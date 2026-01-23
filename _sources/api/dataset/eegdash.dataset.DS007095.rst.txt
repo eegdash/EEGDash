@@ -7,11 +7,11 @@ eegdash.dataset.DS007095
 
 RNS_Epilepsy-iBIDS (OpenNeuro ``ds007095``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu (—). *RNS_Epilepsy-iBIDS*. `10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
+**Citation:** Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu (2025). *RNS_Epilepsy-iBIDS*. `10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 6019`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 25153`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - RNS_Epilepsy-iBIDS
    * - Year
-     - —
+     - 2025
    * - Authors
      - Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng, Wenjie Ming, Shuang Wang, Kedi Xu, Junming Zhu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007095.v1.0.0 <https://doi.org/10.18112/openneuro.ds007095.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007095>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007095>`__ | `Source URL <https://openneuro.org/datasets/ds007095>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007095>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007095>`__ | `Source URL <https://openneuro.org/datasets/ds007095/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,8 +69,11 @@ Description
 
 Dataset of long-term iEEG invasively recorded in epilepsy patients implanted with responsive neurostimulation system  (RNS)
 We provided a long-term intracranial electroencephalography (iEEG) dataset of 8 epilepsy patients implanted with responsive neurostimulation (RNS) devices. The dataset was constituted by iEEG data recorded from bilateral epileptic lesion areas.
-Each recording contains 90 seconds of dual-channel iEEG around each stimulation, 60 seconds before the start of the stimulation, and about 30 seconds after the end of the stimulation. The stimulation markers are contained in the events.tsv files, including the onset and duration for each stimulus. The ieeg.json files contain the electrical stimulation parameters for the current session, which were set by the neurosurgeon during each regular clinical follow-up of epilepsy patients.
+
+Each recording contains 90 seconds of dual-channel iEEG around each stimulation, 60 seconds before the start of the stimulation, and about 30 seconds after the end of the stimulation. The stimulation markers are contained in the events.tsv files, including the onset and duration for each stimulus. The ieeg.json files contain the electrical stimulation parameters for the current session, which were set by the neurosurgeon during each regular clinical follow-up of epilepsy patients. 
+
 The iEEG data were saved in EDF format, stored as the Brain Imaging Data Structure (BIDS), and published on the OpenNeuro. The criterion for including patients in this dataset is to intracranially record the seizure events for more than six months. For each subject, one week is considered as a session, which includes all seizures within a day with high frequency seizure onset during that week.
+
 The dataset can be used to evaluate the alterations of seizure onset pattern during the development of epilepsy, as well as the changes in iEEG characteristics after the electrical stimulation. We have technically validated the dataset through specific signal analysis, such as power spectral analysis, calculation of envelop length, and calculation of phase locking value.
 
 Highlights
@@ -83,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 8
-      - Recordings: 6019
+      - Recordings: 25153
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +106,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 505.5 MB
-      - File count: 6019
+      - Size on disk: 497.8 MB
+      - File count: 25153
       - Format: BIDS
 
    .. grid-item-card:: License & citation

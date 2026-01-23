@@ -7,11 +7,11 @@ eegdash.dataset.DS006817
 
 Visual Attribute-Specific Contextual Trajectory Paradigm 2.0 (OpenNeuro ``ds006817``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (20). *Visual Attribute-Specific Contextual Trajectory Paradigm 2.0*. `10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
+**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (2025). *Visual Attribute-Specific Contextual Trajectory Paradigm 2.0*. `10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 34`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 35` :bdg-secondary:`Recordings: 75`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com)
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006817.v1.0.0 <https://doi.org/10.18112/openneuro.ds006817.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006817>`__ | `Source URL <https://openneuro.org/datasets/ds006817>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006817>`__ | `Source URL <https://openneuro.org/datasets/ds006817/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 TBD upon publication.
+
 Associated pre-print: https://doi.org/10.1101/2025.08.18.670829
 
 Highlights
@@ -79,8 +80,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 34
-      - Recordings: 34
+      - Subjects: 35
+      - Recordings: 75
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.4 GB
-      - File count: 34
+      - Size on disk: 9.7 GB
+      - File count: 75
       - Format: BIDS
 
    .. grid-item-card:: License & citation

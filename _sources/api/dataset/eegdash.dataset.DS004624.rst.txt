@@ -11,7 +11,7 @@ Intracranial recordings using BCI2000 and the CorTec BrainInterchange (OpenNeuro
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 32` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 66425`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 1976`
 
 .. rst-class:: sd-badges
 
@@ -85,9 +85,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 4
-      - Recordings: 66425
-      - Tasks: 32
+      - Subjects: 3
+      - Recordings: 1976
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -106,8 +106,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 66425
+      - Size on disk: 19.3 GB
+      - File count: 1976
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS007176
 
 Longitudinal EEG Test-Retest Reliability in Healthy Individuals (OpenNeuro ``ds007176``). Access recordings and metadata through EEGDash.
 
-**Citation:** Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez (20). *Longitudinal EEG Test-Retest Reliability in Healthy Individuals*. `10.18112/openneuro.ds007176.v1.0.1 <https://doi.org/10.18112/openneuro.ds007176.v1.0.1>`__
+**Citation:** Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez (2026). *Longitudinal EEG Test-Retest Reliability in Healthy Individuals*. `10.18112/openneuro.ds007176.v1.0.1 <https://doi.org/10.18112/openneuro.ds007176.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 45` :bdg-secondary:`Recordings: 300`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 45` :bdg-secondary:`Recordings: 1656`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Longitudinal EEG Test-Retest Reliability in Healthy Individuals
    * - Year
-     - 20
+     - 2026
    * - Authors
      - Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007176.v1.0.1 <https://doi.org/10.18112/openneuro.ds007176.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007176>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007176>`__ | `Source URL <https://openneuro.org/datasets/ds007176>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007176>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007176>`__ | `Source URL <https://openneuro.org/datasets/ds007176/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **Longitudinal EEG Test-Retest Reliability in Healthy Individuals**
 
 
+
 **Dataset Description**
 
-This dataset contains longitudinal resting-state EEG recordings from 43 healthy adults,
-collected over four sessions spanning approximately two years, with an average interval
-of 7.2 months between sessions. The dataset includes raw EEG data and relevant metadata
-following the BIDS standard.
+This dataset contains longitudinal resting-state EEG recordings from 43 healthy adults, 
+collected over four sessions spanning approximately two years, with an average interval 
+of 7.2 months between sessions. The dataset includes raw EEG data and relevant metadata 
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,19 +85,22 @@ following the BIDS standard.
    **Longitudinal EEG Test-Retest Reliability in Healthy Individuals**
    
    
+   
    **Dataset Description**
    
-   This dataset contains longitudinal resting-state EEG recordings from 43 healthy adults,
-   collected over four sessions spanning approximately two years, with an average interval
-   of 7.2 months between sessions. The dataset includes raw EEG data and relevant metadata
+   This dataset contains longitudinal resting-state EEG recordings from 43 healthy adults, 
+   collected over four sessions spanning approximately two years, with an average interval 
+   of 7.2 months between sessions. The dataset includes raw EEG data and relevant metadata 
    following the BIDS standard.
+   
    
    **Purpose**
    
-   The dataset was acquired to assess the test-retest reliability of EEG signals using
-   an automated preprocessing pipeline, including independent component analysis and
-   wavelet-enhanced artifact removal. It allows for analysis of neural components,
+   The dataset was acquired to assess the test-retest reliability of EEG signals using 
+   an automated preprocessing pipeline, including independent component analysis and 
+   wavelet-enhanced artifact removal. It allows for analysis of neural components, 
    relative power in regions of interest (ROIs), and longitudinal stability of EEG measures.
+   
    
    **Data Structure**
    
@@ -105,20 +108,23 @@ following the BIDS standard.
    - `participants.tsv` : Participant demographics and IDs.
    - `sub-XX/eeg/` : Folder for each participant containing EEG data files.
    
+   
    **EEG Data**
    
-   Each participant folder contains EEG recordings in BIDS-compliant format. Data
+   Each participant folder contains EEG recordings in BIDS-compliant format. Data 
    include:
    - Raw EEG signals (`.eeg`, `.vhdr`, `.vmrk`)
    - Associated metadata files (`.json`) describing recording parameters and task information.
    
+   
    **Usage Notes**
    
-   - All participants provided written informed consent.
+   - All participants provided written informed consent. 
    - Data are de-identified and do not contain personally identifiable information.
    - Users should cite the following paper when using this dataset:
-     Henao Isaza V, et al. Longitudinal test-retest reliability of quantitative EEG in
+     Henao Isaza V, et al. Longitudinal test-retest reliability of quantitative EEG in 
      healthy individuals using an automated preprocessing approach. DOI: 10.1016/j.bspc.2026.109484
+   
    
    **License**
    
@@ -135,7 +141,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 45
-      - Recordings: 300
+      - Recordings: 1656
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -156,7 +162,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 21.1 GB
-      - File count: 300
+      - File count: 1656
       - Format: BIDS
 
    .. grid-item-card:: License & citation

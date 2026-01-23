@@ -7,11 +7,11 @@ eegdash.dataset.DS004477
 
 PES - Pandemic Emergency Scenario (OpenNeuro ``ds004477``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (20). *PES - Pandemic Emergency Scenario*. `10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
+**Citation:** Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (2023). *PES - Pandemic Emergency Scenario*. `10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 9`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 68`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PES - Pandemic Emergency Scenario
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004477.v1.0.2 <https://doi.org/10.18112/openneuro.ds004477.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004477>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004477>`__ | `Source URL <https://openneuro.org/datasets/ds004477>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004477>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004477>`__ | `Source URL <https://openneuro.org/datasets/ds004477/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,14 +68,23 @@ Description
 -----------
 
 Experiment:
+
 PES is a complex and strategic decision-making "Pandemic" Experiment. In this experiment, users were shown a map that gives a description of the spread of a pandemic emergency situation in various locations within the map. Resources (in terms, medicines, personnels) are allocated to few cities in the beginning. The user must allocate more resources to new cities that are displayed on the map. The user must keep in mind that the resources are limited and handing over all resources could mean that new cities (if displayed) might not get any resources.
+
 In this experiment, 9 participants are paired with an artificial agent and they have to decide resource allocation on this scenario, providing their reported confidences for each decision.  The experiment is divided in 64 sequences.
+
 Neurophysiological markers and behavioural information is obtained for each participant as they provide the number of allocated resources and their own subjective perception of the accuracy of each response for each trial. There is a span of 10 seconds where the Participant can press the mouse button (the Hold Response event), drag the mouse upwards while keeping the mouse-button pressed, thereby increasing the number of plus symbols that appear around the city icon, or downwards to decrease them, and finally release the mouse button when the decision is made (the Release Response event). Immediately after that, there is an additional span of 5 seconds where the participant reports the confidence in their decision by moving the mouse wheel. After that (the End-of-trial event) a black screen replaces the map, and the responses from the other players are shown for 2 seconds.
 Each participant sat comfortably at about 1 meter from an LCD monitor; each participant wore an EEG cap connected to a Biosemi ActiveTwo system. Wet electrodes were used and recordings were performed with 64 electrodes in the International 10-20 System. Eight additional external channels were also included, two measuring the electrocardiogram (ECG), while 4 measured the electrooculogram (EOG) signal. The EEG data was sampled at 2048 Hz.
+
 Ethical Statement:
+
 The study complied at all times with the Declaration of Helsinki ethical guidelines for research involving human subjects;  formal ethical approval was granted by the Ministry of Defence Research Ethics Committee MoDREC – Application No:  983/MoDREC/19 first approved on 5th September 2019, with revisions (ver. 3) approved on the 3rd of June 2021.
+
+
 Acknowledgment:
+
 This research was supported by the Defence Science and Technology Laboratory (Dstl) on behalf of the UK Ministry of Defence (MOD) via funding from US/UK DoD Bilateral Academic Research Initiative (BARI).
+
 Code: https://github.com/BCI-NE/PES
 
 Highlights
@@ -88,7 +97,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 9
-      - Recordings: 9
+      - Recordings: 68
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -109,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 22.3 GB
-      - File count: 9
+      - File count: 68
       - Format: BIDS
 
    .. grid-item-card:: License & citation

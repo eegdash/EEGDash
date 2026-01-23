@@ -7,11 +7,11 @@ eegdash.dataset.DS005293
 
 95 By BP (OpenNeuro ``ds005293``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *95 By BP*. `10.18112/openneuro.ds005293.v1.0.0 <https://doi.org/10.18112/openneuro.ds005293.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *95 By BP*. `10.18112/openneuro.ds005293.v1.0.0 <https://doi.org/10.18112/openneuro.ds005293.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 95` :bdg-secondary:`Recordings: 570`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 95` :bdg-secondary:`Recordings: 3996`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 95 By BP
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005293.v1.0.0 <https://doi.org/10.18112/openneuro.ds005293.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005293>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005293>`__ | `Source URL <https://openneuro.org/datasets/ds005293>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005293>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005293>`__ | `Source URL <https://openneuro.org/datasets/ds005293/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,7 +69,7 @@ Description
 
 1.Study introduction:
 In this experiment, the intensity of laser stimulation varied individually based on participants’pain thresholds. Prior to the formal commencement of the experiment, participants underwent a series of stimuli of increasing intensity, incrementally rising from low to high in 0.25J steps until reaching the maximum tolerable intensity for each individual. Participants were instructed to verbally report the perceived pain intensity of each laser stimulation using a numerical rating scale (NRS) ranging from 0 (no sensation) to 10 (the maximum tolerable level of pain), with 4 indicating the pain perception threshold akin to a pricking sensation. In this study, each participant received four levels of stimulation intensity, corresponding to ratings of 2, 4, 6, and 8 on the NRS (E1: 2.0 ± 0.2 J; E2: 2.7 ± 0.3 J; E3: 3.4 ± 0.3 J; E4: 4.1 ± 0.4 J).
-2.Participant task information(description of the experiment):
+2.Participant task information(description of the experiment): 
 Participants received laser stimulation and subsequently provided pain intensity ratings one by one.
 3.Participant instructions(as exact as possible):
 The participants were instructed to relax and sit comfortably on a chair, focusing their attention on the sensation of laser stimulation. The experimental environment was quiet, with a constant room temperature, and no unrelated individuals were present. Both the participants and the experimenter wore protective goggles. The experimental design employed a two-factor repeated measures within-subject design, with 4 levels of stimulation intensity crossed with 2 levels of stimulation location (left hand dorsum and right hand dorsum), resulting in a total of 8 conditions (stimulation locations: left hand dorsum and right hand dorsum). There were 10 trials for each condition, totaling 80 trials. Participants received pain stimulation and provided ratings for each trial individually.
@@ -84,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 95
-      - Recordings: 570
+      - Recordings: 3996
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 300.3 GB
-      - File count: 570
+      - Size on disk: 98.9 GB
+      - File count: 3996
       - Format: BIDS
 
    .. grid-item-card:: License & citation

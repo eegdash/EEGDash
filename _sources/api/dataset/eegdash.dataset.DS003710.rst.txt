@@ -7,11 +7,11 @@ eegdash.dataset.DS003710
 
 APPLESEED Example Dataset (OpenNeuro ``ds003710``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cabell L. Williams, Meghan H. Puglia (20). *APPLESEED Example Dataset*. `10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
+**Citation:** Cabell L. Williams, Meghan H. Puglia (2021). *APPLESEED Example Dataset*. `10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 48`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 293`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - APPLESEED Example Dataset
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Cabell L. Williams, Meghan H. Puglia
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003710.v1.0.2 <https://doi.org/10.18112/openneuro.ds003710.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003710>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003710>`__ | `Source URL <https://openneuro.org/datasets/ds003710>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003710>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003710>`__ | `Source URL <https://openneuro.org/datasets/ds003710/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,13 @@ Description
 -----------
 
 The APPLESEED Example Dataset
+
 This dataset consists of longitudinal EEG recordings from 13 infants at 4, 8, and 12 months of age. Test-retest reliability was assessed at 4 months of age via two appointments (session 1 & 2) that occurred within 1 week of each other. Session 3 data was recorded at 8 months of age and session 4 data was recorded at 12 months of age. Two participants did not return for longitudinal testing at sessions 3 & 4. Therefore, the complete dataset consists of 48 recording sessions, with reliability and longitudinal data (sessions 1-4) for 11 infants (6 F), and reliability data only (sessions 1 & 2) for an additional 2 infants. A channel location file and bin file for analysis are included in the "code" directory.
+
 This dataset was used to develop and validate the Automated Preprocessing Pipe-Line for the Estimation of Scale-wise Entropy from EEG Data (APPLESEED) and is provided as an example dataset to accompany Puglia, M.H., Slobin, J.S., & Williams, C.L., 2022. The Automated Preprocessing Pipe-Line for the Estimation of Scale-wise Entropy from EEG Data (APPLESEED): Development and validation for use in pediatric populations. Developmental Cognitive Neuroscience, 101163.
+
 APPLESEED code is available to download from https://github.com/mhpuglia/APPLESEED.
+
 This dataset is part of a larger, ongoing longitudinal study initially described in Puglia, M.H., Krol, K.M., Missana, M., Williams, C.L., Lillard, T.S., Morris, J.P., Connelly, J.J. and Grossmann, T.,  2020. Epigenetic tuning of brain signal entropy in emergent human social behavior. BMC medicine, 18(1), pp.1-24. https://doi.org/10.1186/s12916-020-01683-x.
 
 Highlights
@@ -83,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 13
-      - Recordings: 48
+      - Recordings: 293
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 10.2 GB
-      - File count: 48
+      - File count: 293
       - Format: BIDS
 
    .. grid-item-card:: License & citation

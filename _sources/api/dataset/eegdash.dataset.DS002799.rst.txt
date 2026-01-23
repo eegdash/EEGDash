@@ -11,7 +11,7 @@ Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functi
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 16824`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 26` :bdg-secondary:`Recordings: 1103`
 
 .. rst-class:: sd-badges
 
@@ -86,8 +86,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 27
-      - Recordings: 16824
+      - Subjects: 26
+      - Recordings: 1103
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,8 +107,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 16824
+      - Size on disk: 18.6 GB
+      - File count: 1103
       - Format: BIDS
 
    .. grid-item-card:: License & citation

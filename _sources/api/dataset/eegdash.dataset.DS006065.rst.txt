@@ -7,11 +7,11 @@ eegdash.dataset.DS006065
 
 TSS_iEEG (OpenNeuro ``ds006065``). Access recordings and metadata through EEGDash.
 
-**Citation:** James Kragel, Joel Voss (20). *TSS_iEEG*. `10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
+**Citation:** James Kragel, Joel Voss (2025). *TSS_iEEG*. `10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 45`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 250`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TSS_iEEG
    * - Year
-     - 20
+     - 2025
    * - Authors
      - James Kragel, Joel Voss
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006065>`__ | `Source URL <https://openneuro.org/datasets/ds006065>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006065>`__ | `Source URL <https://openneuro.org/datasets/ds006065/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **iEEG Dataset: Theta-synchronized Stimulation of Human Hippocampal Networks**
 
 
+
 **Information**
 
-This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:
-**Kragel et al., 2025, Nature Communications:**
-*“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*
-For questions or further information, contact:
+This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:  
+
+**Kragel et al., 2025, Nature Communications:**  
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,25 +85,31 @@ For questions or further information, contact:
    **iEEG Dataset: Theta-synchronized Stimulation of Human Hippocampal Networks**
    
    
+   
    **Information**
    
-   This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:
-   **Kragel et al., 2025, Nature Communications:**
-   *“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*
-   For questions or further information, contact:
-   - **James Kragel:** `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`__
+   This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:  
    
-   **- **Joel Voss:** [joelvoss@uchicago.edu](mailto:joelvoss@uchicago.edu)**
+   **Kragel et al., 2025, Nature Communications:**  
+   *“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*  
+   
+   For questions or further information, contact:  
+   - **James Kragel:** `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`__  
+   - **Joel Voss:** `joelvoss@uchicago.edu <mailto:joelvoss@uchicago.edu>`__  
+   
    
    
    **License**
    
-   This dataset is made available under the **Public Domain Dedication and License v1.0**.
+   This dataset is made available under the **Public Domain Dedication and License v1.0**.  
    Full text: `http://www.opendatacommons.org/licenses/pddl/1.0 <http://www.opendatacommons.org/licenses/pddl/1.0>`__
+   
+   
    
    **Dataset and Protocol**
    
-   The data are organized according to the **Brain Imaging Data Structure (BIDS)** iEEG specification, a community-driven standard for organizing neurophysiology data along with its metadata.
+   The data are organized according to the **Brain Imaging Data Structure (BIDS)** iEEG specification, a community-driven standard for organizing neurophysiology data along with its metadata.  
+   
    
    **Structure**
    
@@ -113,15 +119,17 @@ For questions or further information, contact:
    - **Pre-stimulation rest**
    - **Post-stimulation rest**
    - **Closed-loop stimulation**
+   - **Control stimulation**
    
-   **- **Control stimulation****
    
    
    **Raw Data**
    
    The raw data are stored in **BrainVision format** (`vhdr`, `vmrk`, and `eeg` files). You can read these files into memory using the following tools:
-   - **MATLAB:** `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`__
-   - **Python:** ``pybv` package <https://github.com/bids-standard/pybv>`__
+   
+   - **MATLAB:** `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`__  
+   - **Python:** ``pybv` package <https://github.com/bids-standard/pybv>`__  
+   
    
    **Electrode Coordinates**
    
@@ -138,7 +146,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 7
-      - Recordings: 45
+      - Recordings: 250
       - Tasks: 10
 
    .. grid-item-card:: Channels & sampling rate
@@ -159,7 +167,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.6 GB
-      - File count: 45
+      - File count: 250
       - Format: BIDS
 
    .. grid-item-card:: License & citation

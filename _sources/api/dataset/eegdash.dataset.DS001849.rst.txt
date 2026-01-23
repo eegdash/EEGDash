@@ -11,7 +11,7 @@ RS_TMSEEG_Data (OpenNeuro ``ds001849``). Access recordings and metadata through 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 120`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 363`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds001849.v1.0.2 <https://doi.org/10.18112/openneuro.ds001849.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001849>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001849>`__ | `Source URL <https://openneuro.org/datasets/ds001849>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001849>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001849>`__ | `Source URL <https://openneuro.org/datasets/ds001849/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 120
+      - Recordings: 363
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 44.5 GB
-      - File count: 120
+      - File count: 363
       - Format: BIDS
 
    .. grid-item-card:: License & citation

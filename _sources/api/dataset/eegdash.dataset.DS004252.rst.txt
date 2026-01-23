@@ -7,11 +7,11 @@ eegdash.dataset.DS004252
 
 Rotation-tolerant representations elucidate the time course of high-level object processing (OpenNeuro ``ds004252``). Access recordings and metadata through EEGDash.
 
-**Citation:** Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson (20). *Rotation-tolerant representations elucidate the time course of high-level object processing*. `10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
+**Citation:** Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson (2022). *Rotation-tolerant representations elucidate the time course of high-level object processing*. `10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 7`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rotation-tolerant representations elucidate the time course of high-level object processing
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe, Thomas A. Carlson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__ | `Source URL <https://openneuro.org/datasets/ds004252>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__ | `Source URL <https://openneuro.org/datasets/ds004252/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,11 +67,15 @@ Dataset Information
 Description
 -----------
 
-Note: only the data for participant 1 has been uploaded. The rest of the dataset will be released upon publication.
+Note: only the data for participant 1 has been uploaded. The rest of the dataset will be released upon publication. 
+
 The pre-print can be found here: https://doi.org/10.31234/osf.io/wp73u
-The analysis codes, results, and figures can be found on OSF: https://osf.io/r93es.
-The main folder contains the raw EEG data in standard bids format.
+The analysis codes, results, and figures can be found on OSF: https://osf.io/r93es. 
+
+The main folder contains the raw EEG data in standard bids format.  
+
 The ‘derivatives’ folder contains the pre-processed & epoched EEG data, formatted in line with cosmomvpa.
+
 For codes, results, & figures, see OSF: Engeler, P., Grootswagers, T., Robinson, A. K., Holcombe, A. O., Carlson, T. A., & Moerel, D. (2022, August 17). Rotation-tolerant representations elucidate the time course of high-level object processing. Retrieved from osf.io/r93es
 
 Highlights
@@ -84,8 +88,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 1
-      - Tasks: 1
+      - Recordings: 7
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -104,8 +108,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.3 GB
-      - File count: 1
+      - Size on disk: 1.3 GB
+      - File count: 7
       - Format: BIDS
 
    .. grid-item-card:: License & citation

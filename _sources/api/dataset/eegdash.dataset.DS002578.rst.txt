@@ -7,11 +7,11 @@ eegdash.dataset.DS002578
 
 Visual Oddball Task (256 channels) (OpenNeuro ``ds002578``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Scott Makeig (20). *Visual Oddball Task (256 channels)*. `10.18112/openneuro.ds002578.v1.1.0 <https://doi.org/10.18112/openneuro.ds002578.v1.1.0>`__
+**Citation:** Arnaud Delorme, Scott Makeig (2020). *Visual Oddball Task (256 channels)*. `10.18112/openneuro.ds002578.v1.1.0 <https://doi.org/10.18112/openneuro.ds002578.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 2`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 22`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Oddball Task (256 channels)
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Arnaud Delorme, Scott Makeig
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002578.v1.1.0 <https://doi.org/10.18112/openneuro.ds002578.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002578>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002578>`__ | `Source URL <https://openneuro.org/datasets/ds002578>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002578>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002578>`__ | `Source URL <https://openneuro.org/datasets/ds002578/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -75,6 +75,7 @@ although the number of channel is larger (256), the electrode
 positions are scanned and the anatomical MRI is provided
 (allowing for precise source localization). See publication
 for more details.
+
 Raw data manipulation before export:
 - Fuse all BDF BIOSEMI files and reference to electrode 135 (see loadallbdf_2020.m)
 - Fuse with presentation file information (see loadallbdf_2020.m)
@@ -92,7 +93,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 2
-      - Recordings: 2
+      - Recordings: 22
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -113,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 2
+      - File count: 22
       - Format: BIDS
 
    .. grid-item-card:: License & citation

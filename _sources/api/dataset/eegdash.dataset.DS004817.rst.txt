@@ -7,11 +7,11 @@ eegdash.dataset.DS004817
 
 EEG-attention-rsvp-exp2 (OpenNeuro ``ds004817``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2021). *EEG-attention-rsvp-exp2*. `10.18112/openneuro.ds004817.v1.0.0 <https://doi.org/10.18112/openneuro.ds004817.v1.0.0>`__
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). *EEG-attention-rsvp-exp2*. `10.18112/openneuro.ds004817.v1.0.1 <https://doi.org/10.18112/openneuro.ds004817.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 83`
 
 .. rst-class:: sd-badges
 
@@ -29,13 +29,13 @@ Dataset Information
    * - Title
      - EEG-attention-rsvp-exp2
    * - Year
-     - 2021
+     - 2023
    * - Authors
      - Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004817.v1.0.0 <https://doi.org/10.18112/openneuro.ds004817.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds004817.v1.0.1 <https://doi.org/10.18112/openneuro.ds004817.v1.0.1>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds004817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004817>`__ | `Source URL <https://openneuro.org/datasets/ds004817>`__
 
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds004817,
         title = {EEG-attention-rsvp-exp2},
         author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
-        doi = {10.18112/openneuro.ds004817.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.0},
+        doi = {10.18112/openneuro.ds004817.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -81,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 20
+      - Recordings: 83
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,15 +101,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 25.3 GB
-      - File count: 20
+      - Size on disk: 10.1 GB
+      - File count: 83
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004817.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds004817.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

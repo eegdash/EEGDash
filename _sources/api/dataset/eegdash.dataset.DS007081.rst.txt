@@ -7,11 +7,11 @@ eegdash.dataset.DS007081
 
 Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load (OpenNeuro ``ds007081``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli (—). *Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load*. `10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
+**Citation:** Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli (2025). *Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load*. `10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 41`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 168`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load
    * - Year
-     - —
+     - 2025
    * - Authors
      - Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007081.v1.0.0 <https://doi.org/10.18112/openneuro.ds007081.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007081>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007081>`__ | `Source URL <https://openneuro.org/datasets/ds007081>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007081>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007081>`__ | `Source URL <https://openneuro.org/datasets/ds007081/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -85,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 41
-      - Recordings: 41
+      - Recordings: 168
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 11.3 GB
-      - File count: 41
+      - File count: 168
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS003104
 
 MNE-somato-data-bids dataset (anonymized) (OpenNeuro ``ds003104``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (—). *MNE-somato-data-bids dataset (anonymized)*. `10.18112/openneuro.ds003104.v1.0.0 <https://doi.org/10.18112/openneuro.ds003104.v1.0.0>`__
+**Citation:** Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (2020). *MNE-somato-data-bids dataset (anonymized)*. `10.18112/openneuro.ds003104.v1.0.0 <https://doi.org/10.18112/openneuro.ds003104.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 12`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MNE-somato-data-bids dataset (anonymized)
    * - Year
-     - —
+     - 2020
    * - Authors
      - Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003104.v1.0.0 <https://doi.org/10.18112/openneuro.ds003104.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003104>`__ | `Source URL <https://openneuro.org/datasets/ds003104>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003104>`__ | `Source URL <https://openneuro.org/datasets/ds003104/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,33 +70,58 @@ Description
 
 **MNE-somato-data-bids**
 
+
 This dataset contains the MNE-somato-data in BIDS format.
+
 The conversion can be reproduced through the Python script stored in the
 `/code` directory of this dataset. See the README in that directory.
+
 The `/derivatives` directory contains the outputs of running the FreeSurfer
-pipeline `recon-all` on the MRI data with no additional commandline options
-(only defaults were used):
-$ recon-all -i sub-01_T1w.nii.gz -s 01 -all
-After the `recon-all` call, there were further FreeSurfer calls from the MNE
-API:
-$ mne make_scalp_surfaces -s 01 --force
-$ mne watershed_bem -s 01
-The derivatives also contain the forward model `*-fwd.fif`, which was produced
-using the source space definition, a `*-trans.fif` file, and the boundary
-element model (=conductor model) that lives in
-`freesurfer/subjects/01/bem/*-bem-sol.fif`.
-The `*-trans.fif` file is not saved, but can be recovered from the anatomical
-landmarks in the `sub-01/anat/T1w.json` file and MNE-BIDS' function
-`get_head_mri_transform`.
-See: https://github.com/mne-tools/mne-bids for more information.
 
-**Notes on FreeSurfer**
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-the FreeSurfer pipeline `recon-all` was run new for the sake of converting the
-somato data to BIDS format. This needed to be done to change the "somato"
-subject name to the BIDS subject label "01". Note, that this is NOT "sub-01",
-because in BIDS, the "sub-" is just a prefix, whereas the "01" is the subject
-label.
+   
+   **MNE-somato-data-bids**
+   
+   
+   This dataset contains the MNE-somato-data in BIDS format.
+   
+   The conversion can be reproduced through the Python script stored in the
+   `/code` directory of this dataset. See the README in that directory.
+   
+   The `/derivatives` directory contains the outputs of running the FreeSurfer
+   pipeline `recon-all` on the MRI data with no additional commandline options
+   (only defaults were used):
+   
+   $ recon-all -i sub-01_T1w.nii.gz -s 01 -all
+   
+   After the `recon-all` call, there were further FreeSurfer calls from the MNE
+   API:
+   
+   $ mne make_scalp_surfaces -s 01 --force
+   $ mne watershed_bem -s 01
+   
+   The derivatives also contain the forward model `*-fwd.fif`, which was produced
+   using the source space definition, a `*-trans.fif` file, and the boundary
+   element model (=conductor model) that lives in
+   `freesurfer/subjects/01/bem/*-bem-sol.fif`.
+   
+   The `*-trans.fif` file is not saved, but can be recovered from the anatomical
+   landmarks in the `sub-01/anat/T1w.json` file and MNE-BIDS' function
+   `get_head_mri_transform`.
+   
+   See: https://github.com/mne-tools/mne-bids for more information.
+   
+   
+   **Notes on FreeSurfer**
+   
+   the FreeSurfer pipeline `recon-all` was run new for the sake of converting the
+   somato data to BIDS format. This needed to be done to change the "somato"
+   subject name to the BIDS subject label "01". Note, that this is NOT "sub-01",
+   because in BIDS, the "sub-" is just a prefix, whereas the "01" is the subject
+   label.
+
 
 Highlights
 ----------
@@ -108,7 +133,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 1
+      - Recordings: 12
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -128,8 +153,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 726.2 MB
-      - File count: 1
+      - Size on disk: 333.7 MB
+      - File count: 12
       - Format: BIDS
 
    .. grid-item-card:: License & citation

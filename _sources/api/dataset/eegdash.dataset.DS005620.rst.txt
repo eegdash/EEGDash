@@ -7,11 +7,11 @@ eegdash.dataset.DS005620
 
 A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation (OpenNeuro ``ds005620``). Access recordings and metadata through EEGDash.
 
-**Citation:** Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2 (2019). *A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation*. `10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
+**Citation:** Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2 (2024). *A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation*. `10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 202`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 1440`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2, Johan F. Storm1, Bjørn E. Juel1,2
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005620.v1.0.0 <https://doi.org/10.18112/openneuro.ds005620.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005620>`__ | `Source URL <https://openneuro.org/datasets/ds005620>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005620>`__ | `Source URL <https://openneuro.org/datasets/ds005620/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,11 +71,11 @@ Description
 **A Repeated Awakening Study Exploring the Capacity of Complexity Measures to Capture Dreaming During Propofol Sedation**
 
 
+
 **Description**
 
 This dataset contains EEG data from a study investigating the effects of propofol sedation on dreaming and the applicability of complexity measures in capturing this phenomenon. The study aims to understand the dynamics of consciousness during sedation and the potential for EEG complexity measures to reflect subjective experiences.
 
-**Authors**
 
 
 .. dropdown:: View full README
@@ -85,9 +85,11 @@ This dataset contains EEG data from a study investigating the effects of propofo
    **A Repeated Awakening Study Exploring the Capacity of Complexity Measures to Capture Dreaming During Propofol Sedation**
    
    
+   
    **Description**
    
    This dataset contains EEG data from a study investigating the effects of propofol sedation on dreaming and the applicability of complexity measures in capturing this phenomenon. The study aims to understand the dynamics of consciousness during sedation and the potential for EEG complexity measures to reflect subjective experiences.
+   
    
    **Authors**
    
@@ -99,17 +101,22 @@ This dataset contains EEG data from a study investigating the effects of propofo
    - Johan F. Storm
    - Bjørn E. Juel
    
+   
    **Ethics Statement**
    
    Approved by the Regional Committees for Medical Research Ethics South East Norway (REK), ref. 2015/1520.
+   
    
    **License**
    
    This dataset is licensed under CC-BY-4.0.
    
+   
    **File Structure**
    
+   
    The dataset is organized by subject, with each subject's EEG files stored in a dedicated directory. Below is the structure for the EEG data associated with a sample subject (sub-1016).
+   
    
    **Directory Structure**
    
@@ -128,15 +135,18 @@ This dataset contains EEG data from a study investigating the effects of propofo
    **├── ...**
    
    
+   
    **File Naming Convention**
    
    EEG files are named in the format:
    `sub-<subject_id>_task-<task_name>_acq-<acquisition>_run-<run_number>.<extension>`
    
+   
    **Example Filenames**
    
    - `sub-1016_task-awake_acq-EC_channels.tsv`
    - `sub-1016_task-sed_acq-rest_run-1_eeg.eeg`
+   
    
    **Filename Components**
    
@@ -154,6 +164,7 @@ This dataset contains EEG data from a study investigating the effects of propofo
      - `run-1`, `run-2`, `run-3` (indicating different awakenings in sedation)
    - **.<extension>**: File extension indicating the type of file (e.g., `.eeg`, `.vhdr`, `.vmrk`, etc.).
    
+   
    **File Types**
    
    - **.eeg**: Raw EEG data.
@@ -162,25 +173,31 @@ This dataset contains EEG data from a study investigating the effects of propofo
    - **_events.json / _events.tsv**: Event markers.
    - **_channels.tsv / _eeg.json**: Channel information and metadata.
    
+   
    **Usage Instructions**
    
    To analyze the data, you may need software such as Python with MNE-Python. Please refer to the MNE documentation for details on how to load and manipulate the datasets.
    
+   
    **Contact Information**
    
    For questions regarding this dataset, please contact:
-   Imad J. Bajwa
+   Imad J. Bajwa  
    Email: imadjb@uio.no
+   
    Bjørn E. Juel
    Email: Bjorneju@gmail.com
+   
    
    **Acknowledgements**
    
    We thank the participants and the supporting research staff for their contributions to this study.
    
+   
    **References**
    
    Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+   
    Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
 
 
@@ -194,7 +211,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 202
+      - Recordings: 1440
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
@@ -215,7 +232,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 77.3 GB
-      - File count: 202
+      - File count: 1440
       - Format: BIDS
 
    .. grid-item-card:: License & citation

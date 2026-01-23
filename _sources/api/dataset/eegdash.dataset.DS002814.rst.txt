@@ -7,11 +7,11 @@ eegdash.dataset.DS002814
 
 A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans (OpenNeuro ``ds002814``). Access recordings and metadata through EEGDash.
 
-**Citation:** Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (—). *A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans*. `10.18112/openneuro.ds002814.v1.3.0 <https://doi.org/10.18112/openneuro.ds002814.v1.3.0>`__
+**Citation:** Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (2020). *A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans*. `10.18112/openneuro.ds002814.v1.3.0 <https://doi.org/10.18112/openneuro.ds002814.v1.3.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 168`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 1139`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans
    * - Year
-     - —
+     - 2020
    * - Authors
      - Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds002814.v1.3.0 <https://doi.org/10.18112/openneuro.ds002814.v1.3.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002814>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002814>`__ | `Source URL <https://openneuro.org/datasets/ds002814>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002814>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002814>`__ | `Source URL <https://openneuro.org/datasets/ds002814/versions/1.3.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 168
-      - Tasks: 1
+      - Recordings: 1139
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 48.6 GB
-      - File count: 168
+      - Size on disk: 27.7 GB
+      - File count: 1139
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004369
 
 Blink-Pause-Relation (Competing Speaker Paradigm) (OpenNeuro ``ds004369``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (—). *Blink-Pause-Relation (Competing Speaker Paradigm)*. `10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (2022). *Blink-Pause-Relation (Competing Speaker Paradigm)*. `10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 41`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 345`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Blink-Pause-Relation (Competing Speaker Paradigm)
    * - Year
-     - —
+     - 2022
    * - Authors
      - Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004369.v1.0.1 <https://doi.org/10.18112/openneuro.ds004369.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004369>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004369>`__ | `Source URL <https://openneuro.org/datasets/ds004369>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004369>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004369>`__ | `Source URL <https://openneuro.org/datasets/ds004369/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,22 @@ Dataset Information
 Description
 -----------
 
-No README content is available for this dataset.
+Within this study the EOG channels from two previous studies were pooled. 
+20 participants from Jaeger et al. (2020) and 21 from Holtze et al. (2021) were included. 
+Participants performed a two-competing speaker paradigm in both original studies. 
+Participants were instructed to either attend to the left or right audio book. 
+The paradigm consisted of six (Jaeger et al. 2020) or five (Holtze et al. 2021) 
+10-minute blocks of audio book presentation. In Jaeger et al. (2020) both audio 
+books were always presented equally loud. In Holtze et al. 2021, a 10-minute block could 
+ either be presented in the omnidirectional condition (both audio books were presented 
+equally loud) or in the beamforming condition (the to-be-attended audio book 
+was louder than the to-be-ignored audio book). The first 10-minute block was always 
+presented in the omnidirectional condition whereas the conditions were alternated 
+for the later four blocks, with one half of the participants starting with the 
+omnidirectonal condition and the other half starting with the beamforming condition 
+The article (see Reference) contains all methodological details
+
+- Bj�rn Holtze (December, 2022)
 
 Highlights
 ----------
@@ -79,7 +94,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 41
-      - Recordings: 41
+      - Recordings: 345
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +114,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 8.0 GB
-      - File count: 41
+      - Size on disk: 2.0 GB
+      - File count: 345
       - Format: BIDS
 
    .. grid-item-card:: License & citation

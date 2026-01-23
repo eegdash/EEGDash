@@ -7,11 +7,11 @@ eegdash.dataset.DS005363
 
 Object recognition in healthy aging (ORHA) - EEG (OpenNeuro ``ds005363``). Access recordings and metadata through EEGDash.
 
-**Citation:** Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2019). *Object recognition in healthy aging (ORHA) - EEG*. `10.18112/openneuro.ds005363.v1.0.0 <https://doi.org/10.18112/openneuro.ds005363.v1.0.0>`__
+**Citation:** Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2024). *Object recognition in healthy aging (ORHA) - EEG*. `10.18112/openneuro.ds005363.v1.0.0 <https://doi.org/10.18112/openneuro.ds005363.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 43`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 306`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Object recognition in healthy aging (ORHA) - EEG
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy
    * - License
@@ -97,7 +97,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 43
-      - Recordings: 43
+      - Recordings: 306
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 17.7 GB
-      - File count: 43
+      - File count: 306
       - Format: BIDS
 
    .. grid-item-card:: License & citation

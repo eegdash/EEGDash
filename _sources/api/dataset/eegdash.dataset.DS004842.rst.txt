@@ -7,11 +7,11 @@ eegdash.dataset.DS004842
 
 TX15 (OpenNeuro ``ds004842``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (—). *TX15*. `10.18112/openneuro.ds004842.v1.0.0 <https://doi.org/10.18112/openneuro.ds004842.v1.0.0>`__
+**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (2023). *TX15*. `10.18112/openneuro.ds004842.v1.0.0 <https://doi.org/10.18112/openneuro.ds004842.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 102`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 719`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TX15
    * - Year
-     - —
+     - 2023
    * - Authors
      - Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004842.v1.0.0 <https://doi.org/10.18112/openneuro.ds004842.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004842>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004842>`__ | `Source URL <https://openneuro.org/datasets/ds004842>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004842>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004842>`__ | `Source URL <https://openneuro.org/datasets/ds004842/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 14
-      - Recordings: 102
+      - Recordings: 719
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 5.2 GB
-      - File count: 102
+      - File count: 719
       - Format: BIDS
 
    .. grid-item-card:: License & citation

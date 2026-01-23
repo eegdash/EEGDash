@@ -11,7 +11,7 @@ Disentangling the origins of confidence in speeded perceptual judgments through 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 117`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 949`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002158.v1.0.2 <https://doi.org/10.18112/openneuro.ds002158.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002158>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002158>`__ | `Source URL <https://openneuro.org/datasets/ds002158>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002158>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002158>`__ | `Source URL <https://openneuro.org/datasets/ds002158/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,16 +67,23 @@ Dataset Information
 Description
 -----------
 
-This dataset contains the data in
+This dataset contains the data in  
+
 Pereira, M., Faivre, N., Iturrate, I., Wirthlin, M., Serafini, L., Martin, S., Desvachez, A., Blanke, O., Van De Ville, D., Millan, JdR. (2020). Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging. Proceedings of the National Academy of Science, 117 (15) pp. 8382-8390
 https://doi.org/10.1073/pnas.1918335117
+
 Preprint: https://www.biorxiv.org/content/10.1101/496877v1
+
 ABSTRACT
 The human capacity to compute the likelihood that a decision is correct—known as metacognition—has proven difficult to study in isolation as it usually cooccurs with decision making. Here, we isolated postdecisional from decisional contributions to metacognition by analyzing neural correlates of confidence with multimodal imaging. Healthy volunteers reported their confidence in the accuracy of decisions they made or decisions they observed. We found better metacognitive performance for committed vs. observed decisions, indicating that committing to a decision may improve confidence. Relying on concurrent electroencephalography and hemodynamic recordings, we found a common correlate of confidence following committed and observed decisions in the inferior frontal gyrus and a dissociation in the anterior prefrontal cortex and anterior insula. We discuss these results in light of decisional and postdecisional accounts of confidence and propose a computational model of confidence in which metacognitive performance naturally improves when evidence accumulation is constrained upon committing a decision.
+
 preregistration: https://osf.io/a5qmv/
+
 The dataset contains raw fMRI scans, raw EEG in BrainVision format as well as anatomical scans (T1) and field mapping. We also included preprocessed EEG and fMRI data in derivatives/eegprep and derivatives/fmriprep.
+
 EEG PREPROCESSING
 MR-gradient artifacts were removed using sliding window average template subtraction. TP10 electrode on the right mastoid was used to detect heartbeats for ballistocardiogram artifact (BCG) removal using a semi-automatic procedure in BrainVision Analyzer 2. Data were then filtered using a Butterworth, 4th order zero-phase (two-pass) bandpass filter between 1 and 10 Hz, epoched [-0.2, 0.6 s] around the response onset (i.e. the button press in the active condition or the appearance of the virtual hand for in observation condition), re-referenced to a common average, and input to independent component analysis (ICA) to remove residual BCG and ocular artifacts. In order to ensure numerical stability when estimating the independent components, we retained 99% of the variance from the electrode space, leading to an average of 19 (SD = 6) components estimated for each participant and condition. Independent components (ICs) were then fitted with a dipolar source localization method (66). ICs whose dipole lied outside the brain, or resembled muscular or ocular artifacts were eliminated. A total of 8 (SD = 3) components were finally kept. All preprocessing steps were performed using EEGLAB and in-house scripts under Matlab (The MathWorks, Inc., Natick, Massachusetts, United States).
+ 
 FMRI PREPROCESSING
 We modeled the BOLD signal using a general linear model (GLM) with two separate regressors (stick functions at stimulus onset) for the active and observation condition as well as their spatial and temporal derivatives. We then parametrically modulated the regressors with three behavioral variables: the confidence ratings, the response times, and the numerosity difference between the two arrays of dots (i.e., perceptual evidence). Empirical cross-correlation between regressors confirmed limited collinearity for the active (resp. observation) condition (max(abs(R)) = 0.26 ± 0.02 resp., max(abs(R)) = 0.25 ± 0.02). Bad trials as defined in the behavioral analysis section were modeled by two separate regressors (one for active and one for observation) and their spatial and temporal derivatives. We added six realignments parameters as regressors of no interest. All second-level (group-level) results are reported at a significance-level of p < 0.05 using cluster-extent family-wise error (FWE) correction with a voxel-height threshold of p < 0.001. We used the anatomical automatic labelling (AAL) atlas for brain parcellation (Tzourio-Mazoyer et al., 2002).
 
@@ -90,8 +97,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 117
-      - Tasks: 1
+      - Recordings: 949
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -111,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 76.5 GB
-      - File count: 117
+      - File count: 949
       - Format: BIDS
 
    .. grid-item-card:: License & citation

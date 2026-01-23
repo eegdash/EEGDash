@@ -7,11 +7,11 @@ eegdash.dataset.DS006890
 
 Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata (OpenNeuro ``ds006890``). Access recordings and metadata through EEGDash.
 
-**Citation:** Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa (—). *Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata*. `10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
+**Citation:** Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa (2025). *Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata*. `10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 870`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 5474`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata
    * - Year
-     - —
+     - 2025
    * - Authors
      - Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi, Takamitsu Iwata, Abdi Reza, Kota S Sasaki, Taro Kaiju, Gurlal Gill, Haruhiko Kishima, Shinji Nishimoto, Takufumi Yanagisawa
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006890.v1.0.0 <https://doi.org/10.18112/openneuro.ds006890.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006890>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006890>`__ | `Source URL <https://openneuro.org/datasets/ds006890>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006890>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006890>`__ | `Source URL <https://openneuro.org/datasets/ds006890/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,27 +69,30 @@ Description
 
 Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata — README
 
+
 **Overview**
 
 This repository contains a wireless subdural ECoG (iEEG) dataset from *Macaca fuscata* monkeys,
 organized in compliance with the iEEG-BIDS specification.
 Recordings were acquired several times each week using a wireless, inductively powered implant. The data were curated and organized in BIDS format to facilitate reproducible research in neuroscience.
-Keywords: wireless subdural ECoG, iEEG, Macaca fuscata, BIDS-compliant dataset,
-longitudinal recordings, task-based neurophysiology
 
+Keywords: wireless subdural ECoG, iEEG, Macaca fuscata, BIDS-compliant dataset,
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata — README
    
+   
    **Overview**
    
    This repository contains a wireless subdural ECoG (iEEG) dataset from *Macaca fuscata* monkeys,
    organized in compliance with the iEEG-BIDS specification.
    Recordings were acquired several times each week using a wireless, inductively powered implant. The data were curated and organized in BIDS format to facilitate reproducible research in neuroscience.
+   
    Keywords: wireless subdural ECoG, iEEG, Macaca fuscata, BIDS-compliant dataset,
    longitudinal recordings, task-based neurophysiology
+   
    
    **BIDS Organization**
    
@@ -98,33 +101,40 @@ longitudinal recordings, task-based neurophysiology
    - README.md, CHANGES.md
    - sub-<id>/ses-<index>/ieeg/ (with *_ieeg.edf, *_ieeg.json, *_channels.tsv, *_events.tsv, *_scans.tsv, *_electrodes.tsv, *_electrodes.json, *_coordsystem.json)
    
+   
    **Tasks**
    
    Tasks include rest, pressing, reaching, listening, sep.
    Only curated and validated tasks are exported.
+   
    
    **Signals and Channels**
    
    - Uniform sampling rate per file.
    - channels.tsv lists physiological (ECoG), trigger (TRIGGER) and auxiliary channels (MISC).
    
+   
    **Usage**
    
    This dataset can be loaded with BIDS-compatible toolboxes such as MNE-Python, FieldTrip, or EEGLAB.
    Inspect *_events.tsv for task timing and *_channels.tsv for channel information.
    
+   
    **Participants**
    
    Each subject corresponds to an individual monkey (e.g., sub-monkeyb, sub-monkeyc).
    
+   
    **Ethics**
    
-   All animal procedures complied with Japanese laws and institutional regulations, including the Science Council of Japan Guidelines for Proper Conduct of Animal Experiments and national standards on pain relief and euthanasia, and were approved by the Animal Experiment Committee — The University of Osaka (approval FBS-25-002).
+   All animal procedures complied with Japanese laws and institutional regulations, including the Science Council of Japan Guidelines for Proper Conduct of Animal Experiments and national standards on pain relief and euthanasia, and were approved by the Animal Experiment Committee — The University of Osaka (approval FBS-25-002). 
+   
    
    **License and Citation**
    
    License: CC BY 4.0
    Citation: [Authors], “[Dataset Title],” [Repository/DOI], [Year].
+   
    
    **Contact**
    
@@ -142,7 +152,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 2
-      - Recordings: 870
+      - Recordings: 5474
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -163,7 +173,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 41.2 GB
-      - File count: 870
+      - File count: 5474
       - Format: BIDS
 
    .. grid-item-card:: License & citation

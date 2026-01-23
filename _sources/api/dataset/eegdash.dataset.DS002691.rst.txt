@@ -7,11 +7,11 @@ eegdash.dataset.DS002691
 
 Internal attention study (OpenNeuro ``ds002691``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Dean Radin (—). *Internal attention study*. `10.18112/openneuro.ds002691.v1.1.0 <https://doi.org/10.18112/openneuro.ds002691.v1.1.0>`__
+**Citation:** Arnaud Delorme, Dean Radin (2020). *Internal attention study*. `10.18112/openneuro.ds002691.v1.1.0 <https://doi.org/10.18112/openneuro.ds002691.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 146`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Internal attention study
    * - Year
-     - —
+     - 2020
    * - Authors
      - Arnaud Delorme, Dean Radin
    * - License
@@ -91,7 +91,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 20
+      - Recordings: 146
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -111,8 +111,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 777.1 MB
-      - File count: 20
+      - Size on disk: 776.7 MB
+      - File count: 146
       - Format: BIDS
 
    .. grid-item-card:: License & citation

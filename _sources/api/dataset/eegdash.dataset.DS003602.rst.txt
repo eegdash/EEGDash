@@ -7,11 +7,11 @@ eegdash.dataset.DS003602
 
 Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms (OpenNeuro ``ds003602``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ozlem Korucuoglu, Andrey P. Anokhin (—). *Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms*. `10.18112/openneuro.ds003602.v1.0.0 <https://doi.org/10.18112/openneuro.ds003602.v1.0.0>`__
+**Citation:** Ozlem Korucuoglu, Andrey P. Anokhin (2021). *Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms*. `10.18112/openneuro.ds003602.v1.0.1 <https://doi.org/10.18112/openneuro.ds003602.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 118` :bdg-secondary:`Recordings: 699`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 118` :bdg-secondary:`Recordings: 4247`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms
    * - Year
-     - —
+     - 2021
    * - Authors
      - Ozlem Korucuoglu, Andrey P. Anokhin
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003602.v1.0.0 <https://doi.org/10.18112/openneuro.ds003602.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds003602.v1.0.1 <https://doi.org/10.18112/openneuro.ds003602.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003602>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003602>`__ | `Source URL <https://openneuro.org/datasets/ds003602>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003602>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003602>`__ | `Source URL <https://openneuro.org/datasets/ds003602/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003602,
         title = {Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms},
         author = {Ozlem Korucuoglu and Andrey P. Anokhin},
-        doi = {10.18112/openneuro.ds003602.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds003602.v1.0.0},
+        doi = {10.18112/openneuro.ds003602.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds003602.v1.0.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 118
-      - Recordings: 699
-      - Tasks: 6
+      - Recordings: 4247
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,14 +100,14 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 73.2 GB
-      - File count: 699
+      - File count: 4247
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003602.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds003602.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

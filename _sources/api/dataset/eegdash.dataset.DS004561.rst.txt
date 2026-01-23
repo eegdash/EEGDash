@@ -7,11 +7,11 @@ eegdash.dataset.DS004561
 
 Illusion of Agency over Electrically-Actuated Movements (OpenNeuro ``ds004561``). Access recordings and metadata through EEGDash.
 
-**Citation:** John Veillette, Pedro Lopes, Howard Nusbaum (2019). *Illusion of Agency over Electrically-Actuated Movements*. `10.18112/openneuro.ds004561.v1.0.0 <https://doi.org/10.18112/openneuro.ds004561.v1.0.0>`__
+**Citation:** John Veillette, Pedro Lopes, Howard Nusbaum (2023). *Illusion of Agency over Electrically-Actuated Movements*. `10.18112/openneuro.ds004561.v1.0.0 <https://doi.org/10.18112/openneuro.ds004561.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 23`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 212`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Illusion of Agency over Electrically-Actuated Movements
    * - Year
-     - 2019
+     - 2023
    * - Authors
      - John Veillette, Pedro Lopes, Howard Nusbaum
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004561.v1.0.0 <https://doi.org/10.18112/openneuro.ds004561.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004561>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004561>`__ | `Source URL <https://openneuro.org/datasets/ds004561>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004561>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004561>`__ | `Source URL <https://openneuro.org/datasets/ds004561/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 23
-      - Recordings: 23
+      - Recordings: 212
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 98.0 GB
-      - File count: 23
+      - Size on disk: 97.7 GB
+      - File count: 212
       - Format: BIDS
 
    .. grid-item-card:: License & citation

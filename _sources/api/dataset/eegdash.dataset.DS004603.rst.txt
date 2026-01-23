@@ -7,11 +7,11 @@ eegdash.dataset.DS004603
 
 Visual Attribute-Specific Contextual Trajectory Paradigm (OpenNeuro ``ds004603``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (20). *Visual Attribute-Specific Contextual Trajectory Paradigm*. `10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
+**Citation:** Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (2023). *Visual Attribute-Specific Contextual Trajectory Paradigm*. `10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 37`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 338`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com)
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004603.v1.1.0 <https://doi.org/10.18112/openneuro.ds004603.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004603>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004603>`__ | `Source URL <https://openneuro.org/datasets/ds004603>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004603>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004603>`__ | `Source URL <https://openneuro.org/datasets/ds004603/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,11 +69,14 @@ Description
 
 These data were recorded from 37 subjects using the following exclusion
 criteria: Normal, or correct to normal, vision; no history of neurological disorder; and less than 35 years of age.
+
 Subjects completed a novel, visual contextual trajectory paradigm (CTP) wherein
 the onset of a bound stimulus violated an established trajectory in terms of
 its brightness, size, or orientation. No attribute was violated during control
 trials. Full method details can be read within the following published paper: https://doi.org/10.1016/j.cortex.2023.08.004
+
 Analysis code is available at: https://github.com/benjaminglowe/attribute-specific-prediction-error-analysis-code
+
 Please email ben.lowe@mq.edu.au if you have any further questions.
 
 Highlights
@@ -86,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 37
-      - Recordings: 37
+      - Recordings: 338
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,8 +109,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 39.1 GB
-      - File count: 37
+      - Size on disk: 27.4 GB
+      - File count: 338
       - Format: BIDS
 
    .. grid-item-card:: License & citation

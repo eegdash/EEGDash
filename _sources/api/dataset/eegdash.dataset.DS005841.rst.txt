@@ -7,11 +7,11 @@ eegdash.dataset.DS005841
 
 EEG Experiment measuring ERPs in VR (OpenNeuro ``ds005841``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elena Karakashevska, Alexis Makin, Michael Batterley (—). *EEG Experiment measuring ERPs in VR*. `10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
+**Citation:** Elena Karakashevska, Alexis Makin, Michael Batterley (2025). *EEG Experiment measuring ERPs in VR*. `10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 288`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 870`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Experiment measuring ERPs in VR
    * - Year
-     - —
+     - 2025
    * - Authors
      - Elena Karakashevska, Alexis Makin, Michael Batterley
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005841>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005841>`__ | `Source URL <https://openneuro.org/datasets/ds005841>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005841>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005841>`__ | `Source URL <https://openneuro.org/datasets/ds005841/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,12 +70,14 @@ Description
 
 **EEG Experiment Measuring ERPs in VR**
 
+
 This dataset contains EEG recordings from a study investigating event-related potentials (ERPs) during different visual tasks in virtual reality.
+
 
 **Study Design**
 
 - **Participants**: 48 participants
-- **Tasks**:
+- **Tasks**: 
   - Lumfront
   - Lumperp
   - Regfront
@@ -84,9 +86,11 @@ This dataset contains EEG recordings from a study investigating event-related po
   - Signalvr
 - **Modality**: EEG (512 Hz sampling rate)
 
+
 **Dataset Organization**
 
 The dataset follows the BIDS specification (version 1.6.0). Each subject folder contains EEG recordings and associated metadata.
+
 
 **Funding and Acknowledgements**
 
@@ -102,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 48
-      - Recordings: 288
+      - Recordings: 870
       - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
@@ -123,7 +127,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.3 GB
-      - File count: 288
+      - File count: 870
       - Format: BIDS
 
    .. grid-item-card:: License & citation

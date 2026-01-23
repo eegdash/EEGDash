@@ -7,11 +7,11 @@ eegdash.dataset.DS004022
 
 Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment (OpenNeuro ``ds004022``). Access recordings and metadata through EEGDash.
 
-**Citation:** Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim (—). *Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment*. `10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
+**Citation:** Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim (2022). *Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment*. `10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 21`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 89`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
    * - Year
-     - —
+     - 2022
    * - Authors
      - Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim, Dong-Joo Kim
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004022.v1.0.0 <https://doi.org/10.18112/openneuro.ds004022.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004022>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004022>`__ | `Source URL <https://openneuro.org/datasets/ds004022>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004022>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004022>`__ | `Source URL <https://openneuro.org/datasets/ds004022/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 7
-      - Recordings: 21
+      - Recordings: 89
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 635.0 MB
-      - File count: 21
+      - Size on disk: 616.6 MB
+      - File count: 89
       - Format: BIDS
 
    .. grid-item-card:: License & citation

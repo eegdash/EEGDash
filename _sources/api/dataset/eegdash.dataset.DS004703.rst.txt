@@ -7,11 +7,11 @@ eegdash.dataset.DS004703
 
 sEEG Passive listening to natural speech (OpenNeuro ``ds004703``). Access recordings and metadata through EEGDash.
 
-**Citation:** Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (20). *sEEG Passive listening to natural speech*. `10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
+**Citation:** Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (2023). *sEEG Passive listening to natural speech*. `10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 11`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 325`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - sEEG Passive listening to natural speech
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004703.v1.1.0 <https://doi.org/10.18112/openneuro.ds004703.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004703>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004703>`__ | `Source URL <https://openneuro.org/datasets/ds004703>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004703>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004703>`__ | `Source URL <https://openneuro.org/datasets/ds004703/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,19 +68,33 @@ Description
 -----------
 
 CONTACT
-For questions about this data set, please contact Anna Mai (anna.mai@mpi.nl; ORCiD 0000-0002-8343-9216).
+
+For questions about this data set, please contact Anna Mai (anna.mai@mpi.nl; ORCiD 0000-0002-8343-9216). 
+
 PERMISSIONS
+
 These data may not be used for commericial purposes, including but not limited to use in any kind of training set for commercial machine learning applications.
+
 These data may not be used in any way that either in part or in whole disambiguates participant identity, including but not limited to attempts at 3D facial reconstruction.
+
 RECORDING SETUP
+
 These data were collected from June 2018 to August 2019.
+
 For all patients, a scalp electrode was used for referencing and ground. These were 13mm, 2.5M single lead subdermal electrodes made by Rochester Electro-Medical with serial number S81025-A-24RM.
-Depth electrodes were manufactured by Ad-Tech and are Spencer Probe depth electrodes. Each electrode has 10 leads evenly spaced 3-7mm apart.
+
+Depth electrodes were manufactured by Ad-Tech and are Spencer Probe depth electrodes. Each electrode has 10 leads evenly spaced 3-7mm apart. 
+
 With the exception of patients SD012 and SD022, all implants are depth electrodes. Patients SD012 and SD022 had grid and strip electrodes implanted in addition to several depth electrodes.
+
 Any channel names beginning with ``C'' were not used and should be dropped from analyses.
+
 TASK
+
 Participants passively listened to 30-45s passages of conversational speech and  verbally answered a 2AC content question after each passage. 6 blocks with 7 passages per block.
+
 MISSING DATA
+
 Anatomical scans for particpant SD012 are not available due to excessive movement artifacts.
 
 Highlights
@@ -93,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 11
+      - Recordings: 325
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -113,8 +127,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 13.2 GB
-      - File count: 11
+      - Size on disk: 12.4 GB
+      - File count: 325
       - Format: BIDS
 
    .. grid-item-card:: License & citation

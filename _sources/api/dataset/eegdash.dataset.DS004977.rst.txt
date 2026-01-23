@@ -11,7 +11,7 @@ CARLA: Adjusted common average referencing for cortico-cortical evoked potential
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 4479`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 4459`
 
 .. rst-class:: sd-badges
 
@@ -106,8 +106,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 5
-      - Recordings: 4479
+      - Subjects: 4
+      - Recordings: 4459
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -127,8 +127,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 4479
+      - Size on disk: 1.5 GB
+      - File count: 4459
       - Format: BIDS
 
    .. grid-item-card:: License & citation

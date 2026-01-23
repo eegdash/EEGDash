@@ -7,11 +7,11 @@ eegdash.dataset.DS006171
 
 EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity) (OpenNeuro ``ds006171``). Access recordings and metadata through EEGDash.
 
-**Citation:** María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (—). *EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)*. `10.18112/openneuro.ds006171.v1.0.0 <https://doi.org/10.18112/openneuro.ds006171.v1.0.0>`__
+**Citation:** María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (2025). *EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)*. `10.18112/openneuro.ds006171.v1.0.0 <https://doi.org/10.18112/openneuro.ds006171.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 104`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 559`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)
    * - Year
-     - —
+     - 2025
    * - Authors
      - María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006171.v1.0.0 <https://doi.org/10.18112/openneuro.ds006171.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006171>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006171>`__ | `Source URL <https://openneuro.org/datasets/ds006171>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006171>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006171>`__ | `Source URL <https://openneuro.org/datasets/ds006171/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 36
-      - Recordings: 104
-      - Tasks: 3
+      - Recordings: 559
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 67.8 GB
-      - File count: 104
+      - File count: 559
       - Format: BIDS
 
    .. grid-item-card:: License & citation

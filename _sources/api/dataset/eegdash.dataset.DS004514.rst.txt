@@ -7,11 +7,11 @@ eegdash.dataset.DS004514
 
 Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools (OpenNeuro ``ds004514``). Access recordings and metadata through EEGDash.
 
-**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (20). *Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools*. `10.18112/openneuro.ds004514.v1.1.2 <https://doi.org/10.18112/openneuro.ds004514.v1.1.2>`__
+**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (2023). *Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools*. `10.18112/openneuro.ds004514.v1.1.2 <https://doi.org/10.18112/openneuro.ds004514.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg, fnirs` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 161`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Milan Rybář, Riccardo Poli, Ian Daly
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004514.v1.1.2 <https://doi.org/10.18112/openneuro.ds004514.v1.1.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004514>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004514>`__ | `Source URL <https://openneuro.org/datasets/ds004514>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004514>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004514>`__ | `Source URL <https://openneuro.org/datasets/ds004514/versions/1.1.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -73,10 +73,10 @@ Description
 This dataset contains simultaneous electroencephalography (EEG) and near-infrared spectroscopy (fNIRS) signals recorded from 12 participants while performing a silent naming task and three sensory-based imagery tasks using visual, auditory, and tactile perception.
 Participants were asked to visualize an object in their minds, imagine the sounds made by the object, and imagine the feeling of touching the object.
 
+
+
 **EEG**
 
-EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
-Additionally, 2 electrodes placed on the left hand measured galvanic skin response ('GSR1' channel) and a respiration belt around the waist measured respiration ('Resp' channel).
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -87,12 +87,16 @@ Additionally, 2 electrodes placed on the left hand measured galvanic skin respon
    This dataset contains simultaneous electroencephalography (EEG) and near-infrared spectroscopy (fNIRS) signals recorded from 12 participants while performing a silent naming task and three sensory-based imagery tasks using visual, auditory, and tactile perception.
    Participants were asked to visualize an object in their minds, imagine the sounds made by the object, and imagine the feeling of touching the object.
    
+   
+   
    **EEG**
    
    EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
    Additionally, 2 electrodes placed on the left hand measured galvanic skin response ('GSR1' channel) and a respiration belt around the waist measured respiration ('Resp' channel).
    The sampling rate was 2048 Hz.
+   
    The electrode names were saved in a default BioSemi labeling scheme (A1-A32, B1-B32). See the Biosemi documentation for the corresponding international 10-20 naming scheme (https://www.biosemi.com/pics/cap_64_layout_medium.jpg, https://www.biosemi.com/headcap.htm).
+   
    
    **For convenience, the following ordered channels**
    
@@ -104,25 +108,36 @@ Additionally, 2 electrodes placed on the left hand measured galvanic skin respon
    ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2']
    ```
    
+   
+   
    **fNIRS**
    
    fNIRS data were acquired with a NIRx NIRScoutXP continuous wave imaging system equipped with 4 light detectors, 8 light emitters (sources), and low-profile fNIRS optodes.
    Both electrodes and optodes were placed in a NIRx NIRScap for integrated fNIRS-EEG layouts.
    Two different montages were used: frontal and temporal, see references for more information.
    
+   
+   
    **Stimulus**
    
    Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
+   
+   
    
    **Example code**
    
    We have prepared example scripts to demonstrate how to load the EEG and fNIRS data into Python using MNE and MNE-BIDS packages. These scripts are located in the 'code' directory.
    
+   
+   
    **References**
    
    This dataset was analyzed in the following publications:
+   
    [1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
+   
    [2] Rybář, M., Poli, R. and Daly, I., 2021. Decoding of semantic categories of imagined concepts of animals and tools in fNIRS. Journal of Neural Engineering, 18(4), p.046035.
+   
    [3] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
 
 
@@ -136,7 +151,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 24
+      - Recordings: 161
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -156,8 +171,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.2 GB
-      - File count: 24
+      - Size on disk: 24.1 GB
+      - File count: 161
       - Format: BIDS
 
    .. grid-item-card:: License & citation

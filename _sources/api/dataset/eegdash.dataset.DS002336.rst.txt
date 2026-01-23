@@ -11,7 +11,7 @@ A multi-modal human neuroimaging dataset for data integration: simultaneous EEG 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 325`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002336.v2.0.2 <https://doi.org/10.18112/openneuro.ds002336.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002336>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002336>`__ | `Source URL <https://openneuro.org/datasets/ds002336>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002336>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002336>`__ | `Source URL <https://openneuro.org/datasets/ds002336/versions/2.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **ORIGINAL PAPERS**
 
+
 Lioi, G., Cury, C., Perronnet, L., Mano, M., Bannier, E., Lécuyer, A., & Barillot, C. (2019). Simultaneous MRI-EEG during a motor imagery neurofeedback task: an open access brain imaging dataset for multi-modal data integration Authors. BioRxiv. https://doi.org/https://doi.org/10.1101/862375
+
 Mano, Marsel, Anatole Lécuyer, Elise Bannier, Lorraine Perronnet, Saman Noorzadeh, and Christian Barillot. 2017. “How to Build a Hybrid Neurofeedback Platform Combining EEG and FMRI.” Frontiers in Neuroscience 11 (140). https://doi.org/10.3389/fnins.2017.00140
 Perronnet, Lorraine, L Anatole, Marsel Mano, Elise Bannier, Maureen Clerc, Christian Barillot, Lorraine Perronnet, et al. 2017. “Unimodal Versus Bimodal EEG-FMRI Neurofeedback of a Motor Imagery Task.” Frontiers in Human Neuroscience 11 (193). https://doi.org/10.3389/fnhum.2017.00193.
-This dataset named XP1 can be pull together with the dataset XP2, available here : https://openneuro.org/datasets/ds002338.
-Data acquisition methods have been described in Perronnet et al. (2017, Frontiers in Human Neuroscience).
-Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurofeedback (NF) were acquired in this study (as well as in XP2). For this study, 10 subjects performed three types of NF runs (bimodal EEG-fMRI NF, unimodal EEG-NF and fMRI-NF).
 
+This dataset named XP1 can be pull together with the dataset XP2, available here : https://openneuro.org/datasets/ds002338.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,12 +84,16 @@ Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurof
    
    **ORIGINAL PAPERS**
    
+   
    Lioi, G., Cury, C., Perronnet, L., Mano, M., Bannier, E., Lécuyer, A., & Barillot, C. (2019). Simultaneous MRI-EEG during a motor imagery neurofeedback task: an open access brain imaging dataset for multi-modal data integration Authors. BioRxiv. https://doi.org/https://doi.org/10.1101/862375
+   
    Mano, Marsel, Anatole Lécuyer, Elise Bannier, Lorraine Perronnet, Saman Noorzadeh, and Christian Barillot. 2017. “How to Build a Hybrid Neurofeedback Platform Combining EEG and FMRI.” Frontiers in Neuroscience 11 (140). https://doi.org/10.3389/fnins.2017.00140
    Perronnet, Lorraine, L Anatole, Marsel Mano, Elise Bannier, Maureen Clerc, Christian Barillot, Lorraine Perronnet, et al. 2017. “Unimodal Versus Bimodal EEG-FMRI Neurofeedback of a Motor Imagery Task.” Frontiers in Human Neuroscience 11 (193). https://doi.org/10.3389/fnhum.2017.00193.
+   
    This dataset named XP1 can be pull together with the dataset XP2, available here : https://openneuro.org/datasets/ds002338.
    Data acquisition methods have been described in Perronnet et al. (2017, Frontiers in Human Neuroscience).
-   Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurofeedback (NF) were acquired in this study (as well as in XP2). For this study, 10 subjects performed three types of NF runs (bimodal EEG-fMRI NF, unimodal EEG-NF and fMRI-NF).
+   Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurofeedback (NF) were acquired in this study (as well as in XP2). For this study, 10 subjects performed three types of NF runs (bimodal EEG-fMRI NF, unimodal EEG-NF and fMRI-NF). 
+   
    
    **EXPERIMENTAL PARADIGM**
    
@@ -98,51 +102,71 @@ Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurof
    motor localizer run (task-motorloc) - 8 blocks X (20s rest+20 s task)
    motor imagery run without NF (task-MIpre) -5 blocks X (20s rest+20 s task)
    three NF runs with different NF conditions (task-eegNF, task-fmriNF, task-eegfmriNF) occurring in random order- 10 blocks X (20s rest+20 s task)
+   motor imagery run without NF (task-MIpost) - 5 blocks X (20s rest+20 s task)
    
-   **motor imagery run without NF (task-MIpost) - 5 blocks X (20s rest+20 s task)**
    
    
    **EEG DATA**
    
    EEG data was recorded using a 64-channel MR compatible solution from Brain Products (Brain Products GmbH, Gilching, Germany).
+   
    RAW EEG DATA
+   
    EEG was sampled at 5kHz with FCz as the reference electrode and AFz as the ground electrode, and a resolution of 0.5 microV. Following the BIDs arborescence, raw eeg data for each task can be found for each subject in
+   
    XP1/sub-xp1*/eeg
-   in Brain Vision Recorder format (File Version 1.0). Each raw EEG recording includes three files: the data file (*.eeg), the header file (*.vhdr) and the marker file (*.vmrk).
+   
+   in Brain Vision Recorder format (File Version 1.0). Each raw EEG recording includes three files: the data file (*.eeg), the header file (*.vhdr) and the marker file (*.vmrk). 
    The header file contains information about acquisition parameters and amplifier setup. For each electrode, the impedance at the beginning of the recording  is also specified. For all subjects, channel 32 is the ECG channel. The 63 other channels are EEG channels.
+   
    The marker file contains the list of markers assigned to the EEG recordings and their properties (marker type, marker ID and position in data points). Three type of markers are relevant for the EEG processing:
    R128 (Response): is the fMRI volume marker to correct for the gradient artifact
    S 99 (Stimulus): is the protocol marker indicating the start of the Rest block
-   S  2 (Stimulus): is the protocol marker indicating the start of the Task (Motor Execution Motor Imagery or Neurofeedback)
-   Warning : in few EEG data, the first S99 marker might be missing, but can be easily “added” 20 s before the first S 2.
+   S  2 (Stimulus): is the protocol marker indicating the start of the Task (Motor Execution Motor Imagery or Neurofeedback)  
+   Warning : in few EEG data, the first S99 marker might be missing, but can be easily “added” 20 s before the first S 2.  
+   
    PREPROCESSED EEG DATA
+   
    Following the BIDs arborescence, processed eeg data for each task and subject in the pre-processed data folder :
+   
    XP1/derivatives/sub-xp1*/eeg_pp/*eeg_pp.*
-   and following the Brain Analyzer format. Each processed EEG recording includes three files: the data file (*.dat), the header file (*.vhdr) and the marker file (*.vmrk), containing information similar to those described for raw data. In the header file of preprocessed data channels location are also specified. In the marker file the location in data points of the identified heart pulse (R marker) are specified as well.
+   
+   and following the Brain Analyzer format. Each processed EEG recording includes three files: the data file (*.dat), the header file (*.vhdr) and the marker file (*.vmrk), containing information similar to those described for raw data. In the header file of preprocessed data channels location are also specified. In the marker file the location in data points of the identified heart pulse (R marker) are specified as well. 
+   
    EEG data were pre-processed using BrainVision Analyzer II Software, with the following steps:
    Automatic gradient artifact correction using the artifact template subtraction method (Sliding average calculation with 21 intervals for sliding average and all channels enabled for correction.
    Downsampling with factor: 25 (200 Hz)
    Low Pass FIR Filter:Cut-off Frequency: 50 Hz.
    Ballistocardiogram (pulse) artifact correction using a semiautomatic procedure (Pulse Template searched between 40 s and 240 s in the ECG channel with the following parameters:Coherence Trigger = 0.5, Minimal Amplitude = 0.5, Maximal Amplitude = 1.3. The identified pulses were marked with R.
    Segmentation relative to the first block marker (S 99) for all the length of the training protocol (las S 2 + 20 s).
+   
    EEG NF SCORES
+   
    Neurofeedback scores can be found in the .mat structures in
+   
    XP1/derivatives/sub-xp1*/NF_eeg/d_sub*NFeeg_scores.mat
+   
    Structures names NF_eeg are composed of the following subfields:
+   
    NF_eeg
-   → .nf_laterality (NF score computed as for real-time calculation - equation (1))
+   → .nf_laterality (NF score computed as for real-time calculation - equation (1))              
    → .filteegpow_left (Bandpower of the filtered eeg signal in C1)
    → .filteegpow_right (Bandpower of the filtered eeg signal in C2)
    → .nf (vector of NF scores -4 per s- computed as in eq 3) for comparison with XP2
    → .smoothed
    → .eegdata (64 X 200 X 400 matrix, with the pre-processed EEG signals according to the steps described above)
    → .method
+   
    Where the subfield method contains information about the laplacian filtered used and the frequency band of interest.
+   
+   
    
    **BOLD fMRI DATA**
    
    All DICOM files were converted to Nifti-1 and then in BIDs format (version 2.1.4) using the software dcm2niix (version v1.0.20190720 GVV7.4.0)
-   fMRI acquisitions were performed using echo- planar imaging (EPI) and covering the entire brain with the following parameters
+   
+   fMRI acquisitions were performed using echo- planar imaging (EPI) and covering the entire brain with the following parameters 
+   
    3T Siemens Verio
    EPI sequence
    TR=2 s
@@ -151,26 +175,41 @@ Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurof
    FOV = 210×210mm2
    N of slices: 32
    No slice gap
-   As specified in the relative task event files in XP1\ *events.tsv files onset, the scanner began the EPI pulse sequence two seconds prior to the start of the protocol (first rest block), so the the first two TRs should be discarded.
+   
+   
+   As specified in the relative task event files in XP1\ *events.tsv files onset, the scanner began the EPI pulse sequence two seconds prior to the start of the protocol (first rest block), so the the first two TRs should be discarded. 
    The useful TRs for the runs are therefore
+   
    task-motorloc: 320 s (2 to 322)
    task-MIpre and task-MIpost: 200 s (2 to 202)
    task-eegNF, task-fmriNF, task-eegfmriNF: 400 s (2 to 402)
+   
    In task events files for the different tasks, each column represents:
+   
    - 'onset': onset time (sec) of an event
    - 'duration': duration (sec) of the event
    - 'trial_type': trial (block) type: rest or task (Rest, Task-ME, Task-MI, Task-NF)
    - ''stim_file’: image presented in a stimulus block: during Rest, Motor Imagery (Task-MI) or Motor execution (Task-ME) instructions were presented. On the other hand, during Neurofeedback blocks (Task-NF) the image presented was a ball moving in a square that the subject could control self-regulating his EEG and/or fMRI brain activity.
+   
    Following the BIDs arborescence, the functional data and relative metadata are found for each subject in the following directory
+   
    XP1/sub-xp1*/func
+   
    BOLD-NF SCORES
-   For each subject and NF session, a matlab structure with BOLD-NF features can be found in
+   
+   For each subject and NF session, a matlab structure with BOLD-NF features can be found in 
+   
    XP1/derivatives/sub-xp1*/NF_bold/
+   
    For each subject and NF session, a Matlab structure with BOLD-NF features can be found in
+    
    XP1/derivatives/sub-xp1*/NF_bold/
+    
    In view of BOLD-NF scores computation, fMRI data were preprocessed using SPM8 and with the following steps: slice-time correction, spatial realignment and coregistration with the anatomical scan, spatial smoothing with a 6 mm Gaussian kernel and normalization to the Montreal Neurological Institute (MNI) template.
    For each session, a first level general linear model analysis was then performed. The resulting activation maps (voxel-wise Family-Wise error corrected at p < 0.05) were used to define two ROIs (9x9x3 voxels) around the maximum of activation in the left and right motor cortex. The BOLD-NF scores (fMRI laterality index) were calculated as the difference between percentage signal change in the left and right motor ROIs as for the online NF calculation. A smoothed and normalized version of the NF scores over the precedent three volumes was also computed. To allow for comparison and aggregation of the two datasets XP1 and XP2 we also computed NF scores considering the left motor cortex and a background as for online NF calculation in XP2.
+    
    In the NF_bold folder, the Matlab files sub-xp1*_task-*_NFbold_scores.mat  have therefore the following structure :
+    
    NF_bold
    → .nf_laterality (calculated as for online NF calculation)
    → .smoothnf_laterality
@@ -180,11 +219,15 @@ Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurof
    → .roimean_right (averaged BOLD signal in the right motor ROI)
    → .bgmean (averaged BOLD signal in the background slice)
    → .method
+    
    Where the subfield ".method" contains information about the ROI size (.roisize), the background mask (.bgmask) and ROI masks (.roimask_left,.roimask_right ). More details about signal processing and NF calculation can be found in Perronnet et al. 2017 and Perronnet et al. 2018.
+   
+   
    
    **ANATOMICAL MRI DATA**
    
    As a structural reference for the fMRI analysis, a high resolution 3D T1 MPRAGE sequence was acquired with the following parameters
+   
    3T Siemens Verio
    3D T1 MPRAGE
    TR=1.9 s
@@ -192,8 +235,11 @@ Simultaneous 64 channels EEG and fMRI during right-hand motor imagery and neurof
    Resolution 1x1x1 mm3
    FOV = 256×256 mm2
    N of slices: 176
-   Defacing of MPRAGE T1 images was performed by the submitter using pydeface (https://github.com/poldracklab/pydeface)
+   
+   Defacing of MPRAGE T1 images was performed by the submitter using pydeface (https://github.com/poldracklab/pydeface) 
+   
    Following the BIDs arborescence, the functional data and relative metadata are found for each subject in the following directory
+   
    XP1/sub-xp1*/anat
 
 
@@ -207,7 +253,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 54
+      - Recordings: 325
       - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
@@ -227,8 +273,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 18.0 GB
-      - File count: 54
+      - Size on disk: 16.8 GB
+      - File count: 325
       - Format: BIDS
 
    .. grid-item-card:: License & citation

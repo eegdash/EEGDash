@@ -7,11 +7,11 @@ eegdash.dataset.DS006502
 
 Skill learning and consolidation in healthy humans (OpenNeuro ``ds006502``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bönstrup, M, Buch, ER, Cohen, LG (—). *Skill learning and consolidation in healthy humans*. `10.18112/openneuro.ds006502.v1.0.0 <https://doi.org/10.18112/openneuro.ds006502.v1.0.0>`__
+**Citation:** Bönstrup, M, Buch, ER, Cohen, LG (2025). *Skill learning and consolidation in healthy humans*. `10.18112/openneuro.ds006502.v1.0.0 <https://doi.org/10.18112/openneuro.ds006502.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 380`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 1648`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Skill learning and consolidation in healthy humans
    * - Year
-     - —
+     - 2025
    * - Authors
      - Bönstrup, M, Buch, ER, Cohen, LG
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006502.v1.0.0 <https://doi.org/10.18112/openneuro.ds006502.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006502>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006502>`__ | `Source URL <https://openneuro.org/datasets/ds006502>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006502>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006502>`__ | `Source URL <https://openneuro.org/datasets/ds006502/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **README**
 
 
+
 **Contact**
+
 
 For additional information, please contact:
 Ethan R. Buch (ethan.buch@nih.gov; ORCID: 0000-0002-5443-8222)
-
-**Overview**
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,52 +85,74 @@ Ethan R. Buch (ethan.buch@nih.gov; ORCID: 0000-0002-5443-8222)
    **README**
    
    
+   
    **Contact**
+   
    
    For additional information, please contact:
    Ethan R. Buch (ethan.buch@nih.gov; ORCID: 0000-0002-5443-8222)
    
+   
    **Overview**
    
-   This study was carried out by the Human Cortical Physiology & Neurorehabilitation Section (HCPS) in the NINDS Intramural Research Program.
-   The primary aim of the study was to investigate changes in brain activity associated with early skill learning during an initial training session, overnight skill consolidation and longer-term skill retention. A longitudinal design was used. Skill learning was assessed using the sequential finger tapping task (SFTT). Participants completed an initial session in which anatomical MRI data was acquired, followed by up to three separate MEG session. During the first MEG training session, participants repeatedly typed a 5-item skill sequence (i.e. – 4-1-3-2-4) with their non-dominant left hand over 36 practice trials (lasting 10s each) inter-leaved with short 10s rest breaks. Their instructed goal was to type the sequence as fast and as accurately as possible. This first training session was typically followed by up to two separate MEG retest sessions occurring approximately 24 (mean+/-SD: 23.44+/- 1.32) hours and 30 (29.45 +/- 6.77) days later. During these later MEG sessions, participants were retested on the trained skill (over 9 trials) and 9 different untrained control skill sequences (one trial each). Resting state MEG data was acquired before and after practice blocks during all three MEG sessions. Skill performance, eye gaze and pupillometry, and left wrist flexor/extensor EMG data were also acquired and synchronized with MEG recordings.
+   
+   This study was carried out by the Human Cortical Physiology & Neurorehabilitation Section (HCPS) in the NINDS Intramural Research Program. 
+   
+   The primary aim of the study was to investigate changes in brain activity associated with early skill learning during an initial training session, overnight skill consolidation and longer-term skill retention. A longitudinal design was used. Skill learning was assessed using the sequential finger tapping task (SFTT). Participants completed an initial session in which anatomical MRI data was acquired, followed by up to three separate MEG session. During the first MEG training session, participants repeatedly typed a 5-item skill sequence (i.e. – 4-1-3-2-4) with their non-dominant left hand over 36 practice trials (lasting 10s each) inter-leaved with short 10s rest breaks. Their instructed goal was to type the sequence as fast and as accurately as possible. This first training session was typically followed by up to two separate MEG retest sessions occurring approximately 24 (mean+/-SD: 23.44+/- 1.32) hours and 30 (29.45 +/- 6.77) days later. During these later MEG sessions, participants were retested on the trained skill (over 9 trials) and 9 different untrained control skill sequences (one trial each). Resting state MEG data was acquired before and after practice blocks during all three MEG sessions. Skill performance, eye gaze and pupillometry, and left wrist flexor/extensor EMG data were also acquired and synchronized with MEG recordings. 
+   
    
    **Methods**
    
    
+   
    **Ethics Review**
+   
    
    All study procedures were approved by the Combined Neuroscience Institutional Review Board of the National Institutes of Health (NIH).
    
+   
    **Subjects**
    
-   Study data was acquired from a total of 31 right-handed, healthy adults (21 females; mean+/-SD age = 26.14 +/- 4.17). All participants provided written informed consent. Verification of clinical status was based upon a comprehensive health history assessment, physical and neurological examination, and unremarkable clinical Brain MRI scan prior to study data collection.
+   
+   Study data was acquired from a total of 31 right-handed, healthy adults (21 females; mean+/-SD age = 26.14 +/- 4.17). All participants provided written informed consent. Verification of clinical status was based upon a comprehensive health history assessment, physical and neurological examination, and unremarkable clinical Brain MRI scan prior to study data collection. 
+   
    Inclusion criteria: Healthy right-handed adults.
    Exclusion criteria: Active musicians were excluded from the study.
    
+   
    **Apparatus**
    
-   T1-weighted high-resolution (1mm3 isotropic MPRAGE sequence) anatomical brain MRI volumes were acquired for each participant on 3T MRI scanners (GE Excite HDxt and Siemens Skyra) with a standard 32-channel head coil.
+   
+   T1-weighted high-resolution (1mm3 isotropic MPRAGE sequence) anatomical brain MRI volumes were acquired for each participant on 3T MRI scanners (GE Excite HDxt and Siemens Skyra) with a standard 32-channel head coil. 
+   
    Continuous MEG and EMG data were acquired on a CTF-275 system (CTF Systems, Inc.) at a sampling frequency of 600Hz (60Hz power line frequency). All recordings were performed in a seated position inside a magnetically shielded room. Head position was determined before and after each scan run using three head localization coils attached to the right and left preauricular and nasion landmarks with adhesive tape. The locations for the coils was digitized and mapped the individual participant’s anatomical MRI volume using BrainSight (Rogue Research Inc.).
+   
    Behavioral stimuli were presented and response data acquired using E-Prime 2 (Psychology Software Tools, Inc.) and the Cedrus LS-Line (Cedrus Corp) four-key response pad, respectively.
-   Eye gaze and pupillometry data was acquired using the EyeLink 1000 Plus (SR Research Ltd.) eye-tracker device and recorded using ADC channel inputs to the CTF-275 system.
+   
+   Eye gaze and pupillometry data was acquired using the EyeLink 1000 Plus (SR Research Ltd.) eye-tracker device and recorded using ADC channel inputs to the CTF-275 system. 
+   
    
    **Task details**
    
-   Participants typed a 5-item numerical sequence displayed on a computer screen (41324) as quickly and as accurately as possible, with their non-dominant left hand.  No explicit feedback related to performance accuracy or speed was provided. Small asterisks appeared above each sequence item as keypresses were recorded to provide location information to participants during practice. Individual practice trials lasted 10s each. All practice trials were interleaved with short 10s rest breaks. The displayed numerical target sequence was replaced with “XXXXX” during the rest breaks.
+   
+   Participants typed a 5-item numerical sequence displayed on a computer screen (41324) as quickly and as accurately as possible, with their non-dominant left hand.  No explicit feedback related to performance accuracy or speed was provided. Small asterisks appeared above each sequence item as keypresses were recorded to provide location information to participants during practice. Individual practice trials lasted 10s each. All practice trials were interleaved with short 10s rest breaks. The displayed numerical target sequence was replaced with “XXXXX” during the rest breaks. 
+   
    
    **MEG session design**
+   
    
    MEG1:
    1)	6-minute rest scan
    2)	12-minute “training” scan (4-1-3-2-4)
    3)	6-minute rest scan
+   
    MEG2 (approximately 24 hours after MEG1 session on average; precise inter-session intervals can be found in participants.tsv file):
    1)	6-minute rest scan
    2)	3-minute trained sequence “retest” scan (4-1-3-2-4; 36 practice trials lasting 10s each with 10s interleaved rest breaks)
    3)	6-minute rest scan
    4)	3-minute “control” sequence scan (one 10s trial each of 9 different untrained sequences [2-1-3-4-2, 4-2-4-3-1, 3-4-2-3-1, 1-4-3-4-2, 3-2-4-3-1, 1-4-2-3-1, 3-2-4-2-1, 2-3-1-4-2, 4-2-3-1-4] with 10s interleaved rest breaks)
    5)	6-minute rest scan
+   
    MEG3 (approximately 30 days after MEG1 session on average; precise inter-session intervals can be found in participants.tsv file):
    1)	6-minute rest scan
    2)	3-minute trained sequence “retest” scan (4-1-3-2-4; 9 practice trials lasting 10s each with 10s interleaved rest breaks)
@@ -138,16 +160,24 @@ Ethan R. Buch (ethan.buch@nih.gov; ORCID: 0000-0002-5443-8222)
    4)	3-minute “control” sequence scan (one 10s trial each of 9 different untrained sequences [2-1-3-4-2, 3-1-2-1-4, 1-2-4-3-4, 4-1-3-2-1, 2-3-2-4-1, 3-1-4-3-2, 2-3-1-3-4, 1-2-1-3-4, 4-3-2-4-1] with 10s interleaved rest breaks)
    5)	6-minute rest scan
    
+   
    **Experimental location**
+   
    
    All study data was acquired in the Nuclear Magnetic Resonance Facility (NMRF) at the NIH Clinical Center in Bethesda, MD.
    
+   
    **Missing data**
    
+   
    Three of the gradiometers were malfunctioning and were not used, resulting in 272 total channels of MEG data.
-   Some participants did not complete the 2nd and 3rd MEG sessions.
+   
+   Some participants did not complete the 2nd and 3rd MEG sessions. 
+   
    No keypress responses were recorded for participant “sub-01” on trial 1 of MEG1 training.
+   
    The MEG recording for participant “sub-10” MEG1 training terminated during the rest break after practice trial 34. No MEG data was recorded for practice trials 35 and 36.
+   
    No keypress responses were recorded for participant “sub-23” on trial 1 of MEG1 training and trials 1 and 2 of MEG2 retest.
 
 
@@ -161,7 +191,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 31
-      - Recordings: 380
+      - Recordings: 1648
       - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
@@ -182,7 +212,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 95.8 GB
-      - File count: 380
+      - File count: 1648
       - Format: BIDS
 
    .. grid-item-card:: License & citation

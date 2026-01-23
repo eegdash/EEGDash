@@ -7,11 +7,11 @@ eegdash.dataset.DS004370
 
 PRIOS (OpenNeuro ``ds004370``). Access recordings and metadata through EEGDash.
 
-**Citation:** van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS (—). *PRIOS*. `10.18112/openneuro.ds004370.v1.0.2 <https://doi.org/10.18112/openneuro.ds004370.v1.0.2>`__
+**Citation:** van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS (2022). *PRIOS*. `10.18112/openneuro.ds004370.v1.0.2 <https://doi.org/10.18112/openneuro.ds004370.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 15`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 130`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PRIOS
    * - Year
-     - —
+     - 2022
    * - Authors
      - van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004370.v1.0.2 <https://doi.org/10.18112/openneuro.ds004370.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004370>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004370>`__ | `Source URL <https://openneuro.org/datasets/ds004370>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004370>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004370>`__ | `Source URL <https://openneuro.org/datasets/ds004370/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,12 +70,12 @@ Description
 
 **Dataset description**
 
-This dataset consists of 6 patients age 13-53 years old where Cortico-Cortical Evoked Potentials (CCEPs) were recorded with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation (SPES) in the awake patient for clinical routine (SPES-clinical) and under general propofol-anesthesia (SPES-propofol).
+This dataset consists of 6 patients age 13-53 years old where Cortico-Cortical Evoked Potentials (CCEPs) were recorded with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation (SPES) in the awake patient for clinical routine (SPES-clinical) and under general propofol-anesthesia (SPES-propofol). 
+
 For a detailed description see:
 - The effect of propofol on local effective brain networks (submitted). D. van Blooijs, S. Blok, G.J.M. Huiskamp, P. van Eijsden, H.G.E. Meijer, F.S.S. Leijten
-The study was approved by the Medical Ethical Committee from the UMC Utrecht, the Netherlands.
 
-**Contact**
+The study was approved by the Medical Ethical Committee from the UMC Utrecht, the Netherlands.
 
 
 .. dropdown:: View full README
@@ -84,40 +84,52 @@ The study was approved by the Medical Ethical Committee from the UMC Utrecht, th
    
    **Dataset description**
    
-   This dataset consists of 6 patients age 13-53 years old where Cortico-Cortical Evoked Potentials (CCEPs) were recorded with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation (SPES) in the awake patient for clinical routine (SPES-clinical) and under general propofol-anesthesia (SPES-propofol).
+   This dataset consists of 6 patients age 13-53 years old where Cortico-Cortical Evoked Potentials (CCEPs) were recorded with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation (SPES) in the awake patient for clinical routine (SPES-clinical) and under general propofol-anesthesia (SPES-propofol). 
+   
    For a detailed description see:
    - The effect of propofol on local effective brain networks (submitted). D. van Blooijs, S. Blok, G.J.M. Huiskamp, P. van Eijsden, H.G.E. Meijer, F.S.S. Leijten
+   
    The study was approved by the Medical Ethical Committee from the UMC Utrecht, the Netherlands.
+   
    
    **Contact**
    
    - Dorien van Blooijs: D.vanBlooijs@umcutrecht.nl
    - Frans Leijten: F.S.S.leijten@umcutrecht.nl
    
+   
+   
    **Data organization**
    
-   This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
+   This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/ 
+   
    Each patient has their own folder (e.g., `sub-PRIOS01` to `sub-PRIOS09`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+   
    Data are logically grouped in the same BIDS session and stored across runs indicating the day and time point of recording during the monitoring period.
    We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
-   The task key-value pair in long-term iEEG recordings describes the patient's state during the recording of this file. The task label is “SPESclin“ when these files contain data collected during clinical single pulse electrical stimulation (SPES) and "SPESprop" when these files contain data collected during single pulse electrical stimulation (SPES) in the operating room.
+   The task key-value pair in long-term iEEG recordings describes the patient's state during the recording of this file. The task label is “SPESclin“ when these files contain data collected during clinical single pulse electrical stimulation (SPES) and "SPESprop" when these files contain data collected during single pulse electrical stimulation (SPES) in the operating room. 
+   
    Electrode positions were estimated by running Freesurfer on the individual subject MRI scan. All shared electrode positions were converted to MNI305 space using the Freesurfer surface based non-linear transformation. We note that this surface based transformation distorts the dimensions of the grids, but maintains the gyral anatomy.
+   
    
    **License**
    
-   This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at
-   https://creativecommons.org/publicdomain/zero/1.0/.
-   We hope that all users will follow the ODC Attribution/Share-Alike Community Norms (http://www.opendatacommons.org/norms/odc-by-sa/);
+   This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at 
+   https://creativecommons.org/publicdomain/zero/1.0/. 
+   We hope that all users will follow the ODC Attribution/Share-Alike Community Norms (http://www.opendatacommons.org/norms/odc-by-sa/); 
    in particular, while not legally required, we hope that all users of the data will acknowledge by citing the following in any publication.
    The effect of propofol on local effective brain networks (submitted). D. van Blooijs, S. Blok, G.J.M. Huiskamp, P. van Eijsden, H.G.E. Meijer, F.S.S. Leijten
+   
    
    **Code**
    
    Code to analyses these data is available at: https://github.com/UMCU-EpiLAB/umcuEpi_PRIOS
    
+   
    **Acknowledgements**
    
-   We thank all patients for participating in this study.
+   We thank all patients for participating in this study. 
+   
    
    **Funding**
    
@@ -134,7 +146,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 7
-      - Recordings: 15
+      - Recordings: 130
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -155,7 +167,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 27.6 GB
-      - File count: 15
+      - File count: 130
       - Format: BIDS
 
    .. grid-item-card:: License & citation

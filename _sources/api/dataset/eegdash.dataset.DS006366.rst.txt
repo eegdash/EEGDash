@@ -7,11 +7,11 @@ eegdash.dataset.DS006366
 
 Mouse Sleep Staging Validation dataset (MSSV) (OpenNeuro ``ds006366``). Access recordings and metadata through EEGDash.
 
-**Citation:** Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum (—). *Mouse Sleep Staging Validation dataset (MSSV)*. `10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
+**Citation:** Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum (2025). *Mouse Sleep Staging Validation dataset (MSSV)*. `10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 92` :bdg-secondary:`Recordings: 148`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 92` :bdg-secondary:`Recordings: 395`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mouse Sleep Staging Validation dataset (MSSV)
    * - Year
-     - —
+     - 2025
    * - Authors
      - Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006366.v1.0.1 <https://doi.org/10.18112/openneuro.ds006366.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006366>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006366>`__ | `Source URL <https://openneuro.org/datasets/ds006366>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006366>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006366>`__ | `Source URL <https://openneuro.org/datasets/ds006366/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,28 +70,56 @@ Description
 
 **Mouse Sleep Staging Validation dataset (MSSV)**
 
+
 This dataset contains EEG recordings with sleep scores from 92 healthy mice. The recordings and sleep scores were collected from five different labs:
+
 - Department of Biomedical and Neuromotor Sciences, Università di Bologna, Italy.
 - Center for Translational Neuroscience, University of Copenhagen, Denmark.
 - Department of Neuroscience, University of Copenhagen, Denmark.
 - Zentrum für Experimentelle Neurologie, Department of Neurology, Inselspital University Hospital Bern, Bern, Switzerland.
-- Lyon Neuroscience Research Center, Lyon, France.
 
-**Overview**
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
--   It contains EEG data from healthy mice in both dark and light phases.
--   All recordings contain at least one EEG and one EMG channel. The number of EEG channels available varies between labs (see labs.tsv).
--   The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The recordings are stored in .EDF format.
--   This dataset has been used and is fully described in https://doi.org/10.1093/sleepadvances/zpaf025.
+   
+   **Mouse Sleep Staging Validation dataset (MSSV)**
+   
+   
+   This dataset contains EEG recordings with sleep scores from 92 healthy mice. The recordings and sleep scores were collected from five different labs:
+   
+   - Department of Biomedical and Neuromotor Sciences, Università di Bologna, Italy.
+   - Center for Translational Neuroscience, University of Copenhagen, Denmark.
+   - Department of Neuroscience, University of Copenhagen, Denmark.
+   - Zentrum für Experimentelle Neurologie, Department of Neurology, Inselspital University Hospital Bern, Bern, Switzerland.
+   - Lyon Neuroscience Research Center, Lyon, France.
+   
+   
+   
+   **Overview**
+   
+   
+   -   It contains EEG data from healthy mice in both dark and light phases. 
+   
+   -   All recordings contain at least one EEG and one EMG channel. The number of EEG channels available varies between labs (see labs.tsv).
+   
+   -   The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The recordings are stored in .EDF format.
+   
+   -   This dataset has been used and is fully described in https://doi.org/10.1093/sleepadvances/zpaf025.
+   
+   
+   **Methods**
+   
+   
+   -   There are 92 healthy mice from 5 different labs. Each mouse is scored by a single sleep expert. See participants.tsv to see what lab each mouse belongs to. 
+   
+   -   All recordings have been downsampled to 128Hz and have SI units (volts). The epoch length is 4 seconds.
+   
+   
+   **Contact**
+   
+   
+   For questions regarding this dataset, contact Birgitte Rahbek Kornum, kornum@sund.ku.dk
 
-**Methods**
-
--   There are 92 healthy mice from 5 different labs. Each mouse is scored by a single sleep expert. See participants.tsv to see what lab each mouse belongs to.
--   All recordings have been downsampled to 128Hz and have SI units (volts). The epoch length is 4 seconds.
-
-**Contact**
-
-For questions regarding this dataset, contact Birgitte Rahbek Kornum, kornum@sund.ku.dk
 
 Highlights
 ----------
@@ -103,7 +131,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 92
-      - Recordings: 148
+      - Recordings: 395
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -124,7 +152,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 6.1 GB
-      - File count: 148
+      - File count: 395
       - Format: BIDS
 
    .. grid-item-card:: License & citation

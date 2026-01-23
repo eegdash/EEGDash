@@ -7,11 +7,11 @@ eegdash.dataset.DS004995
 
 The Time-Course of Food Representation in the Human Brain (OpenNeuro ``ds004995``). Access recordings and metadata through EEGDash.
 
-**Citation:** Denise Moerel, James Psihoyos, Thomas A. Carlson (2019). *The Time-Course of Food Representation in the Human Brain*. `10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
+**Citation:** Denise Moerel, James Psihoyos, Thomas A. Carlson (2024). *The Time-Course of Food Representation in the Human Brain*. `10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 83`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The Time-Course of Food Representation in the Human Brain
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Denise Moerel, James Psihoyos, Thomas A. Carlson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004995>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__ | `Source URL <https://openneuro.org/datasets/ds004995>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004995>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__ | `Source URL <https://openneuro.org/datasets/ds004995/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,14 @@ Description
 -----------
 
 The main folder contains the raw EEG data in standard bids format. See references.
+
 Code and figures: https://doi.org/10.17605/OSF.IO/PWC4K
 Manuscript: https://doi.org/10.1101/2023.06.06.543985
+
 References:
+
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
@@ -84,8 +88,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 20
-      - Tasks: 1
+      - Recordings: 83
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -105,7 +109,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 27.6 GB
-      - File count: 20
+      - File count: 83
       - Format: BIDS
 
    .. grid-item-card:: License & citation

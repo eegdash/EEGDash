@@ -7,11 +7,11 @@ eegdash.dataset.DS003947
 
 EEG: First Episode Psychosis vs. Control Resting Task 2 (OpenNeuro ``ds003947``). Access recordings and metadata through EEGDash.
 
-**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (—). *EEG: First Episode Psychosis vs. Control Resting Task 2*. `10.18112/openneuro.ds003947.v1.0.1 <https://doi.org/10.18112/openneuro.ds003947.v1.0.1>`__
+**Citation:** Dean Salisbury, Dylan Seebold, Brian Coffman (2021). *EEG: First Episode Psychosis vs. Control Resting Task 2*. `10.18112/openneuro.ds003947.v1.0.1 <https://doi.org/10.18112/openneuro.ds003947.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 61` :bdg-secondary:`Recordings: 61`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 61` :bdg-secondary:`Recordings: 267`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: First Episode Psychosis vs. Control Resting Task 2
    * - Year
-     - —
+     - 2021
    * - Authors
      - Dean Salisbury, Dylan Seebold, Brian Coffman
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003947.v1.0.1 <https://doi.org/10.18112/openneuro.ds003947.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003947>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003947>`__ | `Source URL <https://openneuro.org/datasets/ds003947>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003947>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003947>`__ | `Source URL <https://openneuro.org/datasets/ds003947/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,9 +69,10 @@ Description
 
 Resting EEG and MEG data was gathered for two independently collected samples of healthy and First Episode Psychosis (FEP) individuals.
 To obtain resting data, EEG channels were recorded for 5 minutes using an Elekta Neuromag Vectorview system.
-EEG was recorded using a low-impedance 10-10 system 60-channel cap.
+EEG was recorded using a low-impedance 10-10 system 60-channel cap. 
 The second collected sample of EEG data is provided here. This sample excludes a portion of subjects that have been included with the first acquisition (EEG: First Episode Psychosis vs. Control Resting Task 1), since they were collected using the same montage.
 The subjects that have been excluded here and are included in Task 1 are: sub-2140A, sub-2170A, sub-2174A, sub-2176A, sub-2177A, sub-2184A, sub-2193A, sub-2214A, sub-2217A, sub-2221A.
+
 The phenotype directory contains clinical assessment results and data divided by type for all subjects. The assessment results were categorized as follows:
 BPRS - Brief Psychiatric Rating Scale,
 SANS - Scale for Assessment of Negative Symptoms,
@@ -79,7 +80,7 @@ SAPS - Scale for Assessment of Positive Symptoms,
 GAFGAS - Global Assessment of Functioning,
 SFS - Social Functioning Scale,
 MATRICS - MATRICS Consensus Cognitive Battery,
-WASI - Wechsler Abbreviated Scale of Intelligence,
+WASI - Wechsler Abbreviated Scale of Intelligence, 
 Hollingshead - Hollingshead Four-Factor Index of Socioeconomic Status,
 Medications - Chlorpromazine equivalency of prescribed medication at time of EEG scan.
 Values/scores that were not collected and questions without given responses are denoted by n/a.
@@ -94,7 +95,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 61
-      - Recordings: 61
+      - Recordings: 267
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -115,7 +116,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 12.5 GB
-      - File count: 61
+      - File count: 267
       - Format: BIDS
 
    .. grid-item-card:: License & citation

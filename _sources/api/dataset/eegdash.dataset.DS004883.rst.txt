@@ -7,11 +7,11 @@ eegdash.dataset.DS004883
 
 Registerd Report of ERN During Three Versions of a Flanker Task (OpenNeuro ``ds004883``). Access recordings and metadata through EEGDash.
 
-**Citation:** Peter E. Clayson, Michael J. Larson (—). *Registerd Report of ERN During Three Versions of a Flanker Task*. `10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
+**Citation:** Peter E. Clayson, Michael J. Larson (2023). *Registerd Report of ERN During Three Versions of a Flanker Task*. `10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 172` :bdg-secondary:`Recordings: 516`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 172` :bdg-secondary:`Recordings: 3618`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Registerd Report of ERN During Three Versions of a Flanker Task
    * - Year
-     - —
+     - 2023
    * - Authors
      - Peter E. Clayson, Michael J. Larson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004883.v1.0.0 <https://doi.org/10.18112/openneuro.ds004883.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004883>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004883>`__ | `Source URL <https://openneuro.org/datasets/ds004883>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004883>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004883>`__ | `Source URL <https://openneuro.org/datasets/ds004883/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 This study is described at https://osf.io/qt2zh/. Scripts used for data processing are posted there.
+
 Here is the script from the manuscript that describes these data.
+
 Error-related negativity is a widely used measure of error monitoring, and many projects are independently moving ERN recorded during a flanker task towards standardization, optimization, and eventual clinical application. However, each project uses a different version of the flanker task and tacitly assumes ERN is functionally equivalent across each version. The routine neglect of a rigorous test of this assumption undermines efforts to integrate ERN findings across tasks, optimize and standardize ERN assessment, and widely apply ERN in clinical trials. The purpose of this registered report was to determine whether ERN shows similar experimental effects (correct vs. error trials) and data quality (intraindividual variability) during three commonly-used versions of a flanker task. ERN was recorded from 172 participants during three versions of a flanker task across two study sites. ERN scores showed numerical differences between tasks, raising questions about the comparability of ERN findings across studies and tasks. Although ERN scores from all three versions of the flanker task yielded high data quality and internal consistency, one version did outperform the other two in terms of the size of experimental effects and the data quality. Exploratory analyses of the error positivity (Pe) provided tentative support for the other two versions of the task over the paradigm that appeared optimal for ERN. The present study provides a roadmap for how to statistically compare psychometric characteristics of ERP scores across paradigms and gives preliminary recommendations for flanker tasks to use for ERN- and Pe-focused studies.
 
 Highlights
@@ -81,8 +83,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 172
-      - Recordings: 516
-      - Tasks: 3
+      - Recordings: 3618
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -102,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 122.8 GB
-      - File count: 516
+      - File count: 3618
       - Format: BIDS
 
    .. grid-item-card:: License & citation

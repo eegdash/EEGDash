@@ -7,11 +7,11 @@ eegdash.dataset.DS007175
 
 FFR-active-listening (OpenNeuro ``ds007175``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (—). *FFR-active-listening*. `10.18112/openneuro.ds007175.v1.0.1 <https://doi.org/10.18112/openneuro.ds007175.v1.0.1>`__
+**Citation:** [Unspecified] (2026). *FFR-active-listening*. `10.18112/openneuro.ds007175.v1.0.1 <https://doi.org/10.18112/openneuro.ds007175.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 41`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 41` :bdg-secondary:`Recordings: 374`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FFR-active-listening
    * - Year
-     - —
+     - 2026
    * - Authors
      - [Unspecified]
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007175.v1.0.1 <https://doi.org/10.18112/openneuro.ds007175.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007175>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007175>`__ | `Source URL <https://openneuro.org/datasets/ds007175>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007175>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007175>`__ | `Source URL <https://openneuro.org/datasets/ds007175/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 41
-      - Recordings: 41
+      - Recordings: 374
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 221.5 GB
-      - File count: 41
+      - Size on disk: 200.4 GB
+      - File count: 374
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005929
 
 Motion-Yucel2014 (OpenNeuro ``ds005929``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (—). *Motion-Yucel2014*. `10.18112/openneuro.ds005929.v1.0.1 <https://doi.org/10.18112/openneuro.ds005929.v1.0.1>`__
+**Citation:** Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (2025). *Motion-Yucel2014*. `10.18112/openneuro.ds005929.v1.0.1 <https://doi.org/10.18112/openneuro.ds005929.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 7`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 74`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Motion-Yucel2014
    * - Year
-     - —
+     - 2025
    * - Authors
      - Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005929.v1.0.1 <https://doi.org/10.18112/openneuro.ds005929.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005929>`__ | `Source URL <https://openneuro.org/datasets/ds005929>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005929>`__ | `Source URL <https://openneuro.org/datasets/ds005929/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 7
-      - Recordings: 7
+      - Recordings: 74
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 68.6 MB
-      - File count: 7
+      - Size on disk: 68.5 MB
+      - File count: 74
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004841
 
 TX14 (OpenNeuro ``ds004841``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (—). *TX14*. `10.18112/openneuro.ds004841.v1.0.1 <https://doi.org/10.18112/openneuro.ds004841.v1.0.1>`__
+**Citation:** Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King (2023). *TX14*. `10.18112/openneuro.ds004841.v1.0.1 <https://doi.org/10.18112/openneuro.ds004841.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 147`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 1034`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TX14
    * - Year
-     - —
+     - 2023
    * - Authors
      - Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King
    * - License
@@ -80,7 +80,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 147
+      - Recordings: 1034
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +101,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.3 GB
-      - File count: 147
+      - File count: 1034
       - Format: BIDS
 
    .. grid-item-card:: License & citation

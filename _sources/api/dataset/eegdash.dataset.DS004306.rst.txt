@@ -7,11 +7,11 @@ eegdash.dataset.DS004306
 
 EEG Semantic Imagination and Perception Dataset (OpenNeuro ``ds004306``). Access recordings and metadata through EEGDash.
 
-**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (—). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
+**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (2022). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 15`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 514`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Semantic Imagination and Perception Dataset
    * - Year
-     - —
+     - 2022
    * - Authors
      - Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__ | `Source URL <https://openneuro.org/datasets/ds004306>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__ | `Source URL <https://openneuro.org/datasets/ds004306/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,15 +67,18 @@ Dataset Information
 Description
 -----------
 
-This dataset consists of electroencephalography (EEG) signals acquired with a 124 EEG ANT-Neuro device.
+This dataset consists of electroencephalography (EEG) signals acquired with a 124 EEG ANT-Neuro device. 
+
 
 **Participants and Sessions**
 
 There are 13 participants included, ten performed one session and three performed two sessions. All participants had normal or corrected vision and hearing, apart from sub-16.
 
+
 **Task**
 
-The task consisted of imagining and perceiving stimuli from three modalities; visual pictorial, visual orthographic (writing) or auditory. Each of the stimuli belonged to one of three categories: guitar, flower and penguin. These categories were selected based on being semantically dissimilar to one another, and because there were all of 2 syllables.
+The task consisted of imagining and perceiving stimuli from three modalities; visual pictorial, visual orthographic (writing) or auditory. Each of the stimuli belonged to one of three categories: guitar, flower and penguin. These categories were selected based on being semantically dissimilar to one another, and because there were all of 2 syllables. 
+
 
 **Dataset Versions**
 
@@ -91,7 +94,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 15
+      - Recordings: 514
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -111,8 +114,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 79.1 GB
-      - File count: 15
+      - Size on disk: 654.9 MB
+      - File count: 514
       - Format: BIDS
 
    .. grid-item-card:: License & citation

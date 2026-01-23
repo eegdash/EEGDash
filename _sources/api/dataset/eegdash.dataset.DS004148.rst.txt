@@ -7,11 +7,11 @@ eegdash.dataset.DS004148
 
 A test-retest resting and cognitive state EEG dataset (OpenNeuro ``ds004148``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (20). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
+**Citation:** Yulin Wang, Wei Duan, Debo Dong, Lihong Ding, Xu Lei (2022). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.1 <https://doi.org/10.18112/openneuro.ds004148.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 60` :bdg-secondary:`Recordings: 900`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 60` :bdg-secondary:`Recordings: 5585`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - A test-retest resting and cognitive state EEG dataset
    * - Year
-     - 20
+     - 2022
    * - Authors
-     - Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei
+     - Yulin Wang, Wei Duan, Debo Dong, Lihong Ding, Xu Lei
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds004148.v1.0.1 <https://doi.org/10.18112/openneuro.ds004148.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004148>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004148>`__ | `Source URL <https://openneuro.org/datasets/ds004148>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004148>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004148>`__ | `Source URL <https://openneuro.org/datasets/ds004148/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -47,9 +47,9 @@ Dataset Information
 
       @dataset{ds004148,
         title = {A test-retest resting and cognitive state EEG dataset},
-        author = {Yulin Wang and Wei Duan and Lihong Ding and Debo Dong and Xu Lei},
-        doi = {10.18112/openneuro.ds004148.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.0},
+        author = {Yulin Wang and Wei Duan and Debo Dong and Lihong Ding and Xu Lei},
+        doi = {10.18112/openneuro.ds004148.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -70,28 +70,53 @@ Description
 
 **General information**
 
-This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants
-during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures
+
+This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants 
+during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures 
+
 
 **Dataset**
 
 
-**Presentation**
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-     The data collection was initiated in September 2019 and was terminated in April 2021. The detailed description of the dataset is currently under working
-     by Yulin Wang, and will submit to Scientific Data for publication.
+   
+   **General information**
+   
+   
+   This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants 
+   during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures 
+   
+   
+   **Dataset**
+   
+   
+   
+   **Presentation**
+   
+   
+        The data collection was initiated in September 2019 and was terminated in April 2021. The detailed description of the dataset is currently under working 
+        by Yulin Wang, and will submit to Scientific Data for publication.
+        
+       
+   
+   
+   **EEG acquisition**
+   
+   
+        * EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 64 electrodes) 
+        * Sampling frequency: 500Hz
+        * Impedances were kept below 5k
+   
+   
+   
+   **Contact**
+   
+        * If you have any questions or comments, please contact: 
+        * Xu Lei: xlei@swu.edu.cn
+        * Yulin Wang: yulin.wang90.swu@gmail.com
 
-**EEG acquisition**
-
-     * EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 64 electrodes)
-     * Sampling frequency: 500Hz
-     * Impedances were kept below 5k
-
-**Contact**
-
-     * If you have any questions or comments, please contact:
-     * Xu Lei: xlei@swu.edu.cn
-     * Yulin Wang: yulin.wang90.swu@gmail.com
 
 Highlights
 ----------
@@ -103,7 +128,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 60
-      - Recordings: 900
+      - Recordings: 5585
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -123,15 +148,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 93.2 GB
-      - File count: 900
+      - Size on disk: 30.7 GB
+      - File count: 5585
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004148.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds004148.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

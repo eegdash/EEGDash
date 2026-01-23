@@ -7,11 +7,11 @@ eegdash.dataset.DS004840
 
 Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit. (OpenNeuro ``ds004840``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger (20). *Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.*. `10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
+**Citation:** Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger (2023). *Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.*. `10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 51`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 107`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata, Andrés Salgado-Vascob, Juliana Marín-Sánchez, Viviana Gómez-Ortega, Mark Ettenberger
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004840.v1.0.1 <https://doi.org/10.18112/openneuro.ds004840.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004840>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__ | `Source URL <https://openneuro.org/datasets/ds004840>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004840>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004840>`__ | `Source URL <https://openneuro.org/datasets/ds004840/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **Dataset of  electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
 
 
+
 **Table of Contents**
+
 
 - `1. Experimental Design <#1-experimental-design>`__
   - `1.1 Study Overview <#11-study-overview>`__
-  - `1.2 Electrophysiological Measurements <#12-electrophysiological-measurements>`__
-- `2. Pain Perception and Anxiety-Depression Levels <#2-pain-perception-and-anxiety-depression-levels>`__
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,7 +85,9 @@ Description
    **Dataset of  electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
    
    
+   
    **Table of Contents**
+   
    
    - `1. Experimental Design <#1-experimental-design>`__
      - `1.1 Study Overview <#11-study-overview>`__
@@ -93,19 +95,25 @@ Description
    - `2. Pain Perception and Anxiety-Depression Levels <#2-pain-perception-and-anxiety-depression-levels>`__
    - `3. Code GIT repository <#3-code-GIT-repository>`__
    
+   
    **1. Experimental Design**
+   
    
    
    **1.1 Study Overview**
    
+   
    This dataset forms part of an ongoing single-site Randomized Clinical Trial (RCT) involving adult burn patients admitted to the Intensive Care Unit (ICU). The key details of the study include:
+   
    - **Participants**: The study encompasses 82 adult burn patients admitted to the ICU.
    - **Randomization**: Participants were randomly assigned to either an intervention group or a control group in a 1:1 ratio. The intervention group received standard care in addition to a maximum of six Music therapy sessions provided by a certified music therapist over a 2-week period.
    - **Electrophysiological Measures**: Electrophysiological measures were taken from a subset of 9 participants in the intervention group (11%).
    - **Ethics and Registration**: The study was approved by the ethics committee of the Fundación Santa Fe de Bogotá (FSFB) with approval IDs CCEI-11234-2019 and CCEI-11971-2020. It is registered on Clinicaltrials.gov under the identifier NCT04571255.
    - **Informed Consent**: All participants provided informed consent to participate in the study.
    
+   
    **1.2 Electrophysiological Measurements**
+   
    
    - **Participants**: The electrophysiological measurements were conducted with nine adult burn patients hospitalized in the ICU of the University Hospital Fundación Santa Fe de Bogotá (FSFB).
    - **Inclusion Criteria**: Inclusion criteria involved individuals of legal adult age with an expected hospitalization period of more than 7 days. Patients with known psychiatric disorders, cognitive disabilities, sedation, or mechanical ventilation were excluded. Patients with burns in regions above the neck were also excluded.
@@ -120,17 +128,24 @@ Description
      - ECG: ECG was acquired by a bipolar assembly of lead II with two electrodes located bilaterally in the upper part of the thorax or both arms, depending on each patient's possibilities or limitations.
      - EMG: For EMG, a bipolar electrode configuration was positioned on the left eyebrow to assess the motor activity of the corrugator supercilii muscle. The electrodes were placed with a 20 mm distance between them, following the natural alignment of the muscle fibers.
    
+   
    **2. Pain Perception and Anxiety-Depression Levels**
+   
    
    - **Measures**: To correlate pain, anxiety, and depression levels with electrophysiological signals, two complementary measures were obtained.
    - **Pain Assessment**: A Visual Analog Scale (VAS) was administered before the PRE and after the POST. The VAS ranged from 0 (indicating no pain) to 10 (representing the maximum pain possible).
    - **Anxiety and Depression**: The Colombian version of the Hospital Anxiety and Depression Scale (HADS) was used. HADS consists of two sub-scales for anxiety and depression, each containing seven items. Items are rated on a four-point Likert scale (0 to 3), with higher scores indicating increased anxiety or depression levels (maximum score of 21 for each subscale). HADS was administered after obtaining informed consent, both as a baseline and after the last music therapy sessions.
    
+   
    **3. Code GIT repository**
    
    - All the analysis and graphics in this project were conducted using Python 3.7. We utilized custom scripts in combination with various libraries, such as NumPy, Pandas, SciPy, MNE, Biopsy, neurokit2, and Visbrain. After generating the graphics, we enhanced them in PowerPoint by adding titles, symbols, and any necessary supplementary information.
    - Code is Open by MIT license at: https://github.com/jgcordoba/BurnICU_MusicTherapy_Signals.git
+   
+   
    For more detailed information about the study, please refer to the associated article titled "Article not submitted", DOI: '-Insert Link-'
+   
+   
    **Last Update**: 23/10/2023
    **Author**: Jose Gabriel Cordoba Silva
 
@@ -145,7 +160,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 9
-      - Recordings: 51
+      - Recordings: 107
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
@@ -165,8 +180,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.7 GB
-      - File count: 51
+      - Size on disk: 599.5 MB
+      - File count: 107
       - Format: BIDS
 
    .. grid-item-card:: License & citation

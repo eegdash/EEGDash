@@ -11,7 +11,7 @@ FLUX: A pipeline for MEG analysis (OpenNeuro ``ds004346``). Access recordings an
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 3`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 19`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004346.v1.0.8 <https://doi.org/10.18112/openneuro.ds004346.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004346>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004346>`__ | `Source URL <https://openneuro.org/datasets/ds004346>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004346>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004346>`__ | `Source URL <https://openneuro.org/datasets/ds004346/versions/1.0.8>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,11 +67,13 @@ Dataset Information
 Description
 -----------
 
+References
 
-**References**
 
 Ferrante, O., Liu, L., Minarik, T., Gorska, U., Ghafari, T., Luo, H., & Jensen, O. (2022). FLUX: A pipeline for MEG analysis. NeuroImage, 253, 119047. https://doi.org/10.1016/j.neuroimage.2022.119047
+
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
@@ -84,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 3
+      - Recordings: 19
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,8 +106,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.8 GB
-      - File count: 3
+      - Size on disk: 3.6 GB
+      - File count: 19
       - Format: BIDS
 
    .. grid-item-card:: License & citation

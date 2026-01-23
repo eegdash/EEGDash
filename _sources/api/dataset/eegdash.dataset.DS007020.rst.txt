@@ -7,11 +7,11 @@ eegdash.dataset.DS007020
 
 EEG Mortality Dataset in Parkinson's Disease (OpenNeuro ``ds007020``). Access recordings and metadata through EEGDash.
 
-**Citation:** Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (—). *EEG Mortality Dataset in Parkinson's Disease*. `10.18112/openneuro.ds007020.v1.0.0 <https://doi.org/10.18112/openneuro.ds007020.v1.0.0>`__
+**Citation:** Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (2025). *EEG Mortality Dataset in Parkinson's Disease*. `10.18112/openneuro.ds007020.v1.0.0 <https://doi.org/10.18112/openneuro.ds007020.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 94` :bdg-secondary:`Recordings: 94`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 94` :bdg-secondary:`Recordings: 945`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Mortality Dataset in Parkinson's Disease
    * - Year
-     - —
+     - 2025
    * - Authors
      - Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007020.v1.0.0 <https://doi.org/10.18112/openneuro.ds007020.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007020>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007020>`__ | `Source URL <https://openneuro.org/datasets/ds007020>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007020>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007020>`__ | `Source URL <https://openneuro.org/datasets/ds007020/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
 Dataset Purpose:
 This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
+
 Participant Information:
 - Participants are labeled as either "living" or "deceased" in participants.tsv
 - No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
 - All participant IDs are anonymized following BIDS convention (e.g., sub-PD1301).
+
 EEG Acquisition Details:
-- Recording type: Resting-state EEG (eyes open)
-- Device: Clinical BrainVision EEG system
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,10 +84,12 @@ EEG Acquisition Details:
    This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
    Dataset Purpose:
    This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
+   
    Participant Information:
    - Participants are labeled as either "living" or "deceased" in participants.tsv
    - No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
    - All participant IDs are anonymized following BIDS convention (e.g., sub-PD1301).
+   
    EEG Acquisition Details:
    - Recording type: Resting-state EEG (eyes open)
    - Device: Clinical BrainVision EEG system
@@ -95,6 +97,7 @@ EEG Acquisition Details:
    - Sampling rate: 500 Hz
    - Montage: Standard 10–20 international system
    - Recording condition: “task-rest” (no task)
+   
    Data Organization:
    Data are structured following the BIDS (Brain Imaging Data Structure) EEG standard:
        sub-<ID>/
@@ -103,13 +106,17 @@ EEG Acquisition Details:
                    sub-<ID>_ses-01_task-rest_eeg.vhdr
                    sub-<ID>_ses-01_task-rest_eeg.eeg
                    sub-<ID>_ses-01_task-rest_eeg.vmrk
+   
    Mortality Label Format:
    - Living subjects: survival_status = "living"
    - Deceased subjects: survival_status = "deceased"
+   
    Ethics & Privacy:
    All subjects provided consent for EEG recording at the University of Iowa Hospitals and Clinics. The publicly shared version here is fully de-identified and contains no clinical or personal health information other than mortality classification.
+   
    Suggested Use:
    This dataset can be used to explore EEG biomarkers of mortality risk, EEG signal characteristics in PD, or to build machine learning models for classification.
+   
    Questions or requests:
    Please contact nandakumar-narayanan@uiowa.edu.
 
@@ -124,7 +131,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 94
-      - Recordings: 94
+      - Recordings: 945
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -145,7 +152,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.7 GB
-      - File count: 94
+      - File count: 945
       - Format: BIDS
 
    .. grid-item-card:: License & citation

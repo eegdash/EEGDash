@@ -7,11 +7,11 @@ eegdash.dataset.DS005963
 
 FRESH Motor Dataset (OpenNeuro ``ds005963``). Access recordings and metadata through EEGDash.
 
-**Citation:** Rickson C. Mesquita (2019). *FRESH Motor Dataset*. `10.18112/openneuro.ds005963.v1.0.0 <https://doi.org/10.18112/openneuro.ds005963.v1.0.0>`__
+**Citation:** Rickson C. Mesquita (2025). *FRESH Motor Dataset*. `10.18112/openneuro.ds005963.v1.0.0 <https://doi.org/10.18112/openneuro.ds005963.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 40`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 285`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FRESH Motor Dataset
    * - Year
-     - 2019
+     - 2025
    * - Authors
      - Rickson C. Mesquita
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005963.v1.0.0 <https://doi.org/10.18112/openneuro.ds005963.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005963>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005963>`__ | `Source URL <https://openneuro.org/datasets/ds005963>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005963>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005963>`__ | `Source URL <https://openneuro.org/datasets/ds005963/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 In preperation
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 40
+      - Recordings: 285
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 234.6 MB
-      - File count: 40
+      - Size on disk: 233.4 MB
+      - File count: 285
       - Format: BIDS
 
    .. grid-item-card:: License & citation

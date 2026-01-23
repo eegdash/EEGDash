@@ -7,11 +7,11 @@ eegdash.dataset.DS003568
 
 Mood induction in MDD and healthy adolescents (OpenNeuro ``ds003568``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris (20). *Mood induction in MDD and healthy adolescents*. `10.18112/openneuro.ds003568.v1.0.2 <https://doi.org/10.18112/openneuro.ds003568.v1.0.2>`__
+**Citation:** Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris (2021). *Mood induction in MDD and healthy adolescents*. `10.18112/openneuro.ds003568.v1.0.4 <https://doi.org/10.18112/openneuro.ds003568.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 51` :bdg-secondary:`Recordings: 118`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 51` :bdg-secondary:`Recordings: 3707`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Mood induction in MDD and healthy adolescents
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha, Dylan Nielson, Argyris Stringaris
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003568.v1.0.2 <https://doi.org/10.18112/openneuro.ds003568.v1.0.2>`__
+     - `doi:10.18112/openneuro.ds003568.v1.0.4 <https://doi.org/10.18112/openneuro.ds003568.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003568>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003568>`__ | `Source URL <https://openneuro.org/datasets/ds003568>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003568>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003568>`__ | `Source URL <https://openneuro.org/datasets/ds003568/versions/1.0.4>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003568,
         title = {Mood induction in MDD and healthy adolescents},
         author = {Lucrezia Liuzzi and Katharine Chang and Hanna Keren and Charles Zheng and Dipta Saha and Dylan Nielson and Argyris Stringaris},
-        doi = {10.18112/openneuro.ds003568.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds003568.v1.0.2},
+        doi = {10.18112/openneuro.ds003568.v1.0.4},
+        url = {https://doi.org/10.18112/openneuro.ds003568.v1.0.4},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -68,9 +68,12 @@ Description
 -----------
 
 This dataset contains the MEG and structural MRI data from the "Electrophysiological correlates of mood and reward dynamics in human adolescents" pre-registered analysis (https://www.biorxiv.org/content/10.1101/2021.03.04.433969v1).
-The task-mmi3 data corresponds to the monetary gambling mood induction task described in the paper. Task-mmi3 data has been pre-processed marking bad channels and bad segments (motion > 5mm or/and noise artifacts).
-Task-rest data is unprocessed 10 minutes resting state scan acquired during the same scanning session.
-Anatomical MRIs have been defaced and co-registered fiducial coordinates are available in the anatomical json files.
+  
+The task-mmi3 data corresponds to the monetary gambling mood induction task described in the paper. Task-mmi3 data has been pre-processed marking bad channels and bad segments (motion > 5mm or/and noise artifacts). 
+Task-rest data is unprocessed 10 minutes resting state scan acquired during the same scanning session. 
+
+Anatomical MRIs have been defaced and co-registered fiducial coordinates are available in the anatomical json files. 
+
 Data from four confirmatory subjects are not made available because of missing data sharing consent.
 sub-22658 and sub-24247 do not have an available structural scan.
 
@@ -84,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 51
-      - Recordings: 118
+      - Recordings: 3707
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,14 +108,14 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 123.4 GB
-      - File count: 118
+      - File count: 3707
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003568.v1.0.2
+      - DOI: doi:10.18112/openneuro.ds003568.v1.0.4
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -11,7 +11,7 @@ Audiocue walking study (OpenNeuro ``ds001971``). Access recordings and metadata 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 273`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 1917`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds001971.v1.1.1 <https://doi.org/10.18112/openneuro.ds001971.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001971>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001971>`__ | `Source URL <https://openneuro.org/datasets/ds001971>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001971>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001971>`__ | `Source URL <https://openneuro.org/datasets/ds001971/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,11 +67,12 @@ Dataset Information
 Description
 -----------
 
-This mobile brain body imaging (MoBI) gait adaptation experiment contains 18 subjects.
-Participants were walking on a treadmill at a constant speed and were required to step in
+This mobile brain body imaging (MoBI) gait adaptation experiment contains 18 subjects. 
+Participants were walking on a treadmill at a constant speed and were required to step in 
 time to an auditory tone sequence and adapt their step length and rate to occasional
 shifts in tempo of the pacing stimulus (i.e., following shifts to a faster or slower tempo).
 The scientific article (see Reference) contains all methodological details
+
 - Johanna Wagner (June 6, 2019)
 
 Highlights
@@ -84,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 273
+      - Recordings: 1917
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 32.0 GB
-      - File count: 273
+      - File count: 1917
       - Format: BIDS
 
    .. grid-item-card:: License & citation

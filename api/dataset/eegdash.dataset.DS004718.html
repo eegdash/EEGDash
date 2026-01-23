@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds004718">
 <h1>eegdash.dataset.DS004718<a class="headerlink" href="#eegdash-dataset-ds004718" title="Link to this heading">#</a></h1>
 <p>Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds004718</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (20). <em>Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004718.v1.1.2">10.18112/openneuro.ds004718.v1.1.2</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 51</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 51</span></p>
+<p><strong>Citation:</strong> Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (2023). <em>Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004718.v1.1.2">10.18112/openneuro.ds004718.v1.1.2</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 2</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 52</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 758</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 1.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>20</p></td>
+<td><p>2023</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004718.v1.1.2">doi:10.18112/openneuro.ds004718.v1.1.2</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004718">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004718">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004718">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004718">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004718">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004718/versions/1.1.2">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1097,20 +1097,18 @@ loading errors, etc.), please let us know!</p>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Update note</strong></p>
-<p>Since the auditory stimuli were presented sentence by sentence, we decided to include the original audio files instead of a continuous file. We presented the story in 4 different sections. After each section, there was a time for 5 comprehension check questions. The file “lppHK_timing_word_information.xlsx” includes all the timing information for each section of the story. Information about each column of the file is included in the same file. We also included another file called “EEG_trigger_and_sentence_number.xlsx”. This included information about how to match sentence ID and trigger number in the EEG data. These two files are useful for EEG data analysis. For timing issues in fMRI data analysis, we included the Eprime output files which have all the necessary information for aligning in fMRI analysis. Since Eprime usually shows some delay in the presentation of audio files, the delay could be considered in the analysis which can help with better alignment.
-Per OpenNeuro’s new formatting requirements, all annotation, quiz, and stimuli files are located in the “sourcedata” folder.</p>
+<p>Since the auditory stimuli were presented sentence by sentence, we decided to include the original audio files instead of a continuous file. We presented the story in 4 different sections. After each section, there was a time for 5 comprehension check questions. The file “lppHK_timing_word_information.xlsx” includes all the timing information for each section of the story. Information about each column of the file is included in the same file. We also included another file called “EEG_trigger_and_sentence_number.xlsx”. This included information about how to match sentence ID and trigger number in the EEG data. These two files are useful for EEG data analysis. For timing issues in fMRI data analysis, we included the Eprime output files which have all the necessary information for aligning in fMRI analysis. Since Eprime usually shows some delay in the presentation of audio files, the delay could be considered in the analysis which can help with better alignment.</p>
+<p>Per OpenNeuro’s new formatting requirements, all annotation, quiz, and stimuli files are located in the “sourcedata” folder.</p>
 <p><strong>Overview</strong></p>
-<p>In the field of neurobiology of language, existing research predominantly focuses on data from a limited number of Indo-European languages and primarily involves younger adults, overlooking other age groups. This experiment aims to address these gaps by creating a comprehensive multimodal database. The primary goal is to advance our understanding of language processing in older adults and the impact of healthy aging on brain-behavior relationships.
-The experiment involves collecting task-based and resting-state fMRI, structural MRI, and EEG data from 52 healthy right-handed older Cantonese participants over 65 years old as they listen to excerpts from “The Little Prince” in Cantonese. Additionally, the database includes detailed information on participants’ language history, lifetime experiences, linguistic and cognitive skills, as well as extensive audio and text annotations, such as time-aligned speech segmentation and prosodic features, along with word-by-word predictors from natural language processing (NLP) tools. Quality diagnostics of the MRI and EEG data confirm their robustness, positioning this database as a valuable resource for studying the spatiotemporal dynamics of language comprehension in older adults.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Update note</strong></p>
-<p class="sd-card-text">Since the auditory stimuli were presented sentence by sentence, we decided to include the original audio files instead of a continuous file. We presented the story in 4 different sections. After each section, there was a time for 5 comprehension check questions. The file “lppHK_timing_word_information.xlsx” includes all the timing information for each section of the story. Information about each column of the file is included in the same file. We also included another file called “EEG_trigger_and_sentence_number.xlsx”. This included information about how to match sentence ID and trigger number in the EEG data. These two files are useful for EEG data analysis. For timing issues in fMRI data analysis, we included the Eprime output files which have all the necessary information for aligning in fMRI analysis. Since Eprime usually shows some delay in the presentation of audio files, the delay could be considered in the analysis which can help with better alignment.
-Per OpenNeuro’s new formatting requirements, all annotation, quiz, and stimuli files are located in the “sourcedata” folder.</p>
+<p class="sd-card-text">Since the auditory stimuli were presented sentence by sentence, we decided to include the original audio files instead of a continuous file. We presented the story in 4 different sections. After each section, there was a time for 5 comprehension check questions. The file “lppHK_timing_word_information.xlsx” includes all the timing information for each section of the story. Information about each column of the file is included in the same file. We also included another file called “EEG_trigger_and_sentence_number.xlsx”. This included information about how to match sentence ID and trigger number in the EEG data. These two files are useful for EEG data analysis. For timing issues in fMRI data analysis, we included the Eprime output files which have all the necessary information for aligning in fMRI analysis. Since Eprime usually shows some delay in the presentation of audio files, the delay could be considered in the analysis which can help with better alignment.</p>
+<p class="sd-card-text">Per OpenNeuro’s new formatting requirements, all annotation, quiz, and stimuli files are located in the “sourcedata” folder.</p>
 <p class="sd-card-text"><strong>Overview</strong></p>
-<p class="sd-card-text">In the field of neurobiology of language, existing research predominantly focuses on data from a limited number of Indo-European languages and primarily involves younger adults, overlooking other age groups. This experiment aims to address these gaps by creating a comprehensive multimodal database. The primary goal is to advance our understanding of language processing in older adults and the impact of healthy aging on brain-behavior relationships.
-The experiment involves collecting task-based and resting-state fMRI, structural MRI, and EEG data from 52 healthy right-handed older Cantonese participants over 65 years old as they listen to excerpts from “The Little Prince” in Cantonese. Additionally, the database includes detailed information on participants’ language history, lifetime experiences, linguistic and cognitive skills, as well as extensive audio and text annotations, such as time-aligned speech segmentation and prosodic features, along with word-by-word predictors from natural language processing (NLP) tools. Quality diagnostics of the MRI and EEG data confirm their robustness, positioning this database as a valuable resource for studying the spatiotemporal dynamics of language comprehension in older adults.</p>
+<p class="sd-card-text">In the field of neurobiology of language, existing research predominantly focuses on data from a limited number of Indo-European languages and primarily involves younger adults, overlooking other age groups. This experiment aims to address these gaps by creating a comprehensive multimodal database. The primary goal is to advance our understanding of language processing in older adults and the impact of healthy aging on brain-behavior relationships.</p>
+<p class="sd-card-text">The experiment involves collecting task-based and resting-state fMRI, structural MRI, and EEG data from 52 healthy right-handed older Cantonese participants over 65 years old as they listen to excerpts from “The Little Prince” in Cantonese. Additionally, the database includes detailed information on participants’ language history, lifetime experiences, linguistic and cognitive skills, as well as extensive audio and text annotations, such as time-aligned speech segmentation and prosodic features, along with word-by-word predictors from natural language processing (NLP) tools. Quality diagnostics of the MRI and EEG data confirm their robustness, positioning this database as a valuable resource for studying the spatiotemporal dynamics of language comprehension in older adults.</p>
 <p class="sd-card-text"><strong>Methods</strong></p>
 <p class="sd-card-text"><strong>Participants</strong></p>
 <p class="sd-card-text">We recruited 52 healthy, right-handed older Cantonese participants (40 females, mean age=69.12, SD=3.52) from Hong Kong for the experiment, which consists of an fMRI and an EEG session. In both sessions, participants listened to the same sections of The Little Prince in Cantonese for approximately 20 minutes. We made sure each participant was right-handed and a native Cantonese speaker using the Language History Questionnaire8 (LHQ3). Additionally, participants reported normal or corrected normal hearing. They confirmed they had no cognitive decline. Two participants did not take part in the fMRI session and an additional 4 participants’ fMRI data were removed due to excessive head movement, resulting in a total of 46 participants (39 females, mean age=69.08yrs, SD=3.58) for the fMRI session and 52 participants (40 females, mean age=69.12yrs, SD=3.52) for the EEG session. Prior to the experiment, all participants were provided with written informed consent. All participants received monetary compensation after each session. Ethical approval was obtained from the Human Subjects Ethics Application Committee at the Hong Kong Polytechnic University (application number HSEARS20210302001). This study was performed in accordance with the Declaration of Helsinki and all other regulations set by the Ethics Committee.</p>
@@ -1203,8 +1201,8 @@ rejection of artifacts, including signal noise from eye and muscle, high-amplitu
 <li><p class="sd-card-text">The 20 yes/no quiz questions were employed in both the fMRI and EEG experiments</p></li>
 </ol>
 <p class="sd-card-text"><strong>Usage Note</strong></p>
-<p class="sd-card-text">If you want to know more about the dataset, please refer to our paper “Le Petit Prince Hong Kong (LPPHK): Naturalistic fMRI and EEG Data from Older Cantonese Speakers”, <a class="reference external" href="https://doi.org/10.1101/2024.04.24.590842">https://doi.org/10.1101/2024.04.24.590842</a>
-This dataset is still under maintenance.</p>
+<p class="sd-card-text">If you want to know more about the dataset, please refer to our paper “Le Petit Prince Hong Kong (LPPHK): Naturalistic fMRI and EEG Data from Older Cantonese Speakers”, <a class="reference external" href="https://doi.org/10.1101/2024.04.24.590842">https://doi.org/10.1101/2024.04.24.590842</a></p>
+<p class="sd-card-text">This dataset is still under maintenance.</p>
 <p class="sd-card-text"><strong>Contact</strong></p>
 <p class="sd-card-text">For any question regarding this data, please contact:
 1. Dr. Mohammad Momenian, <a class="reference external" href="mailto:momenian&#37;&#52;&#48;hku&#46;hk">momenian<span>&#64;</span>hku<span>&#46;</span>hk</a>
@@ -1224,9 +1222,9 @@ This dataset is still under maintenance.</p>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Subjects &amp; recordings</div>
 <ul class="simple">
-<li><p class="sd-card-text">Subjects: 51</p></li>
-<li><p class="sd-card-text">Recordings: 51</p></li>
-<li><p class="sd-card-text">Tasks: 1</p></li>
+<li><p class="sd-card-text">Subjects: 52</p></li>
+<li><p class="sd-card-text">Recordings: 758</p></li>
+<li><p class="sd-card-text">Tasks: 2</p></li>
 </ul>
 </div>
 </div>
@@ -1263,8 +1261,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 109.0 GB</p></li>
-<li><p class="sd-card-text">File count: 51</p></li>
+<li><p class="sd-card-text">Size on disk: 37.0 GB</p></li>
+<li><p class="sd-card-text">File count: 758</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

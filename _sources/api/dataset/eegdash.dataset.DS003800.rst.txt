@@ -7,11 +7,11 @@ eegdash.dataset.DS003800
 
 Auditory Gamma Entrainment (OpenNeuro ``ds003800``). Access recordings and metadata through EEGDash.
 
-**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (—). *Auditory Gamma Entrainment*. `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
+**Citation:** Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (2021). *Auditory Gamma Entrainment*. `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 118`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory Gamma Entrainment
    * - Year
-     - —
+     - 2021
    * - Authors
      - Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003800>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003800>`__ | `Source URL <https://openneuro.org/datasets/ds003800>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003800>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003800>`__ | `Source URL <https://openneuro.org/datasets/ds003800/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,15 +68,19 @@ Description
 -----------
 
 > Introduction
-This experiment was designed to entrain the brain oscillations through synthetic auditory stimulation conducted on a group of elderly suffering from dementia. Recently, gamma entrainment has been proposed and shown effective in improving several symptoms of Alzheimer's Diseases (AD). The aim of this study is to investigate the effect of entrainment on brain oscillations using EEG signal recording during the auditory brain stimulation.
+This experiment was designed to entrain the brain oscillations through synthetic auditory stimulation conducted on a group of elderly suffering from dementia. Recently, gamma entrainment has been proposed and shown effective in improving several symptoms of Alzheimer's Diseases (AD). The aim of this study is to investigate the effect of entrainment on brain oscillations using EEG signal recording during the auditory brain stimulation. 
 This study was approved by the Review Board of Tehran University of Medical Sciences (Approval ID: IR.TUMS.MEDICINE.REC.1398.524) and all participants provided informed consent before participating and were free to withdraw at any time.
+
 > Rest data
 Before the main task, a one-minute data was recorded with open eyes for measuring raw resting-state potentials. The rest data for participants number 6 and 13 are missing.
+
 > Auditory stimulation
-Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant's ears at a distance of 50cm. The sound intensity was around -40dB within a fixed range for all participants. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for each participant. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of six trials of 40sec stimulus interleaved by five trials of 20sec rest (silence). The entire session resulted in 340sec (6*40+5*20) of recorded EEG signal.
-> EEG recording and preprocessing
-All EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 250Hz, and the impedance of the electrodes was kept under 20kOhm.
+Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant's ears at a distance of 50cm. The sound intensity was around -40dB within a fixed range for all participants. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for each participant. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of six trials of 40sec stimulus interleaved by five trials of 20sec rest (silence). The entire session resulted in 340sec (6*40+5*20) of recorded EEG signal. 
+
+> EEG recording and preprocessing 
+All EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 250Hz, and the impedance of the electrodes was kept under 20kOhm. 
 Data from all the participants were preprocessed identically following Makoto's preprocessing pipeline: Highpass filtering above 1Hz; removal of the line noise; rejecting potential bad channels; interpolating rejected channels; re-referencing data to the average; Artifact Subspace Reconstruction (ASR); re-referencing data to the average again; estimating the brain source activity using independent component analysis (ICA); dipole fitting; rejecting bad dipoles (sources) for further cleaning the data. These preprocessing steps were performed using EEGLab MATLAB toolbox.
+
 > Instructions
 During the experiment, participants were seated comfortably with open eyes in a quiet room. They were instructed to relax their body to avoid muscle artifacts and move their head as little as possible.
 
@@ -90,7 +94,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 13
-      - Recordings: 24
+      - Recordings: 118
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,8 +114,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 363.8 MB
-      - File count: 24
+      - Size on disk: 189.3 MB
+      - File count: 118
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005415
 
 Numbers (OpenNeuro ``ds005415``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexander P. Rockhill, Ahmed M. Raslan (—). *Numbers*. `10.18112/openneuro.ds005415.v1.0.0 <https://doi.org/10.18112/openneuro.ds005415.v1.0.0>`__
+**Citation:** Alexander P. Rockhill, Ahmed M. Raslan (2024). *Numbers*. `10.18112/openneuro.ds005415.v1.0.0 <https://doi.org/10.18112/openneuro.ds005415.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 13`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 133`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Numbers
    * - Year
-     - —
+     - 2024
    * - Authors
      - Alexander P. Rockhill, Ahmed M. Raslan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005415.v1.0.0 <https://doi.org/10.18112/openneuro.ds005415.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005415>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005415>`__ | `Source URL <https://openneuro.org/datasets/ds005415>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005415>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005415>`__ | `Source URL <https://openneuro.org/datasets/ds005415/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 13
-      - Recordings: 13
+      - Recordings: 133
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 13.5 GB
-      - File count: 13
+      - Size on disk: 7.5 GB
+      - File count: 133
       - Format: BIDS
 
    .. grid-item-card:: License & citation

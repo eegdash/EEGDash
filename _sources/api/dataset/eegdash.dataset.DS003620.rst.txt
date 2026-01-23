@@ -7,11 +7,11 @@ eegdash.dataset.DS003620
 
 Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions (OpenNeuro ``ds003620``). Access recordings and metadata through EEGDash.
 
-**Citation:** Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (20). *Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions*. `10.18112/openneuro.ds003620.v1.1.1 <https://doi.org/10.18112/openneuro.ds003620.v1.1.1>`__
+**Citation:** Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (2021). *Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions*. `10.18112/openneuro.ds003620.v1.1.1 <https://doi.org/10.18112/openneuro.ds003620.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 44` :bdg-secondary:`Recordings: 100`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 44` :bdg-secondary:`Recordings: 370`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003620.v1.1.1 <https://doi.org/10.18112/openneuro.ds003620.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003620>`__ | `Source URL <https://openneuro.org/datasets/ds003620>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003620>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003620>`__ | `Source URL <https://openneuro.org/datasets/ds003620/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **Overview**
 
+
 This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
+
 All preprocessing and analysis code is deposited in the `code` directory. The entire MATLAB pipeline can be reproduced by executing the `run_pipeline.m` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt `def_local.m` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the `stat_analysis.R` script.
+
 See below for software details.
 
-**Citing this dataset**
-
-In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,44 +84,65 @@ In addition to citing this dataset, please cite the original manuscript reportin
    
    **Overview**
    
+   
    This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
+   
    All preprocessing and analysis code is deposited in the `code` directory. The entire MATLAB pipeline can be reproduced by executing the `run_pipeline.m` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt `def_local.m` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the `stat_analysis.R` script.
+   
    See below for software details.
    
+   
    **Citing this dataset**
+   
    
    In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.
    For more information, see the `dataset_description.json` file.
    
+   
    **License**
+   
    
    ODC Open Database License (ODbL). For more information, see the `LICENCE` file.
    
+   
    **Format**
    
+   
    Dataset is formatted according to the EEG-BIDS extension (Pernet et al., 2019) and the BIDS extension proposal for common electrophysiological derivatives (BEP021) v0.0.1, which can be found here:
+   
    https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6
+   
    Note that BEP021 is still a work in progress as of 2021-03-01.
+   
    Generally, you can find data in the .tsv files and descriptions in the
    accompanying .json files.
+   
    An important BIDS definition to consider is the "Inheritance Principle" (see 3.5 in the BIDS specification: http://bids.neuroimaging.io/bids_spec.pdf), which states:
+   
    > Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.
+   
    
    **Details about the experiment**
    
-   Forty-four healthy adults aged 18-40 performed an oddball task involving complex tone (piano and horn) stimuli in three settings:
+   
+   Forty-four healthy adults aged 18-40 performed an oddball task involving complex tone (piano and horn) stimuli in three settings: 
    (1) sitting in a quiet room in the lab (LAB);
    (2) walking around a sports field (FIELD);
    (3) navigating a route through a university campus (CAMPUS).
+   
    Participants performed each environmental condition twice: once while attending to oddball stimuli (i.e. counting the number of presented deviant tones; COUNT), and once while disregarding or ignoring the tone stimuli (IGNORE).
+   
    EEG signals were recorded from 32 active electrodes using a Brain Vision LiveAmp 32 amplifier. See manuscript for further details.
    
+   
    **MATLAB software details**
+   
    
    MATLAB Version: 9.7.0.1319299 (R2019b) Update 5
    MATLAB License Number: 678256
    Operating System: Microsoft Windows 10 Enterprise Version 10.0 (Build 18363)
    Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+   
    * MATLAB (v9.7)
    * Simulink (v10.0)
    * Curve Fitting Toolbox (v3.5.10)
@@ -134,7 +155,9 @@ In addition to citing this dataset, please cite the original manuscript reportin
    * Statistics and Machine Learning Toolbox (v11.6)
    * Symbolic Math Toolbox (v8.4)
    * Wavelet Toolbox (v5.3)
+   
    **The following toolboxes/helper functions were also used:**
+   
    * EEGLAB (v2019.1)
    * ERPLAB (v8.10)
    * ICLabel (v1.3)
@@ -145,125 +168,135 @@ In addition to citing this dataset, please cite the original manuscript reportin
    * export_fig (v3.12)
    * ColorBrewer (v3.1.0)
    
+   
    **R software details**
    
+   
    **R version 3.6.2 (2019-12-12)**
-   **Platform:** x86_64-w64-mingw32/x64 (64-bit)
+   
+   **Platform:** x86_64-w64-mingw32/x64 (64-bit) 
+   
    **locale:**
    _LC_COLLATE=English_Australia.1252_, _LC_CTYPE=English_Australia.1252_, _LC_MONETARY=English_Australia.1252_, _LC_NUMERIC=C_ and _LC_TIME=English_Australia.1252_
-   **attached base packages:**
-   * stats
-   * graphics
-   * grDevices
-   * utils
-   * datasets
-   * methods
-   * base
-   **other attached packages:**
-   * sjPlot(v.2.8.7)
-   * emmeans(v.1.5.1)
-   * car(v.3.0-10)
-   * carData(v.3.0-4)
-   * lme4(v.1.1-23)
-   * Matrix(v.1.2-18)
-   * data.table(v.1.13.0)
-   * forcats(v.0.5.0)
-   * stringr(v.1.4.0)
-   * dplyr(v.1.0.2)
-   * purrr(v.0.3.4)
-   * readr(v.1.4.0)
-   * tidyr(v.1.1.2)
-   * tibble(v.3.0.4)
-   * ggplot2(v.3.3.2)
-   * tidyverse(v.1.3.0)
-   **loaded via a namespace (and not attached):**
-   * nlme(v.3.1-149)
-   * pbkrtest(v.0.4-8.6)
-   * fs(v.1.5.0)
-   * lubridate(v.1.7.9)
-   * insight(v.0.12.0)
-   * httr(v.1.4.2)
-   * numDeriv(v.2016.8-1.1)
-   * tools(v.3.6.2)
-   * backports(v.1.1.10)
-   * utf8(v.1.1.4)
-   * R6(v.2.4.1)
-   * sjlabelled(v.1.1.7)
-   * DBI(v.1.1.0)
-   * colorspace(v.1.4-1)
-   * withr(v.2.3.0)
-   * tidyselect(v.1.1.0)
-   * curl(v.4.3)
-   * compiler(v.3.6.2)
-   * performance(v.0.5.0)
-   * cli(v.2.1.0)
-   * rvest(v.0.3.6)
-   * xml2(v.1.3.2)
-   * sandwich(v.3.0-0)
-   * labeling(v.0.3)
-   * bayestestR(v.0.7.2)
-   * scales(v.1.1.1)
-   * mvtnorm(v.1.1-1)
-   * digest(v.0.6.25)
-   * foreign(v.0.8-76)
-   * minqa(v.1.2.4)
-   * rio(v.0.5.16)
-   * pkgconfig(v.2.0.3)
-   * dbplyr(v.1.4.4)
-   * rlang(v.0.4.8)
-   * readxl(v.1.3.1)
-   * rstudioapi(v.0.11)
-   * farver(v.2.0.3)
-   * generics(v.0.0.2)
-   * zoo(v.1.8-8)
-   * jsonlite(v.1.7.1)
-   * zip(v.2.1.1)
-   * magrittr(v.1.5)
-   * parameters(v.0.8.6)
-   * Rcpp(v.1.0.5)
-   * munsell(v.0.5.0)
-   * fansi(v.0.4.1)
-   * abind(v.1.4-5)
-   * lifecycle(v.0.2.0)
-   * stringi(v.1.4.6)
-   * multcomp(v.1.4-14)
-   * MASS(v.7.3-53)
-   * plyr(v.1.8.6)
-   * grid(v.3.6.2)
-   * blob(v.1.2.1)
-   * parallel(v.3.6.2)
-   * sjmisc(v.2.8.6)
-   * crayon(v.1.3.4)
-   * lattice(v.0.20-41)
-   * ggeffects(v.0.16.0)
-   * haven(v.2.3.1)
-   * splines(v.3.6.2)
-   * pander(v.0.6.3)
-   * sjstats(v.0.18.1)
-   * hms(v.0.5.3)
-   * knitr(v.1.30)
-   * pillar(v.1.4.6)
-   * boot(v.1.3-25)
-   * estimability(v.1.3)
-   * effectsize(v.0.3.3)
-   * codetools(v.0.2-16)
-   * reprex(v.0.3.0)
-   * glue(v.1.4.2)
-   * modelr(v.0.1.8)
-   * vctrs(v.0.3.4)
-   * nloptr(v.1.2.2.2)
-   * cellranger(v.1.1.0)
-   * gtable(v.0.3.0)
-   * assertthat(v.0.2.1)
-   * xfun(v.0.18)
-   * openxlsx(v.4.2.2)
-   * xtable(v.1.8-4)
-   * broom(v.0.7.1)
-   * coda(v.0.19-4)
-   * survival(v.3.2-7)
-   * lmerTest(v.3.1-3)
-   * statmod(v.1.4.34)
-   * TH.data(v.1.0-10)
+   
+   **attached base packages:** 
+   
+   * stats 
+   * graphics 
+   * grDevices 
+   * utils 
+   * datasets 
+   * methods 
+   * base 
+   
+   **other attached packages:** 
+   
+   * sjPlot(v.2.8.7) 
+   * emmeans(v.1.5.1) 
+   * car(v.3.0-10) 
+   * carData(v.3.0-4) 
+   * lme4(v.1.1-23) 
+   * Matrix(v.1.2-18) 
+   * data.table(v.1.13.0) 
+   * forcats(v.0.5.0) 
+   * stringr(v.1.4.0) 
+   * dplyr(v.1.0.2) 
+   * purrr(v.0.3.4) 
+   * readr(v.1.4.0) 
+   * tidyr(v.1.1.2) 
+   * tibble(v.3.0.4) 
+   * ggplot2(v.3.3.2) 
+   * tidyverse(v.1.3.0) 
+   
+   **loaded via a namespace (and not attached):** 
+   
+   * nlme(v.3.1-149) 
+   * pbkrtest(v.0.4-8.6) 
+   * fs(v.1.5.0) 
+   * lubridate(v.1.7.9) 
+   * insight(v.0.12.0) 
+   * httr(v.1.4.2) 
+   * numDeriv(v.2016.8-1.1) 
+   * tools(v.3.6.2) 
+   * backports(v.1.1.10) 
+   * utf8(v.1.1.4) 
+   * R6(v.2.4.1) 
+   * sjlabelled(v.1.1.7) 
+   * DBI(v.1.1.0) 
+   * colorspace(v.1.4-1) 
+   * withr(v.2.3.0) 
+   * tidyselect(v.1.1.0) 
+   * curl(v.4.3) 
+   * compiler(v.3.6.2) 
+   * performance(v.0.5.0) 
+   * cli(v.2.1.0) 
+   * rvest(v.0.3.6) 
+   * xml2(v.1.3.2) 
+   * sandwich(v.3.0-0) 
+   * labeling(v.0.3) 
+   * bayestestR(v.0.7.2) 
+   * scales(v.1.1.1) 
+   * mvtnorm(v.1.1-1) 
+   * digest(v.0.6.25) 
+   * foreign(v.0.8-76) 
+   * minqa(v.1.2.4) 
+   * rio(v.0.5.16) 
+   * pkgconfig(v.2.0.3) 
+   * dbplyr(v.1.4.4) 
+   * rlang(v.0.4.8) 
+   * readxl(v.1.3.1) 
+   * rstudioapi(v.0.11) 
+   * farver(v.2.0.3) 
+   * generics(v.0.0.2) 
+   * zoo(v.1.8-8) 
+   * jsonlite(v.1.7.1) 
+   * zip(v.2.1.1) 
+   * magrittr(v.1.5) 
+   * parameters(v.0.8.6) 
+   * Rcpp(v.1.0.5) 
+   * munsell(v.0.5.0) 
+   * fansi(v.0.4.1) 
+   * abind(v.1.4-5) 
+   * lifecycle(v.0.2.0) 
+   * stringi(v.1.4.6) 
+   * multcomp(v.1.4-14) 
+   * MASS(v.7.3-53) 
+   * plyr(v.1.8.6) 
+   * grid(v.3.6.2) 
+   * blob(v.1.2.1) 
+   * parallel(v.3.6.2) 
+   * sjmisc(v.2.8.6) 
+   * crayon(v.1.3.4) 
+   * lattice(v.0.20-41) 
+   * ggeffects(v.0.16.0) 
+   * haven(v.2.3.1) 
+   * splines(v.3.6.2) 
+   * pander(v.0.6.3) 
+   * sjstats(v.0.18.1) 
+   * hms(v.0.5.3) 
+   * knitr(v.1.30) 
+   * pillar(v.1.4.6) 
+   * boot(v.1.3-25) 
+   * estimability(v.1.3) 
+   * effectsize(v.0.3.3) 
+   * codetools(v.0.2-16) 
+   * reprex(v.0.3.0) 
+   * glue(v.1.4.2) 
+   * modelr(v.0.1.8) 
+   * vctrs(v.0.3.4) 
+   * nloptr(v.1.2.2.2) 
+   * cellranger(v.1.1.0) 
+   * gtable(v.0.3.0) 
+   * assertthat(v.0.2.1) 
+   * xfun(v.0.18) 
+   * openxlsx(v.4.2.2) 
+   * xtable(v.1.8-4) 
+   * broom(v.0.7.1) 
+   * coda(v.0.19-4) 
+   * survival(v.3.2-7) 
+   * lmerTest(v.3.1-3) 
+   * statmod(v.1.4.34) 
+   * TH.data(v.1.0-10) 
    * ellipsis(v.0.3.1)
 
 
@@ -277,7 +310,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 44
-      - Recordings: 100
+      - Recordings: 370
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -297,8 +330,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 89.4 GB
-      - File count: 100
+      - Size on disk: 17.0 GB
+      - File count: 370
       - Format: BIDS
 
    .. grid-item-card:: License & citation

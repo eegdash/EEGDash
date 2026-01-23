@@ -7,11 +7,11 @@ eegdash.dataset.DS003822
 
 EEG: Probabilistic Learning with Affective Feedback: Exp #1 (OpenNeuro ``ds003822``). Access recordings and metadata through EEGDash.
 
-**Citation:** Darin R. Brown, Trevor Jackson, James F Cavanagh (20). *EEG: Probabilistic Learning with Affective Feedback: Exp #1*. `10.18112/openneuro.ds003822.v1.1.0 <https://doi.org/10.18112/openneuro.ds003822.v1.1.0>`__
+**Citation:** Darin R. Brown, Trevor Jackson, James F Cavanagh (2021). *EEG: Probabilistic Learning with Affective Feedback: Exp #1*. `10.18112/openneuro.ds003822.v1.1.0 <https://doi.org/10.18112/openneuro.ds003822.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 25`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 259`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Probabilistic Learning with Affective Feedback: Exp #1
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Darin R. Brown, Trevor Jackson, James F Cavanagh
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003822.v1.1.0 <https://doi.org/10.18112/openneuro.ds003822.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003822>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003822>`__ | `Source URL <https://openneuro.org/datasets/ds003822>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003822>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003822>`__ | `Source URL <https://openneuro.org/datasets/ds003822/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 25
+      - Recordings: 259
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 5.8 GB
-      - File count: 25
+      - File count: 259
       - Format: BIDS
 
    .. grid-item-card:: License & citation

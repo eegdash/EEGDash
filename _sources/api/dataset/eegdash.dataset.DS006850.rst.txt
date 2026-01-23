@@ -7,11 +7,11 @@ eegdash.dataset.DS006850
 
 Urban Appraisal: Physiological Recording during Rating of Different Urban Environments (OpenNeuro ``ds006850``). Access recordings and metadata through EEGDash.
 
-**Citation:** Carolina Zaehme, Isabelle Sander, Klaus Gramann (20). *Urban Appraisal: Physiological Recording during Rating of Different Urban Environments*. `10.18112/openneuro.ds006850.v1.0.0 <https://doi.org/10.18112/openneuro.ds006850.v1.0.0>`__
+**Citation:** Carolina Zaehme, Isabelle Sander, Klaus Gramann (2025). *Urban Appraisal: Physiological Recording during Rating of Different Urban Environments*. `10.18112/openneuro.ds006850.v1.0.0 <https://doi.org/10.18112/openneuro.ds006850.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 63` :bdg-secondary:`Recordings: 126`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 63` :bdg-secondary:`Recordings: 951`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Urban Appraisal: Physiological Recording during Rating of Different Urban Environments
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Carolina Zaehme, Isabelle Sander, Klaus Gramann
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006850.v1.0.0 <https://doi.org/10.18112/openneuro.ds006850.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006850>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006850>`__ | `Source URL <https://openneuro.org/datasets/ds006850>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006850>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006850>`__ | `Source URL <https://openneuro.org/datasets/ds006850/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **README**
 
 
+
 **Details related to access to the data**
 
+
 - [ ] Data user agreement
-The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`__ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
-Please ensure compliance with any applicable ethical and institutional guidelines.
-Ethical approval for the data collection was obtained from the Ethics Board of the Institute of Psychology and Ergonomics at Technische Universität Berlin (ethics protocol BPN_GRA_230,415).
+
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,84 +85,134 @@ Ethical approval for the data collection was obtained from the Ethics Board of t
    **README**
    
    
+   
    **Details related to access to the data**
    
+   
    - [ ] Data user agreement
+   
    The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`__ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
+   
    Please ensure compliance with any applicable ethical and institutional guidelines.
    Ethical approval for the data collection was obtained from the Ethics Board of the Institute of Psychology and Ergonomics at Technische Universität Berlin (ethics protocol BPN_GRA_230,415).
+   
    - [ ] Contact person
+   
    Isabelle Sander
    isabelle.sander@tu-berlin.de
    ORCID: 0009-0006-0304-7690
+   
    - [ ] Practical information to access the data
+   
    NA
+   
    
    **Overview**
    
+   
    - [ ] Project name (if relevant)
+   
    Urban Appraisal
+   
    - [ ] Year(s) that the project ran
-   Data was collected between April and July 2024.
+   
+   Data was collected between April and July 2024. 
+   
    - [ ] Brief overview of the tasks in the experiment
+   
    The data was recorded to investigate the influence of different urban environments and their elements on urban appraisals and neural responses.
    Participants were presented with and rated Streetview images of different urban environments on a desktop PC.
+   
    - [ ] Description of the contents of the dataset
-   Continuous EEG, ECG and EDA (GSR) Data from 63 participants. The data is separated into two block, during which participants took a break.
-   ECG and EDA data was recorded using ExG amplifier by BrainProducts and is thus included in the eeg datasets as additional channels.
+   
+   Continuous EEG, ECG and EDA (GSR) Data from 63 participants. The data is separated into two block, during which participants took a break. 
+   ECG and EDA data was recorded using ExG amplifier by BrainProducts and is thus included in the eeg datasets as additional channels. 
    Note: While EDA data is labeled as being recorded in microVolts, the actual unit is microSiemens!
+   
+   
    - [ ] Independent variables
+   
    56 different Streetview images (available via github.com/BeMoBIL/urban_appraisal_experiment) being presented in combination with 9 different prompts & scales. Semantic segmentation was used to extract area of images covered by buildings, greenery, cars, sky and people to use as predictors for subjective and neural responses.
+   
    - [ ] Dependent variables
+   
    Stimulus-Onset ERPs (P1, N1 at occipital electrode cluster POz, Oz, O1, and O2 and P3, LPP at parietal cluster CPz, Pz, P3, and P4) as well as subjective ratings on 9 scales.
+   
    - [ ] Control variables
-   Experiment was performed in the same room with the same set up and under the same lighting conditions.
+   
+   Experiment was performed in the same room with the same set up and under the same lighting conditions. 
+   
    - [ ] Quality assessment of the data
+   
    Data is of generally good quality. For used preprocessing steps see publication.
+   
+   
    
    **Methods**
    
    
+   
    **Subjects**
    
+   
    Subjects were recruited from the participant pool of TU Berlin and consisted of students who participated for course credit as well as citizens of Berlin who participated for monetary renumeration. 63 subjects included (age M = 29.16 years, SD = 7.53, range = 19–61 years; 29 male, 33 female, 1 non-binary)
+   
    Remember that `Control` or `Patient` status should be defined in the `participants.tsv`
    using a group column.
    
+   
    **Apparatus**
    
-   Participants were seated. The experiment was presented on a 27” (diagonal) monitor with a 60hz refresh rate at a resolution of 2560x1440p using Psychtoolbox (Brainard, 1997; Kleiner et al., 2007) for MATLAB (The Mathworks Inc., Version 2023b).
-   64-channel EEG data with actively amplified wet electrodes in 10-20 System using FCz as reference.
+   
+   Participants were seated. The experiment was presented on a 27” (diagonal) monitor with a 60hz refresh rate at a resolution of 2560x1440p using Psychtoolbox (Brainard, 1997; Kleiner et al., 2007) for MATLAB (The Mathworks Inc., Version 2023b). 
+   
+   64-channel EEG data with actively amplified wet electrodes in 10-20 System using FCz as reference. 
    ECG data was collected using one electrode at the right clavicle, one the left shinbone.
    EDA data was recorded from middle and ring fingers of the non-dominant hand.
    The data was sampled at 500 Hz with a 16-bit resolution using BrainAmp DC amplifiers from BrainProducts (BrainProducts GmbH, Gilching, Germany) with a 0.016 Hz high-pass filter during data acquisition
    
+   
+   
    **Initial setup**
    
-   Participants signed consent and were then prepped for EEG. Electrodes were gelled and impedances kept under 10 kOhm. Pre-gelled ECG electrodes were applied after skin was shaved and cleaned using alcohol. EDA velcro electrodes were applied and gelled with isotonic gel.
+   
+   Participants signed consent and were then prepped for EEG. Electrodes were gelled and impedances kept under 10 kOhm. Pre-gelled ECG electrodes were applied after skin was shaved and cleaned using alcohol. EDA velcro electrodes were applied and gelled with isotonic gel. 
+   
    
    **Task organization**
    
-   Two sessions (pre and post break): Stimuli were separated into 28 pre and 28 post break. Within blocks, stimulus x scale presentations were randomized.
+   
+   Two sessions (pre and post break): Stimuli were separated into 28 pre and 28 post break. Within blocks, stimulus x scale presentations were randomized. 
+   
    
    **Task details**
    
+   
    During the experiment, participants were presented with different urban stimuli and had to subsequently rate them on the nine subjective rating scales (arousal, valence, dominance, stress, openness, safety, beauty, hominess, and fascination). Each of the 56 stimuli were rated on each of the nine scales resulting in 504 trials. The stimulus-scale combinations were randomized individually for each participant and presented across two blocks of 28 stimuli each, separated by a break. Each experimental trial consisted of participants being presented with a word pair for 1000ms priming them to the scale they would be presented with (arousal: excited – calm; valence: happy – unhappy; dominance: controlled – in control; stress: relaxed – stressful; openness: narrow – open; safety: unsafe – safe; beauty: ugly – beautiful; hominess: alienated – at home; fascination: boring – fascinating). Subsequently, a fixation cross appeared for 500ms, followed by a stimulus for 3000ms. After the stimulus disappeared, the rating scale was presented until participants logged a rating using the computer mouse. At the beginning and end of the experiment there was a 3 min baseline recording in which participants kept their eyes open and looking at the screen.
+   
    
    **Additional data acquired**
    
-   Subjective rating data on the 9 scales per stimulus as well as sociodemographic data of participants (extraversion, emotional stability, size of the city they spent the first 15 years of their life in) was also collected. This data is also available under TBA.
+   
+   Subjective rating data on the 9 scales per stimulus as well as sociodemographic data of participants (extraversion, emotional stability, size of the city they spent the first 15 years of their life in) was also collected. This data is also available under TBA. 
    Stimuli used are available under TBA.
+   
+   
    
    **Experimental location**
    
+   
    Small Lab in BeMoBIL at TU Berlin
+   
    
    **Missing data**
    
+   
    NA
    
+   
    **Notes**
+   
    
    Data was recorded by Carolina Zähme, Kim Aljoscha Bressem and Isabelle Sander.
 
@@ -177,7 +227,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 63
-      - Recordings: 126
+      - Recordings: 951
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -198,7 +248,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 34.7 GB
-      - File count: 126
+      - File count: 951
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005692
 
 SpinalExpect_NonInvasive (OpenNeuro ``ds005692``). Access recordings and metadata through EEGDash.
 
-**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2022). *SpinalExpect_NonInvasive*. `10.18112/openneuro.ds005692.v1.0.0 <https://doi.org/10.18112/openneuro.ds005692.v1.0.0>`__
+**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2024). *SpinalExpect_NonInvasive*. `10.18112/openneuro.ds005692.v1.0.0 <https://doi.org/10.18112/openneuro.ds005692.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 59`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 417`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SpinalExpect_NonInvasive
    * - Year
-     - 2022
+     - 2024
    * - Authors
      - Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen
    * - License
@@ -86,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 59
+      - Recordings: 417
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 92.8 GB
-      - File count: 59
+      - File count: 417
       - Format: BIDS
 
    .. grid-item-card:: License & citation

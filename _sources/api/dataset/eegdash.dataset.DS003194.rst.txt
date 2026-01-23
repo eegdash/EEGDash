@@ -7,11 +7,11 @@ eegdash.dataset.DS003194
 
 Neuroepo multisession (OpenNeuro ``ds003194``). Access recordings and metadata through EEGDash.
 
-**Citation:** Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2019). *Neuroepo multisession*. `10.18112/openneuro.ds003194.v1.0.3 <https://doi.org/10.18112/openneuro.ds003194.v1.0.3>`__
+**Citation:** Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). *Neuroepo multisession*. `10.18112/openneuro.ds003194.v1.0.4 <https://doi.org/10.18112/openneuro.ds003194.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 29`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 149`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Neuroepo multisession
    * - Year
-     - 2019
+     - 2020
    * - Authors
      - Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003194.v1.0.3 <https://doi.org/10.18112/openneuro.ds003194.v1.0.3>`__
+     - `doi:10.18112/openneuro.ds003194.v1.0.4 <https://doi.org/10.18112/openneuro.ds003194.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003194>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003194>`__ | `Source URL <https://openneuro.org/datasets/ds003194>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003194>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003194>`__ | `Source URL <https://openneuro.org/datasets/ds003194/versions/1.0.4>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003194,
         title = {Neuroepo multisession},
         author = {Maria Luisa Bringas Vega and Lilia Morales Chacon and Ivonne Pedroso Ibanez},
-        doi = {10.18112/openneuro.ds003194.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds003194.v1.0.3},
+        doi = {10.18112/openneuro.ds003194.v1.0.4},
+        url = {https://doi.org/10.18112/openneuro.ds003194.v1.0.4},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -67,7 +67,7 @@ Dataset Information
 Description
 -----------
 
-The quest for neuroprotection in Parkinson’s disease (PD) has been for new compounds to slow disease progression and stable and non-invasive biomarkers to document their benefits. Neuroepo, a new formulation of EPO with low content of sialic acid reported good results in animal model and tolerance in healthy participants and PD patients.
+The quest for neuroprotection in Parkinson’s disease (PD) has been for new compounds to slow disease progression and stable and non-invasive biomarkers to document their benefits. Neuroepo, a new formulation of EPO with low content of sialic acid reported good results in animal model and tolerance in healthy participants and PD patients. 
 In a double-blind randomized placebo (https://clinicaltrials.gov/ number NCT04110678) twenty-five PD patients were assigned randomly to Neuroepo (n=15) or placebo (n=10) groups we reported the tolerance of the drug. We recorded resting-state EEG before and six months after the administration of the drug. The qualitative analysis of the abnormalities of the EEG was evaluated by two experts using a Likert-type scale and a multivariate item response theory (MIRT) approach was employed to establish the differences between groups in the two times. The quantitative EEG (qEEG) analysis was performed at the sources looking for generators of the neural activity using software VARETA and co-registering the results using the Montreal Neurological Institute Atlas. The statistical analysis between the sources was conducted using a permutation test and later a contrast method using the surfstat software between groups and before vs after condition, with Bonferroni correction for multiple comparisons.
 Here in this repository, we placed the raw EEG in BIDS format  (Pernet, C. R. et al. EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Sci. data 6, 103 (2019). For the use of VARETA the qEEG program you can use (Bosch-Bayard, J. et al. A Quantitative EEG Toolbox for the MNI Neuroinformatics Ecosystem: Normative SPM of EEG Source Spectra. Front. Neuroinform. 14, (2020).)
 The EEG dataset from the different stages of processing can be requested to the authors.
@@ -82,7 +82,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 15
-      - Recordings: 29
+      - Recordings: 149
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -102,15 +102,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 189.3 MB
-      - File count: 29
+      - Size on disk: 189.1 MB
+      - File count: 149
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003194.v1.0.3
+      - DOI: doi:10.18112/openneuro.ds003194.v1.0.4
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

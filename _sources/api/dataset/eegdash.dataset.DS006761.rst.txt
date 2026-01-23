@@ -11,7 +11,7 @@ Neural decoding of competitive decision-making in Rock-Paper-Scissors (OpenNeuro
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 31`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 129`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006761.v1.0.0 <https://doi.org/10.18112/openneuro.ds006761.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006761>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006761>`__ | `Source URL <https://openneuro.org/datasets/ds006761>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006761>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006761>`__ | `Source URL <https://openneuro.org/datasets/ds006761/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,15 @@ Description
 -----------
 
 Experiment Details
+
 Participants played a computerised version of the competitive Rock-Paper-Scissors game (480 games). We recorded 64 channel EEG from 62 participants, grouped into 31 pairs.
+
 Experiment length: 1 hour
-More information:
+
+More information: 
+
 https://doi.org/10.17605/OSF.IO/YJXKN (OSF repository with more information and analysis code)
+
 Moerel, D., Grootswagers, T., Chin, J. L., Ciardo, F., Nijhuis, P., Quek, G. L., Smit, S. & Varlet, M. (2025). Neural decoding of competitive decision-making in Rock-Paper-Scissors. Social Cognitive And Affective Neuroscience, nsaf101. doi: https://doi.org/10.1093/scan/nsaf101
 
 Highlights
@@ -84,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 31
-      - Recordings: 31
+      - Recordings: 129
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +110,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 78.0 GB
-      - File count: 31
+      - File count: 129
       - Format: BIDS
 
    .. grid-item-card:: License & citation

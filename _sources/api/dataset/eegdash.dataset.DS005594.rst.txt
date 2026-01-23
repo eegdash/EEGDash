@@ -11,7 +11,7 @@ Alphabetic Decision Task (Arial Light Font) (OpenNeuro ``ds005594``). Access rec
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 16`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 133`
 
 .. rst-class:: sd-badges
 
@@ -94,7 +94,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 16
-      - Recordings: 16
+      - Recordings: 133
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -115,7 +115,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 10.9 GB
-      - File count: 16
+      - File count: 133
       - Format: BIDS
 
    .. grid-item-card:: License & citation

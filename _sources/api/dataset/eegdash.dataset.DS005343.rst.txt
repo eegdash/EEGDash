@@ -7,11 +7,11 @@ eegdash.dataset.DS005343
 
 Gaffrey Lab Infant Microstates and Attention (OpenNeuro ``ds005343``). Access recordings and metadata through EEGDash.
 
-**Citation:** Armen Bagdasarov, Michael S. Gaffrey (—). *Gaffrey Lab Infant Microstates and Attention*. `10.18112/openneuro.ds005343.v1.0.0 <https://doi.org/10.18112/openneuro.ds005343.v1.0.0>`__
+**Citation:** Armen Bagdasarov, Michael S. Gaffrey (2024). *Gaffrey Lab Infant Microstates and Attention*. `10.18112/openneuro.ds005343.v1.0.0 <https://doi.org/10.18112/openneuro.ds005343.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 43`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 264`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Gaffrey Lab Infant Microstates and Attention
    * - Year
-     - —
+     - 2024
    * - Authors
      - Armen Bagdasarov, Michael S. Gaffrey
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005343.v1.0.0 <https://doi.org/10.18112/openneuro.ds005343.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005343>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005343>`__ | `Source URL <https://openneuro.org/datasets/ds005343>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005343>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005343>`__ | `Source URL <https://openneuro.org/datasets/ds005343/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 43
-      - Recordings: 43
+      - Recordings: 264
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 26.5 GB
-      - File count: 43
+      - Size on disk: 22.7 GB
+      - File count: 264
       - Format: BIDS
 
    .. grid-item-card:: License & citation

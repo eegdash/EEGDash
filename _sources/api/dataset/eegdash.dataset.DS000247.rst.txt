@@ -7,11 +7,11 @@ eegdash.dataset.DS000247
 
 MEG-BIDS OMEGA RestingState_sample (OpenNeuro ``ds000247``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2016). *MEG-BIDS OMEGA RestingState_sample*. `10.18112/openneuro.ds000247.v1.0.2 <https://doi.org/10.18112/openneuro.ds000247.v1.0.2>`__
+**Citation:** Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2018). *MEG-BIDS OMEGA RestingState_sample*. `10.18112/openneuro.ds000247.v1.0.2 <https://doi.org/10.18112/openneuro.ds000247.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 10`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 190`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEG-BIDS OMEGA RestingState_sample
    * - Year
-     - 2016
+     - 2018
    * - Authors
      - Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds000247.v1.0.2 <https://doi.org/10.18112/openneuro.ds000247.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds000247>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000247>`__ | `Source URL <https://openneuro.org/datasets/ds000247>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds000247>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000247>`__ | `Source URL <https://openneuro.org/datasets/ds000247/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,11 +71,11 @@ Description
 **OMEGA - Resting State Sample Dataset**
 
 
+
 **License**
 
+
 - This dataset was obtained from **The Open MEG Archive** (OMEGA, https://omega.bic.mni.mcgill.ca).
-- You are free to use all data in OMEGA for research purposes; please acknowledge its authors and cite the following reference in your publications if you have used data from OMEGA:
-- Niso G., Rogers C., Moreau J.T., Chen L.Y., Madjar C., Das S., Bock E., Tadel F., Evans A.C., Jolicoeur P.,  Baillet S. (2016). OMEGA: The Open MEG Archive. NeuroImage 124, 1182-1187. doi:  https://doi.org/10.1016/j.neuroimage.2015.04.028. OMEGA is available at: https://omega.bic.mni.mcgill.ca
 
 
 .. dropdown:: View full README
@@ -85,17 +85,28 @@ Description
    **OMEGA - Resting State Sample Dataset**
    
    
+   
    **License**
    
+   
    - This dataset was obtained from **The Open MEG Archive** (OMEGA, https://omega.bic.mni.mcgill.ca).
-   - You are free to use all data in OMEGA for research purposes; please acknowledge its authors and cite the following reference in your publications if you have used data from OMEGA:
+   
+   - You are free to use all data in OMEGA for research purposes; please acknowledge its authors and cite the following reference in your publications if you have used data from OMEGA: 
+   
    - Niso G., Rogers C., Moreau J.T., Chen L.Y., Madjar C., Das S., Bock E., Tadel F., Evans A.C., Jolicoeur P.,  Baillet S. (2016). OMEGA: The Open MEG Archive. NeuroImage 124, 1182-1187. doi:  https://doi.org/10.1016/j.neuroimage.2015.04.028. OMEGA is available at: https://omega.bic.mni.mcgill.ca
+   
+   
    
    **Description**
    
+    
+   
    **Experiment**
-   - 5 subjects x 5 minute resting sessions, eyes open
+   
+   - 5 subjects x 5 minute resting sessions, eyes open 
+   
    **MEG acquisition**
+   
    - Recorded at the Montreal Neurological Institute in 2012-2016
    - Acquisition with CTF 275 MEG system at 2400Hz sampling rate
    - Anti-aliasing low-pass filter at 600Hz, files may be saved with or without the CTF 3rd order gradient compensation
@@ -104,20 +115,31 @@ Description
      * 270 MEG axial gradiometers (#28-#297)
      * 1 ECG bipolar (EEG057/#298) - Not available in the empty room recordings
      * 1 vertical EOG bipolar (EEG058/#299) - Not available in the empty room recordings
-     * 1 horizontal EOG bipolar (EEG059/#300) - Not available in the empty room recordings
+     * 1 horizontal EOG bipolar (EEG059/#300) - Not available in the empty room recordings 
+   
    **Head shape and fiducial points**
+   
    - 3D digitization using a Polhemus Fastrak device driven by Brainstorm. The .pos files contain:
      * The center of the CTF coils
      * The anatomical references we use in Brainstorm: nasion and ears as illustrated here
-     * Around 100 head points distributed on the hard parts of the head (no soft tissues).
+     * Around 100 head points distributed on the hard parts of the head (no soft tissues). 
+   
    **Subject anatomy**
+   
    - Structural T1 image (defaced for anonymization purposes)
    - Processed with FreeSurfer 5.3
-   - The anatomical fiducials (NAS, LPA, RPA) have already been marked and saved in the files fiducials.m
+   - The anatomical fiducials (NAS, LPA, RPA) have already been marked and saved in the files fiducials.m 
+   
+   
    **BIDS**
+   
    - The data in this dataset has been organized according to the MEG-BIDS specification (Brain Imaging Data Structure, http://bids.neuroimaging.io) (Niso et al. 2018)
+   
    - Niso G., Gorgolewski K.J., Bock E., Brooks T.L., Flandin G., Gramfort A., Henson R.N., Jas M., Litvak V., Moreau J., Oostenveld R., Schoffelen J.M., Tadel F., Wexler J., Baillet S. (2018). MEG-BIDS: an extension to the Brain Imaging Data Structure for magnetoencephalography. Scientific Data; 5, 180110. https://doi.org/10.1038/sdata.2018.110
+   
+   
    **Release history:**
+   
    - 2016-12-01: initial release
    - 2018-07-18: release OpenNeuro ds000247 (00001 and 00002)
 
@@ -131,8 +153,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 6
-      - Recordings: 10
+      - Subjects: 5
+      - Recordings: 190
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -152,8 +174,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.5 GB
-      - File count: 10
+      - Size on disk: 10.3 GB
+      - File count: 190
       - Format: BIDS
 
    .. grid-item-card:: License & citation

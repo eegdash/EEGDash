@@ -7,11 +7,11 @@ eegdash.dataset.DS006437
 
 LIGHT Hypnotherapy (OpenNeuro ``ds006437``). Access recordings and metadata through EEGDash.
 
-**Citation:** anonymous (—). *LIGHT Hypnotherapy*. `10.18112/openneuro.ds006437.v1.1.0 <https://doi.org/10.18112/openneuro.ds006437.v1.1.0>`__
+**Citation:** anonymous (2025). *LIGHT Hypnotherapy*. `10.18112/openneuro.ds006437.v1.1.0 <https://doi.org/10.18112/openneuro.ds006437.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 63`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 357`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - LIGHT Hypnotherapy
    * - Year
-     - —
+     - 2025
    * - Authors
      - anonymous
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006437.v1.1.0 <https://doi.org/10.18112/openneuro.ds006437.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006437>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006437>`__ | `Source URL <https://openneuro.org/datasets/ds006437>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006437>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006437>`__ | `Source URL <https://openneuro.org/datasets/ds006437/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,64 +67,67 @@ Dataset Information
 Description
 -----------
 
-LIGHT Dataset
-During these guided imagery hypnotherapy sessions,
-a hypnotherapist integrates storytelling and deep
-visualizations techniques to encourage personal
-and wellbeing. This method allows individuals to
-explore and modify their subconscious narratives, in
-order to foster changes that resonate through their
-lives. This differs from traditional hypnotherapy
-by tapping into eudaemonic aspects of well-being,
-emphasizing the pursuit of meaning and self
+LIGHT Dataset                             
+
+During these guided imagery hypnotherapy sessions,   
+a hypnotherapist integrates storytelling and deep    
+visualizations techniques to encourage personal      
+and wellbeing. This method allows individuals to     
+explore and modify their subconscious narratives, in 
+order to foster changes that resonate through their  
+lives. This differs from traditional hypnotherapy    
+by tapping into eudaemonic aspects of well-being,    
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
-   LIGHT Dataset
-   During these guided imagery hypnotherapy sessions,
-   a hypnotherapist integrates storytelling and deep
-   visualizations techniques to encourage personal
-   and wellbeing. This method allows individuals to
-   explore and modify their subconscious narratives, in
-   order to foster changes that resonate through their
-   lives. This differs from traditional hypnotherapy
-   by tapping into eudaemonic aspects of well-being,
-   emphasizing the pursuit of meaning and self
-   realization.
-   2 weeks before the first session, they will come to
-   the lab to record baseline resting EEG (session 0).
+   LIGHT Dataset                             
+   
+   During these guided imagery hypnotherapy sessions,   
+   a hypnotherapist integrates storytelling and deep    
+   visualizations techniques to encourage personal      
+   and wellbeing. This method allows individuals to     
+   explore and modify their subconscious narratives, in 
+   order to foster changes that resonate through their  
+   lives. This differs from traditional hypnotherapy    
+   by tapping into eudaemonic aspects of well-being,    
+   emphasizing the pursuit of meaning and self          
+   realization.                                         
+   
+   2 weeks before the first session, they will come to  
+   the lab to record baseline resting EEG (session 0).  
    With the exception of sessions 1, 4, and 8, all LIGHT
-   sessions were performed virtually. For sessions 1,
-   4, and 8, EEG and ECG data was collected.
+   sessions were performed virtually. For sessions 1,   
+   4, and 8, EEG and ECG data was collected.            
    The first phase of each session was guided relaxation
-   or induction followed by prompts to visualize a
-   perfect place of comfort and safely in ones creative
-   imagination. Next, they were prompted to visualize
-   a path or a set of stairs, and asked to walk down
-   that path or stairway for ten steps, counting down
-   from 10 to 1 outloud. They were guided to visualize
-   and describe a chair or seat, followed by a crown.
-   After taking a seat in their imagined chair and
-   putting on the crown, they were encouraged to pause
-   and observe the world they had conjured. Following
-   this brief period of reflection, awareness was drawn
-   to a light or color that emerged from their creative
-   mind. They identified the color of the light and
-   were instructed to imagine that light entering and
-   traveling through their body, filling up each cell
-   as it passed through. The participant was instructed
-   to leave a mental bookmark in this place so that
-   they could come back to it at any time, before
-   removing and storing their crown. At the end of the
-   LIGHT sessions, the participant was asked to rise
-   from their imagined chair or throne and count their
-   way up from one to ten, with the session ending as
-   the participant returned to an awake and alert state
+   or induction followed by prompts to visualize a      
+   perfect place of comfort and safely in ones creative 
+   imagination. Next, they were prompted to visualize   
+   a path or a set of stairs, and asked to walk down    
+   that path or stairway for ten steps, counting down   
+   from 10 to 1 outloud. They were guided to visualize  
+   and describe a chair or seat, followed by a crown.   
+   After taking a seat in their imagined chair and      
+   putting on the crown, they were encouraged to pause  
+   and observe the world they had conjured. Following   
+   this brief period of reflection, awareness was drawn 
+   to a light or color that emerged from their creative 
+   mind. They identified the color of the light and     
+   were instructed to imagine that light entering and   
+   traveling through their body, filling up each cell   
+   as it passed through. The participant was instructed 
+   to leave a mental bookmark in this place so that     
+   they could come back to it at any time, before       
+   removing and storing their crown. At the end of the  
+   LIGHT sessions, the participant was asked to rise    
+   from their imagined chair or throne and count their  
+   way up from one to ten, with the session ending as   
+   the participant returned to an awake and alert state 
    at the end of the ten count.
-   Baseline recordings were 5 minute of length.
-   Hypnotherapy recordings are variable in length with
-   multiple events indicating a hypnotherapist phase
+   
+   Baseline recordings were 5 minute of length.         
+   Hypnotherapy recordings are variable in length with  
+   multiple events indicating a hypnotherapist phase    
    transitions.
 
 
@@ -138,7 +141,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 9
-      - Recordings: 63
+      - Recordings: 357
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -159,7 +162,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 4.3 GB
-      - File count: 63
+      - File count: 357
       - Format: BIDS
 
    .. grid-item-card:: License & citation

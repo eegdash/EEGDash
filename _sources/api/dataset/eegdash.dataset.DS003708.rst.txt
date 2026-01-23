@@ -11,7 +11,7 @@ Basis profile curve identification to understand electrical stimulation effects 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 281`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 278`
 
 .. rst-class:: sd-badges
 
@@ -105,8 +105,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 2
-      - Recordings: 281
+      - Subjects: 1
+      - Recordings: 278
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -126,8 +126,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 281
+      - Size on disk: 620.1 MB
+      - File count: 278
       - Format: BIDS
 
    .. grid-item-card:: License & citation

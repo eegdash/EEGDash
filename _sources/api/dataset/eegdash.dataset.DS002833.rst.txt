@@ -7,11 +7,11 @@ eegdash.dataset.DS002833
 
 DataSet2 (OpenNeuro ``ds002833``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (—). *DataSet2*. `10.18112/openneuro.ds002833.v1.0.0 <https://doi.org/10.18112/openneuro.ds002833.v1.0.0>`__
+**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan (2020). *DataSet2*. `10.18112/openneuro.ds002833.v1.0.0 <https://doi.org/10.18112/openneuro.ds002833.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 80`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 623`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - DataSet2
    * - Year
-     - —
+     - 2020
    * - Authors
      - Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002833.v1.0.0 <https://doi.org/10.18112/openneuro.ds002833.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002833>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002833>`__ | `Source URL <https://openneuro.org/datasets/ds002833>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002833>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002833>`__ | `Source URL <https://openneuro.org/datasets/ds002833/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 80
+      - Recordings: 623
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 39.8 GB
-      - File count: 80
+      - File count: 623
       - Format: BIDS
 
    .. grid-item-card:: License & citation

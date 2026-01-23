@@ -7,11 +7,11 @@ eegdash.dataset.DS005574
 
 The "Podcast" ECoG dataset (OpenNeuro ``ds005574``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson (—). *The "Podcast" ECoG dataset*. `10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
+**Citation:** Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson (2024). *The "Podcast" ECoG dataset*. `10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 9`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 77`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The "Podcast" ECoG dataset
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005574>`__ | `Source URL <https://openneuro.org/datasets/ds005574>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005574>`__ | `Source URL <https://openneuro.org/datasets/ds005574/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 The "Podcast" ECoG dataset for modeling neural activity during natural story listening.
+
 We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling neural activity supporting natural narrative comprehension. This dataset combines the exceptional spatiotemporal resolution of human intracranial electrophysiology with a naturalistic experimental paradigm for language comprehension. In addition to the raw data, we provide a minimally preprocessed version in the high-gamma spectral band to showcase a simple pipeline and to make it easier to use. Furthermore, we include the auditory stimuli, an aligned word-level transcript, and linguistic features ranging from low-level acoustic properties to large language model (LLM) embeddings. We also include tutorials replicating previous findings and serve as a pedagogical resource and a springboard for new research. The dataset comprises 9 participants with 1,330 electrodes, including grid, depth, and strip electrodes. The participants listened to a 30-minute story with over 5,000 words. By using a natural story with high-fidelity, invasive neural recordings, this dataset offers a unique opportunity to investigate language comprehension.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 9
-      - Recordings: 9
+      - Recordings: 77
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.4 GB
-      - File count: 9
+      - Size on disk: 3.2 GB
+      - File count: 77
       - Format: BIDS
 
    .. grid-item-card:: License & citation

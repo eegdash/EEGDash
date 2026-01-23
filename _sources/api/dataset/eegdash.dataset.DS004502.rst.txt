@@ -7,11 +7,11 @@ eegdash.dataset.DS004502
 
 Anticipatory differences between Attention and Expectation (OpenNeuro ``ds004502``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (—). *Anticipatory differences between Attention and Expectation*. `10.18112/openneuro.ds004502.v1.0.1 <https://doi.org/10.18112/openneuro.ds004502.v1.0.1>`__
+**Citation:** Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (2023). *Anticipatory differences between Attention and Expectation*. `10.18112/openneuro.ds004502.v1.0.1 <https://doi.org/10.18112/openneuro.ds004502.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 48`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 319`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Anticipatory differences between Attention and Expectation
    * - Year
-     - —
+     - 2023
    * - Authors
      - Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004502.v1.0.1 <https://doi.org/10.18112/openneuro.ds004502.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004502>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004502>`__ | `Source URL <https://openneuro.org/datasets/ds004502>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004502>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004502>`__ | `Source URL <https://openneuro.org/datasets/ds004502/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 48
-      - Recordings: 48
+      - Recordings: 319
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 59.4 GB
-      - File count: 48
+      - File count: 319
       - Format: BIDS
 
    .. grid-item-card:: License & citation

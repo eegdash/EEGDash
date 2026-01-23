@@ -7,11 +7,11 @@ eegdash.dataset.DS002778
 
 UC San Diego Resting State EEG Data from Patients with Parkinson's Disease (OpenNeuro ``ds002778``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexander P. Rockhill, Nicko Jackson, Jobi George, Adam Aron, Nicole C. Swann (2019). *UC San Diego Resting State EEG Data from Patients with Parkinson's Disease*. `10.18112/openneuro.ds002778.v1.0.5 <https://doi.org/10.18112/openneuro.ds002778.v1.0.5>`__
+**Citation:** Alexander P. Rockhill, Nicko Jackson, Jobi George, Adam Aron, Nicole C. Swann (2020). *UC San Diego Resting State EEG Data from Patients with Parkinson's Disease*. `10.18112/openneuro.ds002778.v1.0.5 <https://doi.org/10.18112/openneuro.ds002778.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 46`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 328`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - UC San Diego Resting State EEG Data from Patients with Parkinson's Disease
    * - Year
-     - 2019
+     - 2020
    * - Authors
      - Alexander P. Rockhill, Nicko Jackson, Jobi George, Adam Aron, Nicole C. Swann
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds002778.v1.0.5 <https://doi.org/10.18112/openneuro.ds002778.v1.0.5>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002778>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002778>`__ | `Source URL <https://openneuro.org/datasets/ds002778>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002778>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002778>`__ | `Source URL <https://openneuro.org/datasets/ds002778/versions/1.0.5>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,16 +68,26 @@ Description
 -----------
 
 Welcome to the resting state EEG dataset collected at the University of San Diego and curated by Alex Rockhill at the University of Oregon.
+
 Please email arockhil@uoregon.edu before submitting a manuscript to be published in a peer-reviewed journal using this data, we wish to ensure that the data to be analyzed and interpreted with scientific integrity so as not to mislead the public about findings that may have clinical relevance. The purpose of this is to be responsible stewards of the data without an "available upon reasonable request" clause that we feel doesn't fully represent the open-source, reproducible ethos. The data is freely available to download so we cannot stop your publication if we don't support your methods and interpretation of findings, however, in being good data stewards, we would like to offer suggestions in the pre-publication stage so as to reduce conflict in published scientific literature. As far as credit, there is precedent for receiving a mention in the acknowledgements section for reading and providing feedback on the paper or, for more involved consulting, being included as an author may be warranted. The purpose of asking for this is not to inflate our number of authorships; we take ethical considerations of the best way to handle intellectual property in the form of manuscripts very seriously, and, again, sharing is at the discretion of the author although we strongly recommend it. Please be ethical and considerate in your use of this data and all open-source data and be sure to credit authors by citing them.
+
 An example of an analysis that we could consider problematic and would strongly advice to be corrected before submission to a publication would be using machine learning to classify Parkinson's patients from healthy controls using this dataset. This is because there are far too few patients for proper statistics. Parkinson's disease presents heterogeneously across patients, and, with a proper test-training split, there would be fewer than 8 patients in the testing set. Statistics on 8 or fewer patients for such a complicated diease would be inaccurate due to having too small of a sample size. Furthermore, if multiple machine learning algorithms were desired to be tested, a third split would be required to choose the best method, further lowering the number of patients in the testing set. We strongly advise against using any such approach because it would mislead patients and people who are interested in knowing if they have Parkinson's disease.
+
 Note that UPDRS rating scales were collected by laboratory personnel who had completed online training and not a board-certified neurologist. Results should be interpreted accordingly, especially that analyses based largely on these ratings should be taken with the appropriate amount of uncertainty.
+
 In addition to contacting the aforementioned email, please cite the following papers:
+
 Nicko Jackson, Scott R. Cole, Bradley Voytek, Nicole C. Swann. Characteristics of Waveform Shape in Parkinson's Disease Detected with Scalp Electroencephalography. eNeuro 20 May 2019, 6 (3) ENEURO.0151-19.2019; DOI: 10.1523/ENEURO.0151-19.2019.
+
 Swann NC, de Hemptinne C, Aron AR, Ostrem JL, Knight RT, Starr PA. Elevated synchrony in Parkinson disease detected with electroencephalography. Ann Neurol. 2015 Nov;78(5):742-50. doi: 10.1002/ana.24507. Epub 2015 Sep 2. PMID: 26290353; PMCID: PMC4623949.
+
 George JS, Strunk J, Mak-McCully R, Houser M, Poizner H, Aron AR. Dopaminergic therapy in Parkinson's disease decreases cortical beta band coherence in the resting state and increases cortical beta band power during executive control. Neuroimage Clin. 2013 Aug 8;3:261-70. doi: 10.1016/j.nicl.2013.07.013. PMID: 24273711; PMCID: PMC3814961.
+
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G.,
 Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8.
+
 Note: see this discussion on the structure of the json files that is sufficient but not optimal and will hopefully be changed in future versions of BIDS: https://neurostars.org/t/behavior-metadata-without-tsv-event-data-related-to-a-neuroimaging-data/6768/25.
 
 Highlights
@@ -90,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 31
-      - Recordings: 46
+      - Recordings: 328
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,8 +120,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 545.1 MB
-      - File count: 46
+      - Size on disk: 545.0 MB
+      - File count: 328
       - Format: BIDS
 
    .. grid-item-card:: License & citation

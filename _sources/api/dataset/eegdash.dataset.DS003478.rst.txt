@@ -7,7 +7,7 @@ eegdash.dataset.DS003478
 
 EEG: Depression rest (OpenNeuro ``ds003478``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh jcavanagh@unm.edu (20). *EEG: Depression rest*. `10.18112/openneuro.ds003478.v1.1.0 <https://doi.org/10.18112/openneuro.ds003478.v1.1.0>`__
+**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: Depression rest*. `10.18112/openneuro.ds003478.v1.1.0 <https://doi.org/10.18112/openneuro.ds003478.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Depression rest
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh jcavanagh@unm.edu
    * - License

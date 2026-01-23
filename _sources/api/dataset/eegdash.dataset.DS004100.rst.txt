@@ -7,11 +7,11 @@ eegdash.dataset.DS004100
 
 HUP iEEG Epilepsy Dataset (OpenNeuro ``ds004100``). Access recordings and metadata through EEGDash.
 
-**Citation:** John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir, Ian Z. Ong, Kathryn A. Davis, Nishant Sinha, Sridevi Sarma, Brian Litt (2019). *HUP iEEG Epilepsy Dataset*. `10.18112/openneuro.ds004100.v1.1.3 <https://doi.org/10.18112/openneuro.ds004100.v1.1.3>`__
+**Citation:** John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir, Ian Z. Ong, Kathryn A. Davis, Nishant Sinha, Sridevi Sarma, Brian Litt (2022). *HUP iEEG Epilepsy Dataset*. `10.18112/openneuro.ds004100.v1.1.3 <https://doi.org/10.18112/openneuro.ds004100.v1.1.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 319`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 1341`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HUP iEEG Epilepsy Dataset
    * - Year
-     - 2019
+     - 2022
    * - Authors
      - John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir, Ian Z. Ong, Kathryn A. Davis, Nishant Sinha, Sridevi Sarma, Brian Litt
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004100.v1.1.3 <https://doi.org/10.18112/openneuro.ds004100.v1.1.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004100>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004100>`__ | `Source URL <https://openneuro.org/datasets/ds004100>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004100>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004100>`__ | `Source URL <https://openneuro.org/datasets/ds004100/versions/1.1.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,15 +68,22 @@ Description
 -----------
 
 <h1>HUP iEEG dataset</h1>
-This dataset was prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in Kini & Bernabei et al., Brain (2019) [1], and Bernabei & Sinha et al., Brain (2022) [2].
+
+This dataset was prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in Kini & Bernabei et al., Brain (2019) [1], and Bernabei & Sinha et al., Brain (2022) [2]. 
+
 <h3>Dataset description</h3>
-These files contain de-identified patient data collected as part of surgical treatment for drug resistant epilepsy at the Hospital of the University of Pennsylvania. Each of the 58 subjects underwent intracranial EEG with subdural grid, strip, and depth electrodes (ECoG) or purely stereotactically-placed depth electrodes (SEEG). Each patient also underwent subsequent treatment with surgical resection or laser ablation. Electrophysiologic data for both interictal and ictal periods is available, as are electrode localizations in ICBM152 MNI space. Furthermore, clinically-determined seizure onset channels are provided, as are channels which overlap with the resection/ablation zone, which was rigorously determined by segmenting the resection cavity.
+These files contain de-identified patient data collected as part of surgical treatment for drug resistant epilepsy at the Hospital of the University of Pennsylvania. Each of the 58 subjects underwent intracranial EEG with subdural grid, strip, and depth electrodes (ECoG) or purely stereotactically-placed depth electrodes (SEEG). Each patient also underwent subsequent treatment with surgical resection or laser ablation. Electrophysiologic data for both interictal and ictal periods is available, as are electrode localizations in ICBM152 MNI space. Furthermore, clinically-determined seizure onset channels are provided, as are channels which overlap with the resection/ablation zone, which was rigorously determined by segmenting the resection cavity. 
+
 <h3>BIDS Conversion</h3>
-MNE-BIDS was used to convert the dataset into BIDS format.
+MNE-BIDS was used to convert the dataset into BIDS format. 
+
 <h3>References</h3>
 [1] Kini L.*, Bernabei J.M.*, Mikhail F., Hadar P., Shah P., Khambhati A., Oechsel K., Archer R., Boccanfuso J.A., Conrad E., Stein J., Das S., Kheder A., Lucas T.H., Davis K.A., Bassett D.S., Litt B., Virtual resection predicts surgical outcome for drug resistant epilepsy. Brain, 2019.
+
 [2] Bernabei J.M.*, Sinha N.*, Arnold T.C., Conrad E., Ong I., Pattnaik A.R., Stein J.M., Shinohara R.T., Lucas T.H., Bassett D.S., Davis K.A., Litt B., Normative intracranial EEG maps epileptogenic tissues in focal epilepsy. Brain, 2022
+
 [3] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 [4] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 Highlights
@@ -89,7 +96,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 57
-      - Recordings: 319
+      - Recordings: 1341
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,7 +117,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 13.2 GB
-      - File count: 319
+      - File count: 1341
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS003421
 
 HD-EEGtask(Dataset 2) (OpenNeuro ``ds003421``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan (20). *HD-EEGtask(Dataset 2)*. `10.18112/openneuro.ds003421.v1.0.2 <https://doi.org/10.18112/openneuro.ds003421.v1.0.2>`__
+**Citation:** Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan (2020). *HD-EEGtask(Dataset 2)*. `10.18112/openneuro.ds003421.v1.0.2 <https://doi.org/10.18112/openneuro.ds003421.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 80`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 938`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HD-EEGtask(Dataset 2)
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben, Fabrice Wendling, Mahmoud Hassan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003421.v1.0.2 <https://doi.org/10.18112/openneuro.ds003421.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003421>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003421>`__ | `Source URL <https://openneuro.org/datasets/ds003421>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003421>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003421>`__ | `Source URL <https://openneuro.org/datasets/ds003421/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **Dataset 2**
 
 
+
 **Presentation**
+
 
      This dataset was collected between 2014 and 2017 in Rennes (France) during four conditions (resting state, visual naming, auditory naming and working memory tasks).
      All participants provided a written informed consent to participate in this study which was approved
-     by an independent ethics committee and authorized by the IRB "Comite de Protection des Personnes
-     dans la Recherche Biomedicale Ouest V" (CCPPRB-Ouest V).
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,40 +85,54 @@ Description
    **Dataset 2**
    
    
+   
    **Presentation**
+   
    
         This dataset was collected between 2014 and 2017 in Rennes (France) during four conditions (resting state, visual naming, auditory naming and working memory tasks).
         All participants provided a written informed consent to participate in this study which was approved
         by an independent ethics committee and authorized by the IRB "Comite de Protection des Personnes
-        dans la Recherche Biomedicale Ouest V" (CCPPRB-Ouest V).
+        dans la Recherche Biomedicale Ouest V" (CCPPRB-Ouest V). 
         The study name was "Braingraph" and study agreement number was 2014-A01461-46.
         Its promoter was the Rennes University Hospital.
    
+        
+   
    **Participants**
    
-        Twenty right-handed healthy volunteers (10 females, 10 males, mean age 23 years) participated
+   
+        Twenty right-handed healthy volunteers (10 females, 10 males, mean age 23 years) participated 
         in this experiment. (See participants.json and participants.tsv for more details)
+   
+   
    
    **Experiment**
    
+   
         * The experiment begins with the verification of inclusion/exclusion criteria.
-        * The participants read the information notice and the consent form.
-        * Then they sign two questionnaires.
+        * The participants read the information notice and the consent form. 
+        * Then they sign two questionnaires. 
         * One subject -->four conditions (resting state, visual naming, auditory naming and working memory).
         * Resting state--> subject asked to relax for 10 min with their eyes open.
         * Visual naming-->subject asked to name 80 pictures. 40 scrambled pictures were presented and participantس were asked to say nothing.
         * Auditory naming--> subject asked to name 80 different sounds.
-        * Memory--> 80 pictures were displayed of which 40 have already been shown in the naming task. New pictures and already seen pictures randomly appeared on the screen and participants have to indicate if they have seen them before by pressing a button or not.
+        * Memory--> 80 pictures were displayed of which 40 have already been shown in the naming task. New pictures and already seen pictures randomly appeared on the screen and participants have to indicate if they have seen them before by pressing a button or not. 
+   
+   
+   
    
    **EEG acquisition**
    
-        * HD-EEG system (EGI, Electrical Geodesic Inc., 256 electrodes)
+   
+        * HD-EEG system (EGI, Electrical Geodesic Inc., 256 electrodes) 
         * Sampling frequency: 1000Hz
         * Impedances were kept below 5k
    
+   
+   
    **Contact**
    
-        * If you have any questions or comments, please contact:
+        * If you have any questions or comments, please contact: 
         * Ahmad Mheich: mheich.ahmad@gmail.com
 
 
@@ -132,7 +146,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 80
+      - Recordings: 938
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -152,8 +166,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 76.8 GB
-      - File count: 80
+      - Size on disk: 39.6 GB
+      - File count: 938
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS006735
 
 Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding (OpenNeuro ``ds006735``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tong Shan, Edmund C. Lalor, Ross K. Maddox (2024). *Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding*. `10.18112/openneuro.ds006735.v1.0.4 <https://doi.org/10.18112/openneuro.ds006735.v1.0.4>`__
+**Citation:** Tong Shan, Edmund C. Lalor, Ross K. Maddox (2025). *Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding*. `10.18112/openneuro.ds006735.v2.0.0 <https://doi.org/10.18112/openneuro.ds006735.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 27`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 220`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding
    * - Year
-     - 2024
+     - 2025
    * - Authors
      - Tong Shan, Edmund C. Lalor, Ross K. Maddox
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006735.v1.0.4 <https://doi.org/10.18112/openneuro.ds006735.v1.0.4>`__
+     - `doi:10.18112/openneuro.ds006735.v2.0.0 <https://doi.org/10.18112/openneuro.ds006735.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006735>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006735>`__ | `Source URL <https://openneuro.org/datasets/ds006735>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006735>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006735>`__ | `Source URL <https://openneuro.org/datasets/ds006735/versions/2.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds006735,
         title = {Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding},
         author = {Tong Shan and Edmund C. Lalor and Ross K. Maddox},
-        doi = {10.18112/openneuro.ds006735.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds006735.v1.0.4},
+        doi = {10.18112/openneuro.ds006735.v2.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds006735.v2.0.0},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -71,12 +71,12 @@ Description
 **Details related to access to the data**
 
 Please contact the following authors for further information:
+
 Tong Shan (email: tongshan@stanford.edu)
+
 Ross K. Maddox (email: rkmaddox@med.umich.edu)
 
-**Overview**
 
-This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,35 +85,52 @@ This study examines pitch-time interactions in music processing by introducing �
    **Details related to access to the data**
    
    Please contact the following authors for further information:
+   
    Tong Shan (email: tongshan@stanford.edu)
+   
    Ross K. Maddox (email: rkmaddox@med.umich.edu)
+   
    
    **Overview**
    
-   This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences.
+   This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences. 
+   
    Data collected from Sep to Nov, 2023.
+   
    The details of the experiment can be found at Shan et al. (2024). There were two phases in this experiment. For the first phase, ten trials of one-minute clicks were presented to the subjects. For the second phase, the 2 types of monophonic music (original and chimeric) clips were presented. There were 33 trials for each type with shuffled order. Between trials, there was a 0.5 s pause.
+   
    The code for analysis for this study can be found in GitHub repo (https://github.com/maddoxlab/Chimeric_music).
+   
+   
    
    **Format**
    
    This dataset is formatted according to the EEG Brain Imaging Data Structure. It includes EEG recording from subject 001 to subject 027 in raw brainvision format (including .eeg, .vhdr, and .vmrk triplet).
    
+   
+   
    **Subjects**
    
-   27 subjects participated in this study.
+   27 subjects participated in this study. 
+   
    
    **Subject inclusion criteria**
    
+   
    Age between 18-40.
+   
    Normal hearing: audiometric thresholds of 20 dB HL or better from 500 to 8000 Hz.
    Speak English as their primary language.
+   
    Self-reported normal or correctable to normal vision.
-   Twenty-seven participants participated in this experiment with an age of 22.9 ± 3.9 (mean ± STD) years.
+   
+   Twenty-seven participants participated in this experiment with an age of 22.9 ± 3.9 (mean ± STD) years. 
+   
    
    **Apparatus**
    
    Subjects were seated in a sound-isolating booth on a chair in front of a 24-inch BenQ monitor with a viewing distance of approximately 60 cm. Stimuli were presented at an average level of 60 dB SPL and a sampling rate of 48000 Hz through ER-2 insert earphones plugged into an RME Babyface Pro digital sound card. The stimulus presentation for the experiment was controlled by a python script using a custom package, expyfun.
+   
    Following the experimental session, participants completed a self-reported musicianship questionnaire (adapted from Whiteford et al, 2025). The questionnaire is included in this repository.
 
 
@@ -127,7 +144,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 27
-      - Recordings: 27
+      - Recordings: 220
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -147,15 +164,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 192.9 GB
-      - File count: 27
+      - Size on disk: 175.9 GB
+      - File count: 220
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006735.v1.0.4
+      - DOI: doi:10.18112/openneuro.ds006735.v2.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

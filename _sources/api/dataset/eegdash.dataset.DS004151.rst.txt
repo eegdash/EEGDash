@@ -7,11 +7,11 @@ eegdash.dataset.DS004151
 
 Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study (OpenNeuro ``ds004151``). Access recordings and metadata through EEGDash.
 
-**Citation:** Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior (20). *Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study*. `10.18112/openneuro.ds004151.v1.0.0 <https://doi.org/10.18112/openneuro.ds004151.v1.0.0>`__
+**Citation:** Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior (2022). *Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study*. `10.18112/openneuro.ds004151.v1.0.0 <https://doi.org/10.18112/openneuro.ds004151.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 57`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 408`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams, Linda Larson-Prior
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004151.v1.0.0 <https://doi.org/10.18112/openneuro.ds004151.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004151>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004151>`__ | `Source URL <https://openneuro.org/datasets/ds004151>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004151>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004151>`__ | `Source URL <https://openneuro.org/datasets/ds004151/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,22 +68,31 @@ Description
 -----------
 
 Introduction
-This EEG dataset contains the electrophysiological signal from fifty-seven obese and non-obese preteens
-during a stop-signal task. The stimuli were designed and administered using E-Prime
+
+This EEG dataset contains the electrophysiological signal from fifty-seven obese and non-obese preteens 
+during a stop-signal task. The stimuli were designed and administered using E-Prime 
 software (Version 2) at Arkansas Children Nutrition Center (ACNC), Little Rock, Arkansas.
 The University of Arkansas for Medical Sciences (UAMS) approved the study protocol. This research
 was supported by USDA/Agricultural Research Service Project 6026-51000-012-06S.
+
 Raw data files
-The data were acquired with a Geodesic Net Amps 300 system running Netstation 4.5.2 software using
+
+The data were acquired with a Geodesic Net Amps 300 system running Netstation 4.5.2 software using 
 the 128-channel Geodesic Hydrocell Sensor Net™ (Magstim EGI., Eugene OR, USA).
 No operations have been performed on the data.
+
 Participant data
+
 The *Participants.tsv* file contains age, gender, body mass index (BMI), and weight status (WS)
+
 How to cite
+
 All use of this dataset in a publication context requires the following paper to be cited: Alatorre-Cruz GC, Downs H, Hagood D, Sorensen ST, Williams DK, Larson-Prior L. Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study. Int J Psychophysiol. 2021 Jul;165:56-67. doi: 10.1016/j.ijpsycho.2021.04.003
+
 Contact
 Questions regarding the EEG data may be addressed to
 Catalina Alatorre-Cruz (gcalatorrecruz@uams.edu).
+
 Question regarding the project, in general, may be addressed to
 Linda Larson-Prior (ljlarsonprior@uams.edu).
 
@@ -97,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 57
-      - Recordings: 57
+      - Recordings: 408
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,7 +127,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 23.1 GB
-      - File count: 57
+      - File count: 408
       - Format: BIDS
 
    .. grid-item-card:: License & citation

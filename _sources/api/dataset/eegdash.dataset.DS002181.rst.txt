@@ -11,7 +11,7 @@ CRYPTO and PROVIDE EEG Baseline Data (OpenNeuro ``ds002181``). Access recordings
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 226` :bdg-secondary:`Recordings: 226`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 226` :bdg-secondary:`Recordings: 1134`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `mockDOI <https://doi.org/mockDOI>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002181>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002181>`__ | `Source URL <https://openneuro.org/datasets/ds002181>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002181>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002181>`__ | `Source URL <https://openneuro.org/datasets/ds002181/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 These are the EEG baseline data used in the study on the association between stunting and EEG brain functional connectivity in Bangladeshi children (https://doi.org/10.1101/447722).
+
 Data with an ID <  2000 were collected for a cohort of  36-month-old toddlers, and those with an ID > 2000 were collected for a cohort of 6-month-old infants.  The children were watching screen savers for 2 minutes.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 226
-      - Recordings: 226
+      - Recordings: 1134
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 150.9 MB
-      - File count: 226
+      - File count: 1134
       - Format: BIDS
 
    .. grid-item-card:: License & citation

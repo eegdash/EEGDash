@@ -11,7 +11,7 @@ Face processing MEEG dataset with HED annotation (OpenNeuro ``ds003645``). Acces
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg, meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 224`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 1137`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003645.v2.0.2 <https://doi.org/10.18112/openneuro.ds003645.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003645>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003645>`__ | `Source URL <https://openneuro.org/datasets/ds003645>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003645>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003645>`__ | `Source URL <https://openneuro.org/datasets/ds003645/versions/2.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,8 +69,10 @@ Description
 
 **Introduction:**
 This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (https://pubmed.ncbi.nlm.nih.gov/25977808/). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.
+
 **Overview of the experiment:**
 Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.
+
 **Preprocessing:**
 The EEG preprocessing, which was performed using the `wh_extracteeg_BIDS.m` located in the code directory, includes the following steps:
 * Ignore MRI data except for sMRI.
@@ -85,6 +87,7 @@ The EEG preprocessing, which was performed using the `wh_extracteeg_BIDS.m` loca
 * Add HED (v8.0.0) event annotations -- see Robbins et al. (2021)
 * Remove event fields `urevent` and `duration`
 * Save as EEGLAB .set format
+
 **Data curators:**
 Dung Truong, Ramon Martinez, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, USA), Kay Robbins (UTSA, San Antonio, TX, USA)
 
@@ -97,9 +100,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 19
-      - Recordings: 224
-      - Tasks: 2
+      - Subjects: 18
+      - Recordings: 1137
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -119,7 +122,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 106.3 GB
-      - File count: 224
+      - File count: 1137
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005473
 
 29 By BP (OpenNeuro ``ds005473``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *29 By BP*. `10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *29 By BP*. `10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 58`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 412`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 29 By BP
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__ | `Source URL <https://openneuro.org/datasets/ds005473>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__ | `Source URL <https://openneuro.org/datasets/ds005473/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,15 @@ Dataset Information
 Description
 -----------
 
-No README content is available for this dataset.
+1.Study introduction:
+
+2.Participant task information(description of the experiment):
+
+3.Participant instructions(as exact as possible):
+
+4.References and links:
+Hu L, Cai MM, Xiao P, Luo F, Iannetti GD. Human brain responses to concomitant stimulation of A�� and C nociceptors. J Neurosci. 2014 Aug 20;34(34):11439-51. doi: 10.1523/JNEUROSCI.1355-14.2014. PMID: 25143623; PMCID: PMC6615513.
+5.Comments:
 
 Highlights
 ----------
@@ -79,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 29
-      - Recordings: 58
+      - Recordings: 412
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +107,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.0 GB
-      - File count: 58
+      - Size on disk: 6.2 GB
+      - File count: 412
       - Format: BIDS
 
    .. grid-item-card:: License & citation

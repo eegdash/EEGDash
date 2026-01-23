@@ -7,11 +7,11 @@ eegdash.dataset.DS004278
 
 Sustained Neural Representations of Personally Familiar People and Places During Cued Recall (OpenNeuro ``ds004278``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution] (2019). *Sustained Neural Representations of Personally Familiar People and Places During Cued Recall*. `10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
+**Citation:** Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution] (2022). *Sustained Neural Representations of Personally Familiar People and Places During Cued Recall*. `10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 844`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Sustained Neural Representations of Personally Familiar People and Places During Cued Recall
    * - Year
-     - 2019
+     - 2022
    * - Authors
      - Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution]
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004278.v1.0.1 <https://doi.org/10.18112/openneuro.ds004278.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004278>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004278>`__ | `Source URL <https://openneuro.org/datasets/ds004278>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004278>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004278>`__ | `Source URL <https://openneuro.org/datasets/ds004278/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 30
+      - Recordings: 844
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +105,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 76.7 GB
-      - File count: 30
+      - File count: 844
       - Format: BIDS
 
    .. grid-item-card:: License & citation

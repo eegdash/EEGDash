@@ -7,11 +7,11 @@ eegdash.dataset.DS004660
 
 TNO (OpenNeuro ``ds004660``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *TNO*. `10.18112/openneuro.ds004660.v1.0.2 <https://doi.org/10.18112/openneuro.ds004660.v1.0.2>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *TNO*. `10.18112/openneuro.ds004660.v1.0.2 <https://doi.org/10.18112/openneuro.ds004660.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 42`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 299`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TNO
    * - Year
-     - —
+     - 2023
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004660.v1.0.2 <https://doi.org/10.18112/openneuro.ds004660.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004660>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004660>`__ | `Source URL <https://openneuro.org/datasets/ds004660>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004660>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004660>`__ | `Source URL <https://openneuro.org/datasets/ds004660/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 42
+      - Recordings: 299
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.2 GB
-      - File count: 42
+      - File count: 299
       - Format: BIDS
 
    .. grid-item-card:: License & citation

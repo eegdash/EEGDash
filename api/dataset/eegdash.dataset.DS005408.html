@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1041,7 +1041,7 @@
 <h1>eegdash.dataset.DS005408<a class="headerlink" href="#eegdash-dataset-ds005408" title="Link to this heading">#</a></h1>
 <p>The effect of speech masking on the subcortical response to speech (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds005408</span></code>). Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Melissa J. Polonenko, Ross K. Maddox (2024). <em>The effect of speech masking on the subcortical response to speech</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds005408.v1.0.0">10.18112/openneuro.ds005408.v1.0.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 25</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 29</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 25</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 206</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: —</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds005408.v1.0.0">doi:10.18112/openneuro.ds005408.v1.0.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005408">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005408">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005408">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005408">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005408">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005408/versions/1.0.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1115,30 +1115,28 @@ Ross Maddox (email: <a class="reference external" href="mailto:rkmaddox&#37;&#52
 </dl>
 <p class="sd-card-text"><strong>Overview</strong></p>
 <p class="sd-card-text">This is the “peaky_snr” dataset for the paper
-Polonenko MJ &amp; Maddox RK (2024), with citation listed below.
-BioRxiv: The effect of speech masking on the subcortical response to speech
-Auditory brainstem responses (ABRs) were derived to continuous peaky speech
+Polonenko MJ &amp; Maddox RK (2024), with citation listed below.</p>
+<p class="sd-card-text">BioRxiv: The effect of speech masking on the subcortical response to speech</p>
+<p class="sd-card-text">Auditory brainstem responses (ABRs) were derived to continuous peaky speech
 from between one up to five simultaneously presented talkers and from clicks.
-Data was collected from June to July 2021.
-Goal: To better understand masking’s effects on the subcortical neural encoding
-of naturally uttered speech in human listeners.
-To do this we leveraged our recently developed method for determining the
+Data was collected from June to July 2021.</p>
+<p class="sd-card-text">Goal: To better understand masking’s effects on the subcortical neural encoding
+of naturally uttered speech in human listeners.</p>
+<p class="sd-card-text">To do this we leveraged our recently developed method for determining the
 auditory brainstem response (ABR) to speech (Polonenko and Maddox, 2021).
 Whereas our previous work was aimed at encoding of single talkers, here we
 determined the ABR to speech in quiet as well as in the presence of varying
-numbers of other talkers.
-The details of the experiment can be found at Polonenko &amp; Maddox (2024).
-Stimuli:</p>
-<blockquote>
-<div><p class="sd-card-text">1) randomized click trains at an average rate of 40 Hz,
+numbers of other talkers.</p>
+<p class="sd-card-text">The details of the experiment can be found at Polonenko &amp; Maddox (2024).</p>
+<dl>
+<dt>Stimuli:</dt><dd><p class="sd-card-text">1) randomized click trains at an average rate of 40 Hz,
 60 x 10 s trials for a total of 10 minutes;
 2) peaky speech for up to 5 male narrators. 30 minutes of each SNR
 (clean, 0 dB, -3 dB, -6 dB), corresponding to 1, 2, 3, and 5 talkers
-presented simultaneously, each set to 65 dB.
-NOTE: files for each story were completely randomized. Random combinations
+presented simultaneously, each set to 65 dB.</p>
+<p class="sd-card-text">NOTE: files for each story were completely randomized. Random combinations
 were created so that each story was equally represented in the data.</p>
-</div></blockquote>
-<dl class="simple">
+</dd>
 <dt>The code for stimulus preprocessing and EEG analysis is available on Github:</dt><dd><p class="sd-card-text"><a class="github reference external" href="https://github.com/polonenkolab/peaky_snr">polonenkolab/peaky_snr</a></p>
 </dd>
 </dl>
@@ -1155,15 +1153,15 @@ files contain the audio (‘audio’), and regressors for the deconvolution
 in the accompanying .json files. Raw eeg files are provided in the Brain
 Products format.</p>
 <p class="sd-card-text"><strong>Participants</strong></p>
-<p class="sd-card-text">25 participants, mean ± SD age of 23.4 ± 5.5 years (19-37 years)
-Inclusion criteria:</p>
-<blockquote>
-<div><ol class="arabic simple">
+<p class="sd-card-text">25 participants, mean ± SD age of 23.4 ± 5.5 years (19-37 years)</p>
+<dl class="simple">
+<dt>Inclusion criteria:</dt><dd><ol class="arabic simple">
 <li><p class="sd-card-text">Age between 18-40 years</p></li>
 <li><p class="sd-card-text">Normal hearing: audiometric thresholds 20 dB HL or better from 500 to 8000 Hz</p></li>
 <li><p class="sd-card-text">Speak English as their primary language</p></li>
 </ol>
-</div></blockquote>
+</dd>
+</dl>
 <p class="sd-card-text">Please see participants.tsv for more information.</p>
 <p class="sd-card-text"><strong>Apparatus</strong></p>
 <p class="sd-card-text">Participants sat in a darkened sound-isolating booth and rested or watched
@@ -1177,8 +1175,8 @@ experiment and stimulus presentation.</p>
 supplied <cite>task-peaky_snr_eeg.json</cite> file. The 4 SNR speech conditions and the
 story tokens were randomized. This means that the participant would not be able
 to follow the stories. For clicks the trials were not randomized
-(already random clicks).
-Trigger onset times in the tsv files have already been corrected for the tubing
+(already random clicks).</p>
+<p class="sd-card-text">Trigger onset times in the tsv files have already been corrected for the tubing
 delay of the insert earphones (but not in the events of the raw files).
 Triggers with values of “1” were recorded to the onset of the 10 s audio, and
 shortly after triggers with values of “4” or “8” were stamped to indicate info
@@ -1202,7 +1200,7 @@ called ‘alice’ (Alice in Wonderland).</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 25</p></li>
-<li><p class="sd-card-text">Recordings: 29</p></li>
+<li><p class="sd-card-text">Recordings: 206</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1240,8 +1238,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 37.8 GB</p></li>
-<li><p class="sd-card-text">File count: 29</p></li>
+<li><p class="sd-card-text">Size on disk: 15.3 GB</p></li>
+<li><p class="sd-card-text">File count: 206</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

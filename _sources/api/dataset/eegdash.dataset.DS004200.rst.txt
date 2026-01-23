@@ -7,11 +7,11 @@ eegdash.dataset.DS004200
 
 Temporal Scaling (OpenNeuro ``ds004200``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt (20). *Temporal Scaling*. `10.18112/openneuro.ds004200.v1.0.1 <https://doi.org/10.18112/openneuro.ds004200.v1.0.1>`__
+**Citation:** Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt (2022). *Temporal Scaling*. `10.18112/openneuro.ds004200.v1.0.1 <https://doi.org/10.18112/openneuro.ds004200.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 166`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Temporal Scaling
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004200.v1.0.1 <https://doi.org/10.18112/openneuro.ds004200.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__ | `Source URL <https://openneuro.org/datasets/ds004200>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__ | `Source URL <https://openneuro.org/datasets/ds004200/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,7 +70,9 @@ Description
 
 **Temporal Scaling**
 
+
 Twenty participants learned three temporal intervals. There were two subtasks, randomly interleaved. In the Production task, participants produced either a short, medium, or long temporal interval. In the Perception task, participants judged a computer-produced interval as correct or incorrect (again, for a short, medium, or long temporal interval). In both tasks participants received visual feedback (a checkmark or x).
+
 Preprint: https://doi.org/10.1101/2020.12.11.421180
 
 Highlights
@@ -83,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 20
+      - Recordings: 166
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.2 GB
-      - File count: 20
+      - File count: 166
       - Format: BIDS
 
    .. grid-item-card:: License & citation

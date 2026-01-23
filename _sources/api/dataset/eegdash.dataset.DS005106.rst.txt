@@ -7,11 +7,11 @@ eegdash.dataset.DS005106
 
 200 Objects Infants EEG (OpenNeuro ``ds005106``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (20). *200 Objects Infants EEG*. `10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
+**Citation:** Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (2024). *200 Objects Infants EEG*. `10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 42`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 133`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 200 Objects Infants EEG
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005106>`__ | `Source URL <https://openneuro.org/datasets/ds005106>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005106>`__ | `Source URL <https://openneuro.org/datasets/ds005106/versions/1.5.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,9 +69,12 @@ Description
 
 Data and code for the paper:
 Tijl Grootswagers, Genevieve Quek, Zhen Zeng, & Manuel Varlet. 2025. “Human Infant EEG Recordings for 200 Object Images Presented in Rapid Visual Streams.” Scientific Data. https://doi.org/10.1038/s41597-025-04744-z
+
 See the linked paper for details.
+
 The "code" directory contains all the code to reproduce the figures in the paper.
 It requires fieldtrip and cosmomvpa, change the paths to these toolboxes at the top of each script (or remove the lines and add them to the path manually).
+
 Then run the scripts to reproduce each step reported in the paper:
 1. run_preprocessing.m (preprocess and epoch data)
 2. run_rsa.m (makes the individual RDMs)
@@ -79,6 +82,7 @@ Then run the scripts to reproduce each step reported in the paper:
 4. plot_design.m (produces Figure 1 in the paper)
 5. plot_peaks.m (produces Figure 2 in the paper)
 6. plot_rsa.m (produces Figure 3 in the paper)
+
 Each script can also run standalone, as intermediate results are saved in the derivates folder
 
 Highlights
@@ -91,7 +95,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 42
-      - Recordings: 42
+      - Recordings: 133
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -111,8 +115,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.6 GB
-      - File count: 42
+      - Size on disk: 1.2 GB
+      - File count: 133
       - Format: BIDS
 
    .. grid-item-card:: License & citation

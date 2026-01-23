@@ -7,11 +7,11 @@ eegdash.dataset.DS004105
 
 BCIT Auditory Cueing (OpenNeuro ``ds004105``). Access recordings and metadata through EEGDash.
 
-**Citation:** Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation) (20). *BCIT Auditory Cueing*. `10.18112/openneuro.ds004105.v1.0.0 <https://doi.org/10.18112/openneuro.ds004105.v1.0.0>`__
+**Citation:** Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation) (2022). *BCIT Auditory Cueing*. `10.18112/openneuro.ds004105.v1.0.0 <https://doi.org/10.18112/openneuro.ds004105.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 34`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 245`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BCIT Auditory Cueing
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation)
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004105.v1.0.0 <https://doi.org/10.18112/openneuro.ds004105.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004105>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004105>`__ | `Source URL <https://openneuro.org/datasets/ds004105>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004105>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004105>`__ | `Source URL <https://openneuro.org/datasets/ds004105/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **Introduction**
 
+
 **Overview:** Subjects in the Auditory Cueing study performed a long-duration simulated driving task with
 perturbations and audio stimuli in a visually sparse environment.
+
 The purpose of this effort was to supplement and extend the related driving research to collect
 prolonged time-on-task measurements of subjects performing a driving task in a simulated environment
 in order to assess fatigue-based performance through novel biomarkers.
-Similar to the Baseline Driving study, the Auditory Cueing study was intended to identify periods
-of driver fatigue via predictive algorithms formulated from the analysis of driver EEG data,
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,11 +84,14 @@ of driver fatigue via predictive algorithms formulated from the analysis of driv
    
    **Introduction**
    
+   
    **Overview:** Subjects in the Auditory Cueing study performed a long-duration simulated driving task with
    perturbations and audio stimuli in a visually sparse environment.
+   
    The purpose of this effort was to supplement and extend the related driving research to collect
    prolonged time-on-task measurements of subjects performing a driving task in a simulated environment
    in order to assess fatigue-based performance through novel biomarkers.
+   
    Similar to the Baseline Driving study, the Auditory Cueing study was intended to identify periods
    of driver fatigue via predictive algorithms formulated from the analysis of driver EEG data,
    in comparison to the objective performance measures, and in contrast with the (non-fatigued)
@@ -97,42 +100,56 @@ of driver fatigue via predictive algorithms formulated from the analysis of driv
    increasing the frequency and magnitude of perturbation events vs. baseline driving.
    Further information is available on request from `cancta.net <https://cancta.net>`__.
    
+   
+   
    **Methods**
    
-   **Subjects:** Volunteers from the local community recruited through advertisements.
+   
+   **Subjects:** Volunteers from the local community recruited through advertisements.  
+    
    **Apparatus:**  Driving simulator with steering wheel and brake / foot pedals (Real Time Technologies; Dearborn, MI);
    Video Refresh Rate (VRR) = 900 Hz; Vehicle data log file Sampling Rate (SR) = 100 Hz);
    EEG (BioSemi 64 (+8) channel systems with 4 eye and 2 mastoid channels recorded; SR=2048 Hz);
    Eye Tracking (Sensomotoric Instruments (SMI); REDEYE250).
+   
    **Initial setup:** Upon arrival to the lab, subjects were given an introduction to the
    primary study for which they were recruited and provided informed consent and provided demographics information.
    This was followed by a practice session, to acclimate the subject to the driving simulator.
    The driving practice task lasted 10-15 min, until asymptotic performance in steering and speed control
    was demonstrated and lack of motion sickness was reported.
    Subjects were then outfitted and prepped for eye tracking and EEG acquisition.
+   
    **Task organization within the study:** Subjects always began recording sessions by performing
    a Calibration Driving task, which was a 15-minute drive where the subject controlled only the steering
    (and speed was controlled by the simulator). Following this, subjects would perform Auditory Cueing
    condition A and Auditory Cueing condition B, with counter-balancing used across subjects as to
    which of them came first. This study only contains the Auditory Cueing portion of the study.
+   
    **Auditory cueing task details:** Auditory Cueing A was 45 minutes of continuous driving,
    with subjects responsible for steering and maintaining speed, while a tone was played periodically at random.
    Auditory Cueing B was similar, but the tones were correlated with the onset of a perturbation event.
    Both driving tasks were conducted on the same simulated long, straight road.
    In each case, the subject was instructed to stay within the boundaries of the right-most lane,
    and to drive at the posted speed limits.
+   
    The vehicle was periodically subject to lateral perturbing forces, which could be applied to
    either side of the vehicle, pushing the vehicle out of the center of the lane;
    and the subject was instructed to execute corrective steering actions to return the vehicle to the center of the lane.
-   **Independent variables:** Auditory Cue (randomly presented before perturbation vs. predictive)
+   
+   **Independent variables:** Auditory Cue (randomly presented before perturbation vs. predictive) 
+   
    **Dependent variables:** Reaction times to perturbations, continuous performance based on
    vehicle log (steering wheel angle, lane position, heading error, etc.),
    reaction times to target vehicles (police), Task-Induced Fatigue Scale (TIFS),
    Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
+   
    Note: Questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
+   
    **Additional data acquired:** Participant Enrollment Questionnaire, Subject Questionnaire
    for Current Session, Simulator Sickness Questionnaire.
+   
    **Experimental Location:** Teledyne Corporation, Durham, NC.
+   
    **Note:** This dataset has a corresponding dataset in the BCIT Calibration Driving ds004118 which has the
    15 minute driving task performed prior to this one.
 
@@ -147,7 +164,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 17
-      - Recordings: 34
+      - Recordings: 245
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -168,7 +185,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 20.4 GB
-      - File count: 34
+      - File count: 245
       - Format: BIDS
 
    .. grid-item-card:: License & citation

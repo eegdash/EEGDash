@@ -11,7 +11,7 @@ Evidence accumulation relates to perceptual consciousness and monitoring (OpenNe
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 242`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds001785.v1.1.1 <https://doi.org/10.18112/openneuro.ds001785.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001785>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001785>`__ | `Source URL <https://openneuro.org/datasets/ds001785>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001785>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001785>`__ | `Source URL <https://openneuro.org/datasets/ds001785/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,13 +68,20 @@ Description
 -----------
 
 This dataset contains the EEG used in the paper: Evidence accumulation relates to perceptual consciousness and monitoring, 2021, Nature Communications
+
 Participants:
-Twenty healthy participants (7 woman; age: 25.2, SD = 4.1) participated in this study for a 40 CHF compensation. Subjects gave written informed consent prior to participating and all experimental procedures were approved by the Commission Cantonale d'Ethique de la Recherche de la République et Canton de Genève (2015-00092 15-273).
-One patient with intractable epilepsy. The patient provided informed written consent for the present  study which was approved by the Commission Cantonale d’Ethique de la Recherche de la République et Canton de Genève (2016-01856).
+Twenty healthy participants (7 woman; age: 25.2, SD = 4.1) participated in this study for a 40 CHF compensation. Subjects gave written informed consent prior to participating and all experimental procedures were approved by the Commission Cantonale d'Ethique de la Recherche de la République et Canton de Genève (2015-00092 15-273). 
+
+One patient with intractable epilepsy. The patient provided informed written consent for the present  study which was approved by the Commission Cantonale d’Ethique de la Recherche de la République et Canton de Genève (2016-01856). 
+
 Stimuli were applied on the lateral palmar side of the right wrist using a MMC3 Haptuator vibrotactile device from TactileLabs Inc. (Montreal, Canada) driven by a 230 Hz sinusoid audio signal lasting 100 ms. Experiments started by a simple estimation of the individual detection threshold. The tactile stimulus was applied with decreasing intensity with steps corresponding to 2% of the initial intensity until the participant reported not feeling it anymore three times in a row. We then repeated the same procedure but with increasing intensity and until the participant reported feeling the vibration three times in a row. The perceptual threshold was estimated to be the average between the two thresholds found using this procedure. This approximation was then used as a seed value for an adaptive staircase during the main experiment.
-Participants sat in front of a computer screen. A white fixation cross appeared in the middle of the screen for 2 s. From the moment the fixation cross turned green, participants were told that a tactile stimulus could be applied at any moment during the next 2 s. During this period, stimulus onset was uniformly distributed in 80% of trials, the 20% remaining trials served as catch trials. In all trials, 1 second after the green cross disappeared, participants were prompted to answer with the keyboard whether they felt the stimulus or not. Following a 500 ms stimulus onset asynchrony, participants were asked to report the confidence in their first order response by moving a slider on a visual analog scale with marks at 0 (certainty that the first-order response was erroneous), 0.5 (unsure about the first-order response) and 1.0 (certainty that the first-order response was correct). Detection and confidence reports were provided with the left (non-stimulated) hand, using different keys. The total experiment included 500 trials divided in 10 blocks and lasted about 2 hours.
+ 
+Participants sat in front of a computer screen. A white fixation cross appeared in the middle of the screen for 2 s. From the moment the fixation cross turned green, participants were told that a tactile stimulus could be applied at any moment during the next 2 s. During this period, stimulus onset was uniformly distributed in 80% of trials, the 20% remaining trials served as catch trials. In all trials, 1 second after the green cross disappeared, participants were prompted to answer with the keyboard whether they felt the stimulus or not. Following a 500 ms stimulus onset asynchrony, participants were asked to report the confidence in their first order response by moving a slider on a visual analog scale with marks at 0 (certainty that the first-order response was erroneous), 0.5 (unsure about the first-order response) and 1.0 (certainty that the first-order response was correct). Detection and confidence reports were provided with the left (non-stimulated) hand, using different keys. The total experiment included 500 trials divided in 10 blocks and lasted about 2 hours. 
+
+
 Recordings:
 Electroencephalographic data were acquired from 62 active electrodes (10-20 montage) using a WaveGuard EEG cap and amplifier (ANTNeuro, Hengelo, The Netherlands) and digitized at a sampling rate of 1024 Hz. Horizontal and vertical electrooculography (EOG) was derived using bipolar referenced electrodes placed around participants' eyes. The audio signal driving the vibrotactile actuator was recorded as an extra channel to precisely realign data to stimulus onset.
+
 For the patient, electrocorticographical data was obtained through a 24 electrode ECoG grid (Ad-Tech Medical) covering the left hemisphere from the premotor cortex to the superior parietal lobule. The electrodes had a 4 mm diameter with 2.3 mm exposed corresponding to an area of 4.15 mm2. The data was amplified and sampled at 2048 Hz (Brain Quick LTM, Micromed, Treviso, Italy).
 
 Highlights
@@ -87,8 +94,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 18
-      - Recordings: 54
-      - Tasks: 3
+      - Recordings: 242
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -108,7 +115,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 24.9 GB
-      - File count: 54
+      - File count: 242
       - Format: BIDS
 
    .. grid-item-card:: License & citation

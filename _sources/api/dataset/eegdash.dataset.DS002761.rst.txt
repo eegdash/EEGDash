@@ -7,11 +7,11 @@ eegdash.dataset.DS002761
 
 memoryreplay (OpenNeuro ``ds002761``). Access recordings and metadata through EEGDash.
 
-**Citation:** G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (20). *memoryreplay*. `10.18112/openneuro.ds002761.v1.1.2 <https://doi.org/10.18112/openneuro.ds002761.v1.1.2>`__
+**Citation:** G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (2020). *memoryreplay*. `10.18112/openneuro.ds002761.v1.1.2 <https://doi.org/10.18112/openneuro.ds002761.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 249`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 752`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - memoryreplay
    * - Year
-     - 20
+     - 2020
    * - Authors
      - G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds002761.v1.1.2 <https://doi.org/10.18112/openneuro.ds002761.v1.1.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002761>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002761>`__ | `Source URL <https://openneuro.org/datasets/ds002761>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002761>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002761>`__ | `Source URL <https://openneuro.org/datasets/ds002761/versions/1.1.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,12 @@ Description
 -----------
 
 The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.
+
 Memory phase triggers: At the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent actual stimulus categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. The onset of the answer, approximately 5.5 sec later, is marked by a trigger value of 11.
+
 Localizer phase triggers: As in the memory phase, at the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent true categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. For a baseline, note that for the 2 s prior to picture onset, a word naming that picture was presented on the screen; thus, baseline values should be taken from data more than 2 s before the trigger onset.
-Methods note:  a sequenceness analysis step was omitted from the published 2020 Nature Neuroscience paper. The text should have read:
+
+Methods note:  a sequenceness analysis step was omitted from the published 2020 Nature Neuroscience paper. The text should have read:  
 "We next asked whether the βi(Δt) was consistent with a specified 6 × 6 transition matrix by taking the Frobenius inner product between these two matrices (the sum of element-wise products of the two matrices). This resulted in a single number ZΔt, which pertained to lag Δt. For each trial, sequenceness results were then z-scored across lags. Finally, differential forward – backward sequenceness was defined as ZfΔt − ZbΔt."
 
 Highlights
@@ -83,8 +86,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 249
-      - Tasks: 2
+      - Recordings: 752
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -103,8 +106,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 204.1 GB
-      - File count: 249
+      - Size on disk: 1.7 MB
+      - File count: 752
       - Format: BIDS
 
    .. grid-item-card:: License & citation

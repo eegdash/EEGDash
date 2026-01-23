@@ -7,11 +7,11 @@ eegdash.dataset.DS005672
 
 PerceiveImagine (OpenNeuro ``ds005672``). Access recordings and metadata through EEGDash.
 
-**Citation:** Li Zhiyuan, Zhao Jiaxin (—). *PerceiveImagine*. `10.18112/openneuro.ds005672.v1.0.0 <https://doi.org/10.18112/openneuro.ds005672.v1.0.0>`__
+**Citation:** Li Zhiyuan, Zhao Jiaxin (2024). *PerceiveImagine*. `10.18112/openneuro.ds005672.v1.0.0 <https://doi.org/10.18112/openneuro.ds005672.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 3`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 18`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PerceiveImagine
    * - Year
-     - —
+     - 2024
    * - Authors
      - Li Zhiyuan, Zhao Jiaxin
    * - License
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 3
-      - Recordings: 3
+      - Recordings: 18
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 4.2 GB
-      - File count: 3
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation

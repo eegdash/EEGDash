@@ -7,11 +7,11 @@ eegdash.dataset.DS004625
 
 Mind in Motion Young Adults Walking Over Uneven Terrain (OpenNeuro ``ds004625``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner, Natalie Richer, Jungyun Hwang, Yenisel Cruz-Almeida, Todd M. Manini, Chris J. Hass, Rachael D. Seidler, David J. Clark, Daniel P. Ferris (—). *Mind in Motion Young Adults Walking Over Uneven Terrain*. `10.18112/openneuro.ds004625.v1.0.2 <https://doi.org/10.18112/openneuro.ds004625.v1.0.2>`__
+**Citation:** Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner, Natalie Richer, Jungyun Hwang, Yenisel Cruz-Almeida, Todd M. Manini, Chris J. Hass, Rachael D. Seidler, David J. Clark, Daniel P. Ferris (2023). *Mind in Motion Young Adults Walking Over Uneven Terrain*. `10.18112/openneuro.ds004625.v1.0.2 <https://doi.org/10.18112/openneuro.ds004625.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 9` :bdg-secondary:`Subjects: 32` :bdg-secondary:`Recordings: 543`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 32` :bdg-secondary:`Recordings: 3435`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mind in Motion Young Adults Walking Over Uneven Terrain
    * - Year
-     - —
+     - 2023
    * - Authors
      - Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner, Natalie Richer, Jungyun Hwang, Yenisel Cruz-Almeida, Todd M. Manini, Chris J. Hass, Rachael D. Seidler, David J. Clark, Daniel P. Ferris
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004625.v1.0.2 <https://doi.org/10.18112/openneuro.ds004625.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004625>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004625>`__ | `Source URL <https://openneuro.org/datasets/ds004625>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004625>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004625>`__ | `Source URL <https://openneuro.org/datasets/ds004625/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 Our dataset contains high-density, dual-layer electroencephalography (EEG), neck electromyography (EMG), inertial measurement unit (IMU) acceleration, ground reaction forces, head model constructed from T1 structural MR images from 32 participants walking over uneven terrain and at different speeds. Participants completed two trials for each condition for three minutes and a seated rest trial for three minutes. Digitized electrode locations (txt) are included in each subject folder.
-Please refer to our publication for more detail.
+
+Please refer to our publication for more detail. 
+
 This study was supported by the National Institute of Health (U01AG061389).
 
 Highlights
@@ -81,8 +83,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 32
-      - Recordings: 543
-      - Tasks: 9
+      - Recordings: 3435
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -102,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 62.5 GB
-      - File count: 543
+      - File count: 3435
       - Format: BIDS
 
    .. grid-item-card:: License & citation

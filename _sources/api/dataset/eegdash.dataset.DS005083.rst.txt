@@ -11,7 +11,7 @@ Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with 
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 61` :bdg-secondary:`Recordings: 1357`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 60` :bdg-secondary:`Recordings: 123`
 
 .. rst-class:: sd-badges
 
@@ -79,9 +79,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 61
-      - Recordings: 1357
-      - Tasks: 3
+      - Subjects: 60
+      - Recordings: 123
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,8 +100,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 1357
+      - Size on disk: 281.7 KB
+      - File count: 123
       - Format: BIDS
 
    .. grid-item-card:: License & citation

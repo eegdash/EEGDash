@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1041,7 +1041,7 @@
 <h1>eegdash.dataset.DS005429<a class="headerlink" href="#eegdash-dataset-ds005429" title="Link to this heading">#</a></h1>
 <p>Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm) (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds005429</span></code>). Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Renate Rutiku, Chiara Fiscone, Marcello Massimini, Simone Sarasso (2024). <em>Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm)</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds005429.v1.0.0">10.18112/openneuro.ds005429.v1.0.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 15</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 61</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 15</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 430</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 0.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds005429.v1.0.0">doi:10.18112/openneuro.ds005429.v1.0.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005429">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005429">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005429">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005429">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005429">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005429/versions/1.0.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1100,22 +1100,32 @@ loading errors, etc.), please let us know!</p>
 <p>This is the raw EEG data used in:
 Rutiku, R., Fiscone, C., Massimini, M., &amp; Sarasso, S. (2024). Assessing mismatch negativity (MMN) and P3b within‐individual sensitivity — A comparison between the local–global paradigm and two specialized oddball sequences. European Journal of Neuroscience, 59(5), 842-859.</p>
 <p><strong>What’s in this dataset</strong></p>
-<p>Each participant (n=15) completed three different auditory oddball sequences: the Optimum-1 for MMN, the learning-oddball for P3b, and the local–global paradigm for the local and global effect. The tasks are formatted as different sessions but they were all recorded consecutively within one EEG experiment (order differed between participants). The local-global sequence was recorded in two separate EEG files (except for participant 5; see below for exception notes). Note that whereas the .vmrk files contain the original triggers for each recording, the _events files contain the correct event samples used in the analysis (in the fieldtrip cfg.trl format). It namely sometimes happened that some triggers were skipped by the recording system and these triggers needed to be interpolated using the event timestamps from the psychtoolbox output that was used to run the stimulation sequence (see below). Note also that the local-global sequence contains triggers for every single sound, but trials should be cut only for the first sound of every quintlet. The _events files already take that into account.
-| Subject | Session      | Run   |
-| ——- <a href="#id1"><span class="problematic" id="id2">|--------------|</span></a>——-|
-| sub-01  | ses-MMN      |       |
-| sub-01  | ses-P3b      |       |
-| sub-01  | ses-LGeffect | run-1 |
-| sub-01  | ses-LGeffect | run-2 |</p>
-<p><strong>Auditory stimulation specs</strong></p>
-<p>The stimulation sequence information is provided in the original .mat format in the sourcedata folder.
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Introduction</strong></p>
+<p class="sd-card-text">This is the raw EEG data used in:
+Rutiku, R., Fiscone, C., Massimini, M., &amp; Sarasso, S. (2024). Assessing mismatch negativity (MMN) and P3b within‐individual sensitivity — A comparison between the local–global paradigm and two specialized oddball sequences. European Journal of Neuroscience, 59(5), 842-859.</p>
+<p class="sd-card-text"><strong>What’s in this dataset</strong></p>
+<p class="sd-card-text">Each participant (n=15) completed three different auditory oddball sequences: the Optimum-1 for MMN, the learning-oddball for P3b, and the local–global paradigm for the local and global effect. The tasks are formatted as different sessions but they were all recorded consecutively within one EEG experiment (order differed between participants). The local-global sequence was recorded in two separate EEG files (except for participant 5; see below for exception notes). Note that whereas the .vmrk files contain the original triggers for each recording, the _events files contain the correct event samples used in the analysis (in the fieldtrip cfg.trl format). It namely sometimes happened that some triggers were skipped by the recording system and these triggers needed to be interpolated using the event timestamps from the psychtoolbox output that was used to run the stimulation sequence (see below). Note also that the local-global sequence contains triggers for every single sound, but trials should be cut only for the first sound of every quintlet. The _events files already take that into account.</p>
+<div class="line-block">
+<div class="line">Subject | Session      | Run   |</div>
+<div class="line">——- <a href="#id1"><span class="problematic" id="id2">|--------------|</span></a>——-|</div>
+<div class="line">sub-01  | ses-MMN      |       |</div>
+<div class="line">sub-01  | ses-P3b      |       |</div>
+<div class="line">sub-01  | ses-LGeffect | run-1 |</div>
+<div class="line">sub-01  | ses-LGeffect | run-2 |</div>
+</div>
+<p class="sd-card-text"><strong>Auditory stimulation specs</strong></p>
+<p class="sd-card-text">The stimulation sequence information is provided in the original .mat format in the sourcedata folder.
 There are two files for each sequence: a file containing the sound definitions (_stimulation_SEQUENCE) and a file containing the timestamps for each sound (_critical_events).
 The code used to run these sequences is included in the paradigms folder.</p>
-<p><strong>Exceptions</strong></p>
-<p>Participant 13 was recorded with 5000 Hz EEG sampling rate whereas all other participants were recorded with 2500 Hz EEG sampling rate.
+<p class="sd-card-text"><strong>Exceptions</strong></p>
+<p class="sd-card-text">Participant 13 was recorded with 5000 Hz EEG sampling rate whereas all other participants were recorded with 2500 Hz EEG sampling rate.
 Participants 13, 14, and 15 were recorded chronologically first and they have slightly more trials for the oddball sequences. After inspecting their data, it was decided that trial numbers can be reduced for the rest of the participants in order to keep the recording time as short as possible while still having good sensitivity for the effects of interest.
 Participant 5 has three runs for the local-global task due to a need for an extra break by the participant.</p>
-</section>
+</div>
+</details></section>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
@@ -1127,7 +1137,7 @@ Participant 5 has three runs for the local-global task due to a need for an extr
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 15</p></li>
-<li><p class="sd-card-text">Recordings: 61</p></li>
+<li><p class="sd-card-text">Recordings: 430</p></li>
 <li><p class="sd-card-text">Tasks: 3</p></li>
 </ul>
 </div>
@@ -1166,7 +1176,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 16.5 GB</p></li>
-<li><p class="sd-card-text">File count: 61</p></li>
+<li><p class="sd-card-text">File count: 430</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS006269
 
 Tethered EEG Recordings in Syngap1 rats (OpenNeuro ``ds006269``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (20). *Tethered EEG Recordings in Syngap1 rats*. `10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
+**Citation:** Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (2025). *Tethered EEG Recordings in Syngap1 rats*. `10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 40`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 164`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Tethered EEG Recordings in Syngap1 rats
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006269.v1.0.0 <https://doi.org/10.18112/openneuro.ds006269.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006269>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006269>`__ | `Source URL <https://openneuro.org/datasets/ds006269>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006269>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006269>`__ | `Source URL <https://openneuro.org/datasets/ds006269/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 40
-      - Tasks: 2
+      - Recordings: 164
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 106.7 GB
-      - File count: 40
+      - File count: 164
       - Format: BIDS
 
    .. grid-item-card:: License & citation

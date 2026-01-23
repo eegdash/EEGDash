@@ -7,11 +7,11 @@ eegdash.dataset.DS005087
 
 rapid-hemifield-object-eeg (OpenNeuro ``ds005087``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson (2025). *rapid-hemifield-object-eeg*. `10.18112/openneuro.ds005087.v1.0.1 <https://doi.org/10.18112/openneuro.ds005087.v1.0.1>`__
+**Citation:** Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson (2024). *rapid-hemifield-object-eeg*. `10.18112/openneuro.ds005087.v1.0.1 <https://doi.org/10.18112/openneuro.ds005087.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 60`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 207`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - rapid-hemifield-object-eeg
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005087.v1.0.1 <https://doi.org/10.18112/openneuro.ds005087.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005087>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005087>`__ | `Source URL <https://openneuro.org/datasets/ds005087>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005087>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005087>`__ | `Source URL <https://openneuro.org/datasets/ds005087/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Object and word stimuli presented at 5Hz to the left or right visual fields, or centrally, while participants performed an orthogonal red target detection task
+
 [PUBLICATION] Robinson A.K., Grootswagers T., Shatek S., Behrmann M., Carlson T.A. (2025). Dynamics of visual object coding within and across the hemispheres: Objects in the periphery. Science Advances, 11, eadq0889, https://doi.org/10.1126/sciadv.adq0889
 
 Highlights
@@ -80,8 +81,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 60
-      - Tasks: 3
+      - Recordings: 207
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 58.8 GB
-      - File count: 60
+      - Size on disk: 12.2 GB
+      - File count: 207
       - Format: BIDS
 
    .. grid-item-card:: License & citation

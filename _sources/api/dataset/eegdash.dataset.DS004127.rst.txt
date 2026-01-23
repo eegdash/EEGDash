@@ -7,11 +7,11 @@ eegdash.dataset.DS004127
 
 Somatosensory Cortex Rat DISC Data (OpenNeuro ``ds004127``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amada Abrego, Wasif Khan, John P Seymour (20). *Somatosensory Cortex Rat DISC Data*. `10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
+**Citation:** Amada Abrego, Wasif Khan, John P Seymour (2022). *Somatosensory Cortex Rat DISC Data*. `10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 11` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 73`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 222`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Somatosensory Cortex Rat DISC Data
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Amada Abrego, Wasif Khan, John P Seymour
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004127>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004127>`__ | `Source URL <https://openneuro.org/datasets/ds004127>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004127>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004127>`__ | `Source URL <https://openneuro.org/datasets/ds004127/versions/3.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,16 +69,21 @@ Description
 
 Project Title: DISC Validation in Rat Somatosensory Cortex
 Project ID: 000
+
 Expected experimentation period:
 Start date: N/A
 End date: N/A
+
 Project Description:
-DISC were implanted in rat somatosensory cortex. While anesthetized, whiskers were being stimulated using an air puffer. Task name corresponds to the id of the whisker being stimulated.
-For more information of the task go to our biorxiv's paper: https://www.biorxiv.org/content/10.1101/2021.09.20.460996v3
+DISC were implanted in rat somatosensory cortex. While anesthetized, whiskers were being stimulated using an air puffer. Task name corresponds to the id of the whisker being stimulated. 
+For more information of the task go to our biorxiv's paper: https://www.biorxiv.org/content/10.1101/2021.09.20.460996v3 
+
 Participant categories:
 N/A
+
 Trigger channels:
 N/A
+
 Events:
 N/A
 
@@ -92,8 +97,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 8
-      - Recordings: 73
-      - Tasks: 11
+      - Recordings: 222
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -113,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 187.5 GB
-      - File count: 73
+      - File count: 222
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS006519
 
 Dataset of intracranial EEG during cortical stimulations evoking negative motor responses (OpenNeuro ``ds006519``). Access recordings and metadata through EEGDash.
 
-**Citation:** Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (—). *Dataset of intracranial EEG during cortical stimulations evoking negative motor responses*. `10.18112/openneuro.ds006519.v1.0.0 <https://doi.org/10.18112/openneuro.ds006519.v1.0.0>`__
+**Citation:** Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2025). *Dataset of intracranial EEG during cortical stimulations evoking negative motor responses*. `10.18112/openneuro.ds006519.v1.0.0 <https://doi.org/10.18112/openneuro.ds006519.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 35`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 397`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of intracranial EEG during cortical stimulations evoking negative motor responses
    * - Year
-     - —
+     - 2025
    * - Authors
      - Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006519.v1.0.0 <https://doi.org/10.18112/openneuro.ds006519.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006519>`__ | `Source URL <https://openneuro.org/datasets/ds006519>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006519>`__ | `Source URL <https://openneuro.org/datasets/ds006519/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,20 +67,25 @@ Dataset Information
 Description
 -----------
 
-In this dataset we included iEEG recordings of responses to 41 intracranial high frequency stimulations evoking
+In this dataset we included iEEG recordings of responses to 41 intracranial high frequency stimulations evoking 
 negative motor responses, in 23 patients undergoing stereo-EEG presurgical evaluation for drug-resistant epilepsy.
-The dataset contains 24 seconds of iEEG data around each stimulation, 9-10 seconds before the start of the stimulation,
+
+The dataset contains 24 seconds of iEEG data around each stimulation, 9-10 seconds before the start of the stimulation, 
 up to 5 seconds of intracranial stimulation and 9-10 seconds after the end of the stimulation. Each recording contains
 two 5 second epochs, pre-stimulation (used as baseline in the connectivity analysis) and post-stimulation.
-We have used high-frequency bipolar stimulations of different areas of the brain, using biphasic pulses having a duration
-of 1 ms, at a frequency of 43.2 Hz (alternating polarity) or 50 Hz (non-alternating), current intensity between 0.25 to 3 mA,
-for up to 5 s.
-The contact pair on which stimulation is applied, the current intensity level and evoked effect are specified
-in the events tsv.
-Not all patients in which stimulations evoked negative motor responses met the inclusion criteria for network analysis
+
+We have used high-frequency bipolar stimulations of different areas of the brain, using biphasic pulses having a duration 
+of 1 ms, at a frequency of 43.2 Hz (alternating polarity) or 50 Hz (non-alternating), current intensity between 0.25 to 3 mA, 
+for up to 5 s. 
+
+The contact pair on which stimulation is applied, the current intensity level and evoked effect are specified 
+in the events tsv. 
+
+Not all patients in which stimulations evoked negative motor responses met the inclusion criteria for network analysis 
 that requires running the freesurfer pipeline, for instance patients having prior resections, therefore there are subjects
-that do not contain anatomy data and are not included in the dataset. However, they are included in the numbering of patients
+that do not contain anatomy data and are not included in the dataset. However, they are included in the numbering of patients 
 to match the table in the companion manuscript.
+
 Contact: andrei.barborica@fizica.unibuc.ro
 
 Highlights
@@ -93,7 +98,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 35
+      - Recordings: 397
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -114,7 +119,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.0 GB
-      - File count: 35
+      - File count: 397
       - Format: BIDS
 
    .. grid-item-card:: License & citation

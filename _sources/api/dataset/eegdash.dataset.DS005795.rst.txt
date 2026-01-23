@@ -7,11 +7,11 @@ eegdash.dataset.DS005795
 
 MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data) (OpenNeuro ``ds005795``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann (20). *MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)*. `10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
+**Citation:** Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann (2025). *MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)*. `10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 39`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 634`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim, Artur Mathysiak, Anke Michalsky, Gabriele Schöps, Johann van der Meer, Susann Wolff, André Brechmann
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005795.v1.0.0 <https://doi.org/10.18112/openneuro.ds005795.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005795>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005795>`__ | `Source URL <https://openneuro.org/datasets/ds005795>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005795>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005795>`__ | `Source URL <https://openneuro.org/datasets/ds005795/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,13 +68,18 @@ Description
 -----------
 
 Overview
+
 The study comprises data of a combined fMRI/EEG experiment. The EEG files contain 63 head channels, ECG, EOG, facial EMG and skin conductance data. A physio file contains respiration and finger-pulse data. In addition, a T1 weighted whole-brain anatomical MR scan, a PD weighted (UTE) scan for electrode localization is provided (defacing was performed using https://github.com/cbinyu/pydeface). Additional data of the participants (T2 weighted images, button press dynamics, hearing threshold, hearing abilities, and personality traits (NEO-FFI, BIS/BAS, SVF, ERQ, MMG) are available on request.
 The study was conducted at the Combinatorial NeuroImaging (CNI) core facility of the Leibniz Institute for Neurobiology (LIN) Magdeburg and was approved by the ethics committee of the University of Magdeburg, Germany. All participants gave written informed consent.
 Currently you will only find 5 data-sets that include the multi-dimensional category learning experiment (cf. Wolff & Brechmann, Cerebral Cortex, 2023) because of the copyright policy of OpenNeuro (i.e. CC0). If you are interested in the remaining data-sets, please contact brechmann@lin-magdeburg.de. Collaboration is highly welcome!
+
 Details of the learning task
+
 The auditory category learning experiment comprised 180 trials for which 160 different frequency modulated sounds were presented in pseudo-randomized order with a jittered inter-trial interval of 6, 8, or 10 s plus 19-95 ms in steps of 19 ms in order to ensure a pseudo-random jitter of the sound onset with the onset of the acquisition of an MR volume. Each sound had five different binary features, i.e. duration (short: 400 ms, long 800 ms), direction of the frequency modulation (rising, falling), intensity (soft: 76–81 dB, loud: 86–91 dB), speed of the frequency modulation (slow: 0.25 octaves/s, fast: 0.5 octaves/s), and frequency range (low: 500–831 Hz, high: 1630–2639 Hz with 5 different ranges each). Participants had to learn a target category defined by a combination of the features duration and direction (i.e. long/rising, long/falling, short/rising, or short/falling) by trial and error. In each trial, participants had to indicate via button press whether they thought a sound belonged to the target category (right index finger) or not (right middle finger). They received feedback about the correctness of the response by a prerecorded, female voice in standard German; e.g., "ja" (yes) or "richtig" (right) following correct responses, "nein" (no) or "falsch" (wrong) following incorrect responses. In 90% of the trials the feedback immediately followed the button press, in 10% it was delayed by 1500 ms. If participants failed to respond within 2 seconds after FM tone onset, a timeout feedback ("zu spät", too late) was presented. During the ~27 min learning experiment, participants were asked to fixate a white cross on grey background and avoid any movements. For the 10 min rs-fMRI, they were asked to close their eyes.
+
 Technical details
-MR data were acquired with a 3 Tesla MRI scanner (Philips Achieva dStream) equipped with a 32-channel head coil. The MR scanner generates a trigger signal used to synchronize the multimodal data acquisition. The timing of stimulus events and the participants' responses were controlled by the software Presentation (Neurobehavioral Systems) running on a Windows stimulation-PC.
+
+MR data were acquired with a 3 Tesla MRI scanner (Philips Achieva dStream) equipped with a 32-channel head coil. The MR scanner generates a trigger signal used to synchronize the multimodal data acquisition. The timing of stimulus events and the participants' responses were controlled by the software Presentation (Neurobehavioral Systems) running on a Windows stimulation-PC. 
 Auditory stimuli were presented via a Mark II+ (MR-Confon, Magdeburg, Germany) audio control unit to MR compatible electrodynamic headphones with integrated ear muffs that provide passive damping of ambient scanner noise by ~24 dB. Earplugs (Bilsom 303) further reduce the noise by ~29 dB (SNR).
 Button presses of the participants were recorded with the ResponseBox 2.0 by Covilex (Magdeburg, Germany) that includes a response pad with two buttons. The device delivers continuous 8-bit data at a sampling rate of 500 Hz. The Teensy converts left and right button presses that exceed a defined threshold into USB keyboard events handled by the stimulation-PC.
 Respiration and heart rate was recorded with Invivo MRI Sensors at a sampling rate of 100 Hz and stored on the MRI acquisition PC at 496 Hz sampling rate.
@@ -90,8 +95,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 34
-      - Recordings: 39
-      - Tasks: 2
+      - Recordings: 634
+      - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -111,7 +116,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 6.4 GB
-      - File count: 39
+      - File count: 634
       - Format: BIDS
 
    .. grid-item-card:: License & citation

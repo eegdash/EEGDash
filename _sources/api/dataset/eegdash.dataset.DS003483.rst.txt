@@ -7,11 +7,11 @@ eegdash.dataset.DS003483
 
 Logical reasoning study (OpenNeuro ``ds003483``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany (—). *Logical reasoning study*. `10.18112/openneuro.ds003483.v1.0.2 <https://doi.org/10.18112/openneuro.ds003483.v1.0.2>`__
+**Citation:** Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany (2021). *Logical reasoning study*. `10.18112/openneuro.ds003483.v1.0.2 <https://doi.org/10.18112/openneuro.ds003483.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 41`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 209`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Logical reasoning study
    * - Year
-     - —
+     - 2021
    * - Authors
      - Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003483.v1.0.2 <https://doi.org/10.18112/openneuro.ds003483.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003483>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003483>`__ | `Source URL <https://openneuro.org/datasets/ds003483>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003483>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003483>`__ | `Source URL <https://openneuro.org/datasets/ds003483/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 41
+      - Recordings: 209
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 68.3 GB
-      - File count: 41
+      - Size on disk: 24.5 GB
+      - File count: 209
       - Format: BIDS
 
    .. grid-item-card:: License & citation

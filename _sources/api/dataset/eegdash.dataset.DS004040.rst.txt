@@ -7,11 +7,11 @@ eegdash.dataset.DS004040
 
 Trance channeling EEG study (OpenNeuro ``ds004040``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cedric Cannard, Arnaud Delorme, Helane Wahbeh (—). *Trance channeling EEG study*. `10.18112/openneuro.ds004040.v1.0.0 <https://doi.org/10.18112/openneuro.ds004040.v1.0.0>`__
+**Citation:** Cedric Cannard, Arnaud Delorme, Helane Wahbeh (2022). *Trance channeling EEG study*. `10.18112/openneuro.ds004040.v1.0.0 <https://doi.org/10.18112/openneuro.ds004040.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 26`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 160`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Trance channeling EEG study
    * - Year
-     - —
+     - 2022
    * - Authors
      - Cedric Cannard, Arnaud Delorme, Helane Wahbeh
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004040.v1.0.0 <https://doi.org/10.18112/openneuro.ds004040.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004040>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004040>`__ | `Source URL <https://openneuro.org/datasets/ds004040>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004040>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004040>`__ | `Source URL <https://openneuro.org/datasets/ds004040/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,9 +67,9 @@ Dataset Information
 Description
 -----------
 
-This group contains 13 participants that went through a thorough
-screening and did 2 sessions (different days) each. Experiment design
-corresponded in alternating (5 minutes) blocs of trance channeling and
+This group contains 13 participants that went through a thorough 
+screening and did 2 sessions (different days) each. Experiment design 
+corresponded in alternating (5 minutes) blocs of trance channeling and 
 resting state (3 periods per session for each condition).
 
 Highlights
@@ -82,7 +82,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 13
-      - Recordings: 26
+      - Recordings: 160
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +103,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 11.6 GB
-      - File count: 26
+      - File count: 160
       - Format: BIDS
 
    .. grid-item-card:: License & citation

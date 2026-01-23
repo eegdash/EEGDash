@@ -7,11 +7,11 @@ eegdash.dataset.DS002680
 
 Go-nogo categorization and detection task (OpenNeuro ``ds002680``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme (20). *Go-nogo categorization and detection task*. `10.18112/openneuro.ds002680.v1.2.0 <https://doi.org/10.18112/openneuro.ds002680.v1.2.0>`__
+**Citation:** Arnaud Delorme (2020). *Go-nogo categorization and detection task*. `10.18112/openneuro.ds002680.v1.2.0 <https://doi.org/10.18112/openneuro.ds002680.v1.2.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 350`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 4977`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Go-nogo categorization and detection task
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Arnaud Delorme
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002680.v1.2.0 <https://doi.org/10.18112/openneuro.ds002680.v1.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002680>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002680>`__ | `Source URL <https://openneuro.org/datasets/ds002680>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002680>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002680>`__ | `Source URL <https://openneuro.org/datasets/ds002680/versions/1.2.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Participants seated in a dimly lit room at 110 cm from a computer screen piloted from a PC computer. Two tasks alternated: a categorization task and a recognition task. In both tasks, target images and non-target images were equally likely presented. Participants were tested in two recording phases. The first day was composed of 13 series, the second day of 12 series, with 100 images per series (see details of the series below). To start a series, subjects had to press a touch-sensitive button. A small fixation point (smaller than 0.1 degree of visual angle) was drawn in the middle of a black screen. Then, an 8 bit color vertical photograph (256 pixels wide by 384 pixels high which roughly correspond to 4.5 degree of visual angle in width and 6.5 degree in height) was flashed for 20 ms (2 frames of a 100 Hz SVGA screen) using a programmable graphic board (VSG 2.1, Cambridge Research Systems). This short presentation time avoid that subjects use exploratory eye movement to respond. Participants gave their responses following a go/nogo paradigm. For each target, they had to lift their finger from the button as quickly and accurately as possible (releasing the button restored a focused light beam between an optic fiber led and its receiver; the response latency of this apparatus was under 1 ms). Participants were given 1000 ms to respond, after what any response was considered as a nogo response. The stimulus onset asynchrony (SOA) was 2000 ms plus or minus a random delay of 200 ms. For each distractor, participants had to keep pressing the button during at least 1000 ms (nogo response).
+
 More specifically, in the animal categorization task, participants had to respond whenever there was an animal in the picture. In the recognition task, the session started with a learning phase. A probe image was flashed 15 times during 20 ms intermixed with two presentations of 1000 ms after the fifth and the tenth flashes, allowing an ocular exploration of the image; with an inter-stimulus of 1000 ms. Participants were instructed to carefully examine and learn the probe image in order to recognize it in the following series. The test phase started immediately after the learning phase. The probe image constituted the unique target of the series. Both tasks were organized in series of 100 images; 50 targets images were mixed with 50 non-targets in the animal categorization task; 50 copies of an unique photographs were mixed at random with 50 non-targets in the recognition task.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 14
-      - Recordings: 350
+      - Recordings: 4977
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.2 GB
-      - File count: 350
+      - File count: 4977
       - Format: BIDS
 
    .. grid-item-card:: License & citation

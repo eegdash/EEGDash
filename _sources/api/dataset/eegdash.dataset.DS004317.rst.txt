@@ -7,11 +7,11 @@ eegdash.dataset.DS004317
 
 Mood Manipulation and PST, Experiment 2 (OpenNeuro ``ds004317``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Trevor C J Jackson (20). *Mood Manipulation and PST, Experiment 2*. `10.18112/openneuro.ds004317.v1.0.3 <https://doi.org/10.18112/openneuro.ds004317.v1.0.3>`__
+**Citation:** James F Cavanagh, Trevor C J Jackson (2022). *Mood Manipulation and PST, Experiment 2*. `10.18112/openneuro.ds004317.v1.0.3 <https://doi.org/10.18112/openneuro.ds004317.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 50`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 50` :bdg-secondary:`Recordings: 425`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mood Manipulation and PST, Experiment 2
    * - Year
-     - 20
+     - 2022
    * - Authors
      - James F Cavanagh, Trevor C J Jackson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004317.v1.0.3 <https://doi.org/10.18112/openneuro.ds004317.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004317>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004317>`__ | `Source URL <https://openneuro.org/datasets/ds004317>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004317>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004317>`__ | `Source URL <https://openneuro.org/datasets/ds004317/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 50
-      - Recordings: 50
+      - Recordings: 425
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 18.3 GB
-      - File count: 50
+      - File count: 425
       - Format: BIDS
 
    .. grid-item-card:: License & citation

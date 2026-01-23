@@ -11,7 +11,7 @@ HAPwave_bids (OpenNeuro ``ds004696``). Access recordings and metadata through EE
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 5243`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 5163`
 
 .. rst-class:: sd-badges
 
@@ -133,8 +133,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 10
-      - Recordings: 5243
+      - Subjects: 8
+      - Recordings: 5163
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -154,8 +154,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 5243
+      - Size on disk: 14.2 GB
+      - File count: 5163
       - Format: BIDS
 
    .. grid-item-card:: License & citation

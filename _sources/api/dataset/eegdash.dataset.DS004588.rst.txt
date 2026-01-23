@@ -7,11 +7,11 @@ eegdash.dataset.DS004588
 
 Neuma (OpenNeuro ``ds004588``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris (—). *Neuma*. `10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
+**Citation:** Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris (2023). *Neuma*. `10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 42`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 216`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neuma
    * - Year
-     - —
+     - 2023
    * - Authors
      - Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004588>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004588>`__ | `Source URL <https://openneuro.org/datasets/ds004588>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004588>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004588>`__ | `Source URL <https://openneuro.org/datasets/ds004588/versions/1.2.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,8 @@ Dataset Information
 Description
 -----------
 
-A novel multimodal Neuromarketing dataset that encompasses the data from 42 individuals who participated in an advertising brochure-browsing scenario is introduced here. In more detail, participants were exposed to a series of supermarket brochures (containing various products) and instructed to select the products they intended to buy. The data collected for each individual executing this protocol included: (i) encephalographic (EEG) recordings, (ii) eye tracking (ET) recordings, (iii) questionnaire responses (demographic, profiling and product related questions), and (iv) computer mouse data.
+A novel multimodal Neuromarketing dataset that encompasses the data from 42 individuals who participated in an advertising brochure-browsing scenario is introduced here. In more detail, participants were exposed to a series of supermarket brochures (containing various products) and instructed to select the products they intended to buy. The data collected for each individual executing this protocol included: (i) encephalographic (EEG) recordings, (ii) eye tracking (ET) recordings, (iii) questionnaire responses (demographic, profiling and product related questions), and (iv) computer mouse data. 
+
 The preprocessed version of this dataset can be found here: https://figshare.com/articles/dataset/NeuMa_PreProcessed_A_multimodal_Neuromarketing_dataset/22117124
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 42
-      - Recordings: 42
+      - Recordings: 216
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 602.0 MB
-      - File count: 42
+      - Size on disk: 534.1 MB
+      - File count: 216
       - Format: BIDS
 
    .. grid-item-card:: License & citation

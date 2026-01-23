@@ -11,7 +11,7 @@ Real-time EEG feedback on alpha power lateralization leads to behavioral improve
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 167`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 882`
 
 .. rst-class:: sd-badges
 
@@ -86,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 14
-      - Recordings: 167
+      - Recordings: 882
       - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 10.1 GB
-      - File count: 167
+      - File count: 882
       - Format: BIDS
 
    .. grid-item-card:: License & citation

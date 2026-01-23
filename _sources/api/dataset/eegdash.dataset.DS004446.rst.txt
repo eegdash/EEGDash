@@ -11,7 +11,7 @@ The BMI-HDEEG dataset 2 (OpenNeuro ``ds004446``). Access recordings and metadata
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 237`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 1192`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004446.v1.0.1 <https://doi.org/10.18112/openneuro.ds004446.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004446>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004446>`__ | `Source URL <https://openneuro.org/datasets/ds004446>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004446>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004446>`__ | `Source URL <https://openneuro.org/datasets/ds004446/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,13 @@ Description
 -----------
 
 Data Descriptor Article
+
+
 Iwama, S., Morishige, M., Kodama, M. et al. High-density scalp electroencephalogram dataset during sensorimotor rhythm-based brain-computer interfacing. Sci Data 10, 385 (2023). https://doi.org/10.1038/s41597-023-02260-6
+
 Sample code
+
+
 https://github.com/Junichi-Ushiba-Laboratory/pj-hd-smrbmi
 
 Highlights
@@ -82,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 237
+      - Recordings: 1192
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 29.2 GB
-      - File count: 237
+      - File count: 1192
       - Format: BIDS
 
    .. grid-item-card:: License & citation

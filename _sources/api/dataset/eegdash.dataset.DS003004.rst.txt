@@ -7,11 +7,11 @@ eegdash.dataset.DS003004
 
 Imagined Emotion Study (OpenNeuro ``ds003004``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julie Onton, Scott Makeig (—). *Imagined Emotion Study*. `10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
+**Citation:** Julie Onton, Scott Makeig (2020). *Imagined Emotion Study*. `10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 34`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 277`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Imagined Emotion Study
    * - Year
-     - —
+     - 2020
    * - Authors
      - Julie Onton, Scott Makeig
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003004.v1.1.1 <https://doi.org/10.18112/openneuro.ds003004.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003004>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003004>`__ | `Source URL <https://openneuro.org/datasets/ds003004>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003004>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003004>`__ | `Source URL <https://openneuro.org/datasets/ds003004/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,10 +67,14 @@ Dataset Information
 Description
 -----------
 
-**PARADIGM:** The study uses the method of guided imagery to induce resting, eyes-closed participants using voice-guided imagination to enter distinct 15 emotion states during acquisition of high-density EEG data.
+**PARADIGM:** The study uses the method of guided imagery to induce resting, eyes-closed participants using voice-guided imagination to enter distinct 15 emotion states during acquisition of high-density EEG data. 
+
 During the study, participants listen to 15 voice recordings that each suggest imagining a scenario in which they have experienced -- or would experience the named target emotion. Some target emotions have positive valence (e.g., joy, happiness), others negative valence (e.g., sadness, anger). Before and between the 15 emotion imagination periods, participants hear relaxation suggestions ('Now return to a neutral state by ...').
+
 **PROCEDURE:** When the participant first begins to feel the target emotion, they are asked to indicate this by pressing a handheld button. Participants are asked to continue feeling the emotion as long as possible.  To intensify and lengthen the periods of experienced emotion, participants are asked to interoceptively perceive and attend relevant somatosensory sensations. When the target feeling wanes (typically after 1 and 5 minutes), participants push the button again to leave the emotion imagination period and cue the relaxation instructions.
+
 **DATA HANDLING:** The raw data have been preprocessed to fix confusing event codes and to remove excessively noisy channels. In addition, a 1-Hz high pass filter  was applied to ready the data for ICA decomposition. Note: Unfortunately, the unfiltered data are no longer available.
+
 **NOTE:** Sub22 was a repeat subject, hence was removed from the dataset.
 
 Highlights
@@ -83,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 34
-      - Recordings: 34
+      - Recordings: 277
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 36.0 GB
-      - File count: 34
+      - File count: 277
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004147
 
 Average Task Value (OpenNeuro ``ds004147``). Access recordings and metadata through EEGDash.
 
-**Citation:** Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (20). *Average Task Value*. `10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
+**Citation:** Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (2022). *Average Task Value*. `10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 12`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 113`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Average Task Value
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004147>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004147>`__ | `Source URL <https://openneuro.org/datasets/ds004147>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004147>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004147>`__ | `Source URL <https://openneuro.org/datasets/ds004147/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,8 +70,11 @@ Description
 
 **Average Task Value**
 
+
 Twelve participants completed three learning tasks. In each task the goal was to learn cue-response mappings for six cues. The cues were various coloured shapes. The possible responses were left ('d' key) or right ('k' key). There were two types of cues. Low-value cues had a feedback validity of 0.5 (i.e., a coin toss). High-value cues had a feedback validity of 0.8 (80% chance of a win if the correct action was chosen). The low-value task contained only low-value cues. The high-value task contained only high-value cues. The mid-value task contained three low-value cues and three high-value cues. Participants completed 144 trials of each task.
+
 Preprint: https://doi.org/10.1101/2021.09.16.460600
+
 Analysis code: https://github.com/chassall/averagetaskvalue
 
 Highlights
@@ -84,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 12
+      - Recordings: 113
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 4.0 GB
-      - File count: 12
+      - File count: 113
       - Format: BIDS
 
    .. grid-item-card:: License & citation

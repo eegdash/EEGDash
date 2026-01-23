@@ -7,11 +7,11 @@ eegdash.dataset.DS005262
 
 ArEEG: Arabic Inner Speech EEG dataset (OpenNeuro ``ds005262``). Access recordings and metadata through EEGDash.
 
-**Citation:** Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim (—). *ArEEG: Arabic Inner Speech EEG dataset*. `10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
+**Citation:** Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim (2024). *ArEEG: Arabic Inner Speech EEG dataset*. `10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 186`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 561`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ArEEG: Arabic Inner Speech EEG dataset
    * - Year
-     - —
+     - 2024
    * - Authors
      - Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__ | `Source URL <https://openneuro.org/datasets/ds005262>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__ | `Source URL <https://openneuro.org/datasets/ds005262/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,6 +70,7 @@ Description
 
 **ArEEG: Arabic EEG Dataset**
 
+
 This dataset is a collection of Inner Speech EEG recordings from 12 subjects, 7 males and 5 females with visual cues written in Modern Standard Arabic.
 Go to `GitHub Repository <https://github.com/Eslam21/ArEEG-an-Open-Access-Arabic-Inner-Speech-EEG-Dataset>`__ for usage instructions.
 
@@ -83,8 +84,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 186
-      - Tasks: 1
+      - Recordings: 561
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -103,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 689.0 MB
-      - File count: 186
+      - Size on disk: 688.8 MB
+      - File count: 561
       - Format: BIDS
 
    .. grid-item-card:: License & citation

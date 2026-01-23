@@ -7,11 +7,11 @@ eegdash.dataset.DS003458
 
 EEG: Three armed bandit gambling task (OpenNeuro ``ds003458``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh jcavanagh@unm.edu (20). *EEG: Three armed bandit gambling task*. `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
+**Citation:** James F Cavanagh jcavanagh@unm.edu (2021). *EEG: Three armed bandit gambling task*. `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 23`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 201`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Three armed bandit gambling task
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh jcavanagh@unm.edu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003458.v1.1.0 <https://doi.org/10.18112/openneuro.ds003458.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003458>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003458>`__ | `Source URL <https://openneuro.org/datasets/ds003458>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003458>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003458>`__ | `Source URL <https://openneuro.org/datasets/ds003458/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,15 @@ Description
 -----------
 
 Healthy control college students.  23 subjects completed the 3-armed bandit task with oscillating probabilities.    For example, the 'blue' stim would slowly move from 20% reinforcing to 90% then back to 20 over many trials.  The other 'red' and 'green' stims would move similarly, but in different phase.  See Fig 1 of the paper.  This makes the task great for investigating reward processing & reward prediction error in the service of novel task set generation.
-Task included in Matlab programming language.
-Data collected in 2014 in the Cognitive Rhythms and Computation Lab, University of New Mexico.
+
+Task included in Matlab programming language.  
+
+Data collected in 2014 in the Cognitive Rhythms and Computation Lab, University of New Mexico.   
+
 I also collected Corrugator EMG (may be labeled EKG) and Skin Conductance on most people.  But quality was dubious so I never did much with it.  Check .xls sheet under code folder.
-Some pre-processing scripts are included in code folder as well.
+
+Some pre-processing scripts are included in code folder as well.   
+
 - James F Cavanagh 01/04/2021
 
 Highlights
@@ -84,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 23
-      - Recordings: 23
+      - Recordings: 201
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +110,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 4.7 GB
-      - File count: 23
+      - File count: 201
       - Format: BIDS
 
    .. grid-item-card:: License & citation

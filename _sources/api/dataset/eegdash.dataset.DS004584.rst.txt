@@ -7,11 +7,11 @@ eegdash.dataset.DS004584
 
 Rest eyes open (OpenNeuro ``ds004584``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (—). *Rest eyes open*. `10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
+**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). *Rest eyes open*. `10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 149` :bdg-secondary:`Recordings: 149`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 149` :bdg-secondary:`Recordings: 1049`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rest eyes open
    * - Year
-     - —
+     - 2023
    * - Authors
      - Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004584>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004584>`__ | `Source URL <https://openneuro.org/datasets/ds004584>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004584>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004584>`__ | `Source URL <https://openneuro.org/datasets/ds004584/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,9 +67,9 @@ Dataset Information
 Description
 -----------
 
-This experiment includes 149 subjects: 100 individuals with Parkinsons disease,
-and 49 controls. EEG was recorded with a 64-channel BrainVision cap. Resting-state
-EEG was collected from patients sitting in a quiet room with their eyes open for
+This experiment includes 149 subjects: 100 individuals with Parkinsons disease, 
+and 49 controls. EEG was recorded with a 64-channel BrainVision cap. Resting-state 
+EEG was collected from patients sitting in a quiet room with their eyes open for 
 two minutes.
 
 Highlights
@@ -82,7 +82,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 149
-      - Recordings: 149
+      - Recordings: 1049
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +103,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 2.9 GB
-      - File count: 149
+      - File count: 1049
       - Format: BIDS
 
    .. grid-item-card:: License & citation

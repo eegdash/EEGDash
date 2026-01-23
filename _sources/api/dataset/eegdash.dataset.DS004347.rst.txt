@@ -7,11 +7,11 @@ eegdash.dataset.DS004347
 
 Symmetry perception and affective responses: a combined EEG/EMG study (OpenNeuro ``ds004347``). Access recordings and metadata through EEGDash.
 
-**Citation:** Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (—). *Symmetry perception and affective responses: a combined EEG/EMG study*. `10.18112/openneuro.ds004347.v1.0.0 <https://doi.org/10.18112/openneuro.ds004347.v1.0.0>`__
+**Citation:** Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (2022). *Symmetry perception and affective responses: a combined EEG/EMG study*. `10.18112/openneuro.ds004347.v1.0.0 <https://doi.org/10.18112/openneuro.ds004347.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 173`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Symmetry perception and affective responses: a combined EEG/EMG study
    * - Year
-     - —
+     - 2022
    * - Authors
      - Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M.
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004347.v1.0.0 <https://doi.org/10.18112/openneuro.ds004347.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004347>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004347>`__ | `Source URL <https://openneuro.org/datasets/ds004347>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004347>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004347>`__ | `Source URL <https://openneuro.org/datasets/ds004347/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 SPN1 Experiment 1 Project 1. After stimulus offset, participants reported whether patterns were regular or random.
+
 For full catalogue, see https://osf.io/2sncj/
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 24
+      - Recordings: 173
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 2.7 GB
-      - File count: 24
+      - Size on disk: 2.4 GB
+      - File count: 173
       - Format: BIDS
 
    .. grid-item-card:: License & citation

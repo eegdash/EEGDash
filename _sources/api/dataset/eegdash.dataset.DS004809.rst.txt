@@ -7,11 +7,11 @@ eegdash.dataset.DS004809
 
 Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories (OpenNeuro ``ds004809``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories*. `10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2023). *Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories*. `10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 252` :bdg-secondary:`Recordings: 889`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 258` :bdg-secondary:`Recordings: 7226`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories
    * - Year
-     - —
+     - 2023
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__ | `Source URL <https://openneuro.org/datasets/ds004809>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__ | `Source URL <https://openneuro.org/datasets/ds004809/versions/2.2.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,17 +71,22 @@ Description
 **Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a categorized free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
-Unique to this paradigm is the semantic construction of the word lists.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be:
+
+Unique to this paradigm is the semantic construction of the word lists.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be: 
+
 **A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
+
 
 **To Note**
 
 * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
 * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
 * Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
+
 
 **Contact**
 
@@ -96,8 +101,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 252
-      - Recordings: 889
+      - Subjects: 258
+      - Recordings: 7226
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,7 +123,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 477.2 GB
-      - File count: 889
+      - File count: 7226
       - Format: BIDS
 
    .. grid-item-card:: License & citation

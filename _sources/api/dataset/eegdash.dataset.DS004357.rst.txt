@@ -7,11 +7,11 @@ eegdash.dataset.DS004357
 
 Features-EEG (OpenNeuro ``ds004357``). Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2024). *Features-EEG*. `10.18112/openneuro.ds004357.v1.0.1 <https://doi.org/10.18112/openneuro.ds004357.v1.0.1>`__
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2022). *Features-EEG*. `10.18112/openneuro.ds004357.v1.0.1 <https://doi.org/10.18112/openneuro.ds004357.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 16`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 71`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Features-EEG
    * - Year
-     - 2024
+     - 2022
    * - Authors
      - Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004357.v1.0.1 <https://doi.org/10.18112/openneuro.ds004357.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004357>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004357>`__ | `Source URL <https://openneuro.org/datasets/ds004357>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004357>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004357>`__ | `Source URL <https://openneuro.org/datasets/ds004357/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,11 @@ Description
 -----------
 
 Grootswagers T., Robinson A.K., Shatek S.M., Carlson T.A. (2024). Mapping the Dynamics of Visual Feature Coding: Insights into Perception and Integration. PLoS Computational Biology, 20(1) e1011760 https://doi.org/10.1371/journal.pcbi.1011760
+
 Experiment Details
 Electroencephalography recordings from 16 subjects to fast streams of gabor-like stimuli.
 Images were presented in rapid serial visual presentation streams at 6.67Hz and 20Hz rates. Participants performed an orthogonal fixation colour change detection task.
+
 Experiment length: 1 hour
 
 Highlights
@@ -83,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 16
-      - Recordings: 16
+      - Recordings: 71
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +105,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 69.6 GB
-      - File count: 16
+      - Size on disk: 19.3 GB
+      - File count: 71
       - Format: BIDS
 
    .. grid-item-card:: License & citation

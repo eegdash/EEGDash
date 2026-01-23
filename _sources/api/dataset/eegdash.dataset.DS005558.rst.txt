@@ -7,11 +7,11 @@ eegdash.dataset.DS005558
 
 Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier) (OpenNeuro ``ds005558``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)*. `10.18112/openneuro.ds005558.v1.0.0 <https://doi.org/10.18112/openneuro.ds005558.v1.0.0>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)*. `10.18112/openneuro.ds005558.v1.0.0 <https://doi.org/10.18112/openneuro.ds005558.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 22`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 165`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)
    * - Year
-     - —
+     - 2024
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005558.v1.0.0 <https://doi.org/10.18112/openneuro.ds005558.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005558>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005558>`__ | `Source URL <https://openneuro.org/datasets/ds005558>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005558>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005558>`__ | `Source URL <https://openneuro.org/datasets/ds005558/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,32 +71,60 @@ Description
 **Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiology recordings from a categorized free recall task with closed-loop stimulation at encoding, using a classifier trained on encoding data.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.  This dataset is a closed-loop stimulation version of the `catFR1 <https://openneuro.org/datasets/ds004809>`__ and `catFR2 <https://openneuro.org/datasets/ds005491>`__ datasets.
-The word lists in this paradigm follow a specific semantic construction.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be:
-**A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
-This study contains closed-loop electrical stimulation of the brain during encoding.  There is no stimulation during the distractor or retrieval phases.  Stimulation is delivered to a single electrode at a time, and the stimulation parameters are included in the bevavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
 
-**Classifier Details**
+The word lists in this paradigm follow a specific semantic construction.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be: 
 
-The L2 logistic regression classifier is trained to predict whether an encoded item will be subsequently recalled based on the neural features during encoding, using data from a participant's `catFR1 <https://openneuro.org/datasets/ds004809>`__ sessions.  The bipolar recordings during the 0-1366 ms interval after word presentation are filtered with a Butterworth band stop filter (58-62 Hz, 4th order) to remove 60 Hz line noise, and then a Morlet wavelet transformation (wavenumber = 5) is applied to the signal to estimate spectral power, using 8 log-spaced wavelets between 3-180 Hz (center frequencies 3.0, 5.4, 9.7, 17.4, 31.1, 55.9, 100.3, 180 Hz) and 1365 ms mirrored buffers.  The powers are log-transformed and downsampled to a 50 Hz sampling frequency prior to removal of the buffer, and then z-transformed based on the within-session mean and standard deviation across all encoding events.  These z-transformed log power values represent the feature matrix, and the label vector is the recalled status of the encoded items.  The penalty parameter is chosen based on the value that leads to the highest average AUC for all prior participants with at least two `catFR1 <https://openneuro.org/datasets/ds004809>`__ sessions, and is inversely weighted according to the class (i.e., recalled v. not recalled) imbalance to ensure the best fit values of the penalty parameter are comparable across different class distributions (recall rates).  Class weights are computed as: (1/Na) / ((1/Na + 1/Nb) / 2) where Na and Nb are the number of events in each class.
-After at least 3 training sessions with a minimum of 15 lists, each participant's classifier is tested using leave-one-session-out (LOSO) cross validation, and the true AUC is compared to a 200-sample AUC distribution generated from classification of label-permuted data.  p < 0.05 (one-sided) is used as the significance threshold for continuing to the closed-loop task.
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-**Closed-Loop Procedure**
+   
+   **Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)**
+   
+   
+   
+   **Description**
+   
+   This dataset contains behavioral events and intracranial electrophysiology recordings from a categorized free recall task with closed-loop stimulation at encoding, using a classifier trained on encoding data.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.  This dataset is a closed-loop stimulation version of the `catFR1 <https://openneuro.org/datasets/ds004809>`__ and `catFR2 <https://openneuro.org/datasets/ds005491>`__ datasets.
+   
+   The word lists in this paradigm follow a specific semantic construction.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be: 
+   
+   **A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
+   
+   This study contains closed-loop electrical stimulation of the brain during encoding.  There is no stimulation during the distractor or retrieval phases.  Stimulation is delivered to a single electrode at a time, and the stimulation parameters are included in the bevavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
+   
+   
+   
+   **Classifier Details**
+   
+   The L2 logistic regression classifier is trained to predict whether an encoded item will be subsequently recalled based on the neural features during encoding, using data from a participant's `catFR1 <https://openneuro.org/datasets/ds004809>`__ sessions.  The bipolar recordings during the 0-1366 ms interval after word presentation are filtered with a Butterworth band stop filter (58-62 Hz, 4th order) to remove 60 Hz line noise, and then a Morlet wavelet transformation (wavenumber = 5) is applied to the signal to estimate spectral power, using 8 log-spaced wavelets between 3-180 Hz (center frequencies 3.0, 5.4, 9.7, 17.4, 31.1, 55.9, 100.3, 180 Hz) and 1365 ms mirrored buffers.  The powers are log-transformed and downsampled to a 50 Hz sampling frequency prior to removal of the buffer, and then z-transformed based on the within-session mean and standard deviation across all encoding events.  These z-transformed log power values represent the feature matrix, and the label vector is the recalled status of the encoded items.  The penalty parameter is chosen based on the value that leads to the highest average AUC for all prior participants with at least two `catFR1 <https://openneuro.org/datasets/ds004809>`__ sessions, and is inversely weighted according to the class (i.e., recalled v. not recalled) imbalance to ensure the best fit values of the penalty parameter are comparable across different class distributions (recall rates).  Class weights are computed as: (1/Na) / ((1/Na + 1/Nb) / 2) where Na and Nb are the number of events in each class.
+   
+   After at least 3 training sessions with a minimum of 15 lists, each participant's classifier is tested using leave-one-session-out (LOSO) cross validation, and the true AUC is compared to a 200-sample AUC distribution generated from classification of label-permuted data.  p < 0.05 (one-sided) is used as the significance threshold for continuing to the closed-loop task.
+   
+   
+   **Closed-Loop Procedure**
+   
+   Each session contains 26 lists (the first being a practice list) and there is no stimulation on the first 4 lists.  The classifier ouput for each presented item on the first 4 lists is compared to the classifier output when tested on data from all previous sessions using a two-sample Kolmogorov-Smirnov test.  The null hypothesis that the current session and the training data come from the same distribution must not be rejected (p > 0.05) for the closed-loop task to continue.  
+   
+   The remaining 22 lists are equally divided into stimulation and no stimulation lists, with conditions balanced in each half of the session.  On stimulation lists, classifier output is evaluated during the 0-1366 ms interval following word presentation onset.  The input values are normalized using the mean and standard deviation across encoding events on all prior no stimulation lists in the session.  If the classifier output is below the threshold value, stimulation occurs immediately following the 1366 ms decoding interval and lasts for 500 ms.  The classifier threshold is calculated for each participant individually using Youden's J statistic and is chosen as the maximal J value across all points on the participant's training sessions' ROC curve.  With a 750-1000 ms inter-stimulus interval, there is enough time for stimulation artifacts to subside before the next word onset (next classifier decoding).  
+   
+   
+   
+   
+   **To Note**
+   
+   * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+   * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+   * Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+   
+   
+   **Contact**
+   
+   For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
 
-Each session contains 26 lists (the first being a practice list) and there is no stimulation on the first 4 lists.  The classifier ouput for each presented item on the first 4 lists is compared to the classifier output when tested on data from all previous sessions using a two-sample Kolmogorov-Smirnov test.  The null hypothesis that the current session and the training data come from the same distribution must not be rejected (p > 0.05) for the closed-loop task to continue.
-The remaining 22 lists are equally divided into stimulation and no stimulation lists, with conditions balanced in each half of the session.  On stimulation lists, classifier output is evaluated during the 0-1366 ms interval following word presentation onset.  The input values are normalized using the mean and standard deviation across encoding events on all prior no stimulation lists in the session.  If the classifier output is below the threshold value, stimulation occurs immediately following the 1366 ms decoding interval and lasts for 500 ms.  The classifier threshold is calculated for each participant individually using Youden's J statistic and is chosen as the maximal J value across all points on the participant's training sessions' ROC curve.  With a 750-1000 ms inter-stimulus interval, there is enough time for stimulation artifacts to subside before the next word onset (next classifier decoding).
-
-**To Note**
-
-* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
-* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
-* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
-
-**Contact**
-
-For questions or inquiries, please contact sas-kahana-sysadmin@sas.upenn.edu.
 
 Highlights
 ----------
@@ -107,8 +135,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 7
-      - Recordings: 22
+      - Subjects: 9
+      - Recordings: 165
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -129,7 +157,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 12.2 GB
-      - File count: 22
+      - File count: 165
       - Format: BIDS
 
    .. grid-item-card:: License & citation

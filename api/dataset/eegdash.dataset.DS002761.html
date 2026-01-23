@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds002761">
 <h1>eegdash.dataset.DS002761<a class="headerlink" href="#eegdash-dataset-ds002761" title="Link to this heading">#</a></h1>
 <p>memoryreplay (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds002761</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (20). <em>memoryreplay</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds002761.v1.1.2">10.18112/openneuro.ds002761.v1.1.2</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 2</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 25</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 249</span></p>
+<p><strong>Citation:</strong> G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (2020). <em>memoryreplay</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds002761.v1.1.2">10.18112/openneuro.ds002761.v1.1.2</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 25</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 752</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 1.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>memoryreplay</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>20</p></td>
+<td><p>2020</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><ol class="upperalpha simple" start="7">
@@ -1073,7 +1073,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds002761.v1.1.2">doi:10.18112/openneuro.ds002761.v1.1.2</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds002761">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds002761">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds002761">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds002761">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds002761">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds002761/versions/1.1.2">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1099,10 +1099,10 @@ loading errors, etc.), please let us know!</p>
 </section>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
-<p>The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.
-Memory phase triggers: At the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent actual stimulus categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. The onset of the answer, approximately 5.5 sec later, is marked by a trigger value of 11.
-Localizer phase triggers: As in the memory phase, at the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent true categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. For a baseline, note that for the 2 s prior to picture onset, a word naming that picture was presented on the screen; thus, baseline values should be taken from data more than 2 s before the trigger onset.
-Methods note:  a sequenceness analysis step was omitted from the published 2020 Nature Neuroscience paper. The text should have read:
+<p>The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.</p>
+<p>Memory phase triggers: At the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent actual stimulus categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. The onset of the answer, approximately 5.5 sec later, is marked by a trigger value of 11.</p>
+<p>Localizer phase triggers: As in the memory phase, at the onset of a trial, the first trigger represents the category (1-8) of the on-screen image. Categories 1-6 represent true categories. Trigger values of 7 and 8 represent the 4 positive and 4 negative story-ending stimuli, respectively. For a baseline, note that for the 2 s prior to picture onset, a word naming that picture was presented on the screen; thus, baseline values should be taken from data more than 2 s before the trigger onset.</p>
+<p>Methods note:  a sequenceness analysis step was omitted from the published 2020 Nature Neuroscience paper. The text should have read:
 “We next asked whether the βi(Δt) was consistent with a specified 6 × 6 transition matrix by taking the Frobenius inner product between these two matrices (the sum of element-wise products of the two matrices). This resulted in a single number ZΔt, which pertained to lag Δt. For each trial, sequenceness results were then z-scored across lags. Finally, differential forward – backward sequenceness was defined as ZfΔt − ZbΔt.”</p>
 </section>
 <section id="highlights">
@@ -1116,8 +1116,8 @@ Methods note:  a sequenceness analysis step was omitted from the published 2020 
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 25</p></li>
-<li><p class="sd-card-text">Recordings: 249</p></li>
-<li><p class="sd-card-text">Tasks: 2</p></li>
+<li><p class="sd-card-text">Recordings: 752</p></li>
+<li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
 </div>
@@ -1154,8 +1154,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 204.1 GB</p></li>
-<li><p class="sd-card-text">File count: 249</p></li>
+<li><p class="sd-card-text">Size on disk: 1.7 MB</p></li>
+<li><p class="sd-card-text">File count: 752</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

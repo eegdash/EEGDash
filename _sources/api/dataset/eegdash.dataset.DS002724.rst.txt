@@ -7,11 +7,11 @@ eegdash.dataset.DS002724
 
 A dataset recorded during development of an affective brain-computer music interface: training sessions (OpenNeuro ``ds002724``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (—). *A dataset recorded during development of an affective brain-computer music interface: training sessions*. `10.18112/openneuro.ds002724.v1.0.1 <https://doi.org/10.18112/openneuro.ds002724.v1.0.1>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of an affective brain-computer music interface: training sessions*. `10.18112/openneuro.ds002724.v1.0.1 <https://doi.org/10.18112/openneuro.ds002724.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 96`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 700`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset recorded during development of an affective brain-computer music interface: training sessions
    * - Year
-     - —
+     - 2020
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002724.v1.0.1 <https://doi.org/10.18112/openneuro.ds002724.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002724>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002724>`__ | `Source URL <https://openneuro.org/datasets/ds002724>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002724>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002724>`__ | `Source URL <https://openneuro.org/datasets/ds002724/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,98 @@ Dataset Information
 Description
 -----------
 
-No README content is available for this dataset.
+
+**0. Sections**
+
+
+1. Project
+2. Dataset
+3. Terms of Use
+4. Contents
+5. Method and Processing
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   
+   **0. Sections**
+   
+   
+   1. Project
+   2. Dataset
+   3. Terms of Use
+   4. Contents
+   5. Method and Processing
+   
+   
+   **1. PROJECT**
+   
+   
+   Title: Brain-Computer Music Interface for Monitoring and Inducing Affective States (BCMI-MIdAS)
+   Dates: 2012-2017
+   Funding organisation: Engineering and Physical Sciences Research Council (EPSRC)
+   Grant no.: EP/J003077/1 and EP/J002135/1.
+   
+   
+   **2. DATASET**
+   
+   
+   EEG data from an affective Music Brain-Computer Interface: offline training to induce target emotional states.
+   Description: This dataset accompanies the publication by Daly et al. (2018) and has been analysed in Daly et al. (2015) (please see Section 5 for full references). The purpose of the research activity in which the data were collected was to train a music brain-computer interface system to induce specific affective states for individual users. For this purpose the participants listened to music clips (40 s) targeting two affective states, as defined by valence and arousal. Data were recorded over 3 sessions (separate days), each containing 4 runs (same day) of 18 trials each. The music clips were generated using a synthetic music generator. The dataset contains the electroencephalogram (EEG), galvanic skin response (GSR) and electrocardiogram (ECG) data from 16 healthy participants while listening to the music clips, together with the reported affective state (valence and arousal values) and auxiliary variables.
+   
+   This dataset is connected to 2 additional datasets: 
+   
+   1.	EEG data from an affective Music Brain-Computer Interface: system calibration. doi:
+   
+   2.	EEG data from an affective Music Brain-Computer Interface: online real-time control. doi:
+   
+   Please note that the number of participants varies between datasets; however, participant codes are the same across all three datasets.
+   
+   Publication Year: 2018
+   
+   Creators: Nicoletta Nicolaou, Ian Daly.
+   
+   Contributors: Isil Poyraz Bilgin, James Weaver, Asad Malik, Alexis Kirke, Duncan Williams.
+   
+   Principal Investigator: Slawomir Nasuto (EP/J003077/1).
+   
+   Co-Investigator: Eduardo Miranda (EP/J002135/1).
+   
+   Organisation: University of Reading
+   
+   Rights-holders: University of Reading
+   
+   Source: The synthetic generator used to generate the music clips was presented in Williams et al., “Affective Calibration of Musical Feature Sets in an Emotionally Intelligent Music Composition System”, ACM Trans. Appl. Percept. 14, 3, Article 17 (May 2017), 13 pages. DOI: https://doi.org/10.1145/3059005
+   
+   
+   **3. TERMS OF USE**
+   
+   
+   Copyright University of Reading, 2018. This dataset is licensed by the rights-holder(s) under a Creative Commons Attribution 4.0 International Licence: https://creativecommons.org/licenses/by/4.0/.
+   
+   
+   **4. CONTENTS**
+   
+   
+   The dataset comprises data from 17 subjects, stored using the BIDS format. The sampling rate is 1 kHz and the music listening task corresponding to a music clip is 40 s long (clip duration). During the first 20 s, the music clip targets emotional state A, while for the remaining 20 s the music clip targets emotional state B.
+   
+   
+   
+   **5. METHOD and PROCESSING**
+   
+   
+   This information is available in the following publications:
+   
+   [1] Daly, I., Nicolaou, N., Williams, D., Hwang, F., Kirke, A., Miranda, E., Nasuto, S.J., �Neural and physiological data from participants listening to affective music�, Scientific Data, 2018.
+   
+   [2] Daly, I., Williams, D., Hwang, F., Kirke, A., Malik, A., Roesch, E., Weaver, J., Miranda, E. R., Nasuto, S. J., �Identifying music-induced emotions from EEG for use in brain-computer music interfacing�, in Proc. 4th Workshop on Affective Brain-Computer Interfaces at the 6th International Conference on Affective Computing and Intelligent Interaction (ACII2015). Xi�an, China, 21-25 September 2015.
+   If you use this dataset in your study please cite these references, as well as the following reference:
+   
+   [3] Williams, D., Kirke, A., Miranda, E.R., Daly, I., Hwang, F., Weaver, J., Nasuto, S.J., �Affective Calibration of Musical Feature Sets in an Emotionally Intelligent Music Composition System�, ACM Trans. Appl. Percept. 14, 3, Article 17 (May 2017), 13 pages. DOI: https://doi.org/10.1145/3059005
+   
+   Thank you for your interest in our work.
+
 
 Highlights
 ----------
@@ -79,8 +170,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 96
-      - Tasks: 4
+      - Recordings: 700
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,7 +191,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.5 GB
-      - File count: 96
+      - File count: 700
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS002722
 
 A dataset recorded during development of an affective brain-computer music interface: calibration session (OpenNeuro ``ds002722``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (—). *A dataset recorded during development of an affective brain-computer music interface: calibration session*. `10.18112/openneuro.ds002722.v1.0.1 <https://doi.org/10.18112/openneuro.ds002722.v1.0.1>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *A dataset recorded during development of an affective brain-computer music interface: calibration session*. `10.18112/openneuro.ds002722.v1.0.1 <https://doi.org/10.18112/openneuro.ds002722.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 94`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 582`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A dataset recorded during development of an affective brain-computer music interface: calibration session
    * - Year
-     - —
+     - 2020
    * - Authors
      - Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto
    * - License
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 94
-      - Tasks: 5
+      - Recordings: 582
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 6.1 GB
-      - File count: 94
+      - File count: 582
       - Format: BIDS
 
    .. grid-item-card:: License & citation

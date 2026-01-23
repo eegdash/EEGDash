@@ -7,11 +7,11 @@ eegdash.dataset.DS003519
 
 EEG: Visual Working Memory + Cabergoline Challenge (OpenNeuro ``ds003519``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Michael J Frank, James Broadway (20). *EEG: Visual Working Memory + Cabergoline Challenge*. `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
+**Citation:** James F Cavanagh, Michael J Frank, James Broadway (2021). *EEG: Visual Working Memory + Cabergoline Challenge*. `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 27` :bdg-secondary:`Recordings: 439`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Visual Working Memory + Cabergoline Challenge
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Michael J Frank, James Broadway
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003519.v1.1.0 <https://doi.org/10.18112/openneuro.ds003519.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003519>`__ | `Source URL <https://openneuro.org/datasets/ds003519>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003519>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003519>`__ | `Source URL <https://openneuro.org/datasets/ds003519/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 27
-      - Recordings: 54
+      - Recordings: 439
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.0 GB
-      - File count: 54
+      - File count: 439
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS006370
 
 Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset (OpenNeuro ``ds006370``). Access recordings and metadata through EEGDash.
 
-**Citation:** X (—). *Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset*. `10.18112/openneuro.ds006370.v1.0.1 <https://doi.org/10.18112/openneuro.ds006370.v1.0.1>`__
+**Citation:** X (2025). *Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset*. `10.18112/openneuro.ds006370.v1.0.1 <https://doi.org/10.18112/openneuro.ds006370.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 56`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 397`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset
    * - Year
-     - —
+     - 2025
    * - Authors
      - X
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006370.v1.0.1 <https://doi.org/10.18112/openneuro.ds006370.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006370>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006370>`__ | `Source URL <https://openneuro.org/datasets/ds006370>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006370>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006370>`__ | `Source URL <https://openneuro.org/datasets/ds006370/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,18 +67,18 @@ Dataset Information
 Description
 -----------
 
-Each trial began with a space key press, followed by a
-fixation dot for 500–650 ms. Then, 2 or 6 lateral objects appeared
-for 1250 ms. A central cue indicated which object(s) to memorize.
-The other side had irrelevant objects for visual balance. After a
-1000 ms delay, half the blocks showed 4 distractors (dual task),
-where participants identified a same-category object among them.
-The other half showed only fixation (single task). A colored dot gave
-feedback on dual task accuracy. Then, a probe showed 2
-objects, and participants selected the cued one using arrow keys.
+Each trial began with a space key press, followed by a 
+fixation dot for 500–650 ms. Then, 2 or 6 lateral objects appeared 
+for 1250 ms. A central cue indicated which object(s) to memorize. 
+The other side had irrelevant objects for visual balance. After a 
+1000 ms delay, half the blocks showed 4 distractors (dual task), 
+where participants identified a same-category object among them. 
+The other half showed only fixation (single task). A colored dot gave 
+feedback on dual task accuracy. Then, a probe showed 2 
+objects, and participants selected the cued one using arrow keys. 
 Feedback followed, showing the correct object with colored cues.
-The preprocessing steps to reach this dataset is explained
-in the following preprint and the mentioned OSF repository
+The preprocessing steps to reach this dataset is explained 
+in the following preprint and the mentioned OSF repository 
 xx (Experiment 2)
 
 Highlights
@@ -91,7 +91,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 56
-      - Recordings: 56
+      - Recordings: 397
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -112,7 +112,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 40.1 GB
-      - File count: 56
+      - File count: 397
       - Format: BIDS
 
    .. grid-item-card:: License & citation

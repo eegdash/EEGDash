@@ -7,11 +7,11 @@ eegdash.dataset.DS003838
 
 EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest (OpenNeuro ``ds003838``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (—). *EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest*. `10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
+**Citation:** Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (2021). *EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest*. `10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 65` :bdg-secondary:`Recordings: 130`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 65` :bdg-secondary:`Recordings: 947`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest
    * - Year
-     - —
+     - 2021
    * - Authors
      - Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003838.v1.0.6 <https://doi.org/10.18112/openneuro.ds003838.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003838>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003838>`__ | `Source URL <https://openneuro.org/datasets/ds003838>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003838>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003838>`__ | `Source URL <https://openneuro.org/datasets/ds003838/versions/1.0.6>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,13 @@ Description
 -----------
 
 This dataset consists of raw 64-channel EEG, cardiovascular (electrocardiography and photoplethysmography), and pupillometry data from 86 human participants during 4 minutes of eyes-closed resting and during performance of a classic working memory task – digit span task with serial recall. The participants either memorized (memory) or just listened to (control condition) sequences of 5, 9, or 13 digits presented auditorily with 2 second stimulus onset asynchrony. The dataset can be used for (1) developing algorithms for cognitive load discrimination and detection of cognitive overload; (2) studying neural (event-related potentials and brain oscillations) and peripheral physiological (electrocardiography, photoplethysmography, and pupillometry) signals during encoding and maintenance of each sequentially presented memory item in a fine time scale; (3) correlating cognitive load and individual differences in working memory to neural and peripheral physiology, and studying the relationship between the physiological signals; (4) integration of the physiological findings with the vast knowledge coming from behavioral studies of verbal working memory in simple span paradigms.
+
 EEG, pupillometry, ECG and photoplethysmography, and behavioral data are stored separately in corresponding folders. Each data record can consist of four data folders:
 beh - behavioral data: correctness of the recall in the memory trials
 ecg - electrocardiography (ECG) and photoplethysmography (PPG) data
 eeg - EEG data
 pupil -  pupillometry and eye-tracking data
+
 Some of the participants had some physiological data missing:
 sub-017, sub-094 have no pupillometry data
 sub-017, sub-037, sub-066 have no ECG and PPG data
@@ -88,8 +90,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 65
-      - Recordings: 130
-      - Tasks: 2
+      - Recordings: 947
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -108,8 +110,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 253.3 GB
-      - File count: 130
+      - Size on disk: 100.2 GB
+      - File count: 947
       - Format: BIDS
 
    .. grid-item-card:: License & citation

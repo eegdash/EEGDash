@@ -7,11 +7,11 @@ eegdash.dataset.DS004563
 
 Vicarious touch: overlapping neural patterns between seeing and feeling touch (OpenNeuro ``ds004563``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (—). *Vicarious touch: overlapping neural patterns between seeing and feeling touch*. `10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
+**Citation:** Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (2023). *Vicarious touch: overlapping neural patterns between seeing and feeling touch*. `10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 119`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 377`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Vicarious touch: overlapping neural patterns between seeing and feeling touch
    * - Year
-     - —
+     - 2023
    * - Authors
      - Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004563>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004563>`__ | `Source URL <https://openneuro.org/datasets/ds004563>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004563>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004563>`__ | `Source URL <https://openneuro.org/datasets/ds004563/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,13 @@ Description
 -----------
 
 Data collection took place at Macquarie University in Sydney Australia. The study was approved by the Macquarie University Ethics Committee.
-We used time-resolved multivariate pattern analysis on whole-brain EEG data from people with and without vicarious touch experiences to test whether seen touch evokes overlapping neural representations with the first-hand experience of touch. Participants felt touch to the fingers (tactile trials) or watched carefully matched videos of touch to another person’s fingers (visual trials).
+
+We used time-resolved multivariate pattern analysis on whole-brain EEG data from people with and without vicarious touch experiences to test whether seen touch evokes overlapping neural representations with the first-hand experience of touch. Participants felt touch to the fingers (tactile trials) or watched carefully matched videos of touch to another person’s fingers (visual trials). 
+
 There were 12 runs in total, divided into four blocks of 36 trials (with alternating sets of nine tactile and nine visual trials) resulting in a total of 1728 trials (864 tactile and 864 visual). There were an additional 240 target trials (20 per run), which were excluded from analysis.
+
 Between trials there was an inter-trial-interval of 800ms. Each run lasted approximately 7-8 minutes with short breaks between blocks and runs.
+
 Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system (Biosemi, Inc.) at 2048Hz and 10-20 standard caps. Stimuli were presented using MATLAB (MathWorks) and Psychtoolbox (Brainard and Vision). The experiment presentation script, all analysis code, and stimuli are made available (see code and stimuli folder). The data is made available both in raw form (see each participant's file) and after processing (see derivatives).
 
 Highlights
@@ -83,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 40
-      - Recordings: 119
+      - Recordings: 377
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +107,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 172.5 GB
-      - File count: 119
+      - Size on disk: 100.9 GB
+      - File count: 377
       - Format: BIDS
 
    .. grid-item-card:: License & citation

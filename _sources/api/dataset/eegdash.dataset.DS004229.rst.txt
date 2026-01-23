@@ -7,11 +7,11 @@ eegdash.dataset.DS004229
 
 amnoise (OpenNeuro ``ds004229``). Access recordings and metadata through EEGDash.
 
-**Citation:** Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2021). *amnoise*. `10.18112/openneuro.ds004229.v1.0.3 <https://doi.org/10.18112/openneuro.ds004229.v1.0.3>`__
+**Citation:** Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2022). *amnoise*. `10.18112/openneuro.ds004229.v1.0.3 <https://doi.org/10.18112/openneuro.ds004229.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 3`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 18`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - amnoise
    * - Year
-     - 2021
+     - 2022
    * - Authors
      - Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004229.v1.0.3 <https://doi.org/10.18112/openneuro.ds004229.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004229>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004229>`__ | `Source URL <https://openneuro.org/datasets/ds004229>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004229>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004229>`__ | `Source URL <https://openneuro.org/datasets/ds004229/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,12 +70,16 @@ Description
 
 **ILABS amnoise MEG BIDS dataset**
 
+
 This dataset contains MEG data from a single infant subject. For more
 information, see the following publications, which should be cited if you use
 this data:
+
 - Mittag, M., Larson, E., Clarke, M., Taulu, S., & Kuhl, P. K. (2021). Auditory deficits in infants at risk for dyslexia during a linguistic sensitive period predict future language. NeuroImage: Clinical, 30, 102578. https://doi.org/10.1016/j.nicl.2021.102578
 - Mittag, M., Larson, E., Taulu, S., Clarke, M., & Kuhl, P. K. (2022). Reduced Theta Sampling in Infants at Risk for Dyslexia across the Sensitive Period of Native Phoneme Learning. International Journal of Environmental Research and Public Health, 19(3), 1180. https://doi.org/10.3390/ijerph19031180
+
 The data were converted with MNE-BIDS:
+
 - Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
 - Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
@@ -88,8 +92,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 2
-      - Recordings: 3
+      - Subjects: 1
+      - Recordings: 18
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.8 GB
-      - File count: 3
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation

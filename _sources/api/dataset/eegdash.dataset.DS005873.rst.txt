@@ -7,11 +7,11 @@ eegdash.dataset.DS005873
 
 SeizeIT2 (OpenNeuro ``ds005873``). Access recordings and metadata through EEGDash.
 
-**Citation:** Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang, Lieven Lagae, Katrien Jansen, Andreas Schulze-Bonhage, Francisco Sales, Benno Mahler, Yvonne Weber, Wim Van Paesschen, Maarten De Vos (20). *SeizeIT2*. `10.18112/openneuro.ds005873.v1.1.0 <https://doi.org/10.18112/openneuro.ds005873.v1.1.0>`__
+**Citation:** Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang, Lieven Lagae, Katrien Jansen, Andreas Schulze-Bonhage, Francisco Sales, Benno Mahler, Yvonne Weber, Wim Van Paesschen, Maarten De Vos (2025). *SeizeIT2*. `10.18112/openneuro.ds005873.v1.1.0 <https://doi.org/10.18112/openneuro.ds005873.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg, emg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 125` :bdg-secondary:`Recordings: 5654`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 125` :bdg-secondary:`Recordings: 8556`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SeizeIT2
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang, Lieven Lagae, Katrien Jansen, Andreas Schulze-Bonhage, Francisco Sales, Benno Mahler, Yvonne Weber, Wim Van Paesschen, Maarten De Vos
    * - License
@@ -129,7 +129,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 125
-      - Recordings: 5654
+      - Recordings: 8556
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -149,8 +149,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 117.2 GB
-      - File count: 5654
+      - Size on disk: 44.4 GB
+      - File count: 8556
       - Format: BIDS
 
    .. grid-item-card:: License & citation

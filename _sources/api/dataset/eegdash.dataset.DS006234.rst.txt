@@ -11,7 +11,7 @@ Auditory naming (OpenNeuro ``ds006234``). Access recordings and metadata through
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 119` :bdg-secondary:`Recordings: 378`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 119` :bdg-secondary:`Recordings: 1517`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006234.v1.0.0 <https://doi.org/10.18112/openneuro.ds006234.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006234>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006234>`__ | `Source URL <https://openneuro.org/datasets/ds006234>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006234>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006234>`__ | `Source URL <https://openneuro.org/datasets/ds006234/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,13 @@ Description
 -----------
 
 This dataset, used in the analysis reported by Kochi et al., (2025), contains intracranial EEG recordings from 119 individuals who performed an auditory‑naming task. Electrode coordinates are provided in MNI‑305 space.
-Each EDF file is tagged for the auditory naming task with the following event codes:
-401 – stimulus onset
-402 – stimulus offset
-501 – response onset
-Reference:
+
+Each EDF file is tagged for the auditory naming task with the following event codes:  
+401 – stimulus onset  
+402 – stimulus offset  
+501 – response onset  
+
+Reference: 
 Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Hidenori Endo, Michael Cools, Robert Rothermel, Aimee F. Luat, Eishi Asano. Naming is Shaped by Early Facilitative and Late Compensatory Neural Interactions: An Intracranial Study of 125 Patients
 
 Highlights
@@ -85,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 119
-      - Recordings: 378
+      - Recordings: 1517
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 43.9 GB
-      - File count: 378
+      - File count: 1517
       - Format: BIDS
 
    .. grid-item-card:: License & citation

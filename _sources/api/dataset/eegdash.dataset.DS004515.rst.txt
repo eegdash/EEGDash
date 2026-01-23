@@ -7,11 +7,11 @@ eegdash.dataset.DS004515
 
 EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants (OpenNeuro ``ds004515``). Access recordings and metadata through EEGDash.
 
-**Citation:** Garima Singh, James F Cavanagh (20). *EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants*. `10.18112/openneuro.ds004515.v1.0.0 <https://doi.org/10.18112/openneuro.ds004515.v1.0.0>`__
+**Citation:** Garima Singh, James F Cavanagh (2023). *EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants*. `10.18112/openneuro.ds004515.v1.0.0 <https://doi.org/10.18112/openneuro.ds004515.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 54` :bdg-secondary:`Recordings: 54`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 54` :bdg-secondary:`Recordings: 1076`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Garima Singh, James F Cavanagh
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004515.v1.0.0 <https://doi.org/10.18112/openneuro.ds004515.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004515>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004515>`__ | `Source URL <https://openneuro.org/datasets/ds004515>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004515>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004515>`__ | `Source URL <https://openneuro.org/datasets/ds004515/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 54
-      - Recordings: 54
+      - Recordings: 1076
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.5 GB
-      - File count: 54
+      - File count: 1076
       - Format: BIDS
 
    .. grid-item-card:: License & citation

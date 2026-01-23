@@ -7,11 +7,11 @@ eegdash.dataset.DS004330
 
 The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG) (OpenNeuro ``ds004330``). Access recordings and metadata through EEGDash.
 
-**Citation:** Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (20). *The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)*. `10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
+**Citation:** Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (2022). *The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)*. `10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 270`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 1145`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004330.v1.0.0 <https://doi.org/10.18112/openneuro.ds004330.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004330>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004330>`__ | `Source URL <https://openneuro.org/datasets/ds004330>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004330>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004330>`__ | `Source URL <https://openneuro.org/datasets/ds004330/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,13 @@ Description
 -----------
 
 This dataset contains the raw MEG data accompanying the paper "The spatiotemporal neural dynamics of object recognition for natural images and line drawings" (Link to preprint: https://biorxiv.org/cgi/content/short/2022.08.12.503484v1). Please cite the above paper if you use this data.
+
 The dataset includes:
+
 MEG data for 9 runs for each subjects. Events files that contain the onsets, durations and trial types for each trial in the experiment (excluding catch trials).
-For a full description of the paradigm and the employed procedures please see the manuscript.
+
+For a full description of the paradigm and the employed procedures please see the manuscript.  
+
 Results for the first-level analyses for this data can be found on OSF (https://osf.io/vsc6y/). Code for the analysis of the data can be found on Github (https://github.com/Singerjohannes/object_drawing_dynamics/).
 
 Highlights
@@ -83,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 270
+      - Recordings: 1145
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 153.7 GB
-      - File count: 270
+      - File count: 1145
       - Format: BIDS
 
    .. grid-item-card:: License & citation

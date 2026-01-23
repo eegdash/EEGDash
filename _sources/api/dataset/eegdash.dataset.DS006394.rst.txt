@@ -7,11 +7,11 @@ eegdash.dataset.DS006394
 
 Electrophysiological markers of surprise-induced failures of visual and auditory awareness (OpenNeuro ``ds006394``). Access recordings and metadata through EEGDash.
 
-**Citation:** En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund (—). *Electrophysiological markers of surprise-induced failures of visual and auditory awareness*. `10.18112/openneuro.ds006394.v1.0.3 <https://doi.org/10.18112/openneuro.ds006394.v1.0.3>`__
+**Citation:** En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund (2025). *Electrophysiological markers of surprise-induced failures of visual and auditory awareness*. `10.18112/openneuro.ds006394.v1.0.3 <https://doi.org/10.18112/openneuro.ds006394.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 60`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 368`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Electrophysiological markers of surprise-induced failures of visual and auditory awareness
    * - Year
-     - —
+     - 2025
    * - Authors
      - En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006394.v1.0.3 <https://doi.org/10.18112/openneuro.ds006394.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__ | `Source URL <https://openneuro.org/datasets/ds006394>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__ | `Source URL <https://openneuro.org/datasets/ds006394/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,8 +67,10 @@ Dataset Information
 Description
 -----------
 
-This is the dataset for Leong et al. (in prep). 33 participants completed both a visual and auditory surprise task in counterbalanced order. Methodological details are contained in the manuscript.
-Certain participants were excluded at various stages of the analyses. Their data and event lists are included up to the stage of processing that their data reached.
+This is the dataset for Leong et al. (in prep). 33 participants completed both a visual and auditory surprise task in counterbalanced order. Methodological details are contained in the manuscript. 
+
+Certain participants were excluded at various stages of the analyses. Their data and event lists are included up to the stage of processing that their data reached. 
+
 Due to incorrect settings specific to OpenBCI GUI v5.0.1, indicated EEG values are 24 times larger than what they should be. The units (also specified in the channels.tsv files) are thus in microvolts / 24.
 
 Highlights
@@ -81,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 33
-      - Recordings: 60
+      - Recordings: 368
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,8 +103,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 539.6 MB
-      - File count: 60
+      - Size on disk: 534.8 MB
+      - File count: 368
       - Format: BIDS
 
    .. grid-item-card:: License & citation

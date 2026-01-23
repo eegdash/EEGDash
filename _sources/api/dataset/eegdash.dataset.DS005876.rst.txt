@@ -7,11 +7,11 @@ eegdash.dataset.DS005876
 
 Song Familiarity (OpenNeuro ``ds005876``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2009). *Song Familiarity*. `10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
+**Citation:** Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2025). *Song Familiarity*. `10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 29`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 180`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Song Familiarity
    * - Year
-     - 2009
+     - 2025
    * - Authors
      - Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005876>`__ | `Source URL <https://openneuro.org/datasets/ds005876>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005876>`__ | `Source URL <https://openneuro.org/datasets/ds005876/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,8 +70,11 @@ Description
 
 **Song Familiarity**
 
+
 Twenty-nine participants listened to song melodies and responded as soon as the song felt familiar. Participants were then asked to identify the song, if possible (title, artist, or lyrics). Next, participants were shown a multiple choice display with four song titles, selected a song title, and were given visual feedback (correct: selected option turned green and a checkmark appeared next to the title; incorrect: selected option turned red and an x appeared next to the title.)
+
 Song stimuli are taken from Kostic and Cleary (2009): https://supp.apa.org/psycarticles/supplemental/a0014584/a0014584_supp.html
+
 An audio file with a reconstruction of what each participant heard throughout the experiment can be found in /derivatives. The audio file has been synchronized with the EEG recording.
 
 Highlights
@@ -84,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 29
-      - Recordings: 29
+      - Recordings: 180
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,8 +107,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 7.6 GB
-      - File count: 29
+      - Size on disk: 7.1 GB
+      - File count: 180
       - Format: BIDS
 
    .. grid-item-card:: License & citation

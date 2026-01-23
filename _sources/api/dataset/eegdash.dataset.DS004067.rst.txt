@@ -7,11 +7,11 @@ eegdash.dataset.DS004067
 
 Moral conviction and metacognitive ability shape multiple stages of information processing (OpenNeuro ``ds004067``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yoder, Keith J, Decety, Jean (—). *Moral conviction and metacognitive ability shape multiple stages of information processing*. `10.18112/openneuro.ds004067.v1.0.1 <https://doi.org/10.18112/openneuro.ds004067.v1.0.1>`__
+**Citation:** Yoder, Keith J, Decety, Jean (2022). *Moral conviction and metacognitive ability shape multiple stages of information processing*. `10.18112/openneuro.ds004067.v1.0.1 <https://doi.org/10.18112/openneuro.ds004067.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 84`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 257`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Moral conviction and metacognitive ability shape multiple stages of information processing
    * - Year
-     - —
+     - 2022
    * - Authors
      - Yoder, Keith J, Decety, Jean
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004067.v1.0.1 <https://doi.org/10.18112/openneuro.ds004067.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004067>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004067>`__ | `Source URL <https://openneuro.org/datasets/ds004067>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004067>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004067>`__ | `Source URL <https://openneuro.org/datasets/ds004067/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 Experiment Details
+
 Human electroencephalography recordings from 80 participants. Participants first provided their attitudes about a set of sociopolitical issues, then view photographs of protests that were ostensibly about those same issues. Prior to each photo, they saw a pie chart indicating social support for the issue (low, medium, or high). After each photo, they indicated their support for the protestors.
+
 Other data and analysis scripts can be found on OSF (DOI 10.17605/OSF.IO/32DAS) or at the github repository for the project (https://github.com/Social-Cognitive-Neuroscience-Lab/EEGMoralization)
 
 Highlights
@@ -81,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 80
-      - Recordings: 84
+      - Recordings: 257
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -102,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 100.8 GB
-      - File count: 84
+      - File count: 257
       - Format: BIDS
 
    .. grid-item-card:: License & citation

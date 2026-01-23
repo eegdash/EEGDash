@@ -7,11 +7,11 @@ eegdash.dataset.DS004398
 
 planmemreplay (OpenNeuro ``ds004398``). Access recordings and metadata through EEGDash.
 
-**Citation:** G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (—). *planmemreplay*. `10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
+**Citation:** G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (2023). *planmemreplay*. `10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 18`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - planmemreplay
    * - Year
-     - —
+     - 2023
    * - Authors
      - G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.
+
 Localizer phase triggers: [Info to be added]
+
 Struct and Rew phase triggers: [Info to be added]
+
 Post triggers:  [Info to be added]
 
 Highlights
@@ -82,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 1
+      - Recordings: 18
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 1
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation

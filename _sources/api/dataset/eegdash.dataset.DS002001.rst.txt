@@ -7,11 +7,11 @@ eegdash.dataset.DS002001
 
 Rivalry_Tagging (OpenNeuro ``ds002001``). Access recordings and metadata through EEGDash.
 
-**Citation:** Janine Mendola, Elizabeth Bock (—). *Rivalry_Tagging*. `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
+**Citation:** Janine Mendola, Elizabeth Bock (2019). *Rivalry_Tagging*. `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 69`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 1001`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Rivalry_Tagging
    * - Year
-     - —
+     - 2019
    * - Authors
      - Janine Mendola, Elizabeth Bock
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002001.v1.0.0 <https://doi.org/10.18112/openneuro.ds002001.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__ | `Source URL <https://openneuro.org/datasets/ds002001>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002001>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002001>`__ | `Source URL <https://openneuro.org/datasets/ds002001/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -78,8 +78,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 11
-      - Recordings: 69
+      - Subjects: 10
+      - Recordings: 1001
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 81.7 GB
-      - File count: 69
+      - File count: 1001
       - Format: BIDS
 
    .. grid-item-card:: License & citation

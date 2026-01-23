@@ -7,11 +7,11 @@ eegdash.dataset.DS003688
 
 Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film (OpenNeuro ``ds003688``). Access recordings and metadata through EEGDash.
 
-**Citation:** Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey (—). *Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film*. `10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
+**Citation:** Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey (2021). *Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film*. `10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 51` :bdg-secondary:`Recordings: 107`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 63` :bdg-secondary:`Recordings: 1355`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
    * - Year
-     - —
+     - 2021
    * - Authors
      - Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni, Mariana P. Branco, Nick F. Ramsey
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003688.v1.0.7 <https://doi.org/10.18112/openneuro.ds003688.v1.0.7>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003688>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003688>`__ | `Source URL <https://openneuro.org/datasets/ds003688>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003688>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003688>`__ | `Source URL <https://openneuro.org/datasets/ds003688/versions/1.0.7>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 Open iEEG-fMRI dataset from stimulation with a short audiovisual film
+
 Full description of the data in our dataset paper: https://www.nature.com/articles/s41597-022-01173-0
+
 Video description of the dataset: https://www.youtube.com/watch?v=C14cWM1CvrE&t=13s
+
 UMC Utrecht Team
 https://www.nick-ramsey.eu/
 
@@ -82,8 +85,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 51
-      - Recordings: 107
+      - Subjects: 63
+      - Recordings: 1355
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +106,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 15.3 GB
-      - File count: 107
+      - Size on disk: 15.2 GB
+      - File count: 1355
       - Format: BIDS
 
    .. grid-item-card:: License & citation

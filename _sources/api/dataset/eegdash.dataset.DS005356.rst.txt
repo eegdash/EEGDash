@@ -7,11 +7,11 @@ eegdash.dataset.DS005356
 
 MEG: Major Depression & Probabilistic Learning Task (OpenNeuro ``ds005356``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (2025). *MEG: Major Depression & Probabilistic Learning Task*. `10.18112/openneuro.ds005356.v1.5.0 <https://doi.org/10.18112/openneuro.ds005356.v1.5.0>`__
+**Citation:** [Unspecified] (2024). *MEG: Major Depression & Probabilistic Learning Task*. `10.18112/openneuro.ds005356.v1.5.0 <https://doi.org/10.18112/openneuro.ds005356.v1.5.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 85` :bdg-secondary:`Recordings: 116`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 85` :bdg-secondary:`Recordings: 630`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - MEG: Major Depression & Probabilistic Learning Task
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - [Unspecified]
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005356.v1.5.0 <https://doi.org/10.18112/openneuro.ds005356.v1.5.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005356>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005356>`__ | `Source URL <https://openneuro.org/datasets/ds005356>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005356>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005356>`__ | `Source URL <https://openneuro.org/datasets/ds005356/versions/1.5.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 Howdy y'all.   Here's data from:
+
 Pirrung, C.J.H., Singh G., Hogeveen, J., Quinn, D. & Cavanagh, J.F.  (2025) Hypoactivation of ventromedial frontal cortex in major depressive disorder: an MEG study of the Reward Positivity.   Biological Psychiatry: Cognitive Neuroscience and Neuroimaging
+
 An MEG study (306-sensor Elekta Neuromag System) of the Reward Positivity during reinforcement learning.  Participants were all SCID interviewed to meet either control (CTL, non-depressed, n=38) or major depressive disorder (MDD, n=52) group criteria.   Task was an MEG-compatible probabilistic selection task.  We'll upload their T1s and resting state soon.   <jcavanagh@unm.edu>
 
 Highlights
@@ -81,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 85
-      - Recordings: 116
+      - Recordings: 630
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,8 +103,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 162.4 GB
-      - File count: 116
+      - Size on disk: 161.6 GB
+      - File count: 630
       - Format: BIDS
 
    .. grid-item-card:: License & citation

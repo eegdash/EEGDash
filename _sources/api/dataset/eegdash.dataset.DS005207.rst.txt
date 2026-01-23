@@ -7,11 +7,11 @@ eegdash.dataset.DS005207
 
 Surrey cEEGrid sleep data set (OpenNeuro ``ds005207``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos (20). *Surrey cEEGrid sleep data set*. `10.18112/openneuro.ds005207.v1.0.0 <https://doi.org/10.18112/openneuro.ds005207.v1.0.0>`__
+**Citation:** Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos (2024). *Surrey cEEGrid sleep data set*. `10.18112/openneuro.ds005207.v1.0.0 <https://doi.org/10.18112/openneuro.ds005207.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 39`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 223`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Surrey cEEGrid sleep data set
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005207.v1.0.0 <https://doi.org/10.18112/openneuro.ds005207.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005207>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005207>`__ | `Source URL <https://openneuro.org/datasets/ds005207>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005207>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005207>`__ | `Source URL <https://openneuro.org/datasets/ds005207/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,20 +68,33 @@ Description
 -----------
 
 Surrey sleep data set
+
 **Overview**
+
 This dataset was collected as part of a research project on wearable sleep monitoring which took place in spring 2017.
+
 The data set contains nightly EEG recordings from 20 healthy participants ('subjects'). Some recordings are full polysomnography (PSG) measurements, others are cEEGrid measurements. Most subjects have both PSG and ceegrid recordings from the same night, though a few are missing one or the other.
+
 **Format**
+
 The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The EEG data format chosen is the '.set' format of EEGLAB.
+
 For more information, see the following link:
 https://bids-specification.readthedocs.io/en/stable/01-introduction.html
+
+
 **Task description**
+
 The patient performed no tasks. The recording equipment was mounted immediately prior to bedtime, and the recordings took place at the sleep laboratory of the Surrey Clinical Research Centre.
-Note that due to a miscommunication during the study, alignment information between cEEGrid and PSG recordings has not been saved. This means that to obtain a useful comparison between the two methods, for instance to align the manual scoring with the cEEGrid recordings, some post processing has to be performed. In the derivative dataset, 'aligned1', we have shared our own best attempt at alignment.
-The data set was previously described in the paper
+
+Note that due to a miscommunication during the study, alignment information between cEEGrid and PSG recordings has not been saved. This means that to obtain a useful comparison between the two methods, for instance to align the manual scoring with the cEEGrid recordings, some post processing has to be performed. In the derivative dataset, 'aligned1', we have shared our own best attempt at alignment. 
+
+The data set was previously described in the paper 
 'Machine-learning-derived sleep–wake staging from around-the-ear electroencephalogram outperforms manual scoring and actigraphy', Mikkelsen et al 2018, https://doi.org/10.1111/jsr.12786
+
 **Contact**
-For questions regarding this data set, contact:
+
+For questions regarding this data set, contact: 
 Kaare Mikkelsen, Mikkelsen.kaare@ece.au.dk, https://orcid.org/0000-0002-7360-8629
 
 Highlights
@@ -94,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 39
+      - Recordings: 223
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -114,8 +127,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 69.1 GB
-      - File count: 39
+      - Size on disk: 28.5 GB
+      - File count: 223
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004580
 
 Simon-conflict Task. (OpenNeuro ``ds004580``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (—). *Simon-conflict Task.*. `10.18112/openneuro.ds004580.v1.0.0 <https://doi.org/10.18112/openneuro.ds004580.v1.0.0>`__
+**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). *Simon-conflict Task.*. `10.18112/openneuro.ds004580.v1.0.0 <https://doi.org/10.18112/openneuro.ds004580.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 147` :bdg-secondary:`Recordings: 147`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 147` :bdg-secondary:`Recordings: 1182`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Simon-conflict Task.
    * - Year
-     - —
+     - 2023
    * - Authors
      - Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004580.v1.0.0 <https://doi.org/10.18112/openneuro.ds004580.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004580>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004580>`__ | `Source URL <https://openneuro.org/datasets/ds004580>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004580>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004580>`__ | `Source URL <https://openneuro.org/datasets/ds004580/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,12 +67,12 @@ Dataset Information
 Description
 -----------
 
-This experiment includes 146 subjects: 98 individuals with Parkinsons disease,
-and 48 controls. Subjects completed  this Simon task (along with multiple other cognitive tasks)
+This experiment includes 146 subjects: 98 individuals with Parkinsons disease, 
+and 48 controls. Subjects completed  this Simon task (along with multiple other cognitive tasks) 
 while EEG was recorded with a 64-channel BrainVision cap. This task included a stimulus presented
-to the left or right side of the screen. The researchers instructed participants to press a left key when the
-was yellow or red and a right key when it was cyan or blue. The stimulus was either spatially congruent
-with the screen side matching the response hand or incongruent with the screen side contralateral
+to the left or right side of the screen. The researchers instructed participants to press a left key when the 
+was yellow or red and a right key when it was cyan or blue. The stimulus was either spatially congruent 
+with the screen side matching the response hand or incongruent with the screen side contralateral 
 to the response hand. The researchers analyzed data from congruent and incongruent trials separately.
 
 Highlights
@@ -85,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 147
-      - Recordings: 147
+      - Recordings: 1182
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 15.8 GB
-      - File count: 147
+      - File count: 1182
       - Format: BIDS
 
    .. grid-item-card:: License & citation

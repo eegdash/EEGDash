@@ -7,11 +7,11 @@ eegdash.dataset.DS003987
 
 EEG: Amphetamine trials 5CCPT and Probabilistic Learning (OpenNeuro ``ds003987``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (20). *EEG: Amphetamine trials 5CCPT and Probabilistic Learning*. `10.18112/openneuro.ds003987.v1.0.0 <https://doi.org/10.18112/openneuro.ds003987.v1.0.0>`__
+**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2022). *EEG: Amphetamine trials 5CCPT and Probabilistic Learning*. `10.18112/openneuro.ds003987.v1.0.0 <https://doi.org/10.18112/openneuro.ds003987.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 69`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 557`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Amphetamine trials 5CCPT and Probabilistic Learning
    * - Year
-     - 20
+     - 2022
    * - Authors
      - James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003987.v1.0.0 <https://doi.org/10.18112/openneuro.ds003987.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003987>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003987>`__ | `Source URL <https://openneuro.org/datasets/ds003987>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003987>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003987>`__ | `Source URL <https://openneuro.org/datasets/ds003987/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 23
-      - Recordings: 69
+      - Recordings: 557
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 26.4 GB
-      - File count: 69
+      - Size on disk: 25.6 GB
+      - File count: 557
       - Format: BIDS
 
    .. grid-item-card:: License & citation

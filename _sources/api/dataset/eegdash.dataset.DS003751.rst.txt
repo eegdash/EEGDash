@@ -7,11 +7,11 @@ eegdash.dataset.DS003751
 
 Dataset on Emotion with Naturalistic Stimuli (DENS) (OpenNeuro ``ds003751``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (—). *Dataset on Emotion with Naturalistic Stimuli (DENS)*. `10.18112/openneuro.ds003751.v1.0.2 <https://doi.org/10.18112/openneuro.ds003751.v1.0.2>`__
+**Citation:** Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (2021). *Dataset on Emotion with Naturalistic Stimuli (DENS)*. `10.18112/openneuro.ds003751.v1.0.6 <https://doi.org/10.18112/openneuro.ds003751.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 38` :bdg-secondary:`Recordings: 38`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 200`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Dataset on Emotion with Naturalistic Stimuli (DENS)
    * - Year
-     - —
+     - 2021
    * - Authors
      - Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003751.v1.0.2 <https://doi.org/10.18112/openneuro.ds003751.v1.0.2>`__
+     - `doi:10.18112/openneuro.ds003751.v1.0.6 <https://doi.org/10.18112/openneuro.ds003751.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003751>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003751>`__ | `Source URL <https://openneuro.org/datasets/ds003751>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003751>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003751>`__ | `Source URL <https://openneuro.org/datasets/ds003751/versions/1.0.6>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003751,
         title = {Dataset on Emotion with Naturalistic Stimuli (DENS)},
         author = {Sudhakar Mishra and Md. Asif and Uma Shanker Tiwary and Narayanan Srinivasan},
-        doi = {10.18112/openneuro.ds003751.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds003751.v1.0.2},
+        doi = {10.18112/openneuro.ds003751.v1.0.6},
+        url = {https://doi.org/10.18112/openneuro.ds003751.v1.0.6},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -71,25 +71,51 @@ Description
 **Overview**
 
 This is the "Emotion" dataset. The Dataset is recorded with naturalistic paradigm
+
 In brief, it contains EEG, ECG and EMG data for 40 subjects emotionally stimulated using naturalistic emotion stimuli. The stimuli are multimedia videos providing context to understand the situated conceptualization of emotions.
 For details, see the `Details about the experiment` section.
 
-**Citing this dataset**
 
-Please cite as follows:
-For more information, see the `dataset_description.json` file.
 
-**License**
 
-This eeg_emotion dataset is made available under the Open Database
-License: See the LICENSE file. A human readable information can be found at:
-https://opendatacommons.org/licenses/odbl/summary/
-Any rights in individual contents of the database are licensed under the
-Database Contents License: http://opendatacommons.org/licenses/dbcl/1.0/
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-**Dataset Description**
+   
+   **Overview**
+   
+   This is the "Emotion" dataset. The Dataset is recorded with naturalistic paradigm
+   
+   In brief, it contains EEG, ECG and EMG data for 40 subjects emotionally stimulated using naturalistic emotion stimuli. The stimuli are multimedia videos providing context to understand the situated conceptualization of emotions.
+   For details, see the `Details about the experiment` section.
+   
+   
+   
+   **Citing this dataset**
+   
+   Please cite as follows:
+   Sudhakar Mishra and Md. Asif and Uma Shanker Tiwary and Narayanan Srinivasan(2023). Dataset on Emotion with Naturalistic Stimuli (DENS). OpenNeuro. [Dataset] doi: https://doi.org/10.18112/openneuro.ds003751.v1.0.5
+   
+   For more information, see the `dataset_description.json` file.
+   
+   
+   
+   **License**
+   
+   This eeg_emotion dataset is made available under the Open Database
+   License: See the LICENSE file. A human readable information can be found at:
+   
+   https://opendatacommons.org/licenses/odbl/summary/
+   
+   Any rights in individual contents of the database are licensed under the
+   Database Contents License: http://opendatacommons.org/licenses/dbcl/1.0/
+   
+   
+   
+   **Dataset Description**
+   
+   Dataset\_description file described the metadata for the dataset. Participants related details are described in participants.json and participants.tsv files. Each subject directory contains two directories- beh and eeg. A tsv file inside beh folder having entries about the feedbacks given by subject on self-assessment scales-valence, arousal, dominance, liking, familiarity, relevance and emotion category. In addition, it contains the information about the time-stamp of mouse click and other details. The eeg folder inside subject directory contains the raw eeg data in .set \& .fdt format along with the information about task events in \_task-emotion\_events.tsv file. The stimuli directory contains stimuli which were used during the experiment. In addition, feedback excel sheet participant\_details.xlsx filled by participants is also added. The code directory contains the python code for data collection, python code for data validation and matlab file for pre-processing the raw data.
 
-Dataset\_description file described the metadata for the dataset. Participants related details are described in participants.json and participants.tsv files. Each subject directory contains two directories- beh and eeg. A tsv file inside beh folder having entries about the feedbacks given by subject on self-assessment scales-valence, arousal, dominance, liking, familiarity, relevance and emotion category. In addition, it contains the information about the time-stamp of mouse click and other details. The eeg folder inside subject directory contains the raw eeg data in .set \& .fdt format along with the information about task events in \_task-emotion\_events.tsv file. The stimuli directory contains stimuli which were used during the experiment. In addition, feedback excel sheet participant\_details.xlsx filled by participants is also added. The code directory contains the python code for data collection, python code for data validation and matlab file for pre-processing the raw data.
 
 Highlights
 ----------
@@ -100,8 +126,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 38
-      - Recordings: 38
+      - Subjects: 40
+      - Recordings: 200
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -121,15 +147,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 4.5 GB
-      - File count: 38
+      - Size on disk: 4.7 GB
+      - File count: 200
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003751.v1.0.2
+      - DOI: doi:10.18112/openneuro.ds003751.v1.0.6
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

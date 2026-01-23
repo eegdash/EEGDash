@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds003766">
 <h1>eegdash.dataset.DS003766<a class="headerlink" href="#eegdash-dataset-ds003766" title="Link to this heading">#</a></h1>
 <p>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds003766</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu (2022). <em>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003766.v2.0.3">10.18112/openneuro.ds003766.v2.0.3</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 4</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 31</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 124</span></p>
+<p><strong>Citation:</strong> Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu (2021). <em>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003766.v2.0.3">10.18112/openneuro.ds003766.v2.0.3</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 4</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 31</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 1028</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 1.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>2022</p></td>
+<td><p>2021</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan, Yanyan Qi, Haiyan Wu</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003766.v2.0.3">doi:10.18112/openneuro.ds003766.v2.0.3</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003766">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003766">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003766">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003766">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003766">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003766/versions/2.0.3">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1099,20 +1099,27 @@ loading errors, etc.), please let us know!</p>
 <p><strong>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking</strong></p>
 <p><strong>Description</strong></p>
 <p>This dataset was collected in 2020, which combines high-density Electroencephalography (HD-EEG, 128 channels) and mouse-tracking intended as a resource for examining the dynamic decision process of semantics and preference choices in the human brain. The dataset includes high-density resting-state and task-related (food preference choices and semantic judgments) EEG acquired from 31 individuals (ages: 18-33).</p>
-<p><strong>EEG acquisition</strong></p>
-<p>The EEG data were acquired using a 128-channel cap based on the standard 10/20 System with Electrical Geodesics Inc (EGI, Eugene, Oregon) system. During recording, sampling rate was 1000Hz, and the E129 (Cz) electrode was used as reference. Electrode impedances were kept below 50kohm for each electrode during the experiment.</p>
-<p><strong>Main files</strong></p>
-<p><strong>`sub-*`</strong>: EEG (<cite>.set</cite>) and behavior data with BIDS format.
-<strong>`sourcedata/rawdata`</strong>: Raw <cite>.mff</cite> EGI data and behavior data with subject information desensitization.
-<strong>`sourcedata/psychopy`</strong>: Stimuli and PsychoPy scripts for presentation.
-<strong>`derivatives/eeglab-preproc`</strong>: Preprocessed continuous EEG data with EEGLAB (Easy to set different epoch time windows for further analysis).</p>
-<p><strong>Others</strong></p>
-<p>Please refer to the <a class="reference external" href="https://doi.org/10.1038/s41597-022-01538-5">corresponding paper</a> and <a class="reference external" href="https://github.com/andlab-um/MT-EEG-dataset">GitHub code</a> to get more details.</p>
-<p><strong>References</strong></p>
-<p>Chen, K., Wang, R., Huang, J., Gao, F., Yuan, Z., Qi, Y., &amp; Wu, H. (2022). A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking. Scientific Data, 9(1), 416. <a class="reference external" href="https://doi.org/10.1038/s41597-022-01538-5">https://doi.org/10.1038/s41597-022-01538-5</a>
-Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a>
-Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p>
-</section>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking</strong></p>
+<p class="sd-card-text"><strong>Description</strong></p>
+<p class="sd-card-text">This dataset was collected in 2020, which combines high-density Electroencephalography (HD-EEG, 128 channels) and mouse-tracking intended as a resource for examining the dynamic decision process of semantics and preference choices in the human brain. The dataset includes high-density resting-state and task-related (food preference choices and semantic judgments) EEG acquired from 31 individuals (ages: 18-33).</p>
+<p class="sd-card-text"><strong>EEG acquisition</strong></p>
+<p class="sd-card-text">The EEG data were acquired using a 128-channel cap based on the standard 10/20 System with Electrical Geodesics Inc (EGI, Eugene, Oregon) system. During recording, sampling rate was 1000Hz, and the E129 (Cz) electrode was used as reference. Electrode impedances were kept below 50kohm for each electrode during the experiment.</p>
+<p class="sd-card-text"><strong>Main files</strong></p>
+<p class="sd-card-text"><strong>`sub-*`</strong>: EEG (<cite>.set</cite>) and behavior data with BIDS format.</p>
+<p class="sd-card-text"><strong>`sourcedata/rawdata`</strong>: Raw <cite>.mff</cite> EGI data and behavior data with subject information desensitization.</p>
+<p class="sd-card-text"><strong>`sourcedata/psychopy`</strong>: Stimuli and PsychoPy scripts for presentation.</p>
+<p class="sd-card-text"><strong>`derivatives/eeglab-preproc`</strong>: Preprocessed continuous EEG data with EEGLAB (Easy to set different epoch time windows for further analysis).</p>
+<p class="sd-card-text"><strong>Others</strong></p>
+<p class="sd-card-text">Please refer to the <a class="reference external" href="https://doi.org/10.1038/s41597-022-01538-5">corresponding paper</a> and <a class="reference external" href="https://github.com/andlab-um/MT-EEG-dataset">GitHub code</a> to get more details.</p>
+<p class="sd-card-text"><strong>References</strong></p>
+<p class="sd-card-text">Chen, K., Wang, R., Huang, J., Gao, F., Yuan, Z., Qi, Y., &amp; Wu, H. (2022). A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking. Scientific Data, 9(1), 416. <a class="reference external" href="https://doi.org/10.1038/s41597-022-01538-5">https://doi.org/10.1038/s41597-022-01538-5</a></p>
+<p class="sd-card-text">Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a></p>
+<p class="sd-card-text">Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p>
+</div>
+</details></section>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
@@ -1124,7 +1131,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 31</p></li>
-<li><p class="sd-card-text">Recordings: 124</p></li>
+<li><p class="sd-card-text">Recordings: 1028</p></li>
 <li><p class="sd-card-text">Tasks: 4</p></li>
 </ul>
 </div>
@@ -1162,8 +1169,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 152.8 GB</p></li>
-<li><p class="sd-card-text">File count: 124</p></li>
+<li><p class="sd-card-text">Size on disk: 71.3 GB</p></li>
+<li><p class="sd-card-text">File count: 1028</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS005648
 
 Mapping object space dimensions: new insights from temporal dynamics (OpenNeuro ``ds005648``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (—). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
+**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (2024). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 21`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 67`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mapping object space dimensions: new insights from temporal dynamics
    * - Year
-     - —
+     - 2024
    * - Authors
      - Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers
    * - License
@@ -88,7 +88,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 21
+      - Recordings: 67
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -108,8 +108,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 19.7 GB
-      - File count: 21
+      - Size on disk: 15.5 GB
+      - File count: 67
       - Format: BIDS
 
    .. grid-item-card:: License & citation

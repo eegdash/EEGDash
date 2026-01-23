@@ -7,11 +7,11 @@ eegdash.dataset.DS004917
 
 Probability Decision-making Task with ambiguity (OpenNeuro ``ds004917``). Access recordings and metadata through EEGDash.
 
-**Citation:** Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (—). *Probability Decision-making Task with ambiguity*. `10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
+**Citation:** Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). *Probability Decision-making Task with ambiguity*. `10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 53` :bdg-secondary:`Recordings: 874`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Probability Decision-making Task with ambiguity
    * - Year
-     - —
+     - 2024
    * - Authors
      - Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004917>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004917>`__ | `Source URL <https://openneuro.org/datasets/ds004917>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004917>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004917>`__ | `Source URL <https://openneuro.org/datasets/ds004917/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,16 @@ Description
 -----------
 
 Summary
+
 This dataset forms part of a study supported by the Social Neuroscience and Neuromodulation Laboratory of Universidad del Desarrollo, Chile.
 The full dataset is described in a submission to Scientific Data.
+
 Abstract
+
 In our daily lives, we frequently encounter decisions where the potential outcomes are unclear, leading to a state of heightened uncertainty. The complete or partial lack of knowledge regarding the probability of outcomes is called ambiguity and presents significant challenges for individuals. While recent studies have associated the level of ambiguity in decision-making with neural activity in the parietal cortex, the precise role of this brain region and its interactions with other brain regions during decision-making processes are not well known. Here, we present a comprehensive dataset detailing human decision-making under conditions of risk and ambiguity. This dataset includes data from 53 healthy volunteers aged between 18 and 31 years, consisting of structural magnetic resonance imaging (MRI: T1w, T2w, and DWI) and functional MRI (fMRI) acquired during task performance, as well as concurrent electrophysiological (EEG) recordings during inhibitory transcranial magnetic stimulation (TMS) applied over two parietal regions and the vertex. This dataset offers an opportunity to delve into the neurobiological mechanisms of decision-making in detail, highlighting the role of the parietal cortex.
+
 Additional Usage Notes
+
 - All code related to this dataset can be found on GitHub (https://github.com/neurocics/LAN_current) and and the additional data set of study are available in the free and open repository of OSF (https://osf.io/zd3g7/) (DOI: 10.17605/OSF.IO/ZD3G7). This includes sourcedata for the scanner tasks and also stimulus presentation scripts.
 
 Highlights
@@ -84,8 +89,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 24
-      - Recordings: 24
+      - Subjects: 53
+      - Recordings: 874
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +111,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 37.5 GB
-      - File count: 24
+      - File count: 874
       - Format: BIDS
 
    .. grid-item-card:: License & citation

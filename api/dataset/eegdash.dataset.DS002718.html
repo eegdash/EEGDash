@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds002718">
 <h1>eegdash.dataset.DS002718<a class="headerlink" href="#eegdash-dataset-ds002718" title="Link to this heading">#</a></h1>
 <p>Face processing EEG dataset for EEGLAB (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Daniel G. Wakeman, Richard N Henson (—). <em>Face processing EEG dataset for EEGLAB</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds002718.v1.1.0">10.18112/openneuro.ds002718.v1.1.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 18</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 18</span></p>
+<p><strong>Citation:</strong> Daniel G. Wakeman, Richard N Henson (2020). <em>Face processing EEG dataset for EEGLAB</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds002718.v1.1.0">10.18112/openneuro.ds002718.v1.1.0</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 18</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 133</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 11.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>Face processing EEG dataset for EEGLAB</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>—</p></td>
+<td><p>2020</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Daniel G. Wakeman, Richard N Henson</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds002718.v1.1.0">doi:10.18112/openneuro.ds002718.v1.1.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds002718">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds002718">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds002718">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds002718">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds002718">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds002718/versions/1.1.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1097,23 +1097,21 @@ loading errors, etc.), please let us know!</p>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Introduction:</strong>
-This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (<a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25977808/">https://pubmed.ncbi.nlm.nih.gov/25977808/</a>). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.
-<strong>Overview of the experiment:</strong>
-Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.
-<strong>Preprocessing:</strong>
+This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (<a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25977808/">https://pubmed.ncbi.nlm.nih.gov/25977808/</a>). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.</p>
+<p><strong>Overview of the experiment:</strong>
+Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.</p>
+<p><strong>Preprocessing:</strong>
 Multi-subject, multi-modal (sMRI+EEG) neuroimaging dataset
 on face processing. Original data described at <a class="reference external" href="https://www.nature.com/articles/sdata20151">https://www.nature.com/articles/sdata20151</a>
-This is repackaged version of the EEG data in EEGLAB format. The data has gone through
-minimal preprocessing including (see wh_extracteeg_BIDS.m):
-- Ignoring fMRI and MEG data (sMRI preserved for EEG source localization)</p>
+This is repackaged version of the EEG data in EEGLAB format. The data has gone through</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Introduction:</strong>
-This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (<a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25977808/">https://pubmed.ncbi.nlm.nih.gov/25977808/</a>). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.
-<strong>Overview of the experiment:</strong>
-Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.
-<strong>Preprocessing:</strong>
+This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (<a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25977808/">https://pubmed.ncbi.nlm.nih.gov/25977808/</a>). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.</p>
+<p class="sd-card-text"><strong>Overview of the experiment:</strong>
+Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.</p>
+<p class="sd-card-text"><strong>Preprocessing:</strong>
 Multi-subject, multi-modal (sMRI+EEG) neuroimaging dataset
 on face processing. Original data described at <a class="reference external" href="https://www.nature.com/articles/sdata20151">https://www.nature.com/articles/sdata20151</a>
 This is repackaged version of the EEG data in EEGLAB format. The data has gone through
@@ -1141,11 +1139,11 @@ minimal preprocessing including (see wh_extracteeg_BIDS.m):
 This data is a mapping of the original openfmri dataset ds000117 on OpenfMRI, which is no longer
 available (although a copy is available in the sourcedata folder of the ds003645 repository). The ds000117
 dataset on OpenNeuro contains only 16 subjects. The original OpenfMRI dataset is described at the bottom of this README file <a class="reference external" href="https://openneuro.org/datasets/ds000117/versions/1.0.4/file-display/README">https://openneuro.org/datasets/ds000117/versions/1.0.4/file-display/README</a> along with the correspondance with the 16 subjects in ds000117. Note that sub-001 data on OpenfMRI was corrupted
-so it is not included here.
-The openneuro dataset ds003645 is similar to this one but also contains MEG data and HED events. Also, it does not have the different runs merged.
-<strong>Import warning</strong>
-Make sure to import the channel locations from the BIDS electrodes.tsv files. The EEGLAB .set files also contain channel locations, although they differ for subjects 8 and 14 because the .set version is wrong and rotated by 90 degrees. When using the EEGLAB EEG BIDS plugin, the default behavior is to import channel locations from BIDS.
-<strong>Data curators:</strong>
+so it is not included here.</p>
+<p class="sd-card-text">The openneuro dataset ds003645 is similar to this one but also contains MEG data and HED events. Also, it does not have the different runs merged.</p>
+<p class="sd-card-text"><strong>Import warning</strong>
+Make sure to import the channel locations from the BIDS electrodes.tsv files. The EEGLAB .set files also contain channel locations, although they differ for subjects 8 and 14 because the .set version is wrong and rotated by 90 degrees. When using the EEGLAB EEG BIDS plugin, the default behavior is to import channel locations from BIDS.</p>
+<p class="sd-card-text"><strong>Data curators:</strong>
 Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, USA)</p>
 </div>
 </details></section>
@@ -1160,7 +1158,7 @@ Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, U
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 18</p></li>
-<li><p class="sd-card-text">Recordings: 18</p></li>
+<li><p class="sd-card-text">Recordings: 133</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1199,7 +1197,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 4.3 GB</p></li>
-<li><p class="sd-card-text">File count: 18</p></li>
+<li><p class="sd-card-text">File count: 133</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS003768
 
 Simultaneous EEG and fMRI signals during sleep from humans (OpenNeuro ``ds003768``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton, Jeff H. Duyn, Xiao Liu (20). *Simultaneous EEG and fMRI signals during sleep from humans*. `10.18112/openneuro.ds003768.v1.0.0 <https://doi.org/10.18112/openneuro.ds003768.v1.0.0>`__
+**Citation:** Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Xiao Liu (2021). *Simultaneous EEG and fMRI signals during sleep from humans*. `10.18112/openneuro.ds003768.v1.0.13 <https://doi.org/10.18112/openneuro.ds003768.v1.0.13>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 255`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 1346`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Simultaneous EEG and fMRI signals during sleep from humans
    * - Year
-     - 20
+     - 2021
    * - Authors
-     - Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton, Jeff H. Duyn, Xiao Liu
+     - Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Xiao Liu
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003768.v1.0.0 <https://doi.org/10.18112/openneuro.ds003768.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds003768.v1.0.13 <https://doi.org/10.18112/openneuro.ds003768.v1.0.13>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003768>`__ | `Source URL <https://openneuro.org/datasets/ds003768>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003768>`__ | `Source URL <https://openneuro.org/datasets/ds003768/versions/1.0.13>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -47,9 +47,9 @@ Dataset Information
 
       @dataset{ds003768,
         title = {Simultaneous EEG and fMRI signals during sleep from humans},
-        author = {Yameng Gu and Feng Han and Lucas E. Sainburg and Margeaux M. Schade and Orfeu M. Buxton and Jeff H. Duyn and Xiao Liu},
-        doi = {10.18112/openneuro.ds003768.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds003768.v1.0.0},
+        author = {Yameng Gu and Feng Han and Lucas E. Sainburg and Margeaux M. Schade and Xiao Liu},
+        doi = {10.18112/openneuro.ds003768.v1.0.13},
+        url = {https://doi.org/10.18112/openneuro.ds003768.v1.0.13},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -67,9 +67,17 @@ Dataset Information
 Description
 -----------
 
-This dataset included 33 healthy participants collected at Penn State with informed consent. Simultaneously collected EEG and BOLD signals for each participant were recorded and organized at each folder. EEG data were collected using a 32 channel MR-compatible EEG system (Brain Products, Munich, Germany). R128 in the EEG signals corresponds to the BOLD fMRI volume trigger.
-Each scanning section consisted of an anatomical session, two 10-min resting-state sessions, and several 15-min sleep sessions. The first resting-state session was conducted before a visual-motor adaptation task (Albouy et al, Journal of Sleep Research, 2013) and the second resting-state session was conducted after a visual-motor adaptation task. The scored sleep stages for these 33 subjects were organized under sourcedata folder. Each TSV file contained the sleep stages for each 30-sec epoch across different sessions for each subject.
-For more information or any questions about this dataset, please see the manuscript on bioRxiv or contact Yameng Gu (ymgu95@gmail.com)
+This dataset included 33 healthy participants collected at Pennsylvania State University with informed consent. Simultaneously collected EEG and BOLD signals for each participant were recorded and organized at each folder. 
+
+Each scanning section consisted of an anatomical session, two 10-min resting-state sessions, and several 15-min sleep sessions. The first resting-state session was conducted before a visual-motor adaptation task (Albouy et al, Journal of Sleep Research, 2013) and the second resting-state session was conducted after a visual-motor adaptation task. 
+
+The scored sleep stages for these 33 subjects were organized under 'sourcedata' folder. Each TSV file contained the sleep stages for each 30-sec epoch across different sessions for each subject. In the TSV file, “w” represents wakefulness and “1, 2, 3” represents NREM1, NREM2, and NREM3, respectively. Some epochs scoring with uncertainty are noted as “uncertain” and some epochs with too large artifacts to score reasonably are noted as “unscorable”. 
+
+MR imaging data were collected on a 3 Tesla Prisma Siemens Fit scanner using a Siemens 20-channel receive-array coil. Anatomical images were acquired using a MPRAGE sequence (TR: 2300 milliseconds, TE: 2.28 milliseconds, 1mm isotropic spatial resolution, FOV: 256 millimeters, flip angle: 8 degrees, matrix size: 256×256×192, acceleration factor: 2). Blood oxygenation level-dependent (BOLD) fMRI data were acquired using an EPI sequence (TR: 2100 milliseconds, TE: 25 milliseconds, slice thickness: 4mm, slices: 35, FOV: 240mm, in-plane resolution: 3mm×3mm).
+
+EEG data were collected using a 32-channel MR-compatible EEG system from Brain Products, Germany. Electrodes were placed based on the 10-20 international system. EOG and ECG recorded eye movement and cardiac signal, respectively. EEG data were collected at a sampling rate of 5000 Hz with a band-pass filter of 0-250 Hz. R128 in the EEG signals corresponds to the BOLD fMRI volume trigger. S1 markers in the EEG during sleep sessions correspond to participants hitting buttons indicating wakefulness state. S2 and S3 markers during sleep sessions represent no button hitting and can be ignored.
+
+For more information or any questions about this dataset, please see the two papers listed in the References and Links section or contact Dr. Yameng Gu (ymgu95@gmail.com)
 
 Highlights
 ----------
@@ -81,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 33
-      - Recordings: 255
+      - Recordings: 1346
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,15 +109,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 86.5 GB
-      - File count: 255
+      - Size on disk: 86.6 GB
+      - File count: 1346
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003768.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds003768.v1.0.13
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

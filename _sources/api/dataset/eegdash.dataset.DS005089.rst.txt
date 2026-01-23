@@ -7,11 +7,11 @@ eegdash.dataset.DS005089
 
 Proactive selective attention across competition contexts (OpenNeuro ``ds005089``). Access recordings and metadata through EEGDash.
 
-**Citation:** Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz (—). *Proactive selective attention across competition contexts*. `10.18112/openneuro.ds005089.v1.0.1 <https://doi.org/10.18112/openneuro.ds005089.v1.0.1>`__
+**Citation:** Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz (2024). *Proactive selective attention across competition contexts*. `10.18112/openneuro.ds005089.v1.0.1 <https://doi.org/10.18112/openneuro.ds005089.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 36`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 255`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Proactive selective attention across competition contexts
    * - Year
-     - —
+     - 2024
    * - Authors
      - Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia, Chiara Avancini, Luis F. Ciria, Maria Ruz
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005089.v1.0.1 <https://doi.org/10.18112/openneuro.ds005089.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005089>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005089>`__ | `Source URL <https://openneuro.org/datasets/ds005089>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005089>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005089>`__ | `Source URL <https://openneuro.org/datasets/ds005089/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 36
-      - Recordings: 36
+      - Recordings: 255
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 68.0 GB
-      - File count: 36
+      - File count: 255
       - Format: BIDS
 
    .. grid-item-card:: License & citation

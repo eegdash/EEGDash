@@ -7,11 +7,11 @@ eegdash.dataset.DS003078
 
 PROBE iEEG (OpenNeuro ``ds003078``). Access recordings and metadata through EEGDash.
 
-**Citation:** Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (—). *PROBE iEEG*. `10.18112/openneuro.ds003078.v1.0.0 <https://doi.org/10.18112/openneuro.ds003078.v1.0.0>`__
+**Citation:** Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (2020). *PROBE iEEG*. `10.18112/openneuro.ds003078.v1.0.0 <https://doi.org/10.18112/openneuro.ds003078.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 72`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 159`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PROBE iEEG
    * - Year
-     - —
+     - 2020
    * - Authors
      - Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003078.v1.0.0 <https://doi.org/10.18112/openneuro.ds003078.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003078>`__ | `Source URL <https://openneuro.org/datasets/ds003078>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003078>`__ | `Source URL <https://openneuro.org/datasets/ds003078/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 --- version 1.0.0 ---
+
 initial release
-Raw iEEG data + pre and post surgery MRI
+
+Raw iEEG data + pre and post surgery MRI 
+No DOI to data
 No reference to the published study (still in press)
 
 Highlights
@@ -82,8 +85,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 6
-      - Recordings: 72
-      - Tasks: 1
+      - Recordings: 159
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -103,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 11.0 GB
-      - File count: 72
+      - File count: 159
       - Format: BIDS
 
    .. grid-item-card:: License & citation

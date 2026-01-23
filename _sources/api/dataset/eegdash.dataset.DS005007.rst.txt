@@ -7,11 +7,11 @@ eegdash.dataset.DS005007
 
 Auditory naming task with questions that begin or end with a wh-interrogative (OpenNeuro ``ds005007``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yu Kitazawa, Eishi Asano (—). *Auditory naming task with questions that begin or end with a wh-interrogative*. `10.18112/openneuro.ds005007.v1.0.0 <https://doi.org/10.18112/openneuro.ds005007.v1.0.0>`__
+**Citation:** Yu Kitazawa, Eishi Asano (2024). *Auditory naming task with questions that begin or end with a wh-interrogative*. `10.18112/openneuro.ds005007.v1.0.0 <https://doi.org/10.18112/openneuro.ds005007.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 42`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 40` :bdg-secondary:`Recordings: 172`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory naming task with questions that begin or end with a wh-interrogative
    * - Year
-     - —
+     - 2024
    * - Authors
      - Yu Kitazawa, Eishi Asano
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005007.v1.0.0 <https://doi.org/10.18112/openneuro.ds005007.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005007>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005007>`__ | `Source URL <https://openneuro.org/datasets/ds005007>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005007>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005007>`__ | `Source URL <https://openneuro.org/datasets/ds005007/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 40
-      - Recordings: 42
+      - Recordings: 172
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.3 GB
-      - File count: 42
+      - File count: 172
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,7 +7,7 @@ eegdash.dataset.DS003039
 
 free walking study (OpenNeuro ``ds003039``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nadine Jacobsen, Sarah Blum, Karsten Witt, Stefan Debener, Joanna Scanlon (20). *free walking study*. `10.18112/openneuro.ds003039.v1.0.2 <https://doi.org/10.18112/openneuro.ds003039.v1.0.2>`__
+**Citation:** Nadine Jacobsen, Sarah Blum, Karsten Witt, Stefan Debener, Joanna Scanlon (2020). *free walking study*. `10.18112/openneuro.ds003039.v1.0.2 <https://doi.org/10.18112/openneuro.ds003039.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - free walking study
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Nadine Jacobsen, Sarah Blum, Karsten Witt, Stefan Debener, Joanna Scanlon
    * - License

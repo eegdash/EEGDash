@@ -7,11 +7,11 @@ eegdash.dataset.DS004860
 
 Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study (OpenNeuro ``ds004860``). Access recordings and metadata through EEGDash.
 
-**Citation:** Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (—). *Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study*. `10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
+**Citation:** Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (2023). *Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study*. `10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 31`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 99`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study
    * - Year
-     - —
+     - 2023
    * - Authors
      - Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004860.v1.0.0 <https://doi.org/10.18112/openneuro.ds004860.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004860>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004860>`__ | `Source URL <https://openneuro.org/datasets/ds004860>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004860>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004860>`__ | `Source URL <https://openneuro.org/datasets/ds004860/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -80,7 +80,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 31
-      - Recordings: 31
+      - Recordings: 99
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +101,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 3.8 GB
-      - File count: 31
+      - File count: 99
       - Format: BIDS
 
    .. grid-item-card:: License & citation

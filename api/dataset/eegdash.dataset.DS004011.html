@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds004011">
 <h1>eegdash.dataset.DS004011<a class="headerlink" href="#eegdash-dataset-ds004011" title="Link to this heading">#</a></h1>
 <p>The nature of neural object representations during dynamic occlusion (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds004011</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2019). <em>The nature of neural object representations during dynamic occlusion</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004011.v1.0.3">10.18112/openneuro.ds004011.v1.0.3</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 22</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 132</span></p>
+<p><strong>Citation:</strong> Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2022). <em>The nature of neural object representations during dynamic occlusion</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004011.v1.0.3">10.18112/openneuro.ds004011.v1.0.3</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 22</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 4578</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 1.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>The nature of neural object representations during dynamic occlusion</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>2019</p></td>
+<td><p>2022</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004011.v1.0.3">doi:10.18112/openneuro.ds004011.v1.0.3</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004011">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004011">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004011">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004011">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004011">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004011/versions/1.0.3">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1096,18 +1096,44 @@ loading errors, etc.), please let us know!</p>
 </section>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
-<p>The main folder contains the raw MEG data for all participants in standard bids format. See references.
-The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:
-- sourcedata</p>
-<blockquote>
-<div><ul class="simple">
+<p>The main folder contains the raw MEG data for all participants in standard bids format. See references.</p>
+<p>The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>sourcedata</dt><dd><ul>
 <li><dl class="simple">
 <dt>beh</dt><dd><ul>
 <li><dl class="simple">
 <dt>sub-[participant number]</dt><dd><ul>
 <li><p>sub-[participant number]_task-occlusion_run-[run number]_events.csv: contains all the events for each trial in the MEG session, detailing what was shown on the screen.</p></li>
-<li><p>sub-[participant number]_task-occlusion_run-[run number]_occframes.csv: contains all the stimulus positions for each occlusion trial in the MEG session.</p></li>
-<li><p>sub-[participant number]_task-occlusion_run-[run number]_disframes.csv: contains all the stimulus positions for each disappearance trial in the MEG session.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The main folder contains the raw MEG data for all participants in standard bids format. See references.</p>
+<p class="sd-card-text">The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>sourcedata</dt><dd><ul>
+<li><dl class="simple">
+<dt>beh</dt><dd><ul>
+<li><dl class="simple">
+<dt>sub-[participant number]</dt><dd><ul>
+<li><p class="sd-card-text">sub-[participant number]_task-occlusion_run-[run number]_events.csv: contains all the events for each trial in the MEG session, detailing what was shown on the screen.</p></li>
+<li><p class="sd-card-text">sub-[participant number]_task-occlusion_run-[run number]_occframes.csv: contains all the stimulus positions for each occlusion trial in the MEG session.</p></li>
+<li><p class="sd-card-text">sub-[participant number]_task-occlusion_run-[run number]_disframes.csv: contains all the stimulus positions for each disappearance trial in the MEG session.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1118,35 +1144,38 @@ The ‘sourcedata’ folder contains the behavioural data collected during the M
 </li>
 <li><dl class="simple">
 <dt>eyetracking</dt><dd><ul>
-<li><p>sub-[participant number]_Occ.edf: edf file containing the eye positions during the MEG session.</p></li>
+<li><p class="sd-card-text">sub-[participant number]_Occ.edf: edf file containing the eye positions during the MEG session.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-</div></blockquote>
-<p>The ‘derivatives’ folder contains the pre-processed MEG data for each participant. The data in this folder follows the following trial structure:
-- derivatives</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</li>
+</ul>
+<p class="sd-card-text">The ‘derivatives’ folder contains the pre-processed MEG data for each participant. The data in this folder follows the following trial structure:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>derivatives</dt><dd><ul>
 <li><dl class="simple">
 <dt>preprocessed</dt><dd><ul>
 <li><dl class="simple">
 <dt>cosmo_p[participant number].mat: cosmomvpa formatted file with the pre-processed data, epoched for each trial, containing the following variables:</dt><dd><ul>
-<li><p>ds_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)</p></li>
-<li><p>ds_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)</p></li>
-<li><p>ds_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (MEG channels)</p></li>
-<li><p>ds_eyes_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
-<li><p>ds_eyes_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
-<li><p>ds_eyes_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
+<li><p class="sd-card-text">ds_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)</p></li>
+<li><p class="sd-card-text">ds_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)</p></li>
+<li><p class="sd-card-text">ds_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (MEG channels)</p></li>
+<li><p class="sd-card-text">ds_eyes_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
+<li><p class="sd-card-text">ds_eyes_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
+<li><p class="sd-card-text">ds_eyes_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt> cosmo_p[participant number]_position_epochs.mat: cosmomvpa formatted file with the pre-processed data, epoched relative to each position change, containing the following variables:</dt><dd><ul>
-<li><p>ds_tiny: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (MEG channels)</p></li>
-<li><p>ds_tiny_eyes: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (eye-x, eye-y, pupil size)</p></li>
+<li><p class="sd-card-text">ds_tiny: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (MEG channels)</p></li>
+<li><p class="sd-card-text">ds_tiny_eyes: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (eye-x, eye-y, pupil size)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1156,11 +1185,15 @@ The ‘sourcedata’ folder contains the behavioural data collected during the M
 </dl>
 </li>
 </ul>
-</div></blockquote>
-<p>References:
-Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a>
-Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. <a class="reference external" href="https://doi.org/10.1038/sdata.2018.110">https://doi.org/10.1038/sdata.2018.110</a></p>
-</section>
+</dd>
+</dl>
+</li>
+</ul>
+<p class="sd-card-text">References:</p>
+<p class="sd-card-text">Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a></p>
+<p class="sd-card-text">Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. <a class="reference external" href="https://doi.org/10.1038/sdata.2018.110">https://doi.org/10.1038/sdata.2018.110</a></p>
+</div>
+</details></section>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
@@ -1172,7 +1205,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 22</p></li>
-<li><p class="sd-card-text">Recordings: 132</p></li>
+<li><p class="sd-card-text">Recordings: 4578</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1210,8 +1243,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 257.7 GB</p></li>
-<li><p class="sd-card-text">File count: 132</p></li>
+<li><p class="sd-card-text">Size on disk: 198.1 GB</p></li>
+<li><p class="sd-card-text">File count: 4578</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS003626
 
 Inner Speech (OpenNeuro ``ds003626``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (20). *Inner Speech*. `10.18112/openneuro.ds003626.v2.0.0 <https://doi.org/10.18112/openneuro.ds003626.v2.0.0>`__
+**Citation:** Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (2021). *Inner Speech*. `10.18112/openneuro.ds003626.v2.1.2 <https://doi.org/10.18112/openneuro.ds003626.v2.1.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 30`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 33`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Inner Speech
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003626.v2.0.0 <https://doi.org/10.18112/openneuro.ds003626.v2.0.0>`__
+     - `doi:10.18112/openneuro.ds003626.v2.1.2 <https://doi.org/10.18112/openneuro.ds003626.v2.1.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003626>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003626>`__ | `Source URL <https://openneuro.org/datasets/ds003626>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003626>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003626>`__ | `Source URL <https://openneuro.org/datasets/ds003626/versions/2.1.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003626,
         title = {Inner Speech},
         author = {Nicolas Nieto and Victoria Peterson and Hugo Rufiner and Juan Kamienkowski and Ruben Spies},
-        doi = {10.18112/openneuro.ds003626.v2.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds003626.v2.0.0},
+        doi = {10.18112/openneuro.ds003626.v2.1.2},
+        url = {https://doi.org/10.18112/openneuro.ds003626.v2.1.2},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -68,15 +68,24 @@ Description
 -----------
 
 Inner Speech Dataset.
-Author: Nicolas Nieto
-Code available at https://github.com/N-Nieto/Inner_Speech_Dataset
-Prepreint available at https://www.biorxiv.org/content/10.1101/2021.04.19.440473v1
+
+Author: Nicolás Nieto 
+
+Code available at: https://github.com/N-Nieto/Inner_Speech_Dataset
+
+Publication available at: https://www.nature.com/articles/s41597-022-01147-2
+
 Abstract:
 Surface electroencephalography is a standard and noninvasive way to measure electrical brain activity. Recent advances in artificial intelligence led to significant improvements in the automatic detection of brain patterns, allowing increasingly faster, more reliable and accessible Brain-Computer Interfaces.
-Different paradigms have been used to enable the human-machine interaction and the last few years have broad a mark increase in the interest for interpreting and characterizing the "inner voice" phenomenon. This paradigm, called inner speech, raises the possibility of executing an order just by thinking about it, allowing a “natural” way of controlling external devices. Unfortunately, the lack of publicly available electroencephalography datasets, restricts the development of new techniques for inner speech recognition. A ten-subjects dataset acquired under this and two others related paradigms, obtain with an acquisition systems of 136 channels, is presented. The main purpose of this work is to provide the scientific community with an open-access multiclass electroencephalography database of inner speech commands that could be used for better understanding of the related brain mechanisms.
+Different paradigms have been used to enable the human-machine interaction and the last few years have broad a mark increase in the interest for interpreting and characterizing the "inner voice" phenomenon. This paradigm, called inner speech, raises the possibility of executing an order just by thinking about it, allowing a “natural” way of controlling external devices. Unfortunately, the lack of publicly available electroencephalography datasets, restricts the development of new techniques for inner speech recognition. A ten-subjects dataset acquired under this and two others related paradigms, obtain with an acquisition systems of 136 channels, is presented. The main purpose of this work is to provide the scientific community with an open-access multiclass electroencephalography database of inner speech commands that could be used for better understanding of the related brain mechanisms.  
+
 Conditions = Inner Speech, Pronounced Speech, Visualized Condition
+
 Classes = "Arriba/Up", "Abajo/Down", "Derecha/Right", "Izquierda/Left"
+
 Total Trials = 5640
+
+
 Please contact us at this e-mail address if you have any doubts: nnieto@sinc.unl.edu.ar
 
 Highlights
@@ -89,8 +98,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 30
-      - Tasks: 1
+      - Recordings: 33
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -109,15 +118,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 24.6 GB
-      - File count: 30
+      - Size on disk: 18.3 GB
+      - File count: 33
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003626.v2.0.0
+      - DOI: doi:10.18112/openneuro.ds003626.v2.1.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

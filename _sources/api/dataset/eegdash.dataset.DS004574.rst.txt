@@ -7,11 +7,11 @@ eegdash.dataset.DS004574
 
 Cross-modal Oddball Task. (OpenNeuro ``ds004574``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (20). *Cross-modal Oddball Task.*. `10.18112/openneuro.ds004574.v1.0.0 <https://doi.org/10.18112/openneuro.ds004574.v1.0.0>`__
+**Citation:** Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). *Cross-modal Oddball Task.*. `10.18112/openneuro.ds004574.v1.0.0 <https://doi.org/10.18112/openneuro.ds004574.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 146` :bdg-secondary:`Recordings: 146`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 146` :bdg-secondary:`Recordings: 1174`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Cross-modal Oddball Task.
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004574.v1.0.0 <https://doi.org/10.18112/openneuro.ds004574.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004574>`__ | `Source URL <https://openneuro.org/datasets/ds004574>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004574>`__ | `Source URL <https://openneuro.org/datasets/ds004574/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,12 +67,13 @@ Dataset Information
 Description
 -----------
 
-This experiment includes 146 subjects: 98 individuals with Parkinsons disease,
-and 48 controls. The data were collected from 2017-2021. Subjects completed this oddball task (along with multiple other cognitive tasks)
+This experiment includes 146 subjects: 98 individuals with Parkinsons disease, 
+and 48 controls. The data were collected from 2017-2021. Subjects completed this oddball task (along with multiple other cognitive tasks) 
 while EEG was recorded with a 64-channel BrainVision cap. This task includes a primary GO cue,
-(white arrow) that required a directional response. That response could be correct or incorrect. The primary cue
-was preceeded by a visual pre-cue and an auditory pre-cue, which occurred at the same time (500ms before arrow cue).
-Each trial had either standard for both pre-cues, oddball visual pre-cue, or oddball auditory pre-cue.
+(white arrow) that required a directional response. That response could be correct or incorrect. The primary cue 
+
+was preceeded by a visual pre-cue and an auditory pre-cue, which occurred at the same time (500ms before arrow cue). 
+Each trial had either standard for both pre-cues, oddball visual pre-cue, or oddball auditory pre-cue. 
 Our analysis focused only on trials with both pre-cues standard or oddball auditory pre-cue.
 
 Highlights
@@ -85,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 146
-      - Recordings: 146
+      - Recordings: 1174
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 13.5 GB
-      - File count: 146
+      - File count: 1174
       - Format: BIDS
 
    .. grid-item-card:: License & citation

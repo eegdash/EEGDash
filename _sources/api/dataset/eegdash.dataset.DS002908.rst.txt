@@ -7,11 +7,11 @@ eegdash.dataset.DS002908
 
 Human MEG recordings during sequential conflict task (OpenNeuro ``ds002908``). Access recordings and metadata through EEGDash.
 
-**Citation:** Rafal Bogacz, Vladimir Litvak (—). *Human MEG recordings during sequential conflict task*. `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
+**Citation:** Rafal Bogacz, Vladimir Litvak (2020). *Human MEG recordings during sequential conflict task*. `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 53`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 13` :bdg-secondary:`Recordings: 536`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Human MEG recordings during sequential conflict task
    * - Year
-     - —
+     - 2020
    * - Authors
      - Rafal Bogacz, Vladimir Litvak
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002908.v1.0.0 <https://doi.org/10.18112/openneuro.ds002908.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002908>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002908>`__ | `Source URL <https://openneuro.org/datasets/ds002908>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002908>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002908>`__ | `Source URL <https://openneuro.org/datasets/ds002908/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 13
-      - Recordings: 53
+      - Recordings: 536
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 58.3 GB
-      - File count: 53
+      - Size on disk: 59.8 GB
+      - File count: 536
       - Format: BIDS
 
    .. grid-item-card:: License & citation

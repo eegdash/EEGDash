@@ -7,11 +7,11 @@ eegdash.dataset.DS002885
 
 DBS Phantom Recordings (OpenNeuro ``ds002885``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (20). *DBS Phantom Recordings*. `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
+**Citation:** Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (2020). *DBS Phantom Recordings*. `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 7`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 115`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - DBS Phantom Recordings
    * - Year
-     - 20
+     - 2020
    * - Authors
      - Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002885.v1.0.1 <https://doi.org/10.18112/openneuro.ds002885.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002885>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002885>`__ | `Source URL <https://openneuro.org/datasets/ds002885>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002885>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002885>`__ | `Source URL <https://openneuro.org/datasets/ds002885/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,15 @@ Description
 -----------
 
 This dataset is a part of the data used for the study: 'Kandemir, A.L., Litvak, V., Florin, E., 2020. The comparative performance of DBS artefact rejection methods for MEG recordings, NeuroImage, 2020, https://doi.org/10.1016/j.neuroimage.2020.117057.'
+
+
 Please use the latest version of the dataset.
-For detailed information about measurement protocol please refer to https://doi.org/10.1016/j.neuroimage.2020.117057. Additional information about CTF Phantom measurement is provided below.
+ 
+
+For detailed information about measurement protocol please refer to https://doi.org/10.1016/j.neuroimage.2020.117057. Additional information about CTF Phantom measurement is provided below. 
 The customized Matlab code for artefact rejection methods is available at:  https://gitlab.com/lkandemir/dbs-artefact-rejection.
-CTF Phantom Measurement
+
+CTF Phantom Measurement 
 Stimulation reference signal is captured with EEG001
 Movement trigger is captured with UPPT001
 Dipole activity is captured with HADC006
@@ -86,7 +91,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 2
-      - Recordings: 7
+      - Recordings: 115
       - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,7 +112,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 20.1 GB
-      - File count: 7
+      - File count: 115
       - Format: BIDS
 
    .. grid-item-card:: License & citation

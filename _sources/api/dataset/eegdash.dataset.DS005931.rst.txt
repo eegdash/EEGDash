@@ -7,11 +7,11 @@ eegdash.dataset.DS005931
 
 Visuomotor_task (OpenNeuro ``ds005931``). Access recordings and metadata through EEGDash.
 
-**Citation:** Riyo Ueda, Eishi Asano (—). *Visuomotor_task*. `10.18112/openneuro.ds005931.v1.0.0 <https://doi.org/10.18112/openneuro.ds005931.v1.0.0>`__
+**Citation:** Riyo Ueda, Eishi Asano (2025). *Visuomotor_task*. `10.18112/openneuro.ds005931.v1.0.0 <https://doi.org/10.18112/openneuro.ds005931.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 16`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 69`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visuomotor_task
    * - Year
-     - —
+     - 2025
    * - Authors
      - Riyo Ueda, Eishi Asano
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005931.v1.0.0 <https://doi.org/10.18112/openneuro.ds005931.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005931>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005931>`__ | `Source URL <https://openneuro.org/datasets/ds005931>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005931>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005931>`__ | `Source URL <https://openneuro.org/datasets/ds005931/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,17 @@ Description
 -----------
 
 Dataset of intracranial EEG from human epilepsy patients performing a visuomotor task
+
 Description:
+
 We present an electrophysiological dataset recorded from ten subjects during a visuomotor task. Subjects were epilepsy patients undergoing intracranial monitoring for localization of epileptic seizures. Subjects completed five sessions of Speed Match - a visuomotor on the Lumosity platform (https://www.lumosity.com/; Lumos Labs, Inc, San Francisco, CA) - during interictal EEG recording.
+
 Repository structure:
+
 Main directory (interictal EEG from children during gameplay): Contains interictal EEG files of each participant in the study. Folders are explained below.
+
 Subfolders:
+
 sub-/: Contains folders for each subject, named sub-.
 sub-/ses-: Contains folders for visuomotor task.
 sub-/ses-/ieeg/: Contains the raw iEEG data in .edf format for each subject. Each subject performed visuomotor task (ses-task). Each *ieeg.edf file contains continuous iEEG data during the visuomotor task. Details about the channels are given in the corresponding .tsv file. We also provide the information on the timing of the finger tapping on ieeg/edf file by specifying the start and end sample of each trial. (101 is for finger tapping).
@@ -87,7 +93,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 8
-      - Recordings: 16
+      - Recordings: 69
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -108,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 817.7 MB
-      - File count: 16
+      - File count: 69
       - Format: BIDS
 
    .. grid-item-card:: License & citation

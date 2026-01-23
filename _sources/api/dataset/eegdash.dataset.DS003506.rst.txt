@@ -7,11 +7,11 @@ eegdash.dataset.DS003506
 
 EEG: Reinforcement Learning in Parkinson's (OpenNeuro ``ds003506``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Darin Brown (20). *EEG: Reinforcement Learning in Parkinson's*. `10.18112/openneuro.ds003506.v1.1.0 <https://doi.org/10.18112/openneuro.ds003506.v1.1.0>`__
+**Citation:** James F Cavanagh, Darin Brown (2021). *EEG: Reinforcement Learning in Parkinson's*. `10.18112/openneuro.ds003506.v1.1.0 <https://doi.org/10.18112/openneuro.ds003506.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 84`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 724`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Reinforcement Learning in Parkinson's
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Darin Brown
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003506.v1.1.0 <https://doi.org/10.18112/openneuro.ds003506.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003506>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003506>`__ | `Source URL <https://openneuro.org/datasets/ds003506>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003506>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003506>`__ | `Source URL <https://openneuro.org/datasets/ds003506/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,7 @@ Dataset Information
 Description
 -----------
 
-Reinforcement learning task with 28 Parkinson patients and 28 matched controls.  Task with volitional and instucted choices.   Task adapted from here: https://doi.org/10.1016/j.neuron.2014.06.035.    Beh data first published here: 10.1016/j.cortex.2017.02.021.  EEG published here: 10.1016/j.brainres.2019.146541.   PD came in twice separated by a week, either ON or OFF medication.  CTL only came in once.  Task included in Matlab programming language.   Data collected circa 2015 in Cognitive Rhythms and Computation Lab at University of New Mexico.  Subjs also had an acceleromter taped to their most tremor affected hand.  X, Y, Z dimensions recorded throughout.  Check the .xls sheet under code folder for more meta data.  Some Matlab analytic scripts are included, but I didnt ensure that these are complete.  Also behavioral files from the task, which contain more trial-specific information than the triggers.
+Reinforcement learning task with 28 Parkinson patients and 28 matched controls.  Task with volitional and instucted choices.   Task adapted from here: https://doi.org/10.1016/j.neuron.2014.06.035.    Beh data first published here: 10.1016/j.cortex.2017.02.021.  EEG published here: 10.1016/j.brainres.2019.146541.   PD came in twice separated by a week, either ON or OFF medication.  CTL only came in once.  Task included in Matlab programming language.   Data collected circa 2015 in Cognitive Rhythms and Computation Lab at University of New Mexico.  Subjs also had an acceleromter taped to their most tremor affected hand.  X, Y, Z dimensions recorded throughout.  Check the .xls sheet under code folder for more meta data.  Some Matlab analytic scripts are included, but I didnt ensure that these are complete.  Also behavioral files from the task, which contain more trial-specific information than the triggers.  
  - James F Cavanagh 02/05/2021
 
 Highlights
@@ -80,7 +80,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 56
-      - Recordings: 84
+      - Recordings: 724
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +101,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 16.2 GB
-      - File count: 84
+      - File count: 724
       - Format: BIDS
 
    .. grid-item-card:: License & citation

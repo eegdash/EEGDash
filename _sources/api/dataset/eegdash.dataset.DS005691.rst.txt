@@ -7,11 +7,11 @@ eegdash.dataset.DS005691
 
 SpinalExpect_Invasive (OpenNeuro ``ds005691``). Access recordings and metadata through EEGDash.
 
-**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (—). *SpinalExpect_Invasive*. `10.18112/openneuro.ds005691.v1.0.0 <https://doi.org/10.18112/openneuro.ds005691.v1.0.0>`__
+**Citation:** Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen (2024). *SpinalExpect_Invasive*. `10.18112/openneuro.ds005691.v1.0.0 <https://doi.org/10.18112/openneuro.ds005691.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 8`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 8` :bdg-secondary:`Recordings: 60`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SpinalExpect_Invasive
    * - Year
-     - —
+     - 2024
    * - Authors
      - Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze, Matthias Deliano, Lars Buentjen
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005691.v1.0.0 <https://doi.org/10.18112/openneuro.ds005691.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005691>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005691>`__ | `Source URL <https://openneuro.org/datasets/ds005691>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005691>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005691>`__ | `Source URL <https://openneuro.org/datasets/ds005691/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,12 +67,15 @@ Dataset Information
 Description
 -----------
 
-Contact person:
+Contact person: 
 Max-Philipp Stenner, email: max-philipp.stenner@med.ovgu.de or max-philipp.stenner@lin-magdeburg.de, ORCID: 0000-0002-3694-1887
+
 Brief overview of the tasks in the experiment:
-The goal was to reveal whether temporal expectation influences initial sensory processing in the human spinal cord. In each trial, subjects (included n=8, patients with neuropathic pain following epidural electrode implantation into the cervical spinal canal, dorsal to the spinal cord) received at least one electric median nerve stimulation on the left wrist. Their task was to silently count in how many (rare) trials in each block (~5 min) there were two median nerve stimuli in rapid succession (80 ms ISI), and to report that number at the end of each block. In each trial, the median nerve stimulatino was preceded by an auditory cue. In alternating blocks, the time interval between the auditory cue and the (first) median nerve stimulation was either fixed at 1100 ms, or varied randomly (uniform distribution) between 100 and 2100 ms.
-Montage:
+The goal was to reveal whether temporal expectation influences initial sensory processing in the human spinal cord. In each trial, subjects (included n=8, patients with neuropathic pain following epidural electrode implantation into the cervical spinal canal, dorsal to the spinal cord) received at least one electric median nerve stimulation on the left wrist. Their task was to silently count in how many (rare) trials in each block (~5 min) there were two median nerve stimuli in rapid succession (80 ms ISI), and to report that number at the end of each block. In each trial, the median nerve stimulatino was preceded by an auditory cue. In alternating blocks, the time interval between the auditory cue and the (first) median nerve stimulation was either fixed at 1100 ms, or varied randomly (uniform distribution) between 100 and 2100 ms. 
+
+Montage: 
 Lead placement alongside the cervical spinal cord varied across patients. In each patient, we recorded from eight epidural contacts (3 mm length, 1 mm spacing) placed alongside the dorsal cervical spinal cord. The fourth contact (counted from the most caudal contact) served as a reference. The ground was an extra wire twisted around the wire for the sixth contact (counted from the most caudal contact).
+
 Events:
 There are three events of interest. "S1" is a keypress of the experimenter, to advance the task upon breaks. "S1" can therefore be used to identify the start of each new block. "S70" corresponds to the auditory cue. "S130" corresponds to median nerve stimulation. "S99" is a "placeholder" that corresponds to no stimulus at all. The placeholder was used to enable "double stimuli", i.e., a rapid succession of two median nerve stimulations with an ISI of 80 ms. Most trials follow a sequence of "S70" - "S130" - "S99". Deviant trials have "S70" - "S130" - "S130".
 
@@ -86,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 8
-      - Recordings: 8
+      - Recordings: 60
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,8 +109,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 723.2 MB
-      - File count: 8
+      - Size on disk: 723.0 MB
+      - File count: 60
       - Format: BIDS
 
    .. grid-item-card:: License & citation

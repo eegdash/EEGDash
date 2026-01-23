@@ -7,11 +7,11 @@ eegdash.dataset.DS005406
 
 EEG frequency tagging reveals the integration of dissimilar observed actions (OpenNeuro ``ds005406``). Access recordings and metadata through EEGDash.
 
-**Citation:** Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2019). *EEG frequency tagging reveals the integration of dissimilar observed actions*. `10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
+**Citation:** Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2024). *EEG frequency tagging reveals the integration of dissimilar observed actions*. `10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 29`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 29` :bdg-secondary:`Recordings: 295`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG frequency tagging reveals the integration of dissimilar observed actions
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005406.v1.0.0 <https://doi.org/10.18112/openneuro.ds005406.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005406>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005406>`__ | `Source URL <https://openneuro.org/datasets/ds005406>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005406>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005406>`__ | `Source URL <https://openneuro.org/datasets/ds005406/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 29
-      - Recordings: 29
+      - Recordings: 295
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +105,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 13.3 GB
-      - File count: 29
+      - File count: 295
       - Format: BIDS
 
    .. grid-item-card:: License & citation

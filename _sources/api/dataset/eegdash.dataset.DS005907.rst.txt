@@ -7,11 +7,11 @@ eegdash.dataset.DS005907
 
 EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls (OpenNeuro ``ds005907``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ethan Campbell, James F Cavanagh (20). *EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls*. `10.18112/openneuro.ds005907.v1.0.0 <https://doi.org/10.18112/openneuro.ds005907.v1.0.0>`__
+**Citation:** Ethan Campbell, James F Cavanagh (2025). *EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls*. `10.18112/openneuro.ds005907.v1.0.0 <https://doi.org/10.18112/openneuro.ds005907.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 53` :bdg-secondary:`Recordings: 53`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 53` :bdg-secondary:`Recordings: 324`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Ethan Campbell, James F Cavanagh
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005907.v1.0.0 <https://doi.org/10.18112/openneuro.ds005907.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005907>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005907>`__ | `Source URL <https://openneuro.org/datasets/ds005907>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005907>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005907>`__ | `Source URL <https://openneuro.org/datasets/ds005907/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 53
-      - Recordings: 53
+      - Recordings: 324
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 5.6 GB
-      - File count: 53
+      - File count: 324
       - Format: BIDS
 
    .. grid-item-card:: License & citation

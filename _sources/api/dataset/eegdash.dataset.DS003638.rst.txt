@@ -7,11 +7,11 @@ eegdash.dataset.DS003638
 
 EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms (OpenNeuro ``ds003638``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (20). *EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms*. `10.18112/openneuro.ds003638.v1.0.0 <https://doi.org/10.18112/openneuro.ds003638.v1.0.0>`__
+**Citation:** James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2021). *EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms*. `10.18112/openneuro.ds003638.v1.0.0 <https://doi.org/10.18112/openneuro.ds003638.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 57`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 57` :bdg-secondary:`Recordings: 404`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003638.v1.0.0 <https://doi.org/10.18112/openneuro.ds003638.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003638>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003638>`__ | `Source URL <https://openneuro.org/datasets/ds003638>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003638>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003638>`__ | `Source URL <https://openneuro.org/datasets/ds003638/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 57
-      - Recordings: 57
+      - Recordings: 404
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 16.3 GB
-      - File count: 57
+      - Size on disk: 15.3 GB
+      - File count: 404
       - Format: BIDS
 
    .. grid-item-card:: License & citation

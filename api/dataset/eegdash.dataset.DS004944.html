@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds004944">
 <h1>eegdash.dataset.DS004944<a class="headerlink" href="#eegdash-dataset-ds004944" title="Link to this heading">#</a></h1>
 <p>Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds004944</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein (20). <em>Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004944.v1.1.0">10.18112/openneuro.ds004944.v1.1.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 22</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 44</span></p>
+<p><strong>Citation:</strong> Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein (2024). <em>Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004944.v1.1.0">10.18112/openneuro.ds004944.v1.1.0</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 22</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 379</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 1.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>20</p></td>
+<td><p>2024</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004944.v1.1.0">doi:10.18112/openneuro.ds004944.v1.1.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004944">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004944">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004944">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004944">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004944">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004944/versions/1.1.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1098,29 +1098,27 @@ loading errors, etc.), please let us know!</p>
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Overview</strong></p>
 <p>This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
-For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
-We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
-performed with our neuromorphic processing pipeline: <a class="reference external" href="https://doi.org/10.1038/s41467-024-47495-y">https://doi.org/10.1038/s41467-024-47495-y</a>.
-The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
-The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
-The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at <a class="github reference external" href="https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git">CostaFilippo/BCI2000_DYNAP-SE.git</a>.</p>
+For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).</p>
+<p>We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
+performed with our neuromorphic processing pipeline: <a class="reference external" href="https://doi.org/10.1038/s41467-024-47495-y">https://doi.org/10.1038/s41467-024-47495-y</a>.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Overview</strong></p>
 <p class="sd-card-text">This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
-For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
-We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
-performed with our neuromorphic processing pipeline: <a class="reference external" href="https://doi.org/10.1038/s41467-024-47495-y">https://doi.org/10.1038/s41467-024-47495-y</a>.
-The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
+For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).</p>
+<p class="sd-card-text">We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
+performed with our neuromorphic processing pipeline: <a class="reference external" href="https://doi.org/10.1038/s41467-024-47495-y">https://doi.org/10.1038/s41467-024-47495-y</a>.</p>
+<p class="sd-card-text">The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
 The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
-The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at <a class="github reference external" href="https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git">CostaFilippo/BCI2000_DYNAP-SE.git</a>.
-In a previous publication, this dataset has been analyzed with a offline software algorithm: <a class="reference external" href="https://doi.org/10.1016/j.clinph.2019.07.008">https://doi.org/10.1016/j.clinph.2019.07.008</a>.
-The annotations of the epileptiform patterns detected with the offline approach are provided at: sub-*/ses-SITUATION*/sub-*_ses-SITUATION*_task-acute_events.tsv.
-The annotations of the epileptiform patterns detected with the online neuromorphic processing are provided at derivative/sub-*/ses-SITUATION*/sub-*_ses-SITUATION*_task-EV.csv.</p>
+The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at <a class="github reference external" href="https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git">CostaFilippo/BCI2000_DYNAP-SE.git</a>.</p>
+<p class="sd-card-text">In a previous publication, this dataset has been analyzed with a offline software algorithm: <a class="reference external" href="https://doi.org/10.1016/j.clinph.2019.07.008">https://doi.org/10.1016/j.clinph.2019.07.008</a>.</p>
+<p class="sd-card-text">The annotations of the epileptiform patterns detected with the offline approach are provided at: sub-*/ses-SITUATION*/sub-*_ses-SITUATION*_task-acute_events.tsv.</p>
+<p class="sd-card-text">The annotations of the epileptiform patterns detected with the online neuromorphic processing are provided at derivative/sub-*/ses-SITUATION*/sub-*_ses-SITUATION*_task-EV.csv.</p>
 <p class="sd-card-text"><strong>Dataset Structure</strong></p>
-<dl>
-<dt>The derivative folder is structured as follows:</dt><dd><ul class="simple">
+<p class="sd-card-text">The derivative folder is structured as follows:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p class="sd-card-text">sub-*</p></li>
 </ul>
 <blockquote>
@@ -1137,8 +1135,7 @@ The annotations of the epileptiform patterns detected with the online neuromorph
 - <a href="#id15"><span class="problematic" id="id16">*</span></a>task-EV.csv</p></li>
 </ul>
 </div></blockquote>
-</dd>
-</dl>
+</div></blockquote>
 <p class="sd-card-text"><strong>File Descriptions</strong></p>
 <ul class="simple">
 <li><p class="sd-card-text">derivative</p></li>
@@ -1154,21 +1151,22 @@ The annotations of the epileptiform patterns detected with the online neuromorph
 <p class="sd-card-text"><strong>Data Formats</strong></p>
 <p class="sd-card-text">Details of the neuromorphic processing pipeline can be found at <a class="reference external" href="https://doi.org/10.1038/s41467-024-47495-y">https://doi.org/10.1038/s41467-024-47495-y</a>.</p>
 <p class="sd-card-text"><strong>task-BCI.dat</strong></p>
-<p class="sd-card-text">The BCI2000-compatible file contains the raw ECoG recording.
-It can be streamed in real-time using the ‘FilePlayback’ BCI2000 module.</p>
+<p class="sd-card-text">The BCI2000-compatible file contains the raw ECoG recording.</p>
+<p class="sd-card-text">It can be streamed in real-time using the ‘FilePlayback’ BCI2000 module.</p>
 <p class="sd-card-text"><strong>task-ADM.csv</strong></p>
-<dl class="simple">
-<dt>The ADM file is formatted as follows:</dt><dd><ul class="simple">
+<p class="sd-card-text">The ADM file is formatted as follows:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p class="sd-card-text">_pulseType_: -1 for DN pulse, +1 for UP pulse.</p></li>
 <li><p class="sd-card-text">_pulseTime_: Time at which the pulse occurred.</p></li>
 <li><p class="sd-card-text">_channel_: Channel in which the pulse occurred.</p></li>
 <li><p class="sd-card-text">_band_: 0 for EEG band, 1 for HFO band</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p class="sd-card-text"><strong>task-SNN.csv</strong></p>
-<dl class="simple">
-<dt>The SNN file is formatted as follows:</dt><dd><ul class="simple">
+<p class="sd-card-text">The SNN file is formatted as follows:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p class="sd-card-text">_time_: Time at which the SNN neuron activated.</p></li>
 <li><p class="sd-card-text">_neuronId_: Number id of the SNN neuron (DYNAP-SE numbering from 0 to 1024).</p></li>
 <li><p class="sd-card-text">_neuronCounter_: Number id of the SNN neuron (sequential numbering from 0 to 40).</p></li>
@@ -1178,17 +1176,16 @@ It can be streamed in real-time using the ‘FilePlayback’ BCI2000 module.</p>
 <li><p class="sd-card-text">_moduleId_: Module number (0-7).</p></li>
 <li><p class="sd-card-text">_channelId_: Channel for which the SNN neuron activated.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p class="sd-card-text"><strong>task-EV.csv</strong></p>
-<dl class="simple">
-<dt>The EV file contains annotations of the detected epileptiform patterns with the following format:</dt><dd><ul class="simple">
+<p class="sd-card-text">The EV file contains annotations of the detected epileptiform patterns with the following format:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p class="sd-card-text">_time_: time of the detected event.</p></li>
 <li><p class="sd-card-text">_channelId_: channel id of the detected event.</p></li>
 <li><p class="sd-card-text">_location_:  channel name of the detected event.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p class="sd-card-text"><strong>Contact Information</strong></p>
 <p class="sd-card-text">For inquiries or additional information, please contact <a class="reference external" href="mailto:Filippo&#46;Costa&#37;&#52;&#48;usz&#46;ch">Filippo<span>&#46;</span>Costa<span>&#64;</span>usz<span>&#46;</span>ch</a> or <a class="reference external" href="mailto:Johannes&#46;Sarnthein&#37;&#52;&#48;usz&#46;ch">Johannes<span>&#46;</span>Sarnthein<span>&#64;</span>usz<span>&#46;</span>ch</a></p>
 <p class="sd-card-text"><strong>Acknowledgements</strong></p>
@@ -1206,7 +1203,7 @@ It can be streamed in real-time using the ‘FilePlayback’ BCI2000 module.</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 22</p></li>
-<li><p class="sd-card-text">Recordings: 44</p></li>
+<li><p class="sd-card-text">Recordings: 379</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1244,8 +1241,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 2.6 GB</p></li>
-<li><p class="sd-card-text">File count: 44</p></li>
+<li><p class="sd-card-text">Size on disk: 451.1 MB</p></li>
+<li><p class="sd-card-text">File count: 379</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS004483
 
 ABSeqMEG (OpenNeuro ``ds004483``). Access recordings and metadata through EEGDash.
 
-**Citation:** Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene (20). *ABSeqMEG*. `10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
+**Citation:** Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene (2023). *ABSeqMEG*. `10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 282`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 1384`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ABSeqMEG
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004483.v1.0.0 <https://doi.org/10.18112/openneuro.ds004483.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004483>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004483>`__ | `Source URL <https://openneuro.org/datasets/ds004483>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004483>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004483>`__ | `Source URL <https://openneuro.org/datasets/ds004483/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,7 +67,8 @@ Dataset Information
 Description
 -----------
 
-This dataset contains the MEG data from the article entitled Compression of binary sound sequences in human working memory https://www.biorxiv.org/content/10.1101/2022.10.15.512361v1
+This dataset contains the MEG data from the article entitled Compression of binary sound sequences in human working memory https://www.biorxiv.org/content/10.1101/2022.10.15.512361v1 
+
 According to the language of thought hypothesis, regular sequences are compressed in human working memory using recursive loops akin to a mental program that predicts future items. We tested this theory by probing working memory for 16-item sequences made of two sounds. We recorded brain activity with functional MRI and magneto-encephalography (MEG) while participants listened to a hierarchy of sequences of variable complexity, whose minimal description required transition probabilities, chunking, or nested structures. Occasional deviant sounds probed the participants’ knowledge of the sequence. We predicted that task difficulty and brain activity would be proportional to minimal description length (MDL) in our formal language. Furthermore, activity should increase with MDL for learned sequences, and decrease with MDL for deviants. These predictions were upheld in both fMRI and MEG, indicating that sequence predictions are highly dependent on sequence structure and become weaker and delayed as complexity increases. The proposed language recruited bilateral superior temporal, precentral, anterior intraparietal and cerebellar cortices. These regions overlapped extensively with a localizer for mathematical calculation, and much less with spoken or written language processing. We propose that these areas collectively encode regular sequences as repetitions with variations and their recursive composition into nested structures.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 282
+      - Recordings: 1384
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 23.4 GB
-      - File count: 282
+      - File count: 1384
       - Format: BIDS
 
    .. grid-item-card:: License & citation

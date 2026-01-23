@@ -7,11 +7,11 @@ eegdash.dataset.DS003190
 
 Assesment of the visual stimuli properties in P300 paradigm (OpenNeuro ``ds003190``). Access recordings and metadata through EEGDash.
 
-**Citation:** Omar Mendoza-Montoya, Javier M. Antelis (—). *Assesment of the visual stimuli properties in P300 paradigm*. `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
+**Citation:** Omar Mendoza-Montoya, Javier M. Antelis (2020). *Assesment of the visual stimuli properties in P300 paradigm*. `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 384`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 1685`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Assesment of the visual stimuli properties in P300 paradigm
    * - Year
-     - —
+     - 2020
    * - Authors
      - Omar Mendoza-Montoya, Javier M. Antelis
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003190>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003190>`__ | `Source URL <https://openneuro.org/datasets/ds003190>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003190>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003190>`__ | `Source URL <https://openneuro.org/datasets/ds003190/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Dataset description:
+
 The database consists of a total of 382 electroencephalographic files from 19 participants. All recordings were collected on channels Fz, Cz, P3, Pz,P4, PO7, PO8 and Oz, according to the 10-20 EEG electrode placement standard, grounded to AFz channel and referenced to right mastoid (M2).
 •Each participant (S1-S19) performed 3 experimental sessions (Session01-Session03) and in each session there are 7 data files.
 •The filenames for these data files are ’Training 4’, ’Training 5 - SF’, ’Training 5 - CF’, ’Training 6’, ’Training 7’, ’Training 8’, and ’Training 9’.
@@ -75,6 +76,7 @@ The database consists of a total of 382 electroencephalographic files from 19 pa
 •Note that filenames for data-files with 4, 6, 7, 8, and 9 stimuli do not have a letter and were recorded with the type of flash that provided the greater classification accuracy when using 5 stimuli.
 •Each data file contains the data stream in a 2D matrix where rows correspond to channels and columns correspond to time samples with sampling frequency of 256Hz.
 •There are 10 rows, 1 to 8 for each EEG electrode (in descending order Fz, Cz, P3, Pz, P4, PO7, PO8 and Oz), 9 for time stamps, and 10 for a marker that encode information about the execution of theexperiment.
+
 The marker encodes this information as follows:
 •(i)marker numbers 101, 200, 201, 202 and 203, indicate the beginning and end of the five phases in a block
 •(ii)marker numbers 1, 2, 3, 4, 5, 6, 7, 8 and 9, indicate the symbol that is activated on the screen
@@ -92,8 +94,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 384
-      - Tasks: 2
+      - Recordings: 1685
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -112,8 +114,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.3 GB
-      - File count: 384
+      - Size on disk: 1.0 GB
+      - File count: 1685
       - Format: BIDS
 
    .. grid-item-card:: License & citation

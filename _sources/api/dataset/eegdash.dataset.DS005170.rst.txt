@@ -7,11 +7,11 @@ eegdash.dataset.DS005170
 
 Chisco (OpenNeuro ``ds005170``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (—). *Chisco*. `10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
+**Citation:** Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (2024). *Chisco*. `10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 225`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 229`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Chisco
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005170.v1.1.2 <https://doi.org/10.18112/openneuro.ds005170.v1.1.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005170>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005170>`__ | `Source URL <https://openneuro.org/datasets/ds005170>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005170>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005170>`__ | `Source URL <https://openneuro.org/datasets/ds005170/versions/1.1.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,12 +70,12 @@ Description
 
 **Chisco Dataset**
 
+
 This dataset is a Chinese imagined speech dataset with five participants, identified as sub-01 to sub-05. The dataset includes raw data and preprocessed data in both fif and pkl formats. Information also can be found in https://github.com/zhangzihan-is-good/Chisco
+
 
 **Supplementary Information**
 
-The initial dataset release encompassed data from three participants (sub-01 to sub-03) as detailed in related Chisco publications. Subsequently, data from two additional subjects (sub-04 and sub-05) were incorporated. During the interval between the original dataset release and the addition of the new data, the BIDS protocol underwent updates. To preserve the integrity of the data processing code presented in our publications, the supplementary data continue to adhere to the previous version of the BIDS protocol. Consequently, the BIDS validator on our website may report errors; however, these do not compromise the usability of the dataset.
-Future releases will include data from sub-06 and sub-07, who participated under a new experimental paradigm. These will be published as part of a new dataset, Chisco 2.0. We invite you to stay tuned for further updates.
 
 
 .. dropdown:: View full README
@@ -84,17 +84,24 @@ Future releases will include data from sub-06 and sub-07, who participated under
    
    **Chisco Dataset**
    
+   
    This dataset is a Chinese imagined speech dataset with five participants, identified as sub-01 to sub-05. The dataset includes raw data and preprocessed data in both fif and pkl formats. Information also can be found in https://github.com/zhangzihan-is-good/Chisco
+   
    
    **Supplementary Information**
    
+   
    The initial dataset release encompassed data from three participants (sub-01 to sub-03) as detailed in related Chisco publications. Subsequently, data from two additional subjects (sub-04 and sub-05) were incorporated. During the interval between the original dataset release and the addition of the new data, the BIDS protocol underwent updates. To preserve the integrity of the data processing code presented in our publications, the supplementary data continue to adhere to the previous version of the BIDS protocol. Consequently, the BIDS validator on our website may report errors; however, these do not compromise the usability of the dataset.
+   
    Future releases will include data from sub-06 and sub-07, who participated under a new experimental paradigm. These will be published as part of a new dataset, Chisco 2.0. We invite you to stay tuned for further updates.
+   
    
    **Dataset Structure**
    
    
+   
    **Root Directory**
+   
    
    - `dataset_description.json`
    - `participants.tsv`
@@ -104,17 +111,24 @@ Future releases will include data from sub-06 and sub-07, who participated under
    - `textdataset/`
    - `json/`
    
+   
    **Raw Data**
+   
    
    The root directory contains folders `sub-01` to `sub-05` with raw data. Each participant's folder contains 5-6 session folders, corresponding to data collected over 5-6 days.
    
+   
    **Preprocessed Data**
+   
    
    Preprocessed data is stored in the `derivatives` folder in both fif and pkl formats.
    
+   
    **Text Data**
    
+   
    The `textdataset` folder and `json` folder contain text data used to stimulate the participants.
+   
    
    **File Structure**
    
@@ -150,18 +164,21 @@ Future releases will include data from sub-06 and sub-07, who participated under
            ...
        dataset_description.json
        README
+       participants.tsv
    
-   **participants.tsv**
-   
+   ```
    
    **License**
    
    This dataset is licensed under the CC0 license. You are free to use the dataset for non-commercial purposes, but the original author needs to be properly indicated.
    
+   
    **Citation**
    
    If you use this dataset in your research, please cite the following link:
+   
    https://github.com/zhangzihan-is-good/Chisco
+   
    
    **Contact Information**
    
@@ -179,8 +196,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 5
-      - Recordings: 225
-      - Tasks: 1
+      - Recordings: 229
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -199,8 +216,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 261.8 GB
-      - File count: 225
+      - Size on disk: 90.7 GB
+      - File count: 229
       - Format: BIDS
 
    .. grid-item-card:: License & citation

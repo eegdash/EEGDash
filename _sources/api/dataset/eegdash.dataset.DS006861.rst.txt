@@ -7,11 +7,11 @@ eegdash.dataset.DS006861
 
 Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals (OpenNeuro ``ds006861``). Access recordings and metadata through EEGDash.
 
-**Citation:** Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (20). *Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals*. `10.18112/openneuro.ds006861.v1.0.2 <https://doi.org/10.18112/openneuro.ds006861.v1.0.2>`__
+**Citation:** Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (2025). *Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals*. `10.18112/openneuro.ds006861.v1.0.2 <https://doi.org/10.18112/openneuro.ds006861.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 120` :bdg-secondary:`Recordings: 239`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 120` :bdg-secondary:`Recordings: 962`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006861.v1.0.2 <https://doi.org/10.18112/openneuro.ds006861.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006861>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006861>`__ | `Source URL <https://openneuro.org/datasets/ds006861>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006861>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006861>`__ | `Source URL <https://openneuro.org/datasets/ds006861/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **Emotion Processing and Regulation Task (Static Stimuli) — tDCS‑EEG Dataset**
 
-This repository provides EEG recordings and behavioral data from the **Emotion Processing and Regulation** task conducted with **transcranial direct current stimulation (tDCS)**.
+
+This repository provides EEG recordings and behavioral data from the **Emotion Processing and Regulation** task conducted with **transcranial direct current stimulation (tDCS)**. 
+
 * **Preregistration:** `https://osf.io/qdp3w <https://osf.io/qdp3w>`__
+* **Preprint:** `https://osf.io/qtm8r <https://osf.io/qtm8r>`__
 
-*** **Preprint:** [https://osf.io/qtm8r](https://osf.io/qtm8r)**
 
-
-**Overview**
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,75 +84,105 @@ This repository provides EEG recordings and behavioral data from the **Emotion P
    
    **Emotion Processing and Regulation Task (Static Stimuli) — tDCS‑EEG Dataset**
    
-   This repository provides EEG recordings and behavioral data from the **Emotion Processing and Regulation** task conducted with **transcranial direct current stimulation (tDCS)**.
-   * **Preregistration:** `https://osf.io/qdp3w <https://osf.io/qdp3w>`__
    
-   *** **Preprint:** [https://osf.io/qtm8r](https://osf.io/qtm8r)**
+   This repository provides EEG recordings and behavioral data from the **Emotion Processing and Regulation** task conducted with **transcranial direct current stimulation (tDCS)**. 
+   
+   * **Preregistration:** `https://osf.io/qdp3w <https://osf.io/qdp3w>`__
+   * **Preprint:** `https://osf.io/qtm8r <https://osf.io/qtm8r>`__
+   
    
    
    **Overview**
    
+   
    Each participant took part in **two experimental sessions**:
+   
    * **`ses-1`** — Sham stimulation
    * **`ses-2`** — Active stimulation
    
-   **The order of sham/active conditions was counterbalanced across participants.**
+   The order of sham/active conditions was counterbalanced across participants. 
+   
    
    
    **Participants**
    
+   
    * **N = 120** right‑handed, neurologically healthy adults with normal or corrected‑to‑normal vision.
    * **Missing data:** Participant `sub-005` completed only `ses-1` due to a recording error during `ses-2`.
    
+   
    **Experimental Task**
+   
    
    Participants completed 120 trials per session, evenly allocated to a 2 (content: social, non-social) × 3 (regulation requirement: watch-neutral, watch-negative, reappraise-negative) factorial design. On each trial, they viewed a static image for 5 s and either watched or reappraised it as instructed. After each image, participants rated its arousal and then valence on separate 9-point scales.
    
+   
+   
    **tDCS Stimulation**
+   
    
    **System:** Starstim 8 (Neuroelectrics, Spain) with **NIC2** software.
    
+   
    **Electrode Montage**
    
+   
    Stimulation was targeted to the dorsolateral prefrontal cortex (dlPFC) in two alternative montages:
+   
    * **Right dlPFC stimulation**
+   
      * *Anode:* **F4**
      * *Returns:* **FP2, FZ, FC2, FC6**
+   
    * **Left dlPFC stimulation**
+   
      * *Anode:* **F3**
      * *Returns:* **FP1, FZ, FC1, FC5**
+   
    **Electrode areas**
+   
    * **Anodal:** 8 cm²
    * **Return:** π cm²
    * **Ground:** left earlobe
    
+   
    **Stimulation Protocol**
+   
    
    * **Active:** 2 mA for 20 min (with 30 s ramp‑up)
    * **Sham:** only ramp‑up periods at start and end; no sustained current
    * **Questionnaires:** After each session, participants completed the **tDCS Sensation Questionnaire** (Polish version: `https://osf.io/ufszr <https://osf.io/ufszr>`__) to evaluate potential side effects. Additionally, after the final session, they indicated whether they believed each session involved *real*, *sham*, or *I don’t know* stimulation to assess **blinding effectiveness**.
    
+   
+   
    **EEG Acquisition**
+   
    
    * **Cap:** 64‑channel QuickCap (32  EEG electrodes used)
    * **Amplifier:** Neuroscan SynampsRT
    * **Sampling rate:** 1000 Hz
    * **Impedance:** kept < 10 kΩ
+   
    **Active EEG electrodes (32):**
    FP1, FP2, F7, F3, FZ, F4, F8, FT7, FC3, FCZ, FC4, FT8,
    T7, C3, CZ, C4, T8, M1, TP7, CP3, CPZ, CP4, TP8, M2,
    P7, P3, PZ, P4, P8, O1, OZ, O2
-   **Additional sensors**
-   * **EOG:** Horizontal (HEO) and Vertical (VEO) channels were available on the cap but **were not connected** during recording.
    
-   *** **Physio:** ECG and GSR/EDA were recorded via auxiliary channels.**
+   **Additional sensors**
+   
+   * **EOG:** Horizontal (HEO) and Vertical (VEO) channels were available on the cap but **were not connected** during recording.
+   * **Physio:** ECG and GSR/EDA were recorded via auxiliary channels.
+   
    
    
    **EEG Preprocessing**
    
+   
    All preprocessing was performed in **MATLAB R2020b** using **EEGLAB 2023.0** and **ERPLAB 9.10**. The full, commented pipeline is provided in `code/Preprocessing_EEG.m`.
    
+   
    **Steps**
+   
    
    1. **Band‑pass filter:** 0.1–30 Hz (zero‑phase Hamming‑windowed FIR)
    2. **Downsample** to **250 Hz**
@@ -164,26 +194,31 @@ This repository provides EEG recordings and behavioral data from the **Emotion P
    8. **Epoching:** −200 to 5000 ms relative to stimulus onset
    9. **Baseline correction:** −200 ms pre‑stimulus
    10. **Artifact rejection:** Step 1 – absolute amplitude on channels 1–30, epochs rejected if amplitude exceeded ±200 µV within −200 to 5000 ms. Step 2 – FASTER epoch_properties on channels 1–30, epochs rejected if any metric exceeded |z| > 2.
+   11. **Condition‑wise averaging** using ERPLAB
    
-   **11. **Condition‑wise averaging** using ERPLAB**
    
    
    **Derivatives & Ancillary Data**
    
    
+   
    **`derivatives/processed_erps/`**
+   
    
    Averaged ERP files (`.erp`) for each participant and session after preprocessing.
    
+   
    **`derivatives/side_effects_blinding_effectiveness/`**
+   
    
    * `side_effects_blinding_effectiveness_english.csv` — _blinding effectiveness and side effects questionnaire
    * `side_effects_blinding_effectiveness_data_dictionary.csv` — data dictionary with variable names and value coding
    
+   
    **`code/`**
    
    
-   *** MATLAB preprocessing script and documentation: `Preprocessing_EEG.m`**
+   * MATLAB preprocessing script and documentation: `Preprocessing_EEG.m`
    
 
 
@@ -197,7 +232,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 120
-      - Recordings: 239
+      - Recordings: 962
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -217,8 +252,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 53.6 GB
-      - File count: 239
+      - Size on disk: 52.1 GB
+      - File count: 962
       - Format: BIDS
 
    .. grid-item-card:: License & citation

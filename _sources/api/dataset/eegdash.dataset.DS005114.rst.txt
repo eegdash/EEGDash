@@ -7,11 +7,11 @@ eegdash.dataset.DS005114
 
 EEG: DPX Cog Ctl Task in Acute Mild TBI (OpenNeuro ``ds005114``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh (20). *EEG: DPX Cog Ctl Task in Acute Mild TBI*. `10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
+**Citation:** James F Cavanagh (2024). *EEG: DPX Cog Ctl Task in Acute Mild TBI*. `10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 91` :bdg-secondary:`Recordings: 223`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 91` :bdg-secondary:`Recordings: 1796`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: DPX Cog Ctl Task in Acute Mild TBI
    * - Year
-     - 20
+     - 2024
    * - Authors
      - James F Cavanagh
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005114.v1.0.0 <https://doi.org/10.18112/openneuro.ds005114.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005114>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005114>`__ | `Source URL <https://openneuro.org/datasets/ds005114>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005114>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005114>`__ | `Source URL <https://openneuro.org/datasets/ds005114/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 91
-      - Recordings: 223
+      - Recordings: 1796
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 56.5 GB
-      - File count: 223
+      - Size on disk: 55.9 GB
+      - File count: 1796
       - Format: BIDS
 
    .. grid-item-card:: License & citation

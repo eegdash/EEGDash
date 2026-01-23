@@ -7,11 +7,11 @@ eegdash.dataset.DS004015
 
 Attended speaker paradigm (cEEGrid data) (OpenNeuro ``ds004015``). Access recordings and metadata through EEGDash.
 
-**Citation:** Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2020). *Attended speaker paradigm (cEEGrid data)*. `10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
+**Citation:** Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2022). *Attended speaker paradigm (cEEGrid data)*. `10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 36`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 36` :bdg-secondary:`Recordings: 305`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Attended speaker paradigm (cEEGrid data)
    * - Year
-     - 2020
+     - 2022
    * - Authors
      - Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004015.v1.0.2 <https://doi.org/10.18112/openneuro.ds004015.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004015>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004015>`__ | `Source URL <https://openneuro.org/datasets/ds004015>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004015>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004015>`__ | `Source URL <https://openneuro.org/datasets/ds004015/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,20 +67,21 @@ Dataset Information
 Description
 -----------
 
-Within this study cEEGrid data from two previous studies were pooled.
-15 participants from Jaeger et al. (2020) and 21 from Holtze et al. (2021) were included.
-Participants performed a two-competing speaker paradigm in both original studies.
-Participants were instructed to either attend to the left or right audio book.
-The paradigm consisted of six (Jaeger et al. 2020) or five (Holtze et al. 2021)
-10-minute blocks of audio book presentation. In Jaeger et al. (2020) both audio
-books were always presented equally loud. In Holtze et al. 2021, a 10-minute block could
-either be presented in the omnidirectional condition (both audio books were presented
-equally loud) or in the beamforming condition (the to-be-attended audio book
-was louder than the to-be-ignored audio book). The first 10-minute block was always
-presented in the omnidirectional condition whereas the conditions were alternated
-for the later four blocks, with one half of the participants starting with the
-omnidirectonal condition and the other half starting with the beamforming condition.
+Within this study cEEGrid data from two previous studies were pooled. 
+15 participants from Jaeger et al. (2020) and 21 from Holtze et al. (2021) were included. 
+Participants performed a two-competing speaker paradigm in both original studies. 
+Participants were instructed to either attend to the left or right audio book. 
+The paradigm consisted of six (Jaeger et al. 2020) or five (Holtze et al. 2021) 
+10-minute blocks of audio book presentation. In Jaeger et al. (2020) both audio 
+books were always presented equally loud. In Holtze et al. 2021, a 10-minute block could 
+either be presented in the omnidirectional condition (both audio books were presented 
+equally loud) or in the beamforming condition (the to-be-attended audio book 
+was louder than the to-be-ignored audio book). The first 10-minute block was always 
+presented in the omnidirectional condition whereas the conditions were alternated 
+for the later four blocks, with one half of the participants starting with the 
+omnidirectonal condition and the other half starting with the beamforming condition. 
 The article (https://doi.org/10.3389/fnins.2022.869426) contains all methodological details
+
 - Björn Holtze (February, 2022)
 
 Highlights
@@ -93,7 +94,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 36
-      - Recordings: 36
+      - Recordings: 305
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -114,7 +115,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 6.0 GB
-      - File count: 36
+      - File count: 305
       - Format: BIDS
 
    .. grid-item-card:: License & citation

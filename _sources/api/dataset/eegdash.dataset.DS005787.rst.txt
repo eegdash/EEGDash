@@ -7,11 +7,11 @@ eegdash.dataset.DS005787
 
 NOD-EEG (OpenNeuro ``ds005787``). Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Yaoze Liu, Zonglei Zhen (2019). *NOD-EEG*. `10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
+**Citation:** Guohao Zhang, Yaoze Liu, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 448`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 2413`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NOD-EEG
    * - Year
-     - 2019
+     - 2025
    * - Authors
      - Guohao Zhang, Yaoze Liu, Zonglei Zhen
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005787>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005787>`__ | `Source URL <https://openneuro.org/datasets/ds005787>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005787>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005787>`__ | `Source URL <https://openneuro.org/datasets/ds005787/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 448
+      - Recordings: 2413
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 27.1 GB
-      - File count: 448
+      - Size on disk: 14.1 GB
+      - File count: 2413
       - Format: BIDS
 
    .. grid-item-card:: License & citation

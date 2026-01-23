@@ -7,11 +7,11 @@ eegdash.dataset.DS005624
 
 Color Change Detection Task (OpenNeuro ``ds005624``). Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (2019). *Color Change Detection Task*. `10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
+**Citation:** [Unspecified] (2024). *Color Change Detection Task*. `10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 35`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 215`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Color Change Detection Task
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - [Unspecified]
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005624>`__ | `Source URL <https://openneuro.org/datasets/ds005624>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005624>`__ | `Source URL <https://openneuro.org/datasets/ds005624/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+
 Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 35
+      - Recordings: 215
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +105,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 13.8 GB
-      - File count: 35
+      - File count: 215
       - Format: BIDS
 
    .. grid-item-card:: License & citation

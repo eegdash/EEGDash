@@ -7,11 +7,11 @@ eegdash.dataset.DS004017
 
 Embodied Learning for Literacy EEG (OpenNeuro ``ds004017``). Access recordings and metadata through EEGDash.
 
-**Citation:** Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling, Mark Schram Christensen, Rasmus Ahmt Hansen, Søren Kildahl, Jacob Wienecke (20). *Embodied Learning for Literacy EEG*. `10.18112/openneuro.ds004017.v1.0.3 <https://doi.org/10.18112/openneuro.ds004017.v1.0.3>`__
+**Citation:** Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling, Mark Schram Christensen, Rasmus Ahmt Hansen, Søren Kildahl, Jacob Wienecke (2022). *Embodied Learning for Literacy EEG*. `10.18112/openneuro.ds004017.v1.0.3 <https://doi.org/10.18112/openneuro.ds004017.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 63`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 382`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Embodied Learning for Literacy EEG
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling, Mark Schram Christensen, Rasmus Ahmt Hansen, Søren Kildahl, Jacob Wienecke
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004017.v1.0.3 <https://doi.org/10.18112/openneuro.ds004017.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004017>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004017>`__ | `Source URL <https://openneuro.org/datasets/ds004017>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004017>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004017>`__ | `Source URL <https://openneuro.org/datasets/ds004017/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,16 +68,26 @@ Description
 -----------
 
 There are three files per participant collected for each of the three stages of the procedure.
+
 Stage 1 (before measurement): A two-alternative forced choice discrimination task including letters "b" and "d"
+
 Stage 2 (intervention measurement): A simple visual search task including a target letter (either b or d) and three distractor letters chosen at random (p or q).
+
 Stage 3 (after measurement): A two-alternative forced choice discrimination task including letters "b" and "d"
 Participants were assigned to two groups.
+
 Participants in the intervention group were: sub-04, sub-05, sub-06, sub-07, sub-09, sub-10, sub-12, sub-14, sub-15, sub-16, sub-21
+
 Participants in the control group were: sub-01, sub-02, sub-03, sub-08, sub-11, sub-13, sub-17, sub-18, sub-19, sub-20
+
 Events in all recordings correspond to stimulus presentation. The value of 100 represents letter b stimuli and 200 represents letter d stimuli.
 Events marked with 10 (b) and 20 (d) represent practice trials.
+
 The detailed description of the tasks and the procedure can be found in this preprint:
+
 For questions about the tasks and the data please email Jacob Wienecke at wienecke@nexs.ku.dk.
+
+
 Marta Topor 17/03/2022
 
 Highlights
@@ -90,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 63
+      - Recordings: 382
       - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,8 +120,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 36.6 GB
-      - File count: 63
+      - Size on disk: 20.9 GB
+      - File count: 382
       - Format: BIDS
 
    .. grid-item-card:: License & citation

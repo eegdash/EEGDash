@@ -7,11 +7,11 @@ eegdash.dataset.DS003801
 
 Neural Tracking to go (OpenNeuro ``ds003801``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (20). *Neural Tracking to go*. `10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
+**Citation:** Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (2021). *Neural Tracking to go*. `10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 20`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 165`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Neural Tracking to go
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`__ | `Source URL <https://openneuro.org/datasets/ds003801>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`__ | `Source URL <https://openneuro.org/datasets/ds003801/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,9 @@ Description
 -----------
 
 This mobile EEG auditory attention experiment consists of 20 participants.
-In a two-competing speaker paradigm subjects either sat on a chair or walked a route indoors
-Attention was disrupted by environmental salient eventsfrom in front of the participant
+In a two-competing speaker paradigm subjects either sat on a chair or walked a route indoors 
+Attention was disrupted by environmental salient eventsfrom in front of the participant 
+
 - Lisa Straetmans (Sep, 2021)
 
 Highlights
@@ -82,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 20
+      - Recordings: 165
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.1 GB
-      - File count: 20
+      - File count: 165
       - Format: BIDS
 
    .. grid-item-card:: License & citation

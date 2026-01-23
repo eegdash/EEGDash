@@ -7,11 +7,11 @@ eegdash.dataset.DS004348
 
 Ear-EEG Sleep Monitoring 2017 (EESM17) (OpenNeuro ``ds004348``). Access recordings and metadata through EEGDash.
 
-**Citation:** Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (20). *Ear-EEG Sleep Monitoring 2017 (EESM17)*. `10.18112/openneuro.ds004348.v1.0.5 <https://doi.org/10.18112/openneuro.ds004348.v1.0.5>`__
+**Citation:** Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (2022). *Ear-EEG Sleep Monitoring 2017 (EESM17)*. `10.18112/openneuro.ds004348.v1.0.5 <https://doi.org/10.18112/openneuro.ds004348.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 18`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 113`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Ear-EEG Sleep Monitoring 2017 (EESM17)
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004348.v1.0.5 <https://doi.org/10.18112/openneuro.ds004348.v1.0.5>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004348>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004348>`__ | `Source URL <https://openneuro.org/datasets/ds004348>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004348>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004348>`__ | `Source URL <https://openneuro.org/datasets/ds004348/versions/1.0.5>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,24 +68,55 @@ Description
 -----------
 
 Ear-EEG Sleep Monitoring 2017 (EESM17) data set
+
 **Overview**
+
 This dataset was collected as part of a research project on ear-EEG sleep monitoring which took place in 2017.
+
 The data set contains nightly EEG recordings from 9 healthy participants ('subjects'). The recordings consist of 'partial polysomnography' (PSG) measurements, including EEG, EOG and chin EMG combined with 14 ear-EEG electrodes.
+
 **Format**
-The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The EEG data format chosen is the '.set' format of EEGLAB.
-For more information, see the following link:
-https://bids-specification.readthedocs.io/en/stable/01-introduction.html
-**Task description**
-The subjects were instructed to perform two recordings. In the first recording, they had to simply relax in a chair either reading or watching television, prior to going to bed. These recordings are labeled as 'wake' task. After this, the real recording started, which took place during the night and began when the subject went to bed. These recordings are labeled as having task 'sleep'.
-The recording equipment was mounted in the afternoon, and the recordings took place at the subject's home.
-The data set was previously described in the paper: https://doi.org/10.1186/s12938-017-0400-5
-When citing this data set, please refer to this paper.
-Please note that for all subjects, the sleep scoring begins at 'Lights out'.
-** Notes **
-Due to a miscommunication in the original sleep study, two ear-EEG channels, ERB1 and ELB1, were not used. However, they are included in the data set. Both electrode positions were very close to the ERB and ELB positions.
-**Contact**
-For questions regarding this data set, contact:
-Kaare Mikkelsen, Mikkelsen.kaare@ece.au.dk, https://orcid.org/0000-0002-7360-8629
+
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   Ear-EEG Sleep Monitoring 2017 (EESM17) data set
+   
+   **Overview**
+   
+   This dataset was collected as part of a research project on ear-EEG sleep monitoring which took place in 2017.
+   
+   The data set contains nightly EEG recordings from 9 healthy participants ('subjects'). The recordings consist of 'partial polysomnography' (PSG) measurements, including EEG, EOG and chin EMG combined with 14 ear-EEG electrodes.
+   
+   **Format**
+   
+   The dataset is formatted according to the Brain Imaging Data Structure. See the 'dataset_description.json' file for the specific BIDS version used. The EEG data format chosen is the '.set' format of EEGLAB.
+   
+   For more information, see the following link:
+   https://bids-specification.readthedocs.io/en/stable/01-introduction.html
+   
+   
+   **Task description**
+   
+   The subjects were instructed to perform two recordings. In the first recording, they had to simply relax in a chair either reading or watching television, prior to going to bed. These recordings are labeled as 'wake' task. After this, the real recording started, which took place during the night and began when the subject went to bed. These recordings are labeled as having task 'sleep'. 
+   The recording equipment was mounted in the afternoon, and the recordings took place at the subject's home.
+   
+   The data set was previously described in the paper: https://doi.org/10.1186/s12938-017-0400-5
+   When citing this data set, please refer to this paper.
+   
+   
+   Please note that for all subjects, the sleep scoring begins at 'Lights out'.
+   
+   ** Notes **
+   
+   Due to a miscommunication in the original sleep study, two ear-EEG channels, ERB1 and ELB1, were not used. However, they are included in the data set. Both electrode positions were very close to the ERB and ELB positions. 
+   
+   **Contact**
+   
+   For questions regarding this data set, contact: 
+   Kaare Mikkelsen, Mikkelsen.kaare@ece.au.dk, https://orcid.org/0000-0002-7360-8629
+
 
 Highlights
 ----------
@@ -97,8 +128,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 9
-      - Recordings: 18
-      - Tasks: 2
+      - Recordings: 113
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -117,8 +148,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.3 GB
-      - File count: 18
+      - Size on disk: 8.2 GB
+      - File count: 113
       - Format: BIDS
 
    .. grid-item-card:: License & citation

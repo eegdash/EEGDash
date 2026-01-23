@@ -11,7 +11,7 @@ Auditory single word recognition in MEG (OpenNeuro ``ds004276``). Access recordi
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 19`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 135`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004276.v1.0.0 <https://doi.org/10.18112/openneuro.ds004276.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004276>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004276>`__ | `Source URL <https://openneuro.org/datasets/ds004276>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004276>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004276>`__ | `Source URL <https://openneuro.org/datasets/ds004276/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,15 +70,24 @@ Description
 
 **Auditory single word recognition in MEG**
 
+
 This dataset is described in Gaston et al. (2022).
+
 Stimuli and TextGrids are available from the Massive Auditory Lexical Decision database (Tucker et al., 2019).
+
 Converted to BIDS using MNE-BIDS (Appelhoff et al., 2019; Niso et al., 2018).
+
+
 
 **References**
 
+
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Gaston, P., Brodbeck, C., Phillips, C., & Lau, E. (2022). Auditory word comprehension is less incremental in isolated words. Neurobiology of Language
+
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
+
 Tucker, B. V., Brenner, D., Danielson, D. K., Kelley, M. C., Nenadić, F., & Sims, M. (2019). The Massive Auditory Lexical Decision (MALD) database. Behavior Research Methods, 51(3), 1187–1204. https://doi.org/10.3758/s13428-018-1056-1
 
 Highlights
@@ -90,8 +99,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 19
-      - Recordings: 19
+      - Subjects: 18
+      - Recordings: 135
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -112,7 +121,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 11.6 GB
-      - File count: 19
+      - File count: 135
       - Format: BIDS
 
    .. grid-item-card:: License & citation

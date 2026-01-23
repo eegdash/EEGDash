@@ -7,11 +7,11 @@ eegdash.dataset.DS004256
 
 Encoding of Sound Source Elevation in Human Cortex (OpenNeuro ``ds004256``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ole Bialas, Marc Schoenwiesner, Burkhard Maess (—). *Encoding of Sound Source Elevation in Human Cortex*. `10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
+**Citation:** Ole Bialas, Marc Schoenwiesner, Burkhard Maess (2022). *Encoding of Sound Source Elevation in Human Cortex*. `10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 53` :bdg-secondary:`Recordings: 53`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 53` :bdg-secondary:`Recordings: 584`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Encoding of Sound Source Elevation in Human Cortex
    * - Year
-     - —
+     - 2022
    * - Authors
      - Ole Bialas, Marc Schoenwiesner, Burkhard Maess
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004256.v1.0.5 <https://doi.org/10.18112/openneuro.ds004256.v1.0.5>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004256>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004256>`__ | `Source URL <https://openneuro.org/datasets/ds004256>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004256>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004256>`__ | `Source URL <https://openneuro.org/datasets/ds004256/versions/1.0.5>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -72,9 +72,11 @@ Description
 
 The dataset consists of data from two experiments in which subjects were presented bursts of noise from loudspeakers at different elevations. Subjects who participated in either experiment were initially tested in their ability to localize elevated sound sources. Both experiments were conducted in a hemi-anechoic chamber.
 
+
 **Localization Tests**
 
 Bursts of pink noise were presented from loudspeakers at different elevations and 10° azimuth (to the listeners right). In the localization test preceding experiment I, these loudspeakers were positioned at elevations of +50°, +25°, 0° and -25° while the localization test preceding experiment II also included a loudspeaker at -50° elevation. Localization test data is missing for sub-001, sub-002 and sub-003
+
 
 **Deviant Detection (Experiment 1)**
 
@@ -87,6 +89,7 @@ Subjects 001-023 participated in this experiment. Subjects heard a long trail of
 7: adapter at -37.5°, probe at -12.5°
 8: no adapter, any non-target location (deviant)
 The behavioral data contains the trial numbers where a deviant was presented and weather the subject responded within one second by pressing a button.
+
 
 **One-Back (Experiment II)**
 
@@ -104,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 53
-      - Recordings: 53
+      - Recordings: 584
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -125,7 +128,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 18.2 GB
-      - File count: 53
+      - File count: 584
       - Format: BIDS
 
    .. grid-item-card:: License & citation

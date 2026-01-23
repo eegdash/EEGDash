@@ -7,11 +7,11 @@ eegdash.dataset.DS005065
 
 Heuristics in risky decision-making relate to preferential representation of information MEG data (OpenNeuro ``ds005065``). Access recordings and metadata through EEGDash.
 
-**Citation:** Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (—). *Heuristics in risky decision-making relate to preferential representation of information MEG data*. `10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
+**Citation:** Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (2024). *Heuristics in risky decision-making relate to preferential representation of information MEG data*. `10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 275`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 3332`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Heuristics in risky decision-making relate to preferential representation of information MEG data
    * - Year
-     - —
+     - 2024
    * - Authors
      - Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005065.v1.0.0 <https://doi.org/10.18112/openneuro.ds005065.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005065>`__ | `Source URL <https://openneuro.org/datasets/ds005065>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005065>`__ | `Source URL <https://openneuro.org/datasets/ds005065/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 The task consisted of 13 scanner runs (except for subject 1 who completed 5 rather than 3 localizer runs). Runs 1-3 (1-5 for subject 1) are the localizer task. Runs 4-5 are non-analyzed data from the 'probability learning' task. Runs 6-13 (8-15 for subject 1) are the risky decision-making task.
+
 Event times were recorded with a photodiode, which is accessible as a MEG channel. This has been processed so that event times are listed in derivatives/Event_Info_Tables. Raw times of events in the scan are in column "onset_time". The corresponding index into the unprocessed MEG data is in column "scanner_onset_idx". The onset into the downsampled data is in "onset_idx_ds". In the table, each row corresponds to an event. Block number denotes which scanner run that event belongs to. For the localizer task (denoted in phase column), events are image onsets. "image_type" specifies the role of that image in the task ("CHOICE" or "OUTCOME") and "image_number" denotes which choice or outcome it is (see paper Fig. 1). Finally, "image_name" denotes which image category was shown (e.g. "Hand"). For the task, events correspond to gamble information onset (Info), Probability stimulus presentation ("Choice"), response ("Gamble Response") and outcome onset ("Outcome"). Columns denote which image was shown and what the response was (accept).
+
 derivatives/Epoched_Data contains epoched preprocessed data for each subject for the localizer task and then around each choice in the main choice task. Both are epoched from from 0-500 ms following the event.
+
 Code to analyze the data along with additional behavioral data is available at https://github.com/evanrussek/MEG_Heuristics_Risk_Preferential_Information
 
 Highlights
@@ -82,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 275
+      - Recordings: 3332
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -102,8 +105,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 430.7 GB
-      - File count: 275
+      - Size on disk: 425.8 GB
+      - File count: 3332
       - Format: BIDS
 
    .. grid-item-card:: License & citation

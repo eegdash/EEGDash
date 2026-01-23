@@ -7,11 +7,11 @@ eegdash.dataset.DS004505
 
 Real World Table Tennis (OpenNeuro ``ds004505``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda Studnicki, Daniel P. Ferris (—). *Real World Table Tennis*. `10.18112/openneuro.ds004505.v1.0.4 <https://doi.org/10.18112/openneuro.ds004505.v1.0.4>`__
+**Citation:** Amanda Studnicki, Daniel P. Ferris (2023). *Real World Table Tennis*. `10.18112/openneuro.ds004505.v1.0.4 <https://doi.org/10.18112/openneuro.ds004505.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 25`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 230`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Real World Table Tennis
    * - Year
-     - —
+     - 2023
    * - Authors
      - Amanda Studnicki, Daniel P. Ferris
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004505.v1.0.4 <https://doi.org/10.18112/openneuro.ds004505.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004505>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004505>`__ | `Source URL <https://openneuro.org/datasets/ds004505>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004505>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004505>`__ | `Source URL <https://openneuro.org/datasets/ds004505/versions/1.0.4>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 Our dataset contains high-density, dual-layer electroencephalography (EEG), neck electromyography (EMG), inertial measurement unit (IMU) acceleration, T1 structural MR images, and video data from 25 participants playing real-world table tennis. Participants played 60 minutes of table tennis (in total) with a ball machine and a human player, with an additional 10 minutes of standing baseline. For 17 of the participants, we also include video data of all trials. The Adobe Premiere project files (linked to each video) have the timing of hit events marked.
-Data in the main subject folders have been processed. We include the ICA decomposition and dipole model in EEG.etc. The components retained in our analyses are shown in EEG.etc.KeepComponents. The raw data can be found in the sourcedata folder.
+
+Data in the main subject folders have been processed. We include the ICA decomposition and dipole model in EEG.etc. The components retained in our analyses are shown in EEG.etc.KeepComponents. The raw data can be found in the sourcedata folder.    
+
 Please refer to our publication for more details.
 
 Highlights
@@ -81,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 25
+      - Recordings: 230
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,8 +103,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 522.6 GB
-      - File count: 25
+      - Size on disk: 34.6 GB
+      - File count: 230
       - Format: BIDS
 
    .. grid-item-card:: License & citation

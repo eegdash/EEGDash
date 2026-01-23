@@ -11,7 +11,7 @@ visStim (OpenNeuro ``ds005688``). Access recordings and metadata through EEGDash
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 89`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 360`
 
 .. rst-class:: sd-badges
 
@@ -144,7 +144,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 89
+      - Recordings: 360
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -165,7 +165,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.4 GB
-      - File count: 89
+      - File count: 360
       - Format: BIDS
 
    .. grid-item-card:: License & citation

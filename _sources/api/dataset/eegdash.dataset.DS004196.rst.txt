@@ -7,11 +7,11 @@ eegdash.dataset.DS004196
 
 Bimodal dataset on Inner speech (OpenNeuro ``ds004196``). Access recordings and metadata through EEGDash.
 
-**Citation:** Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson (—). *Bimodal dataset on Inner speech*. `10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
+**Citation:** Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson (2022). *Bimodal dataset on Inner speech*. `10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 4`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 4` :bdg-secondary:`Recordings: 109`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Bimodal dataset on Inner speech
    * - Year
-     - —
+     - 2022
    * - Authors
      - Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid, Sumit Rakesh, Scott Wellington, Holly Wilson, Marcus Liwicki, Johan Eriksson
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004196.v2.0.2 <https://doi.org/10.18112/openneuro.ds004196.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004196>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004196>`__ | `Source URL <https://openneuro.org/datasets/ds004196>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004196>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004196>`__ | `Source URL <https://openneuro.org/datasets/ds004196/versions/2.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,17 +68,23 @@ Description
 -----------
 
 Bimodal dataset on Inner Speech
-Code available: https://github.com/LTU-Machine-Learning/Inner_Speech_EEG_FMRI
+
+Code available: https://github.com/LTU-Machine-Learning/Inner_Speech_EEG_FMRI 
+
 Publication available: https://www.nature.com/articles/s41597-023-02286-w
+
 Abstract:
-The recognition of inner speech, which could give a `voice' to patients that have no ability to speak or move, is a challenge for brain-computer interfaces (BCIs). A shortcoming of the available datasets is that they do not combine modalities to increase the performance of inner speech recognition. Multimodal datasets of brain data enable the fusion of neuroimaging modalities with complimentary properties, such as the high spatial resolution of functional magnetic resonance imaging (fMRI) and the temporal resolution of electroencephalography (EEG), and therefore are promising for decoding inner speech. This paper presents the first publicly available bimodal dataset containing EEG and fMRI data acquired nonsimultaneously during inner-speech production.  Data were obtained from four healthy, right-handed participants during an inner-speech task with words in either a social or numerical category. Each of the 8-word stimuli were assessed with 40 trials, resulting in 320 trials in each modality for each participant.
+The recognition of inner speech, which could give a `voice' to patients that have no ability to speak or move, is a challenge for brain-computer interfaces (BCIs). A shortcoming of the available datasets is that they do not combine modalities to increase the performance of inner speech recognition. Multimodal datasets of brain data enable the fusion of neuroimaging modalities with complimentary properties, such as the high spatial resolution of functional magnetic resonance imaging (fMRI) and the temporal resolution of electroencephalography (EEG), and therefore are promising for decoding inner speech. This paper presents the first publicly available bimodal dataset containing EEG and fMRI data acquired nonsimultaneously during inner-speech production.  Data were obtained from four healthy, right-handed participants during an inner-speech task with words in either a social or numerical category. Each of the 8-word stimuli were assessed with 40 trials, resulting in 320 trials in each modality for each participant.   
 The aim of this work is to provide a publicly available bimodal dataset on inner speech, contributing towards speech prostheses.
+
 Short Dataset description:
-The dataset consists of 1280 trials in each modality (EEG, FMRI).
+The dataset consists of 1280 trials in each modality (EEG, FMRI). 
 The stimuli contain 8 words,  selected from 2 different categories (social, numeric):
 Social: child, daughter, father, wife
 Numeric: four, three, ten, six
-There are 4 subjects in total: sub-01, sub-02, sub-03, sub-05. Initially, there were 5 participants, however, sub-04 data was rejected due to high fluctuations. Details of valid data are available in the file participants.tsv.
+
+There are 4 subjects in total: sub-01, sub-02, sub-03, sub-05. Initially, there were 5 participants, however, sub-04 data was rejected due to high fluctuations. Details of valid data are available in the file participants.tsv. 
+
 For questions please contact: foteini.liwicki@ltu.se
 
 Highlights
@@ -91,8 +97,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 4
-      - Recordings: 4
-      - Tasks: 1
+      - Recordings: 109
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -112,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.3 GB
-      - File count: 4
+      - File count: 109
       - Format: BIDS
 
    .. grid-item-card:: License & citation

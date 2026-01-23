@@ -7,11 +7,11 @@ eegdash.dataset.DS005241
 
 NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis (OpenNeuro ``ds005241``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz (2019). *NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis*. `10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
+**Citation:** Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz (2024). *NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis*. `10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 117`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 554`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005241>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005241>`__ | `Source URL <https://openneuro.org/datasets/ds005241>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005241>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005241>`__ | `Source URL <https://openneuro.org/datasets/ds005241/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,13 +67,17 @@ Dataset Information
 Description
 -----------
 
-KIT/Yokogawa MEG system with 208 magnetometer channels
+KIT/Yokogawa MEG system with 208 magnetometer channels 
+
 24 subjects amounting to over 17 hours of data
+
 Supplementary code can be found `here <github.com/amilleah/neuromorph>`__
+
 
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
 
 Highlights
@@ -86,7 +90,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 117
+      - Recordings: 554
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,7 +111,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 140.5 GB
-      - File count: 117
+      - File count: 554
       - Format: BIDS
 
    .. grid-item-card:: License & citation

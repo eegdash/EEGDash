@@ -7,11 +7,11 @@ eegdash.dataset.DS006768
 
 Multiple Object Monitoring (EEG) (OpenNeuro ``ds006768``). Access recordings and metadata through EEGDash.
 
-**Citation:** Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (20). *Multiple Object Monitoring (EEG)*. `10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
+**Citation:** Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (2025). *Multiple Object Monitoring (EEG)*. `10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 210`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 631`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multiple Object Monitoring (EEG)
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006768>`__ | `Source URL <https://openneuro.org/datasets/ds006768>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006768>`__ | `Source URL <https://openneuro.org/datasets/ds006768/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Subjects (N = 30) completed a Multiple Object Monitoring (MOM) task. Methodological details can be read within the pre-print: https://doi.org/10.1101/2025.07.10.663816
+
 Please email ben.lowe@mq.edu.au if you have any further questions.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 210
+      - Recordings: 631
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.1 GB
-      - File count: 210
+      - Size on disk: 6.5 GB
+      - File count: 631
       - Format: BIDS
 
    .. grid-item-card:: License & citation

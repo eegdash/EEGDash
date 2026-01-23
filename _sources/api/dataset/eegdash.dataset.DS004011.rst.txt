@@ -7,11 +7,11 @@ eegdash.dataset.DS004011
 
 The nature of neural object representations during dynamic occlusion (OpenNeuro ``ds004011``). Access recordings and metadata through EEGDash.
 
-**Citation:** Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2019). *The nature of neural object representations during dynamic occlusion*. `10.18112/openneuro.ds004011.v1.0.3 <https://doi.org/10.18112/openneuro.ds004011.v1.0.3>`__
+**Citation:** Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2022). *The nature of neural object representations during dynamic occlusion*. `10.18112/openneuro.ds004011.v1.0.3 <https://doi.org/10.18112/openneuro.ds004011.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 132`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 4578`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The nature of neural object representations during dynamic occlusion
    * - Year
-     - 2019
+     - 2022
    * - Authors
      - Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004011.v1.0.3 <https://doi.org/10.18112/openneuro.ds004011.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004011>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004011>`__ | `Source URL <https://openneuro.org/datasets/ds004011>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004011>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004011>`__ | `Source URL <https://openneuro.org/datasets/ds004011/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,31 +68,58 @@ Description
 -----------
 
 The main folder contains the raw MEG data for all participants in standard bids format. See references.
+ 
+
 The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:
+ 
+
 - sourcedata
 	- beh
 		- sub-[participant number]
 			- sub-[participant number]_task-occlusion_run-[run number]_events.csv: contains all the events for each trial in the MEG session, detailing what was shown on the screen.
-			- sub-[participant number]_task-occlusion_run-[run number]_occframes.csv: contains all the stimulus positions for each occlusion trial in the MEG session.
-			- sub-[participant number]_task-occlusion_run-[run number]_disframes.csv: contains all the stimulus positions for each disappearance trial in the MEG session.
-	- eyetracking
-		- sub-[participant number]_Occ.edf: edf file containing the eye positions during the MEG session.
-The ‘derivatives’ folder contains the pre-processed MEG data for each participant. The data in this folder follows the following trial structure:
-- derivatives
-	- preprocessed
-		- cosmo_p[participant number].mat: cosmomvpa formatted file with the pre-processed data, epoched for each trial, containing the following variables:
-			- ds_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
-			- ds_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
-			- ds_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (MEG channels)
-			- ds_eyes_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
-			- ds_eyes_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
-			- ds_eyes_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
-		-  cosmo_p[participant number]_position_epochs.mat: cosmomvpa formatted file with the pre-processed data, epoched relative to each position change, containing the following variables:
-			- ds_tiny: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (MEG channels)
-			- ds_tiny_eyes: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (eye-x, eye-y, pupil size)
-References:
-Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
+
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
+
+   The main folder contains the raw MEG data for all participants in standard bids format. See references.
+    
+   
+   The ‘sourcedata’ folder contains the behavioural data collected during the MEG session as well as the eyetracking data. The data in this folder follows the following trial structure:
+    
+   
+   - sourcedata
+   	- beh
+   		- sub-[participant number]
+   			- sub-[participant number]_task-occlusion_run-[run number]_events.csv: contains all the events for each trial in the MEG session, detailing what was shown on the screen.
+   			- sub-[participant number]_task-occlusion_run-[run number]_occframes.csv: contains all the stimulus positions for each occlusion trial in the MEG session.
+   			- sub-[participant number]_task-occlusion_run-[run number]_disframes.csv: contains all the stimulus positions for each disappearance trial in the MEG session.
+   	- eyetracking
+   		- sub-[participant number]_Occ.edf: edf file containing the eye positions during the MEG session.
+   
+   The ‘derivatives’ folder contains the pre-processed MEG data for each participant. The data in this folder follows the following trial structure:
+   
+   
+   - derivatives
+   	- preprocessed
+   		- cosmo_p[participant number].mat: cosmomvpa formatted file with the pre-processed data, epoched for each trial, containing the following variables:
+   			- ds_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
+   			- ds_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (MEG channels)
+   			- ds_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (MEG channels)
+   			- ds_eyes_diss: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+   			- ds_eyes_occ: cosmo data struct containing the disappearance trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+   			- ds_eyes_loc: cosmo data struct containing the unpredictable position stream trials epoched relative to stimulus onset (eye-x, eye-y, pupil size)
+   		-  cosmo_p[participant number]_position_epochs.mat: cosmomvpa formatted file with the pre-processed data, epoched relative to each position change, containing the following variables:
+   			- ds_tiny: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (MEG channels)
+   			- ds_tiny_eyes: cell with two entries. First entry contains the disappearance trials epoched relative to position change. Second entry contains the occlusion trials epoched relative to position change. (eye-x, eye-y, pupil size)
+   
+   
+   
+   References:
+   
+   Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+   
+   Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
+
 
 Highlights
 ----------
@@ -104,7 +131,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 22
-      - Recordings: 132
+      - Recordings: 4578
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -124,8 +151,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 257.7 GB
-      - File count: 132
+      - Size on disk: 198.1 GB
+      - File count: 4578
       - Format: BIDS
 
    .. grid-item-card:: License & citation

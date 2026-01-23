@@ -11,7 +11,7 @@ Fundamental frequency predominantly drives talker differences in auditory brains
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 15`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 15` :bdg-secondary:`Recordings: 112`
 
 .. rst-class:: sd-badges
 
@@ -180,7 +180,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 15
-      - Recordings: 15
+      - Recordings: 112
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -200,8 +200,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 19.1 GB
-      - File count: 15
+      - Size on disk: 9.5 GB
+      - File count: 112
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS003682
 
 Model-based aversive learning in humans is supported by preferential task state reactivation (OpenNeuro ``ds003682``). Access recordings and metadata through EEGDash.
 
-**Citation:** Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (—). *Model-based aversive learning in humans is supported by preferential task state reactivation*. `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
+**Citation:** Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (2021). *Model-based aversive learning in humans is supported by preferential task state reactivation*. `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 28` :bdg-secondary:`Recordings: 336`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 28` :bdg-secondary:`Recordings: 1347`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Model-based aversive learning in humans is supported by preferential task state reactivation
    * - Year
-     - —
+     - 2021
    * - Authors
      - Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003682>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003682>`__ | `Source URL <https://openneuro.org/datasets/ds003682>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003682>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003682>`__ | `Source URL <https://openneuro.org/datasets/ds003682/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 This dataset contains raw and processed MEG data for the paper "Model-based aversive learning in humans is supported by preferential task state reactivation" by Toby Wise, Yunzhe Liu, Fatima Chowdhury & Ray Dolan.
+
 Raw data is provided as `.fif` files, although it was acquired on a CRF system.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 28
-      - Recordings: 336
+      - Recordings: 1347
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 302.0 GB
-      - File count: 336
+      - Size on disk: 211.6 GB
+      - File count: 1347
       - Format: BIDS
 
    .. grid-item-card:: License & citation

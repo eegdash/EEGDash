@@ -7,11 +7,11 @@ eegdash.dataset.DS005398
 
 Open iEEG Dataset (OpenNeuro ``ds005398``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding, Shingo Oana, Tonmoy Monsoor, Chenda Duan, Shaun A. Hussain, Joe X Qiao, Noriko Salamon, Aria Fallah, Myung Shin Sim, Raman Sankar, Richard J. Staba, Jerome Engel Jr., Eishi Asano, Vwani Roychowdhury, Hiroki Nariai (20). *Open iEEG Dataset*. `10.18112/openneuro.ds005398.v1.0.1 <https://doi.org/10.18112/openneuro.ds005398.v1.0.1>`__
+**Citation:** Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding, Shingo Oana, Tonmoy Monsoor, Chenda Duan, Shaun A. Hussain, Joe X Qiao, Noriko Salamon, Aria Fallah, Myung Shin Sim, Raman Sankar, Richard J. Staba, Jerome Engel Jr., Eishi Asano, Vwani Roychowdhury, Hiroki Nariai (2024). *Open iEEG Dataset*. `10.18112/openneuro.ds005398.v1.0.1 <https://doi.org/10.18112/openneuro.ds005398.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 185` :bdg-secondary:`Recordings: 185`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 185` :bdg-secondary:`Recordings: 930`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Open iEEG Dataset
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding, Shingo Oana, Tonmoy Monsoor, Chenda Duan, Shaun A. Hussain, Joe X Qiao, Noriko Salamon, Aria Fallah, Myung Shin Sim, Raman Sankar, Richard J. Staba, Jerome Engel Jr., Eishi Asano, Vwani Roychowdhury, Hiroki Nariai
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005398.v1.0.1 <https://doi.org/10.18112/openneuro.ds005398.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005398>`__ | `Source URL <https://openneuro.org/datasets/ds005398>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005398>`__ | `Source URL <https://openneuro.org/datasets/ds005398/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,13 +68,19 @@ Description
 -----------
 
 This dataset was utilized for the publication of the manuscript by Zhang et al. (in preparation). A subset of the data has been employed in [1] and [2].
+
 Summary:
-This data set comprises the de-identified subjects with interictal iEEG recordings with sleep from University of California Los Angels Mattel Children’s Hospital, and Children’s Hospital of Michigan, Detroit.
+This data set comprises the de-identified subjects with interictal iEEG recordings with sleep from University of California Los Angels Mattel Children’s Hospital, and Children’s Hospital of Michigan, Detroit. 
 Subject-wise information is contained in each folder, including iEEGs collected from 185 subjects during sleep. The channel name and valuables, such as the anatomical label and the resection status, are attached to each folder. The outcome and background information of all the subjects are summarized in ‘paticipant.tsv’ located in the parental directory.
+
 Derivatives
 The processed data for HFO detection and classification are shown in the derivatives/folder. The HFO analysis contains detection from two methods: RMS and MNI detectors.
-Ref
+
+
+Ref 
+
 [1] Zhang Y, Lu Q, Monsoor T, et al. Refining epileptogenic high-frequency oscillations using deep learning: a reverse engineering approach. Brain Commun. 2022;4(1):fcab267. doi:10.1093/braincomms/fcab267
+
 [2] Kuroda N, Sonoda M, Miyakoshi M, et al. Objective interictal electrophysiology biomarkers optimize prediction of epilepsy surgery outcome. Brain Commun. 2021;3(2):fcab042. doi:10.1093/braincomms/fcab042
 
 Highlights
@@ -87,7 +93,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 185
-      - Recordings: 185
+      - Recordings: 930
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -108,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 102.2 GB
-      - File count: 185
+      - File count: 930
       - Format: BIDS
 
    .. grid-item-card:: License & citation

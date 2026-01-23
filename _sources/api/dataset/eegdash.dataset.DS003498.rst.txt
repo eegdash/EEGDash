@@ -7,11 +7,11 @@ eegdash.dataset.DS003498
 
 interictal iEEG during slow-wave sleep with HFO markings (OpenNeuro ``ds003498``). Access recordings and metadata through EEGDash.
 
-**Citation:** Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2019). *interictal iEEG during slow-wave sleep with HFO markings*. `10.18112/openneuro.ds003498.v1.0.1 <https://doi.org/10.18112/openneuro.ds003498.v1.0.1>`__
+**Citation:** Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2021). *interictal iEEG during slow-wave sleep with HFO markings*. `10.18112/openneuro.ds003498.v1.1.1 <https://doi.org/10.18112/openneuro.ds003498.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 385`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 2335`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - interictal iEEG during slow-wave sleep with HFO markings
    * - Year
-     - 2019
+     - 2021
    * - Authors
      - Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J.
    * - License
      - CC0
    * - Citation / DOI
-     - `10.18112/openneuro.ds003498.v1.0.1 <https://doi.org/10.18112/openneuro.ds003498.v1.0.1>`__
+     - `doi:10.18112/openneuro.ds003498.v1.1.1 <https://doi.org/10.18112/openneuro.ds003498.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003498>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003498>`__ | `Source URL <https://openneuro.org/datasets/ds003498>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003498>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003498>`__ | `Source URL <https://openneuro.org/datasets/ds003498/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds003498,
         title = {interictal iEEG during slow-wave sleep with HFO markings},
         author = {Fedele T and Krayenbühl N and Hilfiker P and Adam Li and Sarnthein J.},
-        doi = {10.18112/openneuro.ds003498.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds003498.v1.0.1},
+        doi = {10.18112/openneuro.ds003498.v1.1.1},
+        url = {https://doi.org/10.18112/openneuro.ds003498.v1.1.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -70,13 +70,13 @@ Description
 
 **Zurich iEEG HFO Dataset**
 
+
 This dataset was obtained from the publication [1].
-There are 20 subjects with HFO events. We converted the dataset into BIDS format.
-The original uploader: adam2392 obtained explicit permission from the authors of the dataset to upload this to openneuro. Adam worked on an open-source Python implementation of HFO detection algorithms, and uses this dataset in validation. Even though the publication involves a ``Morphology`` HFO detector, we have implemented our interpretation of the RMS, LineLength and Hilbert detectors in the [mne-hfo repository] (https://github.com/adam2392/mne-hfo) [2].For more information, visit: https://github.com/adam2392/mne-hfo.
 
-**Note from the paper**
+There are 20 subjects with HFO events. We converted the dataset into BIDS format. The channels that were included in the resected region and channels excluded from analysis are included in the clinical Excel file under the ``sourcedata/`` directory. The channels were extracted from the Supplementary table at: https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-017-13064-1/MediaObjects/41598_2017_13064_MOESM1_ESM.pdf.
 
-"We excluded all electrode contacts where electrical stimulation evoked motor or language responses (Table S1).
+The original uploader: adam2392 obtained explicit permission from the authors of the dataset to upload this to openneuro. Adam worked on an open-source Python implementation of HFO detection algorithms, and uses this dataset in validation. Even though the publication involves a ``Morphology`` HFO detector, we have implemented our interpretation of the RMS, LineLength and Hilbert detectors in the [mne-hfo repository] (https://github.com/mne-tools/mne-hfo) [2].For more information, visit: https://github.com/mne-tools/mne-hfo.
+
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,39 +84,56 @@ The original uploader: adam2392 obtained explicit permission from the authors of
    
    **Zurich iEEG HFO Dataset**
    
+   
    This dataset was obtained from the publication [1].
-   There are 20 subjects with HFO events. We converted the dataset into BIDS format.
-   The original uploader: adam2392 obtained explicit permission from the authors of the dataset to upload this to openneuro. Adam worked on an open-source Python implementation of HFO detection algorithms, and uses this dataset in validation. Even though the publication involves a ``Morphology`` HFO detector, we have implemented our interpretation of the RMS, LineLength and Hilbert detectors in the [mne-hfo repository] (https://github.com/adam2392/mne-hfo) [2].For more information, visit: https://github.com/adam2392/mne-hfo.
+   
+   There are 20 subjects with HFO events. We converted the dataset into BIDS format. The channels that were included in the resected region and channels excluded from analysis are included in the clinical Excel file under the ``sourcedata/`` directory. The channels were extracted from the Supplementary table at: https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-017-13064-1/MediaObjects/41598_2017_13064_MOESM1_ESM.pdf.
+   
+   The original uploader: adam2392 obtained explicit permission from the authors of the dataset to upload this to openneuro. Adam worked on an open-source Python implementation of HFO detection algorithms, and uses this dataset in validation. Even though the publication involves a ``Morphology`` HFO detector, we have implemented our interpretation of the RMS, LineLength and Hilbert detectors in the [mne-hfo repository] (https://github.com/mne-tools/mne-hfo) [2].For more information, visit: https://github.com/mne-tools/mne-hfo.
+   
    
    **Note from the paper**
    
    "We excluded all electrode contacts where electrical stimulation evoked motor or language responses (Table S1).
    In TLE patients, we included only the 3 most mesial bipolar channels".
    
+   
    **BIDS Conversion**
+   
    
    MNE-BIDS was used to convert the dataset into BIDS format. The code inside `code/` was used to generate the
    data.
    
+   
    **HFO Events From Original Paper**
    
+   
    The HFO events from the original paper that were validated and detected are stored in the `*events.tsv` file per dataset run. The format is similar to ``mne-hfo`` and can be easily read in using ``mne-bids`` and/or ``mne-python``.
-   Each row in the events.tsv file corresponds to a HFO detected in the original source dataset. The ``trial_type`` column stores the information pertaining type of HFO (e.g. ``ripple``, ``fr`` for fast ripple, or ``frandr`` for fast ripple and ripple). The channel name (possibly in bipolar reference) is `"-"` character delimited and appended to the type of HFO with a `"_"` separating. For example: ``<hfo_type>_<channel_name>`` is the form.
+   
+   Each row in the events.tsv file corresponds to a HFO detected in the original source dataset. The ``trial_type`` column stores the information pertaining type of HFO (e.g. ``ripple``, ``fr`` for fast ripple, or ``frandr`` for fast ripple and ripple). The channel name (possibly in bipolar reference) is `"-"` character delimited and appended to the type of HFO with a `"_"` separating. For example: ``<hfo_type>_<channel_name>`` is the form. 
+   
    
    **Reference Dataset**
    
+   
    The following website was where the original data was downloaded.
+   
    http://crcns.org/data-sets/methods/ieeg-1
    
+   
    **References**
+   
    
    [1] Fedele T, Burnos S, Boran E, Krayenbühl N, Hilfiker P, Grunwald T, Sarnthein J.
    Resection of high frequency oscillations predicts seizure outcome in the individual patient.
    Scientific Reports. 2017;7(1):13836.
    https://www.nature.com/articles/s41598-017-13064-1
    doi:10.1038/s41598-017-13064-1
+   
    [2] Dataset meta analysis with mne-hfo. 10.5281/zenodo.4485036
+   
    [3] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+   
    [4] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 
@@ -130,7 +147,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 385
+      - Recordings: 2335
       - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
@@ -150,15 +167,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 44.8 GB
-      - File count: 385
+      - Size on disk: 44.7 GB
+      - File count: 2335
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: 10.18112/openneuro.ds003498.v1.0.1
+      - DOI: doi:10.18112/openneuro.ds003498.v1.1.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

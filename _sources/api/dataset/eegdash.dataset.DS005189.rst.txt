@@ -7,11 +7,11 @@ eegdash.dataset.DS005189
 
 Search Superiority Recollection Familiarity (OpenNeuro ``ds005189``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (—). *Search Superiority Recollection Familiarity*. `10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
+**Citation:** Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (2024). *Search Superiority Recollection Familiarity*. `10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 185`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Search Superiority Recollection Familiarity
    * - Year
-     - —
+     - 2024
    * - Authors
      - Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005189>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005189>`__ | `Source URL <https://openneuro.org/datasets/ds005189>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005189>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005189>`__ | `Source URL <https://openneuro.org/datasets/ds005189/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,14 @@ Description
 -----------
 
 In this experiment, participants searched for objects in some scenes and intentionally memorized others. We then tested their memory of these objects, finding stronger (quantitative difference) and different (qualitative difference: recollection benefit) memory representations for search targets.
+
 We recorded both EEG and eye movements. Behavioral data is split into encoding (Encode_beh) and memory testing (Test_beh).
+
 Analysis scripts and preprocessed data as well as additional materials are available on the OSF at https://osf.io/esr5q/.
+
+
 Project Abstract:
+
 Most memory is not formed deliberately but as a by-product of natural behavior. These incidental representations, when generated during visual search, can be stronger than intentionally memorized content (search superiority effect). In this study, we investigate whether this effect is purely quantitative (stronger memory) or also due to qualitative memory differences; more precisely, differences in recollection and familiarity, two processes supporting recognition memory. In an EEG study with eye tracking, 30 participants searched for objects in scenes and intentionally memorized others before completing a surprise recognition memory test. We find that compared to new objects, both search targets and intentionally memorized objects elicit a more positive-going mid-frontal negativity peaking at around 400 ms post stimulus onset (FN400), which is associated with familiarity, as well as a more positive-going parietal late component (LPC), indicative of recollection. Both components show no differences between tasks, indicating equal contributions of recollection and familiarity to remembering searched and memorized objects. Behavioral data from remember–know judgments and receiver operating characteristics (ROCs), however, contrasts with the EEG findings: Search targets are more often reported as recollected and their ROCs show higher intercepts, indicating more recollection, whereas there are essentially no behavioral differences in familiarity between tasks. These results indicate that search superiority relies on increased recollection rather than familiarity. The absent LPC effect despite the behavioral task difference challenges existing assumptions about the neural correlates of recognition memory, raising the question whether they hold when investigated using real-world scenes and incidental encoding during naturalistic tasks.
 
 Highlights
@@ -83,7 +88,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 30
+      - Recordings: 185
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +108,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 17.0 GB
-      - File count: 30
+      - Size on disk: 16.1 GB
+      - File count: 185
       - Format: BIDS
 
    .. grid-item-card:: License & citation

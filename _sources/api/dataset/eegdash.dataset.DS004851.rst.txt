@@ -7,11 +7,11 @@ eegdash.dataset.DS004851
 
 HID (OpenNeuro ``ds004851``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *HID*. `10.18112/openneuro.ds004851.v2.1.0 <https://doi.org/10.18112/openneuro.ds004851.v2.1.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *HID*. `10.18112/openneuro.ds004851.v2.1.0 <https://doi.org/10.18112/openneuro.ds004851.v2.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 66` :bdg-secondary:`Recordings: 66`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 66` :bdg-secondary:`Recordings: 335`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - HID
    * - Year
-     - —
+     - 2023
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004851.v2.1.0 <https://doi.org/10.18112/openneuro.ds004851.v2.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004851>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004851>`__ | `Source URL <https://openneuro.org/datasets/ds004851>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004851>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004851>`__ | `Source URL <https://openneuro.org/datasets/ds004851/versions/2.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 66
-      - Recordings: 66
+      - Recordings: 335
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 56.6 GB
-      - File count: 66
+      - Size on disk: 55.9 GB
+      - File count: 335
       - Format: BIDS
 
    .. grid-item-card:: License & citation

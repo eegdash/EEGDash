@@ -7,11 +7,11 @@ eegdash.dataset.DS005107
 
 FACE-DEC (OpenNeuro ``ds005107``). Access recordings and metadata through EEGDash.
 
-**Citation:** Wei Xu, et al. (—). *FACE-DEC*. `10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
+**Citation:** Wei Xu, et al. (2024). *FACE-DEC*. `10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 350`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 2491`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - FACE-DEC
    * - Year
-     - —
+     - 2024
    * - Authors
      - Wei Xu, et al.
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005107>`__ | `Source URL <https://openneuro.org/datasets/ds005107>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005107>`__ | `Source URL <https://openneuro.org/datasets/ds005107/versions/2.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,12 +68,19 @@ Description
 -----------
 
 Main entrance: face_0_main
+
 Preprocessing: face_1_prep
+
 Decoding: face_2_dec
+
 RSA: face_3_rsa
+
 Statistical: face_4_stat
+
 BMS: face_6_bayes.m
+
 During original OPM-MEG data acquisition, individual facial point clouds and structural MRIs were not collected due to the unavailability of optical scanning equipment. Hence, all analyses were conducted at the whole-brain & sensor level. The raw data were originally stored using in-house LabVIEW format and were converted into the FIF format later. It should be noted that the sensor coordinates used were approximated by selecting corresponding locations from the Elekta layout and do not reflect the actual sensor positions (only for visualizing topographic maps). We are currently checking all the data to ensure that everything has been uploaded correctly. :)
+
 Correspondence: weixu@mail.bnu.edu.cn
 
 Highlights
@@ -86,7 +93,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 350
+      - Recordings: 2491
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 27.6 GB
-      - File count: 350
+      - File count: 2491
       - Format: BIDS
 
    .. grid-item-card:: License & citation

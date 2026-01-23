@@ -11,7 +11,7 @@ HED schema library for SCORE annotations example (OpenNeuro ``ds006392``). Acces
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 595`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 12`
 
 .. rst-class:: sd-badges
 
@@ -106,8 +106,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 2
-      - Recordings: 595
+      - Subjects: 1
+      - Recordings: 12
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -127,8 +127,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 595
+      - Size on disk: 32.0 MB
+      - File count: 12
       - Format: BIDS
 
    .. grid-item-card:: License & citation

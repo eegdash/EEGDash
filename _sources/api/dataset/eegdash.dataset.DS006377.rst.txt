@@ -7,11 +7,11 @@ eegdash.dataset.DS006377
 
 InclusionStudy (OpenNeuro ``ds006377``). Access recordings and metadata through EEGDash.
 
-**Citation:** Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam, Yuanyuan Gao, Rini I. Kaplan, Emily J. Braun, Nishaat Mukadam, Sudan Duwadi, Laura Carlton, David Beeler, Lindsay K. Butler, Erin Carpenter, Jaimie Girnis, John Wilson, Vaibhav Tripathi, Yiwen Zhang, Bettina Sorger, Alexander von Lühmann, David C. Somers, Alice Cronin-Golomb, Swathi Kiran, Terry D. Ellis, David A. Boas (—). *InclusionStudy*. `10.18112/openneuro.ds006377.v1.0.2 <https://doi.org/10.18112/openneuro.ds006377.v1.0.2>`__
+**Citation:** Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam, Yuanyuan Gao, Rini I. Kaplan, Emily J. Braun, Nishaat Mukadam, Sudan Duwadi, Laura Carlton, David Beeler, Lindsay K. Butler, Erin Carpenter, Jaimie Girnis, John Wilson, Vaibhav Tripathi, Yiwen Zhang, Bettina Sorger, Alexander von Lühmann, David C. Somers, Alice Cronin-Golomb, Swathi Kiran, Terry D. Ellis, David A. Boas (2025). *InclusionStudy*. `10.18112/openneuro.ds006377.v1.0.2 <https://doi.org/10.18112/openneuro.ds006377.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 115` :bdg-secondary:`Recordings: 690`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 115` :bdg-secondary:`Recordings: 3914`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - InclusionStudy
    * - Year
-     - —
+     - 2025
    * - Authors
      - Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam, Yuanyuan Gao, Rini I. Kaplan, Emily J. Braun, Nishaat Mukadam, Sudan Duwadi, Laura Carlton, David Beeler, Lindsay K. Butler, Erin Carpenter, Jaimie Girnis, John Wilson, Vaibhav Tripathi, Yiwen Zhang, Bettina Sorger, Alexander von Lühmann, David C. Somers, Alice Cronin-Golomb, Swathi Kiran, Terry D. Ellis, David A. Boas
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006377.v1.0.2 <https://doi.org/10.18112/openneuro.ds006377.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006377>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006377>`__ | `Source URL <https://openneuro.org/datasets/ds006377>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006377>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006377>`__ | `Source URL <https://openneuro.org/datasets/ds006377/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 115
-      - Recordings: 690
+      - Recordings: 3914
       - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.4 GB
-      - File count: 690
+      - File count: 3914
       - Format: BIDS
 
    .. grid-item-card:: License & citation

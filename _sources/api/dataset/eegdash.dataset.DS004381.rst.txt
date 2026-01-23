@@ -7,11 +7,11 @@ eegdash.dataset.DS004381
 
 Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates (OpenNeuro ``ds004381``). Access recordings and metadata through EEGDash.
 
-**Citation:** Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (20). *Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates*. `10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
+**Citation:** Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (2022). *Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates*. `10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 437`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 1401`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates
    * - Year
-     - 20
+     - 2022
    * - Authors
      - Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004381.v1.0.2 <https://doi.org/10.18112/openneuro.ds004381.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004381>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004381>`__ | `Source URL <https://openneuro.org/datasets/ds004381>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004381>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004381>`__ | `Source URL <https://openneuro.org/datasets/ds004381/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates**
 
-This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP.
+This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP. 
 We randomly sampled a number of sweeps corresponding to recording durations up to 20 s and calculated the signal-to-noise ratio (SNR).
-There are 14 adults subjects and 4 children subjects with continuous EEG data split in sessions (tibial left/right, medianus left/right) and runs (1 run for each stimulation rate).
-We also provide processed data (derivatives) for all the sessions.
-In total there are 34 medianus SEP and 32 tibial SEP sessions.
 
-**Repository structure**
+There are 14 adults subjects and 4 children subjects with continuous EEG data split in sessions (tibial left/right, medianus left/right) and runs (1 run for each stimulation rate).
+We also provide processed data (derivatives) for all the sessions. 
+In total there are 34 medianus SEP and 32 tibial SEP sessions.
+ 
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,44 +84,53 @@ In total there are 34 medianus SEP and 32 tibial SEP sessions.
    
    **Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates**
    
-   This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP.
+   This dataset was obtained from the publication [1] wherein we varyied the stimulus repetition rate and recorded medianus and tibial nerve SEP. 
    We randomly sampled a number of sweeps corresponding to recording durations up to 20 s and calculated the signal-to-noise ratio (SNR).
+   
    There are 14 adults subjects and 4 children subjects with continuous EEG data split in sessions (tibial left/right, medianus left/right) and runs (1 run for each stimulation rate).
-   We also provide processed data (derivatives) for all the sessions.
+   We also provide processed data (derivatives) for all the sessions. 
    In total there are 34 medianus SEP and 32 tibial SEP sessions.
+    
    
    **Repository structure**
+   
    
    
    **Main directory (SEP rate/)**
    
    Contains metadata files in the BIDS standard about the participants and the study. Folders are explained below.
    
+   
    **Subfolders**
    
    * SEP rate/sub-**/
    Contains folders for each subject, named sub-<subject number> and session information.
    * SEP rate/sub-**/ses-01/eeg
-   Contains the raw eeg data in .edf format for each subject.
+   Contains the raw eeg data in .edf format for each subject. 
    Each *eeg.edf file contains EEG data from one stimulation rate (see scans.tsv column stimRate).
-   Details about the channels are given in the corresponding .tsv file.
+   Details about the channels are given in the corresponding .tsv file. 
    * SEP rate/derivatives
    Contains folders for each subject,named sub-<subject number> and session information that include processed data
    * SEP rate/derivatives/sub-**/ses-01/eeg/
    Contains processed data for each subject.
    
+   
+   
    **Note from the paper**
    
-   "The offline data processing used the continuous EEG that was recorded in parallel to the SEP recordings.
-   Data analysis was performed with custom scripts in Matlab (www.mathworks.com). To detect the SEP stimulation artefact,
+   "The offline data processing used the continuous EEG that was recorded in parallel to the SEP recordings. 
+   Data analysis was performed with custom scripts in Matlab (www.mathworks.com). To detect the SEP stimulation artefact, 
    we first filtered the EEG (high pass cutoff = 200 Hz) and performed local peak detection (minimum peak prominence between peaks = 30 ms,
-   minimum peak width = 4 ms, samples = 0.2 ms). We used the times of the detected stimulus artifact as triggers to define sweeps with
+   minimum peak width = 4 ms, samples = 0.2 ms). We used the times of the detected stimulus artifact as triggers to define sweeps with 
    post-stimulus recording sweep length 50 ms for medianus SEP and 100 ms for tibial SEP. We resampled the data to sampling rate 1200 Hz before
    further processing. We classified sweeps with amplitude > 10 ÂµV as artefact-ridden and excluded them from further analysis."
    
+   
    **BIDS Conversion**
    
-   bids-starter-kid and custom Matlab scripts were used to convert the dataset into BIDS format.
+   bids-starter-kid and custom Matlab scripts were used to convert the dataset into BIDS format. 
+   
+   
    
    **References**
    
@@ -138,7 +147,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 18
-      - Recordings: 437
+      - Recordings: 1401
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -158,8 +167,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 12.4 GB
-      - File count: 437
+      - Size on disk: 7.7 GB
+      - File count: 1401
       - Format: BIDS
 
    .. grid-item-card:: License & citation

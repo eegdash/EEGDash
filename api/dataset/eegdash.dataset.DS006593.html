@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds006593">
 <h1>eegdash.dataset.DS006593<a class="headerlink" href="#eegdash-dataset-ds006593" title="Link to this heading">#</a></h1>
 <p>cBCI Matrix Multimodal Dataset (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds006593</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (20). <em>cBCI Matrix Multimodal Dataset</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds006593.v1.0.0">10.18112/openneuro.ds006593.v1.0.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 21</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 21</span></p>
+<p><strong>Citation:</strong> Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (2025). <em>cBCI Matrix Multimodal Dataset</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds006593.v1.0.0">10.18112/openneuro.ds006593.v1.0.0</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 21</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 214</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: —</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>cBCI Matrix Multimodal Dataset</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>20</p></td>
+<td><p>2025</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds006593.v1.0.0">doi:10.18112/openneuro.ds006593.v1.0.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds006593">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds006593">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds006593">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds006593">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds006593">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds006593/versions/1.0.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1098,19 +1098,28 @@ loading errors, etc.), please let us know!</p>
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Multimodal Sensor Fusion for EEG-Based BCI Typing Systems</strong></p>
 <p><strong>Dataset Overview</strong></p>
-<p>This dataset contains recordings of EEG and EyeTracking for a BCI spelling task. The data were collected in 2023 at Northeastern University.
-- N=21
-- Calibration task were proctored using BciPy [1]
-- The dataset is organized in accordance with the Brain Imaging Data Structure (BIDS) specification (version 1.7.0).</p>
-<p><strong>Methodology</strong></p>
-<p>Calibration data were collected from control participants (n=21, mean age 23.6 ± 3.1 years) in a quiet lab room at Northeastern University. EEG data were collected using the DSI-24, dry electrode cap (Wearable Sensing, San Diego CA) at a sampling rate of 300 Hz. The device employs a hardware filter permitting a collection bandwidth of 0.003–150 Hz. Data were recorded from Fp1/2, Fz, F3/4, F7/8, Cz, C3/4, T7/T8, T3/T4, Pz, P3/P4, P7/P8, T5/T6, O1/2 with linked-ear reference (A1 and A2) and ground at A1. All data were collected using a Lenovo Legion 5 Pro Laptop with Windows 11, an Intel Core i7-11800H &#64; 2.30 GHz, 16 GB DDR4 RAM, and a NVIDIA GeForce RTX 3050. Trigger fidelity on the experiment laptop was verified using the Matrix Time Test Task in BciPy and a photodiode. The results of this timing test were used to determine static offsets between hardware and prevent experimentation with any timing violations greater than +/− 10 ms. The Eyetracker data were collected using a portable eye tracker (Tobii Pro Nano) at a sampling rate of 60 Hz. The matrix paradigm and the data acquisition modules are developed in BciPy [1], which is a standalone application for experimental data collection. This work focuses on a specific BCI paradigm called single-character-presentation (SCP) based visual presentation, which consists of symbols presented in matrix form and individually highlighted in randomized order. Calibration task presented letter characters at a rate of 4 Hz, with 100 inquiries consisting of 10 letters each (1 target, 9 non-target). In 10% of the inquiries, only non-target characters were shown. The stimuli included all 26 letters of the English alphabet, as well as the characters “_” for space and “&lt;“ for backspace. The order of target stimuli was randomly distributed among the inquiries. Between inquiries, there was a two-second blank screen. Each inquiry consisted of a one-second prompt showing the target letter, followed by a 0.5s fixation, and then the presentation of 10 letters. The letters were displayed in the center of the screen, in white on a black background. Target prompts and stimuli were presented in white, while fixation crosses were rendered in red.
-The experimental protocol was approved by the Northeastern University Institutional Review Board (IRB). All participants provided written informed consent prior to participation.</p>
-<p><strong>Directory Structure</strong></p>
-<p>The datasets follows the BIDS convention with the following structure: /sub-[subject]/ses-[session]/[eeg or et]. To load the BIDS formatted data into BciPy Simulator, please see the following directory: /sourcedata/bcipy_metadata. This directory contains the raw BciPy parameter files. It also contains the output of the matrix display (matrix.png) for eyetracking visualization.</p>
-<p><strong>Contact Information</strong></p>
-<p>For questions or issues regarding this dataset, please contact the corresponding author <a class="reference external" href="mailto:celik&#46;b&#37;&#52;&#48;northeastern&#46;edu">Basak Celik</a> via email.
-[1] Memmott T, Koçanaoğulları A, Lawhead M, Klee D, Dudy S, Fried-Oken M, Oken B. BciPy: brain-computer interface software in Python. Brain-Computer Interfaces, 8(4), 137-53, 2021.</p>
-</section>
+<p>This dataset contains recordings of EEG and EyeTracking for a BCI spelling task. The data were collected in 2023 at Northeastern University.</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Multimodal Sensor Fusion for EEG-Based BCI Typing Systems</strong></p>
+<p class="sd-card-text"><strong>Dataset Overview</strong></p>
+<p class="sd-card-text">This dataset contains recordings of EEG and EyeTracking for a BCI spelling task. The data were collected in 2023 at Northeastern University.</p>
+<ul class="simple">
+<li><p class="sd-card-text">N=21</p></li>
+<li><p class="sd-card-text">Calibration task were proctored using BciPy [1]</p></li>
+<li><p class="sd-card-text">The dataset is organized in accordance with the Brain Imaging Data Structure (BIDS) specification (version 1.7.0).</p></li>
+</ul>
+<p class="sd-card-text"><strong>Methodology</strong></p>
+<p class="sd-card-text">Calibration data were collected from control participants (n=21, mean age 23.6 ± 3.1 years) in a quiet lab room at Northeastern University. EEG data were collected using the DSI-24, dry electrode cap (Wearable Sensing, San Diego CA) at a sampling rate of 300 Hz. The device employs a hardware filter permitting a collection bandwidth of 0.003–150 Hz. Data were recorded from Fp1/2, Fz, F3/4, F7/8, Cz, C3/4, T7/T8, T3/T4, Pz, P3/P4, P7/P8, T5/T6, O1/2 with linked-ear reference (A1 and A2) and ground at A1. All data were collected using a Lenovo Legion 5 Pro Laptop with Windows 11, an Intel Core i7-11800H &#64; 2.30 GHz, 16 GB DDR4 RAM, and a NVIDIA GeForce RTX 3050. Trigger fidelity on the experiment laptop was verified using the Matrix Time Test Task in BciPy and a photodiode. The results of this timing test were used to determine static offsets between hardware and prevent experimentation with any timing violations greater than +/− 10 ms. The Eyetracker data were collected using a portable eye tracker (Tobii Pro Nano) at a sampling rate of 60 Hz. The matrix paradigm and the data acquisition modules are developed in BciPy [1], which is a standalone application for experimental data collection. This work focuses on a specific BCI paradigm called single-character-presentation (SCP) based visual presentation, which consists of symbols presented in matrix form and individually highlighted in randomized order. Calibration task presented letter characters at a rate of 4 Hz, with 100 inquiries consisting of 10 letters each (1 target, 9 non-target). In 10% of the inquiries, only non-target characters were shown. The stimuli included all 26 letters of the English alphabet, as well as the characters “_” for space and “&lt;“ for backspace. The order of target stimuli was randomly distributed among the inquiries. Between inquiries, there was a two-second blank screen. Each inquiry consisted of a one-second prompt showing the target letter, followed by a 0.5s fixation, and then the presentation of 10 letters. The letters were displayed in the center of the screen, in white on a black background. Target prompts and stimuli were presented in white, while fixation crosses were rendered in red.</p>
+<p class="sd-card-text">The experimental protocol was approved by the Northeastern University Institutional Review Board (IRB). All participants provided written informed consent prior to participation.</p>
+<p class="sd-card-text"><strong>Directory Structure</strong></p>
+<p class="sd-card-text">The datasets follows the BIDS convention with the following structure: /sub-[subject]/ses-[session]/[eeg or et]. To load the BIDS formatted data into BciPy Simulator, please see the following directory: /sourcedata/bcipy_metadata. This directory contains the raw BciPy parameter files. It also contains the output of the matrix display (matrix.png) for eyetracking visualization.</p>
+<p class="sd-card-text"><strong>Contact Information</strong></p>
+<p class="sd-card-text">For questions or issues regarding this dataset, please contact the corresponding author <a class="reference external" href="mailto:celik&#46;b&#37;&#52;&#48;northeastern&#46;edu">Basak Celik</a> via email.</p>
+<p class="sd-card-text">[1] Memmott T, Koçanaoğulları A, Lawhead M, Klee D, Dudy S, Fried-Oken M, Oken B. BciPy: brain-computer interface software in Python. Brain-Computer Interfaces, 8(4), 137-53, 2021.</p>
+</div>
+</details></section>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
@@ -1122,7 +1131,7 @@ The experimental protocol was approved by the Northeastern University Institutio
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 21</p></li>
-<li><p class="sd-card-text">Recordings: 21</p></li>
+<li><p class="sd-card-text">Recordings: 214</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1160,8 +1169,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 616.8 MB</p></li>
-<li><p class="sd-card-text">File count: 21</p></li>
+<li><p class="sd-card-text">Size on disk: 441.9 MB</p></li>
+<li><p class="sd-card-text">File count: 214</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

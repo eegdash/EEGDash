@@ -7,11 +7,11 @@ eegdash.dataset.DS004843
 
 T16 (OpenNeuro ``ds004843``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *T16*. `10.18112/openneuro.ds004843.v1.0.0 <https://doi.org/10.18112/openneuro.ds004843.v1.0.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *T16*. `10.18112/openneuro.ds004843.v1.0.0 <https://doi.org/10.18112/openneuro.ds004843.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 92`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 649`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - T16
    * - Year
-     - —
+     - 2023
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 14
-      - Recordings: 92
+      - Recordings: 649
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 7.7 GB
-      - File count: 92
+      - File count: 649
       - Format: BIDS
 
    .. grid-item-card:: License & citation

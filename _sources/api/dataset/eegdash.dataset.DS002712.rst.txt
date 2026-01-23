@@ -7,11 +7,11 @@ eegdash.dataset.DS002712
 
 Numbers and Letters (OpenNeuro ``ds002712``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (—). *Numbers and Letters*. `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
+**Citation:** Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (2020). *Numbers and Letters*. `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 82`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 482`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Numbers and Letters
    * - Year
-     - —
+     - 2020
    * - Authors
      - Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002712>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002712>`__ | `Source URL <https://openneuro.org/datasets/ds002712>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002712>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002712>`__ | `Source URL <https://openneuro.org/datasets/ds002712/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,18 +67,22 @@ Dataset Information
 Description
 -----------
 
-OpenNeuro curator note: This dataset was previously accessible at ds001985. The dataset was reuploaded due to privacy considerations.
+OpenNeuro curator note: This dataset was previously accessible at ds001985. The dataset was reuploaded due to privacy considerations. 
+
 The experiment is composed by two runs
 We here report the code triggers for each run:
+
 Run 1: single item
 10 = single numbers
 15 = single letters
 20 & 25 = single false fonts
+
 Run 2: strings
 35 = strings numbers
 40 = strings letters
 45 & 50 = strings false fonts
-raw files could be split into two files
+
+raw files could be split into two files 
 (e.g., run-1 + run-11)
 
 Highlights
@@ -91,7 +95,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 82
+      - Recordings: 482
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -111,8 +115,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 309.9 GB
-      - File count: 82
+      - Size on disk: 101.8 GB
+      - File count: 482
       - Format: BIDS
 
    .. grid-item-card:: License & citation

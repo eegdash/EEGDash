@@ -7,11 +7,11 @@ eegdash.dataset.DS006460
 
 High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025 (OpenNeuro ``ds006460``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers, Parisa Rahimi, Parya Y. Farzam, Muhammad H. Zaman, David A. Boas, Meryem A. Yücel (—). *High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025*. `10.18112/openneuro.ds006460.v1.0.0 <https://doi.org/10.18112/openneuro.ds006460.v1.0.0>`__
+**Citation:** Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers, Parisa Rahimi, Parya Y. Farzam, Muhammad H. Zaman, David A. Boas, Meryem A. Yücel (2025). *High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025*. `10.18112/openneuro.ds006460.v1.0.0 <https://doi.org/10.18112/openneuro.ds006460.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 17`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 174`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025
    * - Year
-     - —
+     - 2025
    * - Authors
      - Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers, Parisa Rahimi, Parya Y. Farzam, Muhammad H. Zaman, David A. Boas, Meryem A. Yücel
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006460.v1.0.0 <https://doi.org/10.18112/openneuro.ds006460.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006460>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006460>`__ | `Source URL <https://openneuro.org/datasets/ds006460>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006460>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006460>`__ | `Source URL <https://openneuro.org/datasets/ds006460/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 17
-      - Recordings: 17
+      - Recordings: 174
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 459.8 MB
-      - File count: 17
+      - Size on disk: 459.7 MB
+      - File count: 174
       - Format: BIDS
 
    .. grid-item-card:: License & citation

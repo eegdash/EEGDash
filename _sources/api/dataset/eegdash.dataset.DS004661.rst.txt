@@ -7,11 +7,11 @@ eegdash.dataset.DS004661
 
 ANDI (OpenNeuro ``ds004661``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (20). *ANDI*. `10.18112/openneuro.ds004661.v1.1.0 <https://doi.org/10.18112/openneuro.ds004661.v1.1.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *ANDI*. `10.18112/openneuro.ds004661.v1.1.0 <https://doi.org/10.18112/openneuro.ds004661.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 17`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 90`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - ANDI
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004661.v1.1.0 <https://doi.org/10.18112/openneuro.ds004661.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004661>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004661>`__ | `Source URL <https://openneuro.org/datasets/ds004661>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004661>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004661>`__ | `Source URL <https://openneuro.org/datasets/ds004661/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Participants (N=17, all males) with an average age of 32.8 years performed a guided visual search task in parallel with a second binaurally presented auditory task (Ries, et al., 2016). EEG data from each participant were recorded using a 64-channel BioSemi ActiveTwo system digitized at 512 Hz. Four external electrodes were used to record bipolar horizontal and vertical EOG signals, and a single external electrode was placed on each of the left and right mastoids to provide the reference signals. Fourteen participants were included in the original study, with three additional participants later added, resulting in 17 participants.
+
 The visual search task for this experiment required participants to follow a red annulus around the screen and press a button if the annulus stopped at a prespecified target. The auditory task for this experiment was an N-back matching task in which participants listened to a string of numbers presented at approximately 2 second intervals and were required to indicate whether the current number matched a previously presented number. For the N=0, this would be the number immediately prior. For N=1 this would be the number one level before that, and so on. In the example string “1”, “1”, “2”, “1”, “3”, “2”, the second “1” should generate a match in the N=0 condition, the third “1” should generate a match in the N=1 condition, and the second “2” should generate a match in the N=2 condition. The task was composed of a baseline condition in which participants were presented with both visual and auditory stimuli but were instructed to ignore the auditory component. Next, were three dual-task conditions with N-back levels of N=0, N=1, and N=2.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 17
-      - Recordings: 17
+      - Recordings: 90
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.4 GB
-      - File count: 17
+      - File count: 90
       - Format: BIDS
 
    .. grid-item-card:: License & citation

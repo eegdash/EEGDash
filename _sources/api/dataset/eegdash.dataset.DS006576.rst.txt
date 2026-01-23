@@ -7,11 +7,11 @@ eegdash.dataset.DS006576
 
 The role of REM sleep in neural differentiation of memories in the hippocampus (OpenNeuro ``ds006576``). Access recordings and metadata through EEGDash.
 
-**Citation:** Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2026). *The role of REM sleep in neural differentiation of memories in the hippocampus*. `10.18112/openneuro.ds006576.v1.0.2 <https://doi.org/10.18112/openneuro.ds006576.v1.0.2>`__
+**Citation:** Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2025). *The role of REM sleep in neural differentiation of memories in the hippocampus*. `10.18112/openneuro.ds006576.v1.0.2 <https://doi.org/10.18112/openneuro.ds006576.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 48`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 8` :bdg-secondary:`Subjects: 49` :bdg-secondary:`Recordings: 4200`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The role of REM sleep in neural differentiation of memories in the hippocampus
    * - Year
-     - 2026
+     - 2025
    * - Authors
      - Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006576.v1.0.2 <https://doi.org/10.18112/openneuro.ds006576.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006576>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006576>`__ | `Source URL <https://openneuro.org/datasets/ds006576>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006576>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006576>`__ | `Source URL <https://openneuro.org/datasets/ds006576/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,15 +67,24 @@ Dataset Information
 Description
 -----------
 
-NOTE: This version contains datasets for 49 of the 69 participants. New versions will be created as more data are uploaded.
+NOTE: This version contains datasets for 49 of the 69 participants. New versions will be created as more data are uploaded. 
+
 This dataset contains the fMRI and EEG data for E.A. McDevitt, G. Kim, N.B. Turk-Browne, K.A. Norman (2026). The role of rapid eye movement sleep in neural differentiation of memories in the hippocampus. Journal of Cognitive Neuroscience, 10.1162/jocn.a.82
-Please refer to the paper for detailed methods.
-The dataset includes 69 participants with three fMRI scans and one EEG session per participant. Depending on the participant's condition, the EEG session either contains sleep data from a nap or data recorded during a quiet wake session.
-Please contact Elizabeth McDevitt (emcdevitt@princeton.edu) if you have any questions.
-Notes about the dataset:
+
+Please refer to the paper for detailed methods. 
+
+The dataset includes 69 participants with three fMRI scans and one EEG session per participant. Depending on the participant's condition, the EEG session either contains sleep data from a nap or data recorded during a quiet wake session.  
+
+Please contact Elizabeth McDevitt (emcdevitt@princeton.edu) if you have any questions. 
+
+Notes about the dataset: 
+
 The following subjects/sessions do not include a T1w anatomical scan: sub-160 ses-00; sub-170 ses-00; sub-178 ses-01
-- sub-107/ses-02/func: There are three runs of the decision task included instead of two. During decision_run-01, the participant did not respond to 'B' trials (coded in column trial_type). Therefore, there are many trials with no response_accuracy or response_times recorded in task-decision_run-01_events.tsv. Immediately following this run, the same task was re-run as decision_run-03 to collect behavioral responses; therefore the data associated with task-decision_run-03 can be considered a "repeat" of task-decision_run-01. Decision_run-02 was run as expected during the second cycle of the reward prediction task.
-- sub-108_ses-02_task-reward_run-01_events.tsv: Many trials have no response_accuracy or response_time recorded. The participant misunderstood instructions and did not respond on trials where they predicted a "neutral" outcome.
+
+- sub-107/ses-02/func: There are three runs of the decision task included instead of two. During decision_run-01, the participant did not respond to 'B' trials (coded in column trial_type). Therefore, there are many trials with no response_accuracy or response_times recorded in task-decision_run-01_events.tsv. Immediately following this run, the same task was re-run as decision_run-03 to collect behavioral responses; therefore the data associated with task-decision_run-03 can be considered a "repeat" of task-decision_run-01. Decision_run-02 was run as expected during the second cycle of the reward prediction task.  
+
+- sub-108_ses-02_task-reward_run-01_events.tsv: Many trials have no response_accuracy or response_time recorded. The participant misunderstood instructions and did not respond on trials where they predicted a "neutral" outcome. 
+
 - sub-182_ses-01_task-study_run-01_events.tsv: There was an issue with Matlab not recording "2" button presses during this run of the task. The experimenter recoded all "no response" trials as "2" and used this to code response_accuracy. However, there were no response_times recorded for these trials.
 
 Highlights
@@ -87,9 +96,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 48
-      - Recordings: 48
-      - Tasks: 1
+      - Subjects: 49
+      - Recordings: 4200
+      - Tasks: 8
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -109,7 +118,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 464.5 GB
-      - File count: 48
+      - File count: 4200
       - Format: BIDS
 
    .. grid-item-card:: License & citation

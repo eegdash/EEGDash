@@ -7,11 +7,11 @@ eegdash.dataset.DS005697
 
 PerceiveImagine (OpenNeuro ``ds005697``). Access recordings and metadata through EEGDash.
 
-**Citation:** Weilong Li, Hua Fan (—). *PerceiveImagine*. `10.18112/openneuro.ds005697.v1.0.2 <https://doi.org/10.18112/openneuro.ds005697.v1.0.2>`__
+**Citation:** Weilong Li, Hua Fan (2024). *PerceiveImagine*. `10.18112/openneuro.ds005697.v1.0.2 <https://doi.org/10.18112/openneuro.ds005697.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 51` :bdg-secondary:`Recordings: 51`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 52` :bdg-secondary:`Recordings: 210`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - PerceiveImagine
    * - Year
-     - —
+     - 2024
    * - Authors
      - Weilong Li, Hua Fan
    * - License
@@ -86,8 +86,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 51
-      - Recordings: 51
+      - Subjects: 52
+      - Recordings: 210
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -108,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 66.6 GB
-      - File count: 51
+      - File count: 210
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS006923
 
 Dataset of Electroencephalograms of Juvenile Offenders (OpenNeuro ``ds006923``). Access recordings and metadata through EEGDash.
 
-**Citation:** Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (20). *Dataset of Electroencephalograms of Juvenile Offenders*. `10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
+**Citation:** Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (2025). *Dataset of Electroencephalograms of Juvenile Offenders*. `10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 140` :bdg-secondary:`Recordings: 280`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 140` :bdg-secondary:`Recordings: 985`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Dataset of Electroencephalograms of Juvenile Offenders
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006923.v1.0.0 <https://doi.org/10.18112/openneuro.ds006923.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006923>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006923>`__ | `Source URL <https://openneuro.org/datasets/ds006923>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006923>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006923>`__ | `Source URL <https://openneuro.org/datasets/ds006923/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,11 +71,11 @@ Description
 **Dataset of Electroencephalograms of Juvenile Offenders**
 
 
+
 **Project's name**
 
-Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de patrones asociados a disfunciones neurocognitivas en jóvenes en conflicto con la ley en el departamento del Atlántico.
 
-**Year of project execution**
+Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de patrones asociados a disfunciones neurocognitivas en jóvenes en conflicto con la ley en el departamento del Atlántico.
 
 
 .. dropdown:: View full README
@@ -85,55 +85,78 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    **Dataset of Electroencephalograms of Juvenile Offenders**
    
    
+   
    **Project's name**
+   
    
    Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de patrones asociados a disfunciones neurocognitivas en jóvenes en conflicto con la ley en el departamento del Atlántico.
    
+   
    **Year of project execution**
+   
    
    2021
    
+   
    **Authors and acknowledgment**
    
+   
    Aura Polo, Elmer León, Mariana Pino-Melgarejo and Julie Viloria-Porto.
+   
    Ronald Ruiz for his assistance during the data collection process, and Sergio Miranda for his dedication to data processing and cleaning.
    
+   
    **Work team**
+   
    
    * MAGMA Ingeniería research group
    * Hogares Claret foundation
    
+   
    **Institutions**
+   
    
    - Institución Universitaria de Barranquilla (sede Soledad)
    - Universidad del Magdalena
    - Universidad Autónoma del Caribe
    
+   
    **Description**
+   
    
    This repository contains resting-state EEG data collected with the Biosemi ActiveTwo of 140 participants:
    - 74 juvenile offenders (JO)
    - 66 juvenile non-offender controls
+   
    Exclusion criteria: No psychiatric treatment, dental/orthodontic appliances.
+   
    Recruitment: JO Hogares Claret Foundation (Centro de Reeducación el Oasis & Fundación Luz de Esperanza).
+   
    Controls: Institución Nacional de Educación Media INEM Miguel Antonio Caro (Barranquilla).
+   
    
    **Contents of the dataset**
    
    
+   
    **Core Files**
+   
    
    - `dataset_description.json`: General information about the study
    - `participants.json`: Demographic and group assignment data
    - `participants.tsv`: Demographic and group assignment data in table format
    
+   
    **Features Data (EEG_JO_Dataset/code)**
+   
    
    
    **Feature file nomenclature**
    
+   
    Files are named using the pattern:
    `FR_Dats_band_{BAND}_EP_{EYESTATE}_{EPOCH#}_can_{CHANNEL}.xlsx`
+   
    | Component          | Example     | Description                                                               |
    |--------------------|-------------|---------------------------------------------------------------------------|
    | **FR_Dats_band**   | Fixed       | Prefix = "Feature Results Dataset"                                        |
@@ -143,9 +166,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    | **can_**           | Fixed       | "Channel" prefix                                                          |
    | **{CHANNEL}**      | `A1`        | Electrode position (ABCD system): First letter = A • B • C • D <br>- Number = Electrode ID (1-32)                                                                                   |
    
+   
    **File Contents:**
    
+   
    Each Excel file contains 7 features for the specified band/channel/epoch combination:
+   
    1. Mean Power
    2. RMS of PSD
    3. Standard Deviation
@@ -154,22 +180,28 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    6. Skewness
    7. Kurtosis
    
+   
    **Examples:**
+   
    
    1. `FR_Dats_band_ALFA_EP_C_1_can_A1.xlsx`
       - Alpha band features
       - First closed-eyes epoch
       - Channel A1 (Frontal electrode 1)
+   
    2. `FR_Dats_band_THETA_EP_O_2_can_C15.xlsx`
       - Theta band features
       - Second open-eyes epoch
       - Channel C15 (Posterior electrode 15)
+   
    3. `FR_Dats_band_BETA_EP_C_2_can_B7.xlsx`
       - Beta band features
       - Second closed-eyes epoch
       - Channel B7 (Central electrode 7)
    
+   
    **Dataset Structure:**
+   
    
    - 4 epochs per subject:
      - 2 closed-eyes: `EP_C_1`, `EP_C_2`
@@ -178,7 +210,9 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    - 4 frequency bands
    - Total files per subject: 4 epochs × 128 channels × 4 bands = 2,048 files
    
+   
    **EEG Data**
+   
    
    ```
    EEG_JO_Dataset/
@@ -201,7 +235,9 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    **└── README.md**
    
    
+   
    **File Nomenclature**
+   
    
    | Denomination          | Value           | Description                                                      |
    |-----------------------|-----------------|------------------------------------------------------------------|
@@ -214,15 +250,20 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    | `eeg`                 | Electroencephalography data | Data type                                            |
    | Extension             | `.set`          | **File type**: processed                                         |
    
+   
    **Examples**
+   
    
    1. `sub-1005sg_task-restingstate_acq-epochs_eeg.set` = Epochs EEG for **study group 1** subject 005 (full ID 1005)
    2. `sub-1005sg_task-restingstate_desc-preprocessing_eeg.set` = Preprocessed EEG for **study group 1** subject 005 (full ID 1005)
    
+   
    **Methods**
    
    
+   
    **EEG Acquisition**
+   
    
    - **Device**: Biosemi ActiveTwo system
    - **Electrodes**: 128 channels (radial placement, 10-20 system reference)
@@ -234,9 +275,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      - Continuous monitoring for movements/sleep
      - Event markers via serial communication (paradigm triggers)
    
+   
    **Paradigms**
    
+   
    *(Dataset contains only resting-state recordings)*
+   
    - **Resting State (RS)**:
      - Total duration: 12 minutes
      - Sequence:
@@ -246,7 +290,9 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
        - 5s post-event onset
        - 5s pre-event offset (to avoid transition artifacts)
    
+   
    **Preprocessing pipeline (EEGLAB/MATLAB)**
+   
    
    1. **Visual inspection**:
       - Raw data review using BDFreader
@@ -267,7 +313,9 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
       - ASR (Artifact Subspace Reconstruction)
       - ICA + ICLabel (components >90% non-brain removed)
    
+   
    **Feature Extraction**
+   
    
    - **PSD Calculation**: Welch's method (50% overlap, Hamming window)
    - **Frequency bands**:
@@ -285,7 +333,9 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      7. Kurtosis
    - **Feature volume**: 14,336 features/subject (4 bands × 128 channels × 4 segments × 7 features)
    
+   
    **Technical Specifications**
+   
    
    - **Processing Hardware**:
      - Intel Core i5-9400F @2.9GHz
@@ -297,11 +347,15 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      - Python (scikit-learn, pandas for feature selection)
    - **Processing Time**: ~10 minutes/subject
    
+   
    **Funding**
+   
    
    This research was funded by the SISTEMA GENERAL DE REGALÍAS - SGR and the MINISTERIO DE CIENCIA TECNOLOGÍA E INNOVACIÓN - MINCIENCIAS from Colombia, in the framework of the project “Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de patrones asociados a disfunciones neurocognitivas en jóvenes en conflicto con la ley en el departamento del Atlántico”, with grant number BPIN 2020000100006.
    
+   
    **Support**
+   
    
    Correspondence: Aura Polo (apolol@unimagdalena.edu.co); Elmer León (elmerleondb@unimagdalena.edu.co); Julie Viloria-Porto (julieviloriapp@unimagdalena.edu.co)
 
@@ -316,7 +370,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 140
-      - Recordings: 280
+      - Recordings: 985
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -337,7 +391,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.1 GB
-      - File count: 280
+      - File count: 985
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -11,7 +11,7 @@ MetaRDK (OpenNeuro ``ds006253``). Access recordings and metadata through EEGDash
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 23` :bdg-secondary:`Recordings: 201`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 111`
 
 .. rst-class:: sd-badges
 
@@ -157,9 +157,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 23
-      - Recordings: 201
-      - Tasks: 4
+      - Subjects: 21
+      - Recordings: 111
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -178,8 +178,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 201
+      - Size on disk: 656.2 KB
+      - File count: 111
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds003620">
 <h1>eegdash.dataset.DS003620<a class="headerlink" href="#eegdash-dataset-ds003620" title="Link to this heading">#</a></h1>
 <p>Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds003620</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (20). <em>Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003620.v1.1.1">10.18112/openneuro.ds003620.v1.1.1</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 44</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 100</span></p>
+<p><strong>Citation:</strong> Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky (2021). <em>Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003620.v1.1.1">10.18112/openneuro.ds003620.v1.1.1</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 44</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 370</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 4.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>20</p></td>
+<td><p>2021</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003620.v1.1.1">doi:10.18112/openneuro.ds003620.v1.1.1</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003620">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003620">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003620">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003620">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003620">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003620/versions/1.1.1">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1097,184 +1097,192 @@ loading errors, etc.), please let us know!</p>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Overview</strong></p>
-<p>This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
-All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.
-See below for software details.</p>
-<p><strong>Citing this dataset</strong></p>
-<p>In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.</p>
+<p>This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).</p>
+<p>All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.</p>
+<p>See below for software details.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Overview</strong></p>
-<p class="sd-card-text">This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
-All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.
-See below for software details.</p>
+<p class="sd-card-text">This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).</p>
+<p class="sd-card-text">All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.</p>
+<p class="sd-card-text">See below for software details.</p>
 <p class="sd-card-text"><strong>Citing this dataset</strong></p>
 <p class="sd-card-text">In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.
 For more information, see the <cite>dataset_description.json</cite> file.</p>
 <p class="sd-card-text"><strong>License</strong></p>
 <p class="sd-card-text">ODC Open Database License (ODbL). For more information, see the <cite>LICENCE</cite> file.</p>
 <p class="sd-card-text"><strong>Format</strong></p>
-<p class="sd-card-text">Dataset is formatted according to the EEG-BIDS extension (Pernet et al., 2019) and the BIDS extension proposal for common electrophysiological derivatives (BEP021) v0.0.1, which can be found here:
-<a class="reference external" href="https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6">https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6</a>
-Note that BEP021 is still a work in progress as of 2021-03-01.
-Generally, you can find data in the .tsv files and descriptions in the
-accompanying .json files.
-An important BIDS definition to consider is the “Inheritance Principle” (see 3.5 in the BIDS specification: <a class="reference external" href="http://bids.neuroimaging.io/bids_spec.pdf">http://bids.neuroimaging.io/bids_spec.pdf</a>), which states:
-&gt; Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.</p>
+<p class="sd-card-text">Dataset is formatted according to the EEG-BIDS extension (Pernet et al., 2019) and the BIDS extension proposal for common electrophysiological derivatives (BEP021) v0.0.1, which can be found here:</p>
+<p class="sd-card-text"><a class="reference external" href="https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6">https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6</a></p>
+<p class="sd-card-text">Note that BEP021 is still a work in progress as of 2021-03-01.</p>
+<p class="sd-card-text">Generally, you can find data in the .tsv files and descriptions in the
+accompanying .json files.</p>
+<p class="sd-card-text">An important BIDS definition to consider is the “Inheritance Principle” (see 3.5 in the BIDS specification: <a class="reference external" href="http://bids.neuroimaging.io/bids_spec.pdf">http://bids.neuroimaging.io/bids_spec.pdf</a>), which states:</p>
+<p class="sd-card-text">&gt; Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.</p>
 <p class="sd-card-text"><strong>Details about the experiment</strong></p>
 <p class="sd-card-text">Forty-four healthy adults aged 18-40 performed an oddball task involving complex tone (piano and horn) stimuli in three settings:
 (1) sitting in a quiet room in the lab (LAB);
 (2) walking around a sports field (FIELD);
-(3) navigating a route through a university campus (CAMPUS).
-Participants performed each environmental condition twice: once while attending to oddball stimuli (i.e. counting the number of presented deviant tones; COUNT), and once while disregarding or ignoring the tone stimuli (IGNORE).
-EEG signals were recorded from 32 active electrodes using a Brain Vision LiveAmp 32 amplifier. See manuscript for further details.</p>
+(3) navigating a route through a university campus (CAMPUS).</p>
+<p class="sd-card-text">Participants performed each environmental condition twice: once while attending to oddball stimuli (i.e. counting the number of presented deviant tones; COUNT), and once while disregarding or ignoring the tone stimuli (IGNORE).</p>
+<p class="sd-card-text">EEG signals were recorded from 32 active electrodes using a Brain Vision LiveAmp 32 amplifier. See manuscript for further details.</p>
 <p class="sd-card-text"><strong>MATLAB software details</strong></p>
 <p class="sd-card-text">MATLAB Version: 9.7.0.1319299 (R2019b) Update 5
 MATLAB License Number: 678256
 Operating System: Microsoft Windows 10 Enterprise Version 10.0 (Build 18363)
-Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
-* MATLAB (v9.7)
-* Simulink (v10.0)
-* Curve Fitting Toolbox (v3.5.10)
-* DSP System Toolbox (v9.9)
-* Image Processing Toolbox (v11.0)
-* MATLAB Compiler (v7.1)
-* MATLAB Compiler SDK (v6.7)
-* Parallel Computing Toolbox (v7.1)
-* Signal Processing Toolbox (v8.3)
-* Statistics and Machine Learning Toolbox (v11.6)
-* Symbolic Math Toolbox (v8.4)
-* Wavelet Toolbox (v5.3)
-<strong>The following toolboxes/helper functions were also used:</strong>
-* EEGLAB (v2019.1)
-* ERPLAB (v8.10)
-* ICLabel (v1.3)
-* clean_rawdata (v2.3)
-* bids-matlab-tools (v5.2)
-* dipfit (v3.4)
-* firfilt (v2.4)
-* export_fig (v3.12)
-* ColorBrewer (v3.1.0)</p>
+Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode</p>
+<ul class="simple">
+<li><p class="sd-card-text">MATLAB (v9.7)</p></li>
+<li><p class="sd-card-text">Simulink (v10.0)</p></li>
+<li><p class="sd-card-text">Curve Fitting Toolbox (v3.5.10)</p></li>
+<li><p class="sd-card-text">DSP System Toolbox (v9.9)</p></li>
+<li><p class="sd-card-text">Image Processing Toolbox (v11.0)</p></li>
+<li><p class="sd-card-text">MATLAB Compiler (v7.1)</p></li>
+<li><p class="sd-card-text">MATLAB Compiler SDK (v6.7)</p></li>
+<li><p class="sd-card-text">Parallel Computing Toolbox (v7.1)</p></li>
+<li><p class="sd-card-text">Signal Processing Toolbox (v8.3)</p></li>
+<li><p class="sd-card-text">Statistics and Machine Learning Toolbox (v11.6)</p></li>
+<li><p class="sd-card-text">Symbolic Math Toolbox (v8.4)</p></li>
+<li><p class="sd-card-text">Wavelet Toolbox (v5.3)</p></li>
+</ul>
+<p class="sd-card-text"><strong>The following toolboxes/helper functions were also used:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">EEGLAB (v2019.1)</p></li>
+<li><p class="sd-card-text">ERPLAB (v8.10)</p></li>
+<li><p class="sd-card-text">ICLabel (v1.3)</p></li>
+<li><p class="sd-card-text">clean_rawdata (v2.3)</p></li>
+<li><p class="sd-card-text">bids-matlab-tools (v5.2)</p></li>
+<li><p class="sd-card-text">dipfit (v3.4)</p></li>
+<li><p class="sd-card-text">firfilt (v2.4)</p></li>
+<li><p class="sd-card-text">export_fig (v3.12)</p></li>
+<li><p class="sd-card-text">ColorBrewer (v3.1.0)</p></li>
+</ul>
 <p class="sd-card-text"><strong>R software details</strong></p>
-<p class="sd-card-text"><strong>R version 3.6.2 (2019-12-12)</strong>
-<strong>Platform:</strong> x86_64-w64-mingw32/x64 (64-bit)
-<strong>locale:</strong>
-_LC_COLLATE=English_Australia.1252_, _LC_CTYPE=English_Australia.1252_, _LC_MONETARY=English_Australia.1252_, _LC_NUMERIC=C_ and _LC_TIME=English_Australia.1252_
-<strong>attached base packages:</strong>
-* stats
-* graphics
-* grDevices
-* utils
-* datasets
-* methods
-* base
-<strong>other attached packages:</strong>
-* sjPlot(v.2.8.7)
-* emmeans(v.1.5.1)
-* car(v.3.0-10)
-* carData(v.3.0-4)
-* lme4(v.1.1-23)
-* Matrix(v.1.2-18)
-* data.table(v.1.13.0)
-* forcats(v.0.5.0)
-* stringr(v.1.4.0)
-* dplyr(v.1.0.2)
-* purrr(v.0.3.4)
-* readr(v.1.4.0)
-* tidyr(v.1.1.2)
-* tibble(v.3.0.4)
-* ggplot2(v.3.3.2)
-* tidyverse(v.1.3.0)
-<strong>loaded via a namespace (and not attached):</strong>
-* nlme(v.3.1-149)
-* pbkrtest(v.0.4-8.6)
-* fs(v.1.5.0)
-* lubridate(v.1.7.9)
-* insight(v.0.12.0)
-* httr(v.1.4.2)
-* numDeriv(v.2016.8-1.1)
-* tools(v.3.6.2)
-* backports(v.1.1.10)
-* utf8(v.1.1.4)
-* R6(v.2.4.1)
-* sjlabelled(v.1.1.7)
-* DBI(v.1.1.0)
-* colorspace(v.1.4-1)
-* withr(v.2.3.0)
-* tidyselect(v.1.1.0)
-* curl(v.4.3)
-* compiler(v.3.6.2)
-* performance(v.0.5.0)
-* cli(v.2.1.0)
-* rvest(v.0.3.6)
-* xml2(v.1.3.2)
-* sandwich(v.3.0-0)
-* labeling(v.0.3)
-* bayestestR(v.0.7.2)
-* scales(v.1.1.1)
-* mvtnorm(v.1.1-1)
-* digest(v.0.6.25)
-* foreign(v.0.8-76)
-* minqa(v.1.2.4)
-* rio(v.0.5.16)
-* pkgconfig(v.2.0.3)
-* dbplyr(v.1.4.4)
-* rlang(v.0.4.8)
-* readxl(v.1.3.1)
-* rstudioapi(v.0.11)
-* farver(v.2.0.3)
-* generics(v.0.0.2)
-* zoo(v.1.8-8)
-* jsonlite(v.1.7.1)
-* zip(v.2.1.1)
-* magrittr(v.1.5)
-* parameters(v.0.8.6)
-* Rcpp(v.1.0.5)
-* munsell(v.0.5.0)
-* fansi(v.0.4.1)
-* abind(v.1.4-5)
-* lifecycle(v.0.2.0)
-* stringi(v.1.4.6)
-* multcomp(v.1.4-14)
-* MASS(v.7.3-53)
-* plyr(v.1.8.6)
-* grid(v.3.6.2)
-* blob(v.1.2.1)
-* parallel(v.3.6.2)
-* sjmisc(v.2.8.6)
-* crayon(v.1.3.4)
-* lattice(v.0.20-41)
-* ggeffects(v.0.16.0)
-* haven(v.2.3.1)
-* splines(v.3.6.2)
-* pander(v.0.6.3)
-* sjstats(v.0.18.1)
-* hms(v.0.5.3)
-* knitr(v.1.30)
-* pillar(v.1.4.6)
-* boot(v.1.3-25)
-* estimability(v.1.3)
-* effectsize(v.0.3.3)
-* codetools(v.0.2-16)
-* reprex(v.0.3.0)
-* glue(v.1.4.2)
-* modelr(v.0.1.8)
-* vctrs(v.0.3.4)
-* nloptr(v.1.2.2.2)
-* cellranger(v.1.1.0)
-* gtable(v.0.3.0)
-* assertthat(v.0.2.1)
-* xfun(v.0.18)
-* openxlsx(v.4.2.2)
-* xtable(v.1.8-4)
-* broom(v.0.7.1)
-* coda(v.0.19-4)
-* survival(v.3.2-7)
-* lmerTest(v.3.1-3)
-* statmod(v.1.4.34)
-* TH.data(v.1.0-10)
-* ellipsis(v.0.3.1)</p>
+<p class="sd-card-text"><strong>R version 3.6.2 (2019-12-12)</strong></p>
+<p class="sd-card-text"><strong>Platform:</strong> x86_64-w64-mingw32/x64 (64-bit)</p>
+<p class="sd-card-text"><strong>locale:</strong>
+_LC_COLLATE=English_Australia.1252_, _LC_CTYPE=English_Australia.1252_, _LC_MONETARY=English_Australia.1252_, _LC_NUMERIC=C_ and _LC_TIME=English_Australia.1252_</p>
+<p class="sd-card-text"><strong>attached base packages:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">stats</p></li>
+<li><p class="sd-card-text">graphics</p></li>
+<li><p class="sd-card-text">grDevices</p></li>
+<li><p class="sd-card-text">utils</p></li>
+<li><p class="sd-card-text">datasets</p></li>
+<li><p class="sd-card-text">methods</p></li>
+<li><p class="sd-card-text">base</p></li>
+</ul>
+<p class="sd-card-text"><strong>other attached packages:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">sjPlot(v.2.8.7)</p></li>
+<li><p class="sd-card-text">emmeans(v.1.5.1)</p></li>
+<li><p class="sd-card-text">car(v.3.0-10)</p></li>
+<li><p class="sd-card-text">carData(v.3.0-4)</p></li>
+<li><p class="sd-card-text">lme4(v.1.1-23)</p></li>
+<li><p class="sd-card-text">Matrix(v.1.2-18)</p></li>
+<li><p class="sd-card-text">data.table(v.1.13.0)</p></li>
+<li><p class="sd-card-text">forcats(v.0.5.0)</p></li>
+<li><p class="sd-card-text">stringr(v.1.4.0)</p></li>
+<li><p class="sd-card-text">dplyr(v.1.0.2)</p></li>
+<li><p class="sd-card-text">purrr(v.0.3.4)</p></li>
+<li><p class="sd-card-text">readr(v.1.4.0)</p></li>
+<li><p class="sd-card-text">tidyr(v.1.1.2)</p></li>
+<li><p class="sd-card-text">tibble(v.3.0.4)</p></li>
+<li><p class="sd-card-text">ggplot2(v.3.3.2)</p></li>
+<li><p class="sd-card-text">tidyverse(v.1.3.0)</p></li>
+</ul>
+<p class="sd-card-text"><strong>loaded via a namespace (and not attached):</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">nlme(v.3.1-149)</p></li>
+<li><p class="sd-card-text">pbkrtest(v.0.4-8.6)</p></li>
+<li><p class="sd-card-text">fs(v.1.5.0)</p></li>
+<li><p class="sd-card-text">lubridate(v.1.7.9)</p></li>
+<li><p class="sd-card-text">insight(v.0.12.0)</p></li>
+<li><p class="sd-card-text">httr(v.1.4.2)</p></li>
+<li><p class="sd-card-text">numDeriv(v.2016.8-1.1)</p></li>
+<li><p class="sd-card-text">tools(v.3.6.2)</p></li>
+<li><p class="sd-card-text">backports(v.1.1.10)</p></li>
+<li><p class="sd-card-text">utf8(v.1.1.4)</p></li>
+<li><p class="sd-card-text">R6(v.2.4.1)</p></li>
+<li><p class="sd-card-text">sjlabelled(v.1.1.7)</p></li>
+<li><p class="sd-card-text">DBI(v.1.1.0)</p></li>
+<li><p class="sd-card-text">colorspace(v.1.4-1)</p></li>
+<li><p class="sd-card-text">withr(v.2.3.0)</p></li>
+<li><p class="sd-card-text">tidyselect(v.1.1.0)</p></li>
+<li><p class="sd-card-text">curl(v.4.3)</p></li>
+<li><p class="sd-card-text">compiler(v.3.6.2)</p></li>
+<li><p class="sd-card-text">performance(v.0.5.0)</p></li>
+<li><p class="sd-card-text">cli(v.2.1.0)</p></li>
+<li><p class="sd-card-text">rvest(v.0.3.6)</p></li>
+<li><p class="sd-card-text">xml2(v.1.3.2)</p></li>
+<li><p class="sd-card-text">sandwich(v.3.0-0)</p></li>
+<li><p class="sd-card-text">labeling(v.0.3)</p></li>
+<li><p class="sd-card-text">bayestestR(v.0.7.2)</p></li>
+<li><p class="sd-card-text">scales(v.1.1.1)</p></li>
+<li><p class="sd-card-text">mvtnorm(v.1.1-1)</p></li>
+<li><p class="sd-card-text">digest(v.0.6.25)</p></li>
+<li><p class="sd-card-text">foreign(v.0.8-76)</p></li>
+<li><p class="sd-card-text">minqa(v.1.2.4)</p></li>
+<li><p class="sd-card-text">rio(v.0.5.16)</p></li>
+<li><p class="sd-card-text">pkgconfig(v.2.0.3)</p></li>
+<li><p class="sd-card-text">dbplyr(v.1.4.4)</p></li>
+<li><p class="sd-card-text">rlang(v.0.4.8)</p></li>
+<li><p class="sd-card-text">readxl(v.1.3.1)</p></li>
+<li><p class="sd-card-text">rstudioapi(v.0.11)</p></li>
+<li><p class="sd-card-text">farver(v.2.0.3)</p></li>
+<li><p class="sd-card-text">generics(v.0.0.2)</p></li>
+<li><p class="sd-card-text">zoo(v.1.8-8)</p></li>
+<li><p class="sd-card-text">jsonlite(v.1.7.1)</p></li>
+<li><p class="sd-card-text">zip(v.2.1.1)</p></li>
+<li><p class="sd-card-text">magrittr(v.1.5)</p></li>
+<li><p class="sd-card-text">parameters(v.0.8.6)</p></li>
+<li><p class="sd-card-text">Rcpp(v.1.0.5)</p></li>
+<li><p class="sd-card-text">munsell(v.0.5.0)</p></li>
+<li><p class="sd-card-text">fansi(v.0.4.1)</p></li>
+<li><p class="sd-card-text">abind(v.1.4-5)</p></li>
+<li><p class="sd-card-text">lifecycle(v.0.2.0)</p></li>
+<li><p class="sd-card-text">stringi(v.1.4.6)</p></li>
+<li><p class="sd-card-text">multcomp(v.1.4-14)</p></li>
+<li><p class="sd-card-text">MASS(v.7.3-53)</p></li>
+<li><p class="sd-card-text">plyr(v.1.8.6)</p></li>
+<li><p class="sd-card-text">grid(v.3.6.2)</p></li>
+<li><p class="sd-card-text">blob(v.1.2.1)</p></li>
+<li><p class="sd-card-text">parallel(v.3.6.2)</p></li>
+<li><p class="sd-card-text">sjmisc(v.2.8.6)</p></li>
+<li><p class="sd-card-text">crayon(v.1.3.4)</p></li>
+<li><p class="sd-card-text">lattice(v.0.20-41)</p></li>
+<li><p class="sd-card-text">ggeffects(v.0.16.0)</p></li>
+<li><p class="sd-card-text">haven(v.2.3.1)</p></li>
+<li><p class="sd-card-text">splines(v.3.6.2)</p></li>
+<li><p class="sd-card-text">pander(v.0.6.3)</p></li>
+<li><p class="sd-card-text">sjstats(v.0.18.1)</p></li>
+<li><p class="sd-card-text">hms(v.0.5.3)</p></li>
+<li><p class="sd-card-text">knitr(v.1.30)</p></li>
+<li><p class="sd-card-text">pillar(v.1.4.6)</p></li>
+<li><p class="sd-card-text">boot(v.1.3-25)</p></li>
+<li><p class="sd-card-text">estimability(v.1.3)</p></li>
+<li><p class="sd-card-text">effectsize(v.0.3.3)</p></li>
+<li><p class="sd-card-text">codetools(v.0.2-16)</p></li>
+<li><p class="sd-card-text">reprex(v.0.3.0)</p></li>
+<li><p class="sd-card-text">glue(v.1.4.2)</p></li>
+<li><p class="sd-card-text">modelr(v.0.1.8)</p></li>
+<li><p class="sd-card-text">vctrs(v.0.3.4)</p></li>
+<li><p class="sd-card-text">nloptr(v.1.2.2.2)</p></li>
+<li><p class="sd-card-text">cellranger(v.1.1.0)</p></li>
+<li><p class="sd-card-text">gtable(v.0.3.0)</p></li>
+<li><p class="sd-card-text">assertthat(v.0.2.1)</p></li>
+<li><p class="sd-card-text">xfun(v.0.18)</p></li>
+<li><p class="sd-card-text">openxlsx(v.4.2.2)</p></li>
+<li><p class="sd-card-text">xtable(v.1.8-4)</p></li>
+<li><p class="sd-card-text">broom(v.0.7.1)</p></li>
+<li><p class="sd-card-text">coda(v.0.19-4)</p></li>
+<li><p class="sd-card-text">survival(v.3.2-7)</p></li>
+<li><p class="sd-card-text">lmerTest(v.3.1-3)</p></li>
+<li><p class="sd-card-text">statmod(v.1.4.34)</p></li>
+<li><p class="sd-card-text">TH.data(v.1.0-10)</p></li>
+<li><p class="sd-card-text">ellipsis(v.0.3.1)</p></li>
+</ul>
 </div>
 </details></section>
 <section id="highlights">
@@ -1288,7 +1296,7 @@ _LC_COLLATE=English_Australia.1252_, _LC_CTYPE=English_Australia.1252_, _LC_MONE
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 44</p></li>
-<li><p class="sd-card-text">Recordings: 100</p></li>
+<li><p class="sd-card-text">Recordings: 370</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1326,8 +1334,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 89.4 GB</p></li>
-<li><p class="sd-card-text">File count: 100</p></li>
+<li><p class="sd-card-text">Size on disk: 17.0 GB</p></li>
+<li><p class="sd-card-text">File count: 370</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

@@ -7,11 +7,11 @@ eegdash.dataset.DS004295
 
 Reward gain and punishment avoidance reversal learning (OpenNeuro ``ds004295``). Access recordings and metadata through EEGDash.
 
-**Citation:** Christopher Stolz, Alan Pickering, Erik M. Mueller (—). *Reward gain and punishment avoidance reversal learning*. `10.18112/openneuro.ds004295.v1.0.0 <https://doi.org/10.18112/openneuro.ds004295.v1.0.0>`__
+**Citation:** Christopher Stolz, Alan Pickering, Erik M. Mueller (2022). *Reward gain and punishment avoidance reversal learning*. `10.18112/openneuro.ds004295.v1.0.0 <https://doi.org/10.18112/openneuro.ds004295.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 26` :bdg-secondary:`Recordings: 26`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 26` :bdg-secondary:`Recordings: 158`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Reward gain and punishment avoidance reversal learning
    * - Year
-     - —
+     - 2022
    * - Authors
      - Christopher Stolz, Alan Pickering, Erik M. Mueller
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004295.v1.0.0 <https://doi.org/10.18112/openneuro.ds004295.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004295>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004295>`__ | `Source URL <https://openneuro.org/datasets/ds004295>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004295>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004295>`__ | `Source URL <https://openneuro.org/datasets/ds004295/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 26
-      - Recordings: 26
+      - Recordings: 158
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 31.5 GB
-      - File count: 26
+      - File count: 158
       - Format: BIDS
 
    .. grid-item-card:: License & citation

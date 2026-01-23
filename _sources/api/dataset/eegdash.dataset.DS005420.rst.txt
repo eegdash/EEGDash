@@ -7,11 +7,11 @@ eegdash.dataset.DS005420
 
 Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old (OpenNeuro ``ds005420``). Access recordings and metadata through EEGDash.
 
-**Citation:** Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas (2019). *Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old*. `10.18112/openneuro.ds005420.v1.0.0 <https://doi.org/10.18112/openneuro.ds005420.v1.0.0>`__
+**Citation:** Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas (2024). *Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old*. `10.18112/openneuro.ds005420.v1.0.0 <https://doi.org/10.18112/openneuro.ds005420.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 72`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 37` :bdg-secondary:`Recordings: 258`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005420.v1.0.0 <https://doi.org/10.18112/openneuro.ds005420.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005420>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005420>`__ | `Source URL <https://openneuro.org/datasets/ds005420>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005420>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005420>`__ | `Source URL <https://openneuro.org/datasets/ds005420/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ Description
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
@@ -83,7 +84,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 37
-      - Recordings: 72
+      - Recordings: 258
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,8 +104,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 372.2 MB
-      - File count: 72
+      - Size on disk: 372.1 MB
+      - File count: 258
       - Format: BIDS
 
    .. grid-item-card:: License & citation

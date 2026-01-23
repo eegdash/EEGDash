@@ -7,11 +7,11 @@ eegdash.dataset.DS004078
 
 A synchronized multimodal neuroimaging dataset to study brain language processing (OpenNeuro ``ds004078``). Access recordings and metadata through EEGDash.
 
-**Citation:** Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (—). *A synchronized multimodal neuroimaging dataset to study brain language processing*. `10.18112/openneuro.ds004078.v1.0.4 <https://doi.org/10.18112/openneuro.ds004078.v1.0.4>`__
+**Citation:** Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (2022). *A synchronized multimodal neuroimaging dataset to study brain language processing*. `10.18112/openneuro.ds004078.v1.2.1 <https://doi.org/10.18112/openneuro.ds004078.v1.2.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 720`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 5406`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - A synchronized multimodal neuroimaging dataset to study brain language processing
    * - Year
-     - —
+     - 2022
    * - Authors
      - Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004078.v1.0.4 <https://doi.org/10.18112/openneuro.ds004078.v1.0.4>`__
+     - `doi:10.18112/openneuro.ds004078.v1.2.1 <https://doi.org/10.18112/openneuro.ds004078.v1.2.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004078>`__ | `Source URL <https://openneuro.org/datasets/ds004078>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004078>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004078>`__ | `Source URL <https://openneuro.org/datasets/ds004078/versions/1.2.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds004078,
         title = {A synchronized multimodal neuroimaging dataset to study brain language processing},
         author = {Shaonan Wang and Xiaohan Zhang and Jiajun Zhang and Chengqing Zong},
-        doi = {10.18112/openneuro.ds004078.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds004078.v1.0.4},
+        doi = {10.18112/openneuro.ds004078.v1.2.1},
+        url = {https://doi.org/10.18112/openneuro.ds004078.v1.2.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -70,13 +70,13 @@ Description
 
 **Overview**
 
+
 This synchronized multimodal neuroimaging dataset for studying brain language processing (SMN4Lang) contains:
+
 1. fMRI and MEG data collected on the same 12 participant while they were listening to 6 hours of naturalistic stories;
+
 2. high-resolution structural (T1, T2), diffusion MRI and resting-state fMRI data for each participant;
 3. rich linguistic annotations for the stimuli, including word frequencies, part-of-speech tags, syntactic tree structures, time-aligned characters and words, various types of word and character embeddings.
-More details about the dataset are described as follows.
-
-**Participants**
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,39 +84,58 @@ More details about the dataset are described as follows.
    
    **Overview**
    
+   
    This synchronized multimodal neuroimaging dataset for studying brain language processing (SMN4Lang) contains:
+   
    1. fMRI and MEG data collected on the same 12 participant while they were listening to 6 hours of naturalistic stories;
+   
    2. high-resolution structural (T1, T2), diffusion MRI and resting-state fMRI data for each participant;
    3. rich linguistic annotations for the stimuli, including word frequencies, part-of-speech tags, syntactic tree structures, time-aligned characters and words, various types of word and character embeddings.
+   
    More details about the dataset are described as follows.
+   
    
    **Participants**
    
-   All 12 participants were recruited from universities in Beijing, of which 4 were female, and 8 were male, with an age range 23-30 year. They completed both fMRI and MEG visits (first completed fMRI then MEG experiments which had a gap of 1 month at least),  All participants were right-handed adults with Mandarin Chinese as native language who reported having normal hearing and no history of neurological disorders. They were paid and gave written informed consent. The study was conducted under the approval of the Institutional Review Board of Peking University.
+   
+   All 12 participants were recruited from universities in Beijing, of which 4 were female, and 8 were male, with an age range 23-30 year. They completed both fMRI and MEG visits (first completed fMRI then MEG experiments which had a gap of 1 month at least),  All participants were right-handed adults with Mandarin Chinese as native language who reported having normal hearing and no history of neurological disorders. They were paid and gave written informed consent. The study was conducted under the approval of the Institutional Review Board of Peking University. 
+   
    
    **Experimental Procedures**
    
-   Before each scanning, participants first completed a simple information survey form and an informed consent. During both fMRI and MEG scanning, participants were instructed to listen and pay attention to the story stimulus, remain still, answer questions on the screen after each audio was finished. Stimulus presentation was implemented using Psychtoolbox-3. Specifically, at the beginning of each run, there was instruction of "Waiting for the scanning" on the screen followed with 8 seconds blank. Then, the instruction became "This audio is about to start, please listen carefully" which lasted for 2.65 seconds before playing the audio; during audio play, a centrally located fixation cross was presented; finally, two questions about the story were presented each with four answers to choose from during which time was controlled by participants. Auditory story stimuli were delivered via S14 insert earphones for fMRI studies (with headphones or foam padding were placed over the earphones to reduce scanner noise) and Elekta matching insert earphones for MEG studies.
+   
+   Before each scanning, participants first completed a simple information survey form and an informed consent. During both fMRI and MEG scanning, participants were instructed to listen and pay attention to the story stimulus, remain still, answer questions on the screen after each audio was finished. Stimulus presentation was implemented using Psychtoolbox-3. Specifically, at the beginning of each run, there was instruction of "Waiting for the scanning" on the screen followed with 8 seconds blank. Then, the instruction became "This audio is about to start, please listen carefully" which lasted for 2.65 seconds before playing the audio; during audio play, a centrally located fixation cross was presented; finally, two questions about the story were presented each with four answers to choose from during which time was controlled by participants. Auditory story stimuli were delivered via S14 insert earphones for fMRI studies (with headphones or foam padding were placed over the earphones to reduce scanner noise) and Elekta matching insert earphones for MEG studies. 
+   
    The fMRI recording was split into 7 visits with each lasting 1.5 hours in which the T1, T2, resting MRI were collected on the first visit, fMRI with listening tasks was collected from 1 to 6 visits, and the diffusion MRI were collected on the last visit. During MRI scanning including T1, T2, diffusion and resting, participants were instructed to lie relaxed and still in the machine. The MEG recording was split into 6 visits with each lasting 1.5 hours.
+   
    
    **Stimuli**
    
+   
    Stimuli are 60 story audios with 4 to 7 minutes long, comprising various topics such as education and culture. All audios were downloaded from Renmin Daily Review website read by the same male broadcaster. The corresponding texts were also downloaded from the Renmin Daily Review website in which errors were manually corrected to make sure audio and texts are aligned.
+   
    
    **Annotations**
    
+   
    Rich annotations of audios and texts are provided in the derivatives/annotations folder, including:
+   
    1. Speech to text alignment: The onset and offset time of each character and words in the audio are provided in the "stimuli/time_align" folder. Note that the onset and offset time were added by 10.65 seconds to align with the time of fMRI images because the fMRI scan was started 10.65 seconds before playing the audio.
    2. Frequency: Character and word frequencies in the "stimuli/frequency" folder were calculated from the Xinhua news corpus and then log-transformed.
    3. Textual embeddings: Text embeddings computed by different pre-trained language models (including Word2Vec, BERT, and GPT2) are provided in the "stimuli/embeddings" folder. Both the character-level and word-level embeddings computed by Word2Vec and BERT model and the word-level embeddings computed by GPT2 model are provided.
    4. Syntactic annotations: The POS tag of each word, the constituent tree structure, and the dependency tree structure are provided in the "stimuli/syntactic_annotations" folder. The POS tags were annotated by experts following criterion of Peking Chinese Treebank. The constituent tree structure was manually annotated by linguistic students following PKU Chinese Treebank criterion with the TreeEditor tools and all results were double checked by different experts. The dependency tree structure was transformed from the constituent tree using Stanford CoreNLP tools.
    
+   
    **Preprocessing**
    
+   
    The MRI data, including the structural, functional, resting and diffusion images, were preprocessed using the “minimal preprocessing pipelines (HCP)” .
+   
    The MEG data was first preprocessed using the temporal Signal Space Separation (tSSS) method and the bad channels were excluded. And then the independent component analysis (ICA) method was applied to remove the ocular artefacts using the MNE software.
    
+   
    **Usage Notes**
+   
    
    For the MEG data of sub-08_run-16 and sub-09_run-7, the stimuli-starting triggers were not recorded due to technical problems. The first trigger in these two runs were the stimuli-ending triggers and the starting time can be computed by subtracting the stimuli duration from the time point of the first trigger.
 
@@ -131,8 +150,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 720
-      - Tasks: 1
+      - Recordings: 5406
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -151,15 +170,15 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.4 TB
-      - File count: 720
+      - Size on disk: 631.1 GB
+      - File count: 5406
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004078.v1.0.4
+      - DOI: doi:10.18112/openneuro.ds004078.v1.2.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

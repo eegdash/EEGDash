@@ -7,11 +7,11 @@ eegdash.dataset.DS006040
 
 Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI (OpenNeuro ``ds006040``). Access recordings and metadata through EEGDash.
 
-**Citation:** Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon (—). *Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI*. `10.18112/openneuro.ds006040.v1.0.1 <https://doi.org/10.18112/openneuro.ds006040.v1.0.1>`__
+**Citation:** Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon (2025). *Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI*. `10.18112/openneuro.ds006040.v1.0.1 <https://doi.org/10.18112/openneuro.ds006040.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 28` :bdg-secondary:`Recordings: 392`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 16` :bdg-secondary:`Subjects: 28` :bdg-secondary:`Recordings: 2145`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI
    * - Year
-     - —
+     - 2025
    * - Authors
      - Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min, Hyoungkyu Kim, Minseo Cho, Haesung Lee, Youngjai Park, Joon-Young Moon
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006040.v1.0.1 <https://doi.org/10.18112/openneuro.ds006040.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006040>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006040>`__ | `Source URL <https://openneuro.org/datasets/ds006040>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006040>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006040>`__ | `Source URL <https://openneuro.org/datasets/ds006040/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 This dataset includes simultaneous recordings of electroencephalography (EEG), functional magnetic resonance imaging (fMRI), and diffusion-weighted imaging (DWI) from 28 participants aged 19 to 42 years. The fMRI and DWI data were acquired using a 3T MRI scanner (Siemens Magnetom Prisma), and the EEG was recorded using 64 channels (Brain Product BrainCap MR with Multirodes).
+
 The following tasks were performed: resting state (eyes open and closed), checkerboard (15Hz), gradCPT, and imagery task. Raw files can be found in the subfolders, while preprocessed files are available in the derivatives folder. For more detailed information about the file structure, please refer to the readme files.
 
 Highlights
@@ -80,8 +81,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 28
-      - Recordings: 392
-      - Tasks: 10
+      - Recordings: 2145
+      - Tasks: 16
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 680.3 GB
-      - File count: 392
+      - Size on disk: 172.5 GB
+      - File count: 2145
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004774
 
 Automatic Evoked Response Detection (ER-Detect) dataset (OpenNeuro ``ds004774``). Access recordings and metadata through EEGDash.
 
-**Citation:** M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes (—). *Automatic Evoked Response Detection (ER-Detect) dataset*. `10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
+**Citation:** M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes (2023). *Automatic Evoked Response Detection (ER-Detect) dataset*. `10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 9` :bdg-secondary:`Recordings: 9`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 14` :bdg-secondary:`Recordings: 1074`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Automatic Evoked Response Detection (ER-Detect) dataset
    * - Year
-     - —
+     - 2023
    * - Authors
      - M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller, D. van Blooijs, G.J.M. Huiskamp, F.S.S. Leijten, G.A. Worrell, D. Hermes
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004774.v1.0.0 <https://doi.org/10.18112/openneuro.ds004774.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004774>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004774>`__ | `Source URL <https://openneuro.org/datasets/ds004774>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004774>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004774>`__ | `Source URL <https://openneuro.org/datasets/ds004774/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -78,9 +78,9 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 9
-      - Recordings: 9
-      - Tasks: 1
+      - Subjects: 14
+      - Recordings: 1074
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 30.2 GB
-      - File count: 9
+      - Size on disk: 24.8 GB
+      - File count: 1074
       - Format: BIDS
 
    .. grid-item-card:: License & citation

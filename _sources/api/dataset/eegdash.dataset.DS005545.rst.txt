@@ -7,11 +7,11 @@ eegdash.dataset.DS005545
 
 Auditory naming (OpenNeuro ``ds005545``). Access recordings and metadata through EEGDash.
 
-**Citation:** Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano (2025). *Auditory naming*. `10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
+**Citation:** Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano (2024). *Auditory naming*. `10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 106` :bdg-secondary:`Recordings: 336`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 106` :bdg-secondary:`Recordings: 1349`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Auditory naming
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__ | `Source URL <https://openneuro.org/datasets/ds005545>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__ | `Source URL <https://openneuro.org/datasets/ds005545/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,13 @@ Description
 -----------
 
 This dataset, used in the analysis reported by Kanno et al., (2025), contains intracranial EEG recordings from 106 individuals who performed an auditory‑naming task. The corresponding MATLAB analysis code is available at https://github.com/a8k8nn0/TractographyAtlas, and electrode coordinates are provided in MNI‑305 space.
-Each EDF file is tagged for the auditory naming task with the following event codes:
-401 – stimulus onset
-402 – stimulus offset
-501 – response onset
-Reference:
+
+Each EDF file is tagged for the auditory naming task with the following event codes:  
+401 – stimulus onset  
+402 – stimulus offset  
+501 – response onset  
+
+Reference: 
 Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Robert Rothermel, Aimee F. Luat, Eishi Asano. Dynamic Causal Tractography Analysis of Auditory Descriptive Naming: An Intracranial Study of 106 Patients. bioRxiv 2025.03.07.641428; doi: https://doi.org/10.1101/2025.03.07.641428
 
 Highlights
@@ -85,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 106
-      - Recordings: 336
+      - Recordings: 1349
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 40.0 GB
-      - File count: 336
+      - File count: 1349
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004408
 
 EEG responses to continuous naturalistic speech (OpenNeuro ``ds004408``). Access recordings and metadata through EEGDash.
 
-**Citation:** Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2015). *EEG responses to continuous naturalistic speech*. `10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
+**Citation:** Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2023). *EEG responses to continuous naturalistic speech*. `10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 380`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 1946`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG responses to continuous naturalistic speech
    * - Year
-     - 2015
+     - 2023
    * - Authors
      - Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__ | `Source URL <https://openneuro.org/datasets/ds004408>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__ | `Source URL <https://openneuro.org/datasets/ds004408/versions/1.0.8>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,10 +67,14 @@ Dataset Information
 Description
 -----------
 
-The data in one study [^1] and then added to by another [^2] and contains EEG responses of healthy, neurotypical adults who listened to naturalistic speech. The subjects listened to segments from an audio book version of "The Old Man and the Sea" and their brain activity was recorded using a 128-channel ActiveTwo EEG system (BioSemi).
+The data in one study [^1] and then added to by another [^2] and contains EEG responses of healthy, neurotypical adults who listened to naturalistic speech. The subjects listened to segments from an audio book version of "The Old Man and the Sea" and their brain activity was recorded using a 128-channel ActiveTwo EEG system (BioSemi). 
+
 The stimuli folder contains .wav files of the presented audiobook segments as well as a .TextGrid file for each segment, containng the timing of  words and phonemes in that segment. The text grids were generated using the forced-alignment software Prosodylab-Aligner [^3] and inspected by eye. Each subject's folder contains one EEG-recording per audio segment and their starts are aligned (the EEG recordings are longer than the audio to a varying extent).  The recordings are unfiltered, unreferenced and sampled at 512 Hz.
+
 [^1]: Di Liberto, G. M., O’sullivan, J. A., & Lalor, E. C. (2015). Low-frequency cortical entrainment to speech reflects phoneme-level processing. Current Biology, 25(19), 2457-2465.
+
 [^2]: Broderick, M. P., Anderson, A. J., Di Liberto, G. M., Crosse, M. J., & Lalor, E. C. (2018). Electrophysiological correlates of semantic dissimilarity reflect the comprehension of natural, narrative speech. Current Biology, 28(5), 803-809.
+
 [^3]: Gorman, K., Howell, J., & Wagner, M. (2011). Prosodylab-aligner: A tool for forced alignment of laboratory speech. Canadian Acoustics, 39(3), 192-193.
 
 Highlights
@@ -83,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 380
+      - Recordings: 1946
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 18.7 GB
-      - File count: 380
+      - File count: 1946
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005095
 
 STERNBERG DIFFICULT (OpenNeuro ``ds005095``). Access recordings and metadata through EEGDash.
 
-**Citation:** Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov (19). *STERNBERG DIFFICULT*. `10.18112/openneuro.ds005095.v1.0.1 <https://doi.org/10.18112/openneuro.ds005095.v1.0.1>`__
+**Citation:** Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov (2024). *STERNBERG DIFFICULT*. `10.18112/openneuro.ds005095.v1.0.1 <https://doi.org/10.18112/openneuro.ds005095.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 48`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 485`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - STERNBERG DIFFICULT
    * - Year
-     - 19
+     - 2024
    * - Authors
      - Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov, Boris Kotchoubey, Sergey Malykh, Yuri Pavlov
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005095.v1.0.1 <https://doi.org/10.18112/openneuro.ds005095.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005095>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005095>`__ | `Source URL <https://openneuro.org/datasets/ds005095>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005095>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005095>`__ | `Source URL <https://openneuro.org/datasets/ds005095/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,11 +70,14 @@ Description
 
 **Overview**
 
+
 This is the "Sternberg Difficult" dataset contain RAW EEG data. Raven Progressive Standard Matrices scores for each participant are provided in participants.tsv
+
 
 **Task**
 
-Participants completed a version of the Sternberg task (Sternberg, 1966; Fig 1) during EEG recording. Stimuli were all consonants of the Russian alphabet letters, except for “щ”[sch] and “й” [ij], presented in sets of 3, 6, 9, 12, and 15 letters. No letter repeated within a set. Each trial was preceded by a 500-1000 ms fixation cross. Encoding (letter set), retention (blank screen), and retrieval (probe letter) phases were allocated 1500ms, 2000ms and 1500ms, respectively. After 1500 ms period, the probe letter disappeared from the screen. Participants were asked to recall whether the probe letter was in the letter set presented during encoding phase. They had unlimited time to respond by pressing a button: the “left arrow” for “no” and the “right arrow” for “yes”. The trial concluded immediately after a response was made, regardless of the reaction time. Participants completed 200 trials in total with 40 trials in difficulty blocks corresponding to each particular set size (i.e., 3, 6, 9, 12, and 15 letters) with an opportunity to take a break after each block. The order of blocks was random, and the number of positive and negative probes was equal in each block. All stimuli were presented and responses were recorded using Psychopy2.
+Participants completed a version of the Sternberg task (Sternberg, 1966; Fig 1) during EEG recording. Stimuli were all consonants of the Russian alphabet letters, except for “щ”[sch] and “й” [ij], presented in sets of 3, 6, 9, 12, and 15 letters. No letter repeated within a set. Each trial was preceded by a 500-1000 ms fixation cross. Encoding (letter set), retention (blank screen), and retrieval (probe letter) phases were allocated 1500ms, 2000ms and 1500ms, respectively. After 1500 ms period, the probe letter disappeared from the screen. Participants were asked to recall whether the probe letter was in the letter set presented during encoding phase. They had unlimited time to respond by pressing a button: the “left arrow” for “no” and the “right arrow” for “yes”. The trial concluded immediately after a response was made, regardless of the reaction time. Participants completed 200 trials in total with 40 trials in difficulty blocks corresponding to each particular set size (i.e., 3, 6, 9, 12, and 15 letters) with an opportunity to take a break after each block. The order of blocks was random, and the number of positive and negative probes was equal in each block. All stimuli were presented and responses were recorded using Psychopy2. 
+
 
 **Event triggers**
 
@@ -90,7 +93,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 48
-      - Recordings: 48
+      - Recordings: 485
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -111,7 +114,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 14.3 GB
-      - File count: 48
+      - File count: 485
       - Format: BIDS
 
    .. grid-item-card:: License & citation

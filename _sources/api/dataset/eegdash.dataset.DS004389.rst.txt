@@ -7,11 +7,11 @@ eegdash.dataset.DS004389
 
 Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation (OpenNeuro ``ds004389``). Access recordings and metadata through EEGDash.
 
-**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (—). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
+**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (2023). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 26` :bdg-secondary:`Recordings: 260`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 26` :bdg-secondary:`Recordings: 1642`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation
    * - Year
-     - —
+     - 2023
    * - Authors
      - Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004389>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004389>`__ | `Source URL <https://openneuro.org/datasets/ds004389>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004389>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004389>`__ | `Source URL <https://openneuro.org/datasets/ds004389/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -72,13 +72,16 @@ Description
 
 This is a data set consisting of simultaneous electroencephalography (EEG), electrospinography (ESG), electroneurography (ENG), and electromyography (EMG) recordings from 26 participants. There were nine different recording conditions: i) resting state with eyes open, ii) mixed median nerve stimulation (arm nerve), iii) mixed tibial nerve stimulation (leg nerve), iv) sensory nerve stimulation of the index finger, v) sensory nerve stimulation of the middle finger, vi) simultaneous senory nerve stimulation of the index and middle finger, vii) sensory nerve stimulation to the first toe, viii) sensory nerve stimulation to the second toe, ix) simultaneous senory nerve stimulation to the first and second toe. For each participant, there is i) the simultaneous EEG-ESG-ENG-EMG-recording which also includes electrocardiographic and respiratory signals, ii) ESG electrode positions. For a detailed description please see the following article: XXX. This study was pre-registered on OSF: https://osf.io/mjdha.
 
+
 **Citing this dataset**
 
 Should you make use of this data set in any publication, please cite the following article: XXXX
 
+
 **License**
 
 This data set is made available under the Creative Commons CC0 license. For more information, see https://creativecommons.org/share-your-work/public-domain/cc0/
+
 
 **Data set**
 
@@ -97,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 26
-      - Recordings: 260
+      - Recordings: 1642
       - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,7 +121,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 376.5 GB
-      - File count: 260
+      - File count: 1642
       - Format: BIDS
 
    .. grid-item-card:: License & citation

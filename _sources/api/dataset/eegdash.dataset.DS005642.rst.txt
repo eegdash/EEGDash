@@ -7,11 +7,11 @@ eegdash.dataset.DS005642
 
 illusory-face-eeg (OpenNeuro ``ds005642``). Access recordings and metadata through EEGDash.
 
-**Citation:** Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2025). *illusory-face-eeg*. `10.18112/openneuro.ds005642.v1.0.1 <https://doi.org/10.18112/openneuro.ds005642.v1.0.1>`__
+**Citation:** Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2024). *illusory-face-eeg*. `10.18112/openneuro.ds005642.v1.0.1 <https://doi.org/10.18112/openneuro.ds005642.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 21`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 47`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - illusory-face-eeg
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005642.v1.0.1 <https://doi.org/10.18112/openneuro.ds005642.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005642>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005642>`__ | `Source URL <https://openneuro.org/datasets/ds005642>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005642>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005642>`__ | `Source URL <https://openneuro.org/datasets/ds005642/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,13 +68,17 @@ Description
 -----------
 
 EEG data for:
+
 Robinson AK, Stuart G, Shatek SM, Herbert A, Taubert J. (2025). Neural correlates reveal separate stages of spontaneous face perception.
+
 Preprint: https://doi.org/10.31234/osf.io/vrtbx_v1
+
 300 images of human face, illusory face and matched non-face object stimuli. Three behavioural tasks and neural measurements (EEG) using these stimuli.
 - Spontaneous dissimilarity: triplet odd-one-out task
 - Face-like ratings: participants were asked to rate how easily they could see a face in the image, on a scale of 0-10.
 - Face/object discrimination: speeded categorisation task
 - EEG: Stimuli were presented centrally at 3.75 Hz, while participants performed an orthogonal target detection task
+
 Stimuli, behavioural data and code available at GitHub: https://doi.org/10.5281/zenodo.15833508
 
 Highlights
@@ -87,7 +91,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 21
+      - Recordings: 47
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -107,8 +111,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 32.0 GB
-      - File count: 21
+      - Size on disk: 13.8 GB
+      - File count: 47
       - Format: BIDS
 
    .. grid-item-card:: License & citation

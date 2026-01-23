@@ -7,11 +7,11 @@ eegdash.dataset.DS003352
 
 1 - Light Pink Spiral (OpenNeuro ``ds003352``). Access recordings and metadata through EEGDash.
 
-**Citation:** Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (—). *1 - Light Pink Spiral*. `10.18112/openneuro.ds003352.v1.0.0 <https://doi.org/10.18112/openneuro.ds003352.v1.0.0>`__
+**Citation:** Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (2020). *1 - Light Pink Spiral*. `10.18112/openneuro.ds003352.v1.0.0 <https://doi.org/10.18112/openneuro.ds003352.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 138`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 18` :bdg-secondary:`Recordings: 629`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 1 - Light Pink Spiral
    * - Year
-     - —
+     - 2020
    * - Authors
      - Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003352.v1.0.0 <https://doi.org/10.18112/openneuro.ds003352.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003352>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003352>`__ | `Source URL <https://openneuro.org/datasets/ds003352>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003352>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003352>`__ | `Source URL <https://openneuro.org/datasets/ds003352/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Stimuli include eight different square wave spiral gratings subtending 10 degrees of visual angle as well as the color words "blue" and "green." The color words appeared as white on a gray background. Each stimulus appeared on the screen for 116 ms. The triggers or event ID's of each stimulus are as follows:
+
 1 - Light Pink Spiral
 2 - Dark Pink Spiral
 3 - Light Blue Spiral
@@ -89,7 +90,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 18
-      - Recordings: 138
+      - Recordings: 629
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -110,7 +111,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 214.3 GB
-      - File count: 138
+      - File count: 629
       - Format: BIDS
 
    .. grid-item-card:: License & citation

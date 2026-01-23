@@ -7,11 +7,11 @@ eegdash.dataset.DS004865
 
 pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study (OpenNeuro ``ds004865``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study*. `10.18112/openneuro.ds004865.v2.0.1 <https://doi.org/10.18112/openneuro.ds004865.v2.0.1>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2023). *pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study*. `10.18112/openneuro.ds004865.v2.0.1 <https://doi.org/10.18112/openneuro.ds004865.v2.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 42` :bdg-secondary:`Recordings: 172`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 49` :bdg-secondary:`Recordings: 1244`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study
    * - Year
-     - —
+     - 2023
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004865.v2.0.1 <https://doi.org/10.18112/openneuro.ds004865.v2.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004865>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004865>`__ | `Source URL <https://openneuro.org/datasets/ds004865>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004865>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004865>`__ | `Source URL <https://openneuro.org/datasets/ds004865/versions/2.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,16 +71,20 @@ Description
 **pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a delayed free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalled the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+
 This study was a preliminary cogntive electrophysiology study undertaken by the Computational Memory Lab, and is a predecessor to the following datasets: `FR1 <https://openneuro.org/datasets/ds004789>`__ & `CatFR1 <https://openneuro.org/datasets/ds004809>`__
+
 
 **To Note**
 
 * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
 * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
 * Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
+
 
 **Contact**
 
@@ -95,8 +99,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 42
-      - Recordings: 172
+      - Subjects: 49
+      - Recordings: 1244
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -117,7 +121,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 97.8 GB
-      - File count: 172
+      - File count: 1244
       - Format: BIDS
 
    .. grid-item-card:: License & citation

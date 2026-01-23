@@ -7,11 +7,11 @@ eegdash.dataset.DS003517
 
 EEG: Continuous gameplay of an 8-bit style video game (OpenNeuro ``ds003517``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Joel Castellanos (20). *EEG: Continuous gameplay of an 8-bit style video game*. `10.18112/openneuro.ds003517.v1.1.0 <https://doi.org/10.18112/openneuro.ds003517.v1.1.0>`__
+**Citation:** James F Cavanagh, Joel Castellanos (2021). *EEG: Continuous gameplay of an 8-bit style video game*. `10.18112/openneuro.ds003517.v1.1.0 <https://doi.org/10.18112/openneuro.ds003517.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 34`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 389`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Continuous gameplay of an 8-bit style video game
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Joel Castellanos
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003517.v1.1.0 <https://doi.org/10.18112/openneuro.ds003517.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003517>`__ | `Source URL <https://openneuro.org/datasets/ds003517>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003517>`__ | `Source URL <https://openneuro.org/datasets/ds003517/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 17
-      - Recordings: 34
+      - Recordings: 389
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.5 GB
-      - File count: 34
+      - Size on disk: 5.8 GB
+      - File count: 389
       - Format: BIDS
 
    .. grid-item-card:: License & citation

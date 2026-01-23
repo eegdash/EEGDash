@@ -7,11 +7,11 @@ eegdash.dataset.DS003810
 
 Motor Imagery vs Rest - Low-Cost EEG System (OpenNeuro ``ds003810``). Access recordings and metadata through EEGDash.
 
-**Citation:** Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (—). *Motor Imagery vs Rest - Low-Cost EEG System*. `10.18112/openneuro.ds003810.v2.0.2 <https://doi.org/10.18112/openneuro.ds003810.v2.0.2>`__
+**Citation:** Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (2021). *Motor Imagery vs Rest - Low-Cost EEG System*. `10.18112/openneuro.ds003810.v2.0.2 <https://doi.org/10.18112/openneuro.ds003810.v2.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 50`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 158`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Motor Imagery vs Rest - Low-Cost EEG System
    * - Year
-     - —
+     - 2021
    * - Authors
      - Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003810.v2.0.2 <https://doi.org/10.18112/openneuro.ds003810.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003810>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003810>`__ | `Source URL <https://openneuro.org/datasets/ds003810>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003810>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003810>`__ | `Source URL <https://openneuro.org/datasets/ds003810/versions/2.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,8 +79,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 50
-      - Tasks: 1
+      - Recordings: 158
+      - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 69.4 MB
-      - File count: 50
+      - Size on disk: 69.0 MB
+      - File count: 158
       - Format: BIDS
 
    .. grid-item-card:: License & citation

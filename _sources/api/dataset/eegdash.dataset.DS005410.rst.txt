@@ -7,11 +7,11 @@ eegdash.dataset.DS005410
 
 Semantic_conditioning (OpenNeuro ``ds005410``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuri G. Pavlov (20). *Semantic_conditioning*. `10.18112/openneuro.ds005410.v1.0.1 <https://doi.org/10.18112/openneuro.ds005410.v1.0.1>`__
+**Citation:** Yuri G. Pavlov (2024). *Semantic_conditioning*. `10.18112/openneuro.ds005410.v1.0.1 <https://doi.org/10.18112/openneuro.ds005410.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 81` :bdg-secondary:`Recordings: 81`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 81` :bdg-secondary:`Recordings: 492`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Semantic_conditioning
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Yuri G. Pavlov
    * - License
@@ -81,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 81
-      - Recordings: 81
+      - Recordings: 492
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -102,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 19.8 GB
-      - File count: 81
+      - File count: 492
       - Format: BIDS
 
    .. grid-item-card:: License & citation

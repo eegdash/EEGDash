@@ -7,11 +7,11 @@ eegdash.dataset.DS003509
 
 EEG: Simon Conflict in Parkinson's (OpenNeuro ``ds003509``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Arun Singh, Kumar Narayanan (20). *EEG: Simon Conflict in Parkinson's*. `10.18112/openneuro.ds003509.v1.1.0 <https://doi.org/10.18112/openneuro.ds003509.v1.1.0>`__
+**Citation:** James F Cavanagh, Arun Singh, Kumar Narayanan (2021). *EEG: Simon Conflict in Parkinson's*. `10.18112/openneuro.ds003509.v1.1.0 <https://doi.org/10.18112/openneuro.ds003509.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 84`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 56` :bdg-secondary:`Recordings: 1080`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Simon Conflict in Parkinson's
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Arun Singh, Kumar Narayanan
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003509.v1.1.0 <https://doi.org/10.18112/openneuro.ds003509.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003509>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003509>`__ | `Source URL <https://openneuro.org/datasets/ds003509>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003509>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003509>`__ | `Source URL <https://openneuro.org/datasets/ds003509/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 56
-      - Recordings: 84
+      - Recordings: 1080
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 22.3 GB
-      - File count: 84
+      - File count: 1080
       - Format: BIDS
 
    .. grid-item-card:: License & citation

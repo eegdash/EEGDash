@@ -7,11 +7,11 @@ eegdash.dataset.DS004980
 
 EEG data set for a architectural affordances task (OpenNeuro ``ds004980``). Access recordings and metadata through EEGDash.
 
-**Citation:** Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (—). *EEG data set for a architectural affordances task*. `10.18112/openneuro.ds004980.v1.0.0 <https://doi.org/10.18112/openneuro.ds004980.v1.0.0>`__
+**Citation:** Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (2024). *EEG data set for a architectural affordances task*. `10.18112/openneuro.ds004980.v1.0.0 <https://doi.org/10.18112/openneuro.ds004980.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 17`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 107`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG data set for a architectural affordances task
    * - Year
-     - —
+     - 2024
    * - Authors
      - Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K.
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004980.v1.0.0 <https://doi.org/10.18112/openneuro.ds004980.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004980>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__ | `Source URL <https://openneuro.org/datasets/ds004980>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004980>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__ | `Source URL <https://openneuro.org/datasets/ds004980/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 17
-      - Recordings: 17
+      - Recordings: 107
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 15.8 GB
-      - File count: 17
+      - File count: 107
       - Format: BIDS
 
    .. grid-item-card:: License & citation

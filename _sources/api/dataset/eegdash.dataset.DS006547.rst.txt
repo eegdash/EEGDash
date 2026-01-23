@@ -7,11 +7,11 @@ eegdash.dataset.DS006547
 
 Visual EEG Study (BrainVision → BIDS) (OpenNeuro ``ds006547``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (—). *Visual EEG Study (BrainVision → BIDS)*. `10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
+**Citation:** Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (2025). *Visual EEG Study (BrainVision → BIDS)*. `10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 31`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 31` :bdg-secondary:`Recordings: 161`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Visual EEG Study (BrainVision → BIDS)
    * - Year
-     - —
+     - 2025
    * - Authors
      - Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006547>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006547>`__ | `Source URL <https://openneuro.org/datasets/ds006547>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006547>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006547>`__ | `Source URL <https://openneuro.org/datasets/ds006547/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,6 +71,7 @@ This dataset contains high-density EEG recordings collected during a visual stim
 Files are organized according to the EEG-BIDS specification. Raw data are BrainVision (.vhdr/.vmrk/.eeg).
 Task: visual
 Session: ses-01
+
 Provenance: Converted from c:/shared/raw_eeg with this helper script.
 No acquisition-time filters applied (offline preprocessing not included here).
 
@@ -84,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 31
-      - Recordings: 31
+      - Recordings: 161
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 17.6 GB
-      - File count: 31
+      - File count: 161
       - Format: BIDS
 
    .. grid-item-card:: License & citation

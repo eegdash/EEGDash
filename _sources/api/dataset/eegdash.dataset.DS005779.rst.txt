@@ -7,11 +7,11 @@ eegdash.dataset.DS005779
 
 Real-time personalized brain state-dependent TMS in healthy adults (OpenNeuro ``ds005779``). Access recordings and metadata through EEGDash.
 
-**Citation:** Uttara Khatri, Sara Hussain (20). *Real-time personalized brain state-dependent TMS in healthy adults*. `10.18112/openneuro.ds005779.v1.0.1 <https://doi.org/10.18112/openneuro.ds005779.v1.0.1>`__
+**Citation:** Uttara Khatri, Sara Hussain (2025). *Real-time personalized brain state-dependent TMS in healthy adults*. `10.18112/openneuro.ds005779.v1.0.1 <https://doi.org/10.18112/openneuro.ds005779.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 16` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 250`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 16` :bdg-secondary:`Subjects: 19` :bdg-secondary:`Recordings: 1523`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Real-time personalized brain state-dependent TMS in healthy adults
    * - Year
-     - 20
+     - 2025
    * - Authors
      - Uttara Khatri, Sara Hussain
    * - License
@@ -82,7 +82,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 19
-      - Recordings: 250
+      - Recordings: 1523
       - Tasks: 16
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +103,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 88.7 GB
-      - File count: 250
+      - File count: 1523
       - Format: BIDS
 
    .. grid-item-card:: License & citation

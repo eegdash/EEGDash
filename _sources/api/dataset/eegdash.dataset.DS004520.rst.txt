@@ -7,11 +7,11 @@ eegdash.dataset.DS004520
 
 Changes in behavioral priority influence the accessibility of working memory content - Experiment 2 (OpenNeuro ``ds004520``). Access recordings and metadata through EEGDash.
 
-**Citation:** Edward Ester, Paige Pytel (—). *Changes in behavioral priority influence the accessibility of working memory content - Experiment 2*. `10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
+**Citation:** Edward Ester, Paige Pytel (2023). *Changes in behavioral priority influence the accessibility of working memory content - Experiment 2*. `10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 33`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 33` :bdg-secondary:`Recordings: 235`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Changes in behavioral priority influence the accessibility of working memory content - Experiment 2
    * - Year
-     - —
+     - 2023
    * - Authors
      - Edward Ester, Paige Pytel
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004520.v1.0.1 <https://doi.org/10.18112/openneuro.ds004520.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004520>`__ | `Source URL <https://openneuro.org/datasets/ds004520>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004520>`__ | `Source URL <https://openneuro.org/datasets/ds004520/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 33
-      - Recordings: 33
+      - Recordings: 235
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 10.4 GB
-      - File count: 33
+      - File count: 235
       - Format: BIDS
 
    .. grid-item-card:: License & citation

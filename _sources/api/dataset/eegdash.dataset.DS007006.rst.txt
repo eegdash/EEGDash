@@ -7,11 +7,11 @@ eegdash.dataset.DS007006
 
 VR-Compassion Cultivation Training (OpenNeuro ``ds007006``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten (—). *VR-Compassion Cultivation Training*. `10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
+**Citation:** Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten (2025). *VR-Compassion Cultivation Training*. `10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 50`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 10` :bdg-secondary:`Recordings: 280`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - VR-Compassion Cultivation Training
    * - Year
-     - —
+     - 2025
    * - Authors
      - Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells, Erik Virre, Cassandra Vieten
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007006>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007006>`__ | `Source URL <https://openneuro.org/datasets/ds007006>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007006>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007006>`__ | `Source URL <https://openneuro.org/datasets/ds007006/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,50 +67,51 @@ Dataset Information
 Description
 -----------
 
-VR-CCT Dataset
-Compassion Island was a social world implemented in
-AltspaceVR by tecchnology collaborators Origami Air.
-It was specifically created for the study of VR-based
+VR-CCT Dataset                             
+
+Compassion Island was a social world implemented in   
+AltspaceVR by tecchnology collaborators Origami Air.  
+It was specifically created for the study of VR-based 
 augmentation of compassion cultivation training (CCT).
-It featured three main settings – a meditation hall,
-a garden courtyard with a large willow tree, and a
-clinic. During experimental sessions, participants
-interacted with two characters in these spaces,
-represented as avatars – namely, a guide, who helped
+It featured three main settings – a meditation hall,  
+a garden courtyard with a large willow tree, and a    
+clinic. During experimental sessions, participants    
+interacted with two characters in these spaces,       
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
-   VR-CCT Dataset
-   Compassion Island was a social world implemented in
-   AltspaceVR by tecchnology collaborators Origami Air.
-   It was specifically created for the study of VR-based
+   VR-CCT Dataset                             
+   
+   Compassion Island was a social world implemented in   
+   AltspaceVR by tecchnology collaborators Origami Air.  
+   It was specifically created for the study of VR-based 
    augmentation of compassion cultivation training (CCT).
-   It featured three main settings – a meditation hall,
-   a garden courtyard with a large willow tree, and a
-   clinic. During experimental sessions, participants
-   interacted with two characters in these spaces,
-   represented as avatars – namely, a guide, who helped
-   the volunteer navigate from setting to setting and
-   offered other assistance as needed, and Ivan, who was
-   an agitated patient in the clinic. Both characters
-   were animated by live actors in separate locations.
-   Participants were able to converse freely with these
-   characters whenever they were co-present with either
+   It featured three main settings – a meditation hall,  
+   a garden courtyard with a large willow tree, and a    
+   clinic. During experimental sessions, participants    
+   interacted with two characters in these spaces,       
+   represented as avatars – namely, a guide, who helped  
+   the volunteer navigate from setting to setting and    
+   offered other assistance as needed, and Ivan, who was 
+   an agitated patient in the clinic. Both characters    
+   were animated by live actors in separate locations.   
+   Participants were able to converse freely with these  
+   characters whenever they were co-present with either  
    character in the same space. All sessions began in the
-   meditation hall, which featured a pulsating orb
+   meditation hall, which featured a pulsating orb       
    designed to help participants regulate their breathing
-   during an audio-recorded guided meditation. Next,
+   during an audio-recorded guided meditation. Next,     
    participants were ushered outside to the garden, where
    they were invited to contemplate a tree with a glowing
-   core while listening to an audio-recorded compassion
+   core while listening to an audio-recorded compassion  
    meditation and performing visualization exercises that
-   centered on universal compassion for all beings.
-   Lastly, participants were directed into a virtual
-   clinic to converse with Ivan, an agitated patient
-   waiting inside the clinic, where participants would
-   have the opportunity to practice exercising the
-   feeling of universal compassion from the garden
+   centered on universal compassion for all beings.      
+   Lastly, participants were directed into a virtual     
+   clinic to converse with Ivan, an agitated patient     
+   waiting inside the clinic, where participants would   
+   have the opportunity to practice exercising the       
+   feeling of universal compassion from the garden       
    meditation.
 
 
@@ -124,7 +125,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 10
-      - Recordings: 50
+      - Recordings: 280
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -144,8 +145,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 918.9 MB
-      - File count: 50
+      - Size on disk: 918.7 MB
+      - File count: 280
       - Format: BIDS
 
    .. grid-item-card:: License & citation

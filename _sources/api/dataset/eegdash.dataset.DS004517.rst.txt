@@ -7,11 +7,11 @@ eegdash.dataset.DS004517
 
 EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task (OpenNeuro ``ds004517``). Access recordings and metadata through EEGDash.
 
-**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (20). *EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task*. `10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
+**Citation:** Milan Rybář, Riccardo Poli, Ian Daly (2023). *EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task*. `10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 7`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 7` :bdg-secondary:`Recordings: 47`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Milan Rybář, Riccardo Poli, Ian Daly
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004517>`__ | `Source URL <https://openneuro.org/datasets/ds004517>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004517>`__ | `Source URL <https://openneuro.org/datasets/ds004517/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -72,26 +72,51 @@ Description
 
 This dataset contains electroencephalography (EEG) signals recorded from 7 participants while performing an auditory imagery task. Participants were asked to imagine the sounds made by an object for 5 seconds.
 
+
+
 **EEG**
 
 EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
-Electrooculography (EOG) was also recorded to monitor eye movements. Two electrodes were placed above ('EXG7' channel) and below ('EXG8') the right eye to capture the vertical oculogram, while two more electrodes were placed near the canthus of each eye ('EXG5' by the left eye and 'EXG6' by the right eye) to record the horizontal oculogram.
-Additionally, two electrodes were placed on the left ('EXG3') and right ('EXG4') wrists for additional physiological measurements (e.g., heart rate variability), and respiration was recorded using a belt placed around the waist ('Resp' channel).
-The sampling rate was 2048 Hz.
 
-**Stimulus**
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
+   
+   **Description**
+   
+   This dataset contains electroencephalography (EEG) signals recorded from 7 participants while performing an auditory imagery task. Participants were asked to imagine the sounds made by an object for 5 seconds.
+   
+   
+   
+   **EEG**
+   
+   EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
+   Electrooculography (EOG) was also recorded to monitor eye movements. Two electrodes were placed above ('EXG7' channel) and below ('EXG8') the right eye to capture the vertical oculogram, while two more electrodes were placed near the canthus of each eye ('EXG5' by the left eye and 'EXG6' by the right eye) to record the horizontal oculogram.
+   Additionally, two electrodes were placed on the left ('EXG3') and right ('EXG4') wrists for additional physiological measurements (e.g., heart rate variability), and respiration was recorded using a belt placed around the waist ('Resp' channel).
+   The sampling rate was 2048 Hz.
+   
+   
+   
+   **Stimulus**
+   
+   Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
+   
+   
+   
+   **Example code**
+   
+   We have prepared an example script to demonstrate how to load the EEG data into Python using MNE and MNE-BIDS packages. This script is located in the 'code' directory.
+   
+   
+   
+   **References**
+   
+   This dataset was analyzed in the following publications:
+   
+   [1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
+   
+   [2] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
 
-**Example code**
-
-We have prepared an example script to demonstrate how to load the EEG data into Python using MNE and MNE-BIDS packages. This script is located in the 'code' directory.
-
-**References**
-
-This dataset was analyzed in the following publications:
-[1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
-[2] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
 
 Highlights
 ----------
@@ -103,7 +128,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 7
-      - Recordings: 7
+      - Recordings: 47
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -124,7 +149,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 12.7 GB
-      - File count: 7
+      - File count: 47
       - Format: BIDS
 
    .. grid-item-card:: License & citation

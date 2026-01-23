@@ -11,7 +11,7 @@ Siefert2024 (OpenNeuro ``ds005121``). Access recordings and metadata through EEG
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 39`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 272`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005121.v1.0.2 <https://doi.org/10.18112/openneuro.ds005121.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005121>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__ | `Source URL <https://openneuro.org/datasets/ds005121>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005121>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005121>`__ | `Source URL <https://openneuro.org/datasets/ds005121/versions/1.0.2>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,19 +68,24 @@ Description
 -----------
 
 Overview:
-This is the "Siefert2024" dataset. It is the sleep EEG data from Siefert et al., 2024 (https://doi.org/10.1523/JNEUROSCI.0022-24.2024). In brief, it contains sleep EEG data from 34 participants while Targeted Memory Reactivation was administered.
+This is the "Siefert2024" dataset. It is the sleep EEG data from Siefert et al., 2024 (https://doi.org/10.1523/JNEUROSCI.0022-24.2024). In brief, it contains sleep EEG data from 34 participants while Targeted Memory Reactivation was administered. 
+
 Please cite the following paper:
 E.M. Siefert, S. Uppuluri, J. Mu., M.C. Tandoc, J.W. Antony, A.C. Schapiro (2024). Memory reactivation during sleep does not act holistically on object memory. Journal of Neuroscience, 10.1523/JNEUROSCI.0022-24.2024
+
 The dataset is formatted according to the Brain Imaging Data Structure (BIDS). Data organization was performed using FieldTrip data2bids function.
+
 Additional details:
 Events.tsv files contain information about the different cueing events.
 - item_value is the sound index number used by the TMR system. This number corresponds to the literal code name of the satellite (i.e., "nivex" or "sorex"). Here, 33 indicates no sound was played but a SO was tagged.
-- SatNum is the corresponding satellite number. This number is the same satellite number that is used in the behavioral data.
-    - 0 indicates no sound was played.
+- SatNum is the corresponding satellite number. This number is the same satellite number that is used in the behavioral data. 
+    - 0 indicates no sound was played. 
     - Satellites 1-5 are the studied satellites from the blocked category.
     - Satellites 6-10 are the studied satellites from the interleaved category.
     - Satellites 11-15 are the studied satellites from the uncued category.
+
 System crashed and had to be restarted for participants 6, 7, 15, 17, 21, resulting in two EEG files for these participants.
+
 Please contact Liz Siefert (sieferte@pennmedicine.upenn.edu) with any additional questions.
 
 Highlights
@@ -93,7 +98,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 34
-      - Recordings: 39
+      - Recordings: 272
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -114,7 +119,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 9.0 GB
-      - File count: 39
+      - File count: 272
       - Format: BIDS
 
    .. grid-item-card:: License & citation

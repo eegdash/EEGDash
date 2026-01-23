@@ -7,11 +7,11 @@ eegdash.dataset.DS000117
 
 Multisubject, multimodal face processing (OpenNeuro ``ds000117``). Access recordings and metadata through EEGDash.
 
-**Citation:** Wakeman, DG, Henson, RN (2015). *Multisubject, multimodal face processing*. `10.18112/openneuro.ds000117.v1.1.0 <https://doi.org/10.18112/openneuro.ds000117.v1.1.0>`__
+**Citation:** Wakeman, DG, Henson, RN (2018). *Multisubject, multimodal face processing*. `10.18112/openneuro.ds000117.v1.1.0 <https://doi.org/10.18112/openneuro.ds000117.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 17` :bdg-secondary:`Recordings: 104`
+:bdg-primary:`Modality: meg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 1156`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Multisubject, multimodal face processing
    * - Year
-     - 2015
+     - 2018
    * - Authors
      - Wakeman, DG, Henson, RN
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds000117.v1.1.0 <https://doi.org/10.18112/openneuro.ds000117.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds000117>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000117>`__ | `Source URL <https://openneuro.org/datasets/ds000117>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds000117>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds000117>`__ | `Source URL <https://openneuro.org/datasets/ds000117/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,45 +68,63 @@ Description
 -----------
 
 This dataset was obtained from the OpenNeuro project (https://www.openneuro.org). Accession #: ds000117
+
 The same dataset is also available here: ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/, but in a non-BIDS format (which may be easier to download by subject rather than by modality)
+
 Note that it is a subset of the data available on OpenfMRI (http://www.openfmri.org; Accession #: ds000117).
+
+
 Description:  Multi-subject, multi-modal (sMRI+fMRI+MEG+EEG) neuroimaging dataset on face processing
+
 Please cite the following reference if you use these data:
-     Wakeman, D.G. & Henson, R.N. (2015). A multi-subject, multi-modal human neuroimaging dataset. Sci. Data 2:150001 doi: 10.1038/sdata.2015.1
-The data have been used in several publications including, for example:
-   Henson, R.N., Abdulrahman, H., Flandin, G. & Litvak, V. (2019). Multimodal integration of M/EEG and f/MRI data in SPM12. Frontiers in Neuroscience, Methods, 13, 300.
-    Henson, R.N., Wakeman, D.G., Litvak, V. & Friston, K.J. (2011). A Parametric Empirical Bayesian framework for the EEG/MEG inverse problem: generative models for multisubject and multimodal integration. Frontiers in Human Neuroscience, 5, 76, 1-16.
-    Chapter 42 of the SPM12 manual (http://www.fil.ion.ucl.ac.uk/spm/doc/manual.pdf)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    This dataset was obtained from the OpenNeuro project (https://www.openneuro.org). Accession #: ds000117
+   
    The same dataset is also available here: ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/, but in a non-BIDS format (which may be easier to download by subject rather than by modality)
+   
    Note that it is a subset of the data available on OpenfMRI (http://www.openfmri.org; Accession #: ds000117).
+   
+   
    Description:  Multi-subject, multi-modal (sMRI+fMRI+MEG+EEG) neuroimaging dataset on face processing
+   
    Please cite the following reference if you use these data:
+   
         Wakeman, D.G. & Henson, R.N. (2015). A multi-subject, multi-modal human neuroimaging dataset. Sci. Data 2:150001 doi: 10.1038/sdata.2015.1
+   
    The data have been used in several publications including, for example:
+   
       Henson, R.N., Abdulrahman, H., Flandin, G. & Litvak, V. (2019). Multimodal integration of M/EEG and f/MRI data in SPM12. Frontiers in Neuroscience, Methods, 13, 300.
+   
        Henson, R.N., Wakeman, D.G., Litvak, V. & Friston, K.J. (2011). A Parametric Empirical Bayesian framework for the EEG/MEG inverse problem: generative models for multisubject and multimodal integration. Frontiers in Human Neuroscience, 5, 76, 1-16.
+   
        Chapter 42 of the SPM12 manual (http://www.fil.ion.ucl.ac.uk/spm/doc/manual.pdf)
+   
    (see ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/Publications for full list), as well as the BioMag2010 data competition and the Kaggle competition: https://www.kaggle.com/c/decoding-the-human-brain)
+   
+   
    
    **func/**
    
-   Unlike in v1-v3 of this dataset, the first two (dummy) volumes have now been removed (as stated in *.json), so event onset times correctly refer to t=0 at start of third volume
-   Note that, owing to scanner error, Subject 10 only has 170 volumes in last run (Run 9)
+   Unlike in v1-v3 of this dataset, the first two (dummy) volumes have now been removed (as stated in *.json), so event onset times correctly refer to t=0 at start of third volume 
+   
+   Note that, owing to scanner error, Subject 10 only has 170 volumes in last run (Run 9) 
+   
    
    **meg/**
    
-   Three anatomical fiducials were digitized for aligning the MEG with the MRI: the nasion
-   (lowest depression between the eyes) and the left and right ears (lowest depression
+   Three anatomical fiducials were digitized for aligning the MEG with the MRI: the nasion 
+   (lowest depression between the eyes) and the left and right ears (lowest depression 
    between the tragus and the helix, above the tragus). This procedure is illustrated here:
    http://neuroimage.usc.edu/brainstorm/CoordinateSystems#Subject_Coordinate_System_.28SCS_.2F_CTF.29
-   and in task-facerecognition_fidinfo.pdf
+   and in task-facerecognition_fidinfo.pdf 
+   
    The following triggers are included in the .fif files and are also used in the “trigger” column of the meg and bold events files:
+   
    Trigger            Label               Simplified Label
+   
    5         Initial Famous Face               IniFF
    6         Immediate Repeat Famous Face      ImmFF
    7         Delayed Repeat Famous Face        DelFF
@@ -117,41 +135,53 @@ The data have been used in several publications including, for example:
    18        Immediate Repeat Scrambled Face   ImmSF
    19        Delayed Repeat Scrambled Face     DelSF
    
+   
    **stimuli/meg/**
    
    The .bmp files correspond to those described in the text. There are 6 additional images in this directory, which were used in the practice experiment to familiarize participants with the task (hence some more BIDS validator warnings)
    
+   
    **stimuli/mri/**
    
    The .bmp files correspond to those described in the text.
+   	
    
    **Defacing**
    
    Defacing of MPRAGE T1 images was performed by the submitter. A subset of subjects have given consent for non-defaced versions to be shared - in which case, please contact rik.henson@mrc-cbu.cam.ac.uk.
+    
    
    **Quality Control**
    
    Mriqc was run on the dataset. Results are located in derivatives/mriqc. Learn more about it here: https://mriqc.readthedocs.io/en/latest/
+    
    
    **Known Issues**
    
    N/A
    
+   
    **Relationship of Subject Numbering relative to other versions of Dataset**
    
+   
    There are multiple versions of the dataset available on the web (see notes above), and these entailed a renumbering of the subjects for various reasons. Here are all the versions and how to match subjects between them (plus some rationale and history for different versions):
-   1. Original Paper (N=19): Wakeman & Henson (2015): doi:10.1038/sdata.2015.1
+    
+   1. Original Paper (N=19): Wakeman & Henson (2015): doi:10.1038/sdata.2015.1 
        Number refers to order that tested (and some, eg 4, 7, 13 etc were excluded for not completing both MRI and MEG sessions)
+    
    2. openfMRI, renumbered from paper: http://openfmri.org/s3-browser/?prefix=ds000117/ds000117_R0.1.1/uncompressed/
        Numbers 1-19 just made contiguous
-   3. FTP subset of N=16: ftp: ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/
+    
+   3. FTP subset of N=16: ftp: ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/  
        This set was used for SPM Courses
        Designed to illustrate multimodal integration, so wanted good MRI+MEG+EEG data for all subjects
        Removed original subject_01 and subject_06 because bad EEG data; subject_19 because poor EEG and fMRI data
        (And renumbered subject_14 for some reason).
-   4. Current OpenNeuro subset N=16 used for (BIDS): https://openneuro.org/datasets/ds000117
+    
+   4. Current OpenNeuro subset N=16 used for (BIDS): https://openneuro.org/datasets/ds000117 
        OpenNeuro was rebranding of openfMRI, and enforced BIDS format
        Since this version designed to illustrate multi-modal BIDS, kept same numbering as FTP
+    
    W&H2015       openfMRI    FTP      openNeuro
    ========       ======        ===     =======
    subject_01      sub001
@@ -184,8 +214,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 17
-      - Recordings: 104
+      - Subjects: 16
+      - Recordings: 1156
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -205,8 +235,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 169.4 GB
-      - File count: 104
+      - Size on disk: 87.6 GB
+      - File count: 1156
       - Format: BIDS
 
    .. grid-item-card:: License & citation

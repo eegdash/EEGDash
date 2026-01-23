@@ -7,11 +7,11 @@ eegdash.dataset.DS005670
 
 SEEG Resting State Recording (OpenNeuro ``ds005670``). Access recordings and metadata through EEGDash.
 
-**Citation:** Prof. Pengfei Xu (—). *SEEG Resting State Recording*. `10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
+**Citation:** Prof. Pengfei Xu (2024). *SEEG Resting State Recording*. `10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 2`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 2` :bdg-secondary:`Recordings: 14`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - SEEG Resting State Recording
    * - Year
-     - —
+     - 2024
    * - Authors
      - Prof. Pengfei Xu
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005670>`__ | `Source URL <https://openneuro.org/datasets/ds005670>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005670>`__ | `Source URL <https://openneuro.org/datasets/ds005670/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,17 +67,18 @@ Dataset Information
 Description
 -----------
 
+Dataset description
 
-**Dataset description**
 
-This SEEG raw dataset includes resting state recordings for two patients with epilepsy.
+This SEEG raw dataset includes resting state recordings for two patients with epilepsy. 
+
 The depth electrodes used in this dataset are Sinovation SDE-08 medical-grade stainless steel electrodes, with the following specifications:
     Diameter: 0.8 mm
     Contact length: 2 mm
     Insulator length: 1.5 mm
     Distance between the center of two contacts: 3.5 mm
+    Between 8 and 16 contacts on each electrode 
 
-**Between 8 and 16 contacts on each electrode**
 
 For questions, please contact Pengfei Xu (pxu@bnu.edu.cn).
 
@@ -91,7 +92,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 2
-      - Recordings: 2
+      - Recordings: 14
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -112,7 +113,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 708.8 MB
-      - File count: 2
+      - File count: 14
       - Format: BIDS
 
    .. grid-item-card:: License & citation

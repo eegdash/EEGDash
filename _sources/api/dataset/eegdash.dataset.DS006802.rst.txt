@@ -11,7 +11,7 @@ Collaborative rule learning promotes interbrain information alignment (OpenNeuro
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 24`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 55`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006802.v1.0.0 <https://doi.org/10.18112/openneuro.ds006802.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006802>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006802>`__ | `Source URL <https://openneuro.org/datasets/ds006802>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006802>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006802>`__ | `Source URL <https://openneuro.org/datasets/ds006802/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,15 @@ Description
 -----------
 
 Experiment Details
+
 We recorded EEG from 24 pairs of participants while they performed a 4-way categorisation task based on rules they first agreed upon together. In addition, participants did a pre- and post-test on the same stimuli.
+
 Experiment length: 1 hour
-More information:
+
+More information: 
+
 Pre-print: Moerel, D., Grootswagers, T., Quek, G.L., Smit, S., & Varlet, M. (2025). Information alignment between interacting brains. bioRxiv. doi: https://doi.org/10.1101/2025.01.07.631802
+
 Code: https://doi.org/10.17605/OSF.IO/HE4TU
 
 Highlights
@@ -84,7 +89,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 24
+      - Recordings: 55
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -105,7 +110,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 62.2 GB
-      - File count: 24
+      - File count: 55
       - Format: BIDS
 
    .. grid-item-card:: License & citation

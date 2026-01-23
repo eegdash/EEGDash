@@ -11,7 +11,7 @@ Single-pulse open-loop TMS-EEG dataset (OpenNeuro ``ds002094``). Access recordin
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 43`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 20` :bdg-secondary:`Recordings: 282`
 
 .. rst-class:: sd-badges
 
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002094>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002094>`__ | `Source URL <https://openneuro.org/datasets/ds002094>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002094>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002094>`__ | `Source URL <https://openneuro.org/datasets/ds002094/versions/1.0.0>`__
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -66,7 +66,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 20
-      - Recordings: 43
+      - Recordings: 282
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
@@ -87,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 39.4 GB
-      - File count: 43
+      - File count: 282
       - Format: BIDS
 
    .. grid-item-card:: License & citation

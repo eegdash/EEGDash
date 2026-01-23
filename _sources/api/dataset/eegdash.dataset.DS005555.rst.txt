@@ -7,11 +7,11 @@ eegdash.dataset.DS005555
 
 The Bitbrain Open Access Sleep (BOAS) dataset (OpenNeuro ``ds005555``). Access recordings and metadata through EEGDash.
 
-**Citation:** Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing (2015). *The Bitbrain Open Access Sleep (BOAS) dataset*. `10.18112/openneuro.ds005555.v1.1.1 <https://doi.org/10.18112/openneuro.ds005555.v1.1.1>`__
+**Citation:** Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing (2024). *The Bitbrain Open Access Sleep (BOAS) dataset*. `10.18112/openneuro.ds005555.v1.1.1 <https://doi.org/10.18112/openneuro.ds005555.v1.1.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 128` :bdg-secondary:`Recordings: 256`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 128` :bdg-secondary:`Recordings: 1414`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The Bitbrain Open Access Sleep (BOAS) dataset
    * - Year
-     - 2015
+     - 2024
    * - Authors
      - Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005555.v1.1.1 <https://doi.org/10.18112/openneuro.ds005555.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005555>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005555>`__ | `Source URL <https://openneuro.org/datasets/ds005555>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005555>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005555>`__ | `Source URL <https://openneuro.org/datasets/ds005555/versions/1.1.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,13 +70,13 @@ Description
 
 **README**
 
+
 The **Bitbrain Open Access Sleep (BOAS)** dataset.
+
 
 **Overview**
 
-This project aimed at bridging the gap between gold-standard clinical sleep monitoring and emerging wearable EEG technologies. The dataset contains data from **128 nights** in which participants were simultaneously monitored with two technologies: a **Brain Quick Plus Evolution PSG system by Micromed** and a **wearable EEG headband by Bitbrain**. The Micromed PSG system records a comprehensive and clinically validated set of physiological sleep parameters, while the Bitbrain wearable EEG headband offers a user-friendly, self-administered alternative, limited to forehead EEG electrodes, movement sensors, and photo-plethysmography. **Data from both systems were acquired simultaneously**, allowing for direct comparison and validation of the wearable EEG device against the established PSG standard. This dual-recording approach provides a rich resource for evaluating the performance and potential of wearable EEG technology in sleep studies.
-**Human sleep scoring:** To ensure robust and reliable sleep staging, we followed a rigorous labeling process. **Three expert sleep scorers independently annotated the PSG recordings** following criteria developed by the American Academy of Sleep Medicine (AASM) (Berry et al., 2015). From the resulting three scorings, a **consensus label** was derived: each epoch of sleep data received the label scored by at least two of the scorers. In cases where all three scorers had given different labels, a fourth scorer made the final decision. This consensus labeling approach addresses the inherent variability in human-derived sleep scoring, with an estimated inter-scorer agreement of approximately 85% (Danker-Hopfe et al., 2009; Rosenberg and Van Hout, 2013).
-**Automatic scoring:** We used the human expert consensus labels to train a deep learning model (Esparza-Iaizzo et al., 2024). By implementing a cross-validation procedure, we trained and validated the model separately on the PSG and wearable EEG datasets. The model achieved an 87.13% match between human-consensus and network-provided labels for the PSG data, and an 86.71% match for the wearable EEG data.
+
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -84,39 +84,58 @@ This project aimed at bridging the gap between gold-standard clinical sleep moni
    
    **README**
    
+   
    The **Bitbrain Open Access Sleep (BOAS)** dataset.
+   
    
    **Overview**
    
+   
    This project aimed at bridging the gap between gold-standard clinical sleep monitoring and emerging wearable EEG technologies. The dataset contains data from **128 nights** in which participants were simultaneously monitored with two technologies: a **Brain Quick Plus Evolution PSG system by Micromed** and a **wearable EEG headband by Bitbrain**. The Micromed PSG system records a comprehensive and clinically validated set of physiological sleep parameters, while the Bitbrain wearable EEG headband offers a user-friendly, self-administered alternative, limited to forehead EEG electrodes, movement sensors, and photo-plethysmography. **Data from both systems were acquired simultaneously**, allowing for direct comparison and validation of the wearable EEG device against the established PSG standard. This dual-recording approach provides a rich resource for evaluating the performance and potential of wearable EEG technology in sleep studies.
+   
    **Human sleep scoring:** To ensure robust and reliable sleep staging, we followed a rigorous labeling process. **Three expert sleep scorers independently annotated the PSG recordings** following criteria developed by the American Academy of Sleep Medicine (AASM) (Berry et al., 2015). From the resulting three scorings, a **consensus label** was derived: each epoch of sleep data received the label scored by at least two of the scorers. In cases where all three scorers had given different labels, a fourth scorer made the final decision. This consensus labeling approach addresses the inherent variability in human-derived sleep scoring, with an estimated inter-scorer agreement of approximately 85% (Danker-Hopfe et al., 2009; Rosenberg and Van Hout, 2013).
+   
    **Automatic scoring:** We used the human expert consensus labels to train a deep learning model (Esparza-Iaizzo et al., 2024). By implementing a cross-validation procedure, we trained and validated the model separately on the PSG and wearable EEG datasets. The model achieved an 87.13% match between human-consensus and network-provided labels for the PSG data, and an 86.71% match for the wearable EEG data.
+   
    Our dataset includes:
+   
    1. **PSG recordings** from 128 nights (files ending with "*psg_eeg.edf*"),
    2. **Wearable EEG recordings** from the same nights (files ending with "*headband_eeg.edf*"),
    3. **Human-consensus sleep stage labels**, obtained from the PSG recordings ("*stage_hum*" in the PSG data's event files),
    4. **AI-generated sleep stage labels**, separately obtained from PSG recordings and from wearable EEG recordings ("*stage_ai*" in both the PSG and headband data's event files).
    5. **Further meta data** for each recording (i.e., the participants' age, sex, and BMI, provided in the file "*participants.tsv*")
    
+   
    **Participants**
    
+   
    Participants were members of the general population, provided written informed consent, and received economic compensation of 50€ per night.
+   
    In order to represent the general population, we recruited a broad spectrum of participants along the dimensions of age, sex, and body mass index. We did not recruit patients with particular health conditions but only excluded severe conditions that could have affected the feasibility or safety of the study. In detail, inclusion and exclusion criteria were as follows.
+   
    **Inclusion criteria**
    - Age > 18 years,
    - Sufficient knowledge of Spanish to understand the explanatory text, the consent form and study-related instructions.
+   
    **Exclusion criteria**
    - Current severe medical interventions or medication,
    - History of severe neurological or psychiatric disorders,
    - Severe health problems in the last 12 months (especially neurological or cardiac disorders),
    - Current pregnancy or nursing,
    - Use of psychotropic medication, benzodiazepines, gamma-hydroxybutyric acid, and similar drugs before or during the study.
+   	
+   
    
    **Format**
    
+   
    The dataset is formatted according to the Brain Imaging Data Structure (BIDS). Please note that while the recordings are named from sub-1 up to sub-128, some come from the same participants. 108 unique individuals participated in the recordings, data of which can be matched using the pid (= unique participant ID) property in the file "*participants.tsv*"
-   The folder of each recording contains the data recorded with the PSG ("*sub-xx_task-Sleep_acq-psg_eeg.edf*") and with the wearable EEG headband ("*sub-xx_task-Sleep_acq-headband_eeg.edf*").
+   
+   The folder of each recording contains the data recorded with the PSG ("*sub-xx_task-Sleep_acq-psg_eeg.edf*") and with the wearable EEG headband ("*sub-xx_task-Sleep_acq-headband_eeg.edf*"). 
+   
+   
    **Channel groups**
+   
    Not all recordings contain data from all available sensors. The full list of available sensors for each recording can be obtained on the "*channels.tsv*" file. Channels in this file are coded in groups:
    - **PSG_EEG**: Electroencephalography recorded with the PSG system. Channels available are F3, F4, C3, C4, O1, O2 (PSG_F3, PSG_F4, PSG_C3, PSG_C4, PSG_O1, PSG_O2).
    - **PSG_EOG**: Electrooculography signals recorded with the PSG system. The location of the EOG electrodes was lateral of the eyes; one slightly lower than the participant's left eye and one slightly higher than the participant's right eye (according to AASM guidelines). For recordings containing only one EOG channel (PSG_EOG), the electrodes were recorded as a bipolar derivation. If two EOG channels are present (PSG_EOGR, PSG_EOGL), both electrodes were referenced against the left mastoid.
@@ -128,7 +147,10 @@ This project aimed at bridging the gap between gold-standard clinical sleep moni
    - **HB_EEG**: Electroencephalography recorded with the wearable EEG headband. Headband channels are approximately located at AF7 and AF8 (HB_1, HB_2).
    - **HB_IMU**: Movement activity recorded by an Inertial Measurement Unit (IMU) in the headband. Signals are derived from an accelerometer (HB_IMU_1, HB_IMU_2, HB_IMU_3) and gyroscope (HB_IMU_4, HB_IMU_5, HB_IMU_6), both recording signals for all three spatial dimensions.
    - **HB_PULSE**: Pulse activity recorded with the wearable EEG headband using a PPG sensor (HB_PULSE).
+   
+   
    **Sleep staging labels**
+   
    The sleep stage labels for each recording are coded as events in corresponding event files (stage_hum and stage_ai; see above). Stages are coded as follows:
    - 0: Wake,
    - 1: NonREM sleep stage 1 (N1),
@@ -138,16 +160,26 @@ This project aimed at bridging the gap between gold-standard clinical sleep moni
    - 8: PSG disconnections (e.g., due to bathroom breaks; human-scored only)
    - -2: Artifacts and missing data (AI-scored only)
    
+   
+   
    **References**
    
+   
    Berry, R. B., Brooks, R., Gamaldo, C. E., Harding, S. M., Lloyd, R. M., Marcus, C. L., et al. (2015). The AASM Manual for the Scoring of Sleep and Associated Events: Rules, Terminology and Technical Specifications, Version 2.2. Darien, Illinois.
+   
    Danker-Hopfe, H., Anderer, P., Zeitlhofer, J., Boeck, M., Dorn, H., Gruber, G., et al. (2009). Interrater reliability for sleep scoring according to the Rechtschaffen & Kales and the new AASM standard. J. Sleep Res. 18, 74–84. doi: 10.1111/j.1365-2869.2008.00700.x.
+   
    Esparza-Iaizzo, M., Sierra-Torralba, M., Klinzing, J. G., Minguez, J., Montesano, L., and López-Larraz, E. (2024). Automatic sleep scoring for real-time monitoring and stimulation in individuals with and without sleep apnea. bioRxiv, 2024.06.12.597764. doi: 10.1101/2024.06.12.597764.
+   
    Rosenberg, R. S., and Van Hout, S. (2013). The American Academy of Sleep Medicine inter-scorer reliability program: sleep stage scoring. J. Clin. sleep Med. 9, 81–87. doi: 10.5664/jcsm.2350.
+   
+   
    
    **Contact**
    
+   
    If you have any questions or comments, please contact:
+   
    Eduardo López-Larraz: eduardo.lopez@bitbrain.com
    Jens G. Klinzing: jens.klinzing@bitbrain.com
 
@@ -162,7 +194,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 128
-      - Recordings: 256
+      - Recordings: 1414
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -183,7 +215,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 33.5 GB
-      - File count: 256
+      - File count: 1414
       - Format: BIDS
 
    .. grid-item-card:: License & citation

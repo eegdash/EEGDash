@@ -7,11 +7,11 @@ eegdash.dataset.DS007119
 
 iEEG_comprehensive_HFA_model_part3 (OpenNeuro ``ds007119``). Access recordings and metadata through EEGDash.
 
-**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (—). *iEEG_comprehensive_HFA_model_part3*. `10.18112/openneuro.ds007119.v1.0.0 <https://doi.org/10.18112/openneuro.ds007119.v1.0.0>`__
+**Citation:** Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano (2025). *iEEG_comprehensive_HFA_model_part3*. `10.18112/openneuro.ds007119.v1.0.0 <https://doi.org/10.18112/openneuro.ds007119.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 103` :bdg-secondary:`Recordings: 106`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 103` :bdg-secondary:`Recordings: 639`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - iEEG_comprehensive_HFA_model_part3
    * - Year
-     - —
+     - 2025
    * - Authors
      - Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007119.v1.0.0 <https://doi.org/10.18112/openneuro.ds007119.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007119>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007119>`__ | `Source URL <https://openneuro.org/datasets/ds007119>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007119>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007119>`__ | `Source URL <https://openneuro.org/datasets/ds007119/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,10 +68,12 @@ Description
 -----------
 
 This dataset contains intracranial EEG data recorded during non-REM sleep and used in Hatano et al. (in press).
-Authors:
+
+Authors: 
 Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano
-Funding:
-National Institutes of Health (NIH; NS064033 to E.A.);
+
+Funding: 
+National Institutes of Health (NIH; NS064033 to E.A.); 
 Uehara Memorial Foundation Postdoctoral Fellowship (202441017 to K.H.; 20210301 to H.U.);
 Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 202560576 to N.K.; 202560628 to H.U.; JP19K09494 and 22K09296 to M.I.)
 
@@ -85,7 +87,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 103
-      - Recordings: 106
+      - Recordings: 639
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -106,7 +108,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 32.6 GB
-      - File count: 106
+      - File count: 639
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005523
 
 Spatial Memory of Object Locations with Open-Loop Stimulation at Encoding (OpenNeuro ``ds005523``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Spatial Memory of Object Locations with Open-Loop Stimulation at Encoding*. `10.18112/openneuro.ds005523.v1.0.1 <https://doi.org/10.18112/openneuro.ds005523.v1.0.1>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Spatial Memory of Object Locations with Open-Loop Stimulation at Encoding*. `10.18112/openneuro.ds005523.v1.0.1 <https://doi.org/10.18112/openneuro.ds005523.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 102`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 22` :bdg-secondary:`Recordings: 728`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Spatial Memory of Object Locations with Open-Loop Stimulation at Encoding
    * - Year
-     - —
+     - 2024
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005523.v1.0.1 <https://doi.org/10.18112/openneuro.ds005523.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005523>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005523>`__ | `Source URL <https://openneuro.org/datasets/ds005523>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005523>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005523>`__ | `Source URL <https://openneuro.org/datasets/ds005523/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,12 +71,12 @@ Description
 **Spatial Navigation Memory of Object Locations with Open-Loop Stimulation at Encoding**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task with open-loop stimulation at encoding.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.  This dataset is an open-loop stimulation version of the `YC1 <https://openneuro.org/datasets/ds005522>`__ dataset.
+
 Each session contains 50 trials (2 practice and 48 experimental), and each overall "trial" contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
-This study contains open-loop electrical stimulation of the brain during encoding.  There is no stimulation during the retrieval phase.  Stimulation is delivered to a single electrode at a time, with locations chosen in the hippocampus and entorhinal cortex.  Stimulation parameters are included in the behavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
-Half of the (experimental) trials are assigned to the stimulation condition, and stimulation and no stimulation trials are alternated.  On stimulation trials, stimulation occurs during both of the associated learning trials.  Stimulation begins at the onset of turning towards the object's location and lasts for the 5 seconds of the learning trial (1s turn + 3s drive + 1s pause).
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -85,12 +85,17 @@ Half of the (experimental) trials are assigned to the stimulation condition, and
    **Spatial Navigation Memory of Object Locations with Open-Loop Stimulation at Encoding**
    
    
+   
    **Description**
    
    This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task with open-loop stimulation at encoding.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.  This dataset is an open-loop stimulation version of the `YC1 <https://openneuro.org/datasets/ds005522>`__ dataset.
+   
    Each session contains 50 trials (2 practice and 48 experimental), and each overall "trial" contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
+   
    This study contains open-loop electrical stimulation of the brain during encoding.  There is no stimulation during the retrieval phase.  Stimulation is delivered to a single electrode at a time, with locations chosen in the hippocampus and entorhinal cortex.  Stimulation parameters are included in the behavioral events tsv files, denoting the anode/cathode labels, amplitude, pulse frequency, pulse width, and pulse count.
+   
    Half of the (experimental) trials are assigned to the stimulation condition, and stimulation and no stimulation trials are alternated.  On stimulation trials, stimulation occurs during both of the associated learning trials.  Stimulation begins at the onset of turning towards the object's location and lasts for the 5 seconds of the learning trial (1s turn + 3s drive + 1s pause).
+   
    The trials are blocked by a counterbalanced scheme, so for every stimulated trial there is another non-stimulated trial with reflected object position, starting position, and orientation.  This counterbalancing ensures stimulated and non-stimulated trials are difficulty matched.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y).  Bold represents stimulation:
    - **(X1, Y1)**
        - **(x1', y1')**
@@ -100,6 +105,7 @@ Half of the (experimental) trials are assigned to the stimulation condition, and
        - (x2', y2')
        - (x2'', y2'')
        - (x2''', y2''')
+   
    The paired block contains 2 trials in the opposite order with object and starting locations:
    - **(-X2, -Y2)**
        - **(-x2', -y2')**
@@ -110,11 +116,13 @@ Half of the (experimental) trials are assigned to the stimulation condition, and
        - (-x1'', -y1'')
        - (-x1''', -y1''')
    
+   
    **To Note**
    
    * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
    * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
    * Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+   
    
    **Contact**
    
@@ -130,8 +138,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 21
-      - Recordings: 102
+      - Subjects: 22
+      - Recordings: 728
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -152,7 +160,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 69.7 GB
-      - File count: 102
+      - File count: 728
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS004554
 
 Forced Picture Naming Task (OpenNeuro ``ds004554``). Access recordings and metadata through EEGDash.
 
-**Citation:** V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter (—). *Forced Picture Naming Task*. `10.18112/openneuro.ds004554.v1.0.4 <https://doi.org/10.18112/openneuro.ds004554.v1.0.4>`__
+**Citation:** V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter (2023). *Forced Picture Naming Task*. `10.18112/openneuro.ds004554.v1.0.4 <https://doi.org/10.18112/openneuro.ds004554.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 16`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 16` :bdg-secondary:`Recordings: 101`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Forced Picture Naming Task
    * - Year
-     - —
+     - 2023
    * - Authors
      - V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov, Q. Mesnildrey and A. Beuter
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004554.v1.0.4 <https://doi.org/10.18112/openneuro.ds004554.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004554>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004554>`__ | `Source URL <https://openneuro.org/datasets/ds004554>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004554>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004554>`__ | `Source URL <https://openneuro.org/datasets/ds004554/versions/1.0.4>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,9 +67,12 @@ Dataset Information
 Description
 -----------
 
-This is the preprocessed dataset used for study "Characterization of spatiotemporal dynamics in EEG data during picture naming with optical flow patterns".
-The Picture Naming Task study included sixteen native French-speaking men, ranging in age from 18 to 70 years old. The participants met the inclusion criteria, which required normal or corrected-to-normal vision and hearing, as well as right-handedness, as determined by a handedness questionnaire [Oldfield1971assessment]. Exclusion criteria were in place to ensure that participants had no history of neurological or psychiatric disorders, drug addiction, or head trauma. In total 20 subjects were included in the study. The four first subjects' data was excluded due to hardware failure.
+This is the preprocessed dataset used for study "Characterization of spatiotemporal dynamics in EEG data during picture naming with optical flow patterns". 
+
+The Picture Naming Task study included sixteen native French-speaking men, ranging in age from 18 to 70 years old. The participants met the inclusion criteria, which required normal or corrected-to-normal vision and hearing, as well as right-handedness, as determined by a handedness questionnaire [Oldfield1971assessment]. Exclusion criteria were in place to ensure that participants had no history of neurological or psychiatric disorders, drug addiction, or head trauma. In total 20 subjects were included in the study. The four first subjects' data was excluded due to hardware failure. 
+
 Participants were required to name the pictures shown on a screen. Each event (random pictures) has three phases: [-2s, 0s] is the baseline (pre-visual-stimulation); at time 0 picture is shown on screen; then [0s, 1.5s] post-stimulation phase; [1.5s, 3s], naming phase. Pictures used in the task were selected from the Snodgrass & Vanderwart black-and-white line drawing corpus [Snodgrass1980standardized]. "./code/experiment_schema.pdf" showed the task design.
+
 Data pre-processing pipeline is illustrated in "./code/preprocess_pipeline.pdf". In total, 270 trials each for the 16 subjects.
 
 Highlights
@@ -82,7 +85,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 16
-      - Recordings: 16
+      - Recordings: 101
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.8 GB
-      - File count: 16
+      - File count: 101
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005776
 
 Electrical_Thermal_FingerTapping_2015 (OpenNeuro ``ds005776``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino (—). *Electrical_Thermal_FingerTapping_2015*. `10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
+**Citation:** Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino (2025). *Electrical_Thermal_FingerTapping_2015*. `10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 46`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 5` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 289`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Electrical_Thermal_FingerTapping_2015
    * - Year
-     - —
+     - 2025
    * - Authors
      - Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005776.v1.0.1 <https://doi.org/10.18112/openneuro.ds005776.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005776>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005776>`__ | `Source URL <https://openneuro.org/datasets/ds005776>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005776>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005776>`__ | `Source URL <https://openneuro.org/datasets/ds005776/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 11
-      - Recordings: 46
+      - Recordings: 289
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.2 GB
-      - File count: 46
+      - File count: 289
       - Format: BIDS
 
    .. grid-item-card:: License & citation

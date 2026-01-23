@@ -7,11 +7,11 @@ eegdash.dataset.DS004951
 
 Braille letters - EEG (OpenNeuro ``ds004951``). Access recordings and metadata through EEGDash.
 
-**Citation:** Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2019). *Braille letters - EEG*. `10.18112/openneuro.ds004951.v1.0.0 <https://doi.org/10.18112/openneuro.ds004951.v1.0.0>`__
+**Citation:** Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2024). *Braille letters - EEG*. `10.18112/openneuro.ds004951.v1.0.0 <https://doi.org/10.18112/openneuro.ds004951.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 23`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 200`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Braille letters - EEG
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004951.v1.0.0 <https://doi.org/10.18112/openneuro.ds004951.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004951>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004951>`__ | `Source URL <https://openneuro.org/datasets/ds004951>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004951>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004951>`__ | `Source URL <https://openneuro.org/datasets/ds004951/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,17 @@ Description
 -----------
 
 This dataset contains the raw EEG data accompanying the paper "The transformation of sensory to perceptual braille letter representations in the visually deprived brain". Please cite the above paper if you use this data.
+
 The dataset includes:
+
 Brainvision files (.eeg, .vhdr, .vmrk) for all participants.
+
 Please note, for some participants the EEG decording had to be stopped and restarted within a session. In this case, the different files are indicated as separate runs. In addition, some participants completed a second session.
-The events files contain the onsets, durations, trial types and values for all trials in the corresponding run. Stimuli are Braille letters (B,C,D,L,M,N,V,Z) presented on Braille cells under the left and right index fingers of participants. Triggers S1-8 are letters presented to the left hand, triggers S9-16 are letters presented to the right hand.
+
+The events files contain the onsets, durations, trial types and values for all trials in the corresponding run. Stimuli are Braille letters (B,C,D,L,M,N,V,Z) presented on Braille cells under the left and right index fingers of participants. Triggers S1-8 are letters presented to the left hand, triggers S9-16 are letters presented to the right hand. 
+
 Other triggers:
+
 starttrigger         = S100;
 trialonset           = S101;
 stimulusonset        = S222;
@@ -80,11 +86,15 @@ catchtrial           = S200;
 pedalpress_correct   = S253;
 pedalpress_incorrect = S254;
 endtrigger           = S255;
-For a full description of the paradigm and the employed procedures please see the paper.
+
+
+For a full description of the paradigm and the employed procedures please see the paper.  
+
 
 **References for MNE BIDS conversion**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
+
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Highlights
@@ -97,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 11
-      - Recordings: 23
+      - Recordings: 200
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,7 +128,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 22.0 GB
-      - File count: 23
+      - File count: 200
       - Format: BIDS
 
    .. grid-item-card:: License & citation

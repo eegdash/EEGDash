@@ -7,11 +7,11 @@ eegdash.dataset.DS005034
 
 The effect of theta tACS on working memory (OpenNeuro ``ds005034``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuri G. Pavlov, Dauren Kasanov (—). *The effect of theta tACS on working memory*. `10.18112/openneuro.ds005034.v1.0.1 <https://doi.org/10.18112/openneuro.ds005034.v1.0.1>`__
+**Citation:** Yuri G. Pavlov, Dauren Kasanov (2024). *The effect of theta tACS on working memory*. `10.18112/openneuro.ds005034.v1.0.1 <https://doi.org/10.18112/openneuro.ds005034.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 100`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 406`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The effect of theta tACS on working memory
    * - Year
-     - —
+     - 2024
    * - Authors
      - Yuri G. Pavlov, Dauren Kasanov
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005034.v1.0.1 <https://doi.org/10.18112/openneuro.ds005034.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005034>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005034>`__ | `Source URL <https://openneuro.org/datasets/ds005034>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005034>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005034>`__ | `Source URL <https://openneuro.org/datasets/ds005034/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Following either a 20-minute verum or sham stimulation applied to Fpz-CPz at 1 mA and 6 Hz, the participants performed WM tasks, while EEG was recorded. The task required participants to either mentally manipulate memory items or retain them in memory as they were originally presented. In addition, before the working memory task, resting state EEG with eyes closed was recorded for 3 minutes and with eyes open for 1.5 minutes.
+
 Behavioral performance data are available on OSF (https://osf.io/v2qwc/)
 
 Highlights
@@ -80,8 +81,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 100
-      - Tasks: 2
+      - Recordings: 406
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -101,7 +102,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 61.4 GB
-      - File count: 100
+      - File count: 406
       - Format: BIDS
 
    .. grid-item-card:: License & citation

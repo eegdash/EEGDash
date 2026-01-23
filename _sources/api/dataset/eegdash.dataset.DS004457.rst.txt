@@ -11,7 +11,7 @@ Electrical stimulation of temporal and limbic circuitry produces distinct respon
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 6` :bdg-secondary:`Recordings: 2801`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 5` :bdg-secondary:`Recordings: 2751`
 
 .. rst-class:: sd-badges
 
@@ -105,8 +105,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 6
-      - Recordings: 2801
+      - Subjects: 5
+      - Recordings: 2751
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -126,8 +126,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 2801
+      - Size on disk: 10.9 GB
+      - File count: 2751
       - Format: BIDS
 
    .. grid-item-card:: License & citation

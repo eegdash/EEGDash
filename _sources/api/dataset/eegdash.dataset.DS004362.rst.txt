@@ -7,11 +7,11 @@ eegdash.dataset.DS004362
 
 EEG Motor Movement/Imagery Dataset (OpenNeuro ``ds004362``). Access recordings and metadata through EEGDash.
 
-**Citation:** Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (—). *EEG Motor Movement/Imagery Dataset*. `10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
+**Citation:** Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (2022). *EEG Motor Movement/Imagery Dataset*. `10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 109` :bdg-secondary:`Recordings: 1526`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 109` :bdg-secondary:`Recordings: 9162`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG Motor Movement/Imagery Dataset
    * - Year
-     - —
+     - 2022
    * - Authors
      - Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004362.v1.0.0 <https://doi.org/10.18112/openneuro.ds004362.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004362>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004362>`__ | `Source URL <https://openneuro.org/datasets/ds004362>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004362>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004362>`__ | `Source URL <https://openneuro.org/datasets/ds004362/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,55 +68,68 @@ Description
 -----------
 
 ##Acknowledgements
-This data set was originally created and contributed to PhysioBank by Gerwin Schalk (schalk at wadsworth dot org) and his colleagues at the BCI R&D Program, Wadsworth Center, New York State Department of Health, Albany, NY. W.A. Sarnacki collected the data. Aditya Joshi compiled the dataset and prepared the documentation. D.J. McFarland and J.R. Wolpaw were responsible for experimental design and project oversight, respectively. This work was supported by grants from NIH/NIBIB ((EB006356 (GS) and EB00856 (JRW and GS)).
+This data set was originally created and contributed to PhysioBank by Gerwin Schalk (schalk at wadsworth dot org) and his colleagues at the BCI R&D Program, Wadsworth Center, New York State Department of Health, Albany, NY. W.A. Sarnacki collected the data. Aditya Joshi compiled the dataset and prepared the documentation. D.J. McFarland and J.R. Wolpaw were responsible for experimental design and project oversight, respectively. This work was supported by grants from NIH/NIBIB ((EB006356 (GS) and EB00856 (JRW and GS)). 
+
 **To access the initial publication of this dataset, please visit this link to PhysioBank: https://physionet.org/content/eegmmidb/1.0.0/**
+
 
 **Experiment Protocol**
 
- This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.
-Subjects performed different motor/imagery tasks while 64-channel EEG were recorded using the BCI2000 system (http://www.bci2000.org). Each subject performed 14 experimental runs: two one-minute baseline runs (one with eyes open, one with eyes closed), and three two-minute runs of each of the four following tasks:
-**[Task 1]** A target appears on either the left or the right side of the screen. The subject opens and closes the corresponding fist until the target disappears. Then the subject relaxes.
-**[Task 2]** A target appears on either the left or the right side of the screen. The subject imagines opening and closing the corresponding fist until the target disappears. Then the subject relaxes.
+ This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                           
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    ##Acknowledgements
-   This data set was originally created and contributed to PhysioBank by Gerwin Schalk (schalk at wadsworth dot org) and his colleagues at the BCI R&D Program, Wadsworth Center, New York State Department of Health, Albany, NY. W.A. Sarnacki collected the data. Aditya Joshi compiled the dataset and prepared the documentation. D.J. McFarland and J.R. Wolpaw were responsible for experimental design and project oversight, respectively. This work was supported by grants from NIH/NIBIB ((EB006356 (GS) and EB00856 (JRW and GS)).
+   This data set was originally created and contributed to PhysioBank by Gerwin Schalk (schalk at wadsworth dot org) and his colleagues at the BCI R&D Program, Wadsworth Center, New York State Department of Health, Albany, NY. W.A. Sarnacki collected the data. Aditya Joshi compiled the dataset and prepared the documentation. D.J. McFarland and J.R. Wolpaw were responsible for experimental design and project oversight, respectively. This work was supported by grants from NIH/NIBIB ((EB006356 (GS) and EB00856 (JRW and GS)). 
+   
    **To access the initial publication of this dataset, please visit this link to PhysioBank: https://physionet.org/content/eegmmidb/1.0.0/**
+   
    
    **Experiment Protocol**
    
-    This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.
+    This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                              
    Subjects performed different motor/imagery tasks while 64-channel EEG were recorded using the BCI2000 system (http://www.bci2000.org). Each subject performed 14 experimental runs: two one-minute baseline runs (one with eyes open, one with eyes closed), and three two-minute runs of each of the four following tasks:
-   **[Task 1]** A target appears on either the left or the right side of the screen. The subject opens and closes the corresponding fist until the target disappears. Then the subject relaxes.
-   **[Task 2]** A target appears on either the left or the right side of the screen. The subject imagines opening and closing the corresponding fist until the target disappears. Then the subject relaxes.
-   **[Task 3]** A target appears on either the top or the bottom of the screen. The subject opens and closes either both fists (if the target is on top) or both feet (if the target is on the bottom) until the target disappears. Then the subject relaxes.
-   **[Task 4]** A target appears on either the top or the bottom of the screen. The subject imagines opening and closing either both fists (if the target is on top) or both feet (if the target is on the bottom) until the target disappears. Then the subject relaxes.
-   In summary, the experimental runs were:
-       1. Baseline, eyes open
-       2. Baseline, eyes closed
-       3. Task 1 (open and close left or right fist)
-       4. Task 2 (imagine opening and closing left or right fist)
-       5. Task 3 (open and close both fists or both feet)
-       6. Task 4 (imagine opening and closing both fists or both feet)
-       7. Task 1
-       8. Task 2
-       9. Task 3
-       10. Task 4
-       11. Task 1
-       12. Task 2
-       13. Task 3
-       14. Task 4
+                                                                                                                                                                                                                                                                                                                              
+   **[Task 1]** A target appears on either the left or the right side of the screen. The subject opens and closes the corresponding fist until the target disappears. Then the subject relaxes.                                                                                                                                         
+   **[Task 2]** A target appears on either the left or the right side of the screen. The subject imagines opening and closing the corresponding fist until the target disappears. Then the subject relaxes.                                                                                                                            
+   **[Task 3]** A target appears on either the top or the bottom of the screen. The subject opens and closes either both fists (if the target is on top) or both feet (if the target is on the bottom) until the target disappears. Then the subject relaxes.                                                                         
+   **[Task 4]** A target appears on either the top or the bottom of the screen. The subject imagines opening and closing either both fists (if the target is on top) or both feet (if the target is on the bottom) until the target disappears. Then the subject relaxes.                                                               
+                                                                                                                                                                                                                                                                                                                              
+   In summary, the experimental runs were:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+       1. Baseline, eyes open                                                                                                                                                                                                                                                                                                      
+       2. Baseline, eyes closed                                                                                                                                                                                                                                                                                                   
+       3. Task 1 (open and close left or right fist)                                                                                                                                                                                                                                                                              
+       4. Task 2 (imagine opening and closing left or right fist)                                                                                                                                                                                                                                                                 
+       5. Task 3 (open and close both fists or both feet)                                                                                                                                                                                                                                                                         
+       6. Task 4 (imagine opening and closing both fists or both feet)                                                                                                                                                                                                                                                            
+       7. Task 1                                                                                                                                                                                                                                                                                                                  
+       8. Task 2                                                                                                                                                                                                                                                                                                                  
+       9. Task 3                                                                                                                                                                                                                                                                                                                  
+       10. Task 4                                                                                                                                                                                                                                                                                                                 
+       11. Task 1                                                                                                                                                                                                                                                                                                                 
+       12. Task 2                                                                                                                                                                                                                                                                                                                 
+       13. Task 3                                                                                                                                                                                                                                                                                                                 
+       14. Task 4 
+   
    Each event code includes an event type indicator (T0, T1, or T2) that is concatenated to the Task # it belongs with (i.e TASK1T2). The event type indicators change definition depending on the Task # it is associated with. For example, TASK1T2 would correspond to the onset of real motion in the right fist, while TASK3T2 would correspond to onset of real motion in both feet:
+   
    **[T0]** corresponds to rest
+   
    **[T1]** corresponds to onset of motion (real or imagined) of:
+   
    - the left fist (in runs 3, 4, 7, 8, 11, and 12; for Task 1 (real) and Task 2 (imagined))
    - both fists (in runs 5, 6, 9, 10, 13, and 14; for Task 3 (real) and Task 4 (imagined))
+   
    **[T2]** corresponds to onset of motion (real or imagined) of:
+   
    - the right fist (in runs 3, 4, 7, 8, 11, and 12; Task 1 (real) and Task 2 (imagined))
    - both feet (in runs 5, 6, 9, 10, 13, and 14; for Task 3 (real) and Task 4 (imagined))
+   
    **Note:** The data files in this dataset were converted into the .set format for EEGLAB. The event codes in the .set files of this dataset will contain the concatenated event codes above for all event files for clarity purposes. The non-converted .edf files along with the accompanying PhysioBank-compatible annotation files for all the runs of each subject can be found in the sourcedata folder. In the non-converted .edf files the event codes will only be shown as T0, T1, and T2 regardless of task type. All the Matlab scripts used for the .set conversion and renaming of event codes of the PhysioBank .edf files can be found in the code folder.
+   
    
    **Montage**
    
@@ -133,7 +146,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 109
-      - Recordings: 1526
+      - Recordings: 9162
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -153,8 +166,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.1 GB
-      - File count: 1526
+      - Size on disk: 7.8 GB
+      - File count: 9162
       - Format: BIDS
 
    .. grid-item-card:: License & citation

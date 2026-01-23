@@ -7,11 +7,11 @@ eegdash.dataset.DS005286
 
 30 By ANT (OpenNeuro ``ds005286``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (—). *30 By ANT*. `10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
+**Citation:** Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li (2024). *30 By ANT*. `10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 216`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - 30 By ANT
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005286.v1.0.0 <https://doi.org/10.18112/openneuro.ds005286.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005286>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005286>`__ | `Source URL <https://openneuro.org/datasets/ds005286>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005286>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005286>`__ | `Source URL <https://openneuro.org/datasets/ds005286/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -69,7 +69,7 @@ Description
 
 1.Study introduction:
 In this experiment, participants were initially exposed to a series of laser stimulations of varying intensities. Researchers identified the energy intensity corresponding to an average rating of 7 from the participants. Subsequently, each participant underwent 30 laser stimulis and provided verbal pain ratings one by one. The pain ratings were on a scale where 0 indicated no sensation at all, 4 indicated the onset of pain, 6 represented moderate pain, 8 indicated severe pain, and 10 denoted unbearable pain.
-2.Participant task information(description of the experiment):
+2.Participant task information(description of the experiment): 
 Participants underwent laser stimulation and subsequently verbally rated the intensity of pain.
 3.Participant instructions(as exact as possible):
 Participants were instructed to focus on the laser stimulation, keep their eyes open, and fix their gaze on the crosshairs displayed on the screen. After each laser stimulation, there is a five-second pause. Participants then rated the intensity of the pain. Subsequent trials began at random 5 seconds after the score was provided.
@@ -88,7 +88,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 30
+      - Recordings: 216
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -108,8 +108,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 19.4 GB
-      - File count: 30
+      - Size on disk: 9.4 GB
+      - File count: 216
       - Format: BIDS
 
    .. grid-item-card:: License & citation

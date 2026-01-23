@@ -7,11 +7,11 @@ eegdash.dataset.DS004853
 
 TX17 (OpenNeuro ``ds004853``). Access recordings and metadata through EEGDash.
 
-**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *TX17*. `10.18112/openneuro.ds004853.v1.0.0 <https://doi.org/10.18112/openneuro.ds004853.v1.0.0>`__
+**Citation:** Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *TX17*. `10.18112/openneuro.ds004853.v1.0.0 <https://doi.org/10.18112/openneuro.ds004853.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 10`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TX17
    * - Year
-     - —
+     - 2023
    * - Authors
      - Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004853.v1.0.0 <https://doi.org/10.18112/openneuro.ds004853.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004853>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004853>`__ | `Source URL <https://openneuro.org/datasets/ds004853>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004853>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004853>`__ | `Source URL <https://openneuro.org/datasets/ds004853/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 TX17 dataset
+
 This is a placeholder dataset.
 
 Highlights
@@ -80,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 1
+      - Recordings: 10
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 79.3 MB
-      - File count: 1
+      - Size on disk: 79.2 MB
+      - File count: 10
       - Format: BIDS
 
    .. grid-item-card:: License & citation

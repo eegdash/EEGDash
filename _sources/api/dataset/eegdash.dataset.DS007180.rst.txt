@@ -7,11 +7,11 @@ eegdash.dataset.DS007180
 
 Exo-EEG Experiment (OpenNeuro ``ds007180``). Access recordings and metadata through EEGDash.
 
-**Citation:** Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (—). *Exo-EEG Experiment*. `10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
+**Citation:** Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (2026). *Exo-EEG Experiment*. `10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 25`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 25` :bdg-secondary:`Recordings: 205`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Exo-EEG Experiment
    * - Year
-     - —
+     - 2026
    * - Authors
      - Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007180>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007180>`__ | `Source URL <https://openneuro.org/datasets/ds007180>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007180>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007180>`__ | `Source URL <https://openneuro.org/datasets/ds007180/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,6 +68,7 @@ Description
 -----------
 
 Exo-EEG Experiment
+
 Participants: see participants.tsv
 Task: exo (see *_eeg.json)
 Contact: aguedafgt@ugr.es
@@ -82,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 25
-      - Recordings: 25
+      - Recordings: 205
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -103,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 14.7 GB
-      - File count: 25
+      - File count: 205
       - Format: BIDS
 
    .. grid-item-card:: License & citation

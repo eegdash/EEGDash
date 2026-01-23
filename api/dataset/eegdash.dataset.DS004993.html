@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds004993">
 <h1>eegdash.dataset.DS004993<a class="headerlink" href="#eegdash-dataset-ds004993" title="Link to this heading">#</a></h1>
 <p>WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds004993</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Liberty S. Hamilton, Maansi Desai, Alyssa Field (2019). <em>WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004993.v1.1.2">10.18112/openneuro.ds004993.v1.1.2</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 3</span></p>
+<p><strong>Citation:</strong> Liberty S. Hamilton, Maansi Desai, Alyssa Field (2024). <em>WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004993.v1.1.2">10.18112/openneuro.ds004993.v1.1.2</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 3</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 30</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 0.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>2019</p></td>
+<td><p>2024</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Liberty S. Hamilton, Maansi Desai, Alyssa Field</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004993.v1.1.2">doi:10.18112/openneuro.ds004993.v1.1.2</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004993">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004993">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004993">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004993">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004993">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004993/versions/1.1.2">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1097,34 +1097,42 @@ loading errors, etc.), please let us know!</p>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>WIRED ICM TUTORIAL DATA</strong></p>
-<p><em>Contributors:</em> Liberty S. Hamilton, PhD, Maansi Desai, PhD, Alyssa Field, MEd
-<em>Email:</em> <a class="reference external" href="mailto:liberty&#46;hamilton&#37;&#52;&#48;austin&#46;utexas&#46;edu">liberty<span>&#46;</span>hamilton<span>&#64;</span>austin<span>&#46;</span>utexas<span>&#46;</span>edu</a>
-This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March 2024.
-This contains intracranial recordings collected by the Hamilton Lab at the University of Texas at Austin. These recordings include examples of evoked data during natural listening tasks along with some examples of seizure-related activity and vagus nerve stimulator (VNS) artifact for illustrative purposes. All procedures were approved by the University of Texas at Austin Institutional Review Board.
-<em>Funding:</em> Support was provided by the National Institutes of Health National Institute on Deafness and Other Communication Disorders (R01 DC018579, to LSH).</p>
-<p><strong>Tasks:</strong></p>
+<p><em>Contributors:</em> Liberty S. Hamilton, PhD, Maansi Desai, PhD, Alyssa Field, MEd</p>
+<p><em>Email:</em> <a class="reference external" href="mailto:liberty&#46;hamilton&#37;&#52;&#48;austin&#46;utexas&#46;edu">liberty<span>&#46;</span>hamilton<span>&#64;</span>austin<span>&#46;</span>utexas<span>&#46;</span>edu</a></p>
+<p>This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March 2024.</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>WIRED ICM TUTORIAL DATA</strong></p>
+<p class="sd-card-text"><em>Contributors:</em> Liberty S. Hamilton, PhD, Maansi Desai, PhD, Alyssa Field, MEd</p>
+<p class="sd-card-text"><em>Email:</em> <a class="reference external" href="mailto:liberty&#46;hamilton&#37;&#52;&#48;austin&#46;utexas&#46;edu">liberty<span>&#46;</span>hamilton<span>&#64;</span>austin<span>&#46;</span>utexas<span>&#46;</span>edu</a></p>
+<p class="sd-card-text">This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March 2024.</p>
+<p class="sd-card-text">This contains intracranial recordings collected by the Hamilton Lab at the University of Texas at Austin. These recordings include examples of evoked data during natural listening tasks along with some examples of seizure-related activity and vagus nerve stimulator (VNS) artifact for illustrative purposes. All procedures were approved by the University of Texas at Austin Institutional Review Board.</p>
+<p class="sd-card-text"><em>Funding:</em> Support was provided by the National Institutes of Health National Institute on Deafness and Other Communication Disorders (R01 DC018579, to LSH).</p>
+<p class="sd-card-text"><strong>Tasks:</strong></p>
 <ol class="arabic simple">
-<li><p><cite>movietrailers</cite> - this task involves patients listening to movie clips from various Pixar, Disney, Dreamworks, and other movies. We have published previously using these stimuli in EEG (Desai et al. 2021).</p></li>
-<li><p><cite>timit4</cite> and <cite>timit5</cite> - these tasks involve patients listening to subsets of the TIMIT acoustic phonetic corpus (Garofolo et al 1993). The events provided in the dataset mark the onset and offset of each sentence. In <cite>timit4</cite>, each sentence is unique, while in <cite>timit5</cite>, 10 sentences are repeated 10 times. This is the same stimulus set used in Mesgarani et al. 2014, Hamilton et al. 2018, Hamilton et al. 2021, and Desai et. al 2021.</p></li>
+<li><p class="sd-card-text"><cite>movietrailers</cite> - this task involves patients listening to movie clips from various Pixar, Disney, Dreamworks, and other movies. We have published previously using these stimuli in EEG (Desai et al. 2021).</p></li>
+<li><p class="sd-card-text"><cite>timit4</cite> and <cite>timit5</cite> - these tasks involve patients listening to subsets of the TIMIT acoustic phonetic corpus (Garofolo et al 1993). The events provided in the dataset mark the onset and offset of each sentence. In <cite>timit4</cite>, each sentence is unique, while in <cite>timit5</cite>, 10 sentences are repeated 10 times. This is the same stimulus set used in Mesgarani et al. 2014, Hamilton et al. 2018, Hamilton et al. 2021, and Desai et. al 2021.</p></li>
 </ol>
-<p><strong>Notes:</strong></p>
+<p class="sd-card-text"><strong>Notes:</strong></p>
 <ul class="simple">
-<li><p>The movie trailer data for subject W1 was acquired at the start of a generalized tonic clonic seizure, and the research session was terminated. Large, synchronized spikes can be observed on multiple channels on the right parietal grid throughout the iEEG data.</p></li>
-<li><p>The TIMIT data for subject W2 is an example of fairly clean sentence evoked data.</p></li>
-<li><p>The TIMIT data for subject W3 is a good example of on-and-off VNS artifact. The VNS has a strong artifact at ~20 Hz. Some patients with epilepsy may have these implanted devices to help control their seizures, so you should know how to spot artifact-related activity. Despite these artifacts, the evoked responses to sentences are quite strong.</p></li>
-<li><p>The acquisition number (B3, B8, etc) has to do with the order in which this task was run relative to other tasks in an iEEG session, and can be ignored here.</p></li>
+<li><p class="sd-card-text">The movie trailer data for subject W1 was acquired at the start of a generalized tonic clonic seizure, and the research session was terminated. Large, synchronized spikes can be observed on multiple channels on the right parietal grid throughout the iEEG data.</p></li>
+<li><p class="sd-card-text">The TIMIT data for subject W2 is an example of fairly clean sentence evoked data.</p></li>
+<li><p class="sd-card-text">The TIMIT data for subject W3 is a good example of on-and-off VNS artifact. The VNS has a strong artifact at ~20 Hz. Some patients with epilepsy may have these implanted devices to help control their seizures, so you should know how to spot artifact-related activity. Despite these artifacts, the evoked responses to sentences are quite strong.</p></li>
+<li><p class="sd-card-text">The acquisition number (B3, B8, etc) has to do with the order in which this task was run relative to other tasks in an iEEG session, and can be ignored here.</p></li>
 </ul>
-<p><strong>References</strong></p>
+<p class="sd-card-text"><strong>References</strong></p>
 <ul class="simple">
-<li><p>Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a></p></li>
-<li><p>Desai, M., Holder, J., Villarreal, C., Clark, N., Hoang, B., &amp; Hamilton, L. S. (2021). Generalizable EEG encoding models with naturalistic audiovisual stimuli. Journal of Neuroscience, 41(43), 8946-8962.</p></li>
-<li><p>Garofolo, J. S., Lamel, L. F., Fisher, W. M., Fiscus, J. G., &amp; Pallett, D. S. (1993). DARPA TIMIT acoustic-phonetic continous speech corpus CD-ROM. NIST speech disc 1-1.1. NASA STI/Recon technical report n, 93, 27403.</p></li>
-<li><p>Hamilton, L. S., Edwards, E., &amp; Chang, E. F. (2018). A spatial map of onset and sustained responses to speech in the human superior temporal gyrus. Current Biology, 28(12), 1860-1871.</p></li>
-<li><p>Hamilton, L. S., Oganian, Y., Hall, J., &amp; Chang, E. F. (2021). Parallel and distributed encoding of speech across human auditory cortex. Cell, 184(18), 4626-4639.</p></li>
-<li><p>Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0105-7">https://doi.org/10.1038/s41597-019-0105-7</a></p></li>
-<li><p>Mesgarani, N., Cheung, C., Johnson, K., &amp; Chang, E. F. (2014). Phonetic feature encoding in human superior temporal gyrus. Science, 343(6174), 1006-1010.</p></li>
+<li><p class="sd-card-text">Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a></p></li>
+<li><p class="sd-card-text">Desai, M., Holder, J., Villarreal, C., Clark, N., Hoang, B., &amp; Hamilton, L. S. (2021). Generalizable EEG encoding models with naturalistic audiovisual stimuli. Journal of Neuroscience, 41(43), 8946-8962.</p></li>
+<li><p class="sd-card-text">Garofolo, J. S., Lamel, L. F., Fisher, W. M., Fiscus, J. G., &amp; Pallett, D. S. (1993). DARPA TIMIT acoustic-phonetic continous speech corpus CD-ROM. NIST speech disc 1-1.1. NASA STI/Recon technical report n, 93, 27403.</p></li>
+<li><p class="sd-card-text">Hamilton, L. S., Edwards, E., &amp; Chang, E. F. (2018). A spatial map of onset and sustained responses to speech in the human superior temporal gyrus. Current Biology, 28(12), 1860-1871.</p></li>
+<li><p class="sd-card-text">Hamilton, L. S., Oganian, Y., Hall, J., &amp; Chang, E. F. (2021). Parallel and distributed encoding of speech across human auditory cortex. Cell, 184(18), 4626-4639.</p></li>
+<li><p class="sd-card-text">Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0105-7">https://doi.org/10.1038/s41597-019-0105-7</a></p></li>
+<li><p class="sd-card-text">Mesgarani, N., Cheung, C., Johnson, K., &amp; Chang, E. F. (2014). Phonetic feature encoding in human superior temporal gyrus. Science, 343(6174), 1006-1010.</p></li>
 </ul>
-</section>
+</div>
+</details></section>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
@@ -1136,7 +1144,7 @@ This contains intracranial recordings collected by the Hamilton Lab at the Unive
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 3</p></li>
-<li><p class="sd-card-text">Recordings: 3</p></li>
+<li><p class="sd-card-text">Recordings: 30</p></li>
 <li><p class="sd-card-text">Tasks: 3</p></li>
 </ul>
 </div>
@@ -1174,8 +1182,8 @@ Tags</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Files &amp; format</div>
 <ul class="simple">
-<li><p class="sd-card-text">Size on disk: 347.9 MB</p></li>
-<li><p class="sd-card-text">File count: 3</p></li>
+<li><p class="sd-card-text">Size on disk: 305.1 MB</p></li>
+<li><p class="sd-card-text">File count: 30</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

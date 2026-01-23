@@ -7,11 +7,11 @@ eegdash.dataset.DS005411
 
 Free Recall of Word Lists with Repeated Items (OpenNeuro ``ds005411``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Free Recall of Word Lists with Repeated Items*. `10.18112/openneuro.ds005411.v1.0.0 <https://doi.org/10.18112/openneuro.ds005411.v1.0.0>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Free Recall of Word Lists with Repeated Items*. `10.18112/openneuro.ds005411.v1.0.1 <https://doi.org/10.18112/openneuro.ds005411.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 47` :bdg-secondary:`Recordings: 193`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 48` :bdg-secondary:`Recordings: 1370`
 
 .. rst-class:: sd-badges
 
@@ -29,15 +29,15 @@ Dataset Information
    * - Title
      - Free Recall of Word Lists with Repeated Items
    * - Year
-     - —
+     - 2024
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005411.v1.0.0 <https://doi.org/10.18112/openneuro.ds005411.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds005411.v1.0.1 <https://doi.org/10.18112/openneuro.ds005411.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005411>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005411>`__ | `Source URL <https://openneuro.org/datasets/ds005411>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005411>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005411>`__ | `Source URL <https://openneuro.org/datasets/ds005411/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -48,8 +48,8 @@ Dataset Information
       @dataset{ds005411,
         title = {Free Recall of Word Lists with Repeated Items},
         author = {Haydn G. Herrema and Michael J. Kahana},
-        doi = {10.18112/openneuro.ds005411.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005411.v1.0.0},
+        doi = {10.18112/openneuro.ds005411.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds005411.v1.0.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -71,10 +71,14 @@ Description
 **Free Recall of Word Lists with Repeated Items**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a repated item free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, and then freely recalling the words from the just-presented list in any order. On each list, there is a 7-second delay period between the encoding and recall phases.  The data were collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
-The main manipulation in this paradigm is the repetition of items in the studied list. In total, each list contains 27 encoding events, but only 12 unique words: 3 are presented one time, 3 are presented two times, and 6 are presented three times.
+
+The main manipulation in this paradigm is the repetition of items in the studied list. In total, each list contains 27 encoding events, but only 12 unique words: 3 are presented one time, 3 are presented two times, and 6 are presented three times.  
+
+
 
 **To Note**
 
@@ -82,6 +86,7 @@ The main manipulation in this paradigm is the repetition of items in the studied
 * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
 * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
 * Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+
 
 **Contact**
 
@@ -96,8 +101,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 47
-      - Recordings: 193
+      - Subjects: 48
+      - Recordings: 1370
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -118,14 +123,14 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 157.4 GB
-      - File count: 193
+      - File count: 1370
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005411.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds005411.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

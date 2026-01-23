@@ -7,11 +7,11 @@ eegdash.dataset.DS004572
 
 The effects of sham hypnosis techniques (OpenNeuro ``ds004572``). Access recordings and metadata through EEGDash.
 
-**Citation:** Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (—). *The effects of sham hypnosis techniques*. `10.18112/openneuro.ds004572.v1.3.1 <https://doi.org/10.18112/openneuro.ds004572.v1.3.1>`__
+**Citation:** Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (2023). *The effects of sham hypnosis techniques*. `10.18112/openneuro.ds004572.v1.3.1 <https://doi.org/10.18112/openneuro.ds004572.v1.3.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 52` :bdg-secondary:`Recordings: 516`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 10` :bdg-secondary:`Subjects: 52` :bdg-secondary:`Recordings: 3153`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - The effects of sham hypnosis techniques
    * - Year
-     - —
+     - 2023
    * - Authors
      - Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004572.v1.3.1 <https://doi.org/10.18112/openneuro.ds004572.v1.3.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004572>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004572>`__ | `Source URL <https://openneuro.org/datasets/ds004572>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004572>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004572>`__ | `Source URL <https://openneuro.org/datasets/ds004572/versions/1.3.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,9 +68,12 @@ Description
 -----------
 
 52 participants (39 females) took part in this study and their brain electrophysiological activity were being recorded using 64-channel EasyCap from Brain Products. After mounting the EEG electrode cap, the study protocol started with 5 minutes of closed-eyes rest (Pre-hypnosis Baseline), followed by four experimental conditions (Experimental Blocks), and ended with another 5 minutes of closed-eyes rest (Post-hypnosis Baseline). Throughout the four Experimental Blocks, participants were exposed to either conventional or unconventional (placebo) hypnotic inductions described either as hypnosis or as simple relaxation technique in a 2 x 2 balanced placebo design. In other words, each participant underwent four trials, in which they were exposed to a conventional hypnosis induction presented as “hypnosis”; a conventional hypnosis induction presented as “control”; an unconventional hypnosis induction presented as “hypnosis”; and an unconventional hypnosis induction presented as “control” in a randomized order.
+
 For detailed information on our data collection methods, refer to the public trial registry on the Open Science Framework: https://doi.org/10.17605/OSF.IO/WVHDA.
+
 Publications based on this dataset:
 - https://www.nature.com/articles/s41598-024-56633-x
+
 - https://osf.io/preprints/psyarxiv/k3h5f
 
 Highlights
@@ -83,7 +86,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 52
-      - Recordings: 516
+      - Recordings: 3153
       - Tasks: 10
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +107,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 43.6 GB
-      - File count: 516
+      - File count: 3153
       - Format: BIDS
 
    .. grid-item-card:: License & citation

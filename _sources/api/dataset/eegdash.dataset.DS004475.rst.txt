@@ -7,11 +7,11 @@ eegdash.dataset.DS004475
 
 Mobile EEG split-belt walking study (OpenNeuro ``ds004475``). Access recordings and metadata through EEGDash.
 
-**Citation:** Noelle A. Jacobsen, Daniel P. Ferris (—). *Mobile EEG split-belt walking study*. `10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
+**Citation:** Noelle A. Jacobsen, Daniel P. Ferris (2023). *Mobile EEG split-belt walking study*. `10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 30`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 246`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Mobile EEG split-belt walking study
    * - Year
-     - —
+     - 2023
    * - Authors
      - Noelle A. Jacobsen, Daniel P. Ferris
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004475.v1.0.3 <https://doi.org/10.18112/openneuro.ds004475.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004475>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004475>`__ | `Source URL <https://openneuro.org/datasets/ds004475>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004475>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004475>`__ | `Source URL <https://openneuro.org/datasets/ds004475/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 30
+      - Recordings: 246
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 113.3 GB
-      - File count: 30
+      - Size on disk: 48.5 GB
+      - File count: 246
       - Format: BIDS
 
    .. grid-item-card:: License & citation

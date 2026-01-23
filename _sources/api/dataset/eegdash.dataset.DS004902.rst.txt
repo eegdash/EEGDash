@@ -7,11 +7,11 @@ eegdash.dataset.DS004902
 
 A Resting-state EEG Dataset for Sleep Deprivation (OpenNeuro ``ds004902``). Access recordings and metadata through EEGDash.
 
-**Citation:** Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2024). *A Resting-state EEG Dataset for Sleep Deprivation*. `10.18112/openneuro.ds004902.v1.0.8 <https://doi.org/10.18112/openneuro.ds004902.v1.0.8>`__
+**Citation:** Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2023). *A Resting-state EEG Dataset for Sleep Deprivation*. `10.18112/openneuro.ds004902.v1.0.8 <https://doi.org/10.18112/openneuro.ds004902.v1.0.8>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 71` :bdg-secondary:`Recordings: 218`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 71` :bdg-secondary:`Recordings: 1228`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A Resting-state EEG Dataset for Sleep Deprivation
    * - Year
-     - 2024
+     - 2023
    * - Authors
      - Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004902.v1.0.8 <https://doi.org/10.18112/openneuro.ds004902.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004902>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004902>`__ | `Source URL <https://openneuro.org/datasets/ds004902>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004902>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004902>`__ | `Source URL <https://openneuro.org/datasets/ds004902/versions/1.0.8>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -70,30 +70,57 @@ Description
 
 **General information**
 
+                                                                                                                                                                                                                                                      
 The dataset provides resting-state EEG data (eyes open,partially eyes closed) from 71 participants who underwent two experiments involving normal sleep (NS---session1) and  sleep deprivation(SD---session2) .The dataset also provides information on participants' sleepiness and mood states.
 （Please note here Session 1 (NS) and Session 2 (SD) is not the time order, the time order is counterbalanced across participants and is listed in metadata.）
 
+
+
 **Dataset**
 
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-**Presentation**
+   
+   **General information**
+   
+                                                                                                                                                                                                                                                         
+   The dataset provides resting-state EEG data (eyes open,partially eyes closed) from 71 participants who underwent two experiments involving normal sleep (NS---session1) and  sleep deprivation(SD---session2) .The dataset also provides information on participants' sleepiness and mood states.
+   （Please note here Session 1 (NS) and Session 2 (SD) is not the time order, the time order is counterbalanced across participants and is listed in metadata.）
+   
+   
+   
+   **Dataset**
+   
+                                                                                                                                                                                                                                                                    
+   
+   **Presentation**
+   
+                                                                                                                                                                                                                                                               
+   The data collection was initiated in March 2019 and was terminated in December 2020. The detailed description of the dataset is currently under working by Chuqin Xiang,Xinrui Fan,Duo Bai,Ke Lv and Xu Lei, and will submit to Scientific Data for publication.
+   
+     
+                            
+   
+   **EEG acquisition**
+   
+                                                                                                                                                                                                                                                          
+   * EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 61 electrodes)                                                                                                                                                                                               
+   * Sampling frequency: 500Hz
+   * Impedances were kept below 5k
+   
+        
+   
+   **Contact**
+   
+         * If you have any questions or comments, please contact:
+         * Xu Lei: xlei@swu.edu.cn      
+   
+   
+   **Article**
+   
+   Xiang, C., Fan, X., Bai, D. et al. A resting-state EEG dataset for sleep deprivation. Sci Data 11, 427 (2024). https://doi.org/10.1038/s41597-024-03268-2
 
-The data collection was initiated in March 2019 and was terminated in December 2020. The detailed description of the dataset is currently under working by Chuqin Xiang,Xinrui Fan,Duo Bai,Ke Lv and Xu Lei, and will submit to Scientific Data for publication.
-
-**EEG acquisition**
-
-* EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 61 electrodes)
-* Sampling frequency: 500Hz
-* Impedances were kept below 5k
-
-**Contact**
-
-      * If you have any questions or comments, please contact:
-      * Xu Lei: xlei@swu.edu.cn
-
-**Article**
-
-Xiang, C., Fan, X., Bai, D. et al. A resting-state EEG dataset for sleep deprivation. Sci Data 11, 427 (2024). https://doi.org/10.1038/s41597-024-03268-2
 
 Highlights
 ----------
@@ -105,7 +132,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 71
-      - Recordings: 218
+      - Recordings: 1228
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -126,7 +153,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 8.3 GB
-      - File count: 218
+      - File count: 1228
       - Format: BIDS
 
    .. grid-item-card:: License & citation

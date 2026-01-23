@@ -7,11 +7,11 @@ eegdash.dataset.DS005383
 
 TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments (OpenNeuro ``ds005383``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming (—). *TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments*. `10.18112/openneuro.ds005383.v1.0.0 <https://doi.org/10.18112/openneuro.ds005383.v1.0.0>`__
+**Citation:** Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming (2024). *TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments*. `10.18112/openneuro.ds005383.v1.0.0 <https://doi.org/10.18112/openneuro.ds005383.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 240`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 30` :bdg-secondary:`Recordings: 1925`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments
    * - Year
-     - —
+     - 2024
    * - Authors
      - Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming
    * - License
@@ -136,7 +136,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 30
-      - Recordings: 240
+      - Recordings: 1925
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -156,8 +156,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 17.4 GB
-      - File count: 240
+      - Size on disk: 358.2 MB
+      - File count: 1925
       - Format: BIDS
 
    .. grid-item-card:: License & citation

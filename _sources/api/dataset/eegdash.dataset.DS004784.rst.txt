@@ -7,11 +7,11 @@ eegdash.dataset.DS004784
 
 Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts (OpenNeuro ``ds004784``). Access recordings and metadata through EEGDash.
 
-**Citation:** Ryan J. Downey, Daniel P. Ferris (20). *Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts*. `10.18112/openneuro.ds004784.v1.0.4 <https://doi.org/10.18112/openneuro.ds004784.v1.0.4>`__
+**Citation:** Ryan J. Downey, Daniel P. Ferris (2023). *Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts*. `10.18112/openneuro.ds004784.v1.0.4 <https://doi.org/10.18112/openneuro.ds004784.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 6` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 6`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 51`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Ryan J. Downey, Daniel P. Ferris
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004784.v1.0.4 <https://doi.org/10.18112/openneuro.ds004784.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004784>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004784>`__ | `Source URL <https://openneuro.org/datasets/ds004784>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004784>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004784>`__ | `Source URL <https://openneuro.org/datasets/ds004784/versions/1.0.4>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -67,19 +67,20 @@ Dataset Information
 Description
 -----------
 
-This phantom experiment contains data collected from a an
-electrically conductive head phantom. Six conditions were
-tested: brain-only [no artifacts], or  brain with eye,
-jaw muscle, neck muscle, or motion artifacts present,
-or brain with all artifacts simultaneously present.
-Also contained is a copy of the iCanClean plugin for EEGLAB
-and a set of other helpful scripts that enable parameter sweep
-testing and validation with ground truth knowledge of the brain
-signals of interest. Please see derivatives folder and
-read the How To document within.
-A copy of iCanClean plugin is in derivatives->Scripts->plugins
-Please see reference for methodological details
-https://doi.org/10.3390/s23198214
+This phantom experiment contains data collected from a an 
+electrically conductive head phantom. Six conditions were 
+tested: brain-only [no artifacts], or  brain with eye, 
+jaw muscle, neck muscle, or motion artifacts present, 
+or brain with all artifacts simultaneously present. 
+Also contained is a copy of the iCanClean plugin for EEGLAB 
+and a set of other helpful scripts that enable parameter sweep 
+testing and validation with ground truth knowledge of the brain 
+signals of interest. Please see derivatives folder and 
+read the How To document within. 
+A copy of iCanClean plugin is in derivatives->Scripts->plugins 
+Please see reference for methodological details 
+https://doi.org/10.3390/s23198214 
+
 - Ryan Downey (December 20, 2023)
 
 Highlights
@@ -92,8 +93,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 6
-      - Tasks: 6
+      - Recordings: 51
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -112,8 +113,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 10.8 GB
-      - File count: 6
+      - Size on disk: 1.0 GB
+      - File count: 51
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005872
 
 EEGEyeNet Dataset (OpenNeuro ``ds005872``). Access recordings and metadata through EEGDash.
 
-**Citation:** Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (—). *EEGEyeNet Dataset*. `10.18112/openneuro.ds005872.v1.0.0 <https://doi.org/10.18112/openneuro.ds005872.v1.0.0>`__
+**Citation:** Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2025). *EEGEyeNet Dataset*. `10.18112/openneuro.ds005872.v1.0.0 <https://doi.org/10.18112/openneuro.ds005872.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 1`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 1` :bdg-secondary:`Recordings: 12`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEGEyeNet Dataset
    * - Year
-     - —
+     - 2025
    * - Authors
      - Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer
    * - License
@@ -81,7 +81,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 1
-      - Recordings: 1
+      - Recordings: 12
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -101,8 +101,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 43.6 MB
-      - File count: 1
+      - Size on disk: 39.9 MB
+      - File count: 12
       - Format: BIDS
 
    .. grid-item-card:: License & citation

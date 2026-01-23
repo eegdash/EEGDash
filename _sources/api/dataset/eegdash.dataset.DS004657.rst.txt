@@ -7,11 +7,11 @@ eegdash.dataset.DS004657
 
 Driving with Autonomous Aids (OpenNeuro ``ds004657``). Access recordings and metadata through EEGDash.
 
-**Citation:** Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (—). *Driving with Autonomous Aids*. `10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
+**Citation:** Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). *Driving with Autonomous Aids*. `10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 119`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 24` :bdg-secondary:`Recordings: 838`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Driving with Autonomous Aids
    * - Year
-     - —
+     - 2023
    * - Authors
      - Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004657.v1.0.3 <https://doi.org/10.18112/openneuro.ds004657.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004657>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004657>`__ | `Source URL <https://openneuro.org/datasets/ds004657>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004657>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004657>`__ | `Source URL <https://openneuro.org/datasets/ds004657/versions/1.0.3>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,11 +68,15 @@ Description
 -----------
 
 TX20 dataset
+
 Vehicle survivability is critically important in today’s military. Survivability is critically impacted by the performance of human operators – especially as it degrades with various factors. Significant DoD investments have focused on developing and integrating autonomous technologies to mitigate the effects of human error. However, simply implementing autonomy without having a clear plan for integrating with human operators can lead to relatively poor performance and thus low user acceptance. Human trust in automation (TiA) is a well-documented determinant of acceptance and use, but more important than achieving a certain level of trust is to find an appropriate match between the capabilities of the technology and the operator's trust. Finding means to calibrate TiA to elicit the desired use of the autonomy is an important goal, but requires reliable quantitative indicators that can be continuously monitored. Considerable research on interpersonal trust has revealed measurable patterns of physiological change that correlate significantly with changing levels of subjective trust and trust-based decision making. This research was aimed at facilitating the eventual real-time management of TiA by developing initial psychophysiology-based metrics for monitoring and predicting continuous changes in trust and/or trust-related behaviors.
+
 Complete a semi-automated driving task involving lane maintenance, following distance from a lead vehicle, and collision avoidance (with oncoming traffic and frequently appearing pedestrians). Under certain conditions, an automated driving assistant was available and could be engaged and disengaged at the discretion of the driver.  The automated assistant was capable of managing limited aspects of the driving task (maintainance of following distance alone or maintaining following distance and lane position), but was not capable of collision avoidance. Separate driver responses (button presses) were required to successfully avoid collisions with pedestrians.
+
 This research was conducted to develop and validate methods for monitoring and predicting varying degrees of trust in automation (TiA) using both physiological and behavioral metrics characterizing real-time human-automation interactions. The overarching goal of this research was to develop and validate methods for measuring and drawing inferences about TiA, either directly or indirectly through correlated constructs. In particular, we examined operator trust in vehicle automation as it is reflected in changes observed in subjective reports as well as behavioral and physiological state variables during the execution of a shared human-autonomy driving task. The stated aims underlying this goal included:
 Aim #1: To develop and experimentally validate metrics (dependent variables) that index changes in TiA. Rather than focusing on single-modality metrics, we will record and explore the patterns of correlation and co-variance among a variety of psychophysiological and behavioral variables and focus particularly on metrics that predict decisions around sharing vehicle control with the autonomy in each condition. State measures will be derived from EEG, EOG (electrooculography), ECG, EDA, and gaze position tracking as well as the subject vehicle control behaviors.
 Aim #2: To develop an understanding of factors (independent variables and covariates) that influence the subject’s TiA. Whereas the Aim #1 targets the identification of metrics, or groups of metrics, that reliably predict trust-based decision-making, here we seek to gain insight as to which factors influence the likelihood and directionality of those same trust-based decisions. Such factors will include real-time tracking of variables such as task load, collision risk, and recent performance history or trending changes in success rate.
+
 Sessions/Conditions
 SCPB: PractB
 SCMM: Manual driving
@@ -91,7 +95,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 24
-      - Recordings: 119
+      - Recordings: 838
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -112,7 +116,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 43.1 GB
-      - File count: 119
+      - File count: 838
       - Format: BIDS
 
    .. grid-item-card:: License & citation

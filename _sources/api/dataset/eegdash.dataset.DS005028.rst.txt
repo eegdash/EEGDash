@@ -7,11 +7,11 @@ eegdash.dataset.DS005028
 
 Comparing P300 Flashing paradigms in online typing with language models (OpenNeuro ``ds005028``). Access recordings and metadata through EEGDash.
 
-**Citation:** Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier (20). *Comparing P300 Flashing paradigms in online typing with language models*. `10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
+**Citation:** Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier (2024). *Comparing P300 Flashing paradigms in online typing with language models*. `10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 3` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 105`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: —` :bdg-secondary:`Subjects: 11` :bdg-secondary:`Recordings: 108`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Comparing P300 Flashing paradigms in online typing with language models
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__ | `Source URL <https://openneuro.org/datasets/ds005028>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__ | `Source URL <https://openneuro.org/datasets/ds005028/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 This dataset was created using BCI2000. The goal of this study was to explore the online typing performance of the P300 speller using language models and various flashing paradigms. For more information see Chandravadia et al. (https://www.medrxiv.org/content/10.1101/2022.06.24.22276882v1).
+
 If you reference this dataset in your publications, please acknowledge its authors.
+
 This dataset is made available under CC0.
+
 Note: subject 5 was not included in the analysis because the testing stage did not include all three flashing paradigms.
 
 Highlights
@@ -82,8 +85,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 11
-      - Recordings: 105
-      - Tasks: 3
+      - Recordings: 108
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -102,8 +105,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 1.5 GB
-      - File count: 105
+      - Size on disk: 422.1 MB
+      - File count: 108
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005059
 
 Paired Associates Learning: Memory for Word Pairs in Cued Recall (OpenNeuro ``ds005059``). Access recordings and metadata through EEGDash.
 
-**Citation:** Haydn G. Herrema, Michael J. Kahana (—). *Paired Associates Learning: Memory for Word Pairs in Cued Recall*. `10.18112/openneuro.ds005059.v1.0.6 <https://doi.org/10.18112/openneuro.ds005059.v1.0.6>`__
+**Citation:** Haydn G. Herrema, Michael J. Kahana (2024). *Paired Associates Learning: Memory for Word Pairs in Cued Recall*. `10.18112/openneuro.ds005059.v1.0.6 <https://doi.org/10.18112/openneuro.ds005059.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 69` :bdg-secondary:`Recordings: 282`
+:bdg-primary:`Modality: ieeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 72` :bdg-secondary:`Recordings: 2003`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Paired Associates Learning: Memory for Word Pairs in Cued Recall
    * - Year
-     - —
+     - 2024
    * - Authors
      - Haydn G. Herrema, Michael J. Kahana
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005059.v1.0.6 <https://doi.org/10.18112/openneuro.ds005059.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005059>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005059>`__ | `Source URL <https://openneuro.org/datasets/ds005059>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005059>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005059>`__ | `Source URL <https://openneuro.org/datasets/ds005059/versions/1.0.6>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,16 +71,20 @@ Description
 **Paired Associates Learning of Word Pairs**
 
 
+
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a paired associates memory task.  The experiment consists of participants studying pairs of visually presented words, solving simple arithmetic problems that function as a distractor, and then completing a cued recall task.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
+
 Each session contains 25 lists of the structure: encoding, distractor, cued recall.  During encoding, 6 pairs of words are presented one pair at a time.  Each pair remains on screen for 4000 ms and is followed by a 1000 ms interstimulus interval.  During the cued recall, one randomly chosen word from each pair is shown, and the participant is asked to vocally recall the other word from the pair.  Participants have 5000 ms for each recall, and then the next cue (i.e., a word from another pair) is shown.  All 6 pairs of words are tested on each list.
+
 
 **To Note:**
 
 - The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
 - Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
 - Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
+
 
 **Contact**
 
@@ -95,8 +99,8 @@ Highlights
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1
 
-      - Subjects: 69
-      - Recordings: 282
+      - Subjects: 72
+      - Recordings: 2003
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -117,7 +121,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 167.3 GB
-      - File count: 282
+      - File count: 2003
       - Format: BIDS
 
    .. grid-item-card:: License & citation

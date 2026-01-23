@@ -7,11 +7,11 @@ eegdash.dataset.DS004706
 
 Spatial memory and non-invasive closed-loop stimulus timing (OpenNeuro ``ds004706``). Access recordings and metadata through EEGDash.
 
-**Citation:** Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang, David J. Halpern, Nicholas B. Diamond, Michael J. Kahana (20). *Spatial memory and non-invasive closed-loop stimulus timing*. `10.18112/openneuro.ds004706.v1.0.0 <https://doi.org/10.18112/openneuro.ds004706.v1.0.0>`__
+**Citation:** Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang, David J. Halpern, Nicholas B. Diamond, Michael J. Kahana (2023). *Spatial memory and non-invasive closed-loop stimulus timing*. `10.18112/openneuro.ds004706.v1.0.0 <https://doi.org/10.18112/openneuro.ds004706.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 298`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 34` :bdg-secondary:`Recordings: 2711`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Spatial memory and non-invasive closed-loop stimulus timing
    * - Year
-     - 20
+     - 2023
    * - Authors
      - Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang, David J. Halpern, Nicholas B. Diamond, Michael J. Kahana
    * - License
@@ -83,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 34
-      - Recordings: 298
+      - Recordings: 2711
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.3 TB
-      - File count: 298
+      - File count: 2711
       - Format: BIDS
 
    .. grid-item-card:: License & citation

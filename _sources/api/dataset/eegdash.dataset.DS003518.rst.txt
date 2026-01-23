@@ -7,11 +7,11 @@ eegdash.dataset.DS003518
 
 EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge (OpenNeuro ``ds003518``). Access recordings and metadata through EEGDash.
 
-**Citation:** James F Cavanagh, Michael J Frank (20). *EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge*. `10.18112/openneuro.ds003518.v1.1.0 <https://doi.org/10.18112/openneuro.ds003518.v1.1.0>`__
+**Citation:** James F Cavanagh, Michael J Frank (2021). *EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge*. `10.18112/openneuro.ds003518.v1.1.0 <https://doi.org/10.18112/openneuro.ds003518.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 110` :bdg-secondary:`Recordings: 137`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 110` :bdg-secondary:`Recordings: 1265`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge
    * - Year
-     - 20
+     - 2021
    * - Authors
      - James F Cavanagh, Michael J Frank
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003518.v1.1.0 <https://doi.org/10.18112/openneuro.ds003518.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003518>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003518>`__ | `Source URL <https://openneuro.org/datasets/ds003518>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003518>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003518>`__ | `Source URL <https://openneuro.org/datasets/ds003518/versions/1.1.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 110
-      - Recordings: 137
+      - Recordings: 1265
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -100,7 +100,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 39.5 GB
-      - File count: 137
+      - File count: 1265
       - Format: BIDS
 
    .. grid-item-card:: License & citation

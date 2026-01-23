@@ -7,11 +7,11 @@ eegdash.dataset.DS004000
 
 Fribourg Ultimatum Game in Schizophrenia Study (OpenNeuro ``ds004000``). Access recordings and metadata through EEGDash.
 
-**Citation:** Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi (—). *Fribourg Ultimatum Game in Schizophrenia Study*. `10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
+**Citation:** Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi (2022). *Fribourg Ultimatum Game in Schizophrenia Study*. `10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 2` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 86`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 43` :bdg-secondary:`Recordings: 392`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Fribourg Ultimatum Game in Schizophrenia Study
    * - Year
-     - —
+     - 2022
    * - Authors
      - Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey, Marco Merlo, Jonas Richiardi
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004000.v1.0.0 <https://doi.org/10.18112/openneuro.ds004000.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004000>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004000>`__ | `Source URL <https://openneuro.org/datasets/ds004000>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004000>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004000>`__ | `Source URL <https://openneuro.org/datasets/ds004000/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,8 +68,11 @@ Description
 -----------
 
 This is a schizophrenia in ultimatum game task study for Fribourg University. Participants were asked to play the UG in both roles, both as responder and proposer. 128 electrode EEG was recorded during the task. 19 patients with psychosis epoisodes and 24 healths controls were recorded during the task.
+
 This dataset was recorded at the Fribourg University in Switzerland. The project was approved by the Ethics Committee of the University of Fribourg (reference number: 054/13-CER-FR).
-Participants sat in a shielded room, in a comfortable chair and played the game, while EEG was recorded.
+
+Participants sat in a shielded room, in a comfortable chair and played the game, while EEG was recorded. 
+
 For each role, participants performed three blocks, consisting of 30 repetitions each.
 
 Highlights
@@ -82,8 +85,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 43
-      - Recordings: 86
-      - Tasks: 2
+      - Recordings: 392
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -103,7 +106,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 22.5 GB
-      - File count: 86
+      - File count: 392
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS006801
 
 Resting-state EEG before and after different study methods (OpenNeuro ``ds006801``). Access recordings and metadata through EEGDash.
 
-**Citation:** Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (—). *Resting-state EEG before and after different study methods*. `10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
+**Citation:** Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (2025). *Resting-state EEG before and after different study methods*. `10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 42`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 21` :bdg-secondary:`Recordings: 173`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Resting-state EEG before and after different study methods
    * - Year
-     - —
+     - 2025
    * - Authors
      - Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006801.v1.0.0 <https://doi.org/10.18112/openneuro.ds006801.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006801>`__ | `Source URL <https://openneuro.org/datasets/ds006801>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006801>`__ | `Source URL <https://openneuro.org/datasets/ds006801/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -83,7 +83,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 21
-      - Recordings: 42
+      - Recordings: 173
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -104,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 42
+      - File count: 173
       - Format: BIDS
 
    .. grid-item-card:: License & citation

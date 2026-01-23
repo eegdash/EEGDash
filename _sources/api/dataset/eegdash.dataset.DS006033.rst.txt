@@ -7,11 +7,11 @@ eegdash.dataset.DS006033
 
 Synchronous EEG and fMRI dataset on inner speech (OpenNeuro ``ds006033``). Access recordings and metadata through EEGDash.
 
-**Citation:** Foteini Simistira Liwicki (—). *Synchronous EEG and fMRI dataset on inner speech*. `10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
+**Citation:** Foteini Simistira Liwicki (2025). *Synchronous EEG and fMRI dataset on inner speech*. `10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 5`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 3` :bdg-secondary:`Recordings: 63`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Synchronous EEG and fMRI dataset on inner speech
    * - Year
-     - —
+     - 2025
    * - Authors
      - Foteini Simistira Liwicki
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006033>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006033>`__ | `Source URL <https://openneuro.org/datasets/ds006033>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006033>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006033>`__ | `Source URL <https://openneuro.org/datasets/ds006033/versions/1.0.1>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -71,32 +71,52 @@ Description
 **Inner Speech EEG-fMRI Dataset**
 
 
+
 **Description**
 
 This dataset contains simultaneous EEG-fMRI recordings for inner speech experiments. Data were collected using a 3T MRI scanner and 64-channel BrainProducts EEG system. The EEG data have undergone preprocessing, including pulse artifact removal, using the BrainVision Analyzer software. No further data transformations have been applied to ensure the dataset remains BIDS-compliant as "raw".
 
-**Subjects**
 
-- Number of subjects: 3
-- Sessions per subject: 2
-- Tasks: Inner speech
 
-**Experimental Protocol**
+.. dropdown:: View full README
+   :class-container: sd-shadow-sm
 
-- Each trial includes a fixation period (2s), stimulus display (2s), and rest (12s).
-- 8 words were presented in random order, each repeated 40 times.
-- EEG sampled at 5000 Hz, fMRI acquired with TR=2s.
+   
+   **Inner Speech EEG-fMRI Dataset**
+   
+   
+   
+   **Description**
+   
+   This dataset contains simultaneous EEG-fMRI recordings for inner speech experiments. Data were collected using a 3T MRI scanner and 64-channel BrainProducts EEG system. The EEG data have undergone preprocessing, including pulse artifact removal, using the BrainVision Analyzer software. No further data transformations have been applied to ensure the dataset remains BIDS-compliant as "raw".
+   
+   
+   **Subjects**
+   
+   - Number of subjects: 3
+   - Sessions per subject: 2
+   - Tasks: Inner speech
+   
+   
+   **Experimental Protocol**
+   
+   - Each trial includes a fixation period (2s), stimulus display (2s), and rest (12s).
+   - 8 words were presented in random order, each repeated 40 times.
+   - EEG sampled at 5000 Hz, fMRI acquired with TR=2s.
+   
+   
+   **Data Organization**
+   
+   - Functional MRI data: `sub-xx/ses-xx/func/`
+   - EEG data: `sub-xx/ses-xx/eeg/`
+   - Event markers: `events.tsv`
+   - BIDS-compatible metadata included in JSON sidecars.
+   
+   
+   **Contact**
+   
+   For inquiries, contact: Foteini Simistira Liwicki (Foteini.liwicki@ltu.se)
 
-**Data Organization**
-
-- Functional MRI data: `sub-xx/ses-xx/func/`
-- EEG data: `sub-xx/ses-xx/eeg/`
-- Event markers: `events.tsv`
-- BIDS-compatible metadata included in JSON sidecars.
-
-**Contact**
-
-For inquiries, contact: Foteini Simistira Liwicki (Foteini.liwicki@ltu.se)
 
 Highlights
 ----------
@@ -108,7 +128,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 3
-      - Recordings: 5
+      - Recordings: 63
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -129,7 +149,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 15.3 GB
-      - File count: 5
+      - File count: 63
       - Format: BIDS
 
    .. grid-item-card:: License & citation

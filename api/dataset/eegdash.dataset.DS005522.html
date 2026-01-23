@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7021f170" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=75d7bb15" />
   
@@ -1040,8 +1040,8 @@
   <section id="eegdash-dataset-ds005522">
 <h1>eegdash.dataset.DS005522<a class="headerlink" href="#eegdash-dataset-ds005522" title="Link to this heading">#</a></h1>
 <p>Spatial Navigation Memory of Object Locations (OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds005522</span></code>). Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Haydn G. Herrema, Michael J. Kahana (—). <em>Spatial Navigation Memory of Object Locations</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds005522.v1.0.0">10.18112/openneuro.ds005522.v1.0.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 55</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 176</span></p>
+<p><strong>Citation:</strong> Haydn G. Herrema, Michael J. Kahana (2024). <em>Spatial Navigation Memory of Object Locations</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds005522.v1.0.0">10.18112/openneuro.ds005522.v1.0.0</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Tasks: 1</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Subjects: 58</span> <span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Recordings: 1297</span></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">Citations: 0.0</span></p>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
@@ -1058,7 +1058,7 @@
 <td><p>Spatial Navigation Memory of Object Locations</p></td>
 </tr>
 <tr class="row-odd"><td><p>Year</p></td>
-<td><p>—</p></td>
+<td><p>2024</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
 <td><p>Haydn G. Herrema, Michael J. Kahana</p></td>
@@ -1070,7 +1070,7 @@
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds005522.v1.0.0">doi:10.18112/openneuro.ds005522.v1.0.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005522">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005522">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005522">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005522">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005522">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005522/versions/1.0.0">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1098,18 +1098,16 @@ loading errors, etc.), please let us know!</p>
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p><strong>Spatial Navigation Memory of Object Locations</strong></p>
 <p><strong>Description</strong></p>
-<p>This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
-Each session contains 50 trials (2 practice and 48 experimental), and each overall “trial” contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
-The trials are blocked by a counterbalanced scheme, so for every trial there is another trial with reflected object position, starting position, and orientation.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y):
-- <strong>(X1, Y1)</strong></p>
+<p>This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.</p>
+<p>Each session contains 50 trials (2 practice and 48 experimental), and each overall “trial” contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Spatial Navigation Memory of Object Locations</strong></p>
 <p class="sd-card-text"><strong>Description</strong></p>
-<p class="sd-card-text">This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
-Each session contains 50 trials (2 practice and 48 experimental), and each overall “trial” contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).
-The trials are blocked by a counterbalanced scheme, so for every trial there is another trial with reflected object position, starting position, and orientation.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y):
+<p class="sd-card-text">This dataset contains behavioral events and intracranial electrophysiological recordings from a spatial navigation memory task.  The experiment consists of participants encoding object locations during a guided navigation learning phase and then recalling the object locations during a self-navigation test phase.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.</p>
+<p class="sd-card-text">Each session contains 50 trials (2 practice and 48 experimental), and each overall “trial” contains 2 learning trials followed by 1 test trial with the same object at the same location.  For learning trial 1, participants are placed at a random location at a given radius from the object.  They are smoothly turned to face the object (1 s), automatically driven to the object location (3 s), and then paused at the object (1 s).  5 seconds later, participants are placed at a new random location and the process repeats for learning trial 2.  On test trials, participants are placed at a random location and orientation, with the object invisible.  They navigate to where they believe the object was located and press a button to record their response.  The environment for all sessions and trials is 64.8 x 36, with coordinates: x = (-32.4, 32.4), y = (-18.0, 18.0).</p>
+<p class="sd-card-text">The trials are blocked by a counterbalanced scheme, so for every trial there is another trial with reflected object position, starting position, and orientation.  Each block contains 2 trials (i.e., 2 x (2 learning, 1 test)), with object (X, Y) and starting locations (x, y):
 - <strong>(X1, Y1)</strong></p>
 <blockquote>
 <div><ul class="simple">
@@ -1169,8 +1167,8 @@ The trials are blocked by a counterbalanced scheme, so for every trial there is 
 <div class="sd-card-title sd-font-weight-bold docutils">
 Subjects &amp; recordings</div>
 <ul class="simple">
-<li><p class="sd-card-text">Subjects: 55</p></li>
-<li><p class="sd-card-text">Recordings: 176</p></li>
+<li><p class="sd-card-text">Subjects: 58</p></li>
+<li><p class="sd-card-text">Recordings: 1297</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1209,7 +1207,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 107.5 GB</p></li>
-<li><p class="sd-card-text">File count: 176</p></li>
+<li><p class="sd-card-text">File count: 1297</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>

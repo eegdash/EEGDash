@@ -7,11 +7,11 @@ eegdash.dataset.DS003969
 
 Meditation vs thinking task (OpenNeuro ``ds003969``). Access recordings and metadata through EEGDash.
 
-**Citation:** Arnaud Delorme, Claire Braboszcz (—). *Meditation vs thinking task*. `10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
+**Citation:** Arnaud Delorme, Claire Braboszcz (2021). *Meditation vs thinking task*. `10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 4` :bdg-secondary:`Subjects: 98` :bdg-secondary:`Recordings: 392`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 98` :bdg-secondary:`Recordings: 1181`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - Meditation vs thinking task
    * - Year
-     - —
+     - 2021
    * - Authors
      - Arnaud Delorme, Claire Braboszcz
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003969>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003969>`__ | `Source URL <https://openneuro.org/datasets/ds003969>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003969>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003969>`__ | `Source URL <https://openneuro.org/datasets/ds003969/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -68,7 +68,9 @@ Description
 -----------
 
 Data collection took place at the Meditation Research Institute (MRI) in Rishikesh, India, under the supervision of Arnaud Delorme, Ph.D. The project was approved by the local MRI Indian ethical committee and the ethical committee of the University of California San Diego (IRB project # 090731).
+
 Participants sat either on a blanket on the floor or on a chair for both experimental periods depending on their personal preference. Participants were asked to keep their eyes closed, and all lighting in the room was turned off during data collection. An intercom allowed communication between the experimental and the recording room.
+
 Participants performed four blocks, 2 meditation blocks interspaced by two thining blocks (in which they are instructed to think actively). Half of the participants start with a meditation block, and half of them start with a thinking block. The first meditation block is a breath counting meditation for all participants. The second block is a tradition-specific meditation - except for the control group, for which it is a breath counting meditation.
 
 Highlights
@@ -81,8 +83,8 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 98
-      - Recordings: 392
-      - Tasks: 4
+      - Recordings: 1181
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1
@@ -102,7 +104,7 @@ Highlights
       :class-card: sd-border-1
 
       - Size on disk: 54.5 GB
-      - File count: 392
+      - File count: 1181
       - Format: BIDS
 
    .. grid-item-card:: License & citation

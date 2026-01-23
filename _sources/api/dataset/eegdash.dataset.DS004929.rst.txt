@@ -7,11 +7,11 @@ eegdash.dataset.DS004929
 
 BallSqueezingHD (OpenNeuro ``ds004929``). Access recordings and metadata through EEGDash.
 
-**Citation:** Yuanyuan Gao, De’Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel (—). *BallSqueezingHD*. `10.18112/openneuro.ds004929.v1.0.0 <https://doi.org/10.18112/openneuro.ds004929.v1.0.0>`__
+**Citation:** Yuanyuan Gao, De’Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel (2024). *BallSqueezingHD*. `10.18112/openneuro.ds004929.v1.0.0 <https://doi.org/10.18112/openneuro.ds004929.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: fnirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 36`
+:bdg-primary:`Modality: nirs` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 12` :bdg-secondary:`Recordings: 231`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - BallSqueezingHD
    * - Year
-     - —
+     - 2024
    * - Authors
      - Yuanyuan Gao, De’Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas, Meryem A. Yücel
    * - License
@@ -37,7 +37,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004929.v1.0.0 <https://doi.org/10.18112/openneuro.ds004929.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004929>`__ | `Source URL <https://openneuro.org/datasets/ds004929>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004929>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004929>`__ | `Source URL <https://openneuro.org/datasets/ds004929/versions/1.0.0>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -79,7 +79,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 12
-      - Recordings: 36
+      - Recordings: 231
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -99,8 +99,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 302.6 MB
-      - File count: 36
+      - Size on disk: 302.4 MB
+      - File count: 231
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -7,11 +7,11 @@ eegdash.dataset.DS005662
 
 A high-quality EEG dataset for studying visual touch perception (OpenNeuro ``ds005662``). Access recordings and metadata through EEGDash.
 
-**Citation:** Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek, Tijl Grootswagers (20). *A high-quality EEG dataset for studying visual touch perception*. `10.18112/openneuro.ds005662.v2.0.0 <https://doi.org/10.18112/openneuro.ds005662.v2.0.0>`__
+**Citation:** Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek, Tijl Grootswagers (2024). *A high-quality EEG dataset for studying visual touch perception*. `10.18112/openneuro.ds005662.v2.0.0 <https://doi.org/10.18112/openneuro.ds005662.v2.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 80`
+:bdg-primary:`Modality: eeg` :bdg-info:`Tasks: 1` :bdg-secondary:`Subjects: 80` :bdg-secondary:`Recordings: 175`
 
 .. rst-class:: sd-badges
 
@@ -29,7 +29,7 @@ Dataset Information
    * - Title
      - A high-quality EEG dataset for studying visual touch perception
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek, Tijl Grootswagers
    * - License
@@ -82,7 +82,7 @@ Highlights
       :class-card: sd-border-1
 
       - Subjects: 80
-      - Recordings: 80
+      - Recordings: 175
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -102,8 +102,8 @@ Highlights
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 118.3 GB
-      - File count: 80
+      - Size on disk: 107.8 GB
+      - File count: 175
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -5,6 +5,30 @@ import pytest
 from eegdash.paths import get_default_cache_dir
 
 
+def is_bids_dataset_available() -> tuple[bool, str]:
+    """Check if the BIDS test dataset is available and valid.
+
+    Returns a tuple of (is_available, reason).
+    """
+    cache_dir = Path(get_default_cache_dir())
+    path = cache_dir / "ds005509-bdf-mini"
+
+    if not path.exists():
+        return False, f"BIDS dataset not found at {path}"
+
+    # Check for basic BIDS structure (dataset_description.json)
+    if not (path / "dataset_description.json").exists():
+        return False, "Not a valid BIDS dataset (missing dataset_description.json)"
+
+    # Check for at least one data file
+    bdf_files = list(path.rglob("*.bdf"))
+    edf_files = list(path.rglob("*.edf"))
+    if not bdf_files and not edf_files:
+        return False, "No BDF/EDF data files found in dataset"
+
+    return True, ""
+
+
 @pytest.fixture(scope="session")
 def cache_dir():
     """Provide a shared cache directory for tests that need to cache datasets.

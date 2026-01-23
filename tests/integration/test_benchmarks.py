@@ -14,9 +14,20 @@ Note: This module uses the shared `bids_mini_dataset_path` and `cache_dir` fixtu
 from conftest.py to ensure consistent caching and avoid redundant downloads.
 """
 
+import sys
 import time
+from pathlib import Path
 
 import pytest
+
+# Add parent directory to path for conftest import
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from conftest import is_bids_dataset_available
+
+# Module-level skip if dataset not available
+_available, _reason = is_bids_dataset_available()
+if not _available:
+    pytest.skip(_reason, allow_module_level=True)
 
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
 
@@ -36,14 +47,11 @@ def bids_dataset_path(bids_mini_dataset_path):
 @pytest.fixture(scope="session")
 def bids_dataset(bids_dataset_path):
     """Load the BIDS dataset once for all tests in the session."""
-    try:
-        dataset = EEGBIDSDataset(
-            data_dir=str(bids_dataset_path),
-            dataset=bids_dataset_path.name,
-            allow_symlinks=True,
-        )
-    except (AssertionError, ValueError) as e:
-        pytest.skip(f"Could not load BIDS dataset: {e}")
+    dataset = EEGBIDSDataset(
+        data_dir=str(bids_dataset_path),
+        dataset=bids_dataset_path.name,
+        allow_symlinks=True,
+    )
     return dataset
 
 
@@ -54,12 +62,9 @@ class TestInitializationPerformance:
     def test_initialization_time(self, bids_dataset_path):
         """Test that dataset initialization is fast enough."""
         start = time.time()
-        try:
-            dataset = EEGBIDSDataset(
-                data_dir=str(bids_dataset_path), dataset=bids_dataset_path.name
-            )
-        except (AssertionError, ValueError) as e:
-            pytest.skip(f"Could not load BIDS dataset: {e}")
+        dataset = EEGBIDSDataset(
+            data_dir=str(bids_dataset_path), dataset=bids_dataset_path.name
+        )
         init_time = time.time() - start
 
         assert len(dataset.files) > 0, "Dataset should find at least one recording"

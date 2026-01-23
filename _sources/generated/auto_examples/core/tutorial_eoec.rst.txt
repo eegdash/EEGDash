@@ -211,7 +211,7 @@ corresponding to their respective event markers).
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
       warn(
     Used Annotations descriptions: ['boundary', 'break cnt', 'instructed_toCloseEyes', 'instructed_toOpenEyes', 'resting_start']
-    [01/22/26 23:40:05] INFO     Original events found with ids: preprocessing.py:66
+    [01/23/26 00:06:29] INFO     Original events found with ids: preprocessing.py:66
                                  {'boundary': 1, 'break cnt': 2,                    
                                  'instructed_toCloseEyes': 3,                       
                                  'instructed_toOpenEyes': 4,                        
@@ -232,7 +232,7 @@ corresponding to their respective event markers).
     - Filter length: 423 samples (3.305 s)
 
     Used Annotations descriptions: ['boundary', 'break cnt', 'instructed_toCloseEyes', 'instructed_toOpenEyes', 'resting_start']
-    [01/22/26 23:40:06] INFO     Original events found with ids: preprocessing.py:66
+    [01/23/26 00:06:32] INFO     Original events found with ids: preprocessing.py:66
                                  {'boundary': 1, 'break cnt': 2,                    
                                  'instructed_toCloseEyes': 3,                       
                                  'instructed_toOpenEyes': 4,                        
@@ -606,9 +606,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.996 seconds)
+   **Total running time of the script:** (0 minutes 8.677 seconds)
 
-**Estimated memory usage:**  1598 MB
+**Estimated memory usage:**  1593 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_eoec.py:

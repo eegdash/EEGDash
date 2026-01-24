@@ -105,9 +105,12 @@ html_js_files = [
     "https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js",
     "https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js",
     "https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js",
+    # Fuse.js for fuzzy search autocomplete (24KB minified, 8KB gzipped)
+    "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js",
     "js/tag-palette.js",
     "js/datatables-init.js",
     "js/hero-search.js",
+    "js/search-as-you-type.js",  # Live search in PyData theme search modal
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -332,10 +335,22 @@ AUTOGEN_NOTICE = """..
 """
 
 
-DATASET_PAGE_TEMPLATE = """{notice}{title}
+DATASET_PAGE_TEMPLATE = """{notice}:html_theme.sidebar_secondary.remove:
+
+{title}
 {underline}
 
 {hero_section}
+
+Quickstart
+----------
+
+{quickstart_section}
+
+About This Dataset
+------------------
+
+{readme_section}
 
 Dataset Information
 -------------------
@@ -344,28 +359,13 @@ Dataset Information
 
 {feedback_section}
 
-Description
------------
-
-{readme_section}
-
-Highlights
-----------
+Technical Details
+-----------------
 
 {highlights_section}
 
-Quickstart
-----------
-
-{quickstart_section}
-
-Quality & caveats
------------------
-
-{quality_section}
-
-API
----
+API Reference
+-------------
 
 {api_section}
 
@@ -677,8 +677,33 @@ def _normalize_list(value: object) -> list[str]:
     return [text] if text else []
 
 
-def _value_or_unknown(value: str) -> str:
-    return value if value else "—"
+def _value_or_unknown(value: str, field_type: str = "general") -> str:
+    """Return value or a context-aware placeholder for missing data.
+
+    Parameters
+    ----------
+    value : str
+        The value to check.
+    field_type : str
+        The type of field, used to select an appropriate placeholder.
+        Options: "n_channels", "pathology", "duration", "sampling_rate",
+                 "subjects", "recordings", "tasks", "license", "general".
+
+    """
+    if value and value.strip() not in ("", "nan", "none", "null", "unknown", "—"):
+        return value
+    placeholders = {
+        "n_channels": "Varies",
+        "pathology": "Not specified",
+        "duration": "Not calculated",
+        "sampling_rate": "Varies",
+        "subjects": "—",
+        "recordings": "—",
+        "tasks": "—",
+        "license": "See source",
+        "general": "—",
+    }
+    return placeholders.get(field_type, placeholders["general"])
 
 
 def _normalize_doi(doi: str) -> str:
@@ -941,7 +966,72 @@ def _build_dataset_context(
     }
 
 
-def _format_badges(items: Sequence[tuple[str, str]]) -> str:
+def _compute_quality_score(context: Mapping[str, object]) -> tuple[str, str, int]:
+    """Compute a data quality score based on metadata completeness.
+
+    Returns
+    -------
+    tuple[str, str, int]
+        (label, badge_color, percentage) where:
+        - label: "Complete", "Good", "Partial", or "Limited"
+        - badge_color: "success", "primary", "warning", or "secondary"
+        - percentage: 0-100 indicating completeness
+
+    """
+    # Key fields to check for completeness
+    fields_to_check = [
+        ("title", context.get("title")),
+        ("authors", context.get("authors")),
+        ("license", context.get("license")),
+        ("doi", context.get("doi")),
+        ("n_subjects", context.get("n_subjects")),
+        ("n_records", context.get("n_records")),
+        ("n_channels", context.get("n_channels")),
+        ("sampling_freqs", context.get("sampling_freqs")),
+        ("modality", context.get("modality")),
+        ("readme", context.get("readme")),
+    ]
+
+    filled = 0
+    for name, value in fields_to_check:
+        if value:
+            if isinstance(value, str):
+                if value.strip() and value.strip() not in (
+                    "—",
+                    "Varies",
+                    "Not specified",
+                    "Not calculated",
+                    "See source",
+                ):
+                    filled += 1
+            elif isinstance(value, list) and len(value) > 0:
+                filled += 1
+            else:
+                filled += 1
+
+    percentage = int((filled / len(fields_to_check)) * 100)
+
+    if percentage >= 90:
+        return ("Complete", "success", percentage)
+    elif percentage >= 70:
+        return ("Good", "primary", percentage)
+    elif percentage >= 50:
+        return ("Partial", "warning", percentage)
+    else:
+        return ("Limited", "secondary", percentage)
+
+
+def _format_badges(items: Sequence[tuple[str, str]], outline: bool = False) -> str:
+    """Format badge items as RST badge directives.
+
+    Parameters
+    ----------
+    items : Sequence[tuple[str, str]]
+        List of (label, value) tuples for badges.
+    outline : bool
+        If True, use outline badge style for cleaner look.
+
+    """
     # Map labels to badge colors
     color_map = {
         "Modality": "primary",
@@ -956,20 +1046,24 @@ def _format_badges(items: Sequence[tuple[str, str]]) -> str:
     for label, value in items:
         color = color_map.get(label, "light")
         val_text = _value_or_unknown(value)
-        badges.append(f":bdg-{color}:`{label}: {val_text}`")
+        # Use outline style for cleaner, less overwhelming look
+        style = f"{color}-line" if outline else color
+        badges.append(f":bdg-{style}:`{label}: {val_text}`")
 
     badges_str = " ".join(badges)
     return "\n".join([".. rst-class:: sd-badges", "", badges_str]).rstrip()
 
 
 def _format_hero_section(context: Mapping[str, object]) -> str:
-    dataset_id = str(context.get("dataset_id", ""))
     title = str(context.get("title", "")).strip()
+    source = str(context.get("source", "")).strip() or "OpenNeuro"
+
+    # Build subtitle based on available info
     if title:
-        tagline = f"{title} (OpenNeuro ``{dataset_id}``)."
+        tagline = f"*{title}*"
     else:
-        tagline = f"OpenNeuro dataset ``{dataset_id}``."
-    tagline = f"{tagline} Access recordings and metadata through EEGDash."
+        tagline = f"Dataset from {source}."
+    tagline = f"{tagline}\n\nAccess recordings and metadata through EEGDash."
 
     # Format citation
     authors = context.get("authors") or []
@@ -986,29 +1080,37 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
 
     citation_block = f"**Citation:** {authors_text} ({year}). *{title}*. {doi_link}"
 
-    badges_line_1 = _format_badges(
-        [
-            ("Modality", str(context.get("modality", ""))),
-            ("Tasks", str(context.get("n_tasks", ""))),
-            ("Subjects", str(context.get("n_subjects", ""))),
-            ("Recordings", str(context.get("n_records", ""))),
-        ]
-    )
+    # Consolidate all badges into a single line with outline style for cleaner look
     citation_count = context.get("nemar_citation_count", "")
-    badges_line_2 = _format_badges(
-        [
-            ("License", str(context.get("license", ""))),
-            ("Source", str(context.get("source", ""))),
-            ("Citations", str(citation_count) if citation_count else ""),
-        ]
-    )
-    return f"{tagline}\n\n{citation_block}\n\n{badges_line_1}\n\n{badges_line_2}"
+    all_badges = [
+        ("Modality", str(context.get("modality", ""))),
+        ("Subjects", str(context.get("n_subjects", ""))),
+        ("Recordings", str(context.get("n_records", ""))),
+        ("License", str(context.get("license", ""))),
+        ("Source", str(context.get("source", ""))),
+    ]
+    # Only add citations badge if there's a count
+    if citation_count:
+        all_badges.append(("Citations", str(citation_count)))
+
+    badges_line = _format_badges(all_badges, outline=True)
+
+    # Add quality indicator
+    quality_label, quality_color, quality_pct = _compute_quality_score(context)
+    quality_badge = f":bdg-{quality_color}:`Metadata: {quality_label} ({quality_pct}%)`"
+
+    return f"{tagline}\n\n{citation_block}\n\n{badges_line}\n\n{quality_badge}"
 
 
-def _stat_line(label: str, value: object, suffix: str = "") -> str:
+def _stat_line(
+    label: str, value: object, suffix: str = "", field_type: str = "general"
+) -> str:
     """Format a statistic line with label and value."""
-    text = _value_or_unknown(_clean_value(value))
-    if text != "Unknown" and suffix:
+    text = _value_or_unknown(_clean_value(value), field_type)
+    if (
+        text not in ("—", "Varies", "Not specified", "Not calculated", "See source")
+        and suffix
+    ):
         text = f"{text}{suffix}"
     return f"{label}: {text}"
 
@@ -1021,30 +1123,50 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
     cards = [
         (
             "Subjects & recordings",
+            "highlight-primary",
             [
-                _stat_line("Subjects", context.get("n_subjects")),
-                _stat_line("Recordings", context.get("n_records")),
-                _stat_line("Tasks", context.get("n_tasks")),
+                _stat_line(
+                    "Subjects", context.get("n_subjects"), field_type="subjects"
+                ),
+                _stat_line(
+                    "Recordings", context.get("n_records"), field_type="recordings"
+                ),
+                _stat_line("Tasks", context.get("n_tasks"), field_type="tasks"),
             ],
         ),
         (
             "Channels & sampling rate",
+            "highlight-secondary",
             [
-                _stat_line("Channels", context.get("n_channels")),
-                _stat_line("Sampling rate (Hz)", context.get("sampling_freqs")),
-                _stat_line("Duration (hours)", context.get("duration_hours_total")),
+                _stat_line(
+                    "Channels", context.get("n_channels"), field_type="n_channels"
+                ),
+                _stat_line(
+                    "Sampling rate (Hz)",
+                    context.get("sampling_freqs"),
+                    field_type="sampling_rate",
+                ),
+                _stat_line(
+                    "Duration (hours)",
+                    context.get("duration_hours_total"),
+                    field_type="duration",
+                ),
             ],
         ),
         (
             "Tags",
+            "highlight-tertiary",
             [
-                _stat_line("Pathology", context.get("pathology")),
+                _stat_line(
+                    "Pathology", context.get("pathology"), field_type="pathology"
+                ),
                 _stat_line("Modality", context.get("tag_modality")),
                 _stat_line("Type", context.get("tag_type")),
             ],
         ),
         (
             "Files & format",
+            "",
             [
                 _stat_line("Size on disk", context.get("size")),
                 _stat_line("File count", context.get("s3_item_count")),
@@ -1053,13 +1175,15 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
         ),
         (
             "License & citation",
+            "",
             [
-                _stat_line("License", context.get("license")),
+                _stat_line("License", context.get("license"), field_type="license"),
                 _stat_line("DOI", context.get("doi")),
             ],
         ),
         (
             "Provenance",
+            "",
             [
                 _stat_line("Source", context.get("source")),
                 f"OpenNeuro: `{dataset_id} <{openneuro_url}>`__",
@@ -1069,9 +1193,12 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
     ]
 
     lines = [".. grid:: 1 2 3 3", "   :gutter: 2", ""]
-    for title, items in cards:
+    for title, css_class, items in cards:
         lines.append(f"   .. grid-item-card:: {title}")
-        lines.append("      :class-card: sd-border-1")
+        if css_class:
+            lines.append(f"      :class-card: sd-border-1 {css_class}")
+        else:
+            lines.append("      :class-card: sd-border-1")
         lines.append("")
         for item in items:
             lines.append(f"      - {item}")
@@ -1082,28 +1209,60 @@ def _format_highlights_section(context: Mapping[str, object]) -> str:
 
 def _format_quickstart_section(context: Mapping[str, object]) -> str:
     class_name = str(context.get("class_name", ""))
+    dataset_id = str(context.get("dataset_id", ""))
+    title = str(context.get("title", ""))
+    doi = _clean_value(context.get("doi"))
+    doi_clean = _normalize_doi(doi)
+    authors = context.get("authors") or []
+
+    # Build BibTeX citation
+    bibtex_key = dataset_id.replace("-", "_")
+    bibtex_lines = [f"@dataset{{{bibtex_key},"]
+    if title:
+        bibtex_lines.append(f"  title = {{{title}}},")
+    if authors:
+        bibtex_lines.append(f"  author = {{{' and '.join(authors)}}},")
+    if doi_clean:
+        bibtex_lines.append(f"  doi = {{{doi_clean}}},")
+        bibtex_lines.append(f"  url = {{https://doi.org/{doi_clean}}},")
+    bibtex_lines.append("}")
+    bibtex_block = "\n".join(f"         {line}" for line in bibtex_lines)
+
     return (
-        "**Install**\n\n"
-        ".. code-block:: bash\n\n"
-        "    pip install eegdash\n\n"
-        "**Access the data**\n\n"
-        ".. code-block:: python\n\n"
-        f"    from eegdash.dataset import {class_name}\n\n"
-        f'    dataset = {class_name}(cache_dir="./data")\n'
-        "    # Get the raw object of the first recording\n"
-        "    raw = dataset.datasets[0].raw\n"
-        "    print(raw.info)\n\n"
-        "**Filter/query**\n\n"
         ".. tab-set::\n\n"
-        "   .. tab-item:: Basic\n\n"
+        "   .. tab-item:: Get Started\n"
+        "      :sync: start\n\n"
+        "      **Install**\n\n"
+        "      .. code-block:: bash\n\n"
+        "         pip install eegdash\n\n"
+        "      **Access the data**\n\n"
+        "      .. code-block:: python\n\n"
+        f"         from eegdash.dataset import {class_name}\n\n"
+        f'         dataset = {class_name}(cache_dir="./data")\n'
+        "         # Get the raw object of the first recording\n"
+        "         raw = dataset.datasets[0].raw\n"
+        "         print(raw.info)\n\n"
+        "   .. tab-item:: Query & Filter\n"
+        "      :sync: query\n\n"
+        "      **Filter by subject**\n\n"
         "      .. code-block:: python\n\n"
         f'         dataset = {class_name}(cache_dir="./data", subject="01")\n\n'
-        "   .. tab-item:: Advanced\n\n"
+        "      **Advanced query**\n\n"
         "      .. code-block:: python\n\n"
         f"         dataset = {class_name}(\n"
         '             cache_dir="./data",\n'
         '             query={"subject": {"$in": ["01", "02"]}},\n'
-        "         )\n"
+        "         )\n\n"
+        "      **Iterate recordings**\n\n"
+        "      .. code-block:: python\n\n"
+        "         for rec in dataset:\n"
+        "             print(rec.subject, rec.raw.info['sfreq'])\n\n"
+        "   .. tab-item:: Cite This Dataset\n"
+        "      :sync: cite\n\n"
+        "      If you use this dataset in your research, please cite the original authors.\n\n"
+        "      **BibTeX**\n\n"
+        "      .. code-block:: bibtex\n\n"
+        f"{bibtex_block}\n"
     )
 
 
@@ -1199,16 +1358,159 @@ def _convert_readme_to_rst(text: str) -> str:
 
     Handles markdown (#) headers, RST-style underline headers, and decorative
     box-style headers (em-dash lines) to avoid messing up the document structure.
+
+    Also handles various Markdown constructs that conflict with RST syntax:
+    - Markdown tables (wrapped in code blocks)
+    - Directory trees (wrapped in code blocks)
+    - Code fences (converted to RST code-block directives)
+    - Reference-style links [text][1] with [1]: url
+    - Trailing underscores (escaped to avoid hyperlink target errors)
+    - Pipe characters (escaped to avoid substitution reference errors)
+    - Orphan asterisks in file patterns (escaped)
+    - Markdown checkboxes (converted to simple list items)
     """
     # Remove BOM if present
     text = text.lstrip("\ufeff")
 
+    # === Phase 1: Extract reference-style link definitions ===
+    # Pattern: [1]: http://... or [name]: http://...
+    ref_link_defs: dict[str, str] = {}
+    ref_def_pattern = re.compile(r"^\s*\[([^\]]+)\]:\s*(.+?)\s*$", re.MULTILINE)
+    for match in ref_def_pattern.finditer(text):
+        ref_link_defs[match.group(1)] = match.group(2)
+    # Remove reference definitions from text
+    text = ref_def_pattern.sub("", text)
+
+    # === Phase 2: Convert markdown code fences to RST code blocks ===
+    def convert_code_fence(match: re.Match) -> str:
+        lang = match.group(1) or "text"
+        code = match.group(2)
+        # Indent the code content
+        indented_code = "\n".join("   " + line for line in code.split("\n"))
+        return f"\n.. code-block:: {lang}\n\n{indented_code}\n"
+
+    # Match ```lang\n...\n``` (multiline) - with or without newline after opening
+    code_fence_pattern = re.compile(r"```(\w*)\n?(.*?)```", re.DOTALL)
+    text = code_fence_pattern.sub(convert_code_fence, text)
+
+    # Clean up any remaining orphan triple backticks (convert to RST literal)
+    text = re.sub(r"``\s*`", "``", text)  # ``\` -> ``
+    text = re.sub(r"`\s*``", "``", text)  # `\`` -> ``
+
     lines = text.split("\n")
-    result = []
+    result: list[str] = []
     i = 0
+    in_code_block = False  # Track if we're inside a code block directive
+
+    # === Phase 3: Detect and wrap markdown tables ===
+    def is_table_line(line: str) -> bool:
+        """Check if line looks like a markdown table row."""
+        stripped = line.strip()
+        return (
+            stripped.startswith("|")
+            and stripped.endswith("|")
+            and "|" in stripped[1:-1]
+        )
+
+    def is_table_separator(line: str) -> bool:
+        """Check if line is a markdown table separator (|---|---|)."""
+        stripped = line.strip()
+        return bool(re.match(r"^\|[-:\s|]+\|$", stripped))
+
+    def is_tree_line(line: str) -> bool:
+        """Check if line is part of a directory tree."""
+        return bool(re.match(r"^\s*[\|│├└][\s─\-\|│├└]*", line))
+
+    # Pre-scan for table and tree regions
+    table_regions: set[int] = set()
+    tree_regions: set[int] = set()
+
+    # Find markdown tables
+    j = 0
+    while j < len(lines):
+        if is_table_line(lines[j]) or is_table_separator(lines[j]):
+            # Found start of potential table
+            while j < len(lines) and (
+                is_table_line(lines[j])
+                or is_table_separator(lines[j])
+                or lines[j].strip() == ""
+            ):
+                if lines[j].strip():  # Skip empty lines from region
+                    table_regions.add(j)
+                j += 1
+        else:
+            j += 1
+
+    # Find directory trees
+    j = 0
+    while j < len(lines):
+        if is_tree_line(lines[j]):
+            while j < len(lines) and (is_tree_line(lines[j]) or lines[j].strip() == ""):
+                if lines[j].strip():
+                    tree_regions.add(j)
+                j += 1
+        else:
+            j += 1
+
+    # === Phase 4: Process lines ===
+    table_block: list[str] = []
+    tree_block: list[str] = []
+    in_table = False
+    in_tree = False
+    prev_was_list_item = False
 
     while i < len(lines):
         line = lines[i]
+
+        # Track if we're in an RST code block (indented content after ::)
+        if line.strip().endswith("::") or line.strip().startswith(".. code-block::"):
+            in_code_block = True
+        elif (
+            in_code_block
+            and line.strip()
+            and not line.startswith(" ")
+            and not line.startswith("\t")
+        ):
+            in_code_block = False
+
+        # Handle table regions
+        if i in table_regions and not in_tree:
+            if not in_table:
+                # Start table block
+                in_table = True
+                table_block = []
+                # Add blank line before code block
+                if result and result[-1].strip():
+                    result.append("")
+                result.append(".. code-block:: text")
+                result.append("")
+            table_block.append("   " + line)
+            result.append("   " + line)
+            i += 1
+            continue
+        elif in_table:
+            # End of table
+            in_table = False
+            result.append("")
+
+        # Handle tree regions
+        if i in tree_regions and not in_table:
+            if not in_tree:
+                # Start tree block
+                in_tree = True
+                tree_block = []
+                if result and result[-1].strip():
+                    result.append("")
+                result.append(".. code-block:: text")
+                result.append("")
+            tree_block.append("   " + line)
+            result.append("   " + line)
+            i += 1
+            continue
+        elif in_tree:
+            # End of tree
+            in_tree = False
+            result.append("")
 
         # Skip purely decorative lines (em-dashes, repeated dashes, etc.)
         if _is_decorative_line(line):
@@ -1222,6 +1524,7 @@ def _convert_readme_to_rst(text: str) -> str:
                     result.append(f"**{potential_title}**")
                     result.append("")
                     i += 3  # Skip decorative, title, decorative
+                    prev_was_list_item = False
                     continue
             # Just a decorative line by itself - skip it
             i += 1
@@ -1235,6 +1538,7 @@ def _convert_readme_to_rst(text: str) -> str:
             result.append(f"**{title}**")
             result.append("")
             i += 1
+            prev_was_list_item = False
             continue
 
         # Check for RST-style underline headers (Title followed by ==== or ----)
@@ -1254,12 +1558,172 @@ def _convert_readme_to_rst(text: str) -> str:
                 result.append(f"**{title}**")
                 result.append("")
                 i += 2  # Skip both the title and underline
+                prev_was_list_item = False
                 continue
 
-        # Convert markdown links [text](url) -> `text <url>`__
-        line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"`\1 <\2>`__", line)
+        # === Line-level transformations (skip if in code block) ===
+        if not in_code_block:
+            # Convert Unicode bullets to RST-compatible list items
+            # • (U+2022 bullet), ⁃ (U+2043 hyphen bullet), ‣ (U+2023 triangular bullet)
+            line = re.sub(r"^(\s*)[•⁃‣]\s*", r"\1- ", line)
+
+            # Convert markdown checkboxes: - [ ] item -> - item
+            line = re.sub(r"^(\s*)-\s*\[([ xX]?)\]\s*", r"\1- ", line)
+
+            # Convert reference-style links: [text][ref] -> `text <url>`__
+            def replace_ref_link(m: re.Match) -> str:
+                text = m.group(1)
+                ref = m.group(2)
+                url = ref_link_defs.get(ref, "")
+                if url:
+                    return f"`{text} <{url}>`__"
+                return m.group(0)  # Keep original if ref not found
+
+            line = re.sub(r"\[([^\]]+)\]\[([^\]]+)\]", replace_ref_link, line)
+
+            # Convert markdown links [text](url) -> `text <url>`__
+            line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"`\1 <\2>`__", line)
+
+            # Escape trailing underscores on words (e.g., auricular_points_)
+            # Matches word_underscore followed by whitespace, punctuation, or end of line
+            line = re.sub(r"(\w)_(?=[\s.,;:!?\)\]\}]|$)", r"\1\_", line)
+
+            # Escape pipe characters that could be interpreted as substitution references
+            # Don't escape pipes that are already in table-like structures we've processed
+            # Escape |word| patterns and lone | characters
+            line = re.sub(r"\|([^\|]+)\|", r"\\|\1\\|", line)
+            # Also escape standalone | at start of line (except in tables we already handled)
+            if (
+                line.strip().startswith("|")
+                and i not in table_regions
+                and i not in tree_regions
+            ):
+                line = line.replace("|", "\\|")
+
+            # === Handle escaped asterisks and malformed bold/emphasis ===
+
+            # Fix \**text:** patterns (escaped asterisk before single-star emphasis)
+            # \**Active:** -> *Active:* (convert to proper single emphasis)
+            line = re.sub(r"\\?\*\*([^*:]+:)\*\*?(?=\s|$)", r"*\1*", line)
+
+            # Fix patterns like \**MATLAB R2020b**using (escaped * before bold, no space after)
+            # Convert to proper bold with space: **MATLAB R2020b** using
+            line = re.sub(r"\\?\*(\*\*[^*]+\*\*)(?=[a-zA-Z])", r"\1 ", line)
+
+            # Fix **text* \* patterns (bold opened with ** but closed with * \*)
+            # Convert to proper bold: **text**
+            line = re.sub(r"(\*\*[^*]+)\*\s*\\\*", r"\1**", line)
+
+            # Normalize already-escaped asterisks: \* -> placeholder
+            line = line.replace("\\*", "\x00ESCAPED_ASTERISK\x00")
+
+            # Escape asterisks in file patterns and paths
+            # Pattern: asterisk in file patterns (*.eeg, *_events.tsv, sub-*/eeg/)
+            # Asterisk followed by dot, underscore, or /
+            line = re.sub(r"\*(?=[._/])", r"\\*", line)
+            # Asterisk preceded by / or - (path patterns like sub-* or /*)
+            line = re.sub(r"(?<=[/\-])\*", r"\\*", line)
+
+            # Count unescaped asterisks - if odd number, some are orphaned
+            asterisk_count = line.count("*") - line.count("\\*")
+            if asterisk_count % 2 == 1:
+                # Escape lone asterisks not forming valid emphasis pairs
+                # This catches asterisks at start of word not followed by closing asterisk
+                line = re.sub(r"(?<=\s)\*(?=\S)", r"\\*", line)
+
+            # Restore pre-escaped asterisks
+            line = line.replace("\x00ESCAPED_ASTERISK\x00", "\\*")
+
+            # Fix bold/emphasis that's immediately followed by text without space
+            # **Protocol:**Data -> **Protocol:** Data
+            line = re.sub(r"(\*\*[^*]+\*\*)(?=[a-zA-Z])", r"\1 ", line)
+
+            # Fix text immediately before bold without space (only for double asterisks)
+            # word**text** -> word **text**
+            line = re.sub(r"([a-zA-Z])(\*\*[^*]+\*\*)", r"\1 \2", line)
+
+            # Fix spaces inside bold/emphasis markers (RST doesn't allow this)
+            # ** text** -> **text**
+            line = re.sub(r"\*\*\s+([^*]+)\*\*", r"**\1**", line)
+            # Also fix trailing spaces: **text ** -> **text**
+            line = re.sub(r"\*\*([^*]+)\s+\*\*", r"**\1**", line)
+            # Fix single emphasis with spaces: * text* -> *text*
+            line = re.sub(r"\*\s+([^*]+)\*(?!\*)", r"*\1*", line)
+            line = re.sub(r"\*([^*]+)\s+\*(?!\*)", r"*\1*", line)
+
+            # Fix malformed emphasis patterns like **[text]* \* or * text*
+            # These need to be either properly closed or escaped
+            line = re.sub(r"\*\*\[([^\]]+)\]\*\s*\\?\*", r"**[\1]**", line)
+
+            # Fix patterns where bold ends with \** (escaped closing)
+            # **text\** -> **text** (the \* was meant to end the bold)
+            line = re.sub(r"(\*\*[^*]+)\\(\*\*)$", r"\1\2", line)
+
+            # Fix \**text** patterns at start - escaped asterisk before bold
+            # \**text** should just be **text** (ignore leading escaped *)
+            line = re.sub(r"(?<=\s)\\?\*(\*\*[^*]+\*\*)", r"\1", line)
+            line = re.sub(r"^\\?\*(\*\*[^*]+\*\*)", r"\1", line)
+
+            # Fix lone * markers that look like attempts at emphasis but have spaces
+            # * real* -> *real* (if it looks like intended emphasis)
+            line = re.sub(r"\*\s+(\w+)\*(?!\*)", r"*\1*", line)
+
+            # Fix emphasis ending with trailing escaped asterisk: *text* \* -> *text*
+            line = re.sub(r"(\*[^*]+\*)\s*\\\*$", r"\1", line)
+
+            # Fix **text* \* patterns (bold opened, single * close with escaped *)
+            # Convert to proper bold: **text**
+            line = re.sub(r"(\*\*[^*]+)\*\s*\\\*$", r"\1**", line)
+
+            # Remove orphan triple backticks that weren't caught by code fence conversion
+            # These appear as ``\` or `\`` after partial processing
+            line = re.sub(r"``\\?`", "``", line)
+            line = re.sub(r"`\\?``", "``", line)
+            # Also remove standalone triple backticks
+            line = re.sub(r"^```\s*$", "", line)
+
+            # Escape orphan backticks (unbalanced inline code)
+            backtick_count = line.count("`") - line.count("\\`") - 2 * line.count("``")
+            if backtick_count % 2 == 1:
+                # Find and escape lone backticks not forming pairs
+                # Simple approach: escape backticks not followed by closing backtick
+                parts = []
+                in_backtick = False
+                for j, char in enumerate(line):
+                    if char == "`" and (j == 0 or line[j - 1] != "\\"):
+                        if in_backtick:
+                            in_backtick = False
+                            parts.append(char)
+                        else:
+                            # Check if there's a closing backtick
+                            remaining = line[j + 1 :]
+                            if "`" in remaining and not remaining.startswith(" "):
+                                in_backtick = True
+                                parts.append(char)
+                            else:
+                                parts.append("\\`")
+                    else:
+                        parts.append(char)
+                line = "".join(parts)
+
+        # Check if current line is a list item
+        is_list_item = bool(
+            re.match(r"^\s*[-*+]\s+", line) or re.match(r"^\s*\d+[.)]\s+", line)
+        )
+
+        # Ensure blank line before text that follows a list item
+        if (
+            prev_was_list_item
+            and not is_list_item
+            and line.strip()
+            and not line.startswith(" ")
+        ):
+            # Insert blank line if missing
+            if result and result[-1].strip():
+                result.append("")
 
         result.append(line)
+        prev_was_list_item = is_list_item
         i += 1
 
     return "\n".join(result)
@@ -1323,7 +1787,9 @@ def _format_quality_section(context: Mapping[str, object]) -> str:
 
 
 def _format_api_section(class_name: str) -> str:
+    """Format the API section with autodoc."""
     return (
+        f"Use the ``{class_name}`` class to access this dataset programmatically.\n\n"
         ".. currentmodule:: eegdash.dataset\n\n"
         f".. autoclass:: eegdash.dataset.{class_name}\n"
         "   :members: __init__, save\n"
@@ -1394,7 +1860,8 @@ def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None
 def _process_dataset_item(
     name: str, dataset_dir: Path, row: Mapping[str, str] | None, srcdir: Path
 ) -> Path:
-    title = f"eegdash.dataset.{name}"
+    # Use simplified title: just the dataset ID (e.g., "DS001787")
+    title = name  # Dataset class name is already uppercase ID like DS001787
     context = _build_dataset_context(name, row)
     dataset_id = str(context.get("dataset_id", ""))
     dataset_title = str(context.get("title", ""))
@@ -1407,11 +1874,11 @@ def _process_dataset_item(
         readme_section=_format_readme_section(context),
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
-        quality_section=_format_quality_section(context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
     )
+    # Keep the file name with full prefix for URL stability
     page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
     if _write_if_changed(page_path, page_content):
         rel = page_path.relative_to(srcdir)

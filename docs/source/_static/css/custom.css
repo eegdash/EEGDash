@@ -8,7 +8,7 @@
 /* 2) Widen the overall page container (default is ~88rem) */
 .bd-page-width {
   max-width: clamp(80rem, 96vw, 130rem);
-}x
+}
 
 /* Copy button styling to match EEGDash surfaces */
 .highlight button.copybtn {
@@ -60,5 +60,501 @@ html[data-theme="dark"] .highlight button.copybtn {
 .sd-badges .sd-badge {
     font-weight: 500;
     letter-spacing: 0.02em;
+}
+
+/* =============================================================================
+   Fuzzy Search Autocomplete Dropdown
+   ============================================================================= */
+
+.hf-search {
+  position: relative;
+}
+
+.hf-autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.5rem;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.2);
+  max-height: 420px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+html[data-theme="dark"] .hf-autocomplete-dropdown {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* Individual result item */
+.hf-autocomplete-item {
+  display: block;
+  padding: 0.85rem 1rem;
+  text-decoration: none;
+  color: #1e293b;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+  transition: background 0.15s ease;
+}
+
+html[data-theme="dark"] .hf-autocomplete-item {
+  color: #e2e8f0;
+  border-bottom-color: rgba(148, 163, 184, 0.1);
+}
+
+.hf-autocomplete-item:last-of-type {
+  border-bottom: none;
+}
+
+.hf-autocomplete-item:hover,
+.hf-autocomplete-item.hf-ac-selected {
+  background: rgba(79, 140, 255, 0.08);
+}
+
+html[data-theme="dark"] .hf-autocomplete-item:hover,
+html[data-theme="dark"] .hf-autocomplete-item.hf-ac-selected {
+  background: rgba(79, 140, 255, 0.15);
+}
+
+/* Header row: ID + tags */
+.hf-ac-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.hf-ac-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #006ca3;
+}
+
+html[data-theme="dark"] .hf-ac-id {
+  color: #7dd3fc;
+}
+
+.hf-ac-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-left: auto;
+}
+
+/* Mini tags */
+.hf-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.hf-tag-source {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+html[data-theme="dark"] .hf-tag-source {
+  background: rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+}
+
+.hf-tag-modality {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+html[data-theme="dark"] .hf-tag-modality {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.hf-tag-pathology {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+html[data-theme="dark"] .hf-tag-pathology {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+/* Title line */
+.hf-ac-title {
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+html[data-theme="dark"] .hf-ac-title {
+  color: #cbd5e1;
+}
+
+/* Stats line */
+.hf-ac-stats {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+html[data-theme="dark"] .hf-ac-stats {
+  color: #94a3b8;
+}
+
+/* Highlight matches */
+.hf-highlight {
+  background: rgba(250, 204, 21, 0.4);
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 2px;
+}
+
+html[data-theme="dark"] .hf-highlight {
+  background: rgba(250, 204, 21, 0.3);
+}
+
+/* View all link */
+.hf-ac-view-all {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #006ca3;
+  background: rgba(79, 140, 255, 0.05);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  text-decoration: none;
+}
+
+.hf-ac-view-all:hover {
+  background: rgba(79, 140, 255, 0.1);
+}
+
+html[data-theme="dark"] .hf-ac-view-all {
+  color: #7dd3fc;
+  background: rgba(79, 140, 255, 0.1);
+  border-top-color: rgba(148, 163, 184, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hf-autocomplete-dropdown {
+    max-height: 320px;
+  }
+
+  .hf-ac-header {
+    flex-wrap: wrap;
+  }
+
+  .hf-ac-tags {
+    margin-left: 0;
+    margin-top: 0.25rem;
+    width: 100%;
+  }
+}
+
+/* =============================================================================
+   Search-as-you-type for PyData Theme Search Modal
+   ============================================================================= */
+
+.sayt-results {
+  max-height: 60vh;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  background: var(--pst-color-surface);
+  border: 1px solid var(--pst-color-border);
+}
+
+.sayt-count {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--pst-color-text-muted);
+  border-bottom: 1px solid var(--pst-color-border);
+  background: var(--pst-color-background);
+}
+
+.sayt-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  text-decoration: none;
+  color: var(--pst-color-text-base);
+  border-bottom: 1px solid var(--pst-color-border);
+  transition: background 0.1s ease;
+}
+
+.sayt-result:last-child {
+  border-bottom: none;
+}
+
+.sayt-result:hover,
+.sayt-result.sayt-selected {
+  background: var(--pst-color-target);
+}
+
+.sayt-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  padding-top: 0.1rem;
+  opacity: 0.7;
+}
+
+.sayt-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sayt-title {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--pst-color-text-base);
+}
+
+.sayt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.sayt-path {
+  font-size: 0.75rem;
+  color: var(--pst-color-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.sayt-parent {
+  font-size: 0.75rem;
+  color: var(--pst-color-text-muted);
+  font-style: italic;
+}
+
+.sayt-badge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--pst-color-border);
+  color: var(--pst-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.sayt-type-title .sayt-badge {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.sayt-type-section .sayt-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.sayt-type-content .sayt-badge {
+  background: rgba(156, 163, 175, 0.15);
+  color: #6b7280;
+}
+
+html[data-theme="dark"] .sayt-type-title .sayt-badge {
+  background: rgba(59, 130, 246, 0.25);
+  color: #60a5fa;
+}
+
+html[data-theme="dark"] .sayt-type-section .sayt-badge {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.sayt-highlight {
+  background: rgba(250, 204, 21, 0.4);
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 2px;
+}
+
+html[data-theme="dark"] .sayt-highlight {
+  background: rgba(250, 204, 21, 0.3);
+}
+
+.sayt-no-results,
+.sayt-hint {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--pst-color-text-muted);
+  font-size: 0.9rem;
+}
+
+.sayt-tip {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.sayt-tip code {
+  background: var(--pst-color-border);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+}
+
+/* Scrollbar styling for results */
+.sayt-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sayt-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sayt-results::-webkit-scrollbar-thumb {
+  background: var(--pst-color-border);
+  border-radius: 3px;
+}
+
+.sayt-results::-webkit-scrollbar-thumb:hover {
+  background: var(--pst-color-text-muted);
+}
+
+/* =============================================================================
+   Dataset Page Improvements
+   ============================================================================= */
+
+/* Tiered highlight cards with accent borders */
+.highlight-primary {
+  border-left: 4px solid #3b82f6 !important;
+}
+
+.highlight-secondary {
+  border-left: 4px solid #8b5cf6 !important;
+}
+
+.highlight-tertiary {
+  border-left: 4px solid #10b981 !important;
+}
+
+html[data-theme="dark"] .highlight-primary {
+  border-left-color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .highlight-secondary {
+  border-left-color: #a78bfa !important;
+}
+
+html[data-theme="dark"] .highlight-tertiary {
+  border-left-color: #34d399 !important;
+}
+
+/* Data quality indicators */
+.quality-complete {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.quality-good {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.quality-partial {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.quality-limited {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+/* Unavailable data styling */
+.data-unavailable {
+  font-style: italic;
+  color: var(--pst-color-text-muted);
+  opacity: 0.8;
+}
+
+/* Badge improvements for dataset pages */
+.sd-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.sd-badges .sd-badge {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+}
+
+/* API reference dropdown styling */
+.api-reference-dropdown .sd-dropdown-container {
+  margin-top: 1rem;
+}
+
+/* Dataset page hero section improvements */
+article.bd-article h1 + p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--pst-color-text-base);
+  margin-bottom: 1rem;
+}
+
+/* Make citation block stand out slightly */
+article.bd-article p strong:first-child {
+  color: var(--pst-color-text-base);
+}
+
+/* Improve list styling in highlight cards */
+.sd-card ul {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.sd-card ul li {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.sd-card ul li:last-child {
+  border-bottom: none;
+}
+
+html[data-theme="dark"] .sd-card ul li {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Quickstart tab styling improvements */
+.sd-tab-set {
+  margin-top: 1rem;
+}
+
+/* Responsive adjustments for dataset pages */
+@media (max-width: 768px) {
+  .sd-badges {
+    justify-content: center;
+  }
+
+  .sd-badges .sd-badge {
+    font-size: 0.75rem;
+  }
 }
 

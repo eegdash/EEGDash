@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=75d7bb15" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -64,9 +64,11 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
     <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
-    <script src="../../../_static/js/hero-search.js?v=d34ab722"></script>
+    <script src="../../../_static/js/hero-search.js?v=e355ff47"></script>
+    <script src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/core/tutorial_eoec.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -674,7 +676,7 @@ corresponding to their respective event markers).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
 Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[01/23/26 08:37:42] INFO     Original events found with ids: preprocessing.py:66
+[01/24/26 14:05:58] INFO     Original events found with ids: preprocessing.py:66
                              {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
                              &#39;instructed_toCloseEyes&#39;: 3,
                              &#39;instructed_toOpenEyes&#39;: 4,
@@ -695,7 +697,7 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 - Filter length: 423 samples (3.305 s)
 
 Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[01/23/26 08:37:45] INFO     Original events found with ids: preprocessing.py:66
+[01/24/26 14:06:00] INFO     Original events found with ids: preprocessing.py:66
                              {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
                              &#39;instructed_toCloseEyes&#39;: 3,
                              &#39;instructed_toOpenEyes&#39;: 4,
@@ -981,8 +983,8 @@ Epoch 4, Train accuracy: 0.97, Test accuracy: 0.93
 Epoch 5, Train accuracy: 0.97, Test accuracy: 0.89
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.214 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1586 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.342 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1588 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-eoec-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_eoec.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />

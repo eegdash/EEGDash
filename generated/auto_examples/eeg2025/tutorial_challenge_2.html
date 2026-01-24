@@ -45,7 +45,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=b9813beb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=75d7bb15" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -65,9 +65,11 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
     <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
-    <script src="../../../_static/js/hero-search.js?v=d34ab722"></script>
+    <script src="../../../_static/js/hero-search.js?v=e355ff47"></script>
+    <script src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_2.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -1024,76 +1026,76 @@ Forward/backward pass size (MB): 16.65
 Params size (MB): 0.22
 Estimated Total Size (MB): 16.97
 ================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.6552072167396545
-Epoch 0 - step 1, loss: 0.6714702844619751
-Epoch 0 - step 2, loss: 0.7099205851554871
-Epoch 0 - step 3, loss: 0.6574225425720215
-Epoch 0 - step 4, loss: 0.6530368328094482
-Epoch 0 - step 5, loss: 0.6193665266036987
-Epoch 0 - step 6, loss: 0.6890743970870972
-Epoch 0 - step 7, loss: 0.6894094944000244
-Epoch 0 - step 8, loss: 0.6886451244354248
-Epoch 0 - step 9, loss: 0.6678006649017334
-Epoch 0 - step 10, loss: 0.6026414632797241
-Epoch 0 - step 11, loss: 0.6088076233863831
-Epoch 0 - step 12, loss: 0.6092385053634644
-Epoch 0 - step 13, loss: 0.6842774748802185
-Epoch 0 - step 14, loss: 0.6195738315582275
-Epoch 0 - step 15, loss: 0.6515263319015503
-Epoch 0 - step 16, loss: 0.5940134525299072
-Epoch 0 - step 17, loss: 0.6120477914810181
-Epoch 0 - step 18, loss: 0.5930865406990051
-Epoch 0 - step 19, loss: 0.6468819975852966
-Epoch 0 - step 20, loss: 0.7064400315284729
-Epoch 0 - step 21, loss: 0.6936212778091431
-Epoch 0 - step 22, loss: 0.636813759803772
-Epoch 0 - step 23, loss: 0.6829714775085449
-Epoch 0 - step 24, loss: 0.5930706262588501
-Epoch 0 - step 25, loss: 0.5831442475318909
-Epoch 0 - step 26, loss: 0.660335898399353
-Epoch 0 - step 27, loss: 0.7239224314689636
-Epoch 0 - step 28, loss: 0.6665024161338806
-Epoch 0 - step 29, loss: 0.6941422820091248
-Epoch 0 - step 30, loss: 0.5975886583328247
-Epoch 0 - step 31, loss: 0.7046077251434326
-Epoch 0 - step 32, loss: 0.7394456267356873
-Epoch 0 - step 33, loss: 0.6114872694015503
-Epoch 0 - step 34, loss: 0.6159681677818298
-Epoch 0 - step 35, loss: 0.6924852132797241
-Epoch 0 - step 36, loss: 0.6548183560371399
-Epoch 0 - step 37, loss: 0.680036723613739
-Epoch 0 - step 38, loss: 0.5990691781044006
-Epoch 0 - step 39, loss: 0.6377286911010742
-Epoch 0 - step 40, loss: 0.7129961848258972
-Epoch 0 - step 41, loss: 0.6620831489562988
-Epoch 0 - step 42, loss: 0.6250301599502563
-Epoch 0 - step 43, loss: 0.7040458917617798
-Epoch 0 - step 44, loss: 0.5945116877555847
-Epoch 0 - step 45, loss: 0.6442674994468689
-Epoch 0 - step 46, loss: 0.6330779790878296
-Epoch 0 - step 47, loss: 0.6295381188392639
-Epoch 0 - step 48, loss: 0.63481205701828
-Epoch 0 - step 49, loss: 0.6397832632064819
-Epoch 0 - step 50, loss: 0.6945137977600098
-Epoch 0 - step 51, loss: 0.666803240776062
-Epoch 0 - step 52, loss: 0.6158873438835144
-Epoch 0 - step 53, loss: 0.6564350724220276
-Epoch 0 - step 54, loss: 0.6318250298500061
-Epoch 0 - step 55, loss: 0.6533629298210144
-Epoch 0 - step 56, loss: 0.6257307529449463
-Epoch 0 - step 57, loss: 0.6647595763206482
-Epoch 0 - step 58, loss: 0.6246114373207092
-Epoch 0 - step 59, loss: 0.6331804394721985
-Epoch 0 - step 60, loss: 0.6494510173797607
-Epoch 0 - step 61, loss: 0.6348007321357727
-Epoch 0 - step 62, loss: 0.6396855115890503
-Epoch 0 - step 63, loss: 0.6799361109733582
-Epoch 0 - step 64, loss: 0.7649016976356506
+Epoch 0 - step 0, loss: 0.6666859984397888
+Epoch 0 - step 1, loss: 0.6728023290634155
+Epoch 0 - step 2, loss: 0.7389814853668213
+Epoch 0 - step 3, loss: 0.6636049747467041
+Epoch 0 - step 4, loss: 0.6584215760231018
+Epoch 0 - step 5, loss: 0.6263919472694397
+Epoch 0 - step 6, loss: 0.6968639492988586
+Epoch 0 - step 7, loss: 0.7068654298782349
+Epoch 0 - step 8, loss: 0.6704986095428467
+Epoch 0 - step 9, loss: 0.6418755054473877
+Epoch 0 - step 10, loss: 0.5989454984664917
+Epoch 0 - step 11, loss: 0.5979832410812378
+Epoch 0 - step 12, loss: 0.5858810544013977
+Epoch 0 - step 13, loss: 0.6945239901542664
+Epoch 0 - step 14, loss: 0.6242622137069702
+Epoch 0 - step 15, loss: 0.633695125579834
+Epoch 0 - step 16, loss: 0.6083099246025085
+Epoch 0 - step 17, loss: 0.6260361671447754
+Epoch 0 - step 18, loss: 0.6042309999465942
+Epoch 0 - step 19, loss: 0.6628886461257935
+Epoch 0 - step 20, loss: 0.7279461026191711
+Epoch 0 - step 21, loss: 0.7136008143424988
+Epoch 0 - step 22, loss: 0.6546177864074707
+Epoch 0 - step 23, loss: 0.7079159617424011
+Epoch 0 - step 24, loss: 0.5902481079101562
+Epoch 0 - step 25, loss: 0.5688971281051636
+Epoch 0 - step 26, loss: 0.6739711761474609
+Epoch 0 - step 27, loss: 0.7256892323493958
+Epoch 0 - step 28, loss: 0.6623989343643188
+Epoch 0 - step 29, loss: 0.6918544173240662
+Epoch 0 - step 30, loss: 0.599495530128479
+Epoch 0 - step 31, loss: 0.6911341547966003
+Epoch 0 - step 32, loss: 0.7392427921295166
+Epoch 0 - step 33, loss: 0.6033374071121216
+Epoch 0 - step 34, loss: 0.6225873827934265
+Epoch 0 - step 35, loss: 0.684200644493103
+Epoch 0 - step 36, loss: 0.6547316312789917
+Epoch 0 - step 37, loss: 0.7000086903572083
+Epoch 0 - step 38, loss: 0.6191323399543762
+Epoch 0 - step 39, loss: 0.6477000713348389
+Epoch 0 - step 40, loss: 0.6861727237701416
+Epoch 0 - step 41, loss: 0.6795316338539124
+Epoch 0 - step 42, loss: 0.6104336977005005
+Epoch 0 - step 43, loss: 0.7091450095176697
+Epoch 0 - step 44, loss: 0.5975114107131958
+Epoch 0 - step 45, loss: 0.6420559287071228
+Epoch 0 - step 46, loss: 0.6239522695541382
+Epoch 0 - step 47, loss: 0.6293221116065979
+Epoch 0 - step 48, loss: 0.6356700658798218
+Epoch 0 - step 49, loss: 0.6431310772895813
+Epoch 0 - step 50, loss: 0.694851815700531
+Epoch 0 - step 51, loss: 0.6637473106384277
+Epoch 0 - step 52, loss: 0.6108371615409851
+Epoch 0 - step 53, loss: 0.6571428179740906
+Epoch 0 - step 54, loss: 0.62440425157547
+Epoch 0 - step 55, loss: 0.6286547780036926
+Epoch 0 - step 56, loss: 0.6300297975540161
+Epoch 0 - step 57, loss: 0.6711091995239258
+Epoch 0 - step 58, loss: 0.6472316384315491
+Epoch 0 - step 59, loss: 0.6269660592079163
+Epoch 0 - step 60, loss: 0.6454180479049683
+Epoch 0 - step 61, loss: 0.6319303512573242
+Epoch 0 - step 62, loss: 0.6457688212394714
+Epoch 0 - step 63, loss: 0.6716553568840027
+Epoch 0 - step 64, loss: 0.7445566654205322
 Model saved as &#39;weights_challenge_2.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (7 minutes 30.450 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1848 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 40.192 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1709 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_2.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />

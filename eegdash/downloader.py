@@ -7,8 +7,17 @@
 This module provides functions for downloading EEG data files and BIDS dependencies from
 AWS S3 storage, with support for caching and progress tracking. It handles the communication
 between the EEGDash metadata database and the actual EEG data stored in the cloud.
+
+The module automatically uses s5cmd for faster downloads when available, falling back to
+s3fs if s5cmd is not installed. All existing functionality (progress bars, size checking,
+error handling) is preserved regardless of the backend used.
 """
 
+import json
+import shutil
+import subprocess
+import threading
+import time
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -31,6 +40,11 @@ def get_s3_filesystem() -> s3fs.S3FileSystem:
 
     """
     return s3fs.S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+
+
+def _s5cmd_available() -> bool:
+    """Check if s5cmd is available in the system PATH."""
+    return shutil.which("s5cmd") is not None
 
 
 def get_s3path(s3_bucket: str, filepath: str) -> str:
@@ -146,6 +160,34 @@ def download_files(
 
 
 def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
+    """Get remote file size, trying s5cmd first, then falling back to s3fs."""
+    # Try s5cmd first if available
+    if _s5cmd_available():
+        try:
+            # s5cmd ls with --json returns JSON with size information
+            result = subprocess.run(
+                ["s5cmd", "--no-sign-request", "ls", "--json", s3path],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                # Parse JSON output (s5cmd outputs one JSON object per line)
+                for line in result.stdout.strip().split("\n"):
+                    if not line.strip():
+                        continue
+                    try:
+                        ls_info = json.loads(line)
+                        # s5cmd ls JSON format: {"key": "...", "size": 123, ...}
+                        size = ls_info.get("size")
+                        if size is not None:
+                            return int(size)
+                    except (json.JSONDecodeError, ValueError, TypeError, KeyError):
+                        continue
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            pass
+
+    # Fall back to s3fs
     try:
         info = filesystem.info(s3path)
     except Exception:
@@ -194,15 +236,16 @@ def _filesystem_get(
     *,
     size: int | None = None,
 ) -> Path:
-    """Perform the file download using fsspec with a progress bar.
+    """Perform the file download using s5cmd (if available) or fsspec with a progress bar.
 
-    Internal helper function that wraps the ``filesystem.get`` call to include
-    a progress bar (Rich if available/console, else TQDM).
+    Internal helper function that attempts to use s5cmd for faster downloads,
+    falling back to s3fs if s5cmd is not available. Includes a progress bar
+    (Rich if available/console, else TQDM).
 
     Parameters
     ----------
     filesystem : s3fs.S3FileSystem
-        The filesystem object to use for the download.
+        The filesystem object to use for the download (used as fallback).
     s3path : str
         The full S3 URI of the source file.
     filepath : pathlib.Path
@@ -217,6 +260,15 @@ def _filesystem_get(
     filename = Path(s3path).name
     description = f"Downloading {filename}"
 
+    # Try s5cmd first if available
+    if _s5cmd_available():
+        try:
+            return _s5cmd_get(s3path, filepath, size=size, description=description)
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError, ValueError):
+            # Fall through to s3fs if s5cmd fails
+            pass
+
+    # Fall back to s3fs
     # Check if we should use Rich
     use_rich = False
     try:
@@ -253,6 +305,148 @@ def _filesystem_get(
         # Ensure callback is closed properly (important for Rich to clean up display)
         if hasattr(callback, "close"):
             callback.close()
+
+    return filepath
+
+
+def _s5cmd_get(
+    s3path: str, filepath: Path, *, size: int | None = None, description: str = ""
+) -> Path:
+    """Download file using s5cmd with progress tracking.
+
+    Parameters
+    ----------
+    s3path : str
+        The full S3 URI of the source file.
+    filepath : pathlib.Path
+        The local destination path.
+    size : int | None
+        Expected file size for progress tracking.
+    description : str
+        Description for progress bar.
+
+    Returns
+    -------
+    pathlib.Path
+        The local path to the downloaded file.
+
+    Raises
+    ------
+    OSError
+        If the download fails or is incomplete.
+
+    """
+    # Check if we should use Rich
+    use_rich = False
+    try:
+        console = Console()
+        if console.is_terminal:
+            use_rich = True
+    except Exception:
+        pass
+
+    if use_rich:
+        progress = rich.progress.Progress(
+            rich.progress.TextColumn("[bold blue]{task.description}"),
+            rich.progress.BarColumn(bar_width=None),
+            rich.progress.TaskProgressColumn(),
+            "•",
+            rich.progress.DownloadColumn(),
+            "•",
+            rich.progress.TransferSpeedColumn(),
+            "•",
+            rich.progress.TimeRemainingColumn(),
+        )
+        task_id = progress.add_task(description, total=size)
+        progress.start()
+    else:
+        from tqdm import tqdm
+
+        progress = tqdm(
+            total=size,
+            desc=description,
+            unit="B",
+            unit_scale=True,
+            unit_divisor=1024,
+            dynamic_ncols=True,
+            leave=True,
+            mininterval=0.2,
+            smoothing=0.1,
+            miniters=1,
+            bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
+            "[{elapsed}<{remaining}, {rate_fmt}]",
+        )
+
+    # Track download progress by monitoring file size
+    download_complete = threading.Event()
+    last_size = 0
+
+    def monitor_progress():
+        """Monitor file size and update progress bar."""
+        nonlocal last_size
+        while not download_complete.is_set():
+            if filepath.exists():
+                try:
+                    current_size = filepath.stat().st_size
+                    if current_size > last_size:
+                        if use_rich:
+                            progress.update(task_id, completed=current_size)
+                        else:
+                            progress.n = current_size
+                            progress.refresh()
+                        last_size = current_size
+                except (OSError, FileNotFoundError):
+                    pass
+            time.sleep(0.1)
+
+    monitor_thread = threading.Thread(target=monitor_progress, daemon=True)
+    monitor_thread.start()
+
+    try:
+        # Run s5cmd download
+        process = subprocess.run(
+            [
+                "s5cmd",
+                "--no-sign-request",
+                "cp",
+                s3path,
+                str(filepath),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=None,
+        )
+
+        download_complete.set()
+
+        if process.returncode != 0:
+            error_msg = process.stderr or process.stdout or "Unknown error"
+            raise OSError(
+                f"s5cmd download failed with return code {process.returncode}: {error_msg}"
+            )
+
+        # Final update to ensure progress bar shows 100%
+        if filepath.exists():
+            final_size = filepath.stat().st_size
+            if use_rich:
+                progress.update(task_id, completed=final_size)
+            else:
+                progress.n = final_size
+                progress.refresh()
+
+    except subprocess.TimeoutExpired:
+        download_complete.set()
+        raise OSError(f"s5cmd download timed out for {s3path}")
+    except FileNotFoundError:
+        download_complete.set()
+        raise
+    finally:
+        download_complete.set()
+        monitor_thread.join(timeout=1.0)
+        if use_rich:
+            progress.stop()
+        else:
+            progress.close()
 
     return filepath
 

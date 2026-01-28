@@ -1,5 +1,6 @@
 from collections.abc import Callable
-from typing import List
+import inspect
+from typing import List, Type
 
 from .extractors import (
     BivariateFeature,
@@ -7,6 +8,7 @@ from .extractors import (
     MultivariateFeature,
     UnivariateFeature,
     _get_underlying_func,
+    BasePreprocessorOutputType,
 )
 
 __all__ = [
@@ -15,6 +17,7 @@ __all__ = [
     "FeaturePredecessor",
     "multivariate_feature",
     "univariate_feature",
+    "PreprocessorOutputType",
 ]
 
 
@@ -141,3 +144,19 @@ multivariate_feature = FeatureKind(MultivariateFeature())
 This is a convenience instance of :class:`~eegdash.features.decorators.FeatureKind` pre-configured for
 multivariate features, which operate on all channels simultaneously.
 """
+
+
+class PreprocessorOutputType:
+    def __init__(self, output_type: Type):
+        if (
+            not inspect.isclass(output_type)
+            or not issubclass(output_type, BasePreprocessorOutputType)
+            or output_type is BasePreprocessorOutputType
+        ):
+            raise ValueError(
+                f"`output_type` must inherit from `PreprocessorOutputType`, got `{output_type}`."
+            )
+        self.output_type = output_type
+
+    def __call__(self, preprocessor: Callable) -> Callable:
+        return type(preprocessor.__name__, (self.output_type, ), {})(preprocessor)

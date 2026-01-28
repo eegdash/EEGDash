@@ -7,9 +7,55 @@ file system operations.
 
 import os
 import re
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from ..logging import logger
+
+
+def _find_best_matching_file(
+    directory: Path, target_name: str, extension: str, threshold: float = 0.5
+) -> str | None:
+    """Find the best matching file in a directory using fuzzy string matching.
+
+    Parameters
+    ----------
+    directory : Path
+        Directory to search in.
+    target_name : str
+        The filename we're looking for (may have typos or different naming).
+    extension : str
+        File extension to filter by (e.g., ".eeg", ".vmrk").
+    threshold : float
+        Minimum similarity ratio (0-1) to consider a match.
+
+    Returns
+    -------
+    str | None
+        The best matching filename, or None if no good match found.
+
+    """
+    candidates = list(directory.glob(f"*{extension}"))
+    if not candidates:
+        return None
+
+    # If only one file with this extension, use it
+    if len(candidates) == 1:
+        return candidates[0].name
+
+    # Find best match using similarity ratio
+    target_stem = Path(target_name).stem.lower()
+    best_match = None
+    best_ratio = threshold
+
+    for candidate in candidates:
+        candidate_stem = candidate.stem.lower()
+        ratio = SequenceMatcher(None, target_stem, candidate_stem).ratio()
+        if ratio > best_ratio:
+            best_ratio = ratio
+            best_match = candidate.name
+
+    return best_match
 
 
 class _VHDRPointerFixer:
@@ -29,18 +75,28 @@ class _VHDRPointerFixer:
         if (self.data_dir / old_val).exists():
             return match.group(0)
 
-        # If it doesn't exist, check if BIDS filename exists
-        # BIDS name for .eeg is same as .vhdr but with .eeg extension
+        # Determine expected extension
         ext = ".vmrk" if key == "MarkerFile" else ".eeg"
-        bids_name = self.vhdr_path.with_suffix(ext).name
 
+        # Strategy 1: Check if BIDS filename exists (same stem as .vhdr)
+        bids_name = self.vhdr_path.with_suffix(ext).name
         if (self.data_dir / bids_name).exists():
-            # Fix found!
             self.changes = True
             logger.info(
                 f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {bids_name}"
             )
             return f"{key}={bids_name}"
+
+        # Strategy 2: Fuzzy match - find best matching file with same extension
+        # This handles typos (rsub- vs sub-, sternbeg vs sternberg) and
+        # BIDS renames where original filename was completely different
+        fuzzy_match = _find_best_matching_file(self.data_dir, old_val, ext)
+        if fuzzy_match and (self.data_dir / fuzzy_match).exists():
+            self.changes = True
+            logger.info(
+                f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {fuzzy_match} (fuzzy match)"
+            )
+            return f"{key}={fuzzy_match}"
 
         return match.group(0)
 

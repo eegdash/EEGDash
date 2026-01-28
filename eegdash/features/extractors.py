@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial
+import inspect
 from typing import Dict
 
 import numpy as np
@@ -15,6 +16,7 @@ __all__ = [
     "MultivariateFeature",
     "TrainableFeature",
     "UnivariateFeature",
+    "BasePreprocessorOutputType",
 ]
 
 
@@ -41,6 +43,28 @@ def _get_underlying_func(func: Callable) -> Callable:
     if isinstance(f, Dispatcher):
         f = f.py_func
     return f
+
+
+class BasePreprocessorOutputType(ABC):
+    """An abstract class representing a type of preprocessor output.
+
+    Parameters
+    ----------
+    preprocessor : callable
+        The underlying preprocessor callable.
+    """
+
+    def __init__(self, preprocessor: Callable):
+        super().__init__()
+        self.preprocessor = preprocessor
+        uf_preprocessor = _get_underlying_func(preprocessor)
+        if hasattr(uf_preprocessor, "parent_extractor_type"):
+            self.parent_extractor_type = preprocessor.parent_extractor_type
+        if hasattr(uf_preprocessor, "feature_kind"):
+            self.feature_kind = preprocessor.feature_kind
+
+    def __call__(self, *args, **kwargs):
+        return self.preprocessor(*args, **kwargs)
 
 
 class TrainableFeature(ABC):
@@ -144,11 +168,22 @@ class FeatureExtractor(TrainableFeature):
             f = _get_underlying_func(f)
             pe_type = getattr(f, "parent_extractor_type", [None])
             if preprocessor not in pe_type:
-                parent = getattr(preprocessor, "__name__", preprocessor)
-                child = getattr(f, "__name__", f)
-                raise TypeError(
-                    f"Feature '{fname}: {child}' cannot be a child of {parent}"
-                )
+                is_valid_by_output_type = False
+                for pet in pe_type:
+                    if (
+                        inspect.isclass(pet)
+                        and issubclass(pet, BasePreprocessorOutputType)
+                        and pet is not BasePreprocessorOutputType
+                        and isinstance(preprocessor, pet)
+                    ):
+                        is_valid_by_output_type = True
+                        break
+                if not is_valid_by_output_type:
+                    parent = getattr(preprocessor, "__name__", preprocessor)
+                    child = getattr(f, "__name__", f)
+                    raise TypeError(
+                        f"Feature '{fname}: {child}' cannot be a child of {parent}"
+                    )
         return feature_extractors
 
     def _check_is_trainable(self, feature_extractors: dict) -> bool:

@@ -3,9 +3,11 @@ import numbers
 import numpy as np
 from scipy import signal, stats
 
-from ..decorators import FeaturePredecessor, univariate_feature
+from ..decorators import FeaturePredecessor, univariate_feature, PreprocessorOutputType
+from ..extractors import BasePreprocessorOutputType
 
 __all__ = [
+    "SignalOutputType",
     "signal_hilbert_preprocessor",
     "SIGNAL_PREDECESSORS",
     "signal_decorrelation_time",
@@ -25,12 +27,23 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor()
+class SignalOutputType(BasePreprocessorOutputType):
+    pass
+
+
+SIGNAL_PREDECESSORS = [None, SignalOutputType]
+
+
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@PreprocessorOutputType(SignalOutputType)
 def signal_hilbert_preprocessor(x, /):
     return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
 
-SIGNAL_PREDECESSORS = [None, signal_hilbert_preprocessor]
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@PreprocessorOutputType(SignalOutputType)
+def signal_filter_preprocessor(x, /):
+    return x # TODO
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)

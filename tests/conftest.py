@@ -138,14 +138,19 @@ from eegdash.logging import logger
 @pytest.fixture(scope="session")
 def eeg_dash_dataset(cache_dir: Path):
     """Fixture to create an instance of EEGDashDataset."""
-    return EEGDashDataset(
-        query={
-            "dataset": "ds005514",
-            "task": "RestingState",
-            "subject": "NDARDB033FW5",
-        },
-        cache_dir=cache_dir,
-    )
+    try:
+        return EEGDashDataset(
+            query={
+                "dataset": "ds005514",
+                "task": "RestingState",
+                "subject": "NDARDB033FW5",
+            },
+            cache_dir=cache_dir,
+        )
+    except OSError as e:
+        if "Incomplete download" in str(e) or "download" in str(e).lower():
+            pytest.skip(f"S3 download failed (flaky network): {e}")
+        raise
 
 
 @pytest.fixture(scope="session")
@@ -207,9 +212,14 @@ def preprocess_instance(eeg_dash_dataset, cache_dir: Path):
         Preprocessor("filter", l_freq=1, h_freq=55),
     ]
 
-    eeg_dash_dataset = preprocess(
-        eeg_dash_dataset, preprocessors, n_jobs=-1, save_dir=pre_processed_dir
-    )
+    try:
+        eeg_dash_dataset = preprocess(
+            eeg_dash_dataset, preprocessors, n_jobs=-1, save_dir=pre_processed_dir
+        )
+    except OSError as e:
+        if "Incomplete download" in str(e) or "download" in str(e).lower():
+            pytest.skip(f"S3 download failed (flaky network): {e}")
+        raise
 
     return eeg_dash_dataset
 

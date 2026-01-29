@@ -9,6 +9,7 @@ from ..extractors import BasePreprocessorOutputType
 __all__ = [
     "SignalOutputType",
     "signal_hilbert_preprocessor",
+    "signal_filter_preprocessor",
     "SIGNAL_PREDECESSORS",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
@@ -42,8 +43,41 @@ def signal_hilbert_preprocessor(x, /):
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @PreprocessorOutputType(SignalOutputType)
-def signal_filter_preprocessor(x, /):
-    return x # TODO
+def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
+    """Linear-phase FIR band-pass filter.
+
+    Parameters
+    ----------
+    x : ndarray
+        Input signal
+    fs : float
+        Sampling frequency (Hz)
+    f_min : float
+        Low cutoff frequency (Hz)
+    f_max : float
+        High cutoff frequency (Hz)
+    num_taps : int
+        Number of filter taps (must be odd for exact linear phase)
+
+    Returns
+    -------
+    ndarray
+    """
+    if num_taps is None:
+        num_taps = int(fs * 1.5)  # rule of thumb for choosing the filter order
+    if num_taps % 2 == 0:  # ensure odd
+        num_taps += 1
+    taps = signal.firwin(
+        numtaps=num_taps,
+        cutoff=[f_min, f_max],
+        fs=fs,
+        pass_zero=False,
+        window="hamming",
+    )
+
+    return signal.filtfilt(
+        taps, [1.0], x
+    )  # Zero-phase application (preserves waveform shape)
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)

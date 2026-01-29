@@ -61,4 +61,4 @@ repos:
         language: python
         types: [python]
         files: ^(eegdash|docs|scripts)/
-        exclude: (\.ipynb$|docs/source/generated/|docs/_build/)
+        exclude: (\.ipynb$|docs/source/generated/|docs/_build/|docs/source/conf\.py)

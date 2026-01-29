@@ -2,11 +2,13 @@ from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
     FeatureKind,
     FeaturePredecessor,
+    PreprocessorOutputType,
     bivariate_feature,
     multivariate_feature,
     univariate_feature,
 )
 from .extractors import (
+    BasePreprocessorOutputType,
     BivariateFeature,
     DirectedBivariateFeature,
     FeatureExtractor,
@@ -16,6 +18,7 @@ from .extractors import (
 )
 from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
+    SignalOutputType,
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
@@ -31,6 +34,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
     signal_decorrelation_time,
+    signal_filter_preprocessor,
     signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
@@ -70,10 +74,12 @@ from .serialization import load_features_concat_dataset
 from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
+    "BasePreprocessorOutputType",
     "FeaturesConcatDataset",
     "FeaturesDataset",
     "FeatureKind",
     "FeaturePredecessor",
+    "PreprocessorOutputType",
     "bivariate_feature",
     "multivariate_feature",
     "univariate_feature",
@@ -113,6 +119,8 @@ __all__ = [
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
     # Signal
+    "SignalOutputType",
+    "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",
     "signal_variance",

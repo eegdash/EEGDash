@@ -677,7 +677,7 @@ corresponding to their respective event markers).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
 Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[01/24/26 14:06:04] INFO     Original events found with ids: preprocessing.py:66
+[01/29/26 01:54:23] INFO     Original events found with ids: preprocessing.py:66
                              {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
                              &#39;instructed_toCloseEyes&#39;: 3,
                              &#39;instructed_toOpenEyes&#39;: 4,
@@ -698,7 +698,7 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 - Filter length: 423 samples (3.305 s)
 
 Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[01/24/26 14:06:05] INFO     Original events found with ids: preprocessing.py:66
+[01/29/26 01:54:25] INFO     Original events found with ids: preprocessing.py:66
                              {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
                              &#39;instructed_toCloseEyes&#39;: 3,
                              &#39;instructed_toOpenEyes&#39;: 4,
@@ -817,11 +817,11 @@ signal is present and looks as expected.</p>
 To use the future default and silence this warning we advise to pass `rcond=None`, to keep using the old, explicitly pass `rcond=-1`.
   r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
 
-Extracting features:  50%|█████     | 1/2 [00:00&lt;00:00,  1.26it/s]/home/runner/work/EEGDash/EEGDash/eegdash/features/feature_bank/spectral.py:103: FutureWarning: `rcond` parameter will change to the default of machine precision times ``max(M, N)`` where M and N are the input matrix dimensions.
+Extracting features:  50%|█████     | 1/2 [00:00&lt;00:00,  1.19it/s]/home/runner/work/EEGDash/EEGDash/eegdash/features/feature_bank/spectral.py:103: FutureWarning: `rcond` parameter will change to the default of machine precision times ``max(M, N)`` where M and N are the input matrix dimensions.
 To use the future default and silence this warning we advise to pass `rcond=None`, to keep using the old, explicitly pass `rcond=-1`.
   r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
 
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00,  2.32it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00,  2.18it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3154,7 +3154,7 @@ Epoch 5, Train accuracy: 0.99, Test accuracy: 0.93
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 56, number of negative: 56
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000474 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000711 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 15006
 [LightGBM] [Info] Number of data points in the train set: 112, number of used features: 460
@@ -3276,8 +3276,8 @@ Train accuracy: 1.00, Validation accuracy: 0.93
 <img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.710 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  1473 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.975 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  1343 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />

@@ -49,14 +49,17 @@ from dotenv import load_dotenv
 
 from eegdash.schemas import create_dataset
 
-# Load API key from .env.figshare
-_env_path = PROJECT_ROOT / ".env.figshare"
-load_dotenv(_env_path)
+# Load API key from .env.figshare, .env or environment
+_env_files = [PROJECT_ROOT / ".env.figshare", PROJECT_ROOT / ".env"]
+for env_file in _env_files:
+    if env_file.exists():
+        load_dotenv(env_file)
+
 FIGSHARE_API_KEY = os.getenv("FIGSHARE_API_KEY", "")
 if FIGSHARE_API_KEY:
-    print(f"✓ Figshare API key loaded from {_env_path}")
+    print("✓ Figshare API key loaded")
 else:
-    print(f"⚠ No Figshare API key found in {_env_path} (using anonymous access)")
+    print("⚠ No Figshare API key found (using anonymous access)")
 
 FIGSHARE_USER_AGENT = "EEGDash/1.0 (https://github.com/eegdash/EEGDash)"
 FIGSHARE_DOWNLOAD_USER_AGENT = (

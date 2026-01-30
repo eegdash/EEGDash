@@ -18,6 +18,7 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
 import re
 import sys
@@ -40,6 +41,7 @@ from _constants import (
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
+from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
@@ -829,6 +831,17 @@ def extract_record(
             if not ch_names:
                 ch_names = edf_metadata.get("ch_names")
 
+    # EEGLAB .set fallback - extracts metadata from .set header even if .fdt is missing
+    if (not sampling_frequency or not nchans) and ext == ".set":
+        set_metadata = parse_set_metadata(bids_file_path)
+        if set_metadata:
+            if not sampling_frequency:
+                sampling_frequency = set_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = set_metadata.get("nchans")
+            if not ch_names:
+                ch_names = set_metadata.get("ch_names")
+
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
     bids_file_path = Path(bids_file)
@@ -903,6 +916,49 @@ def extract_record(
                     found_bv_exts.add(bv_ext)
                 except ValueError:
                     pass
+
+    # Validate extracted metadata
+    # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
+    if sampling_frequency is not None:
+        if sampling_frequency <= 0:
+            logging.warning(
+                "Invalid sampling_frequency <= 0 for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+            sampling_frequency = None
+        elif sampling_frequency > 1_000_000:
+            logging.warning(
+                "Suspicious sampling_frequency > 1MHz for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+
+    # Check nchans is positive
+    if nchans is not None:
+        if nchans <= 0:
+            logging.warning(
+                "Invalid nchans <= 0 for %s: %s",
+                bids_relpath,
+                nchans,
+            )
+            nchans = None
+        elif nchans > 10000:
+            logging.warning(
+                "Suspicious nchans > 10000 for %s: %s",
+                bids_relpath,
+                nchans,
+            )
+
+    # Validate ch_names count matches nchans
+    if ch_names and nchans:
+        if len(ch_names) != nchans:
+            logging.debug(
+                "ch_names count (%d) != nchans (%d) for %s",
+                len(ch_names),
+                nchans,
+                bids_relpath,
+            )
 
     # Create record using the schema
     record = create_record(
@@ -1202,6 +1258,11 @@ def is_neuro_data_file(filepath: str) -> bool:
 
     """
     filepath_lower = filepath.lower()
+
+    # Skip files in derivatives folders - these are processed data, not raw recordings
+    # Common patterns: /derivatives/, /derivative/, derivatives at root level
+    if "/derivatives/" in filepath_lower or filepath_lower.startswith("derivatives/"):
+        return False
 
     # Skip BIDS sidecar/metadata files - these are never data files
     # even when located in modality folders

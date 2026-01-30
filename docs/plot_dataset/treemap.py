@@ -536,6 +536,8 @@ def _build_figure(
 def generate_dataset_treemap(
     df: pd.DataFrame,
     out_html: str | Path,
+    *,
+    width: int = 1260,
 ) -> Path:
     """Generate the dataset treemap and return the output path."""
     cleaned = _preprocess_dataframe(df)
@@ -562,7 +564,8 @@ def generate_dataset_treemap(
         margin=dict(t=132, l=28, r=28, b=36),
         hoverlabel=dict(font=dict(size=14), align="left"),
         height=880,
-        autosize=True,
+        width=width,
+        autosize=False,
     )
 
     return build_and_export_html(

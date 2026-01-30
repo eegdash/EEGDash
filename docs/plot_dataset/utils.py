@@ -66,6 +66,7 @@ RECORDING_MODALITY_MAP = {
     "ieeg": "iEEG",
     "meg": "MEG",
     "fnirs": "fNIRS",
+    "nirs": "fNIRS",  # Also accept 'nirs' without 'f' prefix
     "emg": "EMG",
     "ecg": "ECG",
     "fmri": "fMRI",

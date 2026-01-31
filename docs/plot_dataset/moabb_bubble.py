@@ -424,49 +424,56 @@ def generate_moabb_bubble(
             height: {height}px;
             font-family: Inter, system-ui, sans-serif;
             color: #6b7280;
+            font-size: 16px;
+        }}
+        .subject-bubble {{
+            transition: all 0.15s ease-out;
         }}
         .tooltip {{
             position: absolute;
             background: rgba(255, 255, 255, 0.98);
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 13px;
-            line-height: 1.5;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
             pointer-events: none;
             z-index: 1000;
-            max-width: 320px;
+            max-width: 380px;
         }}
         .tooltip-title {{
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 18px;
             color: #1f2937;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }}
         .tooltip-subtitle {{
             color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            margin-bottom: 12px;
         }}
         .tooltip-row {{
             display: flex;
             justify-content: space-between;
-            margin: 3px 0;
+            margin: 5px 0;
+            gap: 20px;
         }}
         .tooltip-label {{
             color: #6b7280;
+            font-size: 14px;
         }}
         .tooltip-value {{
-            font-weight: 500;
+            font-weight: 600;
             color: #1f2937;
+            font-size: 14px;
         }}
         .tooltip-hint {{
-            margin-top: 10px;
-            padding-top: 8px;
+            margin-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #e5e7eb;
             color: #3b82f6;
-            font-size: 11px;
+            font-size: 13px;
             font-style: italic;
         }}
         .legend {{
@@ -474,60 +481,67 @@ def generate_moabb_bubble(
             top: 15px;
             left: 15px;
             background: rgba(255,255,255,0.95);
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border-radius: 10px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 12px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.8;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }}
         .legend-title {{
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-weight: 700;
+            margin-bottom: 8px;
             color: #374151;
+            font-size: 16px;
         }}
         .legend-item {{
-            color: #6b7280;
+            color: #4b5563;
+            font-size: 14px;
         }}
         .modality-legend {{
             position: absolute;
             top: 15px;
             right: 15px;
             background: rgba(255,255,255,0.95);
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border-radius: 10px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 12px;
+            font-size: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }}
         .modality-legend-title {{
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-weight: 700;
+            margin-bottom: 10px;
             color: #374151;
+            font-size: 16px;
         }}
         .modality-legend-item {{
             display: flex;
             align-items: center;
-            margin: 4px 0;
+            margin: 6px 0;
             cursor: pointer;
+            font-size: 14px;
         }}
         .modality-legend-item:hover {{
             opacity: 0.8;
         }}
         .modality-swatch {{
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
         }}
         .hint {{
             position: absolute;
             bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255,255,255,0.9);
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #6b7280;
+            background: rgba(255,255,255,0.95);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4b5563;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }}
     </style>
 </head>
@@ -650,10 +664,10 @@ def generate_moabb_bubble(
             // Add modality label
             modalityGroup.append("text")
                 .attr("x", mp.size / 2)
-                .attr("y", -10)
+                .attr("y", -15)
                 .attr("text-anchor", "middle")
-                .attr("font-size", "14px")
-                .attr("font-weight", "600")
+                .attr("font-size", "18px")
+                .attr("font-weight", "700")
                 .attr("fill", mp.modality.color)
                 .text(mp.modality.name);
 
@@ -668,35 +682,57 @@ def generate_moabb_bubble(
             subjectNodes.forEach(node => {{
                 const dataset = node.parent.data;
                 const alpha = dataset.alpha || 0.7;
+                const originalRadius = Math.max(node.r, 2);
 
                 modalityGroup.append("circle")
                     .attr("class", "subject-bubble")
                     .attr("data-dataset", dataset.name)
+                    .attr("data-original-r", originalRadius)
+                    .attr("data-original-alpha", alpha)
                     .attr("cx", node.x)
                     .attr("cy", node.y)
-                    .attr("r", Math.max(node.r, 2))
+                    .attr("r", originalRadius)
                     .attr("fill", dataset.color)
                     .attr("fill-opacity", alpha)
                     .attr("stroke", "rgba(255,255,255,0.5)")
                     .attr("stroke-width", 0.5)
                     .style("cursor", "pointer")
+                    .style("filter", "none")
                     .on("mouseover", function(event) {{
-                        // Highlight this dataset
+                        // Highlight this dataset with glow effect and size scaling
                         const dsName = dataset.name;
-                        g.selectAll(".subject-bubble")
-                            .style("opacity", function() {{
-                                return d3.select(this).attr("data-dataset") === dsName ? 1 : 0.15;
-                            }})
-                            .attr("stroke-width", function() {{
-                                return d3.select(this).attr("data-dataset") === dsName ? 2 : 0.5;
-                            }})
-                            .attr("stroke", function() {{
-                                return d3.select(this).attr("data-dataset") === dsName
-                                    ? dataset.color : "rgba(255,255,255,0.5)";
-                            }});
+                        const glowColor = dataset.color;
+
+                        g.selectAll(".subject-bubble").each(function() {{
+                            const bubble = d3.select(this);
+                            const isHighlighted = bubble.attr("data-dataset") === dsName;
+                            const origR = parseFloat(bubble.attr("data-original-r"));
+                            const origAlpha = parseFloat(bubble.attr("data-original-alpha"));
+
+                            if (isHighlighted) {{
+                                // Highlighted: scale up 15%, increase opacity, add glow
+                                bubble
+                                    .attr("r", origR * 1.15)
+                                    .attr("fill-opacity", Math.min(1, origAlpha + 0.3))
+                                    .attr("stroke", glowColor)
+                                    .attr("stroke-width", 3)
+                                    .style("filter", `drop-shadow(0 0 6px ${{glowColor}})`)
+                                    .style("opacity", 1);
+                            }} else {{
+                                // Dimmed: reduce opacity significantly
+                                bubble
+                                    .attr("r", origR)
+                                    .attr("fill-opacity", origAlpha * 0.18)
+                                    .attr("stroke", "rgba(255,255,255,0.2)")
+                                    .attr("stroke-width", 0.3)
+                                    .style("filter", "none")
+                                    .style("opacity", 0.4);
+                            }}
+                        }});
 
                         // Show tooltip
                         tooltip.style("display", "block")
+                            .style("border-color", dataset.color)
                             .html(`
                                 <div class="tooltip-title">${{dataset.name}}</div>
                                 <div class="tooltip-subtitle">${{dataset.title || ''}}</div>
@@ -710,20 +746,29 @@ def generate_moabb_bubble(
                                 <div class="tooltip-row"><span class="tooltip-label">🎯 Modality</span><span class="tooltip-value">${{dataset.modality}}</span></div>
                                 <div class="tooltip-hint">Click to open dataset page →</div>
                             `)
-                            .style("left", (event.pageX + 15) + "px")
-                            .style("top", (event.pageY - 10) + "px");
+                            .style("left", (event.pageX + 20) + "px")
+                            .style("top", (event.pageY - 15) + "px");
                     }})
                     .on("mousemove", function(event) {{
                         tooltip
-                            .style("left", (event.pageX + 15) + "px")
-                            .style("top", (event.pageY - 10) + "px");
+                            .style("left", (event.pageX + 20) + "px")
+                            .style("top", (event.pageY - 15) + "px");
                     }})
                     .on("mouseout", function() {{
-                        // Reset all bubbles
-                        g.selectAll(".subject-bubble")
-                            .style("opacity", 1)
-                            .attr("stroke-width", 0.5)
-                            .attr("stroke", "rgba(255,255,255,0.5)");
+                        // Reset all bubbles to original state
+                        g.selectAll(".subject-bubble").each(function() {{
+                            const bubble = d3.select(this);
+                            const origR = parseFloat(bubble.attr("data-original-r"));
+                            const origAlpha = parseFloat(bubble.attr("data-original-alpha"));
+
+                            bubble
+                                .attr("r", origR)
+                                .attr("fill-opacity", origAlpha)
+                                .attr("stroke", "rgba(255,255,255,0.5)")
+                                .attr("stroke-width", 0.5)
+                                .style("filter", "none")
+                                .style("opacity", 1);
+                        }});
 
                         tooltip.style("display", "none");
                     }})
@@ -736,7 +781,7 @@ def generate_moabb_bubble(
 
             // Add dataset labels for larger datasets
             datasetNodes
-                .filter(d => d.r > 30 && d.data.n_subjects > 5)
+                .filter(d => d.r > 25 && d.data.n_subjects > 3)
                 .forEach(node => {{
                     const dataset = node.data;
                     const labelText = dataset.name.length > 12
@@ -744,14 +789,16 @@ def generate_moabb_bubble(
                         : dataset.name.toUpperCase();
 
                     modalityGroup.append("text")
+                        .attr("class", "dataset-label")
                         .attr("x", node.x)
                         .attr("y", node.y)
                         .attr("text-anchor", "middle")
                         .attr("dominant-baseline", "middle")
-                        .attr("font-size", Math.min(10, node.r / 3) + "px")
-                        .attr("font-weight", "500")
-                        .attr("fill", "#374151")
+                        .attr("font-size", Math.max(11, Math.min(14, node.r / 2.5)) + "px")
+                        .attr("font-weight", "600")
+                        .attr("fill", "#1f2937")
                         .style("pointer-events", "none")
+                        .style("text-shadow", "0 0 3px white, 0 0 3px white, 0 0 3px white")
                         .text(labelText);
                 }});
         }});

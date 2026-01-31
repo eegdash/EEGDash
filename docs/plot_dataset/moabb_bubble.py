@@ -6,14 +6,16 @@ This module creates a MOABB-inspired visualization where:
 - Circle **size** = log(records per subject) - data volume per subject
 - Circle **opacity** = number of sessions (fewer sessions = more opaque)
 - Circle **color** = category (recording modality by default)
-- Datasets are packed into a single cluster using force-directed collision detection
+- Datasets are **grouped by modality** into distinct regional clusters
 
 Features:
+- **Hierarchical grouping**: Datasets are packed within modality regions
 - Hover-based interactivity: Dataset clusters highlight on hover, others dim
 - Rich tooltips: Subjects, sessions, records, channels, sampling rate, size
 - Click to open: Each dataset links to its detail page
-- Visual polish: Subtle glow effects and smooth transitions
+- Visual polish: Subtle glow effects, background regions, and smooth transitions
 
+Inspired by the MOABB plotting style and hierarchical data visualizations.
 Ported from MOABB (moabb/analysis/plotting.py lines 668-1004)
 and (moabb/datasets/utils.py lines 383-491).
 """
@@ -52,6 +54,18 @@ __all__ = ["generate_moabb_bubble"]
 
 # Maximum bubbles per dataset to prevent performance issues with very large datasets
 MAX_BUBBLES_PER_DATASET = 200
+
+# Modality display order (for consistent regional positioning)
+MODALITY_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "Other"]
+
+# Background colors for modality regions (semi-transparent)
+MODALITY_BG_COLORS = {
+    "EEG": "rgba(249, 115, 22, 0.06)",  # Orange tint
+    "MEG": "rgba(59, 130, 246, 0.06)",  # Blue tint
+    "iEEG": "rgba(34, 197, 94, 0.06)",  # Green tint
+    "fNIRS": "rgba(168, 85, 247, 0.06)",  # Purple tint
+    "Other": "rgba(148, 163, 184, 0.06)",  # Gray tint
+}
 
 
 # =============================================================================
@@ -303,6 +317,137 @@ def _get_dataset_area(
 
 
 # =============================================================================
+# Two-level hierarchical packing (modality groups -> datasets)
+# =============================================================================
+
+
+def _pack_modality_groups(
+    modality_data: dict[str, list[dict]],
+    scale: float,
+    gap: float,
+    meta_gap: float,
+) -> dict[str, dict]:
+    """Pack modality groups into a circular layout with hierarchical structure.
+
+    First packs datasets within each modality, then positions the modality
+    groups in a larger circular arrangement.
+
+    Args:
+        modality_data: Dict mapping modality name -> list of dataset info dicts
+        scale: Scaling factor for bubble sizes
+        gap: Gap between bubbles within datasets
+        meta_gap: Gap between dataset clusters
+
+    Returns:
+        Dict mapping modality name -> {center, radius, datasets_packed, total_area}
+
+    """
+    # Step 1: Calculate area and pack datasets within each modality group
+    modality_results = {}
+
+    for modality, datasets in modality_data.items():
+        if not datasets:
+            continue
+
+        # Calculate areas for each dataset in this modality
+        areas = []
+        for ds in datasets:
+            area = _get_dataset_area(
+                ds["n_subjects"], ds["records_per_subject"], scale, gap
+            )
+            areas.append(area)
+            ds["area"] = area
+
+        # Pack datasets within this modality using BubbleChart
+        if len(areas) > 1:
+            bubble_chart = _BubbleChart(np.array(areas), bubble_spacing=meta_gap * 0.5)
+            bubble_chart.collapse(
+                n_iterations=120
+            )  # More iterations for tighter packing
+            centers = bubble_chart.get_centers()
+            centers = centers - centers.mean(axis=0)  # Center around origin
+        else:
+            centers = np.array([[0.0, 0.0]])
+
+        # Calculate bounding radius for this modality group
+        max_radius = 0.0
+        for i, ds in enumerate(datasets):
+            ds["local_x"] = centers[i, 0]
+            ds["local_y"] = centers[i, 1]
+            ds_radius = np.sqrt(ds["area"] / np.pi)
+            dist = np.sqrt(centers[i, 0] ** 2 + centers[i, 1] ** 2) + ds_radius
+            max_radius = max(max_radius, dist)
+
+        # Total area of this modality group (for meta-level packing)
+        total_area = np.pi * (max_radius + meta_gap) ** 2
+
+        modality_results[modality] = {
+            "datasets": datasets,
+            "local_centers": centers,
+            "radius": max_radius,
+            "total_area": total_area,
+        }
+
+    # Step 2: Pack modality groups at the meta level
+    modalities_ordered = [m for m in MODALITY_ORDER if m in modality_results]
+    modalities_ordered += [m for m in modality_results if m not in modalities_ordered]
+
+    if len(modalities_ordered) == 1:
+        # Single modality: center it
+        m = modalities_ordered[0]
+        modality_results[m]["center"] = (0.0, 0.0)
+    else:
+        # Multiple modalities: pack them in a circular arrangement
+        meta_areas = [modality_results[m]["total_area"] for m in modalities_ordered]
+        meta_chart = _BubbleChart(np.array(meta_areas), bubble_spacing=meta_gap * 1.5)
+        meta_chart.collapse(n_iterations=100)  # More iterations for tighter packing
+        meta_centers = meta_chart.get_centers()
+        meta_centers = meta_centers - meta_centers.mean(axis=0)
+
+        for i, m in enumerate(modalities_ordered):
+            modality_results[m]["center"] = (
+                float(meta_centers[i, 0]),
+                float(meta_centers[i, 1]),
+            )
+
+    # Step 3: Compute global positions for each dataset
+    for modality, result in modality_results.items():
+        cx, cy = result["center"]
+        for ds in result["datasets"]:
+            ds["global_x"] = ds["local_x"] + cx
+            ds["global_y"] = ds["local_y"] + cy
+
+    return modality_results
+
+
+def _generate_arc_path(
+    cx: float,
+    cy: float,
+    radius: float,
+    start_angle: float,
+    end_angle: float,
+    n_points: int = 50,
+) -> tuple[list[float], list[float]]:
+    """Generate arc path coordinates for curved labels.
+
+    Args:
+        cx, cy: Center of the arc
+        radius: Radius of the arc
+        start_angle: Start angle in radians
+        end_angle: End angle in radians
+        n_points: Number of points in the arc
+
+    Returns:
+        Tuple of (x_coords, y_coords) lists
+
+    """
+    angles = np.linspace(start_angle, end_angle, n_points)
+    x = cx + radius * np.cos(angles)
+    y = cy + radius * np.sin(angles)
+    return x.tolist(), y.tolist()
+
+
+# =============================================================================
 # Dataset bubble data generation
 # =============================================================================
 
@@ -466,11 +611,11 @@ def generate_moabb_bubble(
     out_html: str | Path,
     *,
     color_by: Literal["modality", "type", "pathology"] = "modality",
-    scale: float = 0.5,
-    gap: float = 0.06,
-    meta_gap: float = 0.8,
+    scale: float = 1.2,
+    gap: float = 0.35,
+    meta_gap: float = 1.8,
     width: int | None = None,
-    height: int = 900,
+    height: int = 1800,
 ) -> Path:
     """Generate MOABB-style circle-packing bubble plot for all datasets.
 
@@ -603,19 +748,20 @@ def generate_moabb_bubble(
         out_path.write_text(empty_html, encoding="utf-8")
         return out_path
 
-    all_bubbles = []
-    dataset_centers = []
+    # =========================================================================
+    # Group datasets by modality for hierarchical packing
+    # =========================================================================
 
-    areas = []
-    dataset_info = []
-    for idx, (_, row) in enumerate(data.iterrows()):
+    # Build dataset info and group by modality
+    modality_data: dict[str, list[dict]] = {}
+    global_idx = 0
+
+    for _, row in data.iterrows():
         n_subjects = int(row["n_subjects"])
         n_sessions = int(row["n_sessions"])
         n_records = int(row["n_records"])
         records_per_subject = float(row["records_per_subject"])
         category = row["category"]
-        area = _get_dataset_area(n_subjects, records_per_subject, scale, gap)
-        areas.append(area)
 
         # Extract additional metadata
         n_tasks = safe_int(row.get("n_tasks", 0), 0)
@@ -623,78 +769,106 @@ def generate_moabb_bubble(
         sfreq = row.get("sfreq_median")
         size_bytes = safe_int(row.get("size_bytes_clean", 0), 0)
 
-        dataset_info.append(
+        ds_info = {
+            "name": row["dataset"],
+            "n_subjects": n_subjects,
+            "n_sessions": n_sessions,
+            "n_records": n_records,
+            "records_per_subject": records_per_subject,
+            "category": category,
+            "title": row.get("dataset_title", ""),
+            "n_tasks": n_tasks,
+            "nchans": nchans,
+            "sfreq": sfreq,
+            "size_bytes": size_bytes,
+            "idx": global_idx,
+        }
+
+        if category not in modality_data:
+            modality_data[category] = []
+        modality_data[category].append(ds_info)
+        global_idx += 1
+
+    # Two-level hierarchical packing: modality groups -> datasets
+    modality_results = _pack_modality_groups(modality_data, scale, gap, meta_gap)
+
+    # Collect all bubbles and dataset centers
+    all_bubbles = []
+    dataset_centers = []
+    modality_regions = []  # For background shapes
+
+    for modality, result in modality_results.items():
+        modality_cx, modality_cy = result["center"]
+        modality_radius = result["radius"]
+        color = MODALITY_COLOR_MAP.get(modality, "#94a3b8")
+
+        # Store modality region info for background shapes
+        # Add extra padding to ensure all bubbles fit inside the region
+        modality_regions.append(
             {
-                "name": row["dataset"],
-                "n_subjects": n_subjects,
-                "n_sessions": n_sessions,
-                "n_records": n_records,
-                "records_per_subject": records_per_subject,
-                "category": category,
-                "title": row.get("dataset_title", ""),
-                "n_tasks": n_tasks,
-                "nchans": nchans,
-                "sfreq": sfreq,
-                "size_bytes": size_bytes,
-                "idx": idx,
+                "modality": modality,
+                "cx": modality_cx,
+                "cy": modality_cy,
+                "radius": modality_radius * 1.2 + meta_gap * 0.4,
+                "color": color,
+                "n_datasets": len(result["datasets"]),
             }
         )
 
-    bubble_chart = _BubbleChart(np.array(areas), bubble_spacing=meta_gap)
-    bubble_chart.collapse(n_iterations=100)
-    centers = bubble_chart.get_centers()
-    centers = centers - centers.mean(axis=0)
+        for ds in result["datasets"]:
+            cx = ds["global_x"]
+            cy = ds["global_y"]
+            area = ds["area"]
+            cluster_radius = float(np.sqrt(area / np.pi))
 
-    for i, info in enumerate(dataset_info):
-        cx, cy = centers[i]
-        area = areas[i]
-        cluster_radius = float(np.sqrt(area / np.pi))
-        color = MODALITY_COLOR_MAP.get(info["category"], "#94a3b8")
-        bubbles = _dataset_bubble_data(
-            dataset_name=info["name"],
-            n_subjects=info["n_subjects"],
-            n_sessions=info["n_sessions"],
-            records_per_subject=info["records_per_subject"],
-            category=info["category"],
-            center=(cx, cy),
-            color=color,
-            dataset_idx=i,
-            scale=scale,
-            gap=gap,
-        )
-        all_bubbles.extend(bubbles)
+            # Generate individual subject bubbles for this dataset
+            bubbles = _dataset_bubble_data(
+                dataset_name=ds["name"],
+                n_subjects=ds["n_subjects"],
+                n_sessions=ds["n_sessions"],
+                records_per_subject=ds["records_per_subject"],
+                category=ds["category"],
+                center=(cx, cy),
+                color=color,
+                dataset_idx=ds["idx"],
+                scale=scale,
+                gap=gap,
+            )
+            all_bubbles.extend(bubbles)
 
-        # Format metadata for hover display
-        nchans_str = _format_int(info["nchans"]) if info["nchans"] else "—"
-        sfreq_str = _format_int(info["sfreq"]) if info["sfreq"] else "—"
-        size_str = (
-            human_readable_size(info["size_bytes"]) if info["size_bytes"] else "—"
-        )
+            # Format metadata for hover display
+            nchans_str = _format_int(ds["nchans"]) if ds["nchans"] else "—"
+            sfreq_str = _format_int(ds["sfreq"]) if ds["sfreq"] else "—"
+            size_str = (
+                human_readable_size(ds["size_bytes"]) if ds["size_bytes"] else "—"
+            )
 
-        dataset_centers.append(
-            {
-                "name": info["name"],
-                "x": float(cx),
-                "y": float(cy),
-                "category": info["category"],
-                "n_subjects": info["n_subjects"],
-                "n_sessions": info["n_sessions"],
-                "n_records": info["n_records"],
-                "records_per_subject": info["records_per_subject"],
-                "area": area,
-                "radius": cluster_radius,
-                "url": get_dataset_url(info["name"]),
-                "title": info["title"] or "",
-                "n_tasks": info["n_tasks"],
-                "nchans_str": nchans_str,
-                "sfreq_str": sfreq_str,
-                "size_str": size_str,
-                "idx": i,
-            }
-        )
+            dataset_centers.append(
+                {
+                    "name": ds["name"],
+                    "x": float(cx),
+                    "y": float(cy),
+                    "category": ds["category"],
+                    "n_subjects": ds["n_subjects"],
+                    "n_sessions": ds["n_sessions"],
+                    "n_records": ds["n_records"],
+                    "records_per_subject": ds["records_per_subject"],
+                    "area": area,
+                    "radius": cluster_radius,
+                    "url": get_dataset_url(ds["name"]),
+                    "title": ds["title"] or "",
+                    "n_tasks": ds["n_tasks"],
+                    "nchans_str": nchans_str,
+                    "sfreq_str": sfreq_str,
+                    "size_str": size_str,
+                    "idx": ds["idx"],
+                }
+            )
 
-    layout_margin = dict(l=20, r=20, t=60, b=40)  # Extra bottom margin for hint text
-    plot_width = width if width is not None else int(height * 1.4)
+    layout_margin = dict(l=60, r=60, t=100, b=80)  # Extra margins for labels
+    plot_width = (
+        width if width is not None else int(height * 1.1)
+    )  # More square aspect ratio
     plot_height = max(height - layout_margin["t"] - layout_margin["b"], 1)
     plot_width_inner = max(plot_width - layout_margin["l"] - layout_margin["r"], 1)
     target_ratio = plot_width_inner / plot_height
@@ -720,6 +894,9 @@ def generate_moabb_bubble(
             if cx is None:
                 continue
             b["x"] = (b["x"] - cx) + (cx * x_scale)
+        # Also scale modality region centers
+        for region in modality_regions:
+            region["cx"] *= x_scale
 
         x_vals = np.array([b["x"] for b in all_bubbles])
         x_min = np.min(x_vals - r_vals)
@@ -729,16 +906,51 @@ def generate_moabb_bubble(
 
     x_center = (x_min + x_max) / 2
     y_center = (y_min + y_max) / 2
-    x_pad_right = x_span * 0.06
-    x_range = [x_center - x_span / 2, x_center + x_span / 2 + x_pad_right]
-    y_range = [y_center - y_span / 2, y_center + y_span / 2]
+    # Add generous padding on all sides to prevent clipping of modality regions
+    x_pad = x_span * 0.22
+    y_pad = y_span * 0.12
+    x_range = [x_center - x_span / 2 - x_pad, x_center + x_span / 2 + x_pad]
+    y_range = [y_center - y_span / 2 - y_pad, y_center + y_span / 2 + y_pad]
     size_scale = plot_height / y_span
 
     # Create figure
     fig = go.Figure()
 
+    # Add background shapes for modality regions (subtle colored circles)
+    for region in modality_regions:
+        bg_color = MODALITY_BG_COLORS.get(region["modality"], "rgba(148,163,184,0.06)")
+        border_color = region["color"]
+
+        # Create a circle shape for the modality region
+        fig.add_shape(
+            type="circle",
+            x0=region["cx"] - region["radius"],
+            y0=region["cy"] - region["radius"],
+            x1=region["cx"] + region["radius"],
+            y1=region["cy"] + region["radius"],
+            fillcolor=bg_color,
+            line=dict(color=border_color, width=1.5, dash="dot"),
+            layer="below",
+        )
+
+        # Add modality label at the top of each region
+        label_y = region["cy"] + region["radius"] * 0.85
+        fig.add_annotation(
+            x=region["cx"],
+            y=label_y,
+            text=f"<b>{region['modality']}</b>",
+            showarrow=False,
+            font=dict(size=14, color=region["color"]),
+            bgcolor="rgba(255,255,255,0.85)",
+            bordercolor=region["color"],
+            borderwidth=1,
+            borderpad=4,
+            xanchor="center",
+            yanchor="bottom",
+        )
+
     # Build a mapping of dataset name -> index for JS highlight functionality
-    dataset_name_to_idx = {info["name"]: info["idx"] for info in dataset_info}
+    dataset_name_to_idx = {d["name"]: d["idx"] for d in dataset_centers}
 
     # Use WebGL scatter traces instead of SVG shapes for performance
     # Group bubbles by dataset for hover highlighting
@@ -903,7 +1115,8 @@ def generate_moabb_bubble(
         label_text = _short_label(d["name"])
         label_width = len(label_text) * label_char_width
         label_x = d["x"]
-        label_y = d["y"] + max(0.4, d["radius"] * 0.15)
+        # Position label closer to center, scaled by cluster radius
+        label_y = d["y"] + d["radius"] * 0.35
 
         # Check for collision with existing labels
         has_collision = False

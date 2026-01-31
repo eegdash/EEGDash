@@ -1,6 +1,6 @@
 """MOABB-style circle-packing bubble visualization for EEGDash.
 
-This module creates a MOABB-inspired visualization where:
+This module creates a MOABB-inspired visualization using D3.js circle packing:
 - Each **dataset** is a cluster of circles
 - Each **circle** represents one subject
 - Circle **size** = log(records per subject) - data volume per subject
@@ -9,15 +9,13 @@ This module creates a MOABB-inspired visualization where:
 - Datasets are **grouped by modality** into distinct regional clusters
 
 Features:
-- **Hierarchical grouping**: Datasets are packed within modality regions
+- **D3.js circle packing**: Uses d3.pack() for optimal, aesthetically pleasing layouts
 - Hover-based interactivity: Dataset clusters highlight on hover, others dim
 - Rich tooltips: Subjects, sessions, records, channels, sampling rate, size
 - Click to open: Each dataset links to its detail page
-- Visual polish: Subtle glow effects, background regions, and smooth transitions
+- SVG-based rendering: Crisp circles at any zoom level
 
 Inspired by the MOABB plotting style and hierarchical data visualizations.
-Ported from MOABB (moabb/analysis/plotting.py lines 668-1004)
-and (moabb/datasets/utils.py lines 383-491).
 """
 
 from __future__ import annotations
@@ -29,12 +27,10 @@ from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 
 try:  # Allow execution as a script or module
     from .colours import MODALITY_COLOR_MAP
     from .utils import (
-        build_and_export_html,
         get_dataset_url,
         human_readable_size,
         primary_recording_modality,
@@ -43,7 +39,6 @@ try:  # Allow execution as a script or module
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import MODALITY_COLOR_MAP  # type: ignore
     from utils import (  # type: ignore
-        build_and_export_html,
         get_dataset_url,
         human_readable_size,
         primary_recording_modality,
@@ -56,463 +51,47 @@ __all__ = ["generate_moabb_bubble"]
 MAX_BUBBLES_PER_DATASET = 200
 
 # Modality display order (for consistent regional positioning)
-MODALITY_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "Other"]
+MODALITY_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "EMG", "Other"]
 
 # Background colors for modality regions (semi-transparent)
 MODALITY_BG_COLORS = {
-    "EEG": "rgba(249, 115, 22, 0.06)",  # Orange tint
-    "MEG": "rgba(59, 130, 246, 0.06)",  # Blue tint
-    "iEEG": "rgba(34, 197, 94, 0.06)",  # Green tint
-    "fNIRS": "rgba(168, 85, 247, 0.06)",  # Purple tint
-    "Other": "rgba(148, 163, 184, 0.06)",  # Gray tint
+    "EEG": "rgba(59, 130, 246, 0.08)",  # Blue tint
+    "MEG": "rgba(168, 85, 247, 0.08)",  # Purple tint
+    "iEEG": "rgba(6, 182, 212, 0.08)",  # Cyan tint
+    "fNIRS": "rgba(249, 115, 22, 0.08)",  # Orange tint
+    "EMG": "rgba(16, 185, 129, 0.08)",  # Green tint
+    "Other": "rgba(148, 163, 184, 0.08)",  # Gray tint
 }
 
 
-# =============================================================================
-# Hexagonal grid and bubble coordinate utilities (from MOABB plotting.py)
-# =============================================================================
-
-
-def _get_hexa_grid(n: int, diameter: float, center: tuple[float, float]) -> tuple:
-    """Generate hexagonal grid positions for n bubbles.
-
-    Args:
-        n: Number of positions to generate (will generate more than n)
-        diameter: Diameter of each bubble
-        center: (x, y) center of the grid
-
-    Returns:
-        Tuple of (x_coords, y_coords) arrays
-
-    """
-    # Use a fixed seed for reproducible layouts
-    rng = np.random.default_rng(42)
-    grid_size = int(np.ceil(np.sqrt(n))) + 1
-
-    x = np.arange(grid_size) - grid_size // 2 + rng.random() * 0.1
-    y = np.arange(grid_size) - grid_size // 2 + rng.random() * 0.1
-    x, y = np.meshgrid(x, y)
-    x = x.flatten()
-    y = y.flatten()
-
-    # Hexagonal offset: shift alternating rows by 0.5
-    return (
-        np.concatenate([x, x + 0.5]) * diameter + center[0],
-        np.concatenate([y, y + 0.5]) * diameter * np.sqrt(3) + center[1],
-    )
-
-
-def _get_bubble_coordinates(
-    n: int, diameter: float, center: tuple[float, float]
-) -> tuple[np.ndarray, np.ndarray]:
-    """Get n bubble coordinates arranged in a hexagonal pattern, sorted by distance from center.
-
-    Args:
-        n: Number of bubbles
-        diameter: Diameter of each bubble
-        center: (x, y) center of the arrangement
-
-    Returns:
-        Tuple of (x_coords, y_coords) arrays of length n
-
-    """
-    x, y = _get_hexa_grid(n, diameter, center)
-    dist = np.sqrt((x - center[0]) ** 2 + (y - center[1]) ** 2)
-    sort_idx = dist.argsort()
-    x = x[sort_idx]
-    y = y[sort_idx]
-    return x[:n], y[:n]
-
-
-# =============================================================================
-# BubbleChart class for force-directed collision detection (from MOABB utils.py)
-# =============================================================================
-
-
-class _BubbleChart:
-    """Force-directed bubble packing for dataset clusters.
-
-    From https://matplotlib.org/stable/gallery/misc/packed_bubbles.html
-    Ported from MOABB moabb/datasets/utils.py.
-    """
-
-    def __init__(self, area: np.ndarray, bubble_spacing: float = 0.0):
-        """Setup for bubble collapse.
-
-        Args:
-            area: Array of bubble areas
-            bubble_spacing: Minimal spacing between bubbles after collapsing
-
-        """
-        area = np.asarray(area)
-        r = np.sqrt(area / np.pi)
-
-        self.bubble_spacing = bubble_spacing
-        self.bubbles = np.ones((len(area), 4))
-        self.bubbles[:, 2] = r
-        self.bubbles[:, 3] = area
-        self.maxstep = 2 * self.bubbles[:, 2].max() + self.bubble_spacing
-        self.step_dist = self.maxstep / 2
-
-        # Calculate initial grid layout for bubbles
-        length = int(np.ceil(np.sqrt(len(self.bubbles))))
-        grid = np.arange(length) * self.maxstep
-        gx, gy = np.meshgrid(grid, grid)
-        self.bubbles[:, 0] = gx.flatten()[: len(self.bubbles)]
-        self.bubbles[:, 1] = gy.flatten()[: len(self.bubbles)]
-
-        self.com = self.center_of_mass()
-
-    def center_of_mass(self) -> np.ndarray:
-        """Calculate center of mass weighted by bubble area."""
-        return np.average(self.bubbles[:, :2], axis=0, weights=self.bubbles[:, 3])
-
-    def center_distance(self, bubble: np.ndarray, bubbles: np.ndarray) -> np.ndarray:
-        """Calculate distance between bubble center and other bubble centers."""
-        return np.hypot(bubble[0] - bubbles[:, 0], bubble[1] - bubbles[:, 1])
-
-    def outline_distance(self, bubble: np.ndarray, bubbles: np.ndarray) -> np.ndarray:
-        """Calculate distance between bubble outlines (negative = collision)."""
-        center_distance = self.center_distance(bubble, bubbles)
-        return center_distance - bubble[2] - bubbles[:, 2] - self.bubble_spacing
-
-    def check_collisions(self, bubble: np.ndarray, bubbles: np.ndarray) -> int:
-        """Count how many bubbles this bubble collides with."""
-        distance = self.outline_distance(bubble, bubbles)
-        return len(distance[distance < 0])
-
-    def collides_with(self, bubble: np.ndarray, bubbles: np.ndarray) -> np.ndarray:
-        """Return indices of bubbles this bubble collides with."""
-        distance = self.outline_distance(bubble, bubbles)
-        return np.argmin(distance, keepdims=True)
-
-    def collapse(self, n_iterations: int = 50) -> None:
-        """Move bubbles toward the center of mass using force-directed algorithm.
-
-        Args:
-            n_iterations: Number of iterations to run
-
-        """
-        for _ in range(n_iterations):
-            moves = 0
-            for i in range(len(self.bubbles)):
-                rest_bub = np.delete(self.bubbles, i, 0)
-
-                # Direction vector from bubble to center of mass
-                dir_vec = self.com - self.bubbles[i, :2]
-
-                # Normalize direction vector
-                norm = np.sqrt(dir_vec.dot(dir_vec))
-                if norm == 0:
-                    continue
-                dir_vec = dir_vec / norm
-
-                # Calculate new bubble position
-                new_point = self.bubbles[i, :2] + dir_vec * self.step_dist
-                new_bubble = np.append(new_point, self.bubbles[i, 2:4])
-
-                # Check whether new bubble collides with other bubbles
-                if not self.check_collisions(new_bubble, rest_bub):
-                    self.bubbles[i, :] = new_bubble
-                    self.com = self.center_of_mass()
-                    moves += 1
-                else:
-                    # Try to move around a colliding bubble
-                    for colliding in self.collides_with(new_bubble, rest_bub):
-                        # Direction to colliding bubble
-                        dir_vec = rest_bub[colliding, :2] - self.bubbles[i, :2]
-                        norm = np.sqrt(dir_vec.dot(dir_vec))
-                        if norm == 0:
-                            continue
-                        dir_vec = dir_vec / norm
-
-                        # Calculate orthogonal vector
-                        orth = np.array([dir_vec[1], -dir_vec[0]])
-
-                        # Test which direction to go
-                        new_point1 = self.bubbles[i, :2] + orth * self.step_dist
-                        new_point2 = self.bubbles[i, :2] - orth * self.step_dist
-                        dist1 = self.center_distance(self.com, np.array([new_point1]))
-                        dist2 = self.center_distance(self.com, np.array([new_point2]))
-                        new_point = new_point1 if dist1 < dist2 else new_point2
-                        new_bubble = np.append(new_point, self.bubbles[i, 2:4])
-
-                        if not self.check_collisions(new_bubble, rest_bub):
-                            self.bubbles[i, :] = new_bubble
-                            self.com = self.center_of_mass()
-
-            if moves / len(self.bubbles) < 0.1:
-                self.step_dist = self.step_dist / 2
-
-    def get_centers(self) -> np.ndarray:
-        """Return array of bubble center coordinates."""
-        return self.bubbles[:, :2]
-
-    def get_radii(self) -> np.ndarray:
-        """Return array of bubble radii."""
-        return self.bubbles[:, 2]
-
-
-# =============================================================================
-# Bubble size and alpha calculations
-# =============================================================================
-
-
-def _get_bubble_diameter(
-    records_per_subject: float,
-    scale: float = 0.5,
-) -> float:
-    """Calculate bubble diameter from data volume per subject.
+def _get_bubble_size(records_per_subject: float, scale: float = 1.0) -> float:
+    """Calculate bubble size from data volume per subject.
 
     Args:
         records_per_subject: Number of records per subject (proxy for trials)
         scale: Scaling factor
 
     Returns:
-        Bubble diameter
+        Bubble size value for D3
 
     """
     size = max(1.0, float(records_per_subject))
-    return np.log(size + 1.0) * scale
+    return np.log(size + 1.0) * scale * 10
 
 
-def _get_alpha(n_sessions: int, alphas: list[float] | None = None) -> float:
+def _get_alpha(n_sessions: int) -> float:
     """Calculate bubble alpha based on number of sessions.
 
     Args:
         n_sessions: Number of sessions
-        alphas: List of alpha values for 1, 2, 3, 4, 5+ sessions
 
     Returns:
-        Alpha value (0.2 to 0.8)
+        Alpha value (0.3 to 0.9)
 
     """
-    if alphas is None:
-        alphas = [0.8, 0.65, 0.5, 0.35, 0.2]
+    alphas = [0.9, 0.75, 0.6, 0.45, 0.35]
     idx = min(max(0, n_sessions - 1), len(alphas) - 1)
     return alphas[idx]
-
-
-def _get_dataset_area(
-    n_subjects: int,
-    records_per_subject: float,
-    scale: float = 0.5,
-    gap: float = 0.1,
-) -> float:
-    """Calculate total area needed for a dataset's bubbles.
-
-    Args:
-        n_subjects: Number of subjects (circles)
-        records_per_subject: Number of records per subject
-        scale: Scaling factor
-        gap: Gap between bubbles
-
-    Returns:
-        Total area for the dataset cluster
-
-    """
-    diameter = _get_bubble_diameter(records_per_subject, scale) + gap
-    # Hexagonal packing area approximation
-    return n_subjects * 3 * 3**0.5 / 8 * diameter**2
-
-
-# =============================================================================
-# Two-level hierarchical packing (modality groups -> datasets)
-# =============================================================================
-
-
-def _pack_modality_groups(
-    modality_data: dict[str, list[dict]],
-    scale: float,
-    gap: float,
-    meta_gap: float,
-) -> dict[str, dict]:
-    """Pack modality groups into a circular layout with hierarchical structure.
-
-    First packs datasets within each modality, then positions the modality
-    groups in a larger circular arrangement.
-
-    Args:
-        modality_data: Dict mapping modality name -> list of dataset info dicts
-        scale: Scaling factor for bubble sizes
-        gap: Gap between bubbles within datasets
-        meta_gap: Gap between dataset clusters
-
-    Returns:
-        Dict mapping modality name -> {center, radius, datasets_packed, total_area}
-
-    """
-    # Step 1: Calculate area and pack datasets within each modality group
-    modality_results = {}
-
-    for modality, datasets in modality_data.items():
-        if not datasets:
-            continue
-
-        # Calculate areas for each dataset in this modality
-        areas = []
-        for ds in datasets:
-            area = _get_dataset_area(
-                ds["n_subjects"], ds["records_per_subject"], scale, gap
-            )
-            areas.append(area)
-            ds["area"] = area
-
-        # Pack datasets within this modality using BubbleChart
-        if len(areas) > 1:
-            bubble_chart = _BubbleChart(np.array(areas), bubble_spacing=meta_gap * 0.5)
-            bubble_chart.collapse(
-                n_iterations=120
-            )  # More iterations for tighter packing
-            centers = bubble_chart.get_centers()
-            centers = centers - centers.mean(axis=0)  # Center around origin
-        else:
-            centers = np.array([[0.0, 0.0]])
-
-        # Calculate bounding radius for this modality group
-        max_radius = 0.0
-        for i, ds in enumerate(datasets):
-            ds["local_x"] = centers[i, 0]
-            ds["local_y"] = centers[i, 1]
-            ds_radius = np.sqrt(ds["area"] / np.pi)
-            dist = np.sqrt(centers[i, 0] ** 2 + centers[i, 1] ** 2) + ds_radius
-            max_radius = max(max_radius, dist)
-
-        # Total area of this modality group (for meta-level packing)
-        total_area = np.pi * (max_radius + meta_gap) ** 2
-
-        modality_results[modality] = {
-            "datasets": datasets,
-            "local_centers": centers,
-            "radius": max_radius,
-            "total_area": total_area,
-        }
-
-    # Step 2: Pack modality groups at the meta level
-    modalities_ordered = [m for m in MODALITY_ORDER if m in modality_results]
-    modalities_ordered += [m for m in modality_results if m not in modalities_ordered]
-
-    if len(modalities_ordered) == 1:
-        # Single modality: center it
-        m = modalities_ordered[0]
-        modality_results[m]["center"] = (0.0, 0.0)
-    else:
-        # Multiple modalities: pack them in a circular arrangement
-        meta_areas = [modality_results[m]["total_area"] for m in modalities_ordered]
-        meta_chart = _BubbleChart(np.array(meta_areas), bubble_spacing=meta_gap * 1.5)
-        meta_chart.collapse(n_iterations=100)  # More iterations for tighter packing
-        meta_centers = meta_chart.get_centers()
-        meta_centers = meta_centers - meta_centers.mean(axis=0)
-
-        for i, m in enumerate(modalities_ordered):
-            modality_results[m]["center"] = (
-                float(meta_centers[i, 0]),
-                float(meta_centers[i, 1]),
-            )
-
-    # Step 3: Compute global positions for each dataset
-    for modality, result in modality_results.items():
-        cx, cy = result["center"]
-        for ds in result["datasets"]:
-            ds["global_x"] = ds["local_x"] + cx
-            ds["global_y"] = ds["local_y"] + cy
-
-    return modality_results
-
-
-def _generate_arc_path(
-    cx: float,
-    cy: float,
-    radius: float,
-    start_angle: float,
-    end_angle: float,
-    n_points: int = 50,
-) -> tuple[list[float], list[float]]:
-    """Generate arc path coordinates for curved labels.
-
-    Args:
-        cx, cy: Center of the arc
-        radius: Radius of the arc
-        start_angle: Start angle in radians
-        end_angle: End angle in radians
-        n_points: Number of points in the arc
-
-    Returns:
-        Tuple of (x_coords, y_coords) lists
-
-    """
-    angles = np.linspace(start_angle, end_angle, n_points)
-    x = cx + radius * np.cos(angles)
-    y = cy + radius * np.sin(angles)
-    return x.tolist(), y.tolist()
-
-
-# =============================================================================
-# Dataset bubble data generation
-# =============================================================================
-
-
-def _dataset_bubble_data(
-    dataset_name: str,
-    n_subjects: int,
-    n_sessions: int,
-    records_per_subject: float,
-    category: str,
-    center: tuple[float, float],
-    color: str,
-    dataset_idx: int,
-    scale: float = 0.5,
-    gap: float = 0.1,
-    alphas: list[float] | None = None,
-) -> list[dict[str, Any]]:
-    """Generate bubble coordinates for one dataset.
-
-    Args:
-        dataset_name: Name of the dataset
-        n_subjects: Number of subjects (circles to draw)
-        n_sessions: Number of sessions (affects alpha)
-        records_per_subject: Number of records per subject (affects size)
-        category: Category label (e.g., modality)
-        center: (x, y) center of the dataset cluster
-        color: Hex color for the bubbles
-        dataset_idx: Index of this dataset for JS cross-referencing
-        scale: Scaling factor for bubble size
-        gap: Gap between bubbles
-        alphas: List of alpha values by session count
-
-    Returns:
-        List of dicts with {x, y, radius, color, alpha, dataset_name, category, dataset_idx}
-
-    """
-    if n_subjects < 1:
-        return []
-
-    # Limit bubbles per dataset for performance
-    effective_subjects = min(n_subjects, MAX_BUBBLES_PER_DATASET)
-
-    diameter = _get_bubble_diameter(records_per_subject, scale)
-    alpha = _get_alpha(n_sessions, alphas)
-
-    x, y = _get_bubble_coordinates(effective_subjects, diameter + gap, center)
-
-    bubbles = []
-    for xi, yi in zip(x, y):
-        bubbles.append(
-            {
-                "x": float(xi),
-                "y": float(yi),
-                "radius": diameter / 2,
-                "color": color,
-                "alpha": alpha,
-                "dataset_name": dataset_name,
-                "category": category,
-                "n_subjects": n_subjects,
-                "n_sessions": n_sessions,
-                "records_per_subject": records_per_subject,
-                "dataset_idx": dataset_idx,
-            }
-        )
-    return bubbles
 
 
 def _to_numeric_median_list(val: Any) -> float | None:
@@ -601,36 +180,27 @@ def _format_int(value: Any) -> str:
         return str(value)
 
 
-# =============================================================================
-# Main visualization function
-# =============================================================================
-
-
 def generate_moabb_bubble(
     df: pd.DataFrame,
     out_html: str | Path,
     *,
     color_by: Literal["modality", "type", "pathology"] = "modality",
-    scale: float = 1.2,
-    gap: float = 0.35,
-    meta_gap: float = 1.8,
-    width: int | None = None,
-    height: int = 1800,
+    scale: float = 1.0,
+    width: int = 1400,
+    height: int = 900,
 ) -> Path:
-    """Generate MOABB-style circle-packing bubble plot for all datasets.
+    """Generate MOABB-style circle-packing bubble plot using D3.js.
 
     Each dataset becomes a cluster of circles (one per subject), arranged
-    in a hexagonal pattern. Datasets are packed into a single cluster, with
-    color encoding the selected category.
+    using D3's circle packing algorithm. Datasets are grouped by modality
+    with color encoding the selected category.
 
     Args:
         df: DataFrame with dataset information
         out_html: Output HTML file path
         color_by: Column to use for coloring ("modality", "type", "pathology")
         scale: Scaling factor for bubble sizes
-        gap: Gap between bubbles within clusters
-        meta_gap: Gap between dataset clusters in the packed layout
-        width: Chart width in pixels (defaults to height * 1.4)
+        width: Chart width in pixels
         height: Chart height in pixels
 
     Returns:
@@ -697,7 +267,7 @@ def generate_moabb_bubble(
     # Filter to datasets with at least 1 subject
     data = data[data["n_subjects"] >= 1].copy()
 
-    # Derive records per subject for sizing (avoid over-scaling large datasets)
+    # Derive records per subject for sizing
     data["records_per_subject"] = data["n_records"] / data["n_subjects"]
     data["records_per_subject"] = (
         data["records_per_subject"]
@@ -749,748 +319,471 @@ def generate_moabb_bubble(
         return out_path
 
     # =========================================================================
-    # Group datasets by modality for hierarchical packing
+    # Build hierarchical data structure for D3
     # =========================================================================
 
-    # Build dataset info and group by modality
-    modality_data: dict[str, list[dict]] = {}
-    global_idx = 0
+    # Build hierarchy: root -> modality -> dataset -> subjects
+    hierarchy = {"name": "root", "children": []}
 
+    # Group by modality
+    modality_groups: dict[str, list[dict]] = {}
     for _, row in data.iterrows():
+        modality = row["category"]
+        if modality not in modality_groups:
+            modality_groups[modality] = []
+
         n_subjects = int(row["n_subjects"])
         n_sessions = int(row["n_sessions"])
         n_records = int(row["n_records"])
         records_per_subject = float(row["records_per_subject"])
-        category = row["category"]
 
-        # Extract additional metadata
-        n_tasks = safe_int(row.get("n_tasks", 0), 0)
+        # Limit subjects per dataset
+        effective_subjects = min(n_subjects, MAX_BUBBLES_PER_DATASET)
+
+        # Extract metadata
         nchans = row.get("nchans_median")
         sfreq = row.get("sfreq_median")
         size_bytes = safe_int(row.get("size_bytes_clean", 0), 0)
 
-        ds_info = {
+        nchans_str = _format_int(nchans) if nchans else "—"
+        sfreq_str = _format_int(sfreq) if sfreq else "—"
+        size_str = human_readable_size(size_bytes) if size_bytes else "—"
+
+        # Calculate bubble size based on records per subject
+        bubble_size = _get_bubble_size(records_per_subject, scale)
+        alpha = _get_alpha(n_sessions)
+
+        # Create dataset node with subject children
+        dataset_node = {
             "name": row["dataset"],
+            "title": row.get("dataset_title", "") or "",
+            "modality": modality,
             "n_subjects": n_subjects,
             "n_sessions": n_sessions,
             "n_records": n_records,
-            "records_per_subject": records_per_subject,
-            "category": category,
-            "title": row.get("dataset_title", ""),
-            "n_tasks": n_tasks,
-            "nchans": nchans,
-            "sfreq": sfreq,
-            "size_bytes": size_bytes,
-            "idx": global_idx,
+            "records_per_subject": round(records_per_subject, 1),
+            "nchans": nchans_str,
+            "sfreq": sfreq_str,
+            "size": size_str,
+            "url": get_dataset_url(row["dataset"]),
+            "alpha": alpha,
+            "color": MODALITY_COLOR_MAP.get(modality, "#94a3b8"),
+            "children": [
+                {"name": f"s{i}", "value": bubble_size}
+                for i in range(effective_subjects)
+            ],
         }
 
-        if category not in modality_data:
-            modality_data[category] = []
-        modality_data[category].append(ds_info)
-        global_idx += 1
+        modality_groups[modality].append(dataset_node)
 
-    # Two-level hierarchical packing: modality groups -> datasets
-    modality_results = _pack_modality_groups(modality_data, scale, gap, meta_gap)
+    # Order modalities consistently
+    ordered_modalities = [m for m in MODALITY_ORDER if m in modality_groups]
+    ordered_modalities += [m for m in modality_groups if m not in ordered_modalities]
 
-    # Collect all bubbles and dataset centers
-    all_bubbles = []
-    dataset_centers = []
-    modality_regions = []  # For background shapes
+    for modality in ordered_modalities:
+        modality_node = {
+            "name": modality,
+            "color": MODALITY_COLOR_MAP.get(modality, "#94a3b8"),
+            "bgColor": MODALITY_BG_COLORS.get(modality, "rgba(148,163,184,0.08)"),
+            "children": modality_groups[modality],
+        }
+        hierarchy["children"].append(modality_node)
 
-    for modality, result in modality_results.items():
-        modality_cx, modality_cy = result["center"]
-        modality_radius = result["radius"]
-        color = MODALITY_COLOR_MAP.get(modality, "#94a3b8")
+    hierarchy_json = json.dumps(hierarchy)
 
-        # Store modality region info for background shapes
-        # Add extra padding to ensure all bubbles fit inside the region
-        modality_regions.append(
-            {
-                "modality": modality,
-                "cx": modality_cx,
-                "cy": modality_cy,
-                "radius": modality_radius * 1.2 + meta_gap * 0.4,
-                "color": color,
-                "n_datasets": len(result["datasets"]),
-            }
-        )
+    # =========================================================================
+    # Generate HTML with D3.js visualization
+    # =========================================================================
 
-        for ds in result["datasets"]:
-            cx = ds["global_x"]
-            cy = ds["global_y"]
-            area = ds["area"]
-            cluster_radius = float(np.sqrt(area / np.pi))
-
-            # Generate individual subject bubbles for this dataset
-            bubbles = _dataset_bubble_data(
-                dataset_name=ds["name"],
-                n_subjects=ds["n_subjects"],
-                n_sessions=ds["n_sessions"],
-                records_per_subject=ds["records_per_subject"],
-                category=ds["category"],
-                center=(cx, cy),
-                color=color,
-                dataset_idx=ds["idx"],
-                scale=scale,
-                gap=gap,
-            )
-            all_bubbles.extend(bubbles)
-
-            # Format metadata for hover display
-            nchans_str = _format_int(ds["nchans"]) if ds["nchans"] else "—"
-            sfreq_str = _format_int(ds["sfreq"]) if ds["sfreq"] else "—"
-            size_str = (
-                human_readable_size(ds["size_bytes"]) if ds["size_bytes"] else "—"
-            )
-
-            dataset_centers.append(
-                {
-                    "name": ds["name"],
-                    "x": float(cx),
-                    "y": float(cy),
-                    "category": ds["category"],
-                    "n_subjects": ds["n_subjects"],
-                    "n_sessions": ds["n_sessions"],
-                    "n_records": ds["n_records"],
-                    "records_per_subject": ds["records_per_subject"],
-                    "area": area,
-                    "radius": cluster_radius,
-                    "url": get_dataset_url(ds["name"]),
-                    "title": ds["title"] or "",
-                    "n_tasks": ds["n_tasks"],
-                    "nchans_str": nchans_str,
-                    "sfreq_str": sfreq_str,
-                    "size_str": size_str,
-                    "idx": ds["idx"],
-                }
-            )
-
-    layout_margin = dict(l=60, r=60, t=100, b=80)  # Extra margins for labels
-    plot_width = (
-        width if width is not None else int(height * 1.1)
-    )  # More square aspect ratio
-    plot_height = max(height - layout_margin["t"] - layout_margin["b"], 1)
-    plot_width_inner = max(plot_width - layout_margin["l"] - layout_margin["r"], 1)
-    target_ratio = plot_width_inner / plot_height
-
-    x_vals = np.array([b["x"] for b in all_bubbles])
-    y_vals = np.array([b["y"] for b in all_bubbles])
-    r_vals = np.array([b["radius"] for b in all_bubbles])
-    x_min = np.min(x_vals - r_vals)
-    x_max = np.max(x_vals + r_vals)
-    y_min = np.min(y_vals - r_vals)
-    y_max = np.max(y_vals + r_vals)
-    x_span = max(x_max - x_min, 1.0)
-    y_span = max(y_max - y_min, 1.0)
-    current_ratio = x_span / y_span
-
-    x_scale = target_ratio / current_ratio
-    if x_scale > 1.02:
-        center_map = {d["name"]: d["x"] for d in dataset_centers}
-        for d in dataset_centers:
-            d["x"] *= x_scale
-        for b in all_bubbles:
-            cx = center_map.get(b["dataset_name"])
-            if cx is None:
-                continue
-            b["x"] = (b["x"] - cx) + (cx * x_scale)
-        # Also scale modality region centers
-        for region in modality_regions:
-            region["cx"] *= x_scale
-
-        x_vals = np.array([b["x"] for b in all_bubbles])
-        x_min = np.min(x_vals - r_vals)
-        x_max = np.max(x_vals + r_vals)
-        x_span = max(x_max - x_min, 1.0)
-        y_span = max(y_max - y_min, 1.0)
-
-    x_center = (x_min + x_max) / 2
-    y_center = (y_min + y_max) / 2
-    # Add generous padding on all sides to prevent clipping of modality regions
-    x_pad = x_span * 0.22
-    y_pad = y_span * 0.12
-    x_range = [x_center - x_span / 2 - x_pad, x_center + x_span / 2 + x_pad]
-    y_range = [y_center - y_span / 2 - y_pad, y_center + y_span / 2 + y_pad]
-    size_scale = plot_height / y_span
-
-    # Create figure
-    fig = go.Figure()
-
-    # Add background shapes for modality regions (subtle colored circles)
-    for region in modality_regions:
-        bg_color = MODALITY_BG_COLORS.get(region["modality"], "rgba(148,163,184,0.06)")
-        border_color = region["color"]
-
-        # Create a circle shape for the modality region
-        fig.add_shape(
-            type="circle",
-            x0=region["cx"] - region["radius"],
-            y0=region["cy"] - region["radius"],
-            x1=region["cx"] + region["radius"],
-            y1=region["cy"] + region["radius"],
-            fillcolor=bg_color,
-            line=dict(color=border_color, width=1.5, dash="dot"),
-            layer="below",
-        )
-
-        # Add modality label at the top of each region
-        label_y = region["cy"] + region["radius"] * 0.85
-        fig.add_annotation(
-            x=region["cx"],
-            y=label_y,
-            text=f"<b>{region['modality']}</b>",
-            showarrow=False,
-            font=dict(size=14, color=region["color"]),
-            bgcolor="rgba(255,255,255,0.85)",
-            bordercolor=region["color"],
-            borderwidth=1,
-            borderpad=4,
-            xanchor="center",
-            yanchor="bottom",
-        )
-
-    # Build a mapping of dataset name -> index for JS highlight functionality
-    dataset_name_to_idx = {d["name"]: d["idx"] for d in dataset_centers}
-
-    # Use WebGL scatter traces instead of SVG shapes for performance
-    # Group bubbles by dataset for hover highlighting
-    bubbles_by_dataset = {}
-    for bubble in all_bubbles:
-        ds_name = bubble["dataset_name"]
-        if ds_name not in bubbles_by_dataset:
-            bubbles_by_dataset[ds_name] = []
-        bubbles_by_dataset[ds_name].append(bubble)
-
-    # Track trace indices for each dataset (for JS hover highlighting)
-    dataset_trace_map = {}  # dataset_name -> list of trace indices
-    trace_idx = 0
-
-    # Add bubble traces per dataset (one trace per dataset for highlighting)
-    # Sort by category first for legend ordering, then by dataset name
-    datasets_sorted = sorted(
-        bubbles_by_dataset.keys(),
-        key=lambda d: (
-            0
-            if bubbles_by_dataset[d][0]["category"] == "EEG"
-            else 1
-            if bubbles_by_dataset[d][0]["category"] == "Other"
-            else 2
-            if bubbles_by_dataset[d][0]["category"] == "MEG"
-            else 3
-            if bubbles_by_dataset[d][0]["category"] == "iEEG"
-            else 4
-            if bubbles_by_dataset[d][0]["category"] == "fNIRS"
-            else 5,
-            d,
-        ),
-    )
-
-    # Track which categories we've added to legend
-    legend_added = set()
-
-    for ds_name in datasets_sorted:
-        ds_bubbles = bubbles_by_dataset[ds_name]
-        cat = ds_bubbles[0]["category"]
-        color = MODALITY_COLOR_MAP.get(cat, "#94a3b8")
-        ds_idx = dataset_name_to_idx.get(ds_name, 0)
-
-        # Convert radius to marker size (Plotly uses diameter in pixels)
-        sizes = [max(b["radius"] * 2 * size_scale, 4) for b in ds_bubbles]
-        alphas = [b["alpha"] for b in ds_bubbles]
-
-        # Only show in legend once per category
-        show_legend = cat not in legend_added and cat != "Other"
-        if show_legend:
-            legend_added.add(cat)
-
-        fig.add_trace(
-            go.Scattergl(
-                x=[b["x"] for b in ds_bubbles],
-                y=[b["y"] for b in ds_bubbles],
-                mode="markers",
-                name=cat,
-                marker=dict(
-                    size=sizes,
-                    color=color,
-                    opacity=alphas,
-                    line=dict(width=0.5, color="rgba(0,0,0,0.1)"),
-                ),
-                customdata=[[ds_name, ds_idx]] * len(ds_bubbles),
-                hoverinfo="skip",  # Hover handled by invisible center markers
-                showlegend=show_legend,
-                legendgroup=cat,
-            )
-        )
-
-        # Track this trace for the dataset
-        if ds_name not in dataset_trace_map:
-            dataset_trace_map[ds_name] = []
-        dataset_trace_map[ds_name].append(trace_idx)
-        trace_idx += 1
-
-    # Add hover traces for interactivity (radius-scaled invisible markers at dataset centers)
-    # These provide the hover targets and rich tooltips
-    categories = sorted(set(d["category"] for d in dataset_centers))
-    for category in categories:
-        cat_data = [d for d in dataset_centers if d["category"] == category]
-        color = MODALITY_COLOR_MAP.get(category, "#94a3b8")
-
-        # Scale hover marker size to match cluster extent (min 35px for small clusters)
-        hover_sizes = [max(35, d["radius"] * 2 * size_scale * 0.9) for d in cat_data]
-
-        fig.add_trace(
-            go.Scatter(
-                x=[d["x"] for d in cat_data],
-                y=[d["y"] for d in cat_data],
-                mode="markers",
-                name=f"{category}_hover",
-                marker=dict(
-                    size=hover_sizes,
-                    color=color,
-                    opacity=0.01,  # Nearly invisible but captures hover
-                ),
-                # Rich customdata for hover and JS highlighting
-                # [0]=name, [1]=subjects, [2]=sessions, [3]=records, [4]=records/subj,
-                # [5]=url, [6]=idx, [7]=title, [8]=category, [9]=tasks,
-                # [10]=nchans, [11]=sfreq, [12]=size
-                customdata=[
-                    [
-                        d["name"],
-                        d["n_subjects"],
-                        d["n_sessions"],
-                        d["n_records"],
-                        d["records_per_subject"],
-                        d["url"],
-                        d["idx"],
-                        d["title"],
-                        d["category"],
-                        d["n_tasks"],
-                        d["nchans_str"],
-                        d["sfreq_str"],
-                        d["size_str"],
-                    ]
-                    for d in cat_data
-                ],
-                hovertemplate=(
-                    "<b>%{customdata[0]}</b><br>"
-                    "<span style='color:#6b7280;font-size:0.9em'>%{customdata[7]}</span><br>"
-                    "<br>"
-                    "📊 <b>Subjects</b>: %{customdata[1]:,}<br>"
-                    "🔄 <b>Sessions</b>: %{customdata[2]:,}<br>"
-                    "📁 <b>Records</b>: %{customdata[3]:,}<br>"
-                    "📈 <b>Records/Subject</b>: %{customdata[4]:.1f}<br>"
-                    "<br>"
-                    "📡 <b>Channels</b>: %{customdata[10]}<br>"
-                    "⚡ <b>Sampling</b>: %{customdata[11]} Hz<br>"
-                    "💾 <b>Size</b>: %{customdata[12]}<br>"
-                    "🎯 <b>Modality</b>: %{customdata[8]}<br>"
-                    "<br>"
-                    "<i style='color:#3b82f6'>Click to open dataset page →</i>"
-                    "<extra></extra>"
-                ),
-                showlegend=False,
-                hoverlabel=dict(
-                    bgcolor="white",
-                    bordercolor=color,
-                    font=dict(size=12, color="#1f2937"),
-                ),
-            )
-        )
-        trace_idx += 1
-
-    # Add dataset labels for the largest clusters with collision detection
-    label_count = min(60, max(30, int(len(dataset_centers) * 0.08)))
-    label_candidates = sorted(dataset_centers, key=lambda d: d["area"], reverse=True)[
-        :label_count
-    ]
-
-    # Simple collision detection: track placed label positions
-    placed_labels: list[tuple[float, float, float, float]] = []  # (x, y, width, height)
-    label_char_width = 0.08 * (
-        x_span / 10
-    )  # Approximate character width in data coords
-    label_height = 0.12 * (y_span / 10)  # Approximate label height in data coords
-
-    for d in label_candidates:
-        label_text = _short_label(d["name"])
-        label_width = len(label_text) * label_char_width
-        label_x = d["x"]
-        # Position label closer to center, scaled by cluster radius
-        label_y = d["y"] + d["radius"] * 0.35
-
-        # Check for collision with existing labels
-        has_collision = False
-        for px, py, pw, ph in placed_labels:
-            # Check if bounding boxes overlap (with some padding)
-            if (
-                abs(label_x - px) < (label_width + pw) / 2 + label_char_width
-                and abs(label_y - py) < (label_height + ph) / 2 + label_height * 0.3
-            ):
-                has_collision = True
-                break
-
-        if has_collision:
-            continue  # Skip this label to avoid overlap
-
-        # Place the label
-        placed_labels.append((label_x, label_y, label_width, label_height))
-        label_color = MODALITY_COLOR_MAP.get(d["category"], "#94a3b8")
-        fig.add_annotation(
-            x=label_x,
-            y=label_y,
-            text=label_text,
-            showarrow=False,
-            font=dict(size=8, color="#1f2937"),
-            bgcolor="rgba(255,255,255,0.9)",
-            bordercolor=label_color,
-            borderwidth=1,
-            borderpad=2,
-        )
-
-    fig.update_layout(
-        height=height,
-        width=plot_width,
-        margin=layout_margin,
-        template="plotly_white",
-        legend=dict(
-            title="Recording Modality",
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="center",
-            x=0.5,
-            itemclick="toggle",
-            itemdoubleclick="toggleothers",
-        ),
-        font=dict(
-            family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-            size=14,
-        ),
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False,
-            scaleanchor="y",
-            scaleratio=1,
-            range=x_range,
-        ),
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False,
-            range=y_range,
-        ),
-        autosize=False,
-        showlegend=True,
-        hoverlabel=dict(
-            bgcolor="rgba(255, 255, 255, 0.95)",
-            bordercolor="#e5e7eb",
-            font=dict(
-                family="Inter, system-ui, -apple-system, sans-serif",
-                size=12,
-                color="#1f2937",
-            ),
-            align="left",
-        ),
-        hovermode="closest",
-    )
-
-    # Add legend annotation
-    _add_moabb_legend(fig, scale=scale)
-
-    # Add interactive hint at the bottom
-    fig.add_annotation(
-        xref="paper",
-        yref="paper",
-        x=0.5,
-        y=-0.02,
-        text="<b>Hover</b> to highlight dataset · <b>Scroll</b> to zoom · <b>Drag</b> to pan · <b>Click</b> to open",
-        showarrow=False,
-        font=dict(size=11, color="#6b7280"),
-        bgcolor="rgba(255,255,255,0.8)",
-        borderpad=4,
-        xanchor="center",
-        yanchor="top",
-    )
-
-    # Build dataset trace mapping JSON for JavaScript
-    dataset_trace_json = json.dumps(dataset_trace_map)
-    n_bubble_traces = trace_idx - len(categories)  # Exclude hover traces
-
-    extra_style = f""".dataset-loading {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: {height}px;
-    font-family: Inter, system-ui, sans-serif;
-    color: #6b7280;
-}}
-#moabb-bubble .hoverlayer .hovertext {{
-    transition: opacity 0.15s ease;
-}}"""
-
-    pre_html = '<div class="dataset-loading" id="moabb-bubble-loading">Loading MOABB bubble plot...</div>\n'
-
-    # JavaScript with hover highlighting functionality
-    extra_html = f"""
-<script>
-document.addEventListener('DOMContentLoaded', function() {{
-    const loading = document.getElementById('moabb-bubble-loading');
-    const plot = document.getElementById('moabb-bubble');
-
-    // Dataset name -> trace indices mapping (for highlight/dim)
-    const datasetTraceMap = {dataset_trace_json};
-    const nBubbleTraces = {n_bubble_traces};
-
-    // Store original opacity and size for each trace
-    let originalStyles = null;
-    let isHighlighting = false;
-    let hoverTimeout = null;
-
-    function showPlot() {{
-        if (loading) loading.style.display = 'none';
-        if (plot) {{
-            plot.style.display = 'block';
-            if (typeof Plotly !== 'undefined') Plotly.Plots.resize(plot);
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOABB Bubble Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }}
-    }}
-
-    function captureOriginalStyles() {{
-        if (!plot || !plot.data || originalStyles) return;
-        originalStyles = plot.data.slice(0, nBubbleTraces).map(function(trace) {{
-            return {{
-                opacity: trace.marker && trace.marker.opacity
-                    ? (Array.isArray(trace.marker.opacity)
-                        ? trace.marker.opacity.slice()
-                        : trace.marker.opacity)
-                    : 0.7,
-                size: trace.marker && trace.marker.size
-                    ? (Array.isArray(trace.marker.size)
-                        ? trace.marker.size.slice()
-                        : trace.marker.size)
-                    : 10,
-                lineWidth: trace.marker && trace.marker.line
-                    ? trace.marker.line.width || 0.5
-                    : 0.5,
-                lineColor: trace.marker && trace.marker.line
-                    ? trace.marker.line.color || 'rgba(0,0,0,0.1)'
-                    : 'rgba(0,0,0,0.1)',
-                color: trace.marker && trace.marker.color
-                    ? trace.marker.color
-                    : '#3b82f6'
-            }};
-        }});
-    }}
-
-    // Convert hex color to rgba for glow effect
-    function hexToRgba(hex, alpha) {{
-        if (!hex || hex.charAt(0) !== '#') return 'rgba(59, 130, 246, ' + alpha + ')';
-        var r = parseInt(hex.slice(1, 3), 16);
-        var g = parseInt(hex.slice(3, 5), 16);
-        var b = parseInt(hex.slice(5, 7), 16);
-        return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
-    }}
-
-    function highlightDataset(datasetName) {{
-        if (!plot || !originalStyles || isHighlighting) return;
-        isHighlighting = true;
-
-        const highlightTraces = datasetTraceMap[datasetName] || [];
-        const updates = {{}};
-
-        // Build updates for all bubble traces
-        for (let i = 0; i < nBubbleTraces; i++) {{
-            const isHighlighted = highlightTraces.includes(i);
-            const orig = originalStyles[i];
-
-            if (!updates['marker.opacity']) updates['marker.opacity'] = [];
-            if (!updates['marker.size']) updates['marker.size'] = [];
-            if (!updates['marker.line.width']) updates['marker.line.width'] = [];
-            if (!updates['marker.line.color']) updates['marker.line.color'] = [];
-
-            if (isHighlighted) {{
-                // Highlighted: scale up, increase opacity, add colored glow
-                const origOpacity = Array.isArray(orig.opacity) ? orig.opacity : [orig.opacity];
-                const origSize = Array.isArray(orig.size) ? orig.size : [orig.size];
-                const glowColor = hexToRgba(orig.color, 0.7);
-
-                updates['marker.opacity'].push(origOpacity.map(function(o) {{
-                    return Math.min(1.0, (typeof o === 'number' ? o : 0.7) + 0.3);
-                }}));
-                updates['marker.size'].push(origSize.map(function(s) {{
-                    return (typeof s === 'number' ? s : 10) * 1.15;
-                }}));
-                updates['marker.line.width'].push(3);
-                updates['marker.line.color'].push(glowColor);
-            }} else {{
-                // Dimmed: reduce opacity significantly for clear contrast
-                const origOpacity = Array.isArray(orig.opacity) ? orig.opacity : [orig.opacity];
-                const origSize = Array.isArray(orig.size) ? orig.size : [orig.size];
-
-                updates['marker.opacity'].push(origOpacity.map(function(o) {{
-                    return (typeof o === 'number' ? o : 0.7) * 0.18;
-                }}));
-                updates['marker.size'].push(origSize);
-                updates['marker.line.width'].push(orig.lineWidth);
-                updates['marker.line.color'].push(orig.lineColor);
-            }}
+        body {{
+            font-family: Inter, system-ui, -apple-system, sans-serif;
+            background: #ffffff;
         }}
-
-        // Apply updates to all bubble traces at once
-        const traceIndices = Array.from({{length: nBubbleTraces}}, function(_, i) {{ return i; }});
-        Plotly.restyle(plot, updates, traceIndices).then(function() {{
-            isHighlighting = false;
-        }});
-    }}
-
-    function restoreOriginalStyles() {{
-        if (!plot || !originalStyles || isHighlighting) return;
-        isHighlighting = true;
-
-        const updates = {{}};
-        for (let i = 0; i < nBubbleTraces; i++) {{
-            const orig = originalStyles[i];
-
-            if (!updates['marker.opacity']) updates['marker.opacity'] = [];
-            if (!updates['marker.size']) updates['marker.size'] = [];
-            if (!updates['marker.line.width']) updates['marker.line.width'] = [];
-            if (!updates['marker.line.color']) updates['marker.line.color'] = [];
-
-            updates['marker.opacity'].push(orig.opacity);
-            updates['marker.size'].push(orig.size);
-            updates['marker.line.width'].push(orig.lineWidth);
-            updates['marker.line.color'].push(orig.lineColor);
+        #moabb-bubble {{
+            width: 100%;
+            height: {height}px;
+            display: block;
         }}
-
-        const traceIndices = Array.from({{length: nBubbleTraces}}, function(_, i) {{ return i; }});
-        Plotly.restyle(plot, updates, traceIndices).then(function() {{
-            isHighlighting = false;
-        }});
-    }}
-
-    function hookPlotlyEvents(attempts) {{
-        if (!plot || typeof plot.on !== 'function') {{
-            if (attempts < 40) {{
-                window.setTimeout(function() {{ hookPlotlyEvents(attempts + 1); }}, 60);
-            }}
-            return;
+        .dataset-loading {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: {height}px;
+            font-family: Inter, system-ui, sans-serif;
+            color: #6b7280;
         }}
+        .tooltip {{
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 320px;
+        }}
+        .tooltip-title {{
+            font-weight: 600;
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }}
+        .tooltip-subtitle {{
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }}
+        .tooltip-row {{
+            display: flex;
+            justify-content: space-between;
+            margin: 3px 0;
+        }}
+        .tooltip-label {{
+            color: #6b7280;
+        }}
+        .tooltip-value {{
+            font-weight: 500;
+            color: #1f2937;
+        }}
+        .tooltip-hint {{
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+            color: #3b82f6;
+            font-size: 11px;
+            font-style: italic;
+        }}
+        .legend {{
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.08);
+            font-size: 12px;
+            line-height: 1.6;
+        }}
+        .legend-title {{
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #374151;
+        }}
+        .legend-item {{
+            color: #6b7280;
+        }}
+        .modality-legend {{
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.08);
+            font-size: 12px;
+        }}
+        .modality-legend-title {{
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }}
+        .modality-legend-item {{
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+            cursor: pointer;
+        }}
+        .modality-legend-item:hover {{
+            opacity: 0.8;
+        }}
+        .modality-swatch {{
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }}
+        .hint {{
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #6b7280;
+        }}
+    </style>
+</head>
+<body>
+    <div id="container" style="position: relative; width: {width}px; height: {height}px; margin: 0 auto;">
+        <svg id="moabb-bubble"></svg>
+        <div class="tooltip" style="display: none;"></div>
+        <div class="legend">
+            <div class="legend-title">Legend</div>
+            <div class="legend-item"><b>Circle size</b>: log(records per subject)</div>
+            <div class="legend-item"><b>Opacity</b>: fewer sessions = more opaque</div>
+            <div class="legend-item"><b>Each circle</b> = 1 subject</div>
+        </div>
+        <div class="modality-legend" id="modality-legend"></div>
+        <div class="hint">
+            <b>Hover</b> to highlight dataset · <b>Scroll</b> to zoom · <b>Drag</b> to pan · <b>Click</b> to open
+        </div>
+    </div>
 
-        // Capture original styles after plot is ready
-        captureOriginalStyles();
+    <script>
+        const data = {hierarchy_json};
+        const width = {width};
+        const height = {height};
+        const margin = 60;
 
-        // Click handler for opening dataset pages
-        plot.on('plotly_click', function(evt) {{
-            const point = evt && evt.points && evt.points[0];
-            const url = point && point.customdata && point.customdata[5];
-            if (url) window.open(url, '_blank', 'noopener');
+        // Create SVG
+        const svg = d3.select("#moabb-bubble")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", [0, 0, width, height]);
+
+        // Create container for zoom
+        const g = svg.append("g");
+
+        // Tooltip
+        const tooltip = d3.select(".tooltip");
+
+        // Build modality legend
+        const legendContainer = d3.select("#modality-legend");
+        legendContainer.append("div")
+            .attr("class", "modality-legend-title")
+            .text("Recording Modality");
+
+        data.children.forEach(modality => {{
+            const item = legendContainer.append("div")
+                .attr("class", "modality-legend-item")
+                .on("click", () => {{
+                    // Toggle modality visibility
+                    const modalityGroup = g.select(`[data-modality="${{modality.name}}"]`);
+                    const isHidden = modalityGroup.style("opacity") === "0.1";
+                    modalityGroup.style("opacity", isHidden ? 1 : 0.1);
+                }});
+
+            item.append("div")
+                .attr("class", "modality-swatch")
+                .style("background", modality.color);
+
+            item.append("span")
+                .text(`${{modality.name}} (${{modality.children.length}})`);
         }});
 
-        // Hover handler for highlighting datasets
-        plot.on('plotly_hover', function(evt) {{
-            if (hoverTimeout) {{
-                clearTimeout(hoverTimeout);
-                hoverTimeout = null;
-            }}
-            const point = evt && evt.points && evt.points[0];
-            const datasetName = point && point.customdata && point.customdata[0];
-            if (datasetName && datasetTraceMap[datasetName]) {{
-                highlightDataset(datasetName);
-            }}
+        // Create pack layout - pack modalities separately then position them
+        const modalityPacks = [];
+        const packPadding = 15;
+
+        data.children.forEach((modality, i) => {{
+            // Create hierarchy for this modality
+            const modalityHierarchy = d3.hierarchy({{
+                name: modality.name,
+                children: modality.children
+            }})
+            .sum(d => d.value || 0)
+            .sort((a, b) => b.value - a.value);
+
+            // Calculate size based on number of datasets
+            const modalitySize = Math.sqrt(modalityHierarchy.value) * 2.5 + 100;
+
+            // Pack this modality
+            const pack = d3.pack()
+                .size([modalitySize, modalitySize])
+                .padding(d => d.depth === 0 ? 20 : d.depth === 1 ? 8 : 2);
+
+            const packedModality = pack(modalityHierarchy);
+
+            modalityPacks.push({{
+                modality: modality,
+                packed: packedModality,
+                size: modalitySize,
+                radius: modalitySize / 2
+            }});
         }});
 
-        // Unhover handler to restore original styles (with debounce)
-        plot.on('plotly_unhover', function() {{
-            if (hoverTimeout) clearTimeout(hoverTimeout);
-            hoverTimeout = setTimeout(function() {{
-                restoreOriginalStyles();
-            }}, 50);
+        // Position modalities in a force-directed layout
+        const simulation = d3.forceSimulation(modalityPacks)
+            .force("x", d3.forceX(width / 2).strength(0.05))
+            .force("y", d3.forceY(height / 2).strength(0.05))
+            .force("collide", d3.forceCollide(d => d.radius + 30).strength(0.8))
+            .stop();
+
+        // Run simulation
+        for (let i = 0; i < 300; i++) simulation.tick();
+
+        // Render each modality group
+        modalityPacks.forEach(mp => {{
+            const modalityGroup = g.append("g")
+                .attr("data-modality", mp.modality.name)
+                .attr("transform", `translate(${{mp.x - mp.size/2}}, ${{mp.y - mp.size/2}})`);
+
+            // Draw modality background circle
+            modalityGroup.append("circle")
+                .attr("cx", mp.size / 2)
+                .attr("cy", mp.size / 2)
+                .attr("r", mp.radius + 20)
+                .attr("fill", mp.modality.bgColor)
+                .attr("stroke", mp.modality.color)
+                .attr("stroke-width", 1.5)
+                .attr("stroke-dasharray", "4,4")
+                .style("pointer-events", "none");
+
+            // Add modality label
+            modalityGroup.append("text")
+                .attr("x", mp.size / 2)
+                .attr("y", -10)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "600")
+                .attr("fill", mp.modality.color)
+                .text(mp.modality.name);
+
+            // Process nodes - group by dataset
+            const nodes = mp.packed.descendants().filter(d => d.depth > 0);
+
+            // Group subjects by dataset
+            const datasetNodes = nodes.filter(d => d.depth === 1);
+            const subjectNodes = nodes.filter(d => d.depth === 2);
+
+            // Draw subject circles (leaves)
+            subjectNodes.forEach(node => {{
+                const dataset = node.parent.data;
+                const alpha = dataset.alpha || 0.7;
+
+                modalityGroup.append("circle")
+                    .attr("class", "subject-bubble")
+                    .attr("data-dataset", dataset.name)
+                    .attr("cx", node.x)
+                    .attr("cy", node.y)
+                    .attr("r", Math.max(node.r, 2))
+                    .attr("fill", dataset.color)
+                    .attr("fill-opacity", alpha)
+                    .attr("stroke", "rgba(255,255,255,0.5)")
+                    .attr("stroke-width", 0.5)
+                    .style("cursor", "pointer")
+                    .on("mouseover", function(event) {{
+                        // Highlight this dataset
+                        const dsName = dataset.name;
+                        g.selectAll(".subject-bubble")
+                            .style("opacity", function() {{
+                                return d3.select(this).attr("data-dataset") === dsName ? 1 : 0.15;
+                            }})
+                            .attr("stroke-width", function() {{
+                                return d3.select(this).attr("data-dataset") === dsName ? 2 : 0.5;
+                            }})
+                            .attr("stroke", function() {{
+                                return d3.select(this).attr("data-dataset") === dsName
+                                    ? dataset.color : "rgba(255,255,255,0.5)";
+                            }});
+
+                        // Show tooltip
+                        tooltip.style("display", "block")
+                            .html(`
+                                <div class="tooltip-title">${{dataset.name}}</div>
+                                <div class="tooltip-subtitle">${{dataset.title || ''}}</div>
+                                <div class="tooltip-row"><span class="tooltip-label">📊 Subjects</span><span class="tooltip-value">${{dataset.n_subjects.toLocaleString()}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">🔄 Sessions</span><span class="tooltip-value">${{dataset.n_sessions.toLocaleString()}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">📁 Records</span><span class="tooltip-value">${{dataset.n_records.toLocaleString()}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">📈 Records/Subject</span><span class="tooltip-value">${{dataset.records_per_subject}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">📡 Channels</span><span class="tooltip-value">${{dataset.nchans}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">⚡ Sampling</span><span class="tooltip-value">${{dataset.sfreq}} Hz</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">💾 Size</span><span class="tooltip-value">${{dataset.size}}</span></div>
+                                <div class="tooltip-row"><span class="tooltip-label">🎯 Modality</span><span class="tooltip-value">${{dataset.modality}}</span></div>
+                                <div class="tooltip-hint">Click to open dataset page →</div>
+                            `)
+                            .style("left", (event.pageX + 15) + "px")
+                            .style("top", (event.pageY - 10) + "px");
+                    }})
+                    .on("mousemove", function(event) {{
+                        tooltip
+                            .style("left", (event.pageX + 15) + "px")
+                            .style("top", (event.pageY - 10) + "px");
+                    }})
+                    .on("mouseout", function() {{
+                        // Reset all bubbles
+                        g.selectAll(".subject-bubble")
+                            .style("opacity", 1)
+                            .attr("stroke-width", 0.5)
+                            .attr("stroke", "rgba(255,255,255,0.5)");
+
+                        tooltip.style("display", "none");
+                    }})
+                    .on("click", function() {{
+                        if (dataset.url) {{
+                            window.open(dataset.url, '_blank', 'noopener');
+                        }}
+                    }});
+            }});
+
+            // Add dataset labels for larger datasets
+            datasetNodes
+                .filter(d => d.r > 30 && d.data.n_subjects > 5)
+                .forEach(node => {{
+                    const dataset = node.data;
+                    const labelText = dataset.name.length > 12
+                        ? dataset.name.substring(0, 12).toUpperCase()
+                        : dataset.name.toUpperCase();
+
+                    modalityGroup.append("text")
+                        .attr("x", node.x)
+                        .attr("y", node.y)
+                        .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
+                        .attr("font-size", Math.min(10, node.r / 3) + "px")
+                        .attr("font-weight", "500")
+                        .attr("fill", "#374151")
+                        .style("pointer-events", "none")
+                        .text(labelText);
+                }});
         }});
 
-        showPlot();
-        window.setTimeout(function() {{
-            if (typeof Plotly !== 'undefined' && plot) {{
-                Plotly.Plots.resize(plot);
-                captureOriginalStyles();
-            }}
-        }}, 100);
-    }}
+        // Add zoom behavior
+        const zoom = d3.zoom()
+            .scaleExtent([0.3, 4])
+            .on("zoom", (event) => {{
+                g.attr("transform", event.transform);
+            }});
 
-    hookPlotlyEvents(0);
-    showPlot();
-}});
-</script>
+        svg.call(zoom);
+
+        // Center the visualization initially
+        const bounds = g.node().getBBox();
+        const dx = bounds.width;
+        const dy = bounds.height;
+        const x = bounds.x + dx / 2;
+        const y = bounds.y + dy / 2;
+        const scale = Math.min(0.9 * width / dx, 0.9 * height / dy, 1);
+        const translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+        svg.call(zoom.transform, d3.zoomIdentity
+            .translate(translate[0], translate[1])
+            .scale(scale));
+    </script>
+</body>
+</html>
 """
 
-    return build_and_export_html(
-        fig,
-        out_path,
-        div_id="moabb-bubble",
-        height=height,
-        extra_style=extra_style,
-        pre_html=pre_html,
-        extra_html=extra_html,
-        config={
-            "responsive": True,
-            "displaylogo": False,
-            "modeBarButtonsToRemove": ["lasso2d", "select2d"],
-            "toImageButtonOptions": {
-                "format": "png",
-                "filename": "moabb_bubble",
-                "height": height,
-                "width": plot_width,
-                "scale": 2,
-            },
-        },
-    )
-
-
-def _short_label(name: str, limit: int = 12) -> str:
-    """Return a trimmed dataset label for annotations."""
-    text = str(name).upper()
-    if len(text) <= limit:
-        return text
-    return text[:limit]
-
-
-def _add_moabb_legend(
-    fig: go.Figure,
-    scale: float = 0.5,
-    x_offset: float = 0.02,
-    y_offset: float = 0.02,
-) -> None:
-    """Add MOABB-style legend showing size and opacity encoding.
-
-    Args:
-        fig: Plotly figure to add legend to
-        scale: Scale factor used for bubbles
-        x_offset: X position (paper coordinates)
-        y_offset: Y position (paper coordinates)
-
-    """
-    # Size legend
-    legend_text = (
-        "<b>Circle size</b>: log(records per subject)<br>"
-        "<b>Opacity</b>: fewer sessions = more opaque<br>"
-        "<b>Each circle</b> = 1 subject"
-    )
-
-    fig.add_annotation(
-        xref="paper",
-        yref="paper",
-        x=x_offset,
-        y=1 - y_offset,
-        text=legend_text,
-        showarrow=False,
-        font=dict(size=12, color="#374151"),
-        bgcolor="rgba(255,255,255,0.9)",
-        bordercolor="rgba(0,0,0,0.1)",
-        borderwidth=1,
-        borderpad=8,
-        align="left",
-        xanchor="left",
-        yanchor="top",
-    )
+    out_path.write_text(html_content, encoding="utf-8")
+    return out_path
 
 
 def main() -> None:
@@ -1508,13 +801,27 @@ def main() -> None:
     parser.add_argument(
         "--scale",
         type=float,
-        default=0.5,
+        default=1.0,
         help="Scaling factor for bubble sizes",
+    )
+    parser.add_argument(
+        "--width",
+        type=int,
+        default=1400,
+        help="Chart width in pixels",
+    )
+    parser.add_argument(
+        "--height",
+        type=int,
+        default=900,
+        help="Chart height in pixels",
     )
     args = parser.parse_args()
 
     df = pd.read_csv(args.source, index_col=False, header=0, skipinitialspace=True)
-    output_path = generate_moabb_bubble(df, args.output, scale=args.scale)
+    output_path = generate_moabb_bubble(
+        df, args.output, scale=args.scale, width=args.width, height=args.height
+    )
     print(f"MOABB bubble chart saved to {output_path.resolve()}")
 
 

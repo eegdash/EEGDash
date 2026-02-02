@@ -21,6 +21,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..logging import logger
 from ..schemas import validate_record
+from .exceptions import DataIntegrityError
 from .io import (
     _ensure_coordsystem_symlink,
     _generate_vhdr_from_metadata,
@@ -147,7 +148,14 @@ class EEGDashRaw(RawDataset):
         self.filenames = [self.filecache]
 
     def _ensure_raw(self) -> None:
-        """Ensure the raw data file and its dependencies are cached locally."""
+        """Ensure the raw data file and its dependencies are cached locally.
+
+        Warns if the record has known data integrity issues but continues loading.
+        """
+        # Check for data integrity issues and warn (but don't block loading)
+        if self.record.get("_has_missing_files"):
+            DataIntegrityError.warn_from_record(self.record)
+
         self._download_required_files()
 
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location

@@ -237,6 +237,147 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
         return None
 
 
+# Companion files required for different formats
+# These are critical files without which the data cannot be loaded
+COMPANION_FILE_REQUIREMENTS = {
+    ".vhdr": {
+        "required": [".eeg", ".dat"],  # Need at least one of these
+        "optional": [".vmrk"],
+        "mode": "any",  # any = at least one required file must exist
+    },
+    ".set": {
+        "required": [".fdt"],
+        "optional": [],
+        "mode": "optional",  # optional = may or may not have .fdt (data can be in .set)
+    },
+}
+
+
+def _file_exists_or_symlink(path: Path, allow_symlinks: bool = True) -> bool:
+    """Check if file exists, considering symlinks.
+
+    Parameters
+    ----------
+    path : Path
+        Path to check.
+    allow_symlinks : bool
+        If True, accept broken symlinks (git-annex) as "existing".
+
+    Returns
+    -------
+    bool
+        True if file exists or is a symlink (when allow_symlinks is True).
+
+    """
+    if path.exists():
+        return True
+    if allow_symlinks and path.is_symlink():
+        return True
+    return False
+
+
+def validate_companion_files(
+    file_path: Path, allow_symlinks: bool = True
+) -> dict[str, Any]:
+    """Validate that required companion files exist for a data file.
+
+    Parameters
+    ----------
+    file_path : Path
+        Path to the primary data file (e.g., .vhdr, .set)
+    allow_symlinks : bool
+        If True, accept broken symlinks (git-annex) as "existing"
+
+    Returns
+    -------
+    dict
+        Validation result with keys:
+        - valid: bool - True if file can be processed
+        - missing_required: list[str] - Missing required companion files
+        - missing_optional: list[str] - Missing optional companion files
+        - found: list[str] - Found companion files
+        - warnings: list[str] - Warning messages
+        - errors: list[str] - Error messages
+
+    """
+    result = {
+        "valid": True,
+        "missing_required": [],
+        "missing_optional": [],
+        "found": [],
+        "warnings": [],
+        "errors": [],
+    }
+
+    ext = file_path.suffix.lower()
+    requirements = COMPANION_FILE_REQUIREMENTS.get(ext)
+
+    if not requirements:
+        # No companion file requirements for this format
+        return result
+
+    parent_dir = file_path.parent
+    stem = file_path.stem
+
+    # Check required companions
+    required_exts = requirements.get("required", [])
+    mode = requirements.get("mode", "all")
+
+    found_required = []
+    for req_ext in required_exts:
+        companion_path = parent_dir / f"{stem}{req_ext}"
+        if _file_exists_or_symlink(companion_path, allow_symlinks):
+            found_required.append(req_ext)
+            result["found"].append(str(companion_path.name))
+
+    # Validate based on mode
+    if mode == "any":
+        # At least one required file must exist
+        if required_exts and not found_required:
+            result["valid"] = False
+            result["missing_required"] = required_exts
+            result["errors"].append(f"Missing data file: need one of {required_exts}")
+    elif mode == "all":
+        # All required files must exist
+        missing = [e for e in required_exts if e not in found_required]
+        if missing:
+            result["valid"] = False
+            result["missing_required"] = missing
+            result["errors"].append(f"Missing required files: {missing}")
+    elif mode == "optional":
+        # Required files are not strictly required (e.g., .set can contain data)
+        missing = [e for e in required_exts if e not in found_required]
+        if missing:
+            result["warnings"].append(f"Optional companion files not found: {missing}")
+            result["missing_optional"].extend(missing)
+
+    # Check optional companions
+    optional_exts = requirements.get("optional", [])
+    for opt_ext in optional_exts:
+        companion_path = parent_dir / f"{stem}{opt_ext}"
+        if _file_exists_or_symlink(companion_path, allow_symlinks):
+            result["found"].append(str(companion_path.name))
+        else:
+            result["missing_optional"].append(opt_ext)
+
+    # Special case for BrainVision: try to read VHDR to check referenced files
+    if ext == ".vhdr" and not result["valid"]:
+        # Try to get more information from the VHDR file
+        try:
+            from _vhdr_parser import extract_vhdr_references
+
+            refs = extract_vhdr_references(file_path)
+            if refs.get("datafile"):
+                data_file = refs["datafile"]
+                result["errors"].append(
+                    f"VHDR references missing data file: {data_file}"
+                )
+        except Exception:
+            pass
+
+    return result
+
+
 def extract_dataset_metadata(
     bids_dataset,
     dataset_id: str,
@@ -917,6 +1058,18 @@ def extract_record(
                 except ValueError:
                     pass
 
+    # Validate companion files exist
+    companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
+    data_integrity_issues = []
+
+    if not companion_validation["valid"]:
+        for error in companion_validation["errors"]:
+            logging.warning("Data integrity issue for %s: %s", bids_relpath, error)
+            data_integrity_issues.append(error)
+
+    for warning in companion_validation.get("warnings", []):
+        logging.info("Companion file note for %s: %s", bids_relpath, warning)
+
     # Validate extracted metadata
     # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
     if sampling_frequency is not None:
@@ -997,6 +1150,13 @@ def extract_record(
                 except (ValueError, TypeError):
                     pass
         record["participant_tsv"] = participant_tsv
+
+    # Add data integrity information if there are issues
+    if data_integrity_issues:
+        record["_data_integrity_issues"] = data_integrity_issues
+        record["_has_missing_files"] = True
+    else:
+        record["_has_missing_files"] = False
 
     return dict(record)
 
@@ -2135,6 +2295,25 @@ def digest_dataset(
     with open(dataset_path, "w") as f:
         json.dump(dataset_meta, f, indent=2, default=_json_serializer)
 
+    # Count records with data integrity issues and add author contact info
+    records_with_issues = [r for r in records if r.get("_has_missing_files", False)]
+    integrity_issues_count = len(records_with_issues)
+
+    # Enrich records with integrity issues with dataset author/contact info
+    # This allows the error message to include who to contact about the issue
+    if records_with_issues:
+        authors = dataset_meta.get("authors", [])
+        contact_info = dataset_meta.get("contact_info")
+        source_url = dataset_meta.get("external_links", {}).get("source_url")
+
+        for rec in records_with_issues:
+            if authors:
+                rec["_dataset_authors"] = authors
+            if contact_info:
+                rec["_dataset_contact"] = contact_info
+            if source_url:
+                rec["_source_url"] = source_url
+
     # Save Records document
     records_path = dataset_output_dir / f"{dataset_id}_records.json"
     records_data = {
@@ -2142,6 +2321,7 @@ def digest_dataset(
         "source": source,
         "digested_at": digested_at,
         "record_count": len(records),
+        "records_with_integrity_issues": integrity_issues_count,
         "records": records,
     }
     with open(records_path, "w") as f:
@@ -2154,9 +2334,21 @@ def digest_dataset(
         "source": source,
         "record_count": len(records),
         "error_count": len(errors),
+        "integrity_issues_count": integrity_issues_count,
         "dataset_file": str(dataset_path),
         "records_file": str(records_path),
     }
+
+    # Log warnings for datasets with integrity issues
+    if integrity_issues_count > 0:
+        logging.warning(
+            "Dataset %s has %d record(s) with missing companion files",
+            dataset_id,
+            integrity_issues_count,
+        )
+        for rec in records_with_issues:
+            issues = rec.get("_data_integrity_issues", [])
+            logging.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
 
     summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
     with open(summary_path, "w") as f:

@@ -350,9 +350,45 @@ def generate_moabb_bubble(
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
         .modality-legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 15px; }}
-        .modality-legend-item {{ display: flex; align-items: center; margin: 5px 0; cursor: pointer; font-size: 13px; }}
+        .modality-legend-item {{ display: flex; align-items: center; margin: 5px 0; cursor: pointer; font-size: 13px; transition: opacity 0.15s; }}
         .modality-legend-item:hover {{ opacity: 0.7; }}
-        .modality-swatch {{ width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; }}
+        .modality-legend-item.hidden {{ opacity: 0.35; text-decoration: line-through; }}
+        .modality-swatch {{ width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; border: 2px solid transparent; }}
+        .modality-legend-item.hidden .modality-swatch {{ background: #ccc !important; }}
+
+        .controls {{
+            position: absolute; bottom: 50px; right: 12px;
+            display: flex; flex-direction: column; gap: 4px;
+        }}
+        .controls button {{
+            width: 36px; height: 36px; border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255,255,255,0.95); border-radius: 6px;
+            font-size: 18px; cursor: pointer; color: #374151;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: background 0.15s, transform 0.1s;
+        }}
+        .controls button:hover {{ background: #f3f4f6; }}
+        .controls button:active {{ transform: scale(0.95); }}
+
+        .search-box {{
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.95); padding: 8px 14px;
+            border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }}
+        .search-box input {{
+            border: none; outline: none; font-size: 14px; width: 180px;
+            background: transparent; color: #1f2937;
+        }}
+        .search-box input::placeholder {{ color: #9ca3af; }}
+        .search-icon {{ color: #6b7280; font-size: 14px; }}
+        .search-clear {{ cursor: pointer; color: #9ca3af; font-size: 16px; display: none; }}
+        .search-clear:hover {{ color: #6b7280; }}
+        .search-results {{ font-size: 12px; color: #6b7280; margin-left: 8px; }}
+
+        .dataset-group.search-match .bubble {{ stroke: #fbbf24 !important; stroke-width: 3px !important; }}
+        .dataset-group.search-dim {{ opacity: 0.1 !important; }}
 
         .hint {{
             position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
@@ -371,9 +407,21 @@ def generate_moabb_bubble(
             <div class="legend-item"><b>Circle size</b>: log(records/subject)</div>
             <div class="legend-item"><b>Opacity</b>: fewer sessions = more opaque</div>
             <div class="legend-item"><b>Each circle</b> = 1 subject</div>
+            <div class="legend-item" id="total-datasets" style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e7eb;font-weight:600;"></div>
         </div>
         <div class="modality-legend" id="modality-legend"></div>
-        <div class="hint"><b>Hover</b> to highlight · <b>Scroll</b> to zoom · <b>Click</b> to open</div>
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search datasets...">
+            <span class="search-clear" id="search-clear">×</span>
+            <span class="search-results" id="search-results"></span>
+        </div>
+        <div class="controls">
+            <button id="zoom-in" title="Zoom in">+</button>
+            <button id="zoom-out" title="Zoom out">−</button>
+            <button id="zoom-reset" title="Reset view">⌂</button>
+        </div>
+        <div class="hint"><b>Hover</b> to highlight · <b>Scroll/buttons</b> to zoom · <b>Click</b> to open · <b>Click legend</b> to filter</div>
     </div>
 
 <script>
@@ -384,13 +432,37 @@ const svg = d3.select("#moabb-bubble").attr("width", width).attr("height", heigh
 const g = svg.append("g");
 const tooltip = d3.select(".tooltip");
 
-// Build legend
+// Calculate totals
+const totalDatasets = data.children.reduce((sum, m) => sum + m.children.length, 0);
+const totalSubjects = data.children.reduce((sum, m) =>
+    sum + m.children.reduce((s, ds) => s + ds.n_subjects, 0), 0);
+document.getElementById("total-datasets").innerHTML =
+    `<b>${{totalDatasets}}</b> datasets · <b>${{totalSubjects.toLocaleString()}}</b> subjects`;
+
+// Build legend with filtering
 const legendContainer = d3.select("#modality-legend");
 legendContainer.append("div").attr("class", "modality-legend-title").text("Recording Modality");
+const hiddenModalities = new Set();
+
 data.children.forEach(m => {{
-    const item = legendContainer.append("div").attr("class", "modality-legend-item");
+    const item = legendContainer.append("div")
+        .attr("class", "modality-legend-item")
+        .attr("data-modality", m.name);
     item.append("div").attr("class", "modality-swatch").style("background", m.color);
     item.append("span").text(`${{m.name}} (${{m.children.length}})`);
+
+    item.on("click", function() {{
+        const modality = m.name;
+        if (hiddenModalities.has(modality)) {{
+            hiddenModalities.delete(modality);
+            d3.select(this).classed("hidden", false);
+            g.selectAll(`[data-modality="${{modality}}"]`).style("display", null);
+        }} else {{
+            hiddenModalities.add(modality);
+            d3.select(this).classed("hidden", true);
+            g.selectAll(`[data-modality="${{modality}}"]`).style("display", "none");
+        }}
+    }});
 }});
 
 // Pack each modality separately
@@ -490,10 +562,53 @@ svg.call(zoom);
 
 // Center view
 const bounds = g.node().getBBox();
-const scale = Math.min(0.88 * width / bounds.width, 0.88 * height / bounds.height, 1);
-const tx = width / 2 - scale * (bounds.x + bounds.width / 2);
-const ty = height / 2 - scale * (bounds.y + bounds.height / 2);
-svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+const initialScale = Math.min(0.88 * width / bounds.width, 0.88 * height / bounds.height, 1);
+const initialTx = width / 2 - initialScale * (bounds.x + bounds.width / 2);
+const initialTy = height / 2 - initialScale * (bounds.y + bounds.height / 2);
+const initialTransform = d3.zoomIdentity.translate(initialTx, initialTy).scale(initialScale);
+svg.call(zoom.transform, initialTransform);
+
+// Zoom controls
+d3.select("#zoom-in").on("click", () => svg.transition().duration(300).call(zoom.scaleBy, 1.4));
+d3.select("#zoom-out").on("click", () => svg.transition().duration(300).call(zoom.scaleBy, 0.7));
+d3.select("#zoom-reset").on("click", () => svg.transition().duration(400).call(zoom.transform, initialTransform));
+
+// Search functionality
+const searchInput = document.getElementById("search-input");
+const searchClear = document.getElementById("search-clear");
+const searchResults = document.getElementById("search-results");
+let allDatasetNames = [];
+g.selectAll(".dataset-group").each(function() {{
+    allDatasetNames.push(d3.select(this).attr("data-dataset").toLowerCase());
+}});
+
+function performSearch(query) {{
+    const q = query.toLowerCase().trim();
+    searchClear.style.display = q ? "block" : "none";
+
+    if (!q) {{
+        g.selectAll(".dataset-group").classed("search-match", false).classed("search-dim", false);
+        searchResults.textContent = "";
+        return;
+    }}
+
+    let matchCount = 0;
+    g.selectAll(".dataset-group").each(function() {{
+        const name = d3.select(this).attr("data-dataset").toLowerCase();
+        const isMatch = name.includes(q);
+        d3.select(this).classed("search-match", isMatch).classed("search-dim", !isMatch);
+        if (isMatch) matchCount++;
+    }});
+
+    searchResults.textContent = matchCount > 0 ? `${{matchCount}} found` : "No matches";
+}}
+
+searchInput.addEventListener("input", (e) => performSearch(e.target.value));
+searchClear.addEventListener("click", () => {{
+    searchInput.value = "";
+    performSearch("");
+    searchInput.focus();
+}});
 </script>
 </body>
 </html>

@@ -92,7 +92,7 @@ About This Dataset
 OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations. 
 
 
-**Data folder corresponding to [this manuscript](https://www.biorxiv.org/content/early/2018/03/16/283234)**
+**Data folder corresponding to this manuscript**
 
 
 **Differential brain mechanisms of selection and maintenance of information during working memory**
@@ -106,7 +106,7 @@ Note: One participant didn't sign a sharing data agreement so data of 22 partici
    OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations. 
    
    
-   **Data folder corresponding to [this manuscript](https://www.biorxiv.org/content/early/2018/03/16/283234)**
+   **Data folder corresponding to this manuscript**
    
    
    **Differential brain mechanisms of selection and maintenance of information during working memory**

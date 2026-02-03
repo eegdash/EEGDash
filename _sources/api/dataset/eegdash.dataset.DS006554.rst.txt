@@ -113,7 +113,7 @@ It can also be useful to also include information that might already bepresent i
    The README is usually the starting point for researchers using your dataand serves as a guidepost for users of your data. A clear and informativeREADME makes your data much more usable.
    In general you can include information in the README that is not captured by some otherfiles in the BIDS dataset (dataset_description.json, events.tsv, ...).
    It can also be useful to also include information that might already bepresent in another file of the dataset but might be important for users to be aware ofbefore preprocessing or analysing the data.
-   If the README gets too long you have the possibility to create a `/doc` folderand add it to the `.bidsignore` file to make sure it is ignored by the BIDS validator.
+   If the README gets too long you have the possibility to create a ``/doc`` folderand add it to the ``.bidsignore`` file to make sure it is ignored by the BIDS validator.
    More info here: https://neurostars.org/t/where-in-a-bids-dataset-should-i-put-notes-about-individual-mri-acqusitions/17315/3
    
    **Details related to access to the data**
@@ -133,7 +133,7 @@ It can also be useful to also include information that might already bepresent i
    - Project name (if relevant)
    - Year(s) that the project ran
    
-   If no `scans.tsv` is included, this could at least cover when the data acquisitionstarter and ended. Local time of day is particularly relevant to subject state.
+   If no ``scans.tsv`` is included, this could at least cover when the data acquisitionstarter and ended. Local time of day is particularly relevant to subject state.
    - Brief overview of the tasks in the experiment
    
    A paragraph giving an overview of the experiment. This should include thegoals or purpose and a discussion about how the experiment tries to achievethese goals.
@@ -159,7 +159,7 @@ It can also be useful to also include information that might already bepresent i
    **Subjects**
    
    A brief sentence about the subject pool in this experiment.
-   Remember that `Control` or `Patient` status should be defined in the `participants.tsv`using a group column.
+   Remember that ``Control`` or ``Patient`` status should be defined in the ``participants.tsv``using a group column.
    - Information about the recruitment procedure- [ ] Subject inclusion criteria (if relevant)- [ ] Subject exclusion criteria (if relevant)
    
    **Apparatus**
@@ -183,7 +183,7 @@ It can also be useful to also include information that might already bepresent i
    **Additional data acquired**
    
    A brief indication of data other than theimaging data that was acquired as part of this experiment. In additionto data from other modalities and behavioral data, this might includequestionnaires and surveys, swabs, and clinical information. Indicatethe availability of this data.
-   This is especially relevant if the data are not included in a `phenotype` folder.https://bids-specification.readthedocs.io/en/stable/03-modality-agnostic-files.html#phenotypic-and-assessment-data
+   This is especially relevant if the data are not included in a ``phenotype`` folder.https://bids-specification.readthedocs.io/en/stable/03-modality-agnostic-files.html#phenotypic-and-assessment-data
    
    **Experimental location**
    

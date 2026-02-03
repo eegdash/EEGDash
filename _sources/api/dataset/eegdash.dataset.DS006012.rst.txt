@@ -144,15 +144,15 @@ Authors:
        1. The original data
        2. The seed used for the anonymization procedure
        3. The shuffling information.  
-   * Anonymization (including defacing of the `anat` folder) has been performed
+   * Anonymization (including defacing of the ``anat`` folder) has been performed
      using the following command:  
-     `python -c 'import mne_bids; mne_bids.anonymize_dataset("<input>", "<output>", random_state=<number>, daysback=<number>)'`  
+     ``python -c 'import mne_bids; mne_bids.anonymize_dataset("<input>", "<output>", random_state=<number>, daysback=<number>)'``  
      This has shuffled the participant order, changed the dates, defaced the
      anatomy, and stripped gender information from the dataset.
    * The data was pre-processed with the configuration file provided at
      `https://github.com/mathias-sm/AGeometricShapeRegularityEffectHumanBrain/blob/main/MEG/POGS_MEG_config.py <https://github.com/mathias-sm/AGeometricShapeRegularityEffectHumanBrain/blob/main/MEG/POGS_MEG_config.py>`_\_
-     for `mne-bids-pipeline` with the development version at the time,
-     `bce60a79241731bdd03fccffa6cf315a35b33ab2` on
+     for ``mne-bids-pipeline`` with the development version at the time,
+     ``bce60a79241731bdd03fccffa6cf315a35b33ab2`` on
      `https://github.com/mne-tools/mne-bids-pipeline/ <https://github.com/mne-tools/mne-bids-pipeline/>`_\_
 
 

@@ -1142,15 +1142,15 @@ information, which I may ask for permission to share in specific cases:</p>
 </ol>
 </div></blockquote>
 </li>
-<li><p class="sd-card-text">Anonymization (including defacing of the <cite>anat</cite> folder) has been performed
+<li><p class="sd-card-text">Anonymization (including defacing of the <code class="docutils literal notranslate"><span class="pre">anat</span></code> folder) has been performed
 using the following command:
-<cite>python -c ‘import mne_bids; mne_bids.anonymize_dataset(“&lt;input&gt;”, “&lt;output&gt;”, random_state=&lt;number&gt;, daysback=&lt;number&gt;)’</cite>
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">'import</span> <span class="pre">mne_bids;</span> <span class="pre">mne_bids.anonymize_dataset(&quot;&lt;input&gt;&quot;,</span> <span class="pre">&quot;&lt;output&gt;&quot;,</span> <span class="pre">random_state=&lt;number&gt;,</span> <span class="pre">daysback=&lt;number&gt;)'</span></code>
 This has shuffled the participant order, changed the dates, defaced the
 anatomy, and stripped gender information from the dataset.</p></li>
 <li><p class="sd-card-text">The data was pre-processed with the configuration file provided at
 <a class="github reference external" href="https://github.com/mathias-sm/AGeometricShapeRegularityEffectHumanBrain/blob/main/MEG/POGS_MEG_config.py">mathias-sm/AGeometricShapeRegularityEffectHumanBrain</a>_
-for <cite>mne-bids-pipeline</cite> with the development version at the time,
-<cite>bce60a79241731bdd03fccffa6cf315a35b33ab2</cite> on
+for <code class="docutils literal notranslate"><span class="pre">mne-bids-pipeline</span></code> with the development version at the time,
+<code class="docutils literal notranslate"><span class="pre">bce60a79241731bdd03fccffa6cf315a35b33ab2</span></code> on
 <a class="github reference external" href="https://github.com/mne-tools/mne-bids-pipeline/">mne-tools/mne-bids-pipeline</a>_</p></li>
 </ul>
 </div>

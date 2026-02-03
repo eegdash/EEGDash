@@ -1104,7 +1104,7 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p>Curated EEG recordings for validating sleep staging from a three-electrode forehead patch against standard 33-channel polysomnography.</p>
 <p><strong>What is included</strong></p>
 <ul class="simple">
-<li><p>CGX patch <cite>.set</cite> files that contain <cite>EEG.VisualHypnogram</cite> and <cite>EEG.SpectralScoring</cite>. The 33-channel data is not included in this release – this release only includes the three-electrode data. The 33-channel data will be released separately.</p></li>
+<li><p>CGX patch <code class="docutils literal notranslate"><span class="pre">.set</span></code> files that contain <code class="docutils literal notranslate"><span class="pre">EEG.VisualHypnogram</span></code> and <code class="docutils literal notranslate"><span class="pre">EEG.SpectralScoring</span></code>. The 33-channel data is not included in this release – this release only includes the three-electrode data. The 33-channel data will be released separately.</p></li>
 </ul>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
@@ -1113,17 +1113,17 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p class="sd-card-text">Curated EEG recordings for validating sleep staging from a three-electrode forehead patch against standard 33-channel polysomnography.</p>
 <p class="sd-card-text"><strong>What is included</strong></p>
 <ul class="simple">
-<li><p class="sd-card-text">CGX patch <cite>.set</cite> files that contain <cite>EEG.VisualHypnogram</cite> and <cite>EEG.SpectralScoring</cite>. The 33-channel data is not included in this release – this release only includes the three-electrode data. The 33-channel data will be released separately.</p></li>
+<li><p class="sd-card-text">CGX patch <code class="docutils literal notranslate"><span class="pre">.set</span></code> files that contain <code class="docutils literal notranslate"><span class="pre">EEG.VisualHypnogram</span></code> and <code class="docutils literal notranslate"><span class="pre">EEG.SpectralScoring</span></code>. The 33-channel data is not included in this release – this release only includes the three-electrode data. The 33-channel data will be released separately.</p></li>
 </ul>
 <p class="sd-card-text"><strong>Sleep stage labels</strong></p>
-<p class="sd-card-text"><cite>EEG.VisualHypnogram</cite> is manual scoring in 30-second epochs using the following integers</p>
+<p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">EEG.VisualHypnogram</span></code> is manual scoring in 30-second epochs using the following integers</p>
 <p class="sd-card-text">1 equals Wake
 2 equals REM
 3 equals N1
 4 equals N2
 5 equals N3
 0 equals unknown or movement</p>
-<p class="sd-card-text"><cite>EEG.SpectralScoring</cite> is spectral staging from the forehead patch. One row per patch channel. One column per 30-second epoch (see publication).</p>
+<p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">EEG.SpectralScoring</span></code> is spectral staging from the forehead patch. One row per patch channel. One column per 30-second epoch (see publication).</p>
 <p class="sd-card-text"><strong>Alignment policy</strong></p>
 <p class="sd-card-text">The 33-channel cap data used to score polysomnography and the 3-channel patch EEG data do not always start and stop at the same clock times. CGX patch data were aligned to the cap start time based on a spreadsheet completed by the data collector, so the start may be off by a few seconds. The 3-channel EEG data were segmented into 30-second windows, and the number of these windows should approximately match the number of values in the EEG.VisualHypnogram for the same dataset. If the patch data ended up shorter than the visual hypnogram, the hypnogram was trimmed at the end to match the patch length. If the hypnogram was longer, it was left untrimmed. In general, the mismatch at the end of the recording is less than one 30-second window.</p>
 <p class="sd-card-text"><strong>Subject exclusions</strong></p>

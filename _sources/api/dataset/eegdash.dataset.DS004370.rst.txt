@@ -125,7 +125,7 @@ The study was approved by the Medical Ethical Committee from the UMC Utrecht, th
    
    This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/ 
    
-   Each patient has their own folder (e.g., `sub-PRIOS01` to `sub-PRIOS09`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+   Each patient has their own folder (e.g., ``sub-PRIOS01`` to ``sub-PRIOS09``) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
    
    Data are logically grouped in the same BIDS session and stored across runs indicating the day and time point of recording during the monitoring period.
    We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).

@@ -107,7 +107,7 @@ This dataset comprises electroencephalogram (EEG) data and behavioral responses 
 
 *\*Hierarchical Event Descriptors (HED):* Events, including the original EEG events and the included behavioral events, have clear explanations, including proper HED annotation suitable for systematic meta and mega analysis of the data.
 *\*P-Factor, Attention, Internalization and Externalization:* Derived from behavioral questionnaires, these factors provide valuable insights into the internalizing and externalizing behaviors of participants, adding a rich layer of psychological interpretation to the EEG and behavioral data.
-*\*Data quality and availability:* We performed minimal quality control to ensure that the data was not corrupted, each task had its necessary events, and was ready for preprocessing. The results of this quality control are available in the `participants.tsv` file.
+*\*Data quality and availability:* We performed minimal quality control to ensure that the data was not corrupted, each task had its necessary events, and was ready for preprocessing. The results of this quality control are available in the ``participants.tsv`` file.
 
 **Copyright and License**
 

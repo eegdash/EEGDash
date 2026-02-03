@@ -97,7 +97,7 @@ It consists of 12 patients: six patients recorded intraoperatively using electro
 This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
 
 
-Each patient has their own folder (e.g., `sub-RESP0280`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+Each patient has their own folder (e.g., ``sub-RESP0280``) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
 
 
 .. dropdown:: View full README
@@ -111,7 +111,7 @@ Each patient has their own folder (e.g., `sub-RESP0280`) which contains the iEEG
    This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
    
    
-   Each patient has their own folder (e.g., `sub-RESP0280`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+   Each patient has their own folder (e.g., ``sub-RESP0280``) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
    
    
    Two different implementation of the BIDS structure were done according to the different type of recordings (i.e. intraoperative or long-term)

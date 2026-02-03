@@ -123,13 +123,13 @@ This dataset was collected in 2020, which combines high-density Electroencephalo
    **Main files**
    
    
-   **`sub-\*`**: EEG (`.set`) and behavior data with BIDS format.
+   **``sub-*``**: EEG (``.set``) and behavior data with BIDS format.
    
-   **`sourcedata/rawdata`**: Raw `.mff` EGI data and behavior data with subject information desensitization.
+   **``sourcedata/rawdata``**: Raw ``.mff`` EGI data and behavior data with subject information desensitization.
    
-   **`sourcedata/psychopy`**: Stimuli and PsychoPy scripts for presentation.
+   **``sourcedata/psychopy``**: Stimuli and PsychoPy scripts for presentation.
    
-   **`derivatives/eeglab-preproc`**: Preprocessed continuous EEG data with EEGLAB (Easy to set different epoch time windows for further analysis).
+   **``derivatives/eeglab-preproc``**: Preprocessed continuous EEG data with EEGLAB (Easy to set different epoch time windows for further analysis).
    
    
    **Others**

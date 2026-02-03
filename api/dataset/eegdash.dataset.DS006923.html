@@ -1135,14 +1135,14 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p class="sd-card-text"><strong>Contents of the dataset</strong></p>
 <p class="sd-card-text"><strong>Core Files</strong></p>
 <ul class="simple">
-<li><p class="sd-card-text"><cite>dataset_description.json</cite>: General information about the study</p></li>
-<li><p class="sd-card-text"><cite>participants.json</cite>: Demographic and group assignment data</p></li>
-<li><p class="sd-card-text"><cite>participants.tsv</cite>: Demographic and group assignment data in table format</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">dataset_description.json</span></code>: General information about the study</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">participants.json</span></code>: Demographic and group assignment data</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code>: Demographic and group assignment data in table format</p></li>
 </ul>
-<p class="sd-card-text"><strong>Features Data (EEG_JO_Dataset/code)</strong></p>
+<p class="sd-card-text"><strong>Features Data (EEGJODataset/code)</strong></p>
 <p class="sd-card-text"><strong>Feature file nomenclature</strong></p>
 <p class="sd-card-text">Files are named using the pattern:
-<cite>FR_Dats_band_{BAND}_EP_{EYESTATE}_{EPOCH#}_can_{CHANNEL}.xlsx</cite></p>
+<code class="docutils literal notranslate"><span class="pre">FR_Dats_band_{BAND}_EP_{EYESTATE}_{EPOCH#}_can_{CHANNEL}.xlsx</span></code></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| Component          | Example     | Description                                                               |
 |--------------------|-------------|---------------------------------------------------------------------------|
 | **FR_Dats_band**   | Fixed       | Prefix = &quot;Feature Results Dataset&quot;                                        |
@@ -1150,9 +1150,14 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 | **EP_{EYESTATE}_** | `EP_C_`     | Eye state during epoch: `C` = Eyes closed; `O` = Eyes open                |
 | **{EPOCH#}**       | `1`         | Epoch number (1 or 2) two epochs per eye state                            |
 | **can_**           | Fixed       | &quot;Channel&quot; prefix                                                          |
-| **{CHANNEL}**      | `A1`        | Electrode position (ABCD system): First letter = A • B • C • D &lt;br&gt;- Number = Electrode ID (1-32)                                                                                   |
 </pre></div>
 </div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| **{CHANNEL}**      | `A1`        | Electrode position (ABCD system): First letter = A • B • C • D
+</pre></div>
+</div>
+<ul class="simple">
+<li><p class="sd-card-text">Number = Electrode ID (1-32)                                                                                   |</p></li>
+</ul>
 <p class="sd-card-text"><strong>File Contents:</strong></p>
 <p class="sd-card-text">Each Excel file contains 7 features for the specified band/channel/epoch combination:</p>
 <ol class="arabic simple">
@@ -1166,15 +1171,15 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </ol>
 <p class="sd-card-text"><strong>Examples:</strong></p>
 <ol class="arabic simple">
-<li><p class="sd-card-text"><cite>FR_Dats_band_ALFA_EP_C_1_can_A1.xlsx</cite>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">FR_Dats_band_ALFA_EP_C_1_can_A1.xlsx</span></code>
 - Alpha band features
 - First closed-eyes epoch
 - Channel A1 (Frontal electrode 1)</p></li>
-<li><p class="sd-card-text"><cite>FR_Dats_band_THETA_EP_O_2_can_C15.xlsx</cite>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">FR_Dats_band_THETA_EP_O_2_can_C15.xlsx</span></code>
 - Theta band features
 - Second open-eyes epoch
 - Channel C15 (Posterior electrode 15)</p></li>
-<li><p class="sd-card-text"><cite>FR_Dats_band_BETA_EP_C_2_can_B7.xlsx</cite>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">FR_Dats_band_BETA_EP_C_2_can_B7.xlsx</span></code>
 - Beta band features
 - Second closed-eyes epoch
 - Channel B7 (Central electrode 7)</p></li>
@@ -1182,8 +1187,8 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p class="sd-card-text"><strong>Dataset Structure:</strong></p>
 <ul class="simple">
 <li><p class="sd-card-text">4 epochs per subject:
-- 2 closed-eyes: <cite>EP_C_1</cite>, <cite>EP_C_2</cite>
-- 2 open-eyes: <cite>EP_O_1</cite>, <cite>EP_O_2</cite></p></li>
+- 2 closed-eyes: <code class="docutils literal notranslate"><span class="pre">EP_C_1</span></code>, <code class="docutils literal notranslate"><span class="pre">EP_C_2</span></code>
+- 2 open-eyes: <code class="docutils literal notranslate"><span class="pre">EP_O_1</span></code>, <code class="docutils literal notranslate"><span class="pre">EP_O_2</span></code></p></li>
 <li><p class="sd-card-text">128 channels (A1-D32)</p></li>
 <li><p class="sd-card-text">4 frequency bands</p></li>
 <li><p class="sd-card-text">Total files per subject: 4 epochs × 128 channels × 4 bands = 2,048 files</p></li>
@@ -1214,8 +1219,16 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| Denomination          | Value           | Description                                                      |
 |-----------------------|-----------------|------------------------------------------------------------------|
 | `sub-`                | Fixed               | Subject prefix                                                   |
-| `{Subject ID}`        | Fixed           | **Unique identifier**:&lt;br&gt;- First digit = group (`1`=sg, `1`=sg2, `2`=cg) &lt;br&gt;- Last 3 digits = subject ID                                                                     |
-| `{Group}`             | `cg`/`sg`/`sg2` | **Group**: `cg`=control, `sg`=study group 1, `sg2`=study group 2 |
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| `{Subject ID}`        | Fixed           | **Unique identifier**:
+</pre></div>
+</div>
+<ul class="simple">
+<li><p class="sd-card-text">First digit = group (<a href="#id1"><span class="problematic" id="id2">``</span></a>1``=sg, <a href="#id3"><span class="problematic" id="id4">``</span></a>1``=sg2, <a href="#id5"><span class="problematic" id="id6">``</span></a>2``=cg)</p></li>
+<li><p class="sd-card-text">Last 3 digits = subject ID                                                                     |</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| `{Group}`             | `cg`/`sg`/`sg2` | **Group**: `cg`=control, `sg`=study group 1, `sg2`=study group 2 |
 | `{Task Name}`         | `restingstate`  | **Task name** (resting state)                                    |
 | `acq-` `desc-`        | `acq-`/`desc-`  | **Label**: `acq-` = acquisition, `desc-` = description           |
 | `{Datatype}`          | `epochs`/`preprocessed` | Adquisition type                                         |
@@ -1225,8 +1238,8 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </div>
 <p class="sd-card-text"><strong>Examples</strong></p>
 <ol class="arabic simple">
-<li><p class="sd-card-text"><cite>sub-1005sg_task-restingstate_acq-epochs_eeg.set</cite> = Epochs EEG for <strong>study group 1</strong> subject 005 (full ID 1005)</p></li>
-<li><p class="sd-card-text"><cite>sub-1005sg_task-restingstate_desc-preprocessing_eeg.set</cite> = Preprocessed EEG for <strong>study group 1</strong> subject 005 (full ID 1005)</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">sub-1005sg_task-restingstate_acq-epochs_eeg.set</span></code> = Epochs EEG for <strong>study group 1</strong> subject 005 (full ID 1005)</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">sub-1005sg_task-restingstate_desc-preprocessing_eeg.set</span></code> = Preprocessed EEG for <strong>study group 1</strong> subject 005 (full ID 1005)</p></li>
 </ol>
 <p class="sd-card-text"><strong>Methods</strong></p>
 <p class="sd-card-text"><strong>EEG Acquisition</strong></p>

@@ -1115,7 +1115,7 @@ It can also be useful to also include information that might already bepresent i
 The README is usually the starting point for researchers using your dataand serves as a guidepost for users of your data. A clear and informativeREADME makes your data much more usable.
 In general you can include information in the README that is not captured by some otherfiles in the BIDS dataset (dataset_description.json, events.tsv, …).
 It can also be useful to also include information that might already bepresent in another file of the dataset but might be important for users to be aware ofbefore preprocessing or analysing the data.
-If the README gets too long you have the possibility to create a <cite>/doc</cite> folderand add it to the <cite>.bidsignore</cite> file to make sure it is ignored by the BIDS validator.
+If the README gets too long you have the possibility to create a <code class="docutils literal notranslate"><span class="pre">/doc</span></code> folderand add it to the <code class="docutils literal notranslate"><span class="pre">.bidsignore</span></code> file to make sure it is ignored by the BIDS validator.
 More info here: <a class="reference external" href="https://neurostars.org/t/where-in-a-bids-dataset-should-i-put-notes-about-individual-mri-acqusitions/17315/3">https://neurostars.org/t/where-in-a-bids-dataset-should-i-put-notes-about-individual-mri-acqusitions/17315/3</a></p>
 <p class="sd-card-text"><strong>Details related to access to the data</strong></p>
 <ul class="simple">
@@ -1131,7 +1131,7 @@ More info here: <a class="reference external" href="https://neurostars.org/t/whe
 <li><p class="sd-card-text">Project name (if relevant)</p></li>
 <li><p class="sd-card-text">Year(s) that the project ran</p></li>
 </ul>
-<p class="sd-card-text">If no <cite>scans.tsv</cite> is included, this could at least cover when the data acquisitionstarter and ended. Local time of day is particularly relevant to subject state.
+<p class="sd-card-text">If no <code class="docutils literal notranslate"><span class="pre">scans.tsv</span></code> is included, this could at least cover when the data acquisitionstarter and ended. Local time of day is particularly relevant to subject state.
 - Brief overview of the tasks in the experiment</p>
 <p class="sd-card-text">A paragraph giving an overview of the experiment. This should include thegoals or purpose and a discussion about how the experiment tries to achievethese goals.
 - Description of the contents of the dataset</p>
@@ -1147,7 +1147,7 @@ More info here: <a class="reference external" href="https://neurostars.org/t/whe
 <p class="sd-card-text"><strong>Methods</strong></p>
 <p class="sd-card-text"><strong>Subjects</strong></p>
 <p class="sd-card-text">A brief sentence about the subject pool in this experiment.
-Remember that <cite>Control</cite> or <cite>Patient</cite> status should be defined in the <a href="#id1"><span class="problematic" id="id2">`</span></a>participants.tsv`using a group column.
+Remember that <code class="docutils literal notranslate"><span class="pre">Control</span></code> or <code class="docutils literal notranslate"><span class="pre">Patient</span></code> status should be defined in the <a href="#id1"><span class="problematic" id="id2">``</span></a>participants.tsv``using a group column.
 - Information about the recruitment procedure- [ ] Subject inclusion criteria (if relevant)- [ ] Subject exclusion criteria (if relevant)</p>
 <p class="sd-card-text"><strong>Apparatus</strong></p>
 <p class="sd-card-text">A summary of the equipment and environment setup for theexperiment. For example, was the experiment performed in a shielded roomwith the subject seated in a fixed position.</p>
@@ -1161,7 +1161,7 @@ Remember that <cite>Control</cite> or <cite>Patient</cite> status should be defi
 <p class="sd-card-text">As much detail as possible about the task and the events that were recorded.</p>
 <p class="sd-card-text"><strong>Additional data acquired</strong></p>
 <p class="sd-card-text">A brief indication of data other than theimaging data that was acquired as part of this experiment. In additionto data from other modalities and behavioral data, this might includequestionnaires and surveys, swabs, and clinical information. Indicatethe availability of this data.
-This is especially relevant if the data are not included in a <cite>phenotype</cite> folder.https://bids-specification.readthedocs.io/en/stable/03-modality-agnostic-files.html#phenotypic-and-assessment-data</p>
+This is especially relevant if the data are not included in a <code class="docutils literal notranslate"><span class="pre">phenotype</span></code> folder.https://bids-specification.readthedocs.io/en/stable/03-modality-agnostic-files.html#phenotypic-and-assessment-data</p>
 <p class="sd-card-text"><strong>Experimental location</strong></p>
 <p class="sd-card-text">This should include any additional information regarding thethe geographical location and facility that cannot be includedin the relevant json files.</p>
 <p class="sd-card-text"><strong>Missing data</strong></p>

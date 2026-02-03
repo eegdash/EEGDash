@@ -124,7 +124,7 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    This release includes data collected between 2020-06-03 (cut-off date for v1.0.0) and 2024-04-01. Notable changes in this release:
    
      1. 769 new participants have been added along with re-evaluation data for 15 participants. Total unique participants count is now 1859.  
-     2. `visit` and `age_at_visit` columns added to phenotype files to distinguish between visits and intervals between them.
+     2. ``visit`` and ``age_at_visit`` columns added to phenotype files to distinguish between visits and intervals between them.
      3. Follow-up online survey data included.
      4. Replaced Beck Anxiety Inventory (BAI) and Beck Depression Inventory-II (BDI-II) with General Anxiety Disorder-7 (GAD7) and Patient Health Questionnaire 9 (PHQ9) surveys, respectively.
      5. Discontinued the Perceived Health rating survey.
@@ -267,7 +267,7 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    **Preparation Notes**
    
    
-   In many of the Clinical Measures data files, there exist `-999` values.  `-999` means there was no response though a response was possible.  The question may have been skipped over by the participant or the question flow.  `-777` appears in the Edinburgh Handedness Inventory (EHI) as well.  `-777` means there is no data available for a response.  The question was not presented or asked to the participant.
+   In many of the Clinical Measures data files, there exist ``-999`` values.  ``-999`` means there was no response though a response was possible.  The question may have been skipped over by the participant or the question flow.  ``-777`` appears in the Edinburgh Handedness Inventory (EHI) as well.  ``-777`` means there is no data available for a response.  The question was not presented or asked to the participant.
    
    The data were prepared using the following tools and filename mappings.
    
@@ -275,27 +275,27 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    **Clinical Measures Data**
    
    
-   The `ctdb_clean_up.ipynb` Jupyter Notebook contains the python functions used to clean and convert the spreadsheet downloaded from CTDB to BIDS-standard TSV files as well as their respective data dictionaries converted to BIDS-standard JSON files.
+   The ``ctdb_clean_up.ipynb`` Jupyter Notebook contains the python functions used to clean and convert the spreadsheet downloaded from CTDB to BIDS-standard TSV files as well as their respective data dictionaries converted to BIDS-standard JSON files.
    
    
    **Biological and Physiological Measures Data**
    
    
-   The `cris_clean_up.ipynb` Jupyter Notebook contains the Python functions used to clean and convert the spreadsheet with clinical measures to BIDS-standard TSV files and their data dictionaries to BIDS-standard JSON files.
+   The ``cris_clean_up.ipynb`` Jupyter Notebook contains the Python functions used to clean and convert the spreadsheet with clinical measures to BIDS-standard TSV files and their data dictionaries to BIDS-standard JSON files.
    
    
    **BIDS-standard MEG Files**
    
    
-   Data collected by the NIMH MEG Core was converted to BIDS-standard files using the MNE BIDS package.  Associated notebooks: `1_mne_bids_extractor.ipynb` & `2_bids_editor.ipynb`.
+   Data collected by the NIMH MEG Core was converted to BIDS-standard files using the MNE BIDS package.  Associated notebooks: ``1_mne_bids_extractor.ipynb`` & ``2_bids_editor.ipynb``.
    
    
    **BIDS-standard MRI**
    
    
-   We used the `heudiconv` tool to convert MRI DICOM files to BIDS-standard files with the associated script: `heuristic_rvol.py`.  A modified workflow of `pydeface` was used to deface structural scans with the associated notebook: `modified-workflow-pydeface.ipynb`
+   We used the ``heudiconv`` tool to convert MRI DICOM files to BIDS-standard files with the associated script: ``heuristic_rvol.py``.  A modified workflow of ``pydeface`` was used to deface structural scans with the associated notebook: ``modified-workflow-pydeface.ipynb``
    
-   Each participant received either the ADNI3 or the ABCD protocol, not both, during their MRI/MEG visit.  T1w scans with acquisition label `fspgr` are ADNI3 protocol sequence and scans with `mprage` acquisition labels are ABCD protocol sequence.
+   Each participant received either the ADNI3 or the ABCD protocol, not both, during their MRI/MEG visit.  T1w scans with acquisition label ``fspgr`` are ADNI3 protocol sequence and scans with ``mprage`` acquisition labels are ABCD protocol sequence.
    
    
    **OpenNeuro BIDS File/Folder Tree**
@@ -340,21 +340,21 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    
    Definitions:
    
-   - `<subject>` = subject number
-   - `<taskname>` = task name: `airpuff`, `artifact`, `gonogo`, `haririhammer`, `movie`, `oddball`, `sternberg`
-   - `<desc>` = placeholder for acquisition label for a given suffix
-   - `<direction>` = flipped, unflipped
-   - `<index>` = run number/index
-   - `<suffix>` = placeholder to indicate the scan type
-       - `T1w`: `<desc>` = `fspgr`, `mprage`, `fse`, `highreshippo`
-       - `T2w`: `<desc>` = `abcdcube`, `cube`, `frfse`
-       - `FLAIR`: `<desc>` = `adni2d`, `2d`, `3d`, `t2`
-       - `epi`: `<desc>` = `dwib1000`, `dwi`, `resting`
-       - `T2star`
-       - `bold`
-       - `meg`
-       - `asl`
-   - `<extension>`: indicates meg data files' type = `acq`, `bak`, `hc`, `hist`, `infods`, `meg4`, `newds`, `res4`, `xml`
+   - ``<subject>`` = subject number
+   - ``<taskname>`` = task name: ``airpuff``, ``artifact``, ``gonogo``, ``haririhammer``, ``movie``, ``oddball``, ``sternberg``
+   - ``<desc>`` = placeholder for acquisition label for a given suffix
+   - ``<direction>`` = flipped, unflipped
+   - ``<index>`` = run number/index
+   - ``<suffix>`` = placeholder to indicate the scan type
+       - ``T1w``: ``<desc>`` = ``fspgr``, ``mprage``, ``fse``, ``highreshippo``
+       - ``T2w``: ``<desc>`` = ``abcdcube``, ``cube``, ``frfse``
+       - ``FLAIR``: ``<desc>`` = ``adni2d``, ``2d``, ``3d``, ``t2``
+       - ``epi``: ``<desc>`` = ``dwib1000``, ``dwi``, ``resting``
+       - ``T2star``
+       - ``bold``
+       - ``meg``
+       - ``asl``
+   - ``<extension>``: indicates meg data files' type = ``acq``, ``bak``, ``hc``, ``hist``, ``infods``, ``meg4``, ``newds``, ``res4``, ``xml``
 
 
 Dataset Information

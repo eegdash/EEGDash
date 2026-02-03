@@ -159,7 +159,7 @@ This dataset contains EEG recordings and behavioral data from the **Emotion Proc
    **EEG Preprocessing**
    
    
-   All preprocessing was conducted in \**MATLAB R2020b**using \** EEGLAB 2023.0**and \**ERPLAB 9.10*\*. The preprocessing pipeline and fully commented scripts are available in `code/Preprocessing_EEG.m`.
+   All preprocessing was conducted in \**MATLAB R2020b**using \** EEGLAB 2023.0**and \**ERPLAB 9.10*\*. The preprocessing pipeline and fully commented scripts are available in ``code/Preprocessing_EEG.m``.
    
    
    **Summary of preprocessing steps**
@@ -183,16 +183,16 @@ This dataset contains EEG recordings and behavioral data from the **Emotion Proc
    
    
    
-   **`derivatives/processed_erps/`**
+   **derivatives/processed_erps/**
    
    
-   Contains averaged ERP files (`.erp`) for each participant after preprocessing.
+   Contains averaged ERP files (``.erp``) for each participant after preprocessing.
    
    
-   **`code/`**
+   **code/**
    
    
-   Includes MATLAB preprocessing scripts and documentation (`Preprocessing_EEG.m`).
+   Includes MATLAB preprocessing scripts and documentation (``Preprocessing_EEG.m``).
 
 
 Dataset Information

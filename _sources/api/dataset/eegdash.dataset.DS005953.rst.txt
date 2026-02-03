@@ -141,7 +141,7 @@ Contact: Dora Hermes (dorahermes@gmail.com)
    
    This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/
    
-   Each subject has their own folder (e.g., `sub-01`) which contains the raw EcoG data for that subject, as well as the metadata needed to understand the raw data and event timing. In addition, the `stimuli/` folder contains the .png files of the presented images.
+   Each subject has their own folder (e.g., ``sub-01``) which contains the raw EcoG data for that subject, as well as the metadata needed to understand the raw data and event timing. In addition, the ``stimuli/`` folder contains the .png files of the presented images.
    
    
    **Stimuli**
@@ -155,7 +155,7 @@ Contact: Dora Hermes (dorahermes@gmail.com)
    
    Raw data is stored with the Brainvision data format. This can be read in to memory with the following tools:
    
-   * Python: The `pybv` package (https://github.com/bids-standard/pybv)
+   * Python: The ``pybv`` package (https://github.com/bids-standard/pybv)
    * Matlab: BrainVision analyzer (https://www.mathworks.com/products/connections/product_detail/brainvision-analyzer.html)
 
 

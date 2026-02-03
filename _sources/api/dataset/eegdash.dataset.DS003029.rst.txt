@@ -138,11 +138,11 @@ This dataset was updated and prepared for release as part of a manuscript by Ber
    **Sourcedata**
    
    
-   For each subject, there was a raw EDF file, which was converted into the BrainVision format with `mne_bids`.
+   For each subject, there was a raw EDF file, which was converted into the BrainVision format with ``mne_bids``.
    
-   Each subject with SEEG implantation from Cleveland Clinic, also has an Excel table, called `electrode_layout.xlsx`, which outlines where the clinicians marked each electrode anatomically. Note that there is no rigorous atlas applied, so the main points of interest are: `WM`, `GM`, `VENTRICLE`, `CSF`, and `OUT`, which represent white-matter, gray-matter, ventricle, cerebrospinal fluid and outside the brain. WM, Ventricle, CSF and OUT were removed channels from further analysis. These were labeled in the corresponding BIDS `channels.tsv` sidecar file as `status=bad`.
+   Each subject with SEEG implantation from Cleveland Clinic, also has an Excel table, called ``electrode_layout.xlsx``, which outlines where the clinicians marked each electrode anatomically. Note that there is no rigorous atlas applied, so the main points of interest are: ``WM``, ``GM``, ``VENTRICLE``, ``CSF``, and ``OUT``, which represent white-matter, gray-matter, ventricle, cerebrospinal fluid and outside the brain. WM, Ventricle, CSF and OUT were removed channels from further analysis. These were labeled in the corresponding BIDS ``channels.tsv`` sidecar file as ``status=bad``.
    
-   The dataset uploaded to `openneuro.org` does not contain the `sourcedata` since there was an extra
+   The dataset uploaded to ``openneuro.org`` does not contain the ``sourcedata`` since there was an extra
    anonymization step that occurred when fully converting to BIDS.
    
    

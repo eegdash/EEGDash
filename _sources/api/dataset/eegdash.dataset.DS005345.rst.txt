@@ -152,7 +152,7 @@ In the case of French participants, due to legal constraints, additional session
    
    MRI Data Processing
    
-   1. DICOM to NIfTI Conversion: All raw MRI data were converted to NIfTI format using `dcm2niix` (version 1.0.20220505) and processed using the `fMRIPrep` pipeline (version 20.2.0).
+   1. DICOM to NIfTI Conversion: All raw MRI data were converted to NIfTI format using ``dcm2niix`` (version 1.0.20220505) and processed using the ``fMRIPrep`` pipeline (version 20.2.0).
    2. Anatomical Preprocessing:
       - Skull stripping
       - Segmentation into gray matter (GM), white matter (WM), and cerebrospinal fluid (CSF)

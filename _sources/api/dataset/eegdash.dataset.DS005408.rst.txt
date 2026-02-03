@@ -190,7 +190,7 @@ Please contact the following authors for further information:
    **Details about the experiment**
    
    For a detailed description of the task, see Polonenko & Maddox (2024) and the
-   supplied `task-peaky_snr_eeg.json` file. The 4 SNR speech conditions and the
+   supplied ``task-peaky_snr_eeg.json`` file. The 4 SNR speech conditions and the
    story tokens were randomized. This means that the participant would not be able
    to follow the stories. For clicks the trials were not randomized
    (already random clicks).

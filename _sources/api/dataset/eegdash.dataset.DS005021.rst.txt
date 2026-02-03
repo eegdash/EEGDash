@@ -120,15 +120,16 @@ EEG correlates of an increased or decreased tilt illusion.
    
    Please cite as follows:
    
-   > Williams, J.G., Harrison, W.J., Beale, H.A., Mattingley, J.B., & Harris, A.M. (2024). Effects of alpha oscillation power and phase on discrimination performance in a visual tilt illusion. Current Biology.
+      Williams, J.G., Harrison, W.J., Beale, H.A., Mattingley, J.B., & Harris, A.M. (2024). Effects of alpha oscillation power and phase on discrimination performance in a visual tilt illusion. Current Biology.
    
-   For more information, see the `dataset_description.json` file.
+   
+   For more information, see the ``dataset_description.json`` file.
    
    
    **License**
    
    
-   The `tilt illusion` dataset is made available under the CC BY 4.0 license.
+   The ``tilt illusion`` dataset is made available under the CC BY 4.0 license.
    
    Copyright (c) 2024, Jessica Williams, William Harrison, Henry Beale, Jason Mattingley, & Anthony Harris
    
@@ -141,16 +142,16 @@ EEG correlates of an increased or decreased tilt illusion.
    
    
    The dataset is formatted according to the Brain Imaging Data Structure (BIDS).
-   See the `dataset_description.json` file for the specific version used.
+   See the ``dataset_description.json`` file for the specific version used.
    
-   Generally, you can find metadata in the `.tsv` files and documentation thereof in the accompanying `.json` files.
+   Generally, you can find metadata in the ``.tsv`` files and documentation thereof in the accompanying ``.json`` files.
    
    An important BIDS definition to consider is the "Inheritance Principle", which
    is described in the BIDS specification under the following link:
    
    https://bids-specification.readthedocs.io/en/latest/common-principles.html#the-inheritance-principle
    
-   In brief, the Inheritance Pinciple states that any metadata file (such as `.json`, `.tsv`)
+   In brief, the Inheritance Pinciple states that any metadata file (such as ``.json``, ``.tsv``)
    may be defined at any directory level, but no more than one applicable file may be defined at a given level [...],
    and the values from the top level are inherited by all lower levels --
    unless they are overridden by a file at the lower level.
@@ -181,8 +182,8 @@ EEG correlates of an increased or decreased tilt illusion.
    
    For more information, you can also consult the events.tsv and events.json files.
    
-   The original data was recorded in `.bdf` format using Actiview. It is stored in 
-   the `/sourcedata` directory. To comply with the BIDS format, the .bdf format was 
+   The original data was recorded in ``.bdf`` format using Actiview. It is stored in 
+   the ``/sourcedata`` directory. To comply with the BIDS format, the .bdf format was 
    converted to EEGLab format, constituting a '.set' file and a 'fdt' file for each 
    dataset. 
    

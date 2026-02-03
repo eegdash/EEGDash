@@ -1103,33 +1103,33 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p><strong>MNE-somato-data-bids</strong></p>
 <p>This dataset contains the MNE-somato-data in BIDS format.</p>
 <p>The conversion can be reproduced through the Python script stored in the
-<cite>/code</cite> directory of this dataset. See the README in that directory.</p>
-<p>The <cite>/derivatives</cite> directory contains the outputs of running the FreeSurfer</p>
+<code class="docutils literal notranslate"><span class="pre">/code</span></code> directory of this dataset. See the README in that directory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">/derivatives</span></code> directory contains the outputs of running the FreeSurfer</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>MNE-somato-data-bids</strong></p>
 <p class="sd-card-text">This dataset contains the MNE-somato-data in BIDS format.</p>
 <p class="sd-card-text">The conversion can be reproduced through the Python script stored in the
-<cite>/code</cite> directory of this dataset. See the README in that directory.</p>
-<p class="sd-card-text">The <cite>/derivatives</cite> directory contains the outputs of running the FreeSurfer
-pipeline <cite>recon-all</cite> on the MRI data with no additional commandline options
+<code class="docutils literal notranslate"><span class="pre">/code</span></code> directory of this dataset. See the README in that directory.</p>
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">/derivatives</span></code> directory contains the outputs of running the FreeSurfer
+pipeline <code class="docutils literal notranslate"><span class="pre">recon-all</span></code> on the MRI data with no additional commandline options
 (only defaults were used):</p>
 <p class="sd-card-text">$ recon-all -i sub-01_T1w.nii.gz -s 01 -all</p>
-<p class="sd-card-text">After the <cite>recon-all</cite> call, there were further FreeSurfer calls from the MNE
+<p class="sd-card-text">After the <code class="docutils literal notranslate"><span class="pre">recon-all</span></code> call, there were further FreeSurfer calls from the MNE
 API:</p>
 <p class="sd-card-text">$ mne make_scalp_surfaces -s 01 –force
 $ mne watershed_bem -s 01</p>
-<p class="sd-card-text">The derivatives also contain the forward model <cite>*-fwd.fif</cite>, which was produced
-using the source space definition, a <cite>*-trans.fif</cite> file, and the boundary
+<p class="sd-card-text">The derivatives also contain the forward model <code class="docutils literal notranslate"><span class="pre">*-fwd.fif</span></code>, which was produced
+using the source space definition, a <code class="docutils literal notranslate"><span class="pre">*-trans.fif</span></code> file, and the boundary
 element model (=conductor model) that lives in
-<cite>freesurfer/subjects/01/bem/*-bem-sol.fif</cite>.</p>
-<p class="sd-card-text">The <cite>*-trans.fif</cite> file is not saved, but can be recovered from the anatomical
-landmarks in the <cite>sub-01/anat/T1w.json</cite> file and MNE-BIDS’ function
-<cite>get_head_mri_transform</cite>.</p>
+<code class="docutils literal notranslate"><span class="pre">freesurfer/subjects/01/bem/*-bem-sol.fif</span></code>.</p>
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">*-trans.fif</span></code> file is not saved, but can be recovered from the anatomical
+landmarks in the <code class="docutils literal notranslate"><span class="pre">sub-01/anat/T1w.json</span></code> file and MNE-BIDS’ function
+<code class="docutils literal notranslate"><span class="pre">get_head_mri_transform</span></code>.</p>
 <p class="sd-card-text">See: <a class="github reference external" href="https://github.com/mne-tools/mne-bids">mne-tools/mne-bids</a> for more information.</p>
 <p class="sd-card-text"><strong>Notes on FreeSurfer</strong></p>
-<p class="sd-card-text">the FreeSurfer pipeline <cite>recon-all</cite> was run new for the sake of converting the
+<p class="sd-card-text">the FreeSurfer pipeline <code class="docutils literal notranslate"><span class="pre">recon-all</span></code> was run new for the sake of converting the
 somato data to BIDS format. This needed to be done to change the “somato”
 subject name to the BIDS subject label “01”. Note, that this is NOT “sub-01”,
 because in BIDS, the “sub-” is just a prefix, whereas the “01” is the subject

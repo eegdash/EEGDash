@@ -1125,7 +1125,7 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </ul>
 <p class="sd-card-text"><strong>Data organization</strong></p>
 <p class="sd-card-text">This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a></p>
-<p class="sd-card-text">Each patient has their own folder (e.g., <cite>sub-ccepAgeUMCU01</cite> to <cite>sub-ccepAgeUMCU74</cite>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.</p>
+<p class="sd-card-text">Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU01</span></code> to <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU74</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.</p>
 <p class="sd-card-text">Data are logically grouped in the same BIDS session and stored across runs that indicating the day and time point of recording during the monitoring period.
 If extra electrodes were added/removed during this period, the session was divided into different sessions (e.g. ses-1a and ses-1b).
 We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).

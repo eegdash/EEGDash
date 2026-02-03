@@ -89,21 +89,26 @@ Quickstart
 About This Dataset
 ------------------
 
-> Introduction
+   Introduction
+
 This experiment was designed to entrain the brain oscillations through synthetic auditory stimulation conducted on a group of elderly suffering from dementia. Recently, gamma entrainment has been proposed and shown effective in improving several symptoms of Alzheimer's Diseases (AD). The aim of this study is to investigate the effect of entrainment on brain oscillations using EEG signal recording during the auditory brain stimulation. 
 This study was approved by the Review Board of Tehran University of Medical Sciences (Approval ID: IR.TUMS.MEDICINE.REC.1398.524) and all participants provided informed consent before participating and were free to withdraw at any time.
 
-> Rest data
+   Rest data
+
 Before the main task, a one-minute data was recorded with open eyes for measuring raw resting-state potentials. The rest data for participants number 6 and 13 are missing.
 
-> Auditory stimulation
+   Auditory stimulation
+
 Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant's ears at a distance of 50cm. The sound intensity was around -40dB within a fixed range for all participants. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for each participant. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of six trials of 40sec stimulus interleaved by five trials of 20sec rest (silence). The entire session resulted in 340sec (6*40+5*20) of recorded EEG signal. 
 
-> EEG recording and preprocessing 
+   EEG recording and preprocessing 
+
 All EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 250Hz, and the impedance of the electrodes was kept under 20kOhm. 
 Data from all the participants were preprocessed identically following Makoto's preprocessing pipeline: Highpass filtering above 1Hz; removal of the line noise; rejecting potential bad channels; interpolating rejected channels; re-referencing data to the average; Artifact Subspace Reconstruction (ASR); re-referencing data to the average again; estimating the brain source activity using independent component analysis (ICA); dipole fitting; rejecting bad dipoles (sources) for further cleaning the data. These preprocessing steps were performed using EEGLab MATLAB toolbox.
 
-> Instructions
+   Instructions
+
 During the experiment, participants were seated comfortably with open eyes in a quiet room. They were instructed to relax their body to avoid muscle artifacts and move their head as little as possible.
 
 Dataset Information

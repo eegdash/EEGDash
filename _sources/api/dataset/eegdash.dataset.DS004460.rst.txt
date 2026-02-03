@@ -129,7 +129,7 @@ collected at the Berlin Mobile Brain-Body Imaging Lab,
    Please cite as follows:
    
    Gramann, K., Hohlefeld, F.U., Gehrke, L. et al. Human cortical dynamics during full-body heading changes. Sci Rep 11, 18186 (2021). https://doi.org/10.1038/s41598-021-97749-8
-   For more information, see the `dataset_description.json` file.
+   For more information, see the ``dataset_description.json`` file.
    
    
    
@@ -143,7 +143,7 @@ collected at the Berlin Mobile Brain-Body Imaging Lab,
    **Format**
    
    The dataset is formatted according to the Brain Imaging Data Structure. See the
-   `dataset_description.json` file for the specific version used.
+   ``dataset_description.json`` file for the specific version used.
    
    Generally, you can find data in the .tsv files and descriptions in the
    accompanying .json files.
@@ -155,10 +155,11 @@ collected at the Berlin Mobile Brain-Body Imaging Lab,
    
    The section states that:
    
-   > Any metadata file (such as .json, .bvec or .tsv) may be defined at any directory level,
-   > but no more than one applicable file may be defined at a given level [...]
-   > The values from the top level are inherited by all lower levels unless
-   > they are overridden by a file at the lower level.
+      Any metadata file (such as .json, .bvec or .tsv) may be defined at any directory level,
+      but no more than one applicable file may be defined at a given level [...]
+      The values from the top level are inherited by all lower levels unless
+      they are overridden by a file at the lower level.
+   
    
    
    
@@ -250,11 +251,11 @@ collected at the Berlin Mobile Brain-Body Imaging Lab,
    Head motion capture data (position and orientation) was acquired using the HTC Lighthouse tracking system 
    with 90Hz sampling rate, since it was also used for the positional tracking of the virtual reality view. 
    
-   The original data was recorded in `.xdf` format using labstreaminglayer
-   (https://github.com/sccn/labstreaminglayer). It is stored in the `/sourcedata`
+   The original data was recorded in ``.xdf`` format using labstreaminglayer
+   (https://github.com/sccn/labstreaminglayer). It is stored in the ``/sourcedata``
    directory. To comply with the BIDS format, the .xdf format was converted to
-   BrainVision format (see the `.eeg` file for binary eeg data, the `.vhdr` as a
-   text header filer containing meta data, and the `.vmrk` as a text file storing
+   BrainVision format (see the ``.eeg`` file for binary eeg data, the ``.vhdr`` as a
+   text header filer containing meta data, and the ``.vmrk`` as a text file storing
    the eeg markers).
 
 

@@ -701,38 +701,38 @@ This is the largest public sEMG dataset to date, specifically designed to study:
 <strong>Electrode naming</strong>: E0-E15 (reused for left and right wrists)
 <strong>Reference</strong>: Bipolar (differential sensing)
 <strong>channels.tsv columns</strong>:
-- <cite>name</cite>: Channel identifier (EMG0-EMG31)
-- <cite>type</cite>: EMG
-- <cite>units</cite>: V
-- <cite>signal_electrode</cite>: Physical electrode name (E0-E15)
-- <cite>reference</cite>: bipolar
-- <cite>group</cite>: left or right (wrist)
-- <cite>target_muscle</cite>: forearm muscles</p>
+- <code class="docutils literal notranslate"><span class="pre">name</span></code>: Channel identifier (EMG0-EMG31)
+- <code class="docutils literal notranslate"><span class="pre">type</span></code>: EMG
+- <code class="docutils literal notranslate"><span class="pre">units</span></code>: V
+- <code class="docutils literal notranslate"><span class="pre">signal_electrode</span></code>: Physical electrode name (E0-E15)
+- <code class="docutils literal notranslate"><span class="pre">reference</span></code>: bipolar
+- <code class="docutils literal notranslate"><span class="pre">group</span></code>: left or right (wrist)
+- <code class="docutils literal notranslate"><span class="pre">target_muscle</span></code>: forearm muscles</p>
 <p class="sd-card-text"><strong>electrodes.tsv columns</strong>:
-- <cite>name</cite>: Electrode identifier (E0-E15)
-- <cite>x</cite>, <cite>y</cite>, <cite>z</cite>: 3D coordinates (percent units, no decimals)
-- <cite>coordinate_system</cite>: leftForearm or rightForearm
-- <cite>group</cite>: left or right</p>
+- <code class="docutils literal notranslate"><span class="pre">name</span></code>: Electrode identifier (E0-E15)
+- <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>: 3D coordinates (percent units, no decimals)
+- <code class="docutils literal notranslate"><span class="pre">coordinate_system</span></code>: leftForearm or rightForearm
+- <code class="docutils literal notranslate"><span class="pre">group</span></code>: left or right</p>
 <p class="sd-card-text"><strong>Events</strong></p>
 <p class="sd-card-text"><strong>events.tsv contains</strong>:
 - <strong>Keystroke events</strong>: Individual key-press and key-release</p>
 <blockquote>
 <div><ul class="simple">
-<li><p class="sd-card-text"><cite>type</cite>: keystroke_X (where X is the key character)</p></li>
-<li><p class="sd-card-text"><cite>latency</cite>: Sample index of keystroke</p></li>
-<li><p class="sd-card-text"><cite>duration</cite>: Samples from press to release</p></li>
-<li><p class="sd-card-text"><cite>key</cite>: Character typed</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">type</span></code>: keystroke_X (where X is the key character)</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">latency</span></code>: Sample index of keystroke</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">duration</span></code>: Samples from press to release</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">key</span></code>: Character typed</p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">
 <li><p class="sd-card-text"><strong>Prompt events</strong>: Text prompts shown to participant
-- <cite>type</cite>: prompt
-- <cite>prompt_text</cite>: Displayed text</p></li>
+- <code class="docutils literal notranslate"><span class="pre">type</span></code>: prompt
+- <code class="docutils literal notranslate"><span class="pre">prompt_text</span></code>: Displayed text</p></li>
 </ul>
 <p class="sd-card-text"><strong>Total keystrokes</strong>: 5,262,671 across all sessions</p>
 <p class="sd-card-text"><strong>Coordinate Systems</strong></p>
 <p class="sd-card-text"><strong>Two separate coordinate systems</strong> (space entities):
-<strong>Left Forearm</strong> (<cite>space-leftForearm_coordsystem.json</cite>):</p>
+<strong>Left Forearm</strong> (<code class="docutils literal notranslate"><span class="pre">space-leftForearm_coordsystem.json</span></code>):</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EMGCoordinateSystem: Other
 EMGCoordinateUnits: percent
 X: USP → RSP (0-100%)
@@ -740,7 +740,7 @@ Y: Right-hand rule perpendicular (limits: Olecranon Process → Cubital Fossa)
 Z: Midpoint RSP-USP → Lateral Humeral Epicondyle
 </pre></div>
 </div>
-<p class="sd-card-text"><strong>Right Forearm</strong> (<cite>space-rightForearm_coordsystem.json</cite>):</p>
+<p class="sd-card-text"><strong>Right Forearm</strong> (<code class="docutils literal notranslate"><span class="pre">space-rightForearm_coordsystem.json</span></code>):</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EMGCoordinateSystem: Other
 EMGCoordinateUnits: percent
 X: RSP → USP (0-100%, reversed from left)
@@ -865,7 +865,7 @@ SCCN (Swartz Center for Computational Neuroscience)
 INC (Institute for Neural Computation)
 University of California San Diego</p>
 <p class="sd-card-text"><strong>Version History</strong></p>
-<p class="sd-card-text"><strong>**v1.0</strong> (2025-10-01): Initial BIDS conversion**</p>
+<p class="sd-card-text"><strong>v1.0 (2025-10-01): Initial BIDS conversion</strong></p>
 <p class="sd-card-text"><strong>BIDS Version</strong>: 1.11 | <strong>EMG-BIDS</strong>: BEP-042 | <strong>Updated</strong>: Oct 1, 2025</p>
 </div>
 </details></section>

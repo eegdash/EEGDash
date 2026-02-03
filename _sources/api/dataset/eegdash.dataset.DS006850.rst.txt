@@ -179,7 +179,7 @@ About This Dataset
    
    Subjects were recruited from the participant pool of TU Berlin and consisted of students who participated for course credit as well as citizens of Berlin who participated for monetary renumeration. 63 subjects included (age M = 29.16 years, SD = 7.53, range = 19–61 years; 29 male, 33 female, 1 non-binary)
    
-   Remember that `Control` or `Patient` status should be defined in the `participants.tsv`
+   Remember that ``Control`` or ``Patient`` status should be defined in the ``participants.tsv``
    using a group column.
    
    

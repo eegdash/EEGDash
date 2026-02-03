@@ -95,7 +95,7 @@ This dataset consists of 13 patients with long-term recordings (5 patients recor
 
 This data is organized according to the Brain Imaging Data Structure specification: A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/ 
 
-Each patient has their own folder (e.g., `sub-STREEF01`) which contains the iEEG recordings of that patient, as well as the metadata to understand the raw data and event timing.
+Each patient has their own folder (e.g., ``sub-STREEF01``) which contains the iEEG recordings of that patient, as well as the metadata to understand the raw data and event timing.
 
 In long-term recordings, data that are recorded within one monitoring period are logically grouped in the same BIDS session and stored across runs indicating the day and time point of recording in the monitoring period. We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
 The task key-value pair in long-term iEEG recordings describes the patient´s state during the recording of this file. A specific task called “SPESclin“ is defined when the clinical SPES protocol has been performed.

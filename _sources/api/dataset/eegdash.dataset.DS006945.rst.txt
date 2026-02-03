@@ -120,7 +120,7 @@ MRI Acquisition:
    - 59 scalp channels + 4 EOG channels + 1 ECG channel
    
    Stimuli:
-   - A video stimulus (`stimuli/walking_exoskeleton_video.mp4`) was presented during walking tasks.
+   - A video stimulus (``stimuli/walking_exoskeleton_video.mp4``) was presented during walking tasks.
    - The video is referenced in the respective JSON sidecars for both fMRI and EEG tasks.
    
    Participants:
@@ -360,7 +360,7 @@ MRI Acquisition:
    
    **Validation Data**
    
-   A validation file (`derivatives/MRI_DataValidation.xls`) is provided to summarize dataset completeness and quality checks.
+   A validation file (``derivatives/MRI_DataValidation.xls``) is provided to summarize dataset completeness and quality checks.
    
    - **Sheet: Files**  
      Lists presence/absence of EEG, MRI, and SPM outputs across subjects (S1–S5).  
@@ -377,7 +377,7 @@ MRI Acquisition:
    
    - Raw data (anat, func, eeg, dwi) are stored under each subject (sub-XX/ses-YY).
    - Derivatives (SPM statistical maps, preprocessed outputs, validation files) are stored separately under derivatives/sub-XX/ses-YY.
-   - Stimuli are stored in the top-level `/stimuli/` folder and referenced in JSON sidecars.
+   - Stimuli are stored in the top-level ``/stimuli/`` folder and referenced in JSON sidecars.
    - Naming conventions follow BIDS entities:
      - sub-<label> : subject identifier
      - ses-<label> : session identifier

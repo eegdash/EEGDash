@@ -129,9 +129,9 @@ This dataset contains simultaneous EEG-fMRI recordings for inner speech experime
    
    **Data Organization**
    
-   - Functional MRI data: `sub-xx/ses-xx/func/`
-   - EEG data: `sub-xx/ses-xx/eeg/`
-   - Event markers: `events.tsv`
+   - Functional MRI data: ``sub-xx/ses-xx/func/``
+   - EEG data: ``sub-xx/ses-xx/eeg/``
+   - Event markers: ``events.tsv``
    - BIDS-compatible metadata included in JSON sidecars.
    
    

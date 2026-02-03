@@ -121,8 +121,8 @@ This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March
    **Tasks:**
    
    
-   1. `movietrailers` - this task involves patients listening to movie clips from various Pixar, Disney, Dreamworks, and other movies. We have published previously using these stimuli in EEG (Desai et al. 2021).
-   2. `timit4` and `timit5` - these tasks involve patients listening to subsets of the TIMIT acoustic phonetic corpus (Garofolo et al 1993). The events provided in the dataset mark the onset and offset of each sentence. In `timit4`, each sentence is unique, while in `timit5`, 10 sentences are repeated 10 times. This is the same stimulus set used in Mesgarani et al. 2014, Hamilton et al. 2018, Hamilton et al. 2021, and Desai et. al 2021.
+   1. ``movietrailers`` - this task involves patients listening to movie clips from various Pixar, Disney, Dreamworks, and other movies. We have published previously using these stimuli in EEG (Desai et al. 2021).
+   2. ``timit4`` and ``timit5`` - these tasks involve patients listening to subsets of the TIMIT acoustic phonetic corpus (Garofolo et al 1993). The events provided in the dataset mark the onset and offset of each sentence. In ``timit4``, each sentence is unique, while in ``timit5``, 10 sentences are repeated 10 times. This is the same stimulus set used in Mesgarani et al. 2014, Hamilton et al. 2018, Hamilton et al. 2021, and Desai et. al 2021.
    
    
    **Notes:**

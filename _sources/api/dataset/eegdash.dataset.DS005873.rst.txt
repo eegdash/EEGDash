@@ -95,7 +95,7 @@ About This Dataset
 This dataset is a BIDS compatible version of the SeizeIT2 dataset. It reorganizes the file structure to comply with the BIDS specification. To this effect:
 - Metadata was organized according to BIDS.
 - Data in the edf files contains wearable EEG, ECG, EMG and movement data recorded with the Sensor Dot device.
-- Annotations were formatted as BIDS-score compatible `tsv` files.
+- Annotations were formatted as BIDS-score compatible ``tsv`` files.
 
 **Contact person**
 
@@ -109,7 +109,7 @@ This dataset is a BIDS compatible version of the SeizeIT2 dataset. It reorganize
    This dataset is a BIDS compatible version of the SeizeIT2 dataset. It reorganizes the file structure to comply with the BIDS specification. To this effect:
    - Metadata was organized according to BIDS.
    - Data in the edf files contains wearable EEG, ECG, EMG and movement data recorded with the Sensor Dot device.
-   - Annotations were formatted as BIDS-score compatible `tsv` files.
+   - Annotations were formatted as BIDS-score compatible ``tsv`` files.
    
    **Contact person**
    

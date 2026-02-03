@@ -117,10 +117,10 @@ In the MEG/EEG experiment, checkerboard patterns were presented into the left an
    
    
    - Calls from the command line:
-     - `recon-all -i sub-01/anat/sub-01_T1w.nii.gz -s sub-01 -all`
-     - `mne make_scalp_surfaces -s sub-01 --overwrite --force`
-     - `mne flash_bem -s sub-01 --overwrite`
-     - `mne watershed_bem -s sub-01 --overwrite`
+     - ``recon-all -i sub-01/anat/sub-01_T1w.nii.gz -s sub-01 -all``
+     - ``mne make_scalp_surfaces -s sub-01 --overwrite --force``
+     - ``mne flash_bem -s sub-01 --overwrite``
+     - ``mne watershed_bem -s sub-01 --overwrite``
    
    
    **References**

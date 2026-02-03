@@ -126,7 +126,7 @@ It contains EEG data for three experiments, detailed in the paper and
    They were instructed to attend to only one narrator on each trial, with cues
    given before they started the trial and through a fixation dot which remained
    for the duration of the trial. For details, see the
-   `Details about the experiment` section and refer to our paper.
+   ``Details about the experiment`` section and refer to our paper.
    
    EEG was recorded simultaneously from a 32 channel activate montage (to examine
    cortical responses) and a 2 channel passive bipolar montage (FCz to earlobes, 
@@ -147,7 +147,7 @@ It contains EEG data for three experiments, detailed in the paper and
    each trial (indicated by the story name, talker sex, and direction) with cues
    given before they started the trial and through a fixation dot with an arrow 
    which remained for the duration of the trial. For details, see the 
-   `Details about the experiment` section and refer to our paper. The records
+   ``Details about the experiment`` section and refer to our paper. The records
    of individual participant age and sex no longer exist, but overall statistics
    are reported in the paper.
    
@@ -169,7 +169,7 @@ It contains EEG data for three experiments, detailed in the paper and
    were paired in the same manner as in Forte et al. (2017). Subjects sat at a
    computer desk in a soundproof room. They were instructed to ignore the audio
    as best they could and distract themselves by watching silent captioned videos
-   of their choosing or by reading.  For details, see the `Details about the experiment`
+   of their choosing or by reading.  For details, see the ``Details about the experiment``
    section and refer to our paper.
    
    EEG was recorded with a passive electrodes using a bipolar montage, with the
@@ -181,7 +181,7 @@ It contains EEG data for three experiments, detailed in the paper and
    **Format**
    
    The dataset is formatted according to the EEG Brain Imaging Data Structure.
-   See the `dataset_description.json` file for the specific version used.
+   See the ``dataset_description.json`` file for the specific version used.
    Generally, you can find detailed event data in the .tsv files and descriptions
    in the accompanying .json files. Raw eeg files are provided in the Brain
    Products format.

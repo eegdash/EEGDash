@@ -121,14 +121,14 @@ This dataset, named TMNRED, consists of electroencephalogram (EEG) recordings ob
    
    The dataset is organized according to the BIDS standard:
    - Main Folder:
-     - `dataset_description.json`: Description of the dataset.
-     - `participants.tsv`: Participant information.
-     - `participants.json`: Details of columns in `participants.tsv`.
-     - `README`: General information about the dataset.
-     - `data_all.mat`: Labeled EEG data of all subjects in MAT format.
+     - ``dataset_description.json``: Description of the dataset.
+     - ``participants.tsv``: Participant information.
+     - ``participants.json``: Details of columns in ``participants.tsv``.
+     - ``README``: General information about the dataset.
+     - ``data_all.mat``: Labeled EEG data of all subjects in MAT format.
    - Derivative Data:
-     - `final_bids/`: EEG data stored in JSON, TSV, and EDF formats.
-     - `preproc/`: Preprocessed data, including subfolders for each subject (`sub-01`, etc.), with data in various formats (BDF, SET, FDT, ERP, MAT).
+     - ``final_bids/``: EEG data stored in JSON, TSV, and EDF formats.
+     - ``preproc/``: Preprocessed data, including subfolders for each subject (``sub-01``, etc.), with data in various formats (BDF, SET, FDT, ERP, MAT).
    
    **Technical Validation**
    
@@ -141,7 +141,7 @@ This dataset, named TMNRED, consists of electroencephalogram (EEG) recordings ob
    **Usage Notes**
    
    - Researchers should cite the dataset appropriately when using it.
-   - For any questions or issues, please refer to the `README` file or contact the corresponding authors: Yanru Bai (yr56 bai@tju.edu.cn), Guangjian Ni (niguangjian@tju.edu.cn).
+   - For any questions or issues, please refer to the ``README`` file or contact the corresponding authors: Yanru Bai (yr56 bai@tju.edu.cn), Guangjian Ni (niguangjian@tju.edu.cn).
    
    **Acknowledgments**
    

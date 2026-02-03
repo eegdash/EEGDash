@@ -98,7 +98,7 @@ Curated EEG recordings for validating sleep staging from a three-electrode foreh
 
 **What is included**
 
-- CGX patch `.set` files that contain `EEG.VisualHypnogram` and `EEG.SpectralScoring`. The 33-channel data is not included in this release -- this release only includes the three-electrode data. The 33-channel data will be released separately.
+- CGX patch ``.set`` files that contain ``EEG.VisualHypnogram`` and ``EEG.SpectralScoring``. The 33-channel data is not included in this release -- this release only includes the three-electrode data. The 33-channel data will be released separately.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -112,12 +112,12 @@ Curated EEG recordings for validating sleep staging from a three-electrode foreh
    
    **What is included**
    
-   - CGX patch `.set` files that contain `EEG.VisualHypnogram` and `EEG.SpectralScoring`. The 33-channel data is not included in this release -- this release only includes the three-electrode data. The 33-channel data will be released separately.
+   - CGX patch ``.set`` files that contain ``EEG.VisualHypnogram`` and ``EEG.SpectralScoring``. The 33-channel data is not included in this release -- this release only includes the three-electrode data. The 33-channel data will be released separately.
    
    
    **Sleep stage labels**
    
-   `EEG.VisualHypnogram` is manual scoring in 30-second epochs using the following integers
+   ``EEG.VisualHypnogram`` is manual scoring in 30-second epochs using the following integers
    
    1 equals Wake  
    2 equals REM  
@@ -126,7 +126,7 @@ Curated EEG recordings for validating sleep staging from a three-electrode foreh
    5 equals N3  
    0 equals unknown or movement
    
-   `EEG.SpectralScoring` is spectral staging from the forehead patch. One row per patch channel. One column per 30-second epoch (see publication).
+   ``EEG.SpectralScoring`` is spectral staging from the forehead patch. One row per patch channel. One column per 30-second epoch (see publication).
    
    
    **Alignment policy**

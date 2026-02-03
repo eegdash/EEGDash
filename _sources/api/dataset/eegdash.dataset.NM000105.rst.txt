@@ -204,26 +204,26 @@ About This Dataset
    **Electrode naming**: E0-E15 (physical positions)
    **Reference**: Bipolar (differential sensing)
    **channels.tsv columns**:
-   - `name`: Channel identifier (EMG0-EMG15)
-   - `type`: EMG
-   - `units`: V
-   - `signal_electrode`: Physical electrode name (E0-E15)
-   - `reference`: bipolar
+   - ``name``: Channel identifier (EMG0-EMG15)
+   - ``type``: EMG
+   - ``units``: V
+   - ``signal_electrode``: Physical electrode name (E0-E15)
+   - ``reference``: bipolar
    
    **electrodes.tsv columns**:
-   - `name`: Electrode identifier (E0-E15)
-   - `x`, `y`, `z`: 3D coordinates (percent units, no decimals)
+   - ``name``: Electrode identifier (E0-E15)
+   - ``x``, ``y``, ``z``: 3D coordinates (percent units, no decimals)
    
    **Events**
    
    **events.tsv contains**:
    - **Gesture prompts**: Timestamped prompts for each gesture
-     - `type`: gesture_X (where X is the gesture name)
-     - `latency`: Sample index when gesture was prompted
-     - `gesture_type`: Specific gesture (e.g., "index_pinch", "thumb_swipe_left")
+     - ``type``: gesture_X (where X is the gesture name)
+     - ``latency``: Sample index when gesture was prompted
+     - ``gesture_type``: Specific gesture (e.g., "index_pinch", "thumb_swipe_left")
    - **Stage boundaries**: Recording session phases
-     - `type`: stage_boundary
-     - `stage_name`: Stage identifier
+     - ``type``: stage_boundary
+     - ``stage_name``: Stage identifier
    
    **Total events**: 1916 (1900 gesture prompts + 16 stage boundaries)
    
@@ -386,7 +386,7 @@ About This Dataset
    **Version History**
    
    
-   ****v1.0** (2025-10-01): Initial BIDS conversion**
+   **v1.0 (2025-10-01): Initial BIDS conversion**
    
    **BIDS Version**: 1.11 \| **EMG-BIDS**: BEP-042 \| **Updated**: Oct 1, 2025
 

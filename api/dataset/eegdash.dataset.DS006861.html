@@ -1114,15 +1114,15 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p class="sd-card-text"><strong>Overview</strong></p>
 <p class="sd-card-text">Each participant took part in <strong>two experimental sessions</strong>:</p>
 <ul class="simple">
-<li><p class="sd-card-text">**`ses-1`** — Sham stimulation</p></li>
-<li><p class="sd-card-text">**`ses-2`** — Active stimulation</p></li>
+<li><p class="sd-card-text">**``ses-1``** — Sham stimulation</p></li>
+<li><p class="sd-card-text">**``ses-2``** — Active stimulation</p></li>
 </ul>
 <p class="sd-card-text">The order of sham/active conditions was counterbalanced across participants.</p>
 <p class="sd-card-text"><strong>Participants</strong></p>
 <ul class="simple">
 <li><p class="sd-card-text">**N = 120** right‑handed, neurologically healthy adults with normal or corrected‑to‑normal vision.</p></li>
 </ul>
-<p class="sd-card-text"><em>*Missing data:</em> Participant <cite>sub-005</cite> completed only <cite>ses-1</cite> due to a recording error during <cite>ses-2</cite>.</p>
+<p class="sd-card-text"><em>*Missing data:</em> Participant <code class="docutils literal notranslate"><span class="pre">sub-005</span></code> completed only <code class="docutils literal notranslate"><span class="pre">ses-1</span></code> due to a recording error during <code class="docutils literal notranslate"><span class="pre">ses-2</span></code>.</p>
 <p class="sd-card-text"><strong>Experimental Task</strong></p>
 <p class="sd-card-text">Participants completed 120 trials per session, evenly allocated to a 2 (content: social, non-social) × 3 (regulation requirement: watch-neutral, watch-negative, reappraise-negative) factorial design. On each trial, they viewed a static image for 5 s and either watched or reappraised it as instructed. After each image, participants rated its arousal and then valence on separate 9-point scales.</p>
 <p class="sd-card-text"><strong>tDCS Stimulation</strong></p>
@@ -1160,7 +1160,7 @@ P7, P3, PZ, P4, P8, O1, OZ, O2</p>
 <p class="sd-card-text"><em>*EOG:</em> Horizontal (HEO) and Vertical (VEO) channels were available on the cap but **were not connected** during recording.
 <em>*Physio:</em> ECG and GSR/EDA were recorded via auxiliary channels.</p>
 <p class="sd-card-text"><strong>EEG Preprocessing</strong></p>
-<p class="sd-card-text">All preprocessing was performed in **MATLAB R2020b**using ** EEGLAB 2023.0**and **ERPLAB 9.10**. The full, commented pipeline is provided in <cite>code/Preprocessing_EEG.m</cite>.</p>
+<p class="sd-card-text">All preprocessing was performed in **MATLAB R2020b**using ** EEGLAB 2023.0**and **ERPLAB 9.10**. The full, commented pipeline is provided in <code class="docutils literal notranslate"><span class="pre">code/Preprocessing_EEG.m</span></code>.</p>
 <p class="sd-card-text"><strong>Steps</strong></p>
 <ol class="arabic simple">
 <li><p class="sd-card-text"><em>Band‑pass filter:</em> 0.1–30 Hz (zero‑phase Hamming‑windowed FIR)</p></li>
@@ -1176,16 +1176,16 @@ P7, P3, PZ, P4, P8, O1, OZ, O2</p>
 <li><p class="sd-card-text"><strong>Condition‑wise averaging</strong> using ERPLAB</p></li>
 </ol>
 <p class="sd-card-text"><strong>Derivatives &amp; Ancillary Data</strong></p>
-<p class="sd-card-text"><strong>`derivatives/processed_erps/`</strong></p>
-<p class="sd-card-text">Averaged ERP files (<cite>.erp</cite>) for each participant and session after preprocessing.</p>
-<p class="sd-card-text"><strong>`derivatives/side_effects_blinding_effectiveness/`</strong></p>
+<p class="sd-card-text"><strong>derivatives/processed_erps/</strong></p>
+<p class="sd-card-text">Averaged ERP files (<code class="docutils literal notranslate"><span class="pre">.erp</span></code>) for each participant and session after preprocessing.</p>
+<p class="sd-card-text"><strong>derivatives/sideeffectsblinding_effectiveness/</strong></p>
 <ul class="simple">
-<li><p class="sd-card-text"><cite>side_effects_blinding_effectiveness_english.csv</cite> — _blinding effectiveness and side effects questionnaire</p></li>
-<li><p class="sd-card-text"><cite>side_effects_blinding_effectiveness_data_dictionary.csv</cite> — data dictionary with variable names and value coding</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">side_effects_blinding_effectiveness_english.csv</span></code> — _blinding effectiveness and side effects questionnaire</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">side_effects_blinding_effectiveness_data_dictionary.csv</span></code> — data dictionary with variable names and value coding</p></li>
 </ul>
-<p class="sd-card-text"><strong>`code/`</strong></p>
+<p class="sd-card-text"><strong>code/</strong></p>
 <ul class="simple">
-<li><p class="sd-card-text">MATLAB preprocessing script and documentation: <cite>Preprocessing_EEG.m</cite></p></li>
+<li><p class="sd-card-text">MATLAB preprocessing script and documentation: <code class="docutils literal notranslate"><span class="pre">Preprocessing_EEG.m</span></code></p></li>
 </ul>
 </div>
 </details></section>

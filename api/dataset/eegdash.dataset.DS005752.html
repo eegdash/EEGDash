@@ -1117,7 +1117,7 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <blockquote>
 <div><ol class="arabic simple">
 <li><p class="sd-card-text">769 new participants have been added along with re-evaluation data for 15 participants. Total unique participants count is now 1859.</p></li>
-<li><p class="sd-card-text"><cite>visit</cite> and <cite>age_at_visit</cite> columns added to phenotype files to distinguish between visits and intervals between them.</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">visit</span></code> and <code class="docutils literal notranslate"><span class="pre">age_at_visit</span></code> columns added to phenotype files to distinguish between visits and intervals between them.</p></li>
 <li><p class="sd-card-text">Follow-up online survey data included.</p></li>
 <li><p class="sd-card-text">Replaced Beck Anxiety Inventory (BAI) and Beck Depression Inventory-II (BDI-II) with General Anxiety Disorder-7 (GAD7) and Patient Health Questionnaire 9 (PHQ9) surveys, respectively.</p></li>
 <li><p class="sd-card-text">Discontinued the Perceived Health rating survey.</p></li>
@@ -1218,17 +1218,17 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </pre></div>
 </div>
 <p class="sd-card-text"><strong>Preparation Notes</strong></p>
-<p class="sd-card-text">In many of the Clinical Measures data files, there exist <cite>-999</cite> values.  <cite>-999</cite> means there was no response though a response was possible.  The question may have been skipped over by the participant or the question flow.  <cite>-777</cite> appears in the Edinburgh Handedness Inventory (EHI) as well.  <cite>-777</cite> means there is no data available for a response.  The question was not presented or asked to the participant.</p>
+<p class="sd-card-text">In many of the Clinical Measures data files, there exist <code class="docutils literal notranslate"><span class="pre">-999</span></code> values.  <code class="docutils literal notranslate"><span class="pre">-999</span></code> means there was no response though a response was possible.  The question may have been skipped over by the participant or the question flow.  <code class="docutils literal notranslate"><span class="pre">-777</span></code> appears in the Edinburgh Handedness Inventory (EHI) as well.  <code class="docutils literal notranslate"><span class="pre">-777</span></code> means there is no data available for a response.  The question was not presented or asked to the participant.</p>
 <p class="sd-card-text">The data were prepared using the following tools and filename mappings.</p>
 <p class="sd-card-text"><strong>Clinical Measures Data</strong></p>
-<p class="sd-card-text">The <cite>ctdb_clean_up.ipynb</cite> Jupyter Notebook contains the python functions used to clean and convert the spreadsheet downloaded from CTDB to BIDS-standard TSV files as well as their respective data dictionaries converted to BIDS-standard JSON files.</p>
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">ctdb_clean_up.ipynb</span></code> Jupyter Notebook contains the python functions used to clean and convert the spreadsheet downloaded from CTDB to BIDS-standard TSV files as well as their respective data dictionaries converted to BIDS-standard JSON files.</p>
 <p class="sd-card-text"><strong>Biological and Physiological Measures Data</strong></p>
-<p class="sd-card-text">The <cite>cris_clean_up.ipynb</cite> Jupyter Notebook contains the Python functions used to clean and convert the spreadsheet with clinical measures to BIDS-standard TSV files and their data dictionaries to BIDS-standard JSON files.</p>
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">cris_clean_up.ipynb</span></code> Jupyter Notebook contains the Python functions used to clean and convert the spreadsheet with clinical measures to BIDS-standard TSV files and their data dictionaries to BIDS-standard JSON files.</p>
 <p class="sd-card-text"><strong>BIDS-standard MEG Files</strong></p>
-<p class="sd-card-text">Data collected by the NIMH MEG Core was converted to BIDS-standard files using the MNE BIDS package.  Associated notebooks: <cite>1_mne_bids_extractor.ipynb</cite> &amp; <cite>2_bids_editor.ipynb</cite>.</p>
+<p class="sd-card-text">Data collected by the NIMH MEG Core was converted to BIDS-standard files using the MNE BIDS package.  Associated notebooks: <code class="docutils literal notranslate"><span class="pre">1_mne_bids_extractor.ipynb</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">2_bids_editor.ipynb</span></code>.</p>
 <p class="sd-card-text"><strong>BIDS-standard MRI</strong></p>
-<p class="sd-card-text">We used the <cite>heudiconv</cite> tool to convert MRI DICOM files to BIDS-standard files with the associated script: <cite>heuristic_rvol.py</cite>.  A modified workflow of <cite>pydeface</cite> was used to deface structural scans with the associated notebook: <cite>modified-workflow-pydeface.ipynb</cite></p>
-<p class="sd-card-text">Each participant received either the ADNI3 or the ABCD protocol, not both, during their MRI/MEG visit.  T1w scans with acquisition label <cite>fspgr</cite> are ADNI3 protocol sequence and scans with <cite>mprage</cite> acquisition labels are ABCD protocol sequence.</p>
+<p class="sd-card-text">We used the <code class="docutils literal notranslate"><span class="pre">heudiconv</span></code> tool to convert MRI DICOM files to BIDS-standard files with the associated script: <code class="docutils literal notranslate"><span class="pre">heuristic_rvol.py</span></code>.  A modified workflow of <code class="docutils literal notranslate"><span class="pre">pydeface</span></code> was used to deface structural scans with the associated notebook: <code class="docutils literal notranslate"><span class="pre">modified-workflow-pydeface.ipynb</span></code></p>
+<p class="sd-card-text">Each participant received either the ADNI3 or the ABCD protocol, not both, during their MRI/MEG visit.  T1w scans with acquisition label <code class="docutils literal notranslate"><span class="pre">fspgr</span></code> are ADNI3 protocol sequence and scans with <code class="docutils literal notranslate"><span class="pre">mprage</span></code> acquisition labels are ABCD protocol sequence.</p>
 <p class="sd-card-text"><strong>OpenNeuro BIDS File/Folder Tree</strong></p>
 <p class="sd-card-text">Below is a BIDS-compliant file/folder tree as it appears for subjects on OpenNeuro.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sub-ON&lt;subject&gt;
@@ -1262,26 +1262,26 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </div>
 <p class="sd-card-text">Definitions:</p>
 <ul class="simple">
-<li><p class="sd-card-text"><cite>&lt;subject&gt;</cite> = subject number</p></li>
-<li><p class="sd-card-text"><cite>&lt;taskname&gt;</cite> = task name: <cite>airpuff</cite>, <cite>artifact</cite>, <cite>gonogo</cite>, <cite>haririhammer</cite>, <cite>movie</cite>, <cite>oddball</cite>, <cite>sternberg</cite></p></li>
-<li><p class="sd-card-text"><cite>&lt;desc&gt;</cite> = placeholder for acquisition label for a given suffix</p></li>
-<li><p class="sd-card-text"><cite>&lt;direction&gt;</cite> = flipped, unflipped</p></li>
-<li><p class="sd-card-text"><cite>&lt;index&gt;</cite> = run number/index</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;subject&gt;</span></code> = subject number</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;taskname&gt;</span></code> = task name: <code class="docutils literal notranslate"><span class="pre">airpuff</span></code>, <code class="docutils literal notranslate"><span class="pre">artifact</span></code>, <code class="docutils literal notranslate"><span class="pre">gonogo</span></code>, <code class="docutils literal notranslate"><span class="pre">haririhammer</span></code>, <code class="docutils literal notranslate"><span class="pre">movie</span></code>, <code class="docutils literal notranslate"><span class="pre">oddball</span></code>, <code class="docutils literal notranslate"><span class="pre">sternberg</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;desc&gt;</span></code> = placeholder for acquisition label for a given suffix</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;direction&gt;</span></code> = flipped, unflipped</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;index&gt;</span></code> = run number/index</p></li>
 <li><dl class="simple">
-<dt><cite>&lt;suffix&gt;</cite> = placeholder to indicate the scan type</dt><dd><ul>
-<li><p class="sd-card-text"><cite>T1w</cite>: <cite>&lt;desc&gt;</cite> = <cite>fspgr</cite>, <cite>mprage</cite>, <cite>fse</cite>, <cite>highreshippo</cite></p></li>
-<li><p class="sd-card-text"><cite>T2w</cite>: <cite>&lt;desc&gt;</cite> = <cite>abcdcube</cite>, <cite>cube</cite>, <cite>frfse</cite></p></li>
-<li><p class="sd-card-text"><cite>FLAIR</cite>: <cite>&lt;desc&gt;</cite> = <cite>adni2d</cite>, <cite>2d</cite>, <cite>3d</cite>, <cite>t2</cite></p></li>
-<li><p class="sd-card-text"><cite>epi</cite>: <cite>&lt;desc&gt;</cite> = <cite>dwib1000</cite>, <cite>dwi</cite>, <cite>resting</cite></p></li>
-<li><p class="sd-card-text"><cite>T2star</cite></p></li>
-<li><p class="sd-card-text"><cite>bold</cite></p></li>
-<li><p class="sd-card-text"><cite>meg</cite></p></li>
-<li><p class="sd-card-text"><cite>asl</cite></p></li>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;suffix&gt;</span></code> = placeholder to indicate the scan type</dt><dd><ul>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">T1w</span></code>: <code class="docutils literal notranslate"><span class="pre">&lt;desc&gt;</span></code> = <code class="docutils literal notranslate"><span class="pre">fspgr</span></code>, <code class="docutils literal notranslate"><span class="pre">mprage</span></code>, <code class="docutils literal notranslate"><span class="pre">fse</span></code>, <code class="docutils literal notranslate"><span class="pre">highreshippo</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">T2w</span></code>: <code class="docutils literal notranslate"><span class="pre">&lt;desc&gt;</span></code> = <code class="docutils literal notranslate"><span class="pre">abcdcube</span></code>, <code class="docutils literal notranslate"><span class="pre">cube</span></code>, <code class="docutils literal notranslate"><span class="pre">frfse</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">FLAIR</span></code>: <code class="docutils literal notranslate"><span class="pre">&lt;desc&gt;</span></code> = <code class="docutils literal notranslate"><span class="pre">adni2d</span></code>, <code class="docutils literal notranslate"><span class="pre">2d</span></code>, <code class="docutils literal notranslate"><span class="pre">3d</span></code>, <code class="docutils literal notranslate"><span class="pre">t2</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">epi</span></code>: <code class="docutils literal notranslate"><span class="pre">&lt;desc&gt;</span></code> = <code class="docutils literal notranslate"><span class="pre">dwib1000</span></code>, <code class="docutils literal notranslate"><span class="pre">dwi</span></code>, <code class="docutils literal notranslate"><span class="pre">resting</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">T2star</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bold</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">meg</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">asl</span></code></p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p class="sd-card-text"><cite>&lt;extension&gt;</cite>: indicates meg data files’ type = <cite>acq</cite>, <cite>bak</cite>, <cite>hc</cite>, <cite>hist</cite>, <cite>infods</cite>, <cite>meg4</cite>, <cite>newds</cite>, <cite>res4</cite>, <cite>xml</cite></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">&lt;extension&gt;</span></code>: indicates meg data files’ type = <code class="docutils literal notranslate"><span class="pre">acq</span></code>, <code class="docutils literal notranslate"><span class="pre">bak</span></code>, <code class="docutils literal notranslate"><span class="pre">hc</span></code>, <code class="docutils literal notranslate"><span class="pre">hist</span></code>, <code class="docutils literal notranslate"><span class="pre">infods</span></code>, <code class="docutils literal notranslate"><span class="pre">meg4</span></code>, <code class="docutils literal notranslate"><span class="pre">newds</span></code>, <code class="docutils literal notranslate"><span class="pre">res4</span></code>, <code class="docutils literal notranslate"><span class="pre">xml</span></code></p></li>
 </ul>
 </div>
 </details></section>

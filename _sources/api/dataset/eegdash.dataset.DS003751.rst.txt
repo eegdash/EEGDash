@@ -95,7 +95,7 @@ About This Dataset
 This is the "Emotion" dataset. The Dataset is recorded with naturalistic paradigm
 
 In brief, it contains EEG, ECG and EMG data for 40 subjects emotionally stimulated using naturalistic emotion stimuli. The stimuli are multimedia videos providing context to understand the situated conceptualization of emotions.
-For details, see the `Details about the experiment` section.
+For details, see the ``Details about the experiment`` section.
 
 
 
@@ -109,7 +109,7 @@ For details, see the `Details about the experiment` section.
    This is the "Emotion" dataset. The Dataset is recorded with naturalistic paradigm
    
    In brief, it contains EEG, ECG and EMG data for 40 subjects emotionally stimulated using naturalistic emotion stimuli. The stimuli are multimedia videos providing context to understand the situated conceptualization of emotions.
-   For details, see the `Details about the experiment` section.
+   For details, see the ``Details about the experiment`` section.
    
    
    
@@ -118,7 +118,7 @@ For details, see the `Details about the experiment` section.
    Please cite as follows:
    Sudhakar Mishra and Md. Asif and Uma Shanker Tiwary and Narayanan Srinivasan(2023). Dataset on Emotion with Naturalistic Stimuli (DENS). OpenNeuro. [Dataset] doi: https://doi.org/10.18112/openneuro.ds003751.v1.0.5
    
-   For more information, see the `dataset_description.json` file.
+   For more information, see the ``dataset_description.json`` file.
    
    
    

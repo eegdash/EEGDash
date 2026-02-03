@@ -176,7 +176,7 @@ Please contact the following authors for further information:
    **Details about the experiment**
    
    For a detailed description of the task, see Polonenko & Maddox (2024) and the
-   supplied `task-peaky_pitch_eeg.json` file. The 6 peaky speech conditions
+   supplied ``task-peaky_pitch_eeg.json`` file. The 6 peaky speech conditions
    (2 narrators x 3 f0s) were randomly interleaved for each block of trials
    (i.e., for trial 1, the 6 conditions were randomized) and the story token
    was randomized. This means that the participant would not be able to follow

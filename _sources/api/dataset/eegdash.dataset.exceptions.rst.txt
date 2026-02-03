@@ -1,0 +1,8 @@
+eegdash.dataset.exceptions module
+=================================
+
+.. automodule:: eegdash.dataset.exceptions
+   :members:
+   :noindex:
+   :show-inheritance:
+   :undoc-members:

@@ -125,7 +125,7 @@ This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) dat
    
    This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see https://bids-specification.readthedocs.io/en/stable/ 
    
-   Each patient has their own folder (e.g., `sub-ccepAgeUMCU01` to `sub-ccepAgeUMCU74`) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+   Each patient has their own folder (e.g., ``sub-ccepAgeUMCU01`` to ``sub-ccepAgeUMCU74``) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
    
    Data are logically grouped in the same BIDS session and stored across runs that indicating the day and time point of recording during the monitoring period.
    If extra electrodes were added/removed during this period, the session was divided into different sessions (e.g. ses-1a and ses-1b). 

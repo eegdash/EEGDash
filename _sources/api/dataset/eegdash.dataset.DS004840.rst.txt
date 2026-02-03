@@ -90,7 +90,7 @@ About This Dataset
 ------------------
 
 
-**Dataset of  electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
+**Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
 
 
 
@@ -104,7 +104,7 @@ About This Dataset
    :class-container: sd-shadow-sm
 
    
-   **Dataset of  electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
+   **Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit - README**
    
    
    

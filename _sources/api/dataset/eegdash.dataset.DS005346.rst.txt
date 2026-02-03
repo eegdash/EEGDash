@@ -96,7 +96,7 @@ Thirty participants (17 females, mean age=23.17±2.31 years) were recruited for 
 
 Data from 6 participants in the MEG experiment exhibited distinct PSD patterns that diverged from the other 24 participants (10 females, mean age=22.75±1.94 years; see figure below), we excluded their data from the ISC and regression analysis for MEG data. However, all datasets remain available in the OpenNeuro repository for other researchers’ use. 
 
-!`Power Spectrum Analysis <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`_\_
+`Power Spectrum Analysis `https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`__`_\_
 
 
 
@@ -110,7 +110,7 @@ Data from 6 participants in the MEG experiment exhibited distinct PSD patterns t
    
    Data from 6 participants in the MEG experiment exhibited distinct PSD patterns that diverged from the other 24 participants (10 females, mean age=22.75±1.94 years; see figure below), we excluded their data from the ISC and regression analysis for MEG data. However, all datasets remain available in the OpenNeuro repository for other researchers’ use. 
    
-   !`Power Spectrum Analysis <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`_\_
+   `Power Spectrum Analysis `https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`__`_\_
    
    
    **Experiment Procedure**

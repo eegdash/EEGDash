@@ -125,31 +125,31 @@ This dataset is a Chinese imagined speech dataset with five participants, identi
    **Root Directory**
    
    
-   - `dataset_description.json`
-   - `participants.tsv`
-   - `README`
-   - `derivatives/`
-   - `sub-01/` to `sub-05/`
-   - `textdataset/`
-   - `json/`
+   - ``dataset_description.json``
+   - ``participants.tsv``
+   - ``README``
+   - ``derivatives/``
+   - ``sub-01/`` to ``sub-05/``
+   - ``textdataset/``
+   - ``json/``
    
    
    **Raw Data**
    
    
-   The root directory contains folders `sub-01` to `sub-05` with raw data. Each participant's folder contains 5-6 session folders, corresponding to data collected over 5-6 days.
+   The root directory contains folders ``sub-01`` to ``sub-05`` with raw data. Each participant's folder contains 5-6 session folders, corresponding to data collected over 5-6 days.
    
    
    **Preprocessed Data**
    
    
-   Preprocessed data is stored in the `derivatives` folder in both fif and pkl formats.
+   Preprocessed data is stored in the ``derivatives`` folder in both fif and pkl formats.
    
    
    **Text Data**
    
    
-   The `textdataset` folder and `json` folder contain text data used to stimulate the participants.
+   The ``textdataset`` folder and ``json`` folder contain text data used to stimulate the participants.
    
    
    **File Structure**

@@ -147,10 +147,10 @@ This folder contains intracranial EEG (iEEG) data from **7 participants** underg
    
    **Raw Data**
    
-   The raw data are stored in **BrainVision format** (`vhdr`, `vmrk`, and `eeg` files). You can read these files into memory using the following tools:
+   The raw data are stored in **BrainVision format** (``vhdr``, ``vmrk``, and ``eeg`` files). You can read these files into memory using the following tools:
    
    - *MATLAB:* `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`_\_  
-   - *Python:* ``pybv` package <https://github.com/bids-standard/pybv>`_\_  
+   - *Python:* ``pybv`` package <https://github.com/bids-standard/pybv>\`_\_  
    
    
    **Electrode Coordinates**

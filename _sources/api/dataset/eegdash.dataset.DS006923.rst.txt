@@ -164,12 +164,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    **Core Files**
    
    
-   - `dataset_description.json`: General information about the study
-   - `participants.json`: Demographic and group assignment data
-   - `participants.tsv`: Demographic and group assignment data in table format
+   - ``dataset_description.json``: General information about the study
+   - ``participants.json``: Demographic and group assignment data
+   - ``participants.tsv``: Demographic and group assignment data in table format
    
    
-   **Features Data (EEG_JO_Dataset/code)**
+   **Features Data (EEGJODataset/code)**
    
    
    
@@ -177,7 +177,7 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    
    
    Files are named using the pattern:
-   `FR_Dats_band_{BAND}_EP_{EYESTATE}_{EPOCH#}_can_{CHANNEL}.xlsx`
+   ``FR_Dats_band_{BAND}_EP_{EYESTATE}_{EPOCH#}_can_{CHANNEL}.xlsx``
    
    .. code-block:: text
    
@@ -188,8 +188,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
       | **EP_{EYESTATE}_** | `EP_C_`     | Eye state during epoch: `C` = Eyes closed; `O` = Eyes open                |
       | **{EPOCH#}**       | `1`         | Epoch number (1 or 2) two epochs per eye state                            |
       | **can_**           | Fixed       | "Channel" prefix                                                          |
-      | **{CHANNEL}**      | `A1`        | Electrode position (ABCD system): First letter = A • B • C • D <br>- Number = Electrode ID (1-32)                                                                                   |
    
+   .. code-block:: text
+   
+      | **{CHANNEL}**      | `A1`        | Electrode position (ABCD system): First letter = A • B • C • D 
+   
+   - Number = Electrode ID (1-32)                                                                                   |
    
    
    **File Contents:**
@@ -209,17 +213,17 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    **Examples:**
    
    
-   1. `FR_Dats_band_ALFA_EP_C_1_can_A1.xlsx`
+   1. ``FR_Dats_band_ALFA_EP_C_1_can_A1.xlsx``
       - Alpha band features
       - First closed-eyes epoch
       - Channel A1 (Frontal electrode 1)
    
-   2. `FR_Dats_band_THETA_EP_O_2_can_C15.xlsx`
+   2. ``FR_Dats_band_THETA_EP_O_2_can_C15.xlsx``
       - Theta band features
       - Second open-eyes epoch
       - Channel C15 (Posterior electrode 15)
    
-   3. `FR_Dats_band_BETA_EP_C_2_can_B7.xlsx`
+   3. ``FR_Dats_band_BETA_EP_C_2_can_B7.xlsx``
       - Beta band features
       - Second closed-eyes epoch
       - Channel B7 (Central electrode 7)
@@ -229,8 +233,8 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    
    
    - 4 epochs per subject:
-     - 2 closed-eyes: `EP_C_1`, `EP_C_2`
-     - 2 open-eyes: `EP_O_1`, `EP_O_2`
+     - 2 closed-eyes: ``EP_C_1``, ``EP_C_2``
+     - 2 open-eyes: ``EP_O_1``, ``EP_O_2``
    - 128 channels (A1-D32)
    - 4 frequency bands
    - Total files per subject: 4 epochs × 128 channels × 4 bands = 2,048 files
@@ -276,7 +280,16 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
       | Denomination          | Value           | Description                                                      |
       |-----------------------|-----------------|------------------------------------------------------------------|
       | `sub-`                | Fixed      	    | Subject prefix                                                   |
-      | `{Subject ID}`        | Fixed           | **Unique identifier**:<br>- First digit = group (`1`=sg, `1`=sg2, `2`=cg) <br>- Last 3 digits = subject ID                                                                     |
+   
+   .. code-block:: text
+   
+      | `{Subject ID}`        | Fixed           | **Unique identifier**:
+   
+   - First digit = group (``1``=sg, ``1``=sg2, ``2``=cg) 
+   - Last 3 digits = subject ID                                                                     |
+   
+   .. code-block:: text
+   
       | `{Group}`             | `cg`/`sg`/`sg2` | **Group**: `cg`=control, `sg`=study group 1, `sg2`=study group 2 |
       | `{Task Name}`         | `restingstate`  | **Task name** (resting state)                                    |
       | `acq-` `desc-`        | `acq-`/`desc-`  | **Label**: `acq-` = acquisition, `desc-` = description           |
@@ -289,8 +302,8 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    **Examples**
    
    
-   1. `sub-1005sg_task-restingstate_acq-epochs_eeg.set` = Epochs EEG for **study group 1** subject 005 (full ID 1005)
-   2. `sub-1005sg_task-restingstate_desc-preprocessing_eeg.set` = Preprocessed EEG for **study group 1** subject 005 (full ID 1005)
+   1. ``sub-1005sg_task-restingstate_acq-epochs_eeg.set`` = Epochs EEG for **study group 1** subject 005 (full ID 1005)
+   2. ``sub-1005sg_task-restingstate_desc-preprocessing_eeg.set`` = Preprocessed EEG for **study group 1** subject 005 (full ID 1005)
    
    
    **Methods**

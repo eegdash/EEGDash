@@ -95,7 +95,7 @@ About This Dataset
 
 This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
 
-All preprocessing and analysis code is deposited in the `code` directory. The entire MATLAB pipeline can be reproduced by executing the `run_pipeline.m` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt `def_local.m` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the `stat_analysis.R` script.
+All preprocessing and analysis code is deposited in the ``code`` directory. The entire MATLAB pipeline can be reproduced by executing the ``run_pipeline.m`` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt ``def_local.m`` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the ``stat_analysis.R`` script.
 
 See below for software details.
 
@@ -109,7 +109,7 @@ See below for software details.
    
    This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).
    
-   All preprocessing and analysis code is deposited in the `code` directory. The entire MATLAB pipeline can be reproduced by executing the `run_pipeline.m` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt `def_local.m` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the `stat_analysis.R` script.
+   All preprocessing and analysis code is deposited in the ``code`` directory. The entire MATLAB pipeline can be reproduced by executing the ``run_pipeline.m`` script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt ``def_local.m`` to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the ``stat_analysis.R`` script.
    
    See below for software details.
    
@@ -118,13 +118,13 @@ See below for software details.
    
    
    In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.
-   For more information, see the `dataset_description.json` file.
+   For more information, see the ``dataset_description.json`` file.
    
    
    **License**
    
    
-   ODC Open Database License (ODbL). For more information, see the `LICENCE` file.
+   ODC Open Database License (ODbL). For more information, see the ``LICENCE`` file.
    
    
    **Format**
@@ -141,7 +141,8 @@ See below for software details.
    
    An important BIDS definition to consider is the "Inheritance Principle" (see 3.5 in the BIDS specification: http://bids.neuroimaging.io/bids_spec.pdf), which states:
    
-   > Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.
+      Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.
+   
    
    
    **Details about the experiment**

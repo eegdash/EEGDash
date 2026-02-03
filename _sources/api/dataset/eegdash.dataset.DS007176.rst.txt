@@ -126,17 +126,17 @@ of 7.2 months between sessions. The dataset includes raw EEG data and relevant m
    
    **Data Structure**
    
-   - `dataset_description.json` : Dataset metadata and authorship information.
-   - `participants.tsv` : Participant demographics and IDs.
-   - `sub-XX/eeg/` : Folder for each participant containing EEG data files.
+   - ``dataset_description.json`` : Dataset metadata and authorship information.
+   - ``participants.tsv`` : Participant demographics and IDs.
+   - ``sub-XX/eeg/`` : Folder for each participant containing EEG data files.
    
    
    **EEG Data**
    
    Each participant folder contains EEG recordings in BIDS-compliant format. Data 
    include:
-   - Raw EEG signals (`.eeg`, `.vhdr`, `.vmrk`)
-   - Associated metadata files (`.json`) describing recording parameters and task information.
+   - Raw EEG signals (``.eeg``, ``.vhdr``, ``.vmrk``)
+   - Associated metadata files (``.json``) describing recording parameters and task information.
    
    
    **Usage Notes**

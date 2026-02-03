@@ -1124,23 +1124,25 @@ Scientific Reports 11, 18186 (2021).
 <p class="sd-card-text"><strong>Citing this dataset</strong></p>
 <p class="sd-card-text">Please cite as follows:</p>
 <p class="sd-card-text">Gramann, K., Hohlefeld, F.U., Gehrke, L. et al. Human cortical dynamics during full-body heading changes. Sci Rep 11, 18186 (2021). <a class="reference external" href="https://doi.org/10.1038/s41598-021-97749-8">https://doi.org/10.1038/s41598-021-97749-8</a>
-For more information, see the <cite>dataset_description.json</cite> file.</p>
+For more information, see the <code class="docutils literal notranslate"><span class="pre">dataset_description.json</span></code> file.</p>
 <p class="sd-card-text"><strong>License</strong></p>
 <p class="sd-card-text">This motion_spotrotation dataset is made available under the Creative Commons CC0 license.
 Information on CC0 can be found here : <a class="reference external" href="https://creativecommons.org/share-your-work/public-domain/cc0/">https://creativecommons.org/share-your-work/public-domain/cc0/</a></p>
 <p class="sd-card-text"><strong>Format</strong></p>
 <p class="sd-card-text">The dataset is formatted according to the Brain Imaging Data Structure. See the
-<cite>dataset_description.json</cite> file for the specific version used.</p>
+<code class="docutils literal notranslate"><span class="pre">dataset_description.json</span></code> file for the specific version used.</p>
 <p class="sd-card-text">Generally, you can find data in the .tsv files and descriptions in the
 accompanying .json files.</p>
 <p class="sd-card-text">An important BIDS definition to consider is the “Inheritance Principle”, which
 is described in the BIDS specification under the following link:</p>
 <p class="sd-card-text"><a class="reference external" href="https://bids-specification.rtfd.io/en/stable/02-common-principles.html#the-inheritance-principle">https://bids-specification.rtfd.io/en/stable/02-common-principles.html#the-inheritance-principle</a></p>
 <p class="sd-card-text">The section states that:</p>
-<p class="sd-card-text">&gt; Any metadata file (such as .json, .bvec or .tsv) may be defined at any directory level,
-&gt; but no more than one applicable file may be defined at a given level […]
-&gt; The values from the top level are inherited by all lower levels unless
-&gt; they are overridden by a file at the lower level.</p>
+<blockquote>
+<div><p class="sd-card-text">Any metadata file (such as .json, .bvec or .tsv) may be defined at any directory level,
+but no more than one applicable file may be defined at a given level […]
+The values from the top level are inherited by all lower levels unless
+they are overridden by a file at the lower level.</p>
+</div></blockquote>
 <p class="sd-card-text"><strong>Details about the experiment</strong></p>
 <p class="sd-card-text">For a detailed description of the task, see Gramann et al. (2021).
 What follows is a brief summary.</p>
@@ -1221,11 +1223,11 @@ to form rigid body parts of feet, hip, and shoulders, enabling tracking with
 six degrees of freedom (x, y, and z position and roll, yaw, and pitch orientation) per body part.
 Head motion capture data (position and orientation) was acquired using the HTC Lighthouse tracking system
 with 90Hz sampling rate, since it was also used for the positional tracking of the virtual reality view.</p>
-<p class="sd-card-text">The original data was recorded in <cite>.xdf</cite> format using labstreaminglayer
-(<a class="github reference external" href="https://github.com/sccn/labstreaminglayer">sccn/labstreaminglayer</a>). It is stored in the <cite>/sourcedata</cite>
+<p class="sd-card-text">The original data was recorded in <code class="docutils literal notranslate"><span class="pre">.xdf</span></code> format using labstreaminglayer
+(<a class="github reference external" href="https://github.com/sccn/labstreaminglayer">sccn/labstreaminglayer</a>). It is stored in the <code class="docutils literal notranslate"><span class="pre">/sourcedata</span></code>
 directory. To comply with the BIDS format, the .xdf format was converted to
-BrainVision format (see the <cite>.eeg</cite> file for binary eeg data, the <cite>.vhdr</cite> as a
-text header filer containing meta data, and the <cite>.vmrk</cite> as a text file storing
+BrainVision format (see the <code class="docutils literal notranslate"><span class="pre">.eeg</span></code> file for binary eeg data, the <code class="docutils literal notranslate"><span class="pre">.vhdr</span></code> as a
+text header filer containing meta data, and the <code class="docutils literal notranslate"><span class="pre">.vmrk</span></code> as a text file storing
 the eeg markers).</p>
 </div>
 </details></section>

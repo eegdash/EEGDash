@@ -244,7 +244,7 @@ About This Dataset
    **Version History**
    
    
-   ****v1.0** (2025-10-01): Initial BIDS conversion**
+   **v1.0 (2025-10-01): Initial BIDS conversion**
    
    **BIDS Version**: 1.11 \| **EMG-BIDS**: BEP-042 \| **Updated**: Oct 1, 2025
 

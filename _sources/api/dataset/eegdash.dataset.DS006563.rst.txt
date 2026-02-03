@@ -107,7 +107,7 @@ Continuous EEG from 12 with ICA weights.
 
 **Expert-annotated Independent Components (ICs)**
 
-The expert-annotated labels of the ICs can be found in the field `expert_ica_labels`, and the class names in `ica_classes`. `expert_ica_labels(i)` is the Matlab-index of `ica_classes` for the i-th IC. ICs can be computed using the fields `data`, `icasphere`, and `icaweights` (e.g., `icaact = icaweights *icasphere* data`).
+The expert-annotated labels of the ICs can be found in the field ``expert_ica_labels``, and the class names in ``ica_classes``. ``expert_ica_labels(i)`` is the Matlab-index of ``ica_classes`` for the i-th IC. ICs can be computed using the fields ``data``, ``icasphere``, and ``icaweights`` (e.g., ``icaact = icaweights * icasphere * data``).
 
 
 **Details related to access to the data**

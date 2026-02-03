@@ -201,38 +201,38 @@ About This Dataset
    **Electrode naming**: E0-E15 (reused for left and right wrists)
    **Reference**: Bipolar (differential sensing)
    **channels.tsv columns**:
-   - `name`: Channel identifier (EMG0-EMG31)
-   - `type`: EMG
-   - `units`: V
-   - `signal_electrode`: Physical electrode name (E0-E15)
-   - `reference`: bipolar
-   - `group`: left or right (wrist)
-   - `target_muscle`: forearm muscles
+   - ``name``: Channel identifier (EMG0-EMG31)
+   - ``type``: EMG
+   - ``units``: V
+   - ``signal_electrode``: Physical electrode name (E0-E15)
+   - ``reference``: bipolar
+   - ``group``: left or right (wrist)
+   - ``target_muscle``: forearm muscles
    
    **electrodes.tsv columns**:
-   - `name`: Electrode identifier (E0-E15)
-   - `x`, `y`, `z`: 3D coordinates (percent units, no decimals)
-   - `coordinate_system`: leftForearm or rightForearm
-   - `group`: left or right
+   - ``name``: Electrode identifier (E0-E15)
+   - ``x``, ``y``, ``z``: 3D coordinates (percent units, no decimals)
+   - ``coordinate_system``: leftForearm or rightForearm
+   - ``group``: left or right
    
    **Events**
    
    **events.tsv contains**:
    - **Keystroke events**: Individual key-press and key-release
-     - `type`: keystroke_X (where X is the key character)
-     - `latency`: Sample index of keystroke
-     - `duration`: Samples from press to release
-     - `key`: Character typed
+     - ``type``: keystroke_X (where X is the key character)
+     - ``latency``: Sample index of keystroke
+     - ``duration``: Samples from press to release
+     - ``key``: Character typed
    - **Prompt events**: Text prompts shown to participant
-     - `type`: prompt
-     - `prompt_text`: Displayed text
+     - ``type``: prompt
+     - ``prompt_text``: Displayed text
    
    **Total keystrokes**: 5,262,671 across all sessions
    
    **Coordinate Systems**
    
    **Two separate coordinate systems** (space entities):
-   **Left Forearm** (`space-leftForearm_coordsystem.json`):
+   **Left Forearm** (``space-leftForearm_coordsystem.json``):
    
    .. code-block:: text
    
@@ -243,7 +243,7 @@ About This Dataset
       Z: Midpoint RSP-USP → Lateral Humeral Epicondyle
       
    
-   **Right Forearm** (`space-rightForearm_coordsystem.json`):
+   **Right Forearm** (``space-rightForearm_coordsystem.json``):
    
    .. code-block:: text
    
@@ -402,7 +402,7 @@ About This Dataset
    **Version History**
    
    
-   ****v1.0** (2025-10-01): Initial BIDS conversion**
+   **v1.0 (2025-10-01): Initial BIDS conversion**
    
    **BIDS Version**: 1.11 \| **EMG-BIDS**: BEP-042 \| **Updated**: Oct 1, 2025
 

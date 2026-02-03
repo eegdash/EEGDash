@@ -108,7 +108,7 @@ Cristina Gil. (2024). crisglav/discover-eeg: 2.0.0 (2.0.0). Zenodo. https://doi.
 **Phenotype data note**
 
 
-Session-level questionnaire data are stored in `phenotype/pain-questionnaire_sessions.tsv` with descriptions of the corresponding questionnaire items in `phenotype/pain-questionnaire_sessions.json`. The phenotype files are currently ignored by the BIDS Validator due to incomplete support for phenotype indexing across multiple sessions.
+Session-level questionnaire data are stored in ``phenotype/pain-questionnaire_sessions.tsv`` with descriptions of the corresponding questionnaire items in ``phenotype/pain-questionnaire_sessions.json``. The phenotype files are currently ignored by the BIDS Validator due to incomplete support for phenotype indexing across multiple sessions.
 
 
 **License**

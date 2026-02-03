@@ -167,30 +167,30 @@ This dataset contains EEG data from a study investigating the effects of propofo
    **File Naming Convention**
    
    EEG files are named in the format:
-   `sub-<subject_id>_task-<task_name>_acq-<acquisition>_run-<run_number>.<extension>`
+   ``sub-<subject_id>_task-<task_name>_acq-<acquisition>_run-<run_number>.<extension>``
    
    
    **Example Filenames**
    
-   - `sub-1016_task-awake_acq-EC_channels.tsv`
-   - `sub-1016_task-sed_acq-rest_run-1_eeg.eeg`
+   - ``sub-1016_task-awake_acq-EC_channels.tsv``
+   - ``sub-1016_task-sed_acq-rest_run-1_eeg.eeg``
    
    
    **Filename Components**
    
-   - **sub-<subject_id>**: Identifier for the subject (e.g., `sub-1016`).
+   - **sub-<subject_id>**: Identifier for the subject (e.g., ``sub-1016``).
    - **task-<task_name>**: Indicates the task condition:
-     - `awake`: Wakefulness
-     - `sed`: Sedation condition
-     - `sed2`: One-minute resting EEG recorded just before an awakening
+     - ``awake``: Wakefulness
+     - ``sed``: Sedation condition
+     - ``sed2``: One-minute resting EEG recorded just before an awakening
    - **acq-<acquisition>**: Type of acquisition:
-     - `EC`: Eyes Closed (during wakefulness)
-     - `EO`: Eyes Open (during wakefulness)
-     - `tms`: Session with Transcranial Magnetic Stimulation
-     - `rest`: Rest condition (during sedation)
+     - ``EC``: Eyes Closed (during wakefulness)
+     - ``EO``: Eyes Open (during wakefulness)
+     - ``tms``: Session with Transcranial Magnetic Stimulation
+     - ``rest``: Rest condition (during sedation)
    - **run-<run_number>**: Specifies the run number for the data collection:
-     - `run-1`, `run-2`, `run-3` (indicating different awakenings in sedation)
-   - \*\*.<extension>**: File extension indicating the type of file (e.g., `.eeg`, `.vhdr`, `.vmrk`, etc.).
+     - ``run-1``, ``run-2``, ``run-3`` (indicating different awakenings in sedation)
+   - \*\*.<extension>**: File extension indicating the type of file (e.g., ``.eeg``, ``.vhdr``, ``.vmrk``, etc.).
    
    
    **File Types**

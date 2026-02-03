@@ -1100,17 +1100,27 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </section>
 <section id="about-this-dataset">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
-<p>&gt; Introduction
-This experiment was designed to study the effects of different sensory modalities (auditory, visual, and audio-visual) on brain entrainment. The EEG data was collected from a young healthy volunteer (23 years old male). Recently, gamma entrainment based on individual (auditory or visual) sensory stimulation as well as simultaneous auditory and visual stimulation have been proposed and shown effective in improving several symptoms of Alzheimer’s Diseases (AD) in mice and humans. The aim of this study is to investigate the effect of different modalities in producing synchronized brain oscillations. The task is composed of three epochs of auditory, visual, and audio-visual stimulations respectively, each lasting for 40sec in one session.</p>
-<p>&gt; Auditory stimulation
-Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant’s ears at a distance of 50cm. The sound intensity was set to around -40dB. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for him. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of 40sec of stimulus.</p>
-<p>&gt; Visual stimulation
-The visual stimulant was a 20Hz flickering white light produced by an array of LEDs and reflected from a white wall at 50cm distance in front of the participant (open eyes) with 50% On cycles (duty cycle = 50%) flickering for 40sec. Due to the presence of harmonic frequencies in the pulse train of the stimulus, the 20Hz stimulant is able to drive 40Hz oscillations in the brain.</p>
-<p>&gt; EEG recording and preprocessing
-The EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 500Hz, and the impedance of the electrodes was kept under 20kOhm.
+<blockquote>
+<div><p>Introduction</p>
+</div></blockquote>
+<p>This experiment was designed to study the effects of different sensory modalities (auditory, visual, and audio-visual) on brain entrainment. The EEG data was collected from a young healthy volunteer (23 years old male). Recently, gamma entrainment based on individual (auditory or visual) sensory stimulation as well as simultaneous auditory and visual stimulation have been proposed and shown effective in improving several symptoms of Alzheimer’s Diseases (AD) in mice and humans. The aim of this study is to investigate the effect of different modalities in producing synchronized brain oscillations. The task is composed of three epochs of auditory, visual, and audio-visual stimulations respectively, each lasting for 40sec in one session.</p>
+<blockquote>
+<div><p>Auditory stimulation</p>
+</div></blockquote>
+<p>Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant’s ears at a distance of 50cm. The sound intensity was set to around -40dB. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for him. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of 40sec of stimulus.</p>
+<blockquote>
+<div><p>Visual stimulation</p>
+</div></blockquote>
+<p>The visual stimulant was a 20Hz flickering white light produced by an array of LEDs and reflected from a white wall at 50cm distance in front of the participant (open eyes) with 50% On cycles (duty cycle = 50%) flickering for 40sec. Due to the presence of harmonic frequencies in the pulse train of the stimulus, the 20Hz stimulant is able to drive 40Hz oscillations in the brain.</p>
+<blockquote>
+<div><p>EEG recording and preprocessing</p>
+</div></blockquote>
+<p>The EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 500Hz, and the impedance of the electrodes was kept under 20kOhm.
 Data from all three epochs were preprocessed identically following Makoto’s preprocessing pipeline: Highpass filtering above 1Hz; removal of the line noise; rejecting potential bad channels; interpolating rejected channels; re-referencing data to the average; Artifact Subspace Reconstruction (ASR); re-referencing data to the average again; estimating the brain source activity using independent component analysis (ICA); dipole fitting; rejecting bad dipoles (sources) for further cleaning the data. These preprocessing steps were performed using EEGLab MATLAB toolbox.</p>
-<p>&gt; Instructions
-During the experiment, participant was seated comfortably with open eyes in a quiet room. He was instructed to relax his body to avoid muscle artifacts and move his head as little as possible. The participant was free to take a rest after each epoch but the EEG cap was not taken off.</p>
+<blockquote>
+<div><p>Instructions</p>
+</div></blockquote>
+<p>During the experiment, participant was seated comfortably with open eyes in a quiet room. He was instructed to relax his body to avoid muscle artifacts and move his head as little as possible. The participant was free to take a rest after each epoch but the EEG cap was not taken off.</p>
 </section>
 <section id="dataset-information">
 <h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>

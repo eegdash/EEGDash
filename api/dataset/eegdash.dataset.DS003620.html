@@ -1102,20 +1102,20 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
 <p><strong>Overview</strong></p>
 <p>This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).</p>
-<p>All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.</p>
+<p>All preprocessing and analysis code is deposited in the <code class="docutils literal notranslate"><span class="pre">code</span></code> directory. The entire MATLAB pipeline can be reproduced by executing the <code class="docutils literal notranslate"><span class="pre">run_pipeline.m</span></code> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <code class="docutils literal notranslate"><span class="pre">def_local.m</span></code> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <code class="docutils literal notranslate"><span class="pre">stat_analysis.R</span></code> script.</p>
 <p>See below for software details.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Overview</strong></p>
 <p class="sd-card-text">This dataset contains raw and pre-processed EEG data from a mobile EEG study investigating the effects of cognitive task demands, motor demands, and environmental complexity on attentional processing (see below for experiment details).</p>
-<p class="sd-card-text">All preprocessing and analysis code is deposited in the <cite>code</cite> directory. The entire MATLAB pipeline can be reproduced by executing the <cite>run_pipeline.m</cite> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <cite>def_local.m</cite> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <cite>stat_analysis.R</cite> script.</p>
+<p class="sd-card-text">All preprocessing and analysis code is deposited in the <code class="docutils literal notranslate"><span class="pre">code</span></code> directory. The entire MATLAB pipeline can be reproduced by executing the <code class="docutils literal notranslate"><span class="pre">run_pipeline.m</span></code> script. In order to run these scripts, you will need to ensure you have the required MATLAB toolboxes and R packages on your system. You will also need to adapt <code class="docutils literal notranslate"><span class="pre">def_local.m</span></code> to specify local paths to MATLAB and EEGLAB. Descriptive statistics and mixed-effects models can be reproduced in R by running the <code class="docutils literal notranslate"><span class="pre">stat_analysis.R</span></code> script.</p>
 <p class="sd-card-text">See below for software details.</p>
 <p class="sd-card-text"><strong>Citing this dataset</strong></p>
 <p class="sd-card-text">In addition to citing this dataset, please cite the original manuscript reporting data collection and experimental procedures.
-For more information, see the <cite>dataset_description.json</cite> file.</p>
+For more information, see the <code class="docutils literal notranslate"><span class="pre">dataset_description.json</span></code> file.</p>
 <p class="sd-card-text"><strong>License</strong></p>
-<p class="sd-card-text">ODC Open Database License (ODbL). For more information, see the <cite>LICENCE</cite> file.</p>
+<p class="sd-card-text">ODC Open Database License (ODbL). For more information, see the <code class="docutils literal notranslate"><span class="pre">LICENCE</span></code> file.</p>
 <p class="sd-card-text"><strong>Format</strong></p>
 <p class="sd-card-text">Dataset is formatted according to the EEG-BIDS extension (Pernet et al., 2019) and the BIDS extension proposal for common electrophysiological derivatives (BEP021) v0.0.1, which can be found here:</p>
 <p class="sd-card-text"><a class="reference external" href="https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6">https://docs.google.com/document/d/1PmcVs7vg7Th-cGC-UrX8rAhKUHIzOI-uIOh69_mvdlw/edit#heading=h.mqkmyp254xh6</a></p>
@@ -1123,7 +1123,9 @@ For more information, see the <cite>dataset_description.json</cite> file.</p>
 <p class="sd-card-text">Generally, you can find data in the .tsv files and descriptions in the
 accompanying .json files.</p>
 <p class="sd-card-text">An important BIDS definition to consider is the “Inheritance Principle” (see 3.5 in the BIDS specification: <a class="reference external" href="http://bids.neuroimaging.io/bids_spec.pdf">http://bids.neuroimaging.io/bids_spec.pdf</a>), which states:</p>
-<p class="sd-card-text">&gt; Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.</p>
+<blockquote>
+<div><p class="sd-card-text">Any metadata file (.json, .bvec, .tsv, etc.) may be defined at any directory level. The values from the top level are inherited by all lower levels unless they are overridden by a file at the lower level.</p>
+</div></blockquote>
 <p class="sd-card-text"><strong>Details about the experiment</strong></p>
 <p class="sd-card-text">Forty-four healthy adults aged 18-40 performed an oddball task involving complex tone (piano and horn) stimuli in three settings:
 (1) sitting in a quiet room in the lab (LAB);

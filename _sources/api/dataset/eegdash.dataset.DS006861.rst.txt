@@ -119,8 +119,8 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    
    Each participant took part in **two experimental sessions**:
    
-   * \**`ses-1`** — Sham stimulation
-   * \**`ses-2`** — Active stimulation
+   * \**``ses-1``** — Sham stimulation
+   * \**``ses-2``** — Active stimulation
    
    The order of sham/active conditions was counterbalanced across participants. 
    
@@ -131,7 +131,7 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    
    * \**N = 120** right‑handed, neurologically healthy adults with normal or corrected‑to‑normal vision.
    
-   *\*Missing data:* Participant `sub-005` completed only `ses-1` due to a recording error during `ses-2`.
+   *\*Missing data:* Participant ``sub-005`` completed only ``ses-1`` due to a recording error during ``ses-2``.
    
    
    **Experimental Task**
@@ -201,7 +201,7 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    **EEG Preprocessing**
    
    
-   All preprocessing was performed in \**MATLAB R2020b**using \** EEGLAB 2023.0**and \**ERPLAB 9.10*\*. The full, commented pipeline is provided in `code/Preprocessing_EEG.m`.
+   All preprocessing was performed in \**MATLAB R2020b**using \** EEGLAB 2023.0**and \**ERPLAB 9.10*\*. The full, commented pipeline is provided in ``code/Preprocessing_EEG.m``.
    
    
    **Steps**
@@ -225,23 +225,23 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    
    
    
-   **`derivatives/processed_erps/`**
+   **derivatives/processed_erps/**
    
    
-   Averaged ERP files (`.erp`) for each participant and session after preprocessing.
+   Averaged ERP files (``.erp``) for each participant and session after preprocessing.
    
    
-   **`derivatives/side_effects_blinding_effectiveness/`**
+   **derivatives/sideeffectsblinding_effectiveness/**
    
    
-   * `side_effects_blinding_effectiveness_english.csv` — _blinding effectiveness and side effects questionnaire
-   * `side_effects_blinding_effectiveness_data_dictionary.csv` — data dictionary with variable names and value coding
+   * ``side_effects_blinding_effectiveness_english.csv`` — _blinding effectiveness and side effects questionnaire
+   * ``side_effects_blinding_effectiveness_data_dictionary.csv`` — data dictionary with variable names and value coding
    
    
-   **`code/`**
+   **code/**
    
    
-   * MATLAB preprocessing script and documentation: `Preprocessing_EEG.m`
+   * MATLAB preprocessing script and documentation: ``Preprocessing_EEG.m``
    
 
 

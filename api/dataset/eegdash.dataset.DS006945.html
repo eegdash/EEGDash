@@ -1124,7 +1124,7 @@ This dataset includes multimodal neuroimaging recordings from five participants 
 - Electrode locations are provided in EEGLAB format, with the actual digitized positions captured using the FASTRAK® system (Polhemus, Colchester, VT, USA).
 - 59 scalp channels + 4 EOG channels + 1 ECG channel</p>
 <p class="sd-card-text">Stimuli:
-- A video stimulus (<cite>stimuli/walking_exoskeleton_video.mp4</cite>) was presented during walking tasks.
+- A video stimulus (<code class="docutils literal notranslate"><span class="pre">stimuli/walking_exoskeleton_video.mp4</span></code>) was presented during walking tasks.
 - The video is referenced in the respective JSON sidecars for both fMRI and EEG tasks.</p>
 <p class="sd-card-text">Participants:
 Five healthy adults out of seven participated in the EEG‑controlled exoskeleton experiments.
@@ -1266,7 +1266,7 @@ Participants S6 and S7 did not undergo MRI scanning due to a pause in data colle
 </pre></div>
 </div>
 <p class="sd-card-text"><strong>Validation Data</strong></p>
-<p class="sd-card-text">A validation file (<cite>derivatives/MRI_DataValidation.xls</cite>) is provided to summarize dataset completeness and quality checks.</p>
+<p class="sd-card-text">A validation file (<code class="docutils literal notranslate"><span class="pre">derivatives/MRI_DataValidation.xls</span></code>) is provided to summarize dataset completeness and quality checks.</p>
 <ul class="simple">
 <li><p class="sd-card-text"><strong>Sheet: Files</strong>
 Lists presence/absence of EEG, MRI, and SPM outputs across subjects (S1–S5).
@@ -1280,7 +1280,7 @@ Provides task durations (minutes) for baseline, walking1, and walking2 EEG recor
 <ul class="simple">
 <li><p class="sd-card-text">Raw data (anat, func, eeg, dwi) are stored under each subject (sub-XX/ses-YY).</p></li>
 <li><p class="sd-card-text">Derivatives (SPM statistical maps, preprocessed outputs, validation files) are stored separately under derivatives/sub-XX/ses-YY.</p></li>
-<li><p class="sd-card-text">Stimuli are stored in the top-level <cite>/stimuli/</cite> folder and referenced in JSON sidecars.</p></li>
+<li><p class="sd-card-text">Stimuli are stored in the top-level <code class="docutils literal notranslate"><span class="pre">/stimuli/</span></code> folder and referenced in JSON sidecars.</p></li>
 <li><p class="sd-card-text">Naming conventions follow BIDS entities:
 - sub-&lt;label&gt; : subject identifier
 - ses-&lt;label&gt; : session identifier

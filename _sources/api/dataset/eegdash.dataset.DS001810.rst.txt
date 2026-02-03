@@ -180,8 +180,9 @@ Both lab visits were about one week apart. During each visit, three EEG files we
    
    Was unable to create BrainVision format data for sub-07/cathodal-post; fieldtrip crashed on the .bdf file in sourcedata:
    
-   > Error in read_biosemi_bdf>readLowLevel (line 274)
-   >   buf = read_24bit(filename, offset, numwords);
+      Error in read_biosemi_bdf>readLowLevel (line 274)
+        buf = read_24bit(filename, offset, numwords);
+   
    
    The .bdf seems to be read fine by EEGLAB, so still included it in case this can be solved.
 

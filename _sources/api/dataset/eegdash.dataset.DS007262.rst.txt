@@ -129,7 +129,7 @@ This dataset was generated from LSL/XDF recordings. Converted to bids with instr
    
    Protocol summary
    - Arithmetic task difficulty was defined using Q-value ranges and randomized order across trials.
-   - Task events encode difficulty in `trial_type` and `difficulty_range` (e.g.,baseline, 0.6-1.5, 1.5-2.4, ..., 6.0-6.9).
+   - Task events encode difficulty in ``trial_type`` and ``difficulty_range`` (e.g.,baseline, 0.6-1.5, 1.5-2.4, ..., 6.0-6.9).
    - Baseline for 60 seconds and then 70 questions, 10 at each difficulty level presented for 6 seconds each.
    
    Task: arithmetic

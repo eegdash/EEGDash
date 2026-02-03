@@ -123,16 +123,16 @@ The original uploader: adam2392 obtained explicit permission from the authors of
    **BIDS Conversion**
    
    
-   MNE-BIDS was used to convert the dataset into BIDS format. The code inside `code/` was used to generate the
+   MNE-BIDS was used to convert the dataset into BIDS format. The code inside ``code/`` was used to generate the
    data.
    
    
    **HFO Events From Original Paper**
    
    
-   The HFO events from the original paper that were validated and detected are stored in the `*events.tsv` file per dataset run. The format is similar to ``mne-hfo`` and can be easily read in using ``mne-bids`` and/or ``mne-python``.
+   The HFO events from the original paper that were validated and detected are stored in the ``*events.tsv`` file per dataset run. The format is similar to ``mne-hfo`` and can be easily read in using ``mne-bids`` and/or ``mne-python``.
    
-   Each row in the events.tsv file corresponds to a HFO detected in the original source dataset. The ``trial_type`` column stores the information pertaining type of HFO (e.g. ``ripple``, ``fr`` for fast ripple, or ``frandr`` for fast ripple and ripple). The channel name (possibly in bipolar reference) is `"-"` character delimited and appended to the type of HFO with a `"_"` separating. For example: ``<hfo_type>_<channel_name>`` is the form. 
+   Each row in the events.tsv file corresponds to a HFO detected in the original source dataset. The ``trial_type`` column stores the information pertaining type of HFO (e.g. ``ripple``, ``fr`` for fast ripple, or ``frandr`` for fast ripple and ripple). The channel name (possibly in bipolar reference) is ``"-"`` character delimited and appended to the type of HFO with a ``"_"`` separating. For example: ``<hfo_type>_<channel_name>`` is the form. 
    
    
    **Reference Dataset**

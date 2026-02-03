@@ -1153,8 +1153,12 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p class="sd-card-text">When reading in the data, 61440 will likely be added to each of them.</p>
 <p class="sd-card-text"><strong>Exceptions</strong></p>
 <p class="sd-card-text">Was unable to create BrainVision format data for sub-07/cathodal-post; fieldtrip crashed on the .bdf file in sourcedata:</p>
-<p class="sd-card-text">&gt; Error in read_biosemi_bdf&gt;readLowLevel (line 274)
-&gt;   buf = read_24bit(filename, offset, numwords);</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Error in read_biosemi_bdf&gt;readLowLevel (line 274)</dt><dd><p class="sd-card-text">buf = read_24bit(filename, offset, numwords);</p>
+</dd>
+</dl>
+</div></blockquote>
 <p class="sd-card-text">The .bdf seems to be read fine by EEGLAB, so still included it in case this can be solved.</p>
 </div>
 </details></section>

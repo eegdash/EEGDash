@@ -113,7 +113,7 @@ We anticipate that the NOD dataset will serve as a valuable resource for advanci
    
    We anticipate that the NOD dataset will serve as a valuable resource for advancing our understanding of the cognitive and neural mechanisms underlying object recognition. 
    
-   The EEG data's accession number is `ds005811`.
+   The EEG data's accession number is ``ds005811``.
    
    
    
@@ -124,33 +124,33 @@ We anticipate that the NOD dataset will serve as a valuable resource for advanci
    **Directory Structure**
    
    
-   The raw data from each subject are stored in the `sub-subID` directory, while preprocessed data and epoch data are stored in the following directories:
-   - *Preprocessed Data:* `derivatives/preprocessed/raw`
-   - *Epoch Data:* `derivatives/preprocessed/epochs`
+   The raw data from each subject are stored in the ``sub-subID`` directory, while preprocessed data and epoch data are stored in the following directories:
+   - *Preprocessed Data:* ``derivatives/preprocessed/raw``
+   - *Epoch Data:* ``derivatives/preprocessed/epochs``
    
    
    **Stimulus Images**
    
    
-   The stimulus images used for MEG and EEG are identical and are stored in the `stimuli/ImageNet` directory. Images within this folder are named in the `synsetID_imageID.JPEG` Where:
-   - `synsetID` is the ILSVRC category information.
-   - `imageID` is the unique number for the image within that category.
+   The stimulus images used for MEG and EEG are identical and are stored in the ``stimuli/ImageNet`` directory. Images within this folder are named in the ``synsetID_imageID.JPEG`` Where:
+   - ``synsetID`` is the ILSVRC category information.
+   - ``imageID`` is the unique number for the image within that category.
    
-   The image metadata, including category information, is available in the table files under the `stimuli/metadata` directory.
+   The image metadata, including category information, is available in the table files under the ``stimuli/metadata`` directory.
    
    
    **Raw Data**
    
    
-   Raw MEG data are stored in BIDS format. Each subject's directory contains multiple session folders, designated as `ses-sesID`. Comprehensive trial information for each subject is documented in the file: `derivatives/detailed_events/sub-subID_events.csv` Where each row corresponds to a trial, and each column contains metadata for that trial, including the session and run number, category information of the stimuli, and subject response.
+   Raw MEG data are stored in BIDS format. Each subject's directory contains multiple session folders, designated as ``ses-sesID``. Comprehensive trial information for each subject is documented in the file: ``derivatives/detailed_events/sub-subID_events.csv`` Where each row corresponds to a trial, and each column contains metadata for that trial, including the session and run number, category information of the stimuli, and subject response.
    
    
    **Preprocessed Data**
    
    
-   The full time series data of preprocessed data are archived in the `derivatives/raw` directory, named as: `sub-subID_ses-sesID_task-ImageNet_run-runID_meg_clean.fif`. The epoch data derived from preprocessed data are stored within the `derivatives/epochs` directory. In this directory, all data for each subject are concatenated into a single file, labeled as: `sub-subID_epo.fif`
+   The full time series data of preprocessed data are archived in the ``derivatives/raw`` directory, named as: ``sub-subID_ses-sesID_task-ImageNet_run-runID_meg_clean.fif``. The epoch data derived from preprocessed data are stored within the ``derivatives/epochs`` directory. In this directory, all data for each subject are concatenated into a single file, labeled as: ``sub-subID_epo.fif``
    
-   The trial information within each subject's epochs data can be accessed via the metadata of the epochs data, which are aligned with the content of the subject's `sub-subID_events.csv` file.
+   The trial information within each subject's epochs data can be accessed via the metadata of the epochs data, which are aligned with the content of the subject's ``sub-subID_events.csv`` file.
 
 
 Dataset Information

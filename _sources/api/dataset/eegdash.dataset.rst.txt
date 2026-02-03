@@ -10,6 +10,7 @@ Submodules
    eegdash.dataset.base
    eegdash.dataset.bids_dataset
    eegdash.dataset.dataset
+   eegdash.dataset.exceptions
    eegdash.dataset.io
    eegdash.dataset.registry
 

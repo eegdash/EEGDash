@@ -116,19 +116,19 @@ MRI and PSG data were partially overlapping across participants. Participants wi
    **Participants** 
    - 29 healthy adults (HC) and 27 zoster-associated neuralgia adults (ZAN) for MRI data. 
    - 32 healthy adults and 27 zoster-associated neuralgia adults for PSG data.
-   - See `participants.tsv` for sex, age, group (HC vs. ZAN) 
+   - See ``participants.tsv`` for sex, age, group (HC vs. ZAN) 
    
    **Tasks**  
    - Functional scans are resting-state.
    
    **What’s included**  
-   - `sub-\*/anat/`  
-     - Defaced T1w MRI: `sub-XX_T1w.nii.gz` (+ JSON sidecar if available).  
-   - `sub-\*/func/`  
-     - Raw multi-echo BOLD: `sub-XX_task-rest_bold.nii.gz`.
-   - `sub-\*/eeg/`  
-     - Defaced T1w MRI: `sub-XX_task-sleep_acq-PSG_eeg.edf`, `sub-XX_task-sleep_acq-PSG_channels.tsv`, `sub-XX_task-sleep_acq-PSG_events.tsv`.
-   - Top-level: `participants.tsv`, `task-rest_bold.json`, `README.md`.
+   - ``sub-*/anat/``  
+     - Defaced T1w MRI: ``sub-XX_T1w.nii.gz`` (+ JSON sidecar if available).  
+   - ``sub-*/func/``  
+     - Raw multi-echo BOLD: ``sub-XX_task-rest_bold.nii.gz``.
+   - ``sub-*/eeg/``  
+     - Defaced T1w MRI: ``sub-XX_task-sleep_acq-PSG_eeg.edf``, ``sub-XX_task-sleep_acq-PSG_channels.tsv``, ``sub-XX_task-sleep_acq-PSG_events.tsv``.
+   - Top-level: ``participants.tsv``, ``task-rest_bold.json``, ``README.md``.
    
    **Notes on data quality & privacy**  
    - T1w images were defaced prior to sharing.  

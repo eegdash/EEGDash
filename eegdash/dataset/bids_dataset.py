@@ -25,6 +25,13 @@ _COMPANION_FILES = {
     ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
 }
 
+# Modality directory aliases - different sources use different naming conventions
+# BIDS spec uses 'nirs' but some sources (NEMAR, older datasets) use 'fnirs'
+_MODALITY_DIR_ALIASES = {
+    "nirs": ["nirs", "fnirs"],
+    "fnirs": ["nirs", "fnirs"],
+}
+
 
 class EEGBIDSDataset:
     """An interface to a local BIDS dataset containing electrophysiology recordings.
@@ -206,7 +213,8 @@ class EEGBIDSDataset:
             modality = "eeg"  # default
             for part in path_parts:
                 if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
-                    modality = part
+                    # Normalize fnirs -> nirs for MNE-BIDS compatibility
+                    modality = "nirs" if part == "fnirs" else part
                     break
 
             # Extract entities from filename using BIDS pattern
@@ -723,8 +731,12 @@ def _find_bids_files(
                 pass  # Continue to fallback search
 
         # Fallback: manual glob search (finds symlinks too)
-        pattern = f"**/{modality}/*{extension}"
-        found = list(bidsdir.glob(pattern))
+        # Search for both the modality name and its aliases (e.g., nirs and fnirs)
+        dir_names = _MODALITY_DIR_ALIASES.get(modality, [modality])
+        found = []
+        for dir_name in dir_names:
+            pattern = f"**/{dir_name}/*{extension}"
+            found.extend(bidsdir.glob(pattern))
 
         # Filter based on validation mode and exclude derivatives
         valid_files = [

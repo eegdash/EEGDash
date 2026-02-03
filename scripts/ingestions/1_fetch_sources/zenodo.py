@@ -57,14 +57,16 @@ from eegdash.schemas import create_dataset
 # Zenodo REST API endpoint
 ZENODO_BASE_URL = "https://zenodo.org/api/records"
 
-# Load API key from .env.zenodo file if it exists
-_env_file = Path(__file__).parent.parent.parent.parent / ".env.zenodo"
-if _env_file.exists():
-    load_dotenv(_env_file)
+# Load API key from .env.zenodo, .env or environment
+_env_files = [
+    Path(__file__).parent.parent.parent.parent / ".env.zenodo",
+    Path(__file__).parent.parent.parent.parent / ".env",
+]
+for env_file in _env_files:
+    if env_file.exists():
+        load_dotenv(env_file)
 
 # Zenodo API key for authentication (100 req/min vs 60 req/min for guests)
-# Set via environment variable or .env.zenodo file
-# Get your key at: https://zenodo.org/account/settings/applications/tokens/new/
 ZENODO_API_KEY = os.environ.get("ZENODO_API_KEY", "")
 
 

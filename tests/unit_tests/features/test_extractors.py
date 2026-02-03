@@ -106,10 +106,15 @@ def feature_extractor(feature_dict):
     return feats
 
 
+@pytest.mark.benchmark(group="features")
 def test_feature_extraction_benchmark(
     benchmark, windows_ds, feature_extractor, batch_size=512, n_jobs=1
 ):
-    """Benchmark feature extraction function."""
+    """Benchmark feature extraction function.
+
+    Note: This test requires pytest-benchmark plugin. Run with:
+        pytest --benchmark-enable tests/unit_tests/features/test_extractors.py
+    """
     feats = benchmark(
         extract_features,
         windows_ds,

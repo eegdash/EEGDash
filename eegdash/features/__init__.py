@@ -142,9 +142,3 @@ __all__ = [
     "spectral_hjorth_mobility",
     "spectral_hjorth_complexity",
 ]
-
-
-# This import is not working because of the indice
-# way of the numba, needs to be improve later.
-# TO DO
-#

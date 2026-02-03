@@ -40,8 +40,8 @@ def _create_color_map_with_aliases(base_map: dict) -> dict:
 RECORDING_MODALITY_COLORS = {
     "EEG": "#3b82f6",  # blue-500 - primary EEG color
     "eeg": "#3b82f6",
-    "iEEG": "#8b5cf6",  # violet-500 - related to EEG but distinct
-    "ieeg": "#8b5cf6",
+    "iEEG": "#06b6d4",  # cyan-500 - clearly distinct from MEG
+    "ieeg": "#06b6d4",
     "MEG": "#a855f7",  # purple-500 - magnetic, purple theme
     "meg": "#a855f7",
     "fNIRS": "#f97316",  # orange-500 - optical/light, warm color

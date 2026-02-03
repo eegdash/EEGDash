@@ -15,7 +15,14 @@ __version__ = "0.5.0"
 # dependencies (e.g., braindecode/torch) when users only need small utilities.
 # Public objects are exposed via lazy attribute access (PEP 562).
 
-__all__ = ["EEGDash", "EEGDashDataset", "EEGChallengeDataset", "preprocessing"]
+__all__ = [
+    "EEGDash",
+    "EEGDashDataset",
+    "EEGChallengeDataset",
+    "DataIntegrityError",
+    "preprocessing",
+    "schemas",
+]
 
 
 def __getattr__(name: str):
@@ -23,6 +30,10 @@ def __getattr__(name: str):
         from .api import EEGDash
 
         return EEGDash
+    if name == "DataIntegrityError":
+        from .dataset.exceptions import DataIntegrityError
+
+        return DataIntegrityError
     if name in {"EEGDashDataset", "EEGChallengeDataset"}:
         from .dataset import EEGChallengeDataset, EEGDashDataset
 
@@ -31,6 +42,10 @@ def __getattr__(name: str):
         from .hbn import preprocessing
 
         return preprocessing
+    if name == "schemas":
+        from . import schemas
+
+        return schemas
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

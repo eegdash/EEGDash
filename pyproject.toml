@@ -156,5 +156,6 @@ python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "benchmark: marks tests as benchmarks (run with '--benchmark-enable')",
 ]
-addopts = "-m 'not slow' -ra --durations=10"
+addopts = "-m 'not slow and not benchmark' -ra --durations=10"

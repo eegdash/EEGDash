@@ -331,3 +331,122 @@ def _generate_vhdr_from_metadata(
     except Exception as e:
         logger.error(f"Failed to write generated VHDR {vhdr_path}: {e}")
         return False
+
+
+def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> bool:
+    """Fix BIDS metadata files for SNIRF (fNIRS) datasets.
+
+    This function attempts to fix common BIDS compliance issues in fNIRS datasets:
+    1. Regenerates channels.tsv from the SNIRF file's actual channel names
+    2. Fixes malformed entries in scans.tsv (NaN timestamps, short strings)
+
+    Parameters
+    ----------
+    snirf_path : Path
+        Path to the SNIRF file.
+    record : dict
+        The database record for this file.
+
+    Returns
+    -------
+    bool
+        True if any repairs were made, False otherwise.
+
+    """
+    if not snirf_path.exists() or snirf_path.suffix.lower() != ".snirf":
+        return False
+
+    data_dir = snirf_path.parent
+    repairs_made = False
+
+    # ==== Fix 1: Regenerate channels.tsv from SNIRF channel names ====
+    try:
+        from mne.io import read_raw_snirf
+
+        # Load SNIRF to get actual channel names
+        raw = read_raw_snirf(str(snirf_path), preload=False)
+        ch_names = raw.ch_names
+        ch_types = raw.get_channel_types()
+
+        # Find the channels.tsv file for this recording
+        # It can be named *_channels.tsv or just channels.tsv
+        channels_files = list(data_dir.glob("*_channels.tsv"))
+        if not channels_files:
+            channels_files = list(data_dir.glob("channels.tsv"))
+
+        for channels_tsv in channels_files:
+            # Check if this channels.tsv matches our SNIRF file
+            # (by checking if the basename patterns match)
+            snirf_base = snirf_path.stem.replace("_nirs", "")
+            tsv_base = channels_tsv.stem.replace("_channels", "")
+
+            if snirf_base.startswith(tsv_base) or tsv_base in snirf_base:
+                # Read existing channels.tsv to preserve structure
+                import pandas as pd
+
+                try:
+                    existing_df = pd.read_csv(channels_tsv, sep="\t")
+
+                    # Check if channel names match
+                    if list(existing_df["name"]) != ch_names:
+                        repairs_made = True
+
+                        # Regenerate with correct channel names
+                        new_df = pd.DataFrame(
+                            {
+                                "name": ch_names,
+                                "type": [t.upper() for t in ch_types],
+                                "units": ["V"] * len(ch_names),
+                            }
+                        )
+                        new_df.to_csv(channels_tsv, sep="\t", index=False)
+                        logger.info(
+                            f"Regenerated {channels_tsv.name} with {len(ch_names)} channels "
+                            f"from SNIRF file"
+                        )
+
+                except Exception as e:
+                    logger.warning(f"Could not repair channels.tsv: {e}")
+
+    except ImportError:
+        logger.warning("Cannot repair SNIRF metadata: mne not available")
+    except Exception as e:
+        logger.warning(f"Error reading SNIRF for channel repair: {e}")
+
+    # ==== Fix 2: Remove malformed scans.tsv entries ====
+    try:
+        scans_files = list(data_dir.parent.glob("*_scans.tsv"))
+        if not scans_files:
+            scans_files = list(data_dir.parent.glob("scans.tsv"))
+
+        for scans_tsv in scans_files:
+            try:
+                import pandas as pd
+
+                df = pd.read_csv(scans_tsv, sep="\t")
+
+                if "acq_time" in df.columns:
+                    # Check for malformed timestamps: NaN, empty, or very short strings
+                    malformed = df["acq_time"].apply(
+                        lambda x: pd.isna(x)
+                        or (isinstance(x, str) and (len(x) < 10 or x.strip() == ""))
+                    )
+
+                    if malformed.any():
+                        repairs_made = True
+
+                        # Convert column to string type, then replace malformed values
+                        df["acq_time"] = df["acq_time"].astype(str)
+                        df.loc[malformed, "acq_time"] = "n/a"
+                        df.to_csv(scans_tsv, sep="\t", index=False)
+                        logger.info(
+                            f"Fixed {malformed.sum()} malformed timestamps in {scans_tsv.name}"
+                        )
+
+            except Exception as e:
+                logger.warning(f"Could not repair scans.tsv: {e}")
+
+    except Exception as e:
+        logger.warning(f"Error fixing scans.tsv: {e}")
+
+    return repairs_made

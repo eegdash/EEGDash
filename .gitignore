@@ -63,3 +63,6 @@ tests/data/
 test_cache/*
 CLAUDE.md
 .claude/
+.verify_cache/
+.verify_cache_python/
+.verify_cache_test/

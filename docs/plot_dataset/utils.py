@@ -66,6 +66,7 @@ RECORDING_MODALITY_MAP = {
     "ieeg": "iEEG",
     "meg": "MEG",
     "fnirs": "fNIRS",
+    "nirs": "fNIRS",  # Also accept 'nirs' without 'f' prefix
     "emg": "EMG",
     "ecg": "ECG",
     "fmri": "fMRI",
@@ -170,6 +171,7 @@ def build_and_export_html(
     config: dict | None = None,
     include_default_style: bool = True,
     html_content: str | None = None,
+    include_plotlyjs: bool | str = False,
 ) -> Path:
     """Build styled HTML from a Plotly figure and write it to *out_path*.
 
@@ -200,6 +202,11 @@ def build_and_export_html(
     html_content : str, optional
         Pre-generated HTML content for the plot. If provided, *fig* is ignored
         and this content is used directly (useful for custom rendering).
+    include_plotlyjs : bool | str, optional
+        Whether to include Plotly.js in the output. Can be:
+        - False: Don't include (default, for embedding in docs with external Plotly)
+        - True or 'cdn': Include via CDN link (for standalone viewing)
+        - 'inline': Include full Plotly.js inline (larger file, fully offline)
 
     Returns
     -------
@@ -207,12 +214,20 @@ def build_and_export_html(
         The path to the written HTML file.
 
     """
+    # Determine plotly.js inclusion mode
+    plotlyjs_mode = False
+    if include_plotlyjs is True or include_plotlyjs == "cdn":
+        plotlyjs_mode = "cdn"
+    elif include_plotlyjs == "inline":
+        plotlyjs_mode = True
+    # else: False (don't include)
+
     if html_content is None:
         if config is None:
             config = {"responsive": True, "displaylogo": False}
         html_content = fig.to_html(
             full_html=False,
-            include_plotlyjs=False,
+            include_plotlyjs=plotlyjs_mode,
             config=config,
             div_id=div_id,
         )

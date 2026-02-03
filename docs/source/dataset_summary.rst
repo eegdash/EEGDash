@@ -87,4 +87,8 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
       .. include:: dataset_summary/bubble.rst
 
+   .. tab-item:: Subject Distribution
+
+      .. include:: dataset_summary/moabb.rst
+
 The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 

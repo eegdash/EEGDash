@@ -24,6 +24,7 @@ from plot_dataset import (
     generate_dataset_growth,
     generate_dataset_sankey,
     generate_dataset_treemap,
+    generate_moabb_bubble,
     generate_modality_ridgeline,
 )
 from plot_dataset.utils import get_dataset_url as _get_dataset_url
@@ -140,6 +141,13 @@ def generate_charts_parallel(
             {"x_var": x_var},
         ),
         (
+            "MOABB Bubble",
+            generate_moabb_bubble,
+            df_raw,
+            target_dir / "dataset_moabb_bubble.html",
+            {"color_by": "modality"},
+        ),
+        (
             "Sankey",
             generate_dataset_sankey,
             df_raw,
@@ -249,6 +257,63 @@ def save_summary_stats(df_raw: pd.DataFrame) -> None:
     if BUILD_STATIC_DIR.exists():
         with open(BUILD_STATIC_DIR / "summary_stats.json", "w") as f:
             json.dump(summary_stats, f)
+
+
+def generate_search_index(df_raw: pd.DataFrame) -> None:
+    """Generate search index JSON for client-side fuzzy search with Fuse.js."""
+    search_index = []
+    excluded = {"test", "ds003380"}
+
+    for _, row in df_raw.iterrows():
+        dataset_id = str(row.get("dataset", "")).strip()
+        if not dataset_id or dataset_id.lower() in excluded:
+            continue
+
+        # Extract and normalize tag arrays
+        pathology_col = "Type Subject" if "Type Subject" in row else "pathology"
+        modality_col = "modality of exp" if "modality of exp" in row else "modality"
+        type_col = "type of exp" if "type of exp" in row else "type"
+        record_mod_col = (
+            "record_modality" if "record_modality" in row else "record modality"
+        )
+
+        pathology_tags = list(_normalize_values(row.get(pathology_col, "")))
+        modality_tags = list(_normalize_values(row.get(modality_col, "")))
+        type_tags = list(_normalize_values(row.get(type_col, "")))
+        record_modality = list(_normalize_values(row.get(record_mod_col, "")))
+
+        # Get numeric values safely
+        n_subjects = pd.to_numeric(row.get("n_subjects", 0), errors="coerce")
+        n_records = pd.to_numeric(row.get("n_records", 0), errors="coerce")
+        n_tasks = pd.to_numeric(row.get("n_tasks", 0), errors="coerce")
+
+        entry = {
+            "id": dataset_id,
+            "title": str(row.get("dataset_title", "")).strip()[:200],
+            "source": str(row.get("source", "")).strip(),
+            "subjects": int(n_subjects) if pd.notna(n_subjects) else 0,
+            "records": int(n_records) if pd.notna(n_records) else 0,
+            "tasks": int(n_tasks) if pd.notna(n_tasks) else 0,
+            "size": str(row.get("size", "")).strip(),
+            "pathology": pathology_tags,
+            "modality": modality_tags,
+            "type": type_tags,
+            "recordModality": record_modality,
+            # URL for dataset detail page
+            "url": f"api/dataset/eegdash.dataset.{dataset_id.upper()}.html",
+        }
+        search_index.append(entry)
+
+    # Save to static directory
+    index_path = STATIC_DATASET_DIR / "search_index.json"
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(search_index, f, separators=(",", ":"))
+    print(f"Generated search index: {index_path} ({len(search_index)} datasets)")
+
+    # Copy to build directory
+    if BUILD_STATIC_DIR.exists():
+        with open(BUILD_STATIC_DIR / "search_index.json", "w", encoding="utf-8") as f:
+            json.dump(search_index, f, separators=(",", ":"))
 
 
 # =============================================================================
@@ -702,6 +767,9 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
 
     # Save summary stats
     save_summary_stats(df_raw)
+
+    # Generate search index for fuzzy autocomplete
+    generate_search_index(df_raw)
 
     # Generate HTML table
     df = prepare_table(df_raw)

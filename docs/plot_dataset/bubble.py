@@ -7,25 +7,32 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 
 try:  # Allow execution as a script or module
-    from .colours import MODALITY_COLOR_MAP
+    from .colours import (
+        EXPERIMENTAL_MODALITY_COLORS,
+        RECORDING_MODALITY_COLORS,
+    )
     from .utils import (
         build_and_export_html,
         get_dataset_url,
         human_readable_size,
         primary_modality,
+        primary_recording_modality,
         safe_int,
     )
 except ImportError:  # pragma: no cover - fallback for direct script execution
-    from colours import MODALITY_COLOR_MAP  # type: ignore
+    from colours import (  # type: ignore
+        EXPERIMENTAL_MODALITY_COLORS,
+        RECORDING_MODALITY_COLORS,
+    )
     from utils import (  # type: ignore
         build_and_export_html,
         get_dataset_url,
         human_readable_size,
         primary_modality,
+        primary_recording_modality,
         safe_int,
     )
 
@@ -156,7 +163,19 @@ def generate_dataset_bubble(
     data["sfreq"] = data["sampling_freqs"].map(_to_numeric_median_list)
     data["nchans"] = data["nchans_set"].map(_to_numeric_median_list)
 
-    data["modality_label"] = data.get("modality of exp").apply(primary_modality)
+    # Compute experiment modality label (Visual, Auditory, Motor, etc.)
+    data["exp_modality_label"] = data.get("modality of exp").apply(primary_modality)
+
+    # Compute recording modality label (EEG, MEG, iEEG, fNIRS, etc.)
+    rec_col = None
+    for col in ["record_modality", "recording_modality"]:
+        if col in data.columns:
+            rec_col = col
+            break
+    if rec_col:
+        data["rec_modality_label"] = data[rec_col].apply(primary_recording_modality)
+    else:
+        data["rec_modality_label"] = "EEG"  # Default fallback
 
     GB = 1024**3
     data["size_gb"] = data["size_bytes"] / GB
@@ -202,45 +221,112 @@ def generate_dataset_bubble(
 
     sfreq_str = data["sfreq"].map(_format_int)
     nchans_str = data["nchans"].map(_format_int)
-
-    fig = px.scatter(
-        data,
-        x=x_field,
-        y=y_field,
-        size="size_gb",
-        color="modality_label",
-        hover_name="dataset",
-        custom_data=[
-            data["dataset"],
-            data["subjects"],
-            data["records"],
-            data["tasks"],
-            nchans_str,
-            sfreq_str,
-            data["size_bytes"].map(
-                lambda bytes_: human_readable_size(safe_int(bytes_, 0))
-            ),
-            data["modality_label"],
-            data["dataset_url"],
-        ],
-        size_max=40,
-        labels={
-            y_field: y_label,
-            "modality_label": "Modality",
-            x_field: x_label,
-        },
-        color_discrete_map=MODALITY_COLOR_MAP,
-        title="",
-        category_orders={
-            "modality_label": [
-                label
-                for label in MODALITY_COLOR_MAP.keys()
-                if label in data["modality_label"].unique()
-            ]
-        },
-        log_x=True,
-        log_y=True,
+    size_str = data["size_bytes"].map(
+        lambda bytes_: human_readable_size(safe_int(bytes_, 0))
     )
+
+    # Build custom data array for hover
+    custom_data = np.column_stack(
+        [
+            data["dataset"].values,
+            data["subjects"].values,
+            data["records"].values,
+            data["tasks"].values,
+            nchans_str.values,
+            sfreq_str.values,
+            size_str.values,
+            data["exp_modality_label"].values,
+            data["rec_modality_label"].values,
+            data["dataset_url"].values,
+        ]
+    )
+
+    # Build traces for experiment modality (default view)
+    exp_traces = []
+    exp_modalities = [
+        label
+        for label in EXPERIMENTAL_MODALITY_COLORS.keys()
+        if label in data["exp_modality_label"].unique()
+    ]
+    for modality in exp_modalities:
+        mask = data["exp_modality_label"] == modality
+        if not mask.any():
+            continue
+        subset = data[mask]
+        exp_traces.append(
+            go.Scatter(
+                x=subset[x_field],
+                y=subset[y_field],
+                mode="markers",
+                name=modality,
+                marker=dict(
+                    size=subset["size_gb"],
+                    color=EXPERIMENTAL_MODALITY_COLORS.get(modality, "#94a3b8"),
+                    sizemode="area",
+                    sizeref=sizeref,
+                    sizemin=6,
+                    line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
+                    opacity=0.75,
+                ),
+                customdata=custom_data[mask.values],
+                hovertemplate=None,  # Will be set later
+                visible=True,
+                legendgroup="exp",
+            )
+        )
+
+    # Build traces for recording modality (hidden by default)
+    rec_traces = []
+    rec_modalities = [
+        label
+        for label in RECORDING_MODALITY_COLORS.keys()
+        if label in data["rec_modality_label"].unique()
+    ]
+    for modality in rec_modalities:
+        mask = data["rec_modality_label"] == modality
+        if not mask.any():
+            continue
+        subset = data[mask]
+        rec_traces.append(
+            go.Scatter(
+                x=subset[x_field],
+                y=subset[y_field],
+                mode="markers",
+                name=modality,
+                marker=dict(
+                    size=subset["size_gb"],
+                    color=RECORDING_MODALITY_COLORS.get(modality, "#94a3b8"),
+                    sizemode="area",
+                    sizeref=sizeref,
+                    sizemin=6,
+                    line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
+                    opacity=0.75,
+                ),
+                customdata=custom_data[mask.values],
+                hovertemplate=None,  # Will be set later
+                visible=False,
+                legendgroup="rec",
+            )
+        )
+
+    # Create figure with experiment modality traces visible by default
+    fig = go.Figure()
+
+    # Add experiment modality traces (visible by default)
+    for trace in exp_traces:
+        fig.add_trace(trace)
+
+    # Add recording modality traces (hidden by default)
+    for trace in rec_traces:
+        fig.add_trace(trace)
+
+    # Track trace counts for visibility toggling
+    n_exp_traces = len(exp_traces)
+    n_rec_traces = len(rec_traces)
+
+    # Update axis labels
+    fig.update_xaxes(title_text=x_label, type="log")
+    fig.update_yaxes(title_text=y_label, type="log")
 
     # ---------- Reference line, OLS fit, and arrow (all robust in log space)
     numeric_x = pd.to_numeric(data[x_field], errors="coerce")
@@ -258,9 +344,9 @@ def generate_dataset_bubble(
         log_y = np.log10(numeric_y[mask])
         ss_tot = np.sum((log_y - log_y.mean()) ** 2)
 
-        # Draw 1:1 line as an underlying shape, clipped to 10^0..10^4 and data bounds
-        lx_min = max(log_x.min(), log_y.min(), 0.0)  # >= 10^0
-        lx_max = min(log_x.max(), log_y.max(), 4.0)  # <= 10^4
+        # Draw 1:1 line as an underlying shape, using actual data bounds
+        lx_min = max(log_x.min(), log_y.min())
+        lx_max = min(log_x.max(), log_y.max())
         if lx_min < lx_max:
             x0 = 10**lx_min
             x1 = 10**lx_max
@@ -276,10 +362,10 @@ def generate_dataset_bubble(
                 line=dict(color="#9ca3af", width=1.5, dash="dash"),
             )
 
-        # Red dotted OLS line (computed in log space), clipped to same bounds
+        # Red dotted OLS line (computed in log space), using actual data bounds
         if np.ptp(log_x) > 0 and np.ptp(log_y) > 0 and ss_tot > 0:
             slope, intercept = np.polyfit(log_x, log_y, 1)
-            line_log_x = np.linspace(max(log_x.min(), 0.0), min(log_x.max(), 4.0), 200)
+            line_log_x = np.linspace(log_x.min(), log_x.max(), 200)
             line_x = 10**line_log_x
             line_y = 10 ** (slope * line_log_x + intercept)
             fig.add_trace(
@@ -320,6 +406,16 @@ def generate_dataset_bubble(
                 align="left",
             )
 
+    # ---------- Build visibility arrays for toggle buttons ----------
+    # Must be done AFTER all traces are added (including OLS line)
+    # Count total traces: exp + rec + OLS line (if present)
+    n_total_traces = len(fig.data)
+    n_ols_traces = n_total_traces - n_exp_traces - n_rec_traces
+
+    # Build visibility: exp traces visible, rec traces hidden, OLS always visible
+    exp_visible = [True] * n_exp_traces + [False] * n_rec_traces + [True] * n_ols_traces
+    rec_visible = [False] * n_exp_traces + [True] * n_rec_traces + [True] * n_ols_traces
+
     # ---------- Hover and styling ----------
     x_hover, y_hover = _build_hover_template(x_field, y_field)
     hover_template = (
@@ -332,7 +428,8 @@ def generate_dataset_bubble(
         "<br>Channels: %{customdata[4]}"
         "<br>Sampling: %{customdata[5]} Hz"
         "<br>Size: %{customdata[6]}"
-        "<br>Modality: %{customdata[7]}"
+        "<br>Experiment: %{customdata[7]}"
+        "<br>Recording: %{customdata[8]}"
         "<br><i>Click bubble to open dataset page</i>"
         "<extra></extra>"
     )
@@ -341,36 +438,62 @@ def generate_dataset_bubble(
         mode = getattr(trace, "mode", "") or ""
         if "markers" not in mode:
             continue
-        trace.marker.update(
-            sizemin=6,
-            sizemode="area",
-            sizeref=sizeref,
-            line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
-            opacity=0.75,
-        )
         trace.hovertemplate = hover_template
+
+    # Create update menus (toggle buttons)
+    updatemenus = [
+        dict(
+            type="buttons",
+            direction="right",
+            active=0,
+            x=0.0,
+            xanchor="left",
+            y=1.18,
+            yanchor="top",
+            buttons=[
+                dict(
+                    label="Experiment Modality",
+                    method="restyle",
+                    args=["visible", exp_visible],
+                ),
+                dict(
+                    label="Recording Modality",
+                    method="restyle",
+                    args=["visible", rec_visible],
+                ),
+            ],
+            pad={"r": 10, "t": 10},
+            showactive=True,
+            bgcolor="white",
+            bordercolor="#d1d5db",
+            font=dict(size=13),
+        )
+    ]
 
     fig.update_layout(
         height=height,
-        width=None,
-        margin=dict(l=60, r=40, t=80, b=60),
+        width=max_width + 200,  # Wider figure
+        margin=dict(l=60, r=40, t=140, b=60),
         template="plotly_white",
+        updatemenus=updatemenus,
         legend=dict(
-            title="Modality 🖱️ (click to toggle)",
-            orientation="h",
+            title=None,  # No title for inline style
+            orientation="h",  # Horizontal inline
             yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=0.99,
+            y=1.08,  # Position above the plot
+            xanchor="left",
+            x=0.0,  # Left-aligned, next to buttons
             itemclick="toggle",
             itemdoubleclick="toggleothers",
+            font=dict(size=12),
+            tracegroupgap=5,  # Minimal gap between items
         ),
         font=dict(
             family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
             size=14,
         ),
         title=dict(text="", x=0.01, xanchor="left", y=0.98, yanchor="top"),
-        autosize=True,
+        autosize=False,
     )
 
     if fit_annotation_text:
@@ -442,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         plot.on('plotly_click', function(evt) {
             const point = evt && evt.points && evt.points[0];
-            const url = point && point.customdata && point.customdata[8];
+            const url = point && point.customdata && point.customdata[9];
             if (url) {
                 window.open(url, '_blank', 'noopener');
             }

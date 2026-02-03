@@ -22,7 +22,12 @@ except ImportError:
     )
 
 
-def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
+def generate_dataset_growth(
+    df: pd.DataFrame,
+    out_html: str | Path,
+    *,
+    width: int = 1260,
+) -> Path:
     """Generate cumulative growth plot."""
     df = df.copy()
 
@@ -196,7 +201,8 @@ def generate_dataset_growth(df: pd.DataFrame, out_html: str | Path) -> Path:
         legend=dict(x=1.02, y=1),
         margin=dict(t=100, l=60, r=40, b=80),
         height=550,
-        autosize=True,
+        width=width,
+        autosize=False,
     )
 
     return build_and_export_html(

@@ -142,45 +142,79 @@ def test_len_error_handling(mock_validate, tmp_path):
     assert length == 0  # Should fallback to 0 on error
 
 
+@pytest.mark.parametrize(
+    "create_vhdr,create_vmrk,expect_repair,expect_generate_vhdr,expect_generate_vmrk",
+    [
+        (True, True, True, False, False),  # VHDR+VMRK exist: repair only
+        (
+            True,
+            False,
+            True,
+            False,
+            True,
+        ),  # VHDR exists, VMRK missing: repair + generate vmrk
+        (
+            False,
+            False,
+            False,
+            True,
+            True,
+        ),  # VHDR missing: generate vhdr + vmrk stub (mock doesn't create files)
+    ],
+    ids=["vhdr_exists", "vmrk_missing", "vhdr_missing"],
+)
 @patch("eegdash.dataset.base.validate_record")
+@patch("eegdash.dataset.base._generate_vmrk_stub")
+@patch("eegdash.dataset.base._generate_vhdr_from_metadata")
 @patch("eegdash.dataset.base._repair_vhdr_pointers")
 @patch("eegdash.dataset.base._ensure_coordsystem_symlink")
 @patch("eegdash.dataset.base.mne_bids")
-def test_ensure_raw_integrity(
-    mock_mne_bids, mock_ensure_symlink, mock_repair, mock_validate, tmp_path
+def test_ensure_raw_vhdr_handling(
+    mock_mne_bids,
+    mock_ensure_symlink,
+    mock_repair,
+    mock_generate_vhdr,
+    mock_generate_vmrk,
+    mock_validate,
+    tmp_path,
+    create_vhdr,
+    create_vmrk,
+    expect_repair,
+    expect_generate_vhdr,
+    expect_generate_vmrk,
 ):
-    """Test that _ensure_raw calls the appropriate IO helpers."""
+    """Test _ensure_raw handles VHDR/VMRK generation and repair correctly."""
     from eegdash.dataset.base import EEGDashRaw
 
     mock_validate.return_value = None
 
     dataset_id = "ds_test"
-    record = {
-        "dataset": dataset_id,
-        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path), "raw_key": "dummy"},
-    }
-
-    # Setup directory structure so checks pass
+    bids_relpath = "sub-01/eeg/sub-01_task-rest_eeg.vhdr"
     eeg_dir = tmp_path / dataset_id / "sub-01" / "eeg"
     eeg_dir.mkdir(parents=True)
 
-    # Init dataset
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+    }
+
+    if create_vhdr:
+        (eeg_dir / "sub-01_task-rest_eeg.vhdr").touch()
+    if create_vmrk:
+        (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
+
     dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
-
-    # Mock _load_raw to prevent actual loading
     dataset._load_raw = MagicMock()
-
-    # Run _ensure_raw
     dataset._ensure_raw()
 
-    # Check delegation
-    mock_ensure_symlink.assert_called_once()
-    mock_repair.assert_called_once()
-
-    # Validation: the argument passed should be related to filecache
-    args, _ = mock_repair.call_args
-    assert args[0] == dataset.filecache
+    assert mock_repair.called == expect_repair
+    assert mock_generate_vhdr.called == expect_generate_vhdr
+    assert mock_generate_vmrk.called == expect_generate_vmrk
 
 
 def test_eegdashraw_backend_logic(tmp_path):

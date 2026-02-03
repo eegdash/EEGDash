@@ -14,6 +14,7 @@ __all__ = [
     "ALLOWED_QUERY_FIELDS",
     "RELEASE_TO_OPENNEURO_DATASET_MAP",
     "SUBJECT_MINI_RELEASE_MAP",
+    "MODALITY_ALIASES",
 ]
 
 ALLOWED_QUERY_FIELDS = {
@@ -30,6 +31,8 @@ ALLOWED_QUERY_FIELDS = {
 }
 """set: A set of field names that are permitted in database queries constructed
 via :func:`~eegdash.api.EEGDash.find` with keyword arguments."""
+
+MODALITY_ALIASES = {"fnirs": "nirs"}
 
 RELEASE_TO_OPENNEURO_DATASET_MAP = {
     "R11": "ds005516",

@@ -61,7 +61,8 @@ override-dependencies = [
 [tool.uv.sources]
 # Solve this when we release a new version of braindecode and mne-python
 braindecode = { git = "https://github.com/braindecode/braindecode.git", branch = "master" }
-mne = { git = "https://github.com/bruAristimunha/mne-python.git", branch = "fix-fnris-reading" }
+mne = { git = "https://github.com/mne-tools/mne-python.git", branch = "main" }
+mne_bids = { git = "https://github.com/bruAristimunha/mne-bids.git", branch = "add-mef3-reader-support" }
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"

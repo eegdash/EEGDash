@@ -38,7 +38,7 @@ classifiers = [
 
 dependencies = [
   "braindecode[hub]>=1.3.2",
-  "mne @ git+https://github.com/bruAristimunha/mne-python.git@fix-fnris-reading",
+  "mne",  # Source overridden in [tool.uv.sources]
   "mne_bids>=0.18.0",
   "numba",
   "requests>=2.25.0",
@@ -52,6 +52,15 @@ dependencies = [
   "pandas>=2.0,<2.2",  # Pin <2.2 due to wfdb ArrowStringArray compatibility
   "pydantic",
 ]
+
+[tool.uv]
+override-dependencies = [
+  "mne>=0.0.0",  # Override braindecode's mne>=1.11.0 constraint
+]
+
+[tool.uv.sources]
+braindecode = { git = "https://github.com/braindecode/braindecode.git", branch = "master" }
+mne = { git = "https://github.com/bruAristimunha/mne-python.git", branch = "fix-fnris-reading" }
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"

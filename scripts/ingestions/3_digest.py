@@ -1014,24 +1014,42 @@ def extract_record(
         "meg",
         "ieeg",
         "beh",
+        "nirs",
     ]:
         search_dirs.append(parent_dir.parent)
+
+    # Build list of base names to search: full base_name and session-level base_name
+    # Session-level sidecars (like optodes) don't have task/run entities
+    base_names_to_search = [base_name]
+    # Extract session-level base name by removing task/run entities
+    # e.g., "sub-6016_ses-1_task-MA_run-01" -> "sub-6016_ses-1"
+    session_base = re.sub(r"_task-[^_]+", "", base_name)
+    session_base = re.sub(r"_run-[^_]+", "", session_base)
+    session_base = re.sub(r"_acq-[^_]+", "", session_base)
+    if session_base != base_name:
+        base_names_to_search.append(session_base)
 
     for search_dir in search_dirs:
         for dep_suffix in [
             "_channels.tsv",
             "_events.tsv",
+            "_events.json",
             "_electrodes.tsv",
             "_coordsystem.json",
             "_eeg.json",
+            # NIRS-specific sidecars
+            "_optodes.tsv",
+            "_optodes.json",
+            "_nirs.json",
         ]:
-            dep_file = search_dir / f"{base_name}{dep_suffix}"
-            if dep_file.exists() or dep_file.is_symlink():
-                try:
-                    dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                    dep_keys.append(str(dep_relpath))
-                except ValueError:
-                    pass
+            for search_base in base_names_to_search:
+                dep_file = search_dir / f"{search_base}{dep_suffix}"
+                if dep_file.exists() or dep_file.is_symlink():
+                    try:
+                        dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
+                        dep_keys.append(str(dep_relpath))
+                    except ValueError:
+                        pass
 
     # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
     ext = bids_file_path.suffix.lower()

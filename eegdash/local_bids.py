@@ -16,7 +16,6 @@ from .const import MODALITY_ALIASES
 from .schemas import create_record
 
 
-
 def _normalize_modalities(modality_filter: Any) -> list[str]:
     """Normalize modality filter to a list of strings.
 

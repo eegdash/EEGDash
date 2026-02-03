@@ -27,6 +27,7 @@ from .io import (
     _ensure_coordsystem_symlink,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_snirf_bids_metadata,
     _repair_vhdr_pointers,
 )
 
@@ -191,9 +192,31 @@ class EEGDashRaw(RawDataset):
                 raise
 
     def _load_raw(self) -> BaseRaw:
-        """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""
-        # MNE-BIDS handles sidecars automatically
-        return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+        """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
+
+        For SNIRF (fNIRS) files, if initial loading fails, applies on-the-fly
+        fixes to BIDS metadata (channels.tsv, scans.tsv) and retries.
+        """
+        try:
+            # First attempt: standard MNE-BIDS loading
+            return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+        except Exception as first_error:
+            # For SNIRF files, try to fix and retry
+            if self.filecache and self.filecache.suffix.lower() == ".snirf":
+                logger.warning(
+                    "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
+                )
+                if _repair_snirf_bids_metadata(self.filecache, self.record):
+                    # Retry after fix
+                    try:
+                        return mne_bids.read_raw_bids(
+                            bids_path=self.bidspath, verbose="ERROR"
+                        )
+                    except Exception as retry_error:
+                        logger.error(f"Retry also failed: {retry_error}")
+                        raise retry_error from first_error
+            # Not a SNIRF or fix didn't help - re-raise original error
+            raise
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

@@ -18,8 +18,12 @@ _MODALITY_ALIASES = {"fnirs": "nirs"}
 
 
 def _normalize_modalities(modality_filter: Any) -> list[str]:
+    """Normalize modality filter to a list of strings.
+
+    If None, returns a default set of physiological modalities (excluding motion).
+    """
     if modality_filter is None:
-        return ["eeg"]
+        return ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
     if isinstance(modality_filter, (list, tuple, set)):
         modalities = [str(m).strip().lower() for m in modality_filter if m]
@@ -27,7 +31,7 @@ def _normalize_modalities(modality_filter: Any) -> list[str]:
         modalities = [str(modality_filter).strip().lower()]
 
     modalities = [_MODALITY_ALIASES.get(m, m) for m in modalities if m]
-    return modalities or ["eeg"]
+    return modalities or ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
 
 def discover_local_bids_records(
@@ -91,7 +95,9 @@ def discover_local_bids_records(
     records_out: list[dict[str, Any]] = []
 
     valid_raw_extensions = {
-        ext for m in modalities for ext in ALLOWED_DATATYPE_EXTENSIONS.get(m, [])
+        ext
+        for m in modalities
+        for ext in ALLOWED_DATATYPE_EXTENSIONS.get(_MODALITY_ALIASES.get(m, m), [])
     }
 
     for bids_path in matched_paths:

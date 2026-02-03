@@ -12,9 +12,9 @@ from typing import Any
 from mne_bids import find_matching_paths
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
+from .const import MODALITY_ALIASES
 from .schemas import create_record
 
-_MODALITY_ALIASES = {"fnirs": "nirs"}
 
 
 def _normalize_modalities(modality_filter: Any) -> list[str]:
@@ -30,7 +30,7 @@ def _normalize_modalities(modality_filter: Any) -> list[str]:
     else:
         modalities = [str(modality_filter).strip().lower()]
 
-    modalities = [_MODALITY_ALIASES.get(m, m) for m in modalities if m]
+    modalities = [MODALITY_ALIASES.get(m, m) for m in modalities if m]
     return modalities or ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
 
@@ -97,7 +97,7 @@ def discover_local_bids_records(
     valid_raw_extensions = {
         ext
         for m in modalities
-        for ext in ALLOWED_DATATYPE_EXTENSIONS.get(_MODALITY_ALIASES.get(m, m), [])
+        for ext in ALLOWED_DATATYPE_EXTENSIONS.get(MODALITY_ALIASES.get(m, m), [])
     }
 
     for bids_path in matched_paths:

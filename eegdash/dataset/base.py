@@ -19,6 +19,7 @@ from mne_bids import BIDSPath
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
+from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
 from .exceptions import DataIntegrityError
@@ -118,8 +119,12 @@ class EEGDashRaw(RawDataset):
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
-            datatype=self.record.get("datatype", "eeg"),
-            suffix=self.record.get("suffix", "eeg"),
+            datatype=MODALITY_ALIASES.get(
+                self.record.get("datatype", "eeg"), self.record.get("datatype", "eeg")
+            ),
+            suffix=MODALITY_ALIASES.get(
+                self.record.get("suffix", "eeg"), self.record.get("suffix", "eeg")
+            ),
             extension=self.record.get("extension", self.filecache.suffix),
             subject=entities_mne.get("subject"),
             session=entities_mne.get("session"),

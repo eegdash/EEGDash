@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: nirs` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 231` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: fnirs` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 36` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005930.v1.0.1 <https://doi.org/10.18112/openneuro.ds005930.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005930>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005930>`__ | `Source URL <https://openneuro.org/datasets/ds005930/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005930>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005930>`__ | `Source URL <https://openneuro.org/datasets/ds005930>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,7 +148,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 12
-      - Recordings: 231
+      - Recordings: 36
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 304.2 MB
-      - File count: 231
+      - File count: 36
       - Format: BIDS
 
    .. grid-item-card:: License & citation

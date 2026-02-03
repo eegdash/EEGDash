@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: nirs` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 1175` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: fnirs` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 222` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,17 +89,13 @@ Quickstart
 About This Dataset
 ------------------
 
-The  fNIRS dataset focus on the prefrontal cortex activity in fourteen types of highly automated driving scenarios, which considers age, sex and driving experience factors, and contains the data of an 8-channel fNIRS device and driving scenarios. A total of 20 participants completed this driving simulator experiment，and each participant need to finish 12 tasks. Their ages range from 21 to 46 years old, with 5 females and 15 males. 
-
- Our objective is to provides the data support for finding the difference of prefrontal cortex activity between low-risk and high-risk episodes by quantifying the risk of driving scenarios. This research may provide a solution to prevent potential hazard and improve SOTIF based on brain-computer interface technology and fNIRS, in the future. 
-
+The  fNIRS dataset focus on the prefrontal cortex activity in fourteen types of highly automated driving scenarios, which considers age, sex and driving experience factors, and contains the data of an 8-channel fNIRS device and driving scenarios. A total of 20 participants completed this driving simulator experiment，and each participant need to finish 12 tasks. Their ages range from 21 to 46 years old, with 5 females and 15 males.
+ Our objective is to provides the data support for finding the difference of prefrontal cortex activity between low-risk and high-risk episodes by quantifying the risk of driving scenarios. This research may provide a solution to prevent potential hazard and improve SOTIF based on brain-computer interface technology and fNIRS, in the future.
 
 **Notes**
 
-
 - Here a total of 240 tasks which are need to be completed by  20 participants，and the data about 20 tasks is removed because the data are not recorded correctly.
 - We update the results of subjective evaluations about dangerous degree of VTD segment, and they are shown in the file "participants.tsv".
-
 
 **How to cite?**
 
@@ -125,7 +121,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004973.v1.0.1 <https://doi.org/10.18112/openneuro.ds004973.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004973>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004973>`__ | `Source URL <https://openneuro.org/datasets/ds004973/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004973>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004973>`__ | `Source URL <https://openneuro.org/datasets/ds004973>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -162,7 +158,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 1175
+      - Recordings: 222
       - Tasks: 12
 
    .. grid-item-card:: Channels & sampling rate
@@ -183,7 +179,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 2.3 GB
-      - File count: 1175
+      - File count: 222
       - Format: BIDS
 
    .. grid-item-card:: License & citation

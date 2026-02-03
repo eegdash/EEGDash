@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**13:09.601** total execution time for 7 files **from all galleries**:
+**13:42.766** total execution time for 7 files **from all galleries**:
 
 .. container::
 
@@ -33,23 +33,23 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py` (``../../examples/eeg2025/tutorial_challenge_2.py``)
-     - 06:26.864
-     - 1741.6
+     - 06:42.434
+     - 1738.3
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py` (``../../examples/eeg2025/tutorial_challenge_1.py``)
-     - 04:00.690
-     - 1792.6
+     - 04:19.128
+     - 1886.2
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_minimal.py` (``../../examples/core/tutorial_minimal.py``)
-     - 02:04.821
-     - 5589.6
+     - 02:03.744
+     - 5513.6
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py` (``../../examples/eeg2025/tutorial_eegdash_offline.py``)
-     - 00:17.279
-     - 949.0
+     - 00:22.484
+     - 956.5
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``../../examples/core/tutorial_eoec.py``)
-     - 00:11.029
-     - 1467.9
+     - 00:07.909
+     - 1341.5
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``../../examples/core/tutorial_feature_extractor_open_close_eye.py``)
-     - 00:08.918
-     - 1396.2
+     - 00:07.067
+     - 1239.3
    * - :ref:`sphx_glr_generated_auto_examples_core_p300_transfer_learning.py` (``../../examples/core/p300_transfer_learning.py``)
      - 00:00.000
      - 0.0

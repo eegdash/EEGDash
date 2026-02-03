@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: nirs` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 135` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: fnirs` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 19` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 This dataset comes with published paper which can be found in https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2024.1329086/full
-
 Please cite the paper if you use this dataset for your publication.
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004830.v1.0.1 <https://doi.org/10.18112/openneuro.ds004830.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004830>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004830>`__ | `Source URL <https://openneuro.org/datasets/ds004830/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004830>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004830>`__ | `Source URL <https://openneuro.org/datasets/ds004830>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,7 +149,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 12
-      - Recordings: 135
+      - Recordings: 19
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 135
+      - File count: 19
       - Format: BIDS
 
    .. grid-item-card:: License & citation

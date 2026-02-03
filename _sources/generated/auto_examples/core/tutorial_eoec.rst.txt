@@ -211,28 +211,7 @@ corresponding to their respective event markers).
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
       warn(
     Used Annotations descriptions: ['boundary', 'break cnt', 'instructed_toCloseEyes', 'instructed_toOpenEyes', 'resting_start']
-    [02/03/26 10:53:04] INFO     Original events found with ids: preprocessing.py:66
-                                 {'boundary': 1, 'break cnt': 2,                    
-                                 'instructed_toCloseEyes': 3,                       
-                                 'instructed_toOpenEyes': 4,                        
-                                 'resting_start': 5}                                
-    NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
-    Filtering raw data in 1 contiguous segment
-    Setting up band-pass filter from 1 - 55 Hz
-
-    FIR filter parameters
-    ---------------------
-    Designing a one-pass, zero-phase, non-causal bandpass filter:
-    - Windowed time-domain design (firwin) method
-    - Hamming window with 0.0194 passband ripple and 53 dB stopband attenuation
-    - Lower passband edge: 1.00
-    - Lower transition bandwidth: 1.00 Hz (-6 dB cutoff frequency: 0.50 Hz)
-    - Upper passband edge: 55.00 Hz
-    - Upper transition bandwidth: 9.00 Hz (-6 dB cutoff frequency: 59.50 Hz)
-    - Filter length: 423 samples (3.305 s)
-
-    Used Annotations descriptions: ['boundary', 'break cnt', 'instructed_toCloseEyes', 'instructed_toOpenEyes', 'resting_start']
-    [02/03/26 10:53:06] INFO     Original events found with ids: preprocessing.py:66
+    [02/03/26 17:14:09] INFO     Original events found with ids: preprocessing.py:66
                                  {'boundary': 1, 'break cnt': 2,                    
                                  'instructed_toCloseEyes': 3,                       
                                  'instructed_toOpenEyes': 4,                        
@@ -370,10 +349,8 @@ test sets.
  .. code-block:: none
 
     labels:  [1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0
-     0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1
-     1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0
-     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0]
-    Shape of data torch.Size([112, 24, 256]) number of samples - Train: 12, Test: 3
+     0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0]
+    Shape of data torch.Size([56, 24, 256]) number of samples - Train: 6, Test: 2
     Eyes-Open/Eyes-Closed balance, train: 0.50, test: 0.50
 
 
@@ -410,7 +387,7 @@ Visualize a batch of target labels
  .. code-block:: none
 
 
-    tensor([0, 1, 1, 1, 1, 0, 1, 1, 1, 1])
+    tensor([0, 1, 1, 1, 1, 0, 1, 1, 0, 0])
 
 
 
@@ -593,12 +570,12 @@ accuracy across six epochs.
 
  .. code-block:: none
 
-    Epoch 0, Train accuracy: 0.62, Test accuracy: 0.54
-    Epoch 1, Train accuracy: 0.82, Test accuracy: 0.71
-    Epoch 2, Train accuracy: 0.93, Test accuracy: 0.86
-    Epoch 3, Train accuracy: 0.96, Test accuracy: 0.93
-    Epoch 4, Train accuracy: 0.97, Test accuracy: 0.93
-    Epoch 5, Train accuracy: 0.97, Test accuracy: 0.89
+    Epoch 0, Train accuracy: 0.66, Test accuracy: 0.50
+    Epoch 1, Train accuracy: 0.79, Test accuracy: 0.50
+    Epoch 2, Train accuracy: 0.91, Test accuracy: 0.50
+    Epoch 3, Train accuracy: 0.88, Test accuracy: 0.57
+    Epoch 4, Train accuracy: 0.91, Test accuracy: 0.57
+    Epoch 5, Train accuracy: 0.88, Test accuracy: 0.50
 
 
 
@@ -606,9 +583,9 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.029 seconds)
+   **Total running time of the script:** (0 minutes 7.909 seconds)
 
-**Estimated memory usage:**  1468 MB
+**Estimated memory usage:**  1342 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_eoec.py:

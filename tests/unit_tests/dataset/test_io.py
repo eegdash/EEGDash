@@ -7,6 +7,7 @@ from eegdash.dataset.io import (
     _find_best_matching_file,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
 
@@ -283,3 +284,33 @@ def test_generate_file_write_error(tmp_path, func, args):
     )
     with patch("pathlib.Path.write_text", side_effect=Exception("Write error")):
         assert func(path, *args) is False
+
+
+# Tests for TSV encoding repair
+
+
+@pytest.mark.parametrize(
+    "encoding,expected_repair",
+    [("latin-1", True), ("cp1252", True), ("utf-8", False)],
+    ids=["latin1", "cp1252", "utf8_no_repair"],
+)
+def test_repair_tsv_encoding(tmp_path, encoding, expected_repair):
+    """Test TSV encoding repair for various encodings."""
+    tsv_path = tmp_path / "channels.tsv"
+    content = "name\ttype\tunits\nFp1\tEEG\tµV\n"
+    tsv_path.write_bytes(content.encode(encoding))
+
+    assert _repair_tsv_encoding(tmp_path) is expected_repair
+    assert tsv_path.read_text(encoding="utf-8") == content
+
+
+def test_repair_tsv_encoding_edge_cases(tmp_path):
+    """Test edge cases: non-existent dir, no TSV files, multiple files."""
+    assert _repair_tsv_encoding(tmp_path / "nonexistent") is False
+
+    (tmp_path / "data.json").write_text("{}")
+    assert _repair_tsv_encoding(tmp_path) is False
+
+    (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
+    (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
+    assert _repair_tsv_encoding(tmp_path) is True

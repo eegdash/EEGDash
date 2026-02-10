@@ -721,6 +721,34 @@ def test_bids_dataset_inheritance_exceptions(tmp_path):
         assert ds._get_bids_file_inheritance(d / "sub-01", "pref", "ext") == []
 
 
+@pytest.mark.parametrize(
+    "encoding,method,expected",
+    [
+        ("latin-1", "channel_labels", ["Fp1", "Fp2"]),
+        ("latin-1", "channel_types", ["EEG", "EOG"]),
+        ("utf-8", "channel_labels", ["Fp1", "Fp2"]),
+    ],
+    ids=["latin1_labels", "latin1_types", "utf8_labels"],
+)
+def test_channel_methods_encoding_fallback(tmp_path, encoding, method, expected):
+    """Test channel_labels/channel_types handle various TSV encodings."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    bids_dir = tmp_path / f"ds_{encoding}_{method}"
+    sub_dir = bids_dir / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    data_file = sub_dir / "sub-01_task-test_eeg.set"
+    data_file.touch()
+
+    channels_tsv = sub_dir / "sub-01_task-test_channels.tsv"
+    content = "name\ttype\tunits\nFp1\tEEG\tµV\nFp2\tEOG\tµV\n"
+    channels_tsv.write_bytes(content.encode(encoding))
+
+    ds = EEGBIDSDataset(str(bids_dir), dataset=bids_dir.name)
+    assert getattr(ds, method)(str(data_file)) == expected
+
+
 def test_bids_dataset_more_coverage(tmp_path):
     # bids_dataset 289-290, 331, 371, 409, 425-431, 552, 557-558, 576-577, 616, 621, 700
     from unittest.mock import patch

@@ -114,6 +114,12 @@ def discover_local_bids_records(
         if final_ext not in valid_raw_extensions:
             continue
 
+        # Skip files without a task entity — these are typically auxiliary
+        # BIDS files (calibration, crosstalk, empty-room) that are not
+        # actual recordings and will fail in read_raw_bids.
+        if not bids_path.task:
+            continue
+
         try:
             bids_relpath = file_path.resolve().relative_to(dataset_root_path.resolve())
         except ValueError:

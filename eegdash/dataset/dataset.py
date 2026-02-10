@@ -355,6 +355,31 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         super().__init__(datasets, lazy=True)
 
+    @property
+    def cumulative_sizes(self) -> list[int]:
+        """Recompute cumulative sizes from current dataset lengths.
+
+        Overrides the cached version from BaseConcatDataset because individual
+        dataset lengths can change after lazy raw loading (estimated ntimes
+        from JSON metadata may differ from actual n_times in the raw file).
+        """
+        from torch.utils.data import ConcatDataset
+
+        return ConcatDataset.cumsum(self.datasets)
+
+    @cumulative_sizes.setter
+    def cumulative_sizes(self, value):
+        # Accept writes from ConcatDataset.__init__ but discard; we always recompute.
+        pass
+
+    def _ensure_cumulative_sizes(self) -> list[int]:
+        """Always recompute cumulative sizes.
+
+        Overrides BaseConcatDataset's cached version (used by __len__) to
+        stay consistent with the dynamic cumulative_sizes property.
+        """
+        return self.cumulative_sizes
+
     def _normalize_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Apply dataset-level record normalization before building datasets.
 

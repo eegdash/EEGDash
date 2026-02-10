@@ -494,13 +494,29 @@ class EEGBIDSDataset:
         json_filename = f"{modality}.json"
         modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
 
+        # Sum all channel type counts from the JSON for a more accurate total.
+        # BIDS sidecars report per-type counts (MEGChannelCount,
+        # MEGREFChannelCount, etc.) but no single total field.
+        _channel_count_keys = [
+            "EEGChannelCount",
+            "MEGChannelCount",
+            "MEGREFChannelCount",
+            "iEEGChannelCount",
+            "NIRSChannelCount",
+            "EOGChannelCount",
+            "ECGChannelCount",
+            "EMGChannelCount",
+            "MiscChannelCount",
+            "TriggerChannelCount",
+        ]
+        nchans_total = sum(
+            modality_json.get(k, 0) or 0 for k in _channel_count_keys
+        )
+
         json_attrs = {
             "sfreq": modality_json.get("SamplingFrequency"),
             "duration": modality_json.get("RecordingDuration"),
-            "nchans": modality_json.get("EEGChannelCount")
-            or modality_json.get("MEGChannelCount")
-            or modality_json.get("iEEGChannelCount")
-            or modality_json.get("NIRSChannelCount"),
+            "nchans": nchans_total or None,
         }
 
         if attribute == "ntimes":

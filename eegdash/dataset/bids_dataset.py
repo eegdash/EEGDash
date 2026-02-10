@@ -509,9 +509,7 @@ class EEGBIDSDataset:
             "MiscChannelCount",
             "TriggerChannelCount",
         ]
-        nchans_total = sum(
-            modality_json.get(k, 0) or 0 for k in _channel_count_keys
-        )
+        nchans_total = sum(modality_json.get(k, 0) or 0 for k in _channel_count_keys)
 
         json_attrs = {
             "sfreq": modality_json.get("SamplingFrequency"),

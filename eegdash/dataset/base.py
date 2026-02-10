@@ -28,6 +28,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _repair_snirf_bids_metadata,
+    _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
 
@@ -167,6 +168,7 @@ class EEGDashRaw(RawDataset):
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
+            _repair_tsv_encoding(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -199,7 +201,9 @@ class EEGDashRaw(RawDataset):
         """
         try:
             # First attempt: standard MNE-BIDS loading
-            return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
+            )
         except Exception as first_error:
             # For SNIRF files, try to fix and retry
             if self.filecache and self.filecache.suffix.lower() == ".snirf":
@@ -210,7 +214,9 @@ class EEGDashRaw(RawDataset):
                     # Retry after fix
                     try:
                         return mne_bids.read_raw_bids(
-                            bids_path=self.bidspath, verbose="ERROR"
+                            bids_path=self.bidspath,
+                            verbose="ERROR",
+                            on_ch_mismatch="rename",
                         )
                     except Exception as retry_error:
                         logger.error(f"Retry also failed: {retry_error}")

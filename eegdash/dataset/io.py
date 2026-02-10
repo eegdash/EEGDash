@@ -5,6 +5,7 @@ specifically for fixing common issues in BIDS datasets and handling
 file system operations.
 """
 
+import json
 import os
 import re
 from difflib import SequenceMatcher
@@ -199,9 +200,60 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
                     logger.debug(f"Created coordsystem symlink: {dst} -> {rel_target}")
                 except Exception as e:
                     logger.warning(f"Failed to link coordsystem: {e}")
+        else:
+            # No coordsystem.json found anywhere — generate a minimal one
+            # Infer the coordinate system from the electrodes filename
+            # (e.g. "sub-01_ses-01_space-CapTrak_electrodes.tsv")
+            _generate_coordsystem_json(electrodes_files[0])
 
     except Exception as e:
         logger.warning(f"Error checking coordsystem symlinks: {e}")
+
+
+def _generate_coordsystem_json(electrodes_tsv: Path) -> bool:
+    """Generate a minimal coordsystem.json from the electrodes.tsv filename.
+
+    BIDS requires coordsystem.json whenever electrodes.tsv exists. Some
+    OpenNeuro datasets omit it. This generates a minimal valid one by
+    extracting the coordinate system from the ``space-<label>`` entity
+    in the electrodes filename.
+
+    Parameters
+    ----------
+    electrodes_tsv : Path
+        Path to the electrodes.tsv file.
+
+    Returns
+    -------
+    bool
+        True if the file was generated, False otherwise.
+
+    """
+    try:
+        name = electrodes_tsv.stem  # e.g. sub-01_ses-01_space-CapTrak_electrodes
+        # Extract space entity
+        match = re.search(r"space-([A-Za-z0-9]+)", name)
+        coord_system = match.group(1) if match else "Other"
+
+        # Build the coordsystem.json filename by replacing _electrodes with
+        # _coordsystem and keeping the rest of the BIDS entities
+        coordsystem_name = name.replace("_electrodes", "_coordsystem") + ".json"
+        coordsystem_path = electrodes_tsv.parent / coordsystem_name
+
+        coordsystem_data = {
+            "EEGCoordinateSystem": coord_system,
+            "EEGCoordinateUnits": "m",
+        }
+
+        coordsystem_path.write_text(json.dumps(coordsystem_data, indent=2))
+        logger.info(
+            f"Generated minimal coordsystem.json: {coordsystem_path.name} "
+            f"(system={coord_system})"
+        )
+        return True
+    except Exception as e:
+        logger.warning(f"Failed to generate coordsystem.json: {e}")
+        return False
 
 
 def _generate_vmrk_stub(vmrk_path: Path, vhdr_name: str) -> bool:
@@ -240,6 +292,47 @@ DataFile={vhdr_name.replace(".vhdr", ".eeg")}
     except Exception as e:
         logger.error(f"Failed to write VMRK stub {vmrk_path}: {e}")
         return False
+
+
+def _repair_tsv_encoding(data_dir: Path) -> bool:
+    """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
+
+    Some datasets have channels.tsv files saved with Latin-1 encoding
+    (common when using µ for microvolts). This converts them to UTF-8.
+
+    Parameters
+    ----------
+    data_dir : Path
+        Directory containing TSV files to check.
+
+    Returns
+    -------
+    bool
+        True if any files were repaired, False otherwise.
+
+    """
+    if not data_dir.exists():
+        return False
+
+    repaired_any = False
+    for tsv_path in data_dir.glob("*.tsv"):
+        try:
+            tsv_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            for encoding in ("cp1252", "latin-1"):
+                try:
+                    content = tsv_path.read_text(encoding=encoding)
+                    tsv_path.write_text(content, encoding="utf-8")
+                    logger.info(
+                        f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)"
+                    )
+                    repaired_any = True
+                    break
+                except Exception:
+                    continue
+        except Exception:
+            pass
+    return repaired_any
 
 
 def _generate_vhdr_from_metadata(

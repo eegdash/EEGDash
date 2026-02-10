@@ -201,7 +201,9 @@ class EEGDashRaw(RawDataset):
         """
         try:
             # First attempt: standard MNE-BIDS loading
-            return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
+            )
         except Exception as first_error:
             # For SNIRF files, try to fix and retry
             if self.filecache and self.filecache.suffix.lower() == ".snirf":
@@ -212,7 +214,9 @@ class EEGDashRaw(RawDataset):
                     # Retry after fix
                     try:
                         return mne_bids.read_raw_bids(
-                            bids_path=self.bidspath, verbose="ERROR"
+                            bids_path=self.bidspath,
+                            verbose="ERROR",
+                            on_ch_mismatch="rename",
                         )
                     except Exception as retry_error:
                         logger.error(f"Retry also failed: {retry_error}")

@@ -242,6 +242,45 @@ DataFile={vhdr_name.replace(".vhdr", ".eeg")}
         return False
 
 
+def _repair_tsv_encoding(data_dir: Path) -> bool:
+    """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
+
+    Some datasets have channels.tsv files saved with Latin-1 encoding
+    (common when using µ for microvolts). This converts them to UTF-8.
+
+    Parameters
+    ----------
+    data_dir : Path
+        Directory containing TSV files to check.
+
+    Returns
+    -------
+    bool
+        True if any files were repaired, False otherwise.
+
+    """
+    if not data_dir.exists():
+        return False
+
+    repaired_any = False
+    for tsv_path in data_dir.glob("*.tsv"):
+        try:
+            tsv_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            for encoding in ("cp1252", "latin-1"):
+                try:
+                    content = tsv_path.read_text(encoding=encoding)
+                    tsv_path.write_text(content, encoding="utf-8")
+                    logger.info(f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)")
+                    repaired_any = True
+                    break
+                except Exception:
+                    continue
+        except Exception:
+            pass
+    return repaired_any
+
+
 def _generate_vhdr_from_metadata(
     vhdr_path: Path,
     record: dict[str, Any],

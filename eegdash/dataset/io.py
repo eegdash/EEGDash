@@ -5,6 +5,7 @@ specifically for fixing common issues in BIDS datasets and handling
 file system operations.
 """
 
+import json
 import os
 import re
 from difflib import SequenceMatcher
@@ -199,9 +200,60 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
                     logger.debug(f"Created coordsystem symlink: {dst} -> {rel_target}")
                 except Exception as e:
                     logger.warning(f"Failed to link coordsystem: {e}")
+        else:
+            # No coordsystem.json found anywhere — generate a minimal one
+            # Infer the coordinate system from the electrodes filename
+            # (e.g. "sub-01_ses-01_space-CapTrak_electrodes.tsv")
+            _generate_coordsystem_json(electrodes_files[0])
 
     except Exception as e:
         logger.warning(f"Error checking coordsystem symlinks: {e}")
+
+
+def _generate_coordsystem_json(electrodes_tsv: Path) -> bool:
+    """Generate a minimal coordsystem.json from the electrodes.tsv filename.
+
+    BIDS requires coordsystem.json whenever electrodes.tsv exists. Some
+    OpenNeuro datasets omit it. This generates a minimal valid one by
+    extracting the coordinate system from the ``space-<label>`` entity
+    in the electrodes filename.
+
+    Parameters
+    ----------
+    electrodes_tsv : Path
+        Path to the electrodes.tsv file.
+
+    Returns
+    -------
+    bool
+        True if the file was generated, False otherwise.
+
+    """
+    try:
+        name = electrodes_tsv.stem  # e.g. sub-01_ses-01_space-CapTrak_electrodes
+        # Extract space entity
+        match = re.search(r"space-([A-Za-z0-9]+)", name)
+        coord_system = match.group(1) if match else "Other"
+
+        # Build the coordsystem.json filename by replacing _electrodes with
+        # _coordsystem and keeping the rest of the BIDS entities
+        coordsystem_name = name.replace("_electrodes", "_coordsystem") + ".json"
+        coordsystem_path = electrodes_tsv.parent / coordsystem_name
+
+        coordsystem_data = {
+            "EEGCoordinateSystem": coord_system,
+            "EEGCoordinateUnits": "m",
+        }
+
+        coordsystem_path.write_text(json.dumps(coordsystem_data, indent=2))
+        logger.info(
+            f"Generated minimal coordsystem.json: {coordsystem_path.name} "
+            f"(system={coord_system})"
+        )
+        return True
+    except Exception as e:
+        logger.warning(f"Failed to generate coordsystem.json: {e}")
+        return False
 
 
 def _generate_vmrk_stub(vmrk_path: Path, vhdr_name: str) -> bool:

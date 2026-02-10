@@ -25,6 +25,27 @@ _COMPANION_FILES = {
     ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
 }
 
+# Modality directory aliases - different sources use different naming conventions
+# BIDS spec uses 'nirs' but some sources (NEMAR, older datasets) use 'fnirs'
+_MODALITY_DIR_ALIASES = {
+    "nirs": ["nirs", "fnirs"],
+    "fnirs": ["nirs", "fnirs"],
+}
+
+_TSV_ENCODINGS = ("utf-8", "cp1252", "latin-1")
+
+
+def _read_tsv_column(tsv_path: Path, column: str) -> list[str]:
+    """Read a column from a TSV file, trying multiple encodings."""
+    for encoding in _TSV_ENCODINGS:
+        try:
+            return pd.read_csv(tsv_path, sep="\t", encoding=encoding)[column].tolist()
+        except UnicodeDecodeError:
+            continue
+        except Exception:
+            return []
+    return []
+
 
 class EEGBIDSDataset:
     """An interface to a local BIDS dataset containing electrophysiology recordings.
@@ -206,7 +227,8 @@ class EEGBIDSDataset:
             modality = "eeg"  # default
             for part in path_parts:
                 if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
-                    modality = part
+                    # Normalize fnirs -> nirs for MNE-BIDS compatibility
+                    modality = "nirs" if part == "fnirs" else part
                     break
 
             # Extract entities from filename using BIDS pattern
@@ -488,85 +510,29 @@ class EEGBIDSDataset:
 
         return json_attrs.get(attribute)
 
-    def channel_labels(self, data_filepath: str) -> list[str]:
-        """Get a list of channel labels from channels.tsv.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        list of str
-            A list of channel names.
-
-        """
-        # Find channels.tsv in the same directory as the data file
-        # It can be named either "channels.tsv" or "*_channels.tsv"
+    def _find_channels_tsv(self, data_filepath: str) -> Path:
+        """Find channels.tsv for a data file."""
         filepath = Path(data_filepath)
-        parent_dir = filepath.parent
-
-        # Try the standard channels.tsv first
-        channels_tsv_path = parent_dir / "channels.tsv"
+        channels_tsv_path = filepath.parent / "channels.tsv"
         if not channels_tsv_path.exists():
-            # Try to find *_channels.tsv matching the filename prefix
-            base_name = filepath.stem  # filename without extension
-            for tsv_file in parent_dir.glob("*_channels.tsv"):
-                # Check if it matches by looking at task/run components
-                tsv_name = tsv_file.stem.replace("_channels", "")
-                if base_name.startswith(tsv_name):
-                    channels_tsv_path = tsv_file
-                    break
+            for tsv_file in filepath.parent.glob("*_channels.tsv"):
+                if filepath.stem.startswith(tsv_file.stem.replace("_channels", "")):
+                    return tsv_file
+        return channels_tsv_path
 
+    def channel_labels(self, data_filepath: str) -> list[str]:
+        """Get a list of channel labels from channels.tsv."""
+        channels_tsv_path = self._find_channels_tsv(data_filepath)
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
-
-        try:
-            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-            return channels_tsv["name"].tolist()
-        except Exception:
-            return []
+        return _read_tsv_column(channels_tsv_path, "name")
 
     def channel_types(self, data_filepath: str) -> list[str]:
-        """Get a list of channel types from channels.tsv.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        list of str
-            A list of channel types.
-
-        """
-        # Find channels.tsv in the same directory as the data file
-        # It can be named either "channels.tsv" or "*_channels.tsv"
-        filepath = Path(data_filepath)
-        parent_dir = filepath.parent
-
-        # Try the standard channels.tsv first
-        channels_tsv_path = parent_dir / "channels.tsv"
-        if not channels_tsv_path.exists():
-            # Try to find *_channels.tsv matching the filename prefix
-            base_name = filepath.stem  # filename without extension
-            for tsv_file in parent_dir.glob("*_channels.tsv"):
-                # Check if it matches by looking at task/run components
-                tsv_name = tsv_file.stem.replace("_channels", "")
-                if base_name.startswith(tsv_name):
-                    channels_tsv_path = tsv_file
-                    break
-
+        """Get a list of channel types from channels.tsv."""
+        channels_tsv_path = self._find_channels_tsv(data_filepath)
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
-
-        try:
-            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-            return channels_tsv["type"].tolist()
-        except Exception:
-            return []
+        return _read_tsv_column(channels_tsv_path, "type")
 
     def num_times(self, data_filepath: str) -> int:
         """Get the number of time points in the recording.
@@ -723,8 +689,12 @@ def _find_bids_files(
                 pass  # Continue to fallback search
 
         # Fallback: manual glob search (finds symlinks too)
-        pattern = f"**/{modality}/*{extension}"
-        found = list(bidsdir.glob(pattern))
+        # Search for both the modality name and its aliases (e.g., nirs and fnirs)
+        dir_names = _MODALITY_DIR_ALIASES.get(modality, [modality])
+        found = []
+        for dir_name in dir_names:
+            pattern = f"**/{dir_name}/*{extension}"
+            found.extend(bidsdir.glob(pattern))
 
         # Filter based on validation mode and exclude derivatives
         valid_files = [

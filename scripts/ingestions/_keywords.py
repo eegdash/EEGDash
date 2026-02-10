@@ -112,13 +112,16 @@ OSF_TITLE_SEARCH_KEYWORDS = {
         "electroencephalography",
         "electroencephalogram",
         "event-related potential",
+        "ERP",
         "ERP CORE",
+        "brain states",
+        "resting state eeg",
     ],
-    "meg": ["MEG", "magnetoencephalography"],
+    "meg": ["MEG", "magnetoencephalography", "magnetoencephalogram"],
     "emg": ["EMG", "electromyography"],
-    "fnirs": ["fNIRS", "NIRS", "near-infrared spectroscopy"],
-    "ieeg": ["iEEG", "intracranial EEG", "ECoG", "sEEG"],
-    "bids": ["BIDS"],
+    "fnirs": ["fNIRS", "NIRS", "near-infrared spectroscopy", "optical imaging"],
+    "ieeg": ["iEEG", "intracranial EEG", "ECoG", "sEEG", "stereotactic EEG"],
+    "bids": ["BIDS", "brain imaging data structure", "BIDS dataset"],
 }
 
 # -----------------------------------------------------------------------------

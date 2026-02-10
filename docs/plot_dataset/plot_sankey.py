@@ -187,7 +187,13 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
     )
 
 
-def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
+def build_sankey(
+    df: pd.DataFrame,
+    columns: Sequence[str],
+    *,
+    width: int = 1260,
+    height: int = 1100,
+) -> go.Figure:
     (
         labels,
         colors,
@@ -221,9 +227,9 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
 
     fig.update_layout(
         font=dict(size=14),
-        height=1100,
-        width=None,
-        autosize=True,
+        height=height,
+        width=width,
+        autosize=False,
         margin=dict(t=50, b=60, l=40, r=40),
         annotations=[
             dict(
@@ -274,13 +280,17 @@ def generate_dataset_sankey(
     out_html: str | Path,
     *,
     columns: Sequence[str] | None = None,
+    width: int = 1260,
+    height: int = 1100,
 ) -> Path:
     """Generate the dataset Sankey diagram and write it to *out_html*."""
     selected_columns = list(columns) if columns is not None else list(DEFAULT_COLUMNS)
     prepared = _prepare_dataframe(df, selected_columns)
-    fig = build_sankey(prepared, selected_columns)
+    fig = build_sankey(prepared, selected_columns, width=width, height=height)
 
-    extra_style = '<div id="dataset-sankey-wrapper" style="width: 100%; height: 100%;">'
+    extra_style = (
+        f'<div id="dataset-sankey-wrapper" style="width: 100%; height: {height}px;">'
+    )
     extra_html = """</div>
 <script>
     window.addEventListener('load', function() {

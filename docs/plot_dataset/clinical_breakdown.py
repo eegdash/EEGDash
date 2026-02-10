@@ -21,7 +21,12 @@ except ImportError:
     )
 
 
-def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Path:
+def generate_clinical_stacked_bar(
+    df: pd.DataFrame,
+    out_html: str | Path,
+    *,
+    width: int = 1260,
+) -> Path:
     """Generate stacked bar chart of Subject Type by Modality."""
     # Preprocess
     df = df.copy()
@@ -164,6 +169,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
         height=650,
+        width=width,
         updatemenus=[
             dict(
                 type="buttons",
@@ -197,7 +203,7 @@ def generate_clinical_stacked_bar(df: pd.DataFrame, out_html: str | Path) -> Pat
             ),
         ],
         margin=dict(t=100, l=60, r=40, b=80),
-        autosize=True,
+        autosize=False,
     )
 
     return build_and_export_html(

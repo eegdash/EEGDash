@@ -19,9 +19,18 @@ from mne_bids import BIDSPath
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
+from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
-from .io import _ensure_coordsystem_symlink, _repair_vhdr_pointers
+from .exceptions import DataIntegrityError
+from .io import (
+    _ensure_coordsystem_symlink,
+    _generate_vhdr_from_metadata,
+    _generate_vmrk_stub,
+    _repair_snirf_bids_metadata,
+    _repair_tsv_encoding,
+    _repair_vhdr_pointers,
+)
 
 
 class EEGDashRaw(RawDataset):
@@ -112,8 +121,12 @@ class EEGDashRaw(RawDataset):
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
-            datatype=self.record.get("datatype", "eeg"),
-            suffix=self.record.get("suffix", "eeg"),
+            datatype=MODALITY_ALIASES.get(
+                self.record.get("datatype", "eeg"), self.record.get("datatype", "eeg")
+            ),
+            suffix=MODALITY_ALIASES.get(
+                self.record.get("suffix", "eeg"), self.record.get("suffix", "eeg")
+            ),
             extension=self.record.get("extension", self.filecache.suffix),
             subject=entities_mne.get("subject"),
             session=entities_mne.get("session"),
@@ -142,16 +155,34 @@ class EEGDashRaw(RawDataset):
         self.filenames = [self.filecache]
 
     def _ensure_raw(self) -> None:
-        """Ensure the raw data file and its dependencies are cached locally."""
+        """Ensure the raw data file and its dependencies are cached locally.
+
+        Warns if the record has known data integrity issues but continues loading.
+        """
+        # Check for data integrity issues and warn (but don't block loading)
+        if self.record.get("_has_missing_files"):
+            DataIntegrityError.warn_from_record(self.record)
+
         self._download_required_files()
 
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
+            _repair_tsv_encoding(self.filecache.parent)
 
-        # Helper: Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
-        if self.filecache:
-            _repair_vhdr_pointers(self.filecache)
+        # Helper: Handle VHDR files - generate if missing, repair if broken
+        if self.filecache and self.filecache.suffix == ".vhdr":
+            if not self.filecache.exists():
+                # Generate VHDR from database metadata if file is missing
+                _generate_vhdr_from_metadata(self.filecache, self.record)
+            else:
+                # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
+                _repair_vhdr_pointers(self.filecache)
+
+            # Also generate VMRK stub if missing (common issue with some datasets)
+            vmrk_path = self.filecache.with_suffix(".vmrk")
+            if not vmrk_path.exists():
+                _generate_vmrk_stub(vmrk_path, self.filecache.name)
 
         if self._raw is None:
             try:
@@ -163,9 +194,35 @@ class EEGDashRaw(RawDataset):
                 raise
 
     def _load_raw(self) -> BaseRaw:
-        """Load raw data, preferring MNE-BIDS if BIDSPath resolves."""
-        # MNE-BIDS handles sidecars automatically
-        return mne_bids.read_raw_bids(bids_path=self.bidspath, verbose="ERROR")
+        """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
+
+        For SNIRF (fNIRS) files, if initial loading fails, applies on-the-fly
+        fixes to BIDS metadata (channels.tsv, scans.tsv) and retries.
+        """
+        try:
+            # First attempt: standard MNE-BIDS loading
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
+            )
+        except Exception as first_error:
+            # For SNIRF files, try to fix and retry
+            if self.filecache and self.filecache.suffix.lower() == ".snirf":
+                logger.warning(
+                    "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
+                )
+                if _repair_snirf_bids_metadata(self.filecache, self.record):
+                    # Retry after fix
+                    try:
+                        return mne_bids.read_raw_bids(
+                            bids_path=self.bidspath,
+                            verbose="ERROR",
+                            on_ch_mismatch="rename",
+                        )
+                    except Exception as retry_error:
+                        logger.error(f"Retry also failed: {retry_error}")
+                        raise retry_error from first_error
+            # Not a SNIRF or fix didn't help - re-raise original error
+            raise
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

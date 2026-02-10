@@ -38,6 +38,7 @@ classifiers = [
 
 dependencies = [
   "braindecode[hub]>=1.3.2",
+  "mne",  # Source overridden in [tool.uv.sources]
   "mne_bids>=0.18.0",
   "numba",
   "requests>=2.25.0",
@@ -51,6 +52,18 @@ dependencies = [
   "pandas>=2.0,<2.2",  # Pin <2.2 due to wfdb ArrowStringArray compatibility
   "pydantic",
 ]
+
+[tool.uv]
+override-dependencies = [
+  "mne>=0.0.0",  # Override braindecode's mne>=1.11.0 constraint
+  "mne-bids>=0.0.0",  # Override version constraint for git source
+]
+
+[tool.uv.sources]
+# Solve this when we release a new version of braindecode and mne-python
+braindecode = { git = "https://github.com/braindecode/braindecode.git", branch = "master" }
+mne = { git = "https://github.com/mne-tools/mne-python.git", branch = "main" }
+mne_bids = { git = "https://github.com/bruAristimunha/mne-bids.git", branch = "add-mef3-reader-support" }
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"
@@ -156,5 +169,6 @@ python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "benchmark: marks tests as benchmarks (run with '--benchmark-enable')",
 ]
-addopts = "-m 'not slow' -ra --durations=10"
+addopts = "-m 'not slow and not benchmark' -ra --durations=10"

@@ -12,22 +12,25 @@ from typing import Any
 from mne_bids import find_matching_paths
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
+from .const import MODALITY_ALIASES
 from .schemas import create_record
-
-_MODALITY_ALIASES = {"fnirs": "nirs"}
 
 
 def _normalize_modalities(modality_filter: Any) -> list[str]:
+    """Normalize modality filter to a list of strings.
+
+    If None, returns a default set of physiological modalities (excluding motion).
+    """
     if modality_filter is None:
-        return ["eeg"]
+        return ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
     if isinstance(modality_filter, (list, tuple, set)):
         modalities = [str(m).strip().lower() for m in modality_filter if m]
     else:
         modalities = [str(modality_filter).strip().lower()]
 
-    modalities = [_MODALITY_ALIASES.get(m, m) for m in modalities if m]
-    return modalities or ["eeg"]
+    modalities = [MODALITY_ALIASES.get(m, m) for m in modalities if m]
+    return modalities or ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
 
 def discover_local_bids_records(
@@ -91,7 +94,9 @@ def discover_local_bids_records(
     records_out: list[dict[str, Any]] = []
 
     valid_raw_extensions = {
-        ext for m in modalities for ext in ALLOWED_DATATYPE_EXTENSIONS.get(m, [])
+        ext
+        for m in modalities
+        for ext in ALLOWED_DATATYPE_EXTENSIONS.get(MODALITY_ALIASES.get(m, m), [])
     }
 
     for bids_path in matched_paths:
@@ -107,6 +112,12 @@ def discover_local_bids_records(
         final_ext = file_path.suffix.lower()
 
         if final_ext not in valid_raw_extensions:
+            continue
+
+        # Skip files without a task entity — these are typically auxiliary
+        # BIDS files (calibration, crosstalk, empty-room) that are not
+        # actual recordings and will fail in read_raw_bids.
+        if not bids_path.task:
             continue
 
         try:

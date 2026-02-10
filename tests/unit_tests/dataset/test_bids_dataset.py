@@ -800,3 +800,89 @@ def test_bids_dataset_more_coverage(tmp_path):
 
     # it uses EPHY_ALLOWED_DATATYPES
     assert _find_bids_files(d, ".none_ext") == []
+
+
+def test_json_inheritance_case_insensitive_task(tmp_path):
+    """Test that JSON sidecar matching is case-insensitive for task entity.
+
+    Reproduces the ds003751 scenario where data files use task-Emotion
+    (capital E) but sidecar files use task-emotion (lowercase e).
+    """
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_case"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    # Data file with uppercase task entity (like ds003751)
+    data_file = sub_dir / "sub-01_task-Emotion_eeg.set"
+    data_file.touch()
+
+    # JSON sidecar with lowercase task entity (case mismatch)
+    json_file = sub_dir / "sub-01_task-emotion_eeg.json"
+    json_file.write_text(json.dumps({"SamplingFrequency": 250, "EEGChannelCount": 128}))
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_case")
+
+    # Should find the JSON despite the case mismatch
+    assert ds.get_bids_file_attribute("sfreq", str(data_file)) == 250
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 128
+
+
+def test_json_inheritance_generalized_suffix(tmp_path):
+    """Test that JSON inheritance uses the actual modality suffix, not hardcoded '_eeg'."""
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_meg"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "meg"
+    sub_dir.mkdir(parents=True)
+
+    # MEG data file
+    data_file = sub_dir / "sub-01_task-rest_meg.fif"
+    data_file.touch()
+
+    # MEG JSON sidecar
+    json_file = sub_dir / "sub-01_task-rest_meg.json"
+    json_file.write_text(
+        json.dumps({"SamplingFrequency": 1000, "MEGChannelCount": 306})
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_meg", modalities=["meg"])
+
+    assert ds.get_bids_file_attribute("sfreq", str(data_file)) == 1000
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 306
+
+
+def test_find_channels_tsv_case_insensitive(tmp_path):
+    """Test that _find_channels_tsv matches despite task entity case mismatch."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_ch_case"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    # Data file with uppercase task
+    data_file = sub_dir / "sub-01_task-Emotion_eeg.set"
+    data_file.touch()
+
+    # Channels TSV with lowercase task (case mismatch)
+    channels_tsv = sub_dir / "sub-01_task-emotion_channels.tsv"
+    channels_tsv.write_text("name\ttype\nFp1\tEEG\nFp2\tEEG\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_ch_case")
+
+    labels = ds.channel_labels(str(data_file))
+    assert labels == ["Fp1", "Fp2"]
+
+    types = ds.channel_types(str(data_file))
+    assert types == ["EEG", "EEG"]

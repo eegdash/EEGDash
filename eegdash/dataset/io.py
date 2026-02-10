@@ -271,7 +271,9 @@ def _repair_tsv_encoding(data_dir: Path) -> bool:
                 try:
                     content = tsv_path.read_text(encoding=encoding)
                     tsv_path.write_text(content, encoding="utf-8")
-                    logger.info(f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)")
+                    logger.info(
+                        f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)"
+                    )
                     repaired_any = True
                     break
                 except Exception:

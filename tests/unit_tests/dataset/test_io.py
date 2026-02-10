@@ -312,5 +312,5 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
     assert _repair_tsv_encoding(tmp_path) is False
 
     (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
-    (tmp_path / "channels.tsv").write_bytes("name\nFp1\n".encode("latin-1"))
+    (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
     assert _repair_tsv_encoding(tmp_path) is True

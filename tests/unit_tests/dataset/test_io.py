@@ -1,8 +1,13 @@
 from unittest.mock import patch
 
+import pytest
+
 from eegdash.dataset.io import (
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
+    _generate_vhdr_from_metadata,
+    _generate_vmrk_stub,
+    _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
 
@@ -187,3 +192,125 @@ MarkerFile=sub-054_sub-054_date-20210505ses-00_task-rest_eeg.vmrk
     new_content = vhdr_path.read_text()
     assert "sub-054_ses-00_task-rest_eeg.eeg" in new_content
     assert "sub-054_ses-00_task-rest_eeg.vmrk" in new_content
+
+
+# Tests for VHDR/VMRK generation from metadata
+
+
+def test_generate_vhdr_from_metadata_success(tmp_path):
+    """Test successful VHDR generation from complete metadata."""
+    vhdr_path = tmp_path / "sub-01_task-rest_eeg.vhdr"
+    record = {
+        "ch_names": ["Fp1", "Fp2", "F3", "F4"],
+        "sampling_frequency": 500,
+        "nchans": 4,
+    }
+
+    assert _generate_vhdr_from_metadata(vhdr_path, record) is True
+
+    content = vhdr_path.read_text()
+    assert "NumberOfChannels=4" in content
+    assert "SamplingInterval=2000" in content  # 1_000_000 / 500
+    assert "Ch1=Fp1,,0.1,µV" in content
+    assert (tmp_path / "sub-01_task-rest_eeg.vmrk").exists()  # VMRK stub created
+
+
+@pytest.mark.parametrize(
+    "record,reason",
+    [
+        ({"sampling_frequency": 500, "nchans": 4}, "missing ch_names"),
+        ({"ch_names": ["Fp1"], "nchans": 1}, "missing sampling_frequency"),
+        ({"ch_names": ["Fp1"], "sampling_frequency": 500}, "missing nchans"),
+        (
+            {"ch_names": ["Fp1"], "sampling_frequency": 500, "nchans": 4},
+            "ch_names/nchans mismatch",
+        ),
+    ],
+    ids=["no_ch_names", "no_sfreq", "no_nchans", "mismatch"],
+)
+def test_generate_vhdr_invalid_metadata(tmp_path, record, reason):
+    """Test VHDR generation fails gracefully with invalid metadata."""
+    vhdr_path = tmp_path / "test.vhdr"
+    assert _generate_vhdr_from_metadata(vhdr_path, record) is False, reason
+    assert not vhdr_path.exists()
+
+
+def test_generate_vhdr_creates_parent_dirs(tmp_path):
+    """Test VHDR generation creates parent directories if needed."""
+    vhdr_path = tmp_path / "sub-01" / "eeg" / "test.vhdr"
+    record = {"ch_names": ["Fp1", "Fp2"], "sampling_frequency": 256, "nchans": 2}
+
+    assert _generate_vhdr_from_metadata(vhdr_path, record) is True
+    assert vhdr_path.exists()
+
+
+def test_generate_vhdr_does_not_overwrite_vmrk(tmp_path):
+    """Test VHDR generation doesn't overwrite existing VMRK file."""
+    vmrk_path = tmp_path / "test.vmrk"
+    vmrk_path.write_text("Custom VMRK content")
+
+    record = {"ch_names": ["Fp1"], "sampling_frequency": 500, "nchans": 1}
+    _generate_vhdr_from_metadata(tmp_path / "test.vhdr", record)
+
+    assert vmrk_path.read_text() == "Custom VMRK content"
+
+
+def test_generate_vmrk_stub_success(tmp_path):
+    """Test successful VMRK stub generation."""
+    vmrk_path = tmp_path / "test.vmrk"
+    assert _generate_vmrk_stub(vmrk_path, "test.vhdr") is True
+
+    content = vmrk_path.read_text()
+    assert "Brain Vision Data Exchange Marker File" in content
+    assert "DataFile=test.eeg" in content
+
+
+@pytest.mark.parametrize(
+    "func,args",
+    [
+        (_generate_vmrk_stub, ("test.vhdr",)),
+        (
+            _generate_vhdr_from_metadata,
+            ({"ch_names": ["Fp1"], "sampling_frequency": 500, "nchans": 1},),
+        ),
+    ],
+)
+def test_generate_file_write_error(tmp_path, func, args):
+    """Test file generation handles write errors gracefully."""
+    path = (
+        tmp_path / "test.vhdr"
+        if func == _generate_vhdr_from_metadata
+        else tmp_path / "test.vmrk"
+    )
+    with patch("pathlib.Path.write_text", side_effect=Exception("Write error")):
+        assert func(path, *args) is False
+
+
+# Tests for TSV encoding repair
+
+
+@pytest.mark.parametrize(
+    "encoding,expected_repair",
+    [("latin-1", True), ("cp1252", True), ("utf-8", False)],
+    ids=["latin1", "cp1252", "utf8_no_repair"],
+)
+def test_repair_tsv_encoding(tmp_path, encoding, expected_repair):
+    """Test TSV encoding repair for various encodings."""
+    tsv_path = tmp_path / "channels.tsv"
+    content = "name\ttype\tunits\nFp1\tEEG\tµV\n"
+    tsv_path.write_bytes(content.encode(encoding))
+
+    assert _repair_tsv_encoding(tmp_path) is expected_repair
+    assert tsv_path.read_text(encoding="utf-8") == content
+
+
+def test_repair_tsv_encoding_edge_cases(tmp_path):
+    """Test edge cases: non-existent dir, no TSV files, multiple files."""
+    assert _repair_tsv_encoding(tmp_path / "nonexistent") is False
+
+    (tmp_path / "data.json").write_text("{}")
+    assert _repair_tsv_encoding(tmp_path) is False
+
+    (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
+    (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
+    assert _repair_tsv_encoding(tmp_path) is True

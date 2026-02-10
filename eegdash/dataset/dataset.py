@@ -805,6 +805,9 @@ class EEGChallengeDataset(EEGDashDataset):
             warning_message = str(message_text)
             logger.warning(warning_message)
 
+        if not kwargs.get("download", True) and "modality" not in kwargs:
+            kwargs["modality"] = "eeg"
+
         super().__init__(
             dataset=dataset_id,
             query=query,

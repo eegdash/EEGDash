@@ -15,6 +15,7 @@ Output: consolidated/osf_datasets.json
 """
 
 import argparse
+import os
 import sys
 import time
 from pathlib import Path
@@ -40,16 +41,36 @@ from _keywords import (
     OSF_TITLE_SEARCH_KEYWORDS as TITLE_SEARCH_KEYWORDS,
 )
 from _serialize import (
+    PROJECT_ROOT,
     extract_subjects_count,
     generate_dataset_id,
     save_datasets_deterministically,
     setup_paths,
 )
+from dotenv import load_dotenv
 
 setup_paths()
 from eegdash.schemas import Dataset, create_dataset
 
 OSF_API_URL = "https://api.osf.io/v2"
+
+# Load API key from .env.osf, .env or environment
+_env_files = [PROJECT_ROOT / ".env.osf", PROJECT_ROOT / ".env"]
+for env_file in _env_files:
+    if env_file.exists():
+        load_dotenv(env_file)
+
+OSF_API_KEY = os.environ.get("OSF_API_KEY", "")
+
+
+def get_osf_headers(extra: dict[str, str] | None = None) -> dict[str, str]:
+    """Build headers for OSF API requests including authentication."""
+    headers = {"Accept": "application/json"}
+    if OSF_API_KEY:
+        headers["Authorization"] = f"Bearer {OSF_API_KEY}"
+    if extra:
+        headers.update(extra)
+    return headers
 
 
 def fetch_node_files(
@@ -72,9 +93,10 @@ def fetch_node_files(
     """
     files = []
     url = f"{OSF_API_URL}/nodes/{node_id}/files/{storage_provider}/"
+    headers = get_osf_headers()
 
     try:
-        data, response = request_json("get", url, timeout=timeout)
+        data, response = request_json("get", url, headers=headers, timeout=timeout)
         if not response or response.status_code != 200 or data is None:
             return files
         items = data.get("data", [])
@@ -105,9 +127,11 @@ def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
         return LICENSE_NAMES[license_id]
 
     try:
+        headers = get_osf_headers()
         data, response = request_json(
             "get",
             f"{OSF_API_URL}/licenses/{license_id}/",
+            headers=headers,
             timeout=timeout,
         )
         if response and response.status_code == 200 and data is not None:
@@ -121,10 +145,12 @@ def fetch_license_name(license_id: str, timeout: float = 10.0) -> str | None:
 def fetch_contributors(node_id: str, timeout: float = 10.0) -> list[str]:
     """Fetch contributor names for a node."""
     try:
+        headers = get_osf_headers()
         data, response = request_json(
             "get",
             f"{OSF_API_URL}/nodes/{node_id}/contributors/",
             params={"embed": "users"},
+            headers=headers,
             timeout=timeout,
         )
         if not response or response.status_code != 200 or data is None:
@@ -177,9 +203,11 @@ def fetch_node_children(
     datasets = []
 
     try:
+        headers = get_osf_headers()
         data, response = request_json(
             "get",
             f"{OSF_API_URL}/nodes/{node_id}/children/",
+            headers=headers,
             params={"page[size]": 100},
             timeout=timeout,
         )

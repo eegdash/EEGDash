@@ -11,6 +11,7 @@ from .colours import (  # noqa: F401
     hex_to_rgba,
 )
 from .growth import generate_dataset_growth  # noqa: F401
+from .moabb_bubble import generate_moabb_bubble  # noqa: F401
 from .plot_sankey import generate_dataset_sankey  # noqa: F401
 from .ridgeline import generate_modality_ridgeline  # noqa: F401
 from .treemap import generate_dataset_treemap  # noqa: F401

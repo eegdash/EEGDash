@@ -126,3 +126,27 @@ def test_dir_function():
     attrs = dir(eegdash)
     assert "EEGDash" in attrs
     assert "EEGDashDataset" in attrs
+
+
+def test_lazy_import_data_integrity_error():
+    """Test lazy import of DataIntegrityError (line 33-35)."""
+    import eegdash
+
+    cls = eegdash.DataIntegrityError
+    assert cls is not None
+    # Verify it's the actual class
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    assert cls is DataIntegrityError
+
+
+def test_lazy_import_schemas():
+    """Test lazy import of schemas module (line 45-47)."""
+    import eegdash
+
+    mod = eegdash.schemas
+    assert mod is not None
+    # Verify it's the actual module
+    from eegdash import schemas as direct_schemas
+
+    assert mod is direct_schemas

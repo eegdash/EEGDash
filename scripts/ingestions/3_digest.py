@@ -237,6 +237,64 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
         return None
 
 
+def _parse_fif_with_mne(fif_path: Path) -> dict[str, Any] | None:
+    """Parse metadata from FIF file using MNE.
+
+    Uses ``on_split_missing="warn"`` so that git-annex datasets where
+    content-hash filenames break MNE's split-file linkage can still
+    have their header metadata extracted.
+
+    Parameters
+    ----------
+    fif_path : Path
+        Path to the FIF file.
+
+    Returns
+    -------
+    dict[str, Any] | None
+        Dictionary with sampling_frequency, nchans, ch_names,
+        or None if parsing fails.
+
+    """
+    # Check if file exists and is readable (not a broken git-annex symlink)
+    if not fif_path.exists():
+        return None
+    try:
+        resolved = fif_path.resolve()
+        if not resolved.exists():
+            return None
+    except (OSError, RuntimeError):
+        return None
+
+    try:
+        import mne
+
+        raw = mne.io.read_raw_fif(
+            str(fif_path), preload=False, on_split_missing="warn", verbose=False
+        )
+        try:
+            result: dict[str, Any] = {}
+
+            sfreq = raw.info.get("sfreq")
+            if sfreq:
+                result["sampling_frequency"] = float(sfreq)
+
+            ch_names = raw.info.get("ch_names")
+            if ch_names:
+                result["ch_names"] = list(ch_names)
+                result["nchans"] = len(ch_names)
+
+            return result if result else None
+        finally:
+            try:
+                raw.close()
+            except Exception:
+                pass
+
+    except Exception:
+        return None
+
+
 # Companion files required for different formats
 # These are critical files without which the data cannot be loaded
 COMPANION_FILE_REQUIREMENTS = {
@@ -971,6 +1029,17 @@ def extract_record(
                 nchans = edf_metadata.get("nchans")
             if not ch_names:
                 ch_names = edf_metadata.get("ch_names")
+
+    # FIF fallback using MNE (handles missing split continuations in git-annex datasets)
+    if (not sampling_frequency or not nchans) and ext == ".fif":
+        fif_metadata = _parse_fif_with_mne(bids_file_path)
+        if fif_metadata:
+            if not sampling_frequency:
+                sampling_frequency = fif_metadata.get("sampling_frequency")
+            if not nchans:
+                nchans = fif_metadata.get("nchans")
+            if not ch_names:
+                ch_names = fif_metadata.get("ch_names")
 
     # EEGLAB .set fallback - extracts metadata from .set header even if .fdt is missing
     if (not sampling_frequency or not nchans) and ext == ".set":

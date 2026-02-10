@@ -50,10 +50,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:76: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
       warn(
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.5B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.48B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.47B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.98B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.21B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.65B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.65B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 24099  =      0.000 ...   240.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -70,10 +70,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.6B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.1B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.16B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.73B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.78B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.77B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23899  =      0.000 ...   238.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -90,10 +90,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.8B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.5B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
-    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.99B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.98B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]    Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23499  =      0.000 ...   234.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -110,10 +110,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.52B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.52B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.03B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.60B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.60B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 42799  =      0.000 ...   427.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -130,10 +130,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.5B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.79B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.78B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.88B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.88B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.88B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 64599  =      0.000 ...   645.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -150,10 +150,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.46B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.89B/s]    Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.89B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23699  =      0.000 ...   236.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -170,10 +170,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.94B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.95B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.09B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.39B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.39B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 42399  =      0.000 ...   423.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -190,10 +190,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.9B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.73B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.72B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.75B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.75B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 67699  =      0.000 ...   676.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -210,10 +210,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.1B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.3B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.49B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.49B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.52B/s]    Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.52B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23699  =      0.000 ...   236.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -230,10 +230,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.9B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.74B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.73B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.27B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.53B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.52B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 72999  =      0.000 ...   729.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -250,10 +250,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.9B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.6B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.3B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.40B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 28099  =      0.000 ...   280.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -270,10 +270,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.9B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.5B/s]
-    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.37B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.36B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.28B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.24B/s]    Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.23B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 30399  =      0.000 ...   303.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -290,10 +290,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.14B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.74B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.73B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.80B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.86B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.54B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.54B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 45399  =      0.000 ...   453.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -310,10 +310,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.3B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.89B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.88B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.59B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.58B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 25499  =      0.000 ...   254.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -330,10 +330,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.2B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
-    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.61B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.61B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.73B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.52B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]    Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.83B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 70099  =      0.000 ...   700.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -350,10 +350,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.96B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.5B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.97B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.96B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.36B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.54B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.54B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 25099  =      0.000 ...   250.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -370,10 +370,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.5B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.7B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.22B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.47B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.47B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.04B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.03B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01<00:00, 1.06s/B]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01<00:00, 1.06s/B]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 90199  =      0.000 ...   901.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -390,10 +390,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.2B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.15B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.14B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.38B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.33B/s]    Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.33B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 42199  =      0.000 ...   421.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -410,10 +410,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.91B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.12B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.11B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.01B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.00B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 34499  =      0.000 ...   344.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -430,10 +430,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.0B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.49B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.62B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.95B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.40B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.40B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 27499  =      0.000 ...   274.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -450,10 +450,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.98B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
-    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.95B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.47B/s]
+    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.31B/s]    Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.30B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 44799  =      0.000 ...   447.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -470,10 +470,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.1B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.6B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.06B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.05B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.16B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.93B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.93B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 39299  =      0.000 ...   392.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -490,10 +490,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.6B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.95B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.59B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.58B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.45B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.44B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 28799  =      0.000 ...   287.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -510,10 +510,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.8B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.4B/s]
-    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.80B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.80B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.54B/s]    Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.53B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 44899  =      0.000 ...   448.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -530,10 +530,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.3B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.67B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.0B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.88B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.87B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.92B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.92B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 64399  =      0.000 ...   643.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -550,10 +550,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.14B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.14B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.28B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.38B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.62B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.62B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23599  =      0.000 ...   235.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -570,10 +570,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.9B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.37B/s]
-    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.45B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.45B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.49B/s]    Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.49B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 45899  =      0.000 ...   458.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -590,10 +590,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.4B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.17B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.41B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.41B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.55B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.30B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.72B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.71B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 19899  =      0.000 ...   198.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -610,10 +610,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.5B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
     Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.88B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.87B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.3B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.20B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.20B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 28499  =      0.000 ...   284.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -630,10 +630,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.96B/s]
     Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
-    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.21B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.21B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.89B/s]    Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.88B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 36399  =      0.000 ...   363.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -650,10 +650,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.8B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.61B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.60B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.04B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.04B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 33199  =      0.000 ...   331.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -670,10 +670,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.7B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.86B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.85B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.10B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.53B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.52B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23899  =      0.000 ...   238.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -690,10 +690,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.9B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.93B/s]
-    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.58B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.57B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.67B/s]    Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.67B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 73799  =      0.000 ...   737.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -710,10 +710,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.5B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.5B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.10B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.10B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 65899  =      0.000 ...   658.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -730,10 +730,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.97B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.96B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.09B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.84B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.83B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 25099  =      0.000 ...   250.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -750,10 +750,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.9B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
-    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.24B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.23B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.12B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.52B/s]    Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.51B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 24599  =      0.000 ...   245.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -770,10 +770,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.6B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.6B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.65B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.65B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.18B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 68399  =      0.000 ...   683.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -790,10 +790,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.0B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.5B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.4B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.56B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.56B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.74B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.37B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.53B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.52B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 41099  =      0.000 ...   410.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -810,10 +810,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.8B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.5B/s]
-    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.35B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.35B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.44B/s]    Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.44B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 87499  =      0.000 ...   874.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -830,10 +830,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.9B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.20B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.19B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.45B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.45B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 27199  =      0.000 ...   271.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -850,10 +850,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.6B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.4B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.3B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.39B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.38B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.57B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.57B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 20499  =      0.000 ...   204.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -870,10 +870,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.24B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.07B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.07B/s]
-    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.33B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.33B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.04B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.04B/s]
+    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.43B/s]    Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.43B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 28099  =      0.000 ...   280.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -890,10 +890,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.1B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.0B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.44B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.43B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.80B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.51B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.51B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 76999  =      0.000 ...   769.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -910,10 +910,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.0B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.01B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.2B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.75B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.18B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.63B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.62B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 25399  =      0.000 ...   253.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -930,10 +930,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.9B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.5B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.9B/s]
-    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.94B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.93B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
+    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.97B/s]    Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.96B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 34099  =      0.000 ...   340.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -950,10 +950,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.3B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.8B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.09B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.08B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.3B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.03B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.03B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 32499  =      0.000 ...   324.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -970,10 +970,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.9B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.03B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.3B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.17B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.16B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 24499  =      0.000 ...   244.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -990,10 +990,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.7B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
-    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.13B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.12B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.67B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.02B/s]    Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.01B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 31299  =      0.000 ...   312.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1010,10 +1010,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.8B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.59B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.58B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.7B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.66B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.73B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.73B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 63799  =      0.000 ...   637.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1030,10 +1030,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.4B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.39B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.39B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.91B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.32B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.32B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 84299  =      0.000 ...   842.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1050,10 +1050,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.4B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.4B/s]
-    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.04B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.03B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.41B/s]    Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.41B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 37799  =      0.000 ...   377.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1070,10 +1070,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.9B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.7B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.5B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.04B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.66B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.66B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 24199  =      0.000 ...   241.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1090,10 +1090,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.0B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.0B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.84B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.83B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.95B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.72B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.71B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23399  =      0.000 ...   233.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1110,10 +1110,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.4B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.5B/s]
-    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.02B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.57B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.6B/s]
+    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.59B/s]    Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.58B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23899  =      0.000 ...   238.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1130,10 +1130,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.1B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.1B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.4B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.50B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.50B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.92B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.92B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 37899  =      0.000 ...   378.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1150,10 +1150,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.6B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.8B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.80B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.79B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.06B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.34B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.33B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 25099  =      0.000 ...   250.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1170,10 +1170,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.7B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.2B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.2B/s]
-    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.02B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.2B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.0B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.9B/s]
+    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.62B/s]    Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.62B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 24899  =      0.000 ...   248.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1190,10 +1190,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.04B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.95B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.61B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.19B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.1B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.80B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.79B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23299  =      0.000 ...   232.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1210,10 +1210,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.8B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.86B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.63B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.62B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.3B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.5B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.60B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.60B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23499  =      0.000 ...   234.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1230,10 +1230,10 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
     - Upper transition bandwidth: 8.75 Hz (-6 dB cutoff frequency: 39.38 Hz)
     - Filter length: 331 samples (3.310 s)
 
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.4B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.6B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
-    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.45B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.31B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.91B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.5B/s]
+    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.00B/s]    Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.00B/s]
     Sampling frequency of the instance is already 100.0, returning unmodified.
     Reading 0 ... 23299  =      0.000 ...   232.990 secs...
     Filtering raw data in 1 contiguous segment
@@ -1252,125 +1252,125 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
 
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/models/eegconformer.py:227: UserWarning: This model has only been tested on no more than 64 channels. no guarantee to work with more channels.
       warnings.warn(
-    Epoch 0, Train Loss: 0.9679641723632812
-    Epoch 0, Train Loss: 0.8921032547950745
-    Epoch 0, Train Loss: 0.8491494655609131
-    Epoch 0, Train Loss: 0.8439897298812866
-    Epoch 0, Train Loss: 0.7785025835037231
-    Epoch 0, Train Loss: 0.6439817547798157
-    Epoch 0, Train Loss: 0.813966691493988
-    Epoch 0, Train Loss: 0.7177593111991882
-    Epoch 0, Train Loss: 0.6848217844963074
-    Epoch 0, Train Loss: 0.7088986039161682
-    Epoch 0, Train Loss: 0.5866864919662476
-    Epoch 0, Train Loss: 0.6569132804870605
-    Epoch 0, Train Loss: 0.6274411678314209
-    Epoch 0, Train Loss: 0.6201997399330139
-    Epoch 0, Train Loss: 0.543755292892456
-    Epoch 0, Train Loss: 0.5202232003211975
-    Epoch 0, Train Loss: 0.5641734600067139
-    Epoch 0, Train Loss: 0.5559597611427307
-    Epoch 0, Train Loss: 0.5279778838157654
-    Epoch 0, Train Loss: 0.4431964159011841
-    Epoch 0, Train Loss: 0.47026383876800537
-    Epoch 0, Train Loss: 0.4836161136627197
-    Epoch 0, Train Loss: 0.45760712027549744
-    Epoch 0, Train Loss: 0.4191647469997406
-    Epoch 0, Train Loss: 0.3658756613731384
-    Epoch 0, Train Loss: 0.3718818426132202
-    Epoch 0, Train Loss: 0.4073101878166199
-    Epoch 0, Train Loss: 0.40275639295578003
-    Epoch 0, Train Loss: 0.3633323013782501
-    Epoch 0, Train Loss: 0.3322834372520447
-    Epoch 0, Train Loss: 0.31492024660110474
-    Epoch 0, Train Loss: 0.3466290533542633
-    Epoch 0, Train Loss: 0.2923710346221924
-    Epoch 0, Train Loss: 0.25961771607398987
-    Epoch 0, Train Loss: 0.2600644826889038
-    Epoch 0, Train Loss: 0.2500346302986145
-    Epoch 0, Train Loss: 0.2974103093147278
-    Epoch 0, Train Loss: 0.2338884472846985
-    Epoch 0, Train Loss: 0.24134014546871185
-    Epoch 0, Train Loss: 0.2363370656967163
-    Epoch 0, Train Loss: 0.21605877578258514
-    Epoch 0, Train Loss: 0.20721307396888733
-    Epoch 0, Train Loss: 0.21125273406505585
-    Epoch 0, Train Loss: 0.2294258177280426
-    Epoch 0, Train Loss: 0.2026510089635849
-    Epoch 0, Train Loss: 0.1948872208595276
-    Epoch 0, Train Loss: 0.17918986082077026
-    Epoch 0, Train Loss: 0.15126317739486694
-    Epoch 0, Train Loss: 0.15306508541107178
-    Epoch 0, Train Loss: 0.1736542135477066
-    Epoch 0, Train Loss: 0.14585548639297485
-    Epoch 0, Train Loss: 0.1383868157863617
-    Epoch 0, Train Loss: 0.16423702239990234
-    Epoch 0, Train Loss: 0.17013515532016754
-    Epoch 0, Train Loss: 0.17438556253910065
-    Epoch 0, Train Loss: 0.1673557460308075
-    Epoch 0, Train Loss: 0.14590588212013245
-    Epoch 0, Train Loss: 0.12571638822555542
-    Epoch 0, Train Loss: 0.1400187611579895
-    Epoch 0, Train Loss: 0.1296621859073639
-    Epoch 0, Train Loss: 0.17775483429431915
-    Epoch 0, Train Loss: 0.11948811262845993
-    Epoch 0, Train Loss: 0.15704238414764404
-    Epoch 0, Train Loss: 0.14076818525791168
-    Epoch 0, Train Loss: 0.15396572649478912
-    Epoch 0, Train Loss: 0.14290374517440796
-    Epoch 0, Train Loss: 0.13138258457183838
-    Epoch 0, Train Loss: 0.11857160925865173
-    Epoch 0, Train Loss: 0.13481058180332184
-    Epoch 0, Train Loss: 0.13691751658916473
-    Epoch 0, Train Loss: 0.12851805984973907
-    Epoch 0, Train Loss: 0.1214740201830864
-    Epoch 0, Train Loss: 0.13724805414676666
-    Epoch 0, Train Loss: 0.11373727023601532
-    Epoch 0, Train Loss: 0.09391394257545471
-    Epoch 0, Train Loss: 0.1319986879825592
-    Epoch 0, Train Loss: 0.11445127427577972
-    Epoch 0, Train Loss: 0.11710500717163086
-    Epoch 0, Train Loss: 0.15299314260482788
-    Epoch 0, Train Loss: 0.09594950079917908
-    Epoch 0, Train Loss: 0.13457901775836945
-    Epoch 0, Train Loss: 0.10883177071809769
-    Epoch 0, Train Loss: 0.1314251571893692
-    Epoch 0, Train Loss: 0.1067037582397461
-    Epoch 0, Train Loss: 0.12026014924049377
-    Epoch 0, Train Loss: 0.14685605466365814
-    Epoch 0, Train Loss: 0.13076728582382202
-    Epoch 0, Train Loss: 0.11947617679834366
-    Epoch 0, Train Loss: 0.14975270628929138
-    Epoch 0, Train Loss: 0.1232062354683876
-    Epoch 0, Train Loss: 0.13587675988674164
-    Epoch 0, Train Loss: 0.11332273483276367
-    Epoch 0, Train Loss: 0.11118683218955994
-    Epoch 0, Train Loss: 0.14852964878082275
-    Epoch 0, Train Loss: 0.12033040821552277
-    Epoch 0, Test Loss: 0.2276788353919983
-    Epoch 0, Test Loss: 0.22784370183944702
-    Epoch 0, Test Loss: 0.22980865836143494
-    Epoch 0, Test Loss: 0.2305937260389328
-    Epoch 0, Test Loss: 0.22821111977100372
-    Epoch 0, Test Loss: 0.2283579260110855
-    Epoch 0, Test Loss: 0.22933079302310944
-    Epoch 0, Test Loss: 0.22942997515201569
-    Epoch 0, Test Loss: 0.23004186153411865
-    Epoch 0, Test Loss: 0.22862255573272705
-    Epoch 0, Test Loss: 0.22917121648788452
-    Epoch 0, Test Loss: 0.22956740856170654
-    Epoch 0, Test Loss: 0.22812439501285553
-    Epoch 0, Test Loss: 0.23027881979942322
-    Epoch 0, Test Loss: 0.22787413001060486
-    Epoch 0, Test Loss: 0.22845429182052612
-    Epoch 0, Test Loss: 0.2290370762348175
-    Epoch 0, Test Loss: 0.2270207554101944
-    Epoch 0, Test Loss: 0.22845089435577393
-    Epoch 0, Test Loss: 0.229217529296875
-    Epoch 0, Test Loss: 0.2282710075378418
-    Epoch 0, Test Loss: 0.23082813620567322
-    Epoch 0, Test Loss: 0.2268112599849701
-    Epoch 0, Test Loss: 0.22960038483142853
+    Epoch 0, Train Loss: 0.9679644703865051
+    Epoch 0, Train Loss: 0.8921031355857849
+    Epoch 0, Train Loss: 0.849151074886322
+    Epoch 0, Train Loss: 0.8439958691596985
+    Epoch 0, Train Loss: 0.7785032391548157
+    Epoch 0, Train Loss: 0.6439814567565918
+    Epoch 0, Train Loss: 0.8139665722846985
+    Epoch 0, Train Loss: 0.7177555561065674
+    Epoch 0, Train Loss: 0.6848160624504089
+    Epoch 0, Train Loss: 0.7088982462882996
+    Epoch 0, Train Loss: 0.5866825580596924
+    Epoch 0, Train Loss: 0.656911313533783
+    Epoch 0, Train Loss: 0.62745600938797
+    Epoch 0, Train Loss: 0.6201995611190796
+    Epoch 0, Train Loss: 0.5437533855438232
+    Epoch 0, Train Loss: 0.5202212333679199
+    Epoch 0, Train Loss: 0.5641738772392273
+    Epoch 0, Train Loss: 0.5559564828872681
+    Epoch 0, Train Loss: 0.5279741287231445
+    Epoch 0, Train Loss: 0.44319313764572144
+    Epoch 0, Train Loss: 0.47026365995407104
+    Epoch 0, Train Loss: 0.48361530900001526
+    Epoch 0, Train Loss: 0.45760565996170044
+    Epoch 0, Train Loss: 0.4191645681858063
+    Epoch 0, Train Loss: 0.3658750653266907
+    Epoch 0, Train Loss: 0.3718827962875366
+    Epoch 0, Train Loss: 0.4073079228401184
+    Epoch 0, Train Loss: 0.4027576148509979
+    Epoch 0, Train Loss: 0.3633304834365845
+    Epoch 0, Train Loss: 0.33228179812431335
+    Epoch 0, Train Loss: 0.3149203360080719
+    Epoch 0, Train Loss: 0.346628874540329
+    Epoch 0, Train Loss: 0.2923716604709625
+    Epoch 0, Train Loss: 0.25961795449256897
+    Epoch 0, Train Loss: 0.2600626051425934
+    Epoch 0, Train Loss: 0.25003546476364136
+    Epoch 0, Train Loss: 0.2974083423614502
+    Epoch 0, Train Loss: 0.23388975858688354
+    Epoch 0, Train Loss: 0.24133805930614471
+    Epoch 0, Train Loss: 0.23634371161460876
+    Epoch 0, Train Loss: 0.21605560183525085
+    Epoch 0, Train Loss: 0.207214817404747
+    Epoch 0, Train Loss: 0.21125225722789764
+    Epoch 0, Train Loss: 0.2294277548789978
+    Epoch 0, Train Loss: 0.2026420384645462
+    Epoch 0, Train Loss: 0.19489146769046783
+    Epoch 0, Train Loss: 0.17918914556503296
+    Epoch 0, Train Loss: 0.15126442909240723
+    Epoch 0, Train Loss: 0.1530677080154419
+    Epoch 0, Train Loss: 0.17365451157093048
+    Epoch 0, Train Loss: 0.14585493505001068
+    Epoch 0, Train Loss: 0.13838805258274078
+    Epoch 0, Train Loss: 0.16423428058624268
+    Epoch 0, Train Loss: 0.1701347678899765
+    Epoch 0, Train Loss: 0.17438624799251556
+    Epoch 0, Train Loss: 0.16735567152500153
+    Epoch 0, Train Loss: 0.14590606093406677
+    Epoch 0, Train Loss: 0.12571404874324799
+    Epoch 0, Train Loss: 0.1400178074836731
+    Epoch 0, Train Loss: 0.12966258823871613
+    Epoch 0, Train Loss: 0.17775529623031616
+    Epoch 0, Train Loss: 0.11948881298303604
+    Epoch 0, Train Loss: 0.15703994035720825
+    Epoch 0, Train Loss: 0.14076770842075348
+    Epoch 0, Train Loss: 0.15396569669246674
+    Epoch 0, Train Loss: 0.14290080964565277
+    Epoch 0, Train Loss: 0.13138242065906525
+    Epoch 0, Train Loss: 0.1185741126537323
+    Epoch 0, Train Loss: 0.13480868935585022
+    Epoch 0, Train Loss: 0.13691693544387817
+    Epoch 0, Train Loss: 0.12852129340171814
+    Epoch 0, Train Loss: 0.12147456407546997
+    Epoch 0, Train Loss: 0.13725121319293976
+    Epoch 0, Train Loss: 0.11373895406723022
+    Epoch 0, Train Loss: 0.09391383081674576
+    Epoch 0, Train Loss: 0.13199786841869354
+    Epoch 0, Train Loss: 0.11445124447345734
+    Epoch 0, Train Loss: 0.11710852384567261
+    Epoch 0, Train Loss: 0.15299315750598907
+    Epoch 0, Train Loss: 0.09594841301441193
+    Epoch 0, Train Loss: 0.13457626104354858
+    Epoch 0, Train Loss: 0.10883072018623352
+    Epoch 0, Train Loss: 0.1314234882593155
+    Epoch 0, Train Loss: 0.1067039892077446
+    Epoch 0, Train Loss: 0.12025930732488632
+    Epoch 0, Train Loss: 0.14685828983783722
+    Epoch 0, Train Loss: 0.13076792657375336
+    Epoch 0, Train Loss: 0.11947646737098694
+    Epoch 0, Train Loss: 0.14975133538246155
+    Epoch 0, Train Loss: 0.12320507317781448
+    Epoch 0, Train Loss: 0.13587673008441925
+    Epoch 0, Train Loss: 0.11331874877214432
+    Epoch 0, Train Loss: 0.11118576675653458
+    Epoch 0, Train Loss: 0.14853011071681976
+    Epoch 0, Train Loss: 0.1203271746635437
+    Epoch 0, Test Loss: 0.23042696714401245
+    Epoch 0, Test Loss: 0.2303001433610916
+    Epoch 0, Test Loss: 0.2327008843421936
+    Epoch 0, Test Loss: 0.23307712376117706
+    Epoch 0, Test Loss: 0.23079842329025269
+    Epoch 0, Test Loss: 0.23053455352783203
+    Epoch 0, Test Loss: 0.2321237176656723
+    Epoch 0, Test Loss: 0.23232343792915344
+    Epoch 0, Test Loss: 0.2327950894832611
+    Epoch 0, Test Loss: 0.23113606870174408
+    Epoch 0, Test Loss: 0.2322867214679718
+    Epoch 0, Test Loss: 0.23242607712745667
+    Epoch 0, Test Loss: 0.23104973137378693
+    Epoch 0, Test Loss: 0.23304609954357147
+    Epoch 0, Test Loss: 0.23079894483089447
+    Epoch 0, Test Loss: 0.23119741678237915
+    Epoch 0, Test Loss: 0.2319776862859726
+    Epoch 0, Test Loss: 0.22980712354183197
+    Epoch 0, Test Loss: 0.2309442013502121
+    Epoch 0, Test Loss: 0.2320765107870102
+    Epoch 0, Test Loss: 0.23106777667999268
+    Epoch 0, Test Loss: 0.2335919886827469
+    Epoch 0, Test Loss: 0.22923682630062103
+    Epoch 0, Test Loss: 0.232705757021904
 
 
 
@@ -1461,9 +1461,9 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 35.522 seconds)
+   **Total running time of the script:** (2 minutes 33.664 seconds)
 
-**Estimated memory usage:**  5613 MB
+**Estimated memory usage:**  5516 MB
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_minimal.py:

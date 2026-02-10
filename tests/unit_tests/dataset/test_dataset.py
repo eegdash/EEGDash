@@ -1468,3 +1468,59 @@ def test_normalize_records_dedupe_with_bids_relpath_key(tmp_path):
     # Should keep the newest (ver=2) for duplicates
     dup_rec = next(r for r in normalized if r.get("bids_relpath") == "path1")
     assert dup_rec["ver"] == 2
+
+
+def test_cumulative_sizes_recomputes_after_length_change(tmp_path):
+    """Test that cumulative_sizes dynamically recomputes when dataset lengths change.
+
+    This covers the fix for stale cumulative_sizes: before lazy raw loading,
+    EEGDashRaw.__len__ returns the estimated ntimes from JSON metadata.  After
+    loading, it returns the actual n_times from the raw file, which often
+    differs.  cumulative_sizes must reflect the updated lengths so that
+    __getitem__ routes to the correct sub-dataset at boundaries.
+    """
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    valid_record = {
+        "dataset": "ds1",
+        "bids_relpath": "f.vhdr",
+        "bidspath": "ds1/f.vhdr",
+        "storage": {"base": str(tmp_path / "ds1"), "backend": "local"},
+    }
+
+    mock_api = MagicMock()
+    mock_api.find.return_value = [valid_record]
+    mock_api.get_dataset.return_value = None
+
+    # Create two mock datasets whose lengths will change (simulating lazy load)
+    mock_ds1 = MagicMock()
+    mock_ds2 = MagicMock()
+    mock_ds3 = MagicMock()
+
+    # Initial lengths: estimated from JSON metadata (ntimes = sfreq * duration)
+    mock_ds1.__len__ = MagicMock(return_value=100_000)
+    mock_ds2.__len__ = MagicMock(return_value=84_000)
+    mock_ds3.__len__ = MagicMock(return_value=670_000)
+
+    with patch("eegdash.dataset.dataset.EEGDashRaw", return_value=mock_ds1):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path, dataset="ds1", eeg_dash_instance=mock_api
+        )
+
+    # Replace with our 3 mock datasets
+    ds.datasets = [mock_ds1, mock_ds2, mock_ds3]
+
+    # Verify initial cumulative sizes
+    assert ds.cumulative_sizes == [100_000, 184_000, 854_000]
+    assert len(ds) == 854_000
+
+    # Simulate raw loading: actual n_times differ from estimates
+    mock_ds1.__len__ = MagicMock(return_value=99_500)
+    mock_ds2.__len__ = MagicMock(return_value=83_317)
+    mock_ds3.__len__ = MagicMock(return_value=669_600)
+
+    # cumulative_sizes must reflect the NEW lengths without any manual refresh
+    assert ds.cumulative_sizes == [99_500, 182_817, 852_417]
+    assert len(ds) == 852_417

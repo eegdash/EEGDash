@@ -802,6 +802,132 @@ def test_bids_dataset_more_coverage(tmp_path):
     assert _find_bids_files(d, ".none_ext") == []
 
 
+def test_bids_path_extracts_acquisition_entity(tmp_path):
+    """BIDSPath correctly resolves files with acq- entity (e.g. ds000248)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_acq"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    meg_dir = d / "sub-01" / "meg"
+    meg_dir.mkdir(parents=True)
+
+    # Two files for the same subject — only distinguishable by acq/task
+    f_task = meg_dir / "sub-01_task-audiovisual_run-01_meg.fif"
+    f_acq = meg_dir / "sub-01_acq-crosstalk_meg.fif"
+    f_task.touch()
+    f_acq.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_acq", allow_symlinks=True)
+
+    # Both files should resolve without ambiguity errors
+    bp_task = ds._get_bids_path_from_file(str(f_task))
+    bp_acq = ds._get_bids_path_from_file(str(f_acq))
+
+    assert bp_task.task == "audiovisual"
+    assert bp_task.acquisition is None
+    assert bp_task.run == "01"
+
+    assert bp_acq.task is None
+    assert bp_acq.acquisition == "crosstalk"
+    assert bp_acq.run is None
+
+    # Entity cache should contain acquisition
+    entities = ds._bids_entity_cache[str(f_acq)]
+    assert entities["acquisition"] == "crosstalk"
+    assert entities["modality"] == "meg"
+
+
+def test_bids_path_extracts_all_entities(tmp_path):
+    """All standard BIDS entities are extracted via get_entities_from_fname."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_ents"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    meg_dir = d / "sub-01" / "ses-02" / "meg"
+    meg_dir.mkdir(parents=True)
+
+    # Use a valid space for MEG (ElektaNeuromag) per MNE-BIDS validation
+    f = (
+        meg_dir
+        / "sub-01_ses-02_task-rest_acq-full_run-03_proc-sss_space-ElektaNeuromag_split-01_desc-preproc_meg.fif"
+    )
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_ents", allow_symlinks=True)
+    bp = ds._get_bids_path_from_file(str(f))
+
+    assert bp.subject == "01"
+    assert bp.session == "02"
+    assert bp.task == "rest"
+    assert bp.acquisition == "full"
+    assert bp.run == "03"
+    assert bp.processing == "sss"
+    assert bp.space == "ElektaNeuromag"
+    assert bp.split == "01"
+    assert bp.description == "preproc"
+    assert bp.datatype == "meg"
+
+
+@pytest.mark.parametrize(
+    "modality_dir,suffix,ext,expected",
+    [
+        ("eeg", "eeg", ".set", "eeg"),
+        ("meg", "meg", ".fif", "meg"),
+        ("ieeg", "ieeg", ".edf", "ieeg"),
+        ("nirs", "nirs", ".snirf", "nirs"),
+        ("fnirs", "nirs", ".snirf", "nirs"),  # fnirs normalizes to nirs
+    ],
+    ids=["eeg", "meg", "ieeg", "nirs", "fnirs_normalized"],
+)
+def test_bids_path_modality_from_directory(
+    tmp_path, modality_dir, suffix, ext, expected
+):
+    """Modality is detected from directory path, including fnirs normalization."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / f"ds_{modality_dir}"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+
+    sub_dir = d / "sub-01" / modality_dir
+    sub_dir.mkdir(parents=True)
+    f = sub_dir / f"sub-01_task-rest_{suffix}{ext}"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset=d.name, allow_symlinks=True)
+    ds._get_bids_path_from_file(str(f))
+    assert ds._bids_entity_cache[str(f)]["modality"] == expected
+
+
+def test_bids_path_nonstandard_entity_warns(tmp_path):
+    """Non-standard entities in filenames produce a warning, not an error."""
+    import warnings
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_warn"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    eeg_dir = d / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    # rec- is not standard in MNE-BIDS (should be recording-)
+    f = eeg_dir / "sub-01_task-rest_rec-mag_eeg.set"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_warn")
+
+    # Should not raise, just warn
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        bp = ds._get_bids_path_from_file(str(f))
+
+    assert bp.subject == "01"
+    assert bp.task == "rest"
+
+
 def test_json_inheritance_case_insensitive_task(tmp_path):
     """Test that JSON sidecar matching is case-insensitive for task entity.
 

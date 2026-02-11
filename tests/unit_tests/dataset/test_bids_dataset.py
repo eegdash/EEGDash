@@ -861,6 +861,48 @@ def test_json_inheritance_generalized_suffix(tmp_path):
     assert ds.get_bids_file_attribute("nchans", str(data_file)) == 306
 
 
+def test_nchans_sums_all_channel_type_counts(tmp_path):
+    """Test that nchans sums all channel type counts from BIDS JSON metadata.
+
+    Reproduces the ds002908 (CTF MEG) scenario where the JSON sidecar reports
+    MEGChannelCount=270 and MEGREFChannelCount=29 separately.  The total
+    should be 299, not just 270.
+    """
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_nchans"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "meg"
+    sub_dir.mkdir(parents=True)
+
+    # MEG data file
+    data_file = sub_dir / "sub-01_task-rest_meg.fif"
+    data_file.touch()
+
+    # JSON with multiple channel type counts (like CTF MEG datasets)
+    json_file = sub_dir / "sub-01_task-rest_meg.json"
+    json_file.write_text(
+        json.dumps(
+            {
+                "SamplingFrequency": 1200,
+                "MEGChannelCount": 270,
+                "MEGREFChannelCount": 29,
+                "EOGChannelCount": 1,
+                "ECGChannelCount": 1,
+                "MiscChannelCount": 5,
+            }
+        )
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_nchans", modalities=["meg"])
+
+    # nchans should be the SUM of all channel type counts, not just the primary one
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 306
+
+
 def test_find_channels_tsv_case_insensitive(tmp_path):
     """Test that _find_channels_tsv matches despite task entity case mismatch."""
     from eegdash.dataset.bids_dataset import EEGBIDSDataset

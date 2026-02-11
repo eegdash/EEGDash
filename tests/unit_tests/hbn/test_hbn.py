@@ -100,8 +100,8 @@ def test_build_trial_table():
     assert pd.isna(second["response_onset"])
     assert pd.isna(second["rt_from_stimulus"])
     assert pd.isna(second["rt_from_trialstart"])
-    assert second["response_type"] is None
-    assert second["correct"] is None
+    assert pd.isna(second["response_type"])
+    assert pd.isna(second["correct"])
 
 
 def test_build_trial_table_without_feedback_column():

@@ -886,3 +886,30 @@ def test_find_channels_tsv_case_insensitive(tmp_path):
 
     types = ds.channel_types(str(data_file))
     assert types == ["EEG", "EEG"]
+def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
+    """Test that duplicate participant_id rows (e.g., multi-session) return a flat dict."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_dup"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
+    f.touch()
+
+    # participants.tsv with duplicate entries for sub-01 (multi-session dataset)
+    p_file = d / "participants.tsv"
+    p_file.write_text(
+        "participant_id\tage\tsex\nsub-01\t25\tM\nsub-01\t25\tM\nsub-02\t30\tF\n"
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_dup")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should return a flat dict (not nested), taking the first row
+    assert isinstance(result, dict)
+    assert result["age"] == "25"
+    assert result["sex"] == "M"
+    # Values should be scalars, not arrays or dicts
+    for v in result.values():
+        assert not isinstance(v, (dict, list))

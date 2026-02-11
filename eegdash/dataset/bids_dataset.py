@@ -321,12 +321,17 @@ class EEGBIDSDataset:
             else:
                 # Look for BIDS-specific JSON files (e.g., "sub-001_task-rest_eeg.json")
                 # Match files ending with the json_filename pattern
+                suffix_key = f"_{json_filename.split('.')[0]}"
                 for json_file in current_dir.glob(f"*_{json_filename}"):
                     # Check if this JSON corresponds to the data file
                     data_basename = Path(data_filepath).stem
                     json_basename = json_file.stem
                     # They should share the same BIDS entities prefix
-                    if data_basename.split("_eeg")[0] == json_basename.split("_eeg")[0]:
+                    # Use case-insensitive comparison to handle task-name
+                    # case mismatches (e.g., task-Emotion vs task-emotion)
+                    data_prefix = data_basename.split(suffix_key)[0].lower()
+                    json_prefix = json_basename.split(suffix_key)[0].lower()
+                    if data_prefix == json_prefix:
                         with open(json_file) as f:
                             json_dict.update(json.load(f))
                         break
@@ -497,13 +502,27 @@ class EEGBIDSDataset:
         json_filename = f"{modality}.json"
         modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
 
+        # Sum all channel type counts from the JSON for a more accurate total.
+        # BIDS sidecars report per-type counts (MEGChannelCount,
+        # MEGREFChannelCount, etc.) but no single total field.
+        _channel_count_keys = [
+            "EEGChannelCount",
+            "MEGChannelCount",
+            "MEGREFChannelCount",
+            "iEEGChannelCount",
+            "NIRSChannelCount",
+            "EOGChannelCount",
+            "ECGChannelCount",
+            "EMGChannelCount",
+            "MiscChannelCount",
+            "TriggerChannelCount",
+        ]
+        nchans_total = sum(modality_json.get(k, 0) or 0 for k in _channel_count_keys)
+
         json_attrs = {
             "sfreq": modality_json.get("SamplingFrequency"),
             "duration": modality_json.get("RecordingDuration"),
-            "nchans": modality_json.get("EEGChannelCount")
-            or modality_json.get("MEGChannelCount")
-            or modality_json.get("iEEGChannelCount")
-            or modality_json.get("NIRSChannelCount"),
+            "nchans": nchans_total or None,
         }
 
         if attribute == "ntimes":
@@ -524,7 +543,8 @@ class EEGBIDSDataset:
         channels_tsv_path = filepath.parent / "channels.tsv"
         if not channels_tsv_path.exists():
             for tsv_file in filepath.parent.glob("*_channels.tsv"):
-                if filepath.stem.startswith(tsv_file.stem.replace("_channels", "")):
+                prefix = tsv_file.stem.replace("_channels", "").lower()
+                if filepath.stem.lower().startswith(prefix):
                     return tsv_file
         return channels_tsv_path
 
@@ -607,7 +627,11 @@ class EEGBIDSDataset:
         if subject not in participants_tsv.index:
             return {}
 
-        row_dict = participants_tsv.loc[subject].to_dict()
+        row = participants_tsv.loc[subject]
+        # Handle duplicate participant_id entries (e.g., multi-session datasets)
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        row_dict = row.to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
 

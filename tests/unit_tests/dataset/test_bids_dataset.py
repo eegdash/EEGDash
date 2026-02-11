@@ -926,6 +926,8 @@ def test_bids_path_nonstandard_entity_warns(tmp_path):
 
     assert bp.subject == "01"
     assert bp.task == "rest"
+
+
 def test_json_inheritance_case_insensitive_task(tmp_path):
     """Test that JSON sidecar matching is case-insensitive for task entity.
 

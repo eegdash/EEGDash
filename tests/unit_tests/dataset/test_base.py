@@ -481,3 +481,325 @@ def test_eegdashraw_s3file_attribute(tmp_path):
 
     assert ds.s3file == "s3://mybucket/path/to/file"
     assert ds.s3file == ds._raw_uri
+
+
+# ---- Tests for _load_raw retry logic ----
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_epoched_eeglab_recovery(mock_validate, tmp_path):
+    """Test that epoched EEGLAB files trigger _load_epoched_eeglab_as_raw."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds006370",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError(
+            "The number of trials is 1280. It must be 1 for raw files."
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_epoched_eeglab_as_raw",
+            return_value=mock_raw,
+        ) as mock_epoched:
+            result = ds._load_raw()
+            mock_epoched.assert_called_once()
+            assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_eeglab_extension_mismatch(mock_validate, tmp_path):
+    """Test EEGLAB extension mismatch falls back to scipy loader."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds003645",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError(
+            "Invalid value for the 'EEGLAB file extension' parameter. "
+            "Allowed values are '.set' and '.fdt', but got '' instead."
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_set_via_scipy",
+            return_value=mock_raw,
+        ) as mock_scipy:
+            result = ds._load_raw()
+            mock_scipy.assert_called_once()
+            assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_channel_type_conflict_recovery(mock_validate, tmp_path):
+    """Test channel type conflict retries with on_ch_mismatch='ignore'."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds002712",
+        "bids_relpath": "sub-01/meg/sub-01_task-rest_meg.fif",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    mock_raw = MagicMock()
+    call_count = [0]
+
+    def side_effect(**kwargs):
+        call_count[0] += 1
+        if call_count[0] == 1:
+            raise RuntimeError(
+                "Cannot change channel type for channel MEG0113 in projector"
+            )
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        result = ds._load_raw()
+        assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_fif_validation_error_direct_fallback(mock_validate, tmp_path):
+    """Test FIF validation errors fall back to direct reader."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds000247",
+        "bids_relpath": "sub-01/meg/sub-01_task-rest_meg.fif",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError("Illegal date: 14-10-1925"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct",
+            return_value=mock_raw,
+        ) as mock_direct:
+            result = ds._load_raw()
+            mock_direct.assert_called_once()
+            assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_corrupted_file_raises_unsupported(mock_validate, tmp_path):
+    """Test corrupted files raise UnsupportedDataError."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    record = {
+        "dataset": "ds004166",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("buffer is too small for requested array"),
+    ):
+        with pytest.raises(UnsupportedDataError, match="corrupted or truncated"):
+            ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_missing_companion_raises_integrity(mock_validate, tmp_path):
+    """Test missing companion files raise DataIntegrityError."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    record = {
+        "dataset": "ds004011",
+        "bids_relpath": "sub-01/meg/sub-01_task-rest_meg.fif",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=OSError("Could not find any data, could not find file"),
+    ):
+        with pytest.raises(DataIntegrityError, match="Missing companion files"):
+            ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_bids_path_mismatch_raises_unsupported(mock_validate, tmp_path):
+    """Test BIDS path mismatch raises UnsupportedDataError."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    record = {
+        "dataset": "ds005795",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError(
+            "PosixPath('eeg/sub-01_task-learning_eeg.vhdr') is not in list. "
+            "Did you mean one of ['func/sub-01_task-learning_bold.nii.gz']?"
+        ),
+    ):
+        with pytest.raises(UnsupportedDataError, match="BIDS path mismatch"):
+            ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_inhomogeneous_raises_unsupported(mock_validate, tmp_path):
+    """Test inhomogeneous array error raises UnsupportedDataError."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    record = {
+        "dataset": "ds004350",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError(
+            "setting an array element with a sequence. "
+            "The requested array has an inhomogeneous shape"
+        ),
+    ):
+        with pytest.raises(UnsupportedDataError, match="inhomogeneous"):
+            ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_snirf_unsupported_type_code(mock_validate, tmp_path):
+    """Test unsupported SNIRF type code raises UnsupportedDataError."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    record = {
+        "dataset": "ds006545",
+        "bids_relpath": "sub-01/fnirs/sub-01_task-rest_nirs.snirf",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(
+            "Expected type code 1 or 99999 but received type code 301"
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._repair_snirf_bids_metadata", return_value=False
+        ):
+            with pytest.raises(UnsupportedDataError, match="Cannot load SNIRF file"):
+                ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_unknown_error_reraised(mock_validate, tmp_path):
+    """Test that unknown errors are re-raised as-is."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_unknown",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError("Some completely unexpected error"),
+    ):
+        with pytest.raises(RuntimeError, match="Some completely unexpected error"):
+            ds._load_raw()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_non_numeric_run_sanitized_in_init(mock_validate, tmp_path):
+    """Test that non-numeric run entities are sanitized to None during init."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds003190",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+        "entities_mne": {"subject": "01", "task": "rest", "run": "5H"},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    # Non-numeric run "5H" should be sanitized to None during construction
+    assert ds.bidspath.run is None
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_numeric_run_preserved_in_init(mock_validate, tmp_path):
+    """Test that valid numeric run entities are preserved."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_test",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+        "entities_mne": {"subject": "01", "task": "rest", "run": "01"},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    # Valid numeric run should be preserved
+    assert ds.bidspath.run == "01"
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_ensure_raw_calls_new_repair_functions(mock_validate, tmp_path):
+    """Test that _ensure_raw calls the new repair functions."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_test",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds_test"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        },
+    }
+
+    eeg_dir = tmp_path / "ds_test" / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    (eeg_dir / "sub-01_task-rest_eeg.vhdr").touch()
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    ds._load_raw = MagicMock()
+
+    with (
+        patch("eegdash.dataset.base._repair_electrodes_tsv") as mock_elec,
+        patch("eegdash.dataset.base._repair_tsv_decimal_separators") as mock_dec,
+        patch("eegdash.dataset.base._repair_tsv_na_values") as mock_na,
+        patch("eegdash.dataset.base._repair_vhdr_missing_markerfile") as mock_marker,
+    ):
+        ds._ensure_raw()
+
+        mock_elec.assert_called_once()
+        mock_dec.assert_called_once()
+        mock_na.assert_called_once()
+        mock_marker.assert_called_once()

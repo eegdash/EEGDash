@@ -301,4 +301,38 @@ class DataIntegrityError(EEGDashError):
         return error
 
 
-__all__ = ["EEGDashError", "DataIntegrityError"]
+class UnsupportedDataError(EEGDashError):
+    """Raised when data cannot be loaded due to format limitations.
+
+    This exception is raised for datasets that fundamentally cannot be loaded
+    because of unsupported format variants (e.g., fluorescence SNIRF), corrupted
+    or truncated files, or other issues that no repair can fix.
+
+    Attributes
+    ----------
+    record : dict
+        The problematic record metadata.
+    reason : str | None
+        Short description of why the data is unsupported.
+
+    Examples
+    --------
+    >>> try:
+    ...     dataset.raw  # Attempt to load data
+    ... except UnsupportedDataError as e:
+    ...     print(f"Cannot load: {e.reason}")
+
+    """
+
+    def __init__(
+        self,
+        message: str,
+        record: dict[str, Any] | None = None,
+        reason: str | None = None,
+    ):
+        self.record = record or {}
+        self.reason = reason
+        super().__init__(message)
+
+
+__all__ = ["EEGDashError", "DataIntegrityError", "UnsupportedDataError"]

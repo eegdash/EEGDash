@@ -307,3 +307,47 @@ def test_all_exports():
 
     assert "EEGDashError" in exceptions.__all__
     assert "DataIntegrityError" in exceptions.__all__
+    assert "UnsupportedDataError" in exceptions.__all__
+
+
+# ---- UnsupportedDataError tests ----
+
+
+def test_unsupported_data_error_is_eegdash_error():
+    """Test that UnsupportedDataError is a subclass of EEGDashError."""
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    assert issubclass(UnsupportedDataError, EEGDashError)
+
+
+def test_unsupported_data_error_init_defaults():
+    """Test UnsupportedDataError initialization with defaults."""
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    error = UnsupportedDataError("Cannot load file")
+    assert str(error) == "Cannot load file"
+    assert error.record == {}
+    assert error.reason is None
+
+
+def test_unsupported_data_error_init_with_all_params():
+    """Test UnsupportedDataError initialization with all parameters."""
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    record = {"dataset": "ds001", "bids_relpath": "sub-01/eeg.set"}
+    error = UnsupportedDataError(
+        message="Unsupported format",
+        record=record,
+        reason="corrupted_file",
+    )
+    assert str(error) == "Unsupported format"
+    assert error.record == record
+    assert error.reason == "corrupted_file"
+
+
+def test_unsupported_data_error_can_be_caught_as_eegdash_error():
+    """Test that UnsupportedDataError can be caught as EEGDashError."""
+    from eegdash.dataset.exceptions import UnsupportedDataError
+
+    with pytest.raises(EEGDashError):
+        raise UnsupportedDataError("test")

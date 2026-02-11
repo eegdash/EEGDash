@@ -886,6 +886,8 @@ def test_find_channels_tsv_case_insensitive(tmp_path):
 
     types = ds.channel_types(str(data_file))
     assert types == ["EEG", "EEG"]
+
+
 def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
     """Test that duplicate participant_id rows (e.g., multi-session) return a flat dict."""
     from eegdash.dataset.bids_dataset import EEGBIDSDataset

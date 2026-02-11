@@ -232,17 +232,30 @@ class EEGBIDSDataset:
                     break
 
             # Extract entities from filename using BIDS pattern
-            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_<modality>.<ext>
-            subject = re.search(r"sub-([^_/.]*)", filename)
-            session = re.search(r"ses-([^_/.]*)", filename)
-            task = re.search(r"task-([^_/.]*)", filename)
-            run = re.search(r"run-([^_/.]*)", filename)
+            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_acq-<label>][_run-<label>]_<modality>.<ext>
+            _entity = r"([^_/.]*)"
+            subject = re.search(rf"sub-{_entity}", filename)
+            session = re.search(rf"ses-{_entity}", filename)
+            task = re.search(rf"task-{_entity}", filename)
+            acquisition = re.search(rf"acq-{_entity}", filename)
+            run = re.search(rf"run-{_entity}", filename)
+            processing = re.search(rf"proc-{_entity}", filename)
+            recording = re.search(rf"rec-{_entity}", filename)
+            space = re.search(rf"space-{_entity}", filename)
+            split = re.search(rf"split-{_entity}", filename)
+            description = re.search(rf"desc-{_entity}", filename)
 
             # Extract raw values
             subject_val = subject.group(1) if subject else None
             session_val = session.group(1) if session else None
             task_val = task.group(1) if task else None
+            acquisition_val = acquisition.group(1) if acquisition else None
             run_val = run.group(1) if run else None
+            processing_val = processing.group(1) if processing else None
+            recording_val = recording.group(1) if recording else None
+            space_val = space.group(1) if space else None
+            split_val = split.group(1) if split else None
+            description_val = description.group(1) if description else None
 
             # Sanitize task if it incorrectly absorbed 'run-' due to missing separator
             # e.g., "task-ECONrun-1" -> task="ECON"
@@ -262,7 +275,13 @@ class EEGBIDSDataset:
                 subject=subject_val,
                 session=session_val,
                 task=task_val,
+                acquisition=acquisition_val,
                 run=run_value_for_bidspath,
+                processing=processing_val,
+                recording=recording_val,
+                space=space_val,
+                split=split_val,
+                description=description_val,
                 datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
@@ -272,7 +291,13 @@ class EEGBIDSDataset:
                 "subject": subject_val,
                 "session": session_val,
                 "task": task_val,
+                "acquisition": acquisition_val,
                 "run": run_val,
+                "processing": processing_val,
+                "recording": recording_val,
+                "space": space_val,
+                "split": split_val,
+                "description": description_val,
                 "modality": modality,
             }
 

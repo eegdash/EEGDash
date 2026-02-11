@@ -1840,6 +1840,47 @@ def digest_from_manifest(
         except Exception as e:
             errors.append({"file": ds_path, "error": str(e)})
 
+    # First pass: Extract unique MEF3 .mefd directory paths from files inside them
+    # MEF3 stores data in .mefd directories, but manifests list individual files
+    mefd_dirs = set()
+    for file_info in files:
+        if isinstance(file_info, dict):
+            filepath = file_info.get("path", "")
+        else:
+            filepath = file_info
+
+        filepath_lower = filepath.lower()
+        if ".mefd/" in filepath_lower:
+            # Extract the .mefd directory path (everything up to and including .mefd)
+            mefd_idx = filepath_lower.index(".mefd/") + 5  # +5 to include ".mefd"
+            mefd_path = filepath[:mefd_idx]  # Use original case
+            mefd_dirs.add(mefd_path)
+
+    # Create records for MEF3 .mefd directories
+    for mefd_path in mefd_dirs:
+        try:
+            entities = parse_bids_entities_from_path(mefd_path)
+            detected_modality = detect_modality_from_path(mefd_path)
+
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=mefd_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend=get_storage_backend(source),
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            records.append(dict(record))
+        except Exception as e:
+            errors.append({"file": mefd_path, "error": str(e)})
+
     for file_info in files:
         if isinstance(file_info, dict):
             filepath = file_info.get("path", "")

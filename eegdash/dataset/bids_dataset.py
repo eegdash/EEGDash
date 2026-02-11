@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from mne_bids import BIDSPath, find_matching_paths
+from mne_bids import BIDSPath, find_matching_paths, get_entities_from_fname
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES, reader
 
 # Known companion/sidecar files for specific formats (BIDS spec requirement)
@@ -217,62 +217,70 @@ class EEGBIDSDataset:
 
         """
         if data_filepath not in self._bids_path_cache:
-            # Parse the filename to extract BIDS entities
             filepath = Path(data_filepath)
-            filename = filepath.name
 
             # Detect modality from the directory path
             # BIDS structure: .../sub-XX/[ses-YY/]<modality>/sub-XX_...
-            path_parts = filepath.parts
             modality = "eeg"  # default
-            for part in path_parts:
+            for part in filepath.parts:
                 if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
                     # Normalize fnirs -> nirs for MNE-BIDS compatibility
                     modality = "nirs" if part == "fnirs" else part
                     break
 
-            # Extract entities from filename using BIDS pattern
-            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_<modality>.<ext>
-            subject = re.search(r"sub-([^_/.]*)", filename)
-            session = re.search(r"ses-([^_/.]*)", filename)
-            task = re.search(r"task-([^_/.]*)", filename)
-            run = re.search(r"run-([^_/.]*)", filename)
+            # Use MNE-BIDS to parse all standard entities from the filename.
+            # on_error="warn" tolerates non-standard entity keys that appear
+            # in some real-world datasets.
+            entities = get_entities_from_fname(filepath.name, on_error="warn")
 
-            # Extract raw values
-            subject_val = subject.group(1) if subject else None
-            session_val = session.group(1) if session else None
-            task_val = task.group(1) if task else None
-            run_val = run.group(1) if run else None
+            task_val = entities.get("task")
+            run_val = entities.get("run")
 
-            # Sanitize task if it incorrectly absorbed 'run-' due to missing separator
-            # e.g., "task-ECONrun-1" -> task="ECON"
-            if task_val and "run-" in task_val:
-                task_parts = task_val.split("run-")
-                task_val = task_parts[0]
+            # Sanitize task if it incorrectly absorbed 'run' due to missing
+            # underscore separator in the original filename.
+            # get_entities_from_fname("task-ECONrun-1_eeg.set") -> task="ECONrun"
+            # We want task="ECON", run="1".
+            if task_val and re.search(r"run\d*$", task_val):
+                task_val = re.split(r"run\d*$", task_val)[0]
+                if run_val is None:
+                    run_match = re.search(r"run-([^_/.]*)", filepath.name)
+                    if run_match:
+                        run_val = run_match.group(1)
 
-            # BIDSPath enforces "run" to be an index; accept numeric strings, but
-            # drop non-numeric runs (e.g., "5F") while preserving them in the cache.
-            run_value_for_bidspath = None
-            if run_val is not None:
-                run_str = str(run_val)
-                if run_str.isdigit():
-                    run_value_for_bidspath = run_str
+            # BIDSPath enforces "run" to be an index; accept numeric strings,
+            # but drop non-numeric runs (e.g., "5F") while preserving them
+            # in the entity cache.
+            run_for_bidspath = None
+            if run_val is not None and str(run_val).isdigit():
+                run_for_bidspath = run_val
 
             bids_path = BIDSPath(
-                subject=subject_val,
-                session=session_val,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
                 task=task_val,
-                run=run_value_for_bidspath,
+                acquisition=entities.get("acquisition"),
+                run=run_for_bidspath,
+                processing=entities.get("processing"),
+                recording=entities.get("recording"),
+                space=entities.get("space"),
+                split=entities.get("split"),
+                description=entities.get("description"),
                 datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
             )
             self._bids_path_cache[data_filepath] = bids_path
             self._bids_entity_cache[data_filepath] = {
-                "subject": subject_val,
-                "session": session_val,
+                "subject": entities.get("subject"),
+                "session": entities.get("session"),
                 "task": task_val,
+                "acquisition": entities.get("acquisition"),
                 "run": run_val,
+                "processing": entities.get("processing"),
+                "recording": entities.get("recording"),
+                "space": entities.get("space"),
+                "split": entities.get("split"),
+                "description": entities.get("description"),
                 "modality": modality,
             }
 

@@ -850,6 +850,8 @@ def extract_record(
         nchans = int(nchans)
     if ntimes:
         ntimes = int(ntimes)
+    else:
+        ntimes = None
 
     # Extract channel names if channels.tsv exists
     ch_names = None

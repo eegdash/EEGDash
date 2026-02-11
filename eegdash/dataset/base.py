@@ -228,7 +228,7 @@ class EEGDashRaw(RawDataset):
         """Return the number of samples in the dataset."""
         if self._raw is None:
             ntimes = self.record.get("ntimes")
-            if ntimes is not None:
+            if ntimes:  # Treat 0 and None as "unknown" → fall through to load raw
                 return int(ntimes)
             try:
                 self._ensure_raw()

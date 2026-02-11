@@ -528,7 +528,7 @@ class EEGBIDSDataset:
         if attribute == "ntimes":
             sfreq = json_attrs.get("sfreq")
             duration = json_attrs.get("duration")
-            if sfreq is None or duration is None:
+            if not sfreq or not duration:
                 return None
             try:
                 return int(float(sfreq) * float(duration))

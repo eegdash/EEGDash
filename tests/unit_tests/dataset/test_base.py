@@ -3,34 +3,14 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
-def test_len_with_ntimes_and_sfreq():
-    """Test length calculation when ntimes exists and raw is accessed."""
-    from eegdash.dataset.base import EEGDashRaw
-
-    # Create mock with ntimes in record and accessed raw
-    mock_raw = MagicMock()
-    mock_raw.__len__ = MagicMock(return_value=5000)
-
-    recording = EEGDashRaw.__new__(EEGDashRaw)
-    recording._raw = mock_raw
-    recording.record = {"ntimes": 10.5, "sampling_frequency": 500}
-
-    # Access length - should use len(self._raw) since _raw exists
-    length = len(recording)
-    assert length == 5000
-
-
-def test_len_without_raw_with_ntimes_sfreq():
-    """Test length calculation from ntimes when raw not loaded."""
-    from eegdash.dataset.base import EEGDashRaw
-
-    recording = EEGDashRaw.__new__(EEGDashRaw)
-    recording._raw = None
-    recording.record = {"ntimes": 10, "sampling_frequency": 100}
-
-    # Should return int(ntimes) = 10
-    length = len(recording)
-    assert length == 10
+@pytest.fixture
+def base_record(tmp_path):
+    """Create a minimal valid record for testing."""
+    return {
+        "dataset": "ds1",
+        "bids_relpath": "sub-01/eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+    }
 
 
 def test_eegdashraw_len_with_sfreq_ntimes(tmp_path):
@@ -256,101 +236,61 @@ def test_eegdashraw_backend_logic(tmp_path):
         assert len(ds._dep_uris) == 1
 
 
-def test_eegdashraw_raw_setter(tmp_path):
+def test_eegdashraw_raw_setter(tmp_path, base_record):
     """Test the raw property setter (line 210-211)."""
     from unittest.mock import MagicMock, patch
 
     from eegdash.dataset.base import EEGDashRaw
 
-    record = {
-        "dataset": "ds1",
-        "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
     with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+        ds = EEGDashRaw(base_record, cache_dir=str(tmp_path))
 
     mock_raw = MagicMock()
     ds.raw = mock_raw
     assert ds._raw is mock_raw
 
 
-def test_eegdashraw_https_backend(tmp_path):
-    """Test HTTPS backend storage logic."""
-    from unittest.mock import patch
-
+@pytest.mark.parametrize(
+    "storage,expected_uri",
+    [
+        (
+            {
+                "backend": "https",
+                "base": "https://bucket.s3.amazonaws.com",
+                "raw_key": "raw",
+                "dep_keys": ["dep1"],
+            },
+            "https://bucket.s3.amazonaws.com/raw",
+        ),
+        ({"backend": "s3", "base": "s3://bucket"}, None),  # No raw_key
+        (
+            {"backend": "local", "base": "/tmp", "raw_key": "", "dep_keys": []},
+            None,
+        ),  # Local empty raw_key
+    ],
+    ids=["https", "no_raw_key", "local_no_raw_key"],
+)
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_eegdashraw_storage_backends(mock_validate, tmp_path, storage, expected_uri):
+    """Test different storage backend configurations."""
     from eegdash.dataset.base import EEGDashRaw
 
+    if "base" in storage and storage["base"] == "/tmp":
+        storage["base"] = str(tmp_path)  # Use actual tmp_path
     record = {
         "dataset": "ds1",
         "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {
-            "backend": "https",
-            "base": "https://bucket.s3.amazonaws.com",
-            "raw_key": "raw",
-            "dep_keys": ["dep1"],
-        },
+        "storage": storage,
     }
-    with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-        assert ds._raw_uri == "https://bucket.s3.amazonaws.com/raw"
-        assert len(ds._dep_uris) == 1
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    assert ds._raw_uri == expected_uri
 
 
-def test_eegdashraw_no_raw_key(tmp_path):
-    """Test when storage has backend but no raw_key."""
-    from unittest.mock import patch
-
-    from eegdash.dataset.base import EEGDashRaw
-
-    record = {
-        "dataset": "ds1",
-        "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {
-            "backend": "s3",
-            "base": "s3://bucket",
-            # No raw_key
-        },
-    }
-    with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-        # Should not set _raw_uri when raw_key is missing
-        assert ds._raw_uri is None
-
-
-def test_eegdashraw_local_backend_no_raw_key(tmp_path):
-    """Test local backend uses filecache when raw_key is empty."""
-    from unittest.mock import patch
-
-    from eegdash.dataset.base import EEGDashRaw
-
-    record = {
-        "dataset": "ds1",
-        "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {
-            "backend": "local",
-            "base": str(tmp_path),
-            "raw_key": "",  # Empty raw_key
-            "dep_keys": [],
-        },
-    }
-    with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-        # Should use default filecache path
-        assert ds._raw_uri is None
-
-
-def test_eegdashraw_download_required_files_no_uri(tmp_path):
+def test_eegdashraw_download_required_files_no_uri(tmp_path, base_record):
     """Test _download_required_files when _raw_uri is None."""
     from unittest.mock import patch
 
     from eegdash.dataset.base import EEGDashRaw
-
-    record = {
-        "dataset": "ds1",
-        "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
 
     # Create the file so it exists
     ds_dir = tmp_path / "ds1" / "sub-01"
@@ -358,7 +298,7 @@ def test_eegdashraw_download_required_files_no_uri(tmp_path):
     (ds_dir / "eeg.vhdr").touch()
 
     with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+        ds = EEGDashRaw(base_record, cache_dir=str(tmp_path))
         ds._raw_uri = None
         ds._download_required_files()
         # Should just set filenames
@@ -427,7 +367,7 @@ def test_eegdashraw_len_with_raw_loaded(tmp_path):
     assert len(ds) == 5000
 
 
-def test_eegdashraw_ensure_raw_load_error_logging(tmp_path):
+def test_eegdashraw_ensure_raw_load_error_logging(tmp_path, base_record):
     """Test _ensure_raw logs error and re-raises on load failure."""
     from unittest.mock import MagicMock, patch
 
@@ -435,18 +375,12 @@ def test_eegdashraw_ensure_raw_load_error_logging(tmp_path):
 
     from eegdash.dataset.base import EEGDashRaw
 
-    record = {
-        "dataset": "ds1",
-        "bids_relpath": "sub-01/eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
-
     # Create directory for filecache
     ds_dir = tmp_path / "ds1" / "sub-01"
     ds_dir.mkdir(parents=True)
 
     with patch("eegdash.dataset.base.validate_record", return_value=None):
-        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+        ds = EEGDashRaw(base_record, cache_dir=str(tmp_path))
 
     # Mock _download_required_files to do nothing
     ds._download_required_files = MagicMock()
@@ -597,24 +531,46 @@ def test_load_raw_fif_validation_error_direct_fallback(mock_validate, tmp_path):
             assert result is mock_raw
 
 
+@pytest.mark.parametrize(
+    "error_cls,error_msg,match",
+    [
+        (
+            TypeError,
+            "buffer is too small for requested array",
+            "corrupted or truncated",
+        ),
+        (
+            ValueError,
+            "PosixPath('eeg/sub-01_task-learning_eeg.vhdr') is not in list. "
+            "Did you mean one of ['func/sub-01_task-learning_bold.nii.gz']?",
+            "BIDS path mismatch",
+        ),
+        (
+            ValueError,
+            "setting an array element with a sequence. "
+            "The requested array has an inhomogeneous shape",
+            "inhomogeneous",
+        ),
+    ],
+    ids=["corrupted", "bids_mismatch", "inhomogeneous"],
+)
 @patch("eegdash.dataset.base.validate_record", return_value=None)
-def test_load_raw_corrupted_file_raises_unsupported(mock_validate, tmp_path):
-    """Test corrupted files raise UnsupportedDataError."""
+def test_load_raw_raises_unsupported(
+    mock_validate, tmp_path, error_cls, error_msg, match
+):
+    """Test various unrecoverable errors raise UnsupportedDataError."""
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.dataset.exceptions import UnsupportedDataError
 
     record = {
-        "dataset": "ds004166",
+        "dataset": "ds_test",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
         "storage": {"backend": "local", "base": str(tmp_path)},
     }
     ds = EEGDashRaw(record, cache_dir=str(tmp_path))
 
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=TypeError("buffer is too small for requested array"),
-    ):
-        with pytest.raises(UnsupportedDataError, match="corrupted or truncated"):
+    with patch("mne_bids.read_raw_bids", side_effect=error_cls(error_msg)):
+        with pytest.raises(UnsupportedDataError, match=match):
             ds._load_raw()
 
 
@@ -636,54 +592,6 @@ def test_load_raw_missing_companion_raises_integrity(mock_validate, tmp_path):
         side_effect=OSError("Could not find any data, could not find file"),
     ):
         with pytest.raises(DataIntegrityError, match="Missing companion files"):
-            ds._load_raw()
-
-
-@patch("eegdash.dataset.base.validate_record", return_value=None)
-def test_load_raw_bids_path_mismatch_raises_unsupported(mock_validate, tmp_path):
-    """Test BIDS path mismatch raises UnsupportedDataError."""
-    from eegdash.dataset.base import EEGDashRaw
-    from eegdash.dataset.exceptions import UnsupportedDataError
-
-    record = {
-        "dataset": "ds005795",
-        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
-    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError(
-            "PosixPath('eeg/sub-01_task-learning_eeg.vhdr') is not in list. "
-            "Did you mean one of ['func/sub-01_task-learning_bold.nii.gz']?"
-        ),
-    ):
-        with pytest.raises(UnsupportedDataError, match="BIDS path mismatch"):
-            ds._load_raw()
-
-
-@patch("eegdash.dataset.base.validate_record", return_value=None)
-def test_load_raw_inhomogeneous_raises_unsupported(mock_validate, tmp_path):
-    """Test inhomogeneous array error raises UnsupportedDataError."""
-    from eegdash.dataset.base import EEGDashRaw
-    from eegdash.dataset.exceptions import UnsupportedDataError
-
-    record = {
-        "dataset": "ds004350",
-        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
-    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError(
-            "setting an array element with a sequence. "
-            "The requested array has an inhomogeneous shape"
-        ),
-    ):
-        with pytest.raises(UnsupportedDataError, match="inhomogeneous"):
             ds._load_raw()
 
 

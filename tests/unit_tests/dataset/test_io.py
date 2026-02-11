@@ -18,6 +18,53 @@ from eegdash.dataset.io import (
 )
 
 
+@pytest.mark.parametrize(
+    "func",
+    [
+        _repair_electrodes_tsv,
+        _repair_tsv_decimal_separators,
+        _repair_tsv_na_values,
+        _repair_events_tsv_na_duration,
+        _repair_ctf_eeg_position_file,
+    ],
+)
+def test_repair_nonexistent_dir(tmp_path, func):
+    """Test repair functions return False for non-existent directory."""
+    assert func(tmp_path / "nonexistent") is False
+
+
+@pytest.mark.parametrize(
+    "func,filename,content",
+    [
+        (
+            _repair_electrodes_tsv,
+            "sub-01_electrodes.tsv",
+            "name\tx\ty\tz\nFp1\t1.0\t2.0\t3.0\n",
+        ),
+        (
+            _repair_tsv_decimal_separators,
+            "sub-01_channels.tsv",
+            "name\tsampling_frequency\nFp1\t500.0\n",
+        ),
+        (
+            _repair_tsv_na_values,
+            "sub-01_channels.tsv",
+            "name\tsampling_frequency\tlow_cutoff\nFp1\t256\t0.1\n",
+        ),
+        (
+            _repair_events_tsv_na_duration,
+            "sub-01_task-rest_events.tsv",
+            "onset\tduration\ttrial_type\n0.5\t0.5\tgo\n",
+        ),
+    ],
+    ids=["electrodes", "decimal_sep", "na_values", "events_duration"],
+)
+def test_repair_no_change_needed(tmp_path, func, filename, content):
+    """Test repair functions return False when no changes are needed."""
+    (tmp_path / filename).write_text(content)
+    assert func(tmp_path) is False
+
+
 def test_repair_vhdr_pointers(tmp_path):
     """Test that VHDR pointers are repaired if broken but BIDS files exist."""
     eeg_dir = tmp_path
@@ -124,80 +171,52 @@ def test_find_best_matching_file_no_candidates(tmp_path):
     assert result is None
 
 
-def test_repair_vhdr_fuzzy_match_typo(tmp_path):
-    """Test VHDR repair with typo in filename (fuzzy match fallback)."""
-    eeg_dir = tmp_path
+@pytest.mark.parametrize(
+    "vhdr_stem,bad_data,bad_vmrk,expected_data,expected_vmrk",
+    [
+        (
+            "sub-01_task-sternberg_eeg",
+            "sub-01_task-sternbeg_eeg.eeg",
+            "sub-01_task-sternbeg_eeg.vmrk",
+            "sub-01_task-sternberg_eeg.eeg",
+            "sub-01_task-sternberg_eeg.vmrk",
+        ),
+        (
+            "sub-16_task-rest_eeg",
+            "rsub-16_task-rest_eeg.eeg",
+            "sub-16_task-rest_eeg.vmrk",
+            "sub-16_task-rest_eeg.eeg",
+            "sub-16_task-rest_eeg.vmrk",
+        ),
+        (
+            "sub-054_ses-00_task-rest_eeg",
+            "sub-054_sub-054_date-20210505ses-00_task-rest_eeg.eeg",
+            "sub-054_sub-054_date-20210505ses-00_task-rest_eeg.vmrk",
+            "sub-054_ses-00_task-rest_eeg.eeg",
+            "sub-054_ses-00_task-rest_eeg.vmrk",
+        ),
+    ],
+    ids=["typo", "prefix_typo", "complex_name"],
+)
+def test_repair_vhdr_fuzzy_match(
+    tmp_path, vhdr_stem, bad_data, bad_vmrk, expected_data, expected_vmrk
+):
+    """Test VHDR repair with various naming mismatches (fuzzy match)."""
+    (tmp_path / f"{vhdr_stem}.eeg").touch()
+    (tmp_path / f"{vhdr_stem}.vmrk").touch()
 
-    # Create the actual BIDS files
-    (eeg_dir / "sub-01_task-sternberg_eeg.eeg").touch()
-    (eeg_dir / "sub-01_task-sternberg_eeg.vmrk").touch()
+    vhdr_path = tmp_path / f"{vhdr_stem}.vhdr"
+    vhdr_path.write_text(
+        f"Brain Vision Data Exchange Header File Version 1.0\n"
+        f"[Common Infos]\n"
+        f"DataFile={bad_data}\n"
+        f"MarkerFile={bad_vmrk}\n"
+    )
 
-    # Create VHDR with typo ("sternbeg" instead of "sternberg")
-    vhdr_path = eeg_dir / "sub-01_task-sternberg_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=sub-01_task-sternbeg_eeg.eeg
-MarkerFile=sub-01_task-sternbeg_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    # Run repair
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    # Verify content was fixed
-    new_content = vhdr_path.read_text()
-    assert "sub-01_task-sternberg_eeg.eeg" in new_content
-    assert "sub-01_task-sternberg_eeg.vmrk" in new_content
-
-
-def test_repair_vhdr_fuzzy_match_prefix_typo(tmp_path):
-    """Test VHDR repair with prefix typo (e.g., 'rsub-' instead of 'sub-')."""
-    eeg_dir = tmp_path
-
-    # Create actual files
-    (eeg_dir / "sub-16_task-rest_eeg.eeg").touch()
-    (eeg_dir / "sub-16_task-rest_eeg.vmrk").touch()
-
-    # Create VHDR with 'r' prefix typo
-    vhdr_path = eeg_dir / "sub-16_task-rest_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=rsub-16_task-rest_eeg.eeg
-MarkerFile=sub-16_task-rest_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    new_content = vhdr_path.read_text()
-    assert "DataFile=sub-16_task-rest_eeg.eeg" in new_content
-
-
-def test_repair_vhdr_complex_original_name(tmp_path):
-    """Test VHDR repair when original name was completely different."""
-    eeg_dir = tmp_path
-
-    # Create BIDS files
-    (eeg_dir / "sub-054_ses-00_task-rest_eeg.eeg").touch()
-    (eeg_dir / "sub-054_ses-00_task-rest_eeg.vmrk").touch()
-
-    # Create VHDR with complex original filename
-    vhdr_path = eeg_dir / "sub-054_ses-00_task-rest_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=sub-054_sub-054_date-20210505ses-00_task-rest_eeg.eeg
-MarkerFile=sub-054_sub-054_date-20210505ses-00_task-rest_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    new_content = vhdr_path.read_text()
-    assert "sub-054_ses-00_task-rest_eeg.eeg" in new_content
-    assert "sub-054_ses-00_task-rest_eeg.vmrk" in new_content
+    assert _repair_vhdr_pointers(vhdr_path) is True
+    content = vhdr_path.read_text()
+    assert expected_data in content
+    assert expected_vmrk in content
 
 
 # Tests for VHDR/VMRK generation from metadata
@@ -338,19 +357,6 @@ def test_repair_electrodes_tsv_replaces_na(tmp_path):
     assert "Fp2\t1.0\t2.0\t3.0" in content
 
 
-def test_repair_electrodes_tsv_no_change_needed(tmp_path):
-    """Test no repair when coordinates are valid."""
-    tsv_path = tmp_path / "sub-01_electrodes.tsv"
-    tsv_path.write_text("name\tx\ty\tz\nFp1\t1.0\t2.0\t3.0\n")
-
-    assert _repair_electrodes_tsv(tmp_path) is False
-
-
-def test_repair_electrodes_tsv_nonexistent_dir(tmp_path):
-    """Test returns False for non-existent directory."""
-    assert _repair_electrodes_tsv(tmp_path / "nonexistent") is False
-
-
 def test_repair_electrodes_tsv_no_coord_columns(tmp_path):
     """Test returns False when no x/y/z columns exist."""
     tsv_path = tmp_path / "sub-01_electrodes.tsv"
@@ -373,19 +379,6 @@ def test_repair_tsv_decimal_separators(tmp_path):
     assert "5.004" in content
     assert "3.2" in content
     assert "1.001" in content
-
-
-def test_repair_tsv_decimal_separators_no_change(tmp_path):
-    """Test no repair when dots are already used."""
-    tsv_path = tmp_path / "sub-01_channels.tsv"
-    tsv_path.write_text("name\tsampling_frequency\nFp1\t500.0\n")
-
-    assert _repair_tsv_decimal_separators(tmp_path) is False
-
-
-def test_repair_tsv_decimal_separators_nonexistent(tmp_path):
-    """Test returns False for non-existent directory."""
-    assert _repair_tsv_decimal_separators(tmp_path / "nonexistent") is False
 
 
 def test_repair_tsv_decimal_separators_header_untouched(tmp_path):
@@ -426,19 +419,6 @@ def test_repair_tsv_na_values_no_numeric_columns(tmp_path):
     """Test returns False when no target numeric columns."""
     tsv_path = tmp_path / "sub-01_channels.tsv"
     tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tuV\n")
-
-    assert _repair_tsv_na_values(tmp_path) is False
-
-
-def test_repair_tsv_na_values_nonexistent(tmp_path):
-    """Test returns False for non-existent directory."""
-    assert _repair_tsv_na_values(tmp_path / "nonexistent") is False
-
-
-def test_repair_tsv_na_values_no_na_present(tmp_path):
-    """Test returns False when no n/a values in numeric columns."""
-    tsv_path = tmp_path / "sub-01_channels.tsv"
-    tsv_path.write_text("name\tsampling_frequency\tlow_cutoff\nFp1\t256\t0.1\n")
 
     assert _repair_tsv_na_values(tmp_path) is False
 
@@ -640,25 +620,12 @@ def test_repair_events_tsv_na_sample_replaced(tmp_path):
     assert lines[1] == "0.5\t0\t0\t1"
 
 
-def test_repair_events_tsv_na_duration_no_na(tmp_path):
-    """Test returns False when no n/a in duration column."""
-    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
-    tsv_path.write_text("onset\tduration\ttrial_type\n0.5\t0.5\tgo\n")
-
-    assert _repair_events_tsv_na_duration(tmp_path) is False
-
-
 def test_repair_events_tsv_na_duration_no_relevant_columns(tmp_path):
     """Test returns False when no onset/duration/sample columns exist."""
     tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
     tsv_path.write_text("trial_type\tvalue\ngo\t1\n")
 
     assert _repair_events_tsv_na_duration(tmp_path) is False
-
-
-def test_repair_events_tsv_na_duration_nonexistent(tmp_path):
-    """Test returns False for non-existent directory."""
-    assert _repair_events_tsv_na_duration(tmp_path / "nonexistent") is False
 
 
 def test_repair_events_tsv_na_duration_whitespace(tmp_path):
@@ -674,24 +641,13 @@ def test_repair_events_tsv_na_duration_whitespace(tmp_path):
 # ---- Tests for _repair_ctf_eeg_position_file ----
 
 
-def test_repair_ctf_eeg_position_file_na(tmp_path):
+@pytest.mark.parametrize("content", ["n/a", "  n/a  \n"], ids=["plain", "whitespace"])
+def test_repair_ctf_eeg_position_file_na(tmp_path, content):
     """Test replacing n/a content in CTF .eeg file with empty file."""
     ds_dir = tmp_path / "test_meg.ds"
     ds_dir.mkdir()
     eeg_file = ds_dir / "test_meg.eeg"
-    eeg_file.write_text("n/a")
-
-    assert _repair_ctf_eeg_position_file(ds_dir) is True
-    assert eeg_file.read_text() == ""
-
-
-def test_repair_ctf_eeg_position_file_na_whitespace(tmp_path):
-    """Test n/a with surrounding whitespace."""
-    ds_dir = tmp_path / "test_meg.ds"
-    ds_dir.mkdir()
-    eeg_file = ds_dir / "test_meg.eeg"
-    eeg_file.write_text("  n/a  \n")
-
+    eeg_file.write_text(content)
     assert _repair_ctf_eeg_position_file(ds_dir) is True
     assert eeg_file.read_text() == ""
 
@@ -704,11 +660,6 @@ def test_repair_ctf_eeg_position_file_valid(tmp_path):
     eeg_file.write_text("1 Nasion 10.5 20.3 15.7\n2 LPA 5.0 -20.0 10.0\n")
 
     assert _repair_ctf_eeg_position_file(ds_dir) is False
-
-
-def test_repair_ctf_eeg_position_file_nonexistent(tmp_path):
-    """Test returns False for non-existent directory."""
-    assert _repair_ctf_eeg_position_file(tmp_path / "nonexistent.ds") is False
 
 
 def test_repair_ctf_eeg_position_file_no_eeg(tmp_path):

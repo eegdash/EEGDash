@@ -599,7 +599,11 @@ class EEGBIDSDataset:
         if subject not in participants_tsv.index:
             return {}
 
-        row_dict = participants_tsv.loc[subject].to_dict()
+        row = participants_tsv.loc[subject]
+        # Handle duplicate participant_id entries (e.g., multi-session datasets)
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        row_dict = row.to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
 

@@ -22,13 +22,22 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
-from .exceptions import DataIntegrityError
+from .exceptions import DataIntegrityError, UnsupportedDataError
 from .io import (
     _ensure_coordsystem_symlink,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _load_epoched_eeglab_as_raw,
+    _load_raw_direct,
+    _load_set_via_scipy,
+    _repair_ctf_eeg_position_file,
+    _repair_electrodes_tsv,
+    _repair_events_tsv_na_duration,
     _repair_snirf_bids_metadata,
+    _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_values,
+    _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
 
@@ -119,6 +128,13 @@ class EEGDashRaw(RawDataset):
 
         entities_mne = self.record.get("entities_mne") or {}
 
+        # Sanitize non-numeric run entities (e.g., "5H") before creating BIDSPath
+        # because mne_bids rejects non-integer run values even with check=False
+        run = entities_mne.get("run")
+        if run is not None and not str(run).isdigit():
+            logger.info(f"Sanitizing non-numeric run entity: '{run}' → None")
+            run = None
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype=MODALITY_ALIASES.get(
@@ -131,7 +147,7 @@ class EEGDashRaw(RawDataset):
             subject=entities_mne.get("subject"),
             session=entities_mne.get("session"),
             task=entities_mne.get("task"),
-            run=entities_mne.get("run"),
+            run=run,
             check=False,
         )
 
@@ -169,6 +185,18 @@ class EEGDashRaw(RawDataset):
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
+            _repair_electrodes_tsv(self.filecache.parent)
+            _repair_tsv_decimal_separators(self.filecache.parent)
+            _repair_tsv_na_values(self.filecache.parent)
+            _repair_events_tsv_na_duration(self.filecache.parent)
+
+        # Helper: Repair CTF .ds internal files (e.g., .eeg with n/a)
+        if (
+            self.filecache
+            and self.filecache.suffix == ".ds"
+            and self.filecache.is_dir()
+        ):
+            _repair_ctf_eeg_position_file(self.filecache)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -178,6 +206,8 @@ class EEGDashRaw(RawDataset):
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
+                # Fix missing MarkerFile entry (causes KeyError: 'markerfile')
+                _repair_vhdr_missing_markerfile(self.filecache)
 
             # Also generate VMRK stub if missing (common issue with some datasets)
             vmrk_path = self.filecache.with_suffix(".vmrk")
@@ -196,8 +226,14 @@ class EEGDashRaw(RawDataset):
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
 
-        For SNIRF (fNIRS) files, if initial loading fails, applies on-the-fly
-        fixes to BIDS metadata (channels.tsv, scans.tsv) and retries.
+        Implements a cascade of recovery strategies for known failure modes:
+
+        1. EEGLAB epoched .set files → concatenate epochs into continuous Raw
+        2. SNIRF metadata issues → repair and retry
+        3. EEGLAB extension mismatch → direct MNE reader
+        4. Channel type conflicts → retry with on_ch_mismatch="ignore"
+        5. FIF/MEG validation errors → direct reader with allow_maxshield
+        6. Corrupted/unsupported files → raise UnsupportedDataError
         """
         try:
             # First attempt: standard MNE-BIDS loading
@@ -205,13 +241,36 @@ class EEGDashRaw(RawDataset):
                 bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
             )
         except Exception as first_error:
-            # For SNIRF files, try to fix and retry
-            if self.filecache and self.filecache.suffix.lower() == ".snirf":
+            error_msg = str(first_error)
+            ext = self.filecache.suffix.lower() if self.filecache else ""
+            dataset_id = self.record.get("dataset", "unknown")
+
+            # GROUP A: EEGLAB epoched files (12 datasets)
+            # TypeError: "The number of trials is X. It must be 1 for raw files."
+            if ext == ".set" and "number of trials" in error_msg.lower():
                 logger.warning(
-                    "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
+                    f"[{dataset_id}] Epoched EEGLAB file detected, "
+                    f"converting to continuous..."
+                )
+                try:
+                    return _load_epoched_eeglab_as_raw(self.filecache)
+                except Exception as epoch_error:
+                    logger.error(
+                        f"[{dataset_id}] Epoched conversion failed: {epoch_error}"
+                    )
+                    raise UnsupportedDataError(
+                        f"Cannot load epoched EEGLAB file: {epoch_error}",
+                        record=self.record,
+                        reason="epoched_eeglab_conversion_failed",
+                    ) from first_error
+
+            # SNIRF: existing repair logic
+            if ext == ".snirf":
+                logger.warning(
+                    f"[{dataset_id}] Initial load failed for SNIRF file, "
+                    f"attempting to fix BIDS metadata..."
                 )
                 if _repair_snirf_bids_metadata(self.filecache, self.record):
-                    # Retry after fix
                     try:
                         return mne_bids.read_raw_bids(
                             bids_path=self.bidspath,
@@ -219,9 +278,143 @@ class EEGDashRaw(RawDataset):
                             on_ch_mismatch="rename",
                         )
                     except Exception as retry_error:
-                        logger.error(f"Retry also failed: {retry_error}")
-                        raise retry_error from first_error
-            # Not a SNIRF or fix didn't help - re-raise original error
+                        logger.error(
+                            f"[{dataset_id}] SNIRF retry failed: {retry_error}"
+                        )
+
+                # SNIRF unrecoverable errors
+                if any(
+                    s in error_msg
+                    for s in ["0-d array", "type code", "truncated file", "truncated"]
+                ):
+                    raise UnsupportedDataError(
+                        f"Cannot load SNIRF file '{self.filecache.name}': {error_msg}",
+                        record=self.record,
+                        reason="unsupported_snirf_format",
+                    ) from first_error
+                raise
+
+            # GROUP B4: EEGLAB extension mismatch
+            # ValueError: "Invalid value for the 'EEGLAB file extension' parameter"
+            if ext == ".set" and "EEGLAB file extension" in error_msg:
+                logger.warning(
+                    f"[{dataset_id}] EEGLAB extension error, trying scipy loader..."
+                )
+                try:
+                    return _load_set_via_scipy(self.filecache)
+                except Exception as scipy_error:
+                    logger.error(
+                        f"[{dataset_id}] Scipy EEGLAB read failed: {scipy_error}"
+                    )
+                    raise UnsupportedDataError(
+                        f"Cannot load EEGLAB file: {scipy_error}",
+                        record=self.record,
+                        reason="eeglab_extension_mismatch",
+                    ) from first_error
+
+            # GROUP C2: Channel type conflict in projectors
+            # RuntimeError: "Cannot change channel type for channel ... in projector"
+            if "Cannot change channel type" in error_msg:
+                logger.warning(
+                    f"[{dataset_id}] Channel type conflict, "
+                    f"retrying with on_ch_mismatch='ignore'..."
+                )
+                try:
+                    return mne_bids.read_raw_bids(
+                        bids_path=self.bidspath,
+                        verbose="ERROR",
+                        on_ch_mismatch="ignore",
+                    )
+                except Exception as ignore_error:
+                    logger.error(
+                        f"[{dataset_id}] Retry with ignore also failed: {ignore_error}"
+                    )
+                    # Fall through to direct reader
+
+            # GROUP B3/C1/C2/C6/F1: Direct reader fallback for FIF/MEG validation errors
+            if any(
+                s in error_msg
+                for s in [
+                    "Illegal date",
+                    "FIFFV_COIL",
+                    "cannot reshape array",
+                    "HPI",
+                    "device-coordinate",
+                    "Cannot change channel type",
+                ]
+            ):
+                logger.warning(
+                    f"[{dataset_id}] BIDS validation error, trying direct reader..."
+                )
+                try:
+                    return _load_raw_direct(self.filecache, allow_maxshield=True)
+                except Exception as direct_error:
+                    logger.error(
+                        f"[{dataset_id}] Direct reader also failed: {direct_error}"
+                    )
+                    raise UnsupportedDataError(
+                        f"Cannot load file '{self.filecache.name}': {direct_error}",
+                        record=self.record,
+                        reason="fif_validation_error",
+                    ) from first_error
+
+            # Unrecoverable: corrupted/truncated files
+            if any(
+                s in error_msg
+                for s in [
+                    "buffer is too small",
+                    "could not read bytes",
+                    "truncated file",
+                ]
+            ):
+                raise UnsupportedDataError(
+                    f"Data file is corrupted or truncated: {error_msg}",
+                    record=self.record,
+                    reason="corrupted_file",
+                ) from first_error
+
+            # Unrecoverable: unsupported format variants
+            if "type code" in error_msg:
+                raise UnsupportedDataError(
+                    f"Unsupported data format variant: {error_msg}",
+                    record=self.record,
+                    reason="unsupported_format_variant",
+                ) from first_error
+
+            # Unrecoverable: missing companion files (CTF .ds, etc.)
+            if any(s in error_msg.lower() for s in ["not found", "could not find"]):
+                raise DataIntegrityError(
+                    message=f"Missing companion files: {error_msg}",
+                    record=self.record,
+                    issues=[error_msg],
+                )
+
+            # Unrecoverable: BIDS path mismatch (e.g., eeg vs func)
+            if "is not in list" in error_msg and "Did you mean" in error_msg:
+                raise UnsupportedDataError(
+                    f"BIDS path mismatch — record metadata may be incorrect: {error_msg}",
+                    record=self.record,
+                    reason="bids_path_mismatch",
+                ) from first_error
+
+            # Unrecoverable: inhomogeneous arrays in TSV
+            if "inhomogeneous" in error_msg:
+                raise UnsupportedDataError(
+                    f"Malformed data structure: {error_msg}",
+                    record=self.record,
+                    reason="inhomogeneous_data",
+                ) from first_error
+
+            # Catch-all for AssertionErrors with no message
+            if isinstance(first_error, AssertionError):
+                raise UnsupportedDataError(
+                    f"Assertion failed during loading of "
+                    f"'{self.filecache.name}': {error_msg}",
+                    record=self.record,
+                    reason="assertion_error",
+                ) from first_error
+
+            # Default: re-raise original error
             raise
 
     def __len__(self) -> int:

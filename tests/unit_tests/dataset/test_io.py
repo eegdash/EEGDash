@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -7,9 +7,62 @@ from eegdash.dataset.io import (
     _find_best_matching_file,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_ctf_eeg_position_file,
+    _repair_electrodes_tsv,
+    _repair_events_tsv_na_duration,
+    _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_values,
+    _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
+
+
+@pytest.mark.parametrize(
+    "func",
+    [
+        _repair_electrodes_tsv,
+        _repair_tsv_decimal_separators,
+        _repair_tsv_na_values,
+        _repair_events_tsv_na_duration,
+        _repair_ctf_eeg_position_file,
+    ],
+)
+def test_repair_nonexistent_dir(tmp_path, func):
+    """Test repair functions return False for non-existent directory."""
+    assert func(tmp_path / "nonexistent") is False
+
+
+@pytest.mark.parametrize(
+    "func,filename,content",
+    [
+        (
+            _repair_electrodes_tsv,
+            "sub-01_electrodes.tsv",
+            "name\tx\ty\tz\nFp1\t1.0\t2.0\t3.0\n",
+        ),
+        (
+            _repair_tsv_decimal_separators,
+            "sub-01_channels.tsv",
+            "name\tsampling_frequency\nFp1\t500.0\n",
+        ),
+        (
+            _repair_tsv_na_values,
+            "sub-01_channels.tsv",
+            "name\tsampling_frequency\tlow_cutoff\nFp1\t256\t0.1\n",
+        ),
+        (
+            _repair_events_tsv_na_duration,
+            "sub-01_task-rest_events.tsv",
+            "onset\tduration\ttrial_type\n0.5\t0.5\tgo\n",
+        ),
+    ],
+    ids=["electrodes", "decimal_sep", "na_values", "events_duration"],
+)
+def test_repair_no_change_needed(tmp_path, func, filename, content):
+    """Test repair functions return False when no changes are needed."""
+    (tmp_path / filename).write_text(content)
+    assert func(tmp_path) is False
 
 
 def test_repair_vhdr_pointers(tmp_path):
@@ -118,80 +171,52 @@ def test_find_best_matching_file_no_candidates(tmp_path):
     assert result is None
 
 
-def test_repair_vhdr_fuzzy_match_typo(tmp_path):
-    """Test VHDR repair with typo in filename (fuzzy match fallback)."""
-    eeg_dir = tmp_path
+@pytest.mark.parametrize(
+    "vhdr_stem,bad_data,bad_vmrk,expected_data,expected_vmrk",
+    [
+        (
+            "sub-01_task-sternberg_eeg",
+            "sub-01_task-sternbeg_eeg.eeg",
+            "sub-01_task-sternbeg_eeg.vmrk",
+            "sub-01_task-sternberg_eeg.eeg",
+            "sub-01_task-sternberg_eeg.vmrk",
+        ),
+        (
+            "sub-16_task-rest_eeg",
+            "rsub-16_task-rest_eeg.eeg",
+            "sub-16_task-rest_eeg.vmrk",
+            "sub-16_task-rest_eeg.eeg",
+            "sub-16_task-rest_eeg.vmrk",
+        ),
+        (
+            "sub-054_ses-00_task-rest_eeg",
+            "sub-054_sub-054_date-20210505ses-00_task-rest_eeg.eeg",
+            "sub-054_sub-054_date-20210505ses-00_task-rest_eeg.vmrk",
+            "sub-054_ses-00_task-rest_eeg.eeg",
+            "sub-054_ses-00_task-rest_eeg.vmrk",
+        ),
+    ],
+    ids=["typo", "prefix_typo", "complex_name"],
+)
+def test_repair_vhdr_fuzzy_match(
+    tmp_path, vhdr_stem, bad_data, bad_vmrk, expected_data, expected_vmrk
+):
+    """Test VHDR repair with various naming mismatches (fuzzy match)."""
+    (tmp_path / f"{vhdr_stem}.eeg").touch()
+    (tmp_path / f"{vhdr_stem}.vmrk").touch()
 
-    # Create the actual BIDS files
-    (eeg_dir / "sub-01_task-sternberg_eeg.eeg").touch()
-    (eeg_dir / "sub-01_task-sternberg_eeg.vmrk").touch()
+    vhdr_path = tmp_path / f"{vhdr_stem}.vhdr"
+    vhdr_path.write_text(
+        f"Brain Vision Data Exchange Header File Version 1.0\n"
+        f"[Common Infos]\n"
+        f"DataFile={bad_data}\n"
+        f"MarkerFile={bad_vmrk}\n"
+    )
 
-    # Create VHDR with typo ("sternbeg" instead of "sternberg")
-    vhdr_path = eeg_dir / "sub-01_task-sternberg_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=sub-01_task-sternbeg_eeg.eeg
-MarkerFile=sub-01_task-sternbeg_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    # Run repair
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    # Verify content was fixed
-    new_content = vhdr_path.read_text()
-    assert "sub-01_task-sternberg_eeg.eeg" in new_content
-    assert "sub-01_task-sternberg_eeg.vmrk" in new_content
-
-
-def test_repair_vhdr_fuzzy_match_prefix_typo(tmp_path):
-    """Test VHDR repair with prefix typo (e.g., 'rsub-' instead of 'sub-')."""
-    eeg_dir = tmp_path
-
-    # Create actual files
-    (eeg_dir / "sub-16_task-rest_eeg.eeg").touch()
-    (eeg_dir / "sub-16_task-rest_eeg.vmrk").touch()
-
-    # Create VHDR with 'r' prefix typo
-    vhdr_path = eeg_dir / "sub-16_task-rest_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=rsub-16_task-rest_eeg.eeg
-MarkerFile=sub-16_task-rest_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    new_content = vhdr_path.read_text()
-    assert "DataFile=sub-16_task-rest_eeg.eeg" in new_content
-
-
-def test_repair_vhdr_complex_original_name(tmp_path):
-    """Test VHDR repair when original name was completely different."""
-    eeg_dir = tmp_path
-
-    # Create BIDS files
-    (eeg_dir / "sub-054_ses-00_task-rest_eeg.eeg").touch()
-    (eeg_dir / "sub-054_ses-00_task-rest_eeg.vmrk").touch()
-
-    # Create VHDR with complex original filename
-    vhdr_path = eeg_dir / "sub-054_ses-00_task-rest_eeg.vhdr"
-    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
-[Common Infos]
-DataFile=sub-054_sub-054_date-20210505ses-00_task-rest_eeg.eeg
-MarkerFile=sub-054_sub-054_date-20210505ses-00_task-rest_eeg.vmrk
-"""
-    vhdr_path.write_text(vhdr_content)
-
-    repaired = _repair_vhdr_pointers(vhdr_path)
-    assert repaired is True
-
-    new_content = vhdr_path.read_text()
-    assert "sub-054_ses-00_task-rest_eeg.eeg" in new_content
-    assert "sub-054_ses-00_task-rest_eeg.vmrk" in new_content
+    assert _repair_vhdr_pointers(vhdr_path) is True
+    content = vhdr_path.read_text()
+    assert expected_data in content
+    assert expected_vmrk in content
 
 
 # Tests for VHDR/VMRK generation from metadata
@@ -314,3 +339,340 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
     (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
     (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
     assert _repair_tsv_encoding(tmp_path) is True
+
+
+# ---- Tests for _repair_electrodes_tsv ----
+
+
+def test_repair_electrodes_tsv_replaces_na(tmp_path):
+    """Test that n/a values in coordinate columns are replaced with 0.0."""
+    tsv_path = tmp_path / "sub-01_electrodes.tsv"
+    tsv_path.write_text("name\tx\ty\tz\nFp1\tn/a\tn/a\tn/a\nFp2\t1.0\t2.0\t3.0\n")
+
+    assert _repair_electrodes_tsv(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "n/a" not in content
+    assert "Fp1\t0.0\t0.0\t0.0" in content
+    assert "Fp2\t1.0\t2.0\t3.0" in content
+
+
+def test_repair_electrodes_tsv_no_coord_columns(tmp_path):
+    """Test returns False when no x/y/z columns exist."""
+    tsv_path = tmp_path / "sub-01_electrodes.tsv"
+    tsv_path.write_text("name\ttype\nFp1\tEEG\n")
+
+    assert _repair_electrodes_tsv(tmp_path) is False
+
+
+# ---- Tests for _repair_tsv_decimal_separators ----
+
+
+def test_repair_tsv_decimal_separators(tmp_path):
+    """Test comma-to-dot conversion in numeric fields."""
+    tsv_path = tmp_path / "sub-01_electrodes.tsv"
+    tsv_path.write_text("name\tx\ty\tz\nFp1\t5,004\t3,2\t1,001\n")
+
+    assert _repair_tsv_decimal_separators(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "5.004" in content
+    assert "3.2" in content
+    assert "1.001" in content
+
+
+def test_repair_tsv_decimal_separators_header_untouched(tmp_path):
+    """Test that header line is never modified."""
+    tsv_path = tmp_path / "sub-01_channels.tsv"
+    tsv_path.write_text("name\tsampling_frequency\nFp1\t5,004\n")
+
+    _repair_tsv_decimal_separators(tmp_path)
+
+    content = tsv_path.read_text()
+    lines = content.strip().split("\n")
+    assert lines[0] == "name\tsampling_frequency"
+
+
+# ---- Tests for _repair_tsv_na_values ----
+
+
+def test_repair_tsv_na_values(tmp_path):
+    """Test n/a replacement in numeric columns of channels.tsv."""
+    tsv_path = tmp_path / "sub-01_channels.tsv"
+    tsv_path.write_text(
+        "name\ttype\tsampling_frequency\tlow_cutoff\thigh_cutoff\n"
+        "Fp1\tEEG\tn/a\tn/a\tn/a\n"
+        "Fp2\tEEG\t256\t0.1\t100\n"
+    )
+
+    assert _repair_tsv_na_values(tmp_path) is True
+
+    content = tsv_path.read_text()
+    lines = content.strip().split("\n")
+    # First data line should have n/a replaced with 0
+    assert "n/a" not in lines[1]
+    # Second data line should be untouched
+    assert "256" in lines[2]
+
+
+def test_repair_tsv_na_values_no_numeric_columns(tmp_path):
+    """Test returns False when no target numeric columns."""
+    tsv_path = tmp_path / "sub-01_channels.tsv"
+    tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tuV\n")
+
+    assert _repair_tsv_na_values(tmp_path) is False
+
+
+# ---- Tests for _repair_vhdr_missing_markerfile ----
+
+
+def test_repair_vhdr_missing_markerfile(tmp_path):
+    """Test adding MarkerFile entry when missing."""
+    vhdr_path = tmp_path / "sub-01_task-rest_eeg.vhdr"
+    vhdr_path.write_text(
+        "Brain Vision Data Exchange Header File Version 1.0\n"
+        "[Common Infos]\n"
+        "DataFile=sub-01_task-rest_eeg.eeg\n"
+        "[Binary Infos]\n"
+    )
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is True
+
+    content = vhdr_path.read_text()
+    assert "MarkerFile=sub-01_task-rest_eeg.vmrk" in content
+    # VMRK stub should be generated
+    assert (tmp_path / "sub-01_task-rest_eeg.vmrk").exists()
+
+
+def test_repair_vhdr_missing_markerfile_already_exists(tmp_path):
+    """Test no repair when MarkerFile is already present."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_path.write_text("[Common Infos]\nDataFile=test.eeg\nMarkerFile=test.vmrk\n")
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is False
+
+
+def test_repair_vhdr_missing_markerfile_no_common_infos(tmp_path):
+    """Test returns False when [Common Infos] section is missing."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_path.write_text("DataFile=test.eeg\n")
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is False
+
+
+def test_repair_vhdr_missing_markerfile_nonexistent(tmp_path):
+    """Test returns False for non-existent file."""
+    assert _repair_vhdr_missing_markerfile(tmp_path / "nonexistent.vhdr") is False
+
+
+def test_repair_vhdr_missing_markerfile_wrong_extension(tmp_path):
+    """Test returns False for non-.vhdr file."""
+    f = tmp_path / "test.eeg"
+    f.touch()
+    assert _repair_vhdr_missing_markerfile(f) is False
+
+
+def test_repair_vhdr_missing_markerfile_no_datafile(tmp_path):
+    """Test MarkerFile is added after [Common Infos] when DataFile is also missing."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_path.write_text("[Common Infos]\nCodepage=UTF-8\n")
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is True
+
+    content = vhdr_path.read_text()
+    assert "MarkerFile=test.vmrk" in content
+
+
+# ---- Tests for _load_epoched_eeglab_as_raw ----
+
+
+def test_load_epoched_eeglab_as_raw():
+    """Test epoched EEGLAB loading and concatenation (mocked via MNE)."""
+    import numpy as np
+
+    from eegdash.dataset.io import _load_epoched_eeglab_as_raw
+
+    # Mock the MNE functions — strategy 1 (MNE epoch reader)
+    mock_epochs = MagicMock()
+    mock_epochs.get_data.return_value = np.random.randn(10, 4, 100)
+    mock_epochs.info = MagicMock()
+
+    with patch("mne.read_epochs_eeglab", return_value=mock_epochs):
+        with patch("mne.io.RawArray") as MockRawArray:
+            from pathlib import Path
+
+            _load_epoched_eeglab_as_raw(Path("/fake/file.set"))
+
+            call_args = MockRawArray.call_args
+            data_arg = call_args[0][0]
+            assert data_arg.shape == (4, 1000)
+
+
+def test_load_epoched_eeglab_scipy_fallback():
+    """Test scipy fallback when MNE epoch reader fails."""
+    from eegdash.dataset.io import _load_epoched_eeglab_as_raw
+
+    # Make MNE epoch reader fail, triggering scipy fallback
+    with patch(
+        "mne.read_epochs_eeglab", side_effect=IndexError("list index out of range")
+    ):
+        with patch("eegdash.dataset.io._load_set_via_scipy") as mock_scipy:
+            mock_scipy.return_value = MagicMock()
+            from pathlib import Path
+
+            result = _load_epoched_eeglab_as_raw(Path("/fake/file.set"))
+            mock_scipy.assert_called_once()
+            assert result is mock_scipy.return_value
+
+
+# ---- Tests for _load_raw_direct ----
+
+
+def test_load_raw_direct_fif():
+    """Test direct FIF loading with allow_maxshield."""
+    from pathlib import Path
+
+    from eegdash.dataset.io import _load_raw_direct
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_fif", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(Path("/fake/file.fif"), allow_maxshield=True)
+        assert result is mock_raw
+        mock_reader.assert_called_once_with(
+            "/fake/file.fif", preload=False, verbose="ERROR", allow_maxshield=True
+        )
+
+
+def test_load_raw_direct_set():
+    """Test direct EEGLAB loading."""
+    from pathlib import Path
+
+    from eegdash.dataset.io import _load_raw_direct
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_eeglab", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(Path("/fake/file.set"))
+        assert result is mock_raw
+        mock_reader.assert_called_once_with(
+            "/fake/file.set", preload=False, verbose="ERROR"
+        )
+
+
+def test_load_raw_direct_unsupported_extension():
+    """Test that unsupported extension raises ValueError."""
+    from pathlib import Path
+
+    from eegdash.dataset.io import _load_raw_direct
+
+    with pytest.raises(ValueError, match="No direct reader available"):
+        _load_raw_direct(Path("/fake/file.xyz"))
+
+
+# ---- Tests for _repair_events_tsv_na_duration ----
+
+
+def test_repair_events_tsv_na_duration(tmp_path):
+    """Test replacing n/a in duration column of events.tsv."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\ttrial_type\n0.5\tn/a\tgo\n1.0\t0.5\tstop\n2.0\tn/a\tgo\n"
+    )
+
+    assert _repair_events_tsv_na_duration(tmp_path) is True
+
+    content = tsv_path.read_text()
+    lines = content.strip().split("\n")
+    assert lines[0] == "onset\tduration\ttrial_type"
+    assert lines[1] == "0.5\t0\tgo"
+    assert lines[2] == "1.0\t0.5\tstop"
+    assert lines[3] == "2.0\t0\tgo"
+
+
+def test_repair_events_tsv_nan_onset_removed(tmp_path):
+    """Test rows with NaN onset are removed from events.tsv."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\tsample\tvalue\n"
+        "0.5\t0\t128\t1\n"
+        "NaN\t0\tn/a\t2\n"
+        "1.0\t0\t256\t3\n"
+    )
+
+    assert _repair_events_tsv_na_duration(tmp_path) is True
+
+    content = tsv_path.read_text()
+    lines = content.strip().split("\n")
+    assert len(lines) == 3  # header + 2 valid rows (NaN row removed)
+    assert "NaN" not in content
+
+
+def test_repair_events_tsv_na_sample_replaced(tmp_path):
+    """Test n/a in sample column is replaced with 0."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\tsample\tvalue\n0.5\tn/a\tn/a\t1\n1.0\t0.5\t256\t2\n"
+    )
+
+    assert _repair_events_tsv_na_duration(tmp_path) is True
+
+    content = tsv_path.read_text()
+    lines = content.strip().split("\n")
+    assert lines[1] == "0.5\t0\t0\t1"
+
+
+def test_repair_events_tsv_na_duration_no_relevant_columns(tmp_path):
+    """Test returns False when no onset/duration/sample columns exist."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text("trial_type\tvalue\ngo\t1\n")
+
+    assert _repair_events_tsv_na_duration(tmp_path) is False
+
+
+def test_repair_events_tsv_na_duration_whitespace(tmp_path):
+    """Test handles n/a with surrounding whitespace."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text("onset\tduration\ttrial_type\n0.5\t n/a \tgo\n")
+
+    assert _repair_events_tsv_na_duration(tmp_path) is True
+    content = tsv_path.read_text()
+    assert "0\tgo" in content
+
+
+# ---- Tests for _repair_ctf_eeg_position_file ----
+
+
+@pytest.mark.parametrize("content", ["n/a", "  n/a  \n"], ids=["plain", "whitespace"])
+def test_repair_ctf_eeg_position_file_na(tmp_path, content):
+    """Test replacing n/a content in CTF .eeg file with empty file."""
+    ds_dir = tmp_path / "test_meg.ds"
+    ds_dir.mkdir()
+    eeg_file = ds_dir / "test_meg.eeg"
+    eeg_file.write_text(content)
+    assert _repair_ctf_eeg_position_file(ds_dir) is True
+    assert eeg_file.read_text() == ""
+
+
+def test_repair_ctf_eeg_position_file_valid(tmp_path):
+    """Test no repair when .eeg file has valid position data."""
+    ds_dir = tmp_path / "test_meg.ds"
+    ds_dir.mkdir()
+    eeg_file = ds_dir / "test_meg.eeg"
+    eeg_file.write_text("1 Nasion 10.5 20.3 15.7\n2 LPA 5.0 -20.0 10.0\n")
+
+    assert _repair_ctf_eeg_position_file(ds_dir) is False
+
+
+def test_repair_ctf_eeg_position_file_no_eeg(tmp_path):
+    """Test returns False when no .eeg file exists."""
+    ds_dir = tmp_path / "test_meg.ds"
+    ds_dir.mkdir()
+
+    assert _repair_ctf_eeg_position_file(ds_dir) is False
+
+
+def test_repair_ctf_eeg_position_file_not_dir(tmp_path):
+    """Test returns False when path is not a directory."""
+    f = tmp_path / "test.ds"
+    f.touch()
+
+    assert _repair_ctf_eeg_position_file(f) is False

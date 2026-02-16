@@ -11,11 +11,11 @@ DS004696
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Ojeda Valencia, G., Gregg, N., Huang, H., Lundstrom, B., Brinkmann, B., Pal Attia1, T., Van Gompel, J., Bernstein,M., In, M., Huston, J., Worrell1, G., Miller, K., Hermes, D. (2023). *HAPwave_bids*. `10.18112/openneuro.ds004696.v1.0.1 <https://doi.org/10.18112/openneuro.ds004696.v1.0.1>`__
+**Citation:** Ojeda Valencia, G., Gregg, N., Huang, H., Lundstrom, B., Brinkmann, B., Pal Attia1, T., Van Gompel, J., Bernstein,M., In, M., Huston, J., Worrell1, G., Miller, K., Hermes, D. (20). *HAPwave_bids*. `10.18112/openneuro.ds004696.v1.0.1 <https://doi.org/10.18112/openneuro.ds004696.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 8` :bdg-secondary-line:`Recordings: 5163` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 10` :bdg-secondary-line:`Recordings: 5243` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -158,7 +158,7 @@ Dataset Information
    * - Title
      - HAPwave_bids
    * - Year
-     - 2023
+     - 20
    * - Authors
      - Ojeda Valencia, G., Gregg, N., Huang, H., Lundstrom, B., Brinkmann, B., Pal Attia1, T., Van Gompel, J., Bernstein,M., In, M., Huston, J., Worrell1, G., Miller, K., Hermes, D.
    * - License
@@ -202,8 +202,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 8
-      - Recordings: 5163
+      - Subjects: 10
+      - Recordings: 5243
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -223,8 +223,8 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.2 GB
-      - File count: 5163
+      - Size on disk: —
+      - File count: 5243
       - Format: BIDS
 
    .. grid-item-card:: License & citation

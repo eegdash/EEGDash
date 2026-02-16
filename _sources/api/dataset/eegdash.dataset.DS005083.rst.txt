@@ -7,17 +7,17 @@
 DS005083
 ========
 
-*Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy*
+Dataset from OpenNeuro.
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko, John Zempel, Peter Brunner, Sean D McEvoy, Matthew D Smyth, Jarod L Roland (2024). *Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy*. `10.18112/openneuro.ds005083.v1.0.0 <https://doi.org/10.18112/openneuro.ds005083.v1.0.0>`__
+**Citation:** Unknown (—). **. 
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 60` :bdg-secondary-line:`Recordings: 123` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: —` :bdg-secondary-line:`Subjects: —` :bdg-secondary-line:`Recordings: —` :bdg-success-line:`License: —` :bdg-warning-line:`Source: OpenNeuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-secondary:`Metadata: Limited (0%)`
 
 Quickstart
 ----------
@@ -79,18 +79,13 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{ds005083,
-           title = {Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy},
-           author = {Peter H Yang and Nathan Wulfekammer and Amanda V. Jenson and Elliot Neal and Stuart Tomko and John Zempel and Peter Brunner and Sean D McEvoy and Matthew D Smyth and Jarod L Roland},
-           doi = {10.18112/openneuro.ds005083.v1.0.0},
-           url = {https://doi.org/10.18112/openneuro.ds005083.v1.0.0},
          }
 
 
 About This Dataset
 ------------------
 
-BIDS iEEG dataset for the SEEG electrode data used for analysis in the manuscript title "Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy."
-All coordinates are recorded in the individual native post-operative CT imaging space. There was no alignment to other imaging modalities or standardized atlases.
+No README content is available for this dataset.
 
 Dataset Information
 -------------------
@@ -102,30 +97,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005083``
    * - Title
-     - Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy
+     - —
    * - Year
-     - 2024
+     - —
    * - Authors
-     - Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko, John Zempel, Peter Brunner, Sean D McEvoy, Matthew D Smyth, Jarod L Roland
+     - Unknown
    * - License
-     - CC0
+     - —
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005083.v1.0.0 <https://doi.org/10.18112/openneuro.ds005083.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__ | `Source URL <https://openneuro.org/datasets/ds005083/versions/1.0.0>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005083,
-        title = {Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy},
-        author = {Peter H Yang and Nathan Wulfekammer and Amanda V. Jenson and Elliot Neal and Stuart Tomko and John Zempel and Peter Brunner and Sean D McEvoy and Matthew D Smyth and Jarod L Roland},
-        doi = {10.18112/openneuro.ds005083.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005083.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -133,7 +115,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005083&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005083%0A-%20%2A%2ATitle%3A%2A%2A%20Safety%20and%20Accuracy%20of%20Stereoelectroencephalography%20for%20Pediatric%20Patients%20with%20Prior%20Craniotomy%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005083&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005083%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -148,8 +130,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 60
-      - Recordings: 123
+      - Subjects: —
+      - Recordings: —
       - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
@@ -157,32 +139,32 @@ Technical Details
 
       - Channels: Varies
       - Sampling rate (Hz): Varies
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Surgery
+      - Pathology: Not specified
       - Modality: —
-      - Type: Clinical/Intervention
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 281.7 KB
-      - File count: 123
+      - Size on disk: —
+      - File count: —
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005083.v1.0.0
+      - License: See source
+      - DOI: —
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: openneuro
+      - Source: OpenNeuro
       - OpenNeuro: `ds005083 <https://openneuro.org/datasets/ds005083>`__
       - NeMAR: `ds005083 <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__
 

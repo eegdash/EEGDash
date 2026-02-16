@@ -9,4 +9,7 @@ Other Datasets
 .. toctree::
    :maxdepth: 1
 
+   eegdash.dataset.DS002799
+   eegdash.dataset.DS005083
    eegdash.dataset.DS005511
+   eegdash.dataset.DS006253

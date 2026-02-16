@@ -42,7 +42,6 @@ Openneuro Datasets
    eegdash.dataset.DS002761
    eegdash.dataset.DS002778
    eegdash.dataset.DS002791
-   eegdash.dataset.DS002799
    eegdash.dataset.DS002814
    eegdash.dataset.DS002833
    eegdash.dataset.DS002885
@@ -301,7 +300,6 @@ Openneuro Datasets
    eegdash.dataset.DS005059
    eegdash.dataset.DS005065
    eegdash.dataset.DS005079
-   eegdash.dataset.DS005083
    eegdash.dataset.DS005087
    eegdash.dataset.DS005089
    eegdash.dataset.DS005095
@@ -440,7 +438,6 @@ Openneuro Datasets
    eegdash.dataset.DS006171
    eegdash.dataset.DS006233
    eegdash.dataset.DS006234
-   eegdash.dataset.DS006253
    eegdash.dataset.DS006260
    eegdash.dataset.DS006269
    eegdash.dataset.DS006317

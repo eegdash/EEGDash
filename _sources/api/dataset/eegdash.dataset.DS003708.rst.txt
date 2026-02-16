@@ -11,11 +11,11 @@ DS003708
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (2021). *Basis profile curve identification to understand electrical stimulation effects in human brain networks*. `10.18112/openneuro.ds003708.v1.0.4 <https://doi.org/10.18112/openneuro.ds003708.v1.0.4>`__
+**Citation:** Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (20). *Basis profile curve identification to understand electrical stimulation effects in human brain networks*. `10.18112/openneuro.ds003708.v1.0.4 <https://doi.org/10.18112/openneuro.ds003708.v1.0.4>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 278` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 2` :bdg-secondary-line:`Recordings: 281` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -130,7 +130,7 @@ Dataset Information
    * - Title
      - Basis profile curve identification to understand electrical stimulation effects in human brain networks
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic
    * - License
@@ -174,8 +174,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 1
-      - Recordings: 278
+      - Subjects: 2
+      - Recordings: 281
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -195,8 +195,8 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 620.1 MB
-      - File count: 278
+      - Size on disk: —
+      - File count: 281
       - Format: BIDS
 
    .. grid-item-card:: License & citation

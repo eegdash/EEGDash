@@ -7,17 +7,17 @@
 DS002799
 ========
 
-*Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI*
+Dataset from OpenNeuro.
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Thompson WH\*, Nair R\*, Oya H\*, Esteban O, Shine JM, Petkov CI, Poldrack RA, Howard M, Adolphs R†, \*equally contributing, †corresponding author (2020). *Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI*. `10.18112/openneuro.ds002799.v1.0.4 <https://doi.org/10.18112/openneuro.ds002799.v1.0.4>`__
+**Citation:** Unknown (—). **. 
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 26` :bdg-secondary-line:`Recordings: 1103` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 9.0`
+:bdg-primary-line:`Modality: —` :bdg-secondary-line:`Subjects: —` :bdg-secondary-line:`Recordings: —` :bdg-success-line:`License: —` :bdg-warning-line:`Source: OpenNeuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-secondary:`Metadata: Limited (0%)`
 
 Quickstart
 ----------
@@ -79,25 +79,13 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{ds002799,
-           title = {Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI},
-           author = {Thompson WH* and Nair R* and Oya H* and Esteban O and Shine JM and Petkov CI and Poldrack RA and Howard M and Adolphs R† and *equally contributing, †corresponding author},
-           doi = {10.18112/openneuro.ds002799.v1.0.4},
-           url = {https://doi.org/10.18112/openneuro.ds002799.v1.0.4},
          }
 
 
 About This Dataset
 ------------------
 
-Link to published paper for this data resource: https://rdcu.be/b57kz
-
-This collection contains data from 26 human patients who underwent electrical stimulation during functional magnetic resonance imaging (es-fMRI). The patients had medically refractory epilepsy requiring surgically implanted intracranial electrodes in cortical and subcortical locations. One or multiple contacts on these electrodes were stimulated while simultaneously recording BOLD-fMRI activity in a block design. Multiple runs exist for patients with different stimulation sites. 
-Data is organized in two sessions : Pre-op (pre electrode implantation) and Post-op (post electrode implantation). Raw data is provided in BIDS format and consists of T1s, T2s, resting state scans (pre-op), es-fMRI scans(post-op) , any associated field-maps and stimulation electrode coordinates and stimulation parameters. Pre-processed data (fMRIprep and Freesurfer) is present in the ‘derivatives’ folder.   
-
-Notes:
-1. Subject IDs 339, 369 and 394 do not have stimulation electrode location data available.
-2. Electrodes are in chA-chB format (chA gets leading positive phase of the stimulation). This information is stored in the "channel" file for each stimulation run.
-3. In some cases, two distant sites were stimulated simultaneously as indicated by the electrode listed under the appropriate run IDs within the ieeg folders.
+No README content is available for this dataset.
 
 Dataset Information
 -------------------
@@ -109,30 +97,17 @@ Dataset Information
    * - Dataset ID
      - ``DS002799``
    * - Title
-     - Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI
+     - —
    * - Year
-     - 2020
+     - —
    * - Authors
-     - Thompson WH\*, Nair R\*, Oya H\*, Esteban O, Shine JM, Petkov CI, Poldrack RA, Howard M, Adolphs R†, \*equally contributing, †corresponding author
+     - Unknown
    * - License
-     - CC0
+     - —
    * - Citation / DOI
-     - `10.18112/openneuro.ds002799.v1.0.4 <https://doi.org/10.18112/openneuro.ds002799.v1.0.4>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002799>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002799>`__ | `Source URL <https://openneuro.org/datasets/ds002799/versions/1.0.4>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds002799,
-        title = {Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI},
-        author = {Thompson WH* and Nair R* and Oya H* and Esteban O and Shine JM and Petkov CI and Poldrack RA and Howard M and Adolphs R† and *equally contributing, †corresponding author},
-        doi = {10.18112/openneuro.ds002799.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds002799.v1.0.4},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds002799>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002799>`__
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -140,7 +115,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002799&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002799%0A-%20%2A%2ATitle%3A%2A%2A%20Human%20es-fMRI%20Resource%3A%20Concurrent%20deep-brain%20stimulation%20and%20whole-brain%20functional%20MRI%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS002799&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS002799%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -155,41 +130,41 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 26
-      - Recordings: 1103
-      - Tasks: 2
+      - Subjects: —
+      - Recordings: —
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: Varies
       - Sampling rate (Hz): Varies
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Epilepsy
-      - Modality: Other
-      - Type: Clinical/Intervention
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 18.6 GB
-      - File count: 1103
+      - Size on disk: —
+      - File count: —
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: 10.18112/openneuro.ds002799.v1.0.4
+      - License: See source
+      - DOI: —
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: openneuro
+      - Source: OpenNeuro
       - OpenNeuro: `ds002799 <https://openneuro.org/datasets/ds002799>`__
       - NeMAR: `ds002799 <https://nemar.org/dataexplorer/detail?dataset_id=ds002799>`__
 

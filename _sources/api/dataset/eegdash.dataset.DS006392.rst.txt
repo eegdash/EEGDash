@@ -11,11 +11,11 @@ DS006392
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Tal Pal Attia, Kay Robbins, Dora Hermes (2025). *HED schema library for SCORE annotations example*. `10.18112/openneuro.ds006392.v1.0.1 <https://doi.org/10.18112/openneuro.ds006392.v1.0.1>`__
+**Citation:** Tal Pal Attia, Kay Robbins, Dora Hermes (20). *HED schema library for SCORE annotations example*. `10.18112/openneuro.ds006392.v1.0.1 <https://doi.org/10.18112/openneuro.ds006392.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 12` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 2` :bdg-secondary-line:`Recordings: 595` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -131,7 +131,7 @@ Dataset Information
    * - Title
      - HED schema library for SCORE annotations example
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Tal Pal Attia, Kay Robbins, Dora Hermes
    * - License
@@ -175,8 +175,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 1
-      - Recordings: 12
+      - Subjects: 2
+      - Recordings: 595
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -196,8 +196,8 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 32.0 MB
-      - File count: 12
+      - Size on disk: —
+      - File count: 595
       - Format: BIDS
 
    .. grid-item-card:: License & citation

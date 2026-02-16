@@ -38,7 +38,7 @@ Base Dataset API
    * - Unknown
      - 70
    * - Clinical/Intervention
-     - 67
+     - 65
    * - Perception
      - 51
    * - Attention
@@ -58,7 +58,7 @@ Base Dataset API
    * - Sleep
      - 7
    * - Decision-making
-     - 5
+     - 4
 
 
 All Datasets

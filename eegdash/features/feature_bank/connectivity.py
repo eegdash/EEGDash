@@ -44,8 +44,6 @@ def connectivity_coherency_preprocessor(x, /, **kwargs):
     ----------
     x : ndarray
         The input signal of shape (n_trials, n_channels, n_times).
-        Note: If input is 2D (n_channels, n_times), it should be 
-        reshaped to (1, n_channels, n_times).
     **kwargs : dict
         Additional keyword arguments to pass to `scipy.signal.csd`. Must include
         'fs' (sampling frequency) and 'nperseg' (length of each segment for CSD estimation).
@@ -89,7 +87,7 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
 
     MSC measures the linear correlation between two signals in the frequency 
     domain. It is defined as the squared magnitude of the complex coherency: 
-    $|c|^2$.
+    .. math::|c|^2, where :math:`c` is the complex coherency.
 
     Parameters
     ----------
@@ -172,5 +170,5 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
     
     """
-    coher = c.imag / np.sqrt(1 - c.real)
+    coher = c.imag / np.sqrt(1 - c.real) # chnage to: c.imag / np.sqrt(1 - c.real**2)
     return utils.reduce_freq_bands(f, coher, bands, np.mean)

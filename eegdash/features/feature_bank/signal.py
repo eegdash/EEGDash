@@ -325,8 +325,15 @@ def signal_hjorth_mobility(x, /):
     .. math::
         \text{Mobility} = \sqrt{\frac{\text{var}(\frac{dx(t)}{dt})}{\text{var}(x(t))}}
 
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
+    
     for more details, see the `Wikipedia entry 
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`_.   
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`_.
+    
+     
     """
     return np.diff(x, axis=-1).std(axis=-1) / x.std(axis=-1)
 
@@ -356,8 +363,13 @@ def signal_hjorth_complexity(x, /):
     .. math::
         \text{Complexity} = \frac{\text{Mobility}(\frac{dx(t)}{dt})}{\text{Mobility}(x(t))}
 
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
+    
     For more details, see the `Wikipedia entry 
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity>`_.
     """
     return (np.diff(x, 2, axis=-1).std(axis=-1) * x.std(axis=-1)) / np.diff(
         x, axis=-1
@@ -422,7 +434,12 @@ r"""Calculate the Hjorth Activity of the signal.
     The activity is calculated using the following formula:
     .. math::
         \text{Activity} = \text{var}(x(t))
-
+    
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
+    
     for more details, see the `Wikipedia entry 
     <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`_.   
     """

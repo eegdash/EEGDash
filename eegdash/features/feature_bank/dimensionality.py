@@ -161,7 +161,6 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
     
     The Hurst Exponent is calculated using the Rescaled range (R/S) analysis
     method, expanded with Anis-Lloyd correction.
-    
 
     Parameters
     ----------

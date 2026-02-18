@@ -189,6 +189,10 @@ def spectral_hjorth_activity(f, p, /):
     ndarray
         Total spectral power. Shape is ``p.shape[:-1]``.
     
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
     """
     return np.sum(p, axis=-1)
 
@@ -201,9 +205,11 @@ def spectral_hjorth_mobility(f, p, /):
     Mobility is an estimate of the mean frequency. 
     For a normalized PSD, it is calculated as:
 
-    $$\sqrt{\frac{\sum f^2 P(f)}{\sum P(f)}}$$
+    .. math:: \sqrt{\frac{\sum f^2 P(f)}{\sum P(f)}}
 
-    Where: $$\sum P(f) = 1$$ (since the PSD is normalized)
+    Where: 
+    
+    .. math:: \sum P(f) = 1$$ (since the PSD is normalized)
 
     Parameters
     ----------
@@ -217,6 +223,10 @@ def spectral_hjorth_mobility(f, p, /):
     ndarray
         Spectral mobility. Shape is ``p.shape[:-1]``.
     
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
     """
     return np.sqrt(np.sum(np.power(f, 2) * p, axis=-1))
 
@@ -230,7 +240,7 @@ def spectral_hjorth_complexity(f, p, /):
 
     For a normalized PSD, it is calculated as:
 
-    $$\frac{\sqrt{\sum f^4 P(f)}}{\sum f^2 P(f)}$$
+    .. math:: \frac{\sqrt{\sum f^4 P(f)}}{\sum f^2 P(f)}
 
     Parameters
     ----------
@@ -243,6 +253,11 @@ def spectral_hjorth_complexity(f, p, /):
     -------
     ndarray
         Spectral complexity. Shape is ``p.shape[:-1]``.
+
+    References
+    ----------
+    - Hjorth, B. (1970). EEG analysis based on time domain properties.
+      Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
     """
     
     return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
@@ -261,7 +276,7 @@ def spectral_entropy(f, p, /):
 
     It is calculated as:
     
-    $$SE = -\sum_{i=1}^{N} p_i \ln(p_i)$$
+    .. math:: SE = -\sum_{i=1}^{N} p_i \ln(p_i)
 
     Parameters
     ----------

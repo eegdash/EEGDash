@@ -37,8 +37,8 @@ __all__ = [
 def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
     r"""Calculate Higuchi's Fractal Dimension (HFD).
 
-    Higuchi's Fractal Dimension estimates the complexity of a time series by 
-    measuring the mean length of the curve at different time scales $k$. It is 
+    Higuchi's Fractal Dimension [1]_ [2]_ estimates the complexity of a time series
+    by measuring the mean length of the curve at different time scales $k$. It is 
     highly robust for non-stationary signals. 
 
     Parameters
@@ -62,6 +62,14 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 
     For a theoretical overview of Higuchi's Fractal Dimension, see the 
     `Wikipedia entry <https://en.wikipedia.org/wiki/Higuchi_dimension>`_.
+
+    References
+    ----------
+    .. [1] Higuchi, T., 1988. Approach to an irregular time series on the basis of 
+           the fractal theory. Physica D: Nonlinear Phenomena, 31(2), pp.277-283.
+    .. [2] Esteller, R., Vachtsevanos, G., Echauz, J. and Litt, B., 2001. 
+           A comparison of waveform fractal dimension algorithms. IEEE Transactions 
+           on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-183.
     """
     N = x.shape[-1]
     hfd = np.empty(x.shape[:-1])
@@ -81,10 +89,9 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_petrosian_fractal_dim(x, /):
-    # TODO: Add reference
     r"""Calculate Petrosian Fractal Dimension (PFD).
 
-    Petrosian Fractal Dimension provides a fast estimate of fractal 
+    Petrosian Fractal Dimension [1]_ [2]_ provides a fast estimate of fractal 
     dimension by analyzing the number of sign changes in the signal's 
     first derivative.
 
@@ -98,6 +105,15 @@ def dimensionality_petrosian_fractal_dim(x, /):
     ndarray
         The Petrosian Fractal Dimension values. 
         Shape is ``x.shape[:-1]``.
+
+    References
+    ----------
+    .. [1] Petrosian, A., 1995. Kolmogorov complexity of finite sequences and 
+           recognition of different preictal EEG patterns. In Proceedings of the 
+           1995 IEEE International Symposium on Circuits and Systems (Vol. 2, pp. 86-89). IEEE.
+    .. [2] Esteller, R., Vachtsevanos, G., Echauz, J. and Litt, B., 2001. 
+           A comparison of waveform fractal dimension algorithms. IEEE Transactions 
+           on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-183.
     """
     nd = signal_zero_crossings(np.diff(x, axis=-1))
     log_n = np.log(x.shape[-1])
@@ -107,10 +123,9 @@ def dimensionality_petrosian_fractal_dim(x, /):
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def dimensionality_katz_fractal_dim(x, /):
-    # TODO: Add reference
     r"""Calculate Katz Fractal Dimension (KFD).
 
-    KFD is calculated as the ratio between the total path length and the 
+    KFD[1]_ [2]_ is calculated as the ratio between the total path length and the 
     maximum planar distance from the first point to any other point.
 
     Parameters
@@ -124,6 +139,13 @@ def dimensionality_katz_fractal_dim(x, /):
         The Katz Fractal Dimension values. 
         Shape is ``x.shape[:-1]``.
     
+    References
+    ----------
+    .. [1] Katz, M. J. (1988). Fractals and the analysis of waveforms.
+           Computers in Biology and Medicine, 18(3), 145-156.
+    .. [2] Esteller, R., Vachtsevanos, G., Echauz, J. and Litt, B., 2001. 
+           A comparison of waveform fractal dimension algorithms. IEEE Transactions 
+           on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-183.
     """
     dists = np.abs(np.diff(x, axis=-1))
     L = dists.sum(axis=-1)

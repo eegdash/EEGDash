@@ -1,3 +1,19 @@
+r"""
+Spectral Feature Extraction
+===========================
+
+This module provides functions to compute various spectral features from signals.
+
+Data Shape Convention
+---------------------
+This module follows a **Time-Last** convention:
+
+* **Input:** ``(..., time)``
+* **Output:** ``(...,)``
+
+All functions collapse the last dimension (time), returning an ndarray of 
+features corresponding to the leading dimensions (e.g., subjects, channels).
+"""
 import numba as nb
 import numpy as np
 from scipy.signal import welch
@@ -24,7 +40,7 @@ __all__ = [
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 def spectral_preprocessor(x, /, **kwargs):
-    """Compute the Power Spectral Density (PSD) using Welch's method.
+    r"""Compute the Power Spectral Density (PSD) using Welch's method.
 
     Parameters
     ----------
@@ -41,6 +57,10 @@ def spectral_preprocessor(x, /, **kwargs):
         Frequency vector.
     p : ndarray
         Power Spectral Density.
+
+    Assertsions
+    -----------
+    - 'fs' must be provided in kwargs.
     
     """
     f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
@@ -55,28 +75,59 @@ def spectral_preprocessor(x, /, **kwargs):
 
 @FeaturePredecessor(spectral_preprocessor)
 def spectral_normalized_preprocessor(f, p, /):
-    """Normalize the PSD so that the total power equals 1.
+    r"""Normalize the PSD so that the total power equals 1.
     
     This is equivalent to treating the PSD as a Probability Density 
     Function (PDF), which is required for Spectral Entropy.
 
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density.
+
+    Returns
+    -------
+    f : ndarray
+        Frequency vector (unchanged).
+    p : ndarray
+        Normalized Power Spectral Density.
     """
     return f, p / p.sum(axis=-1, keepdims=True)
 
 
 @FeaturePredecessor(spectral_preprocessor)
 def spectral_db_preprocessor(f, p, /, eps=1e-15):
-    r"""Convert the PSD to decibels: $10 \cdot \log_{10}(P + \epsilon)$. """
+    r"""Convert the PSD to decibels. 
+    
+    Calculated as:
+
+    $10 \cdot \log_{10}(P + \epsilon)$. 
+    
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density.
+    eps : float, optional
+        A small constant to prevent log of zero (default: 1e-15).
+    
+    Returns
+    -------
+    f : ndarray
+        Frequency vector (unchanged).
+    ndarray
+        Power Spectral Density in decibels. Shape is ``p.shape``.
+    """
     return f, 10 * np.log10(p + eps)
 
 
 @FeaturePredecessor(spectral_preprocessor)
 @univariate_feature
 def spectral_root_total_power(f, p, /):
-    """Calculate the square root of the total spectral power.
-
-    This is the frequency-domain equivalent of the Root Mean Square (RMS) 
-    amplitude in the time domain.
+    r"""Calculate the square root of the total spectral power.
 
     Parameters
     ----------
@@ -97,7 +148,7 @@ def spectral_root_total_power(f, p, /):
 @FeaturePredecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_moment(f, p, /):
-    """Calculate the first spectral moment ('Weighted' Mean Frequency).
+    r"""Calculate the first spectral moment ('Weighted' Mean Frequency).
 
     When applied to a normalized PSD, this represents the "center of mass" 
     of the power spectrum.
@@ -121,11 +172,18 @@ def spectral_moment(f, p, /):
 @FeaturePredecessor(spectral_preprocessor)
 @univariate_feature
 def spectral_hjorth_activity(f, p, /):
-    """Calculate Hjorth Activity in the frequency domain.
+    r"""Calculate Hjorth Activity in the frequency domain.
 
     Activity represents the total power of the signal, calculated here 
     as the integral (sum) of the Power Spectral Density.
 
+    Parameters
+    ----------
+    f : ndarray
+            Frequency vector.
+    p : ndarray
+        Power Spectral Density.
+    
     Returns
     -------
     ndarray
@@ -138,12 +196,22 @@ def spectral_hjorth_activity(f, p, /):
 @FeaturePredecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_hjorth_mobility(f, p, /):
-    """Calculate Hjorth Mobility in the frequency domain.
+    r"""Calculate Hjorth Mobility in the frequency domain.
 
-    Mobility is an estimate of the mean frequency. In the frequency domain, 
-    it is calculated as the square root of the second spectral moment 
-    of the normalized PSD.
+    Mobility is an estimate of the mean frequency. 
+    For a normalized PSD, it is calculated as:
 
+    $$\sqrt{\frac{\sum f^2 P(f)}{\sum P(f)}}$$
+
+    Where: $$\sum P(f) = 1$$ (since the PSD is normalized)
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Normalized Power Spectral Density.
+    
     Returns
     -------
     ndarray
@@ -156,12 +224,21 @@ def spectral_hjorth_mobility(f, p, /):
 @FeaturePredecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_hjorth_complexity(f, p, /):
-    """Calculate Hjorth Complexity in the frequency domain.
+    r"""Calculate Hjorth Complexity in the frequency domain.
 
-    Complexity measures the bandwidth or the "irregularity" of the 
-    spectrum. It is calculated using the fourth spectral moment of 
-    the normalized PSD.
+    Complexity measures the bandwidth or the "irregularity" of the spectrum.
 
+    For a normalized PSD, it is calculated as:
+
+    $$\frac{\sqrt{\sum f^4 P(f)}}{\sum f^2 P(f)}$$
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Normalized Power Spectral Density.
+    
     Returns
     -------
     ndarray
@@ -170,15 +247,29 @@ def spectral_hjorth_complexity(f, p, /):
     
     return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1))
 
+    # return np.sqrt(np.sum(np.power(f, 4) * p, axis=-1)) / np.sum(np.power(f, 2) * p, axis=-1)
+
 
 @FeaturePredecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_entropy(f, p, /):
-    """Calculate Spectral Entropy.
+    r"""Calculate Spectral Entropy of thepower spectrum.
 
-    Measures the complexity or "flatness" of the power spectrum. A 
-    rhythmic signal has low entropy, while white noise has high entropy.
+    Spectral Entropy (SE) measures the complexity or "disorder" of a signal.
+    A high SE indicates a flat, broad spectrum (e.g., white noise), while a 
+    low SE indicates a spectrum concentrated in a few frequency components.
 
+    It is calculated as:
+    
+    $$SE = -\sum_{i=1}^{N} p_i \ln(p_i)$$
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Normalized Power Spectral Density (treated as a PDF).
+    
     Returns
     -------
     ndarray
@@ -195,15 +286,24 @@ def spectral_entropy(f, p, /):
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def spectral_edge(f, p, /, edge=0.9):
-    """Calculate the Spectral Edge Frequency (SEF).
+    r"""Calculate the Spectral Edge Frequency (SEF).
 
     The frequency below which a certain percentage (e.g., 90%) of 
     the total power is contained.
 
     Parameters
     ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Normalized Power Spectral Density (treated as a PDF).
     edge : float, optional
         The fraction of total power (default is 0.9 for SEF90).
+
+    Returns
+    -------
+    ndarray
+        The spectral edge frequency. Shape is ``p.shape[:-1]``.
 
     Notes
     -----
@@ -219,10 +319,17 @@ def spectral_edge(f, p, /, edge=0.9):
 @FeaturePredecessor(spectral_db_preprocessor)
 @univariate_feature
 def spectral_slope(f, p, /):
-    """Estimate the $1/f$ spectral slope using least-squares regression.
+    r"""Estimate the $1/f$ spectral slope using least-squares regression.
 
     This measures the slope and intercept of the PSD in log-log space.
 
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density in decibels.
+    
     Returns
     -------
     dict
@@ -244,10 +351,14 @@ def spectral_slope(f, p, /):
 )
 @univariate_feature
 def spectral_bands_power(f, p, /, bands=utils.DEFAULT_FREQ_BANDS):
-    """Calculate total power within specified frequency bands.
+    r"""Calculate total power within specified frequency bands.
 
     Parameters
     ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density (PSD).
     bands : dict, optional
         Mapping of band names to (min, max) frequency tuples.
 

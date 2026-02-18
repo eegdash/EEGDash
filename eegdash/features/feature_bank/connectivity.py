@@ -1,3 +1,20 @@
+"""
+Connectivity Feature Extraction
+===============================
+
+This module computes bivariate connectivity features based on the complex 
+coherency between pairs of channels.
+
+Data Shape Convention
+---------------------
+This module follows a **Time-Last** convention:
+
+* **Input:** ``(..., time)``
+* **Output:** ``(...,)``
+
+All functions collapse the last dimension (time), returning an ndarray of 
+features corresponding to the leading dimensions (e.g., subjects, channels).
+"""
 from itertools import chain
 
 import numpy as np
@@ -18,27 +35,35 @@ __all__ = [
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 def connectivity_coherency_preprocessor(x, /, **kwargs):
-    """Compute complex coherency for all unique channel pairs.
+    r"""Compute Complex Coherency for all unique channel pairs.
 
-    This function calculates the Cross-Spectral Density (CSD) and normalizes 
-    it by the Power Spectral Densities (PSD) to produce the complex coherency 
-    matrix. It handles frequency slicing and validation internally.
+    The Complex Coherency is calculated by estimating the Cross-Spectral Densities 
+    (CSD) between pairs of channels and normalizing it by the auto-spectral densities. 
 
     Parameters
     ----------
     x : ndarray
-        The input signal of shape (n_channels, n_times).
+        The input signal of shape (n_trials, n_channels, n_times).
+        Note: If input is 2D (n_channels, n_times), it should be 
+        reshaped to (1, n_channels, n_times).
     **kwargs : dict
-        Must include 'fs' (sampling rate) and 'nperseg'. May include 
-        'f_min' and 'f_max' for frequency band slicing.
+        Additional keyword arguments to pass to `scipy.signal.csd`. Must include
+        'fs' (sampling frequency) and 'nperseg' (length of each segment for CSD estimation).
+        Optional keys include 'f_min' and 'f_max' to specify frequency band limits.
 
     Returns
     -------
     f : ndarray
-        The frequency vector within the validated band.
+        Frequency vector of shape (n_frequencies,).
     c : ndarray
-        The complex coherency array for all unique bivariate pairs.
-        Shape is (n_pairs, n_frequencies).
+        Complex coherency array of shape (n_trials, n_pairs, n_frequencies).
+        Values are complex numbers where:
+        - Absolute value |c| is the coherence (0 to 1).
+        - Angle arg(c) is the phase lag.
+
+    Assertions
+    ----------
+    - 'fs' and 'nperseg' must be provided in kwargs.
     
     """
     f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
@@ -60,7 +85,7 @@ def connectivity_coherency_preprocessor(x, /, **kwargs):
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    """Calculate Magnitude Squared Coherence (MSC).
+    r"""Calculate Magnitude Squared Coherence (MSC).
 
     MSC measures the linear correlation between two signals in the frequency 
     domain. It is defined as the squared magnitude of the complex coherency: 
@@ -92,7 +117,7 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    """Calculate Imaginary Coherence (iCOH).
+    r"""Calculate Imaginary Coherence (iCOH).
 
     iCOH captures only the non-zero phase-lagged synchronization.
 
@@ -122,7 +147,7 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
 @FeaturePredecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
-    """Calculate Lagged Coherence.
+    r"""Calculate Lagged Coherence.
 
     Lagged coherence further refines the synchronization measure by 
     normalizing the imaginary part of the coherency, effectively removing 

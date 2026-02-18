@@ -1,3 +1,12 @@
+r"""
+Feature Extraction Utilities
+============================
+
+This module provides the following helper functions:
+- `get_valid_freq_band`: Validates and returns frequency boundaries based on Nyquist and resolution.
+- `slice_freq_band`: Slices frequency vector and associated data arrays to a specific range.
+- `reduce_freq_bands`: Reduces spectral data into discrete frequency bands by aggregating bins
+"""
 import numpy as np
 
 __all__ = [

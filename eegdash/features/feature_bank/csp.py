@@ -3,6 +3,16 @@ Common Spatial Pattern Features Extraction
 ==========================================
 This module provides the Common Spatial Pattern (CSP) feature extractor
 for signal classification.
+
+Data Shape Convention
+---------------------
+This module follows a **Time-Last** convention:
+
+* **Input:** ``(..., time)``
+* **Output:** ``(...,)``
+
+All functions collapse the last dimension (time), returning an ndarray of 
+features corresponding to the leading dimensions (e.g., subjects, channels).
 """
 
 import numba as nb

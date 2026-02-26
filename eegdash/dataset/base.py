@@ -9,6 +9,7 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.
 """
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -119,6 +120,16 @@ class EEGDashRaw(RawDataset):
 
         entities_mne = self.record.get("entities_mne") or {}
 
+        # Fallback: parse acquisition from bids_relpath for records
+        # that predate the acquisition field in entities_mne
+        acq_val = entities_mne.get("acquisition")
+        if acq_val is None:
+            _acq_match = re.search(
+                r"acq-([^_/]+)", self.record.get("bids_relpath", "")
+            )
+            if _acq_match:
+                acq_val = _acq_match.group(1)
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype=MODALITY_ALIASES.get(
@@ -132,6 +143,7 @@ class EEGDashRaw(RawDataset):
             session=entities_mne.get("session"),
             task=entities_mne.get("task"),
             run=entities_mne.get("run"),
+            acquisition=acq_val,
             check=False,
         )
 

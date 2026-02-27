@@ -124,9 +124,7 @@ class EEGDashRaw(RawDataset):
         # that predate the acquisition field in entities_mne
         acq_val = entities_mne.get("acquisition")
         if acq_val is None:
-            _acq_match = re.search(
-                r"acq-([^_/]+)", self.record.get("bids_relpath", "")
-            )
+            _acq_match = re.search(r"acq-([^_/]+)", self.record.get("bids_relpath", ""))
             if _acq_match:
                 acq_val = _acq_match.group(1)
 

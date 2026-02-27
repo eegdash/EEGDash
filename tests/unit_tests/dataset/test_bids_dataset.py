@@ -451,9 +451,10 @@ def test_bids_dataset_subject_participant_tsv(tmp_path):
         p_file.write_text("participant_id\tsex\n")  # Header only
         assert ds.subject_participant_tsv(str(f)) == {}
 
-        # 3. Valid participants.tsv but subject not in it
+        # 3. Valid participants.tsv but subject not in it → skeleton row
         p_file.write_text("participant_id\tsex\nsub-02\tM\n")
-        assert ds.subject_participant_tsv(str(f)) == {}
+        result = ds.subject_participant_tsv(str(f))
+        assert result == {"sex": None}
 
         # 4. Valid match
         p_file.write_text("participant_id\tsex\nsub-01\tF\n")
@@ -1056,6 +1057,72 @@ def test_find_channels_tsv_case_insensitive(tmp_path):
     assert types == ["EEG", "EEG"]
 
 
+def test_subject_participant_tsv_numeric_fallback(tmp_path):
+    """Test fallback matching when folder subject (sub-FFE001) differs from participants.tsv (sub-001)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_fallback"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-FFE001" / "eeg").mkdir(parents=True)
+    f = d / "sub-FFE001" / "eeg" / "sub-FFE001_task-FF_eeg.set"
+    f.touch()
+
+    # participants.tsv uses sub-001 (numeric-only IDs)
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\nsub-001\t40\tM\nsub-002\t21\tF\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_fallback")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should match sub-FFE001 -> sub-001 via numeric fallback
+    assert result["age"] == "40"
+    assert result["sex"] == "M"
+
+
+def test_subject_participant_tsv_numeric_fallback_no_match(tmp_path):
+    """Test fallback returns empty when no numeric match exists."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_nomatch"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-FFE099" / "eeg").mkdir(parents=True)
+    f = d / "sub-FFE099" / "eeg" / "sub-FFE099_task-FF_eeg.set"
+    f.touch()
+
+    # participants.tsv doesn't have sub-099 or sub-99
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\nsub-001\t40\tM\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_nomatch")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Skeleton row with column names but None values
+    assert result == {"age": None, "sex": None}
+
+
+def test_subject_participant_tsv_non_numeric_suffix(tmp_path):
+    """Test that non-numeric subject suffixes don't trigger numeric fallback."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_alpha"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-ABC" / "eeg").mkdir(parents=True)
+    f = d / "sub-ABC" / "eeg" / "sub-ABC_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-001\t25\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_alpha")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Skeleton row with column names but None values
+    assert result == {"age": None}
+
+
 def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
     """Test that duplicate participant_id rows (e.g., multi-session) return a flat dict."""
     from eegdash.dataset.bids_dataset import EEGBIDSDataset
@@ -1083,3 +1150,120 @@ def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
     # Values should be scalars, not arrays or dicts
     for v in result.values():
         assert not isinstance(v, (dict, list))
+
+
+def test_subject_participant_tsv_case_insensitive(tmp_path):
+    """Test case-insensitive matching (e.g., folder sub-S01 vs tsv sub-s01)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_case_sub"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-S01" / "eeg").mkdir(parents=True)
+    f = d / "sub-S01" / "eeg" / "sub-S01_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-s01\t33\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_case_sub")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result["age"] == "33"
+
+
+def test_subject_participant_tsv_prefix_preserved(tmp_path):
+    """Test prefix-preserved numeric fallback (e.g., sub-S01 -> sub-S1 in tsv)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_prefix"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-S01" / "eeg").mkdir(parents=True)
+    f = d / "sub-S01" / "eeg" / "sub-S01_task-rest_eeg.set"
+    f.touch()
+
+    # TSV uses sub-S1 (no zero-padding) — the ds004588 scenario
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-S1\t28\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_prefix")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result["age"] == "28"
+
+
+def test_subject_participant_tsv_default_skeleton(tmp_path):
+    """Test that unmatched subject returns skeleton dict with None values (not {})."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_skel"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-999" / "eeg").mkdir(parents=True)
+    f = d / "sub-999" / "eeg" / "sub-999_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\thand\nsub-001\t25\tF\tR\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_skel")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should be a skeleton with column names but all None values
+    assert result == {"age": None, "sex": None, "hand": None}
+    # Skeleton is truthy (not empty dict)
+    assert result
+
+
+def test_subject_participant_tsv_no_tsv_still_empty(tmp_path):
+    """Test that missing participants.tsv returns {} (not skeleton)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_notsv"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
+    f.touch()
+
+    # No participants.tsv file at all
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_notsv")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result == {}
+
+
+def test_match_subject_fallback_unit():
+    """Unit tests for the _match_subject_fallback helper."""
+    import pandas as pd
+
+    from eegdash.dataset.bids_dataset import _match_subject_fallback
+
+    # Case-insensitive exact match
+    idx = pd.Index(["sub-s01", "sub-s02"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-s01"
+
+    # Prefix-preserved numeric fallback (sub-S01 -> sub-S1)
+    idx = pd.Index(["sub-S1", "sub-S2"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-S1"
+
+    # Prefix-stripped numeric fallback (sub-FFE001 -> sub-001)
+    idx = pd.Index(["sub-001", "sub-002"])
+    assert _match_subject_fallback("sub-FFE001", "FFE001", idx) == "sub-001"
+
+    # Zero-padding fallback (sub-001 -> sub-01)
+    idx = pd.Index(["sub-01", "sub-02"])
+    assert _match_subject_fallback("sub-001", "001", idx) == "sub-01"
+
+    # No match at all
+    idx = pd.Index(["sub-050", "sub-051"])
+    assert _match_subject_fallback("sub-999", "999", idx) is None
+
+    # Non-numeric suffix — no match possible
+    idx = pd.Index(["sub-001"])
+    assert _match_subject_fallback("sub-ABC", "ABC", idx) is None
+
+    # Prefix-preserved case-insensitive (sub-S01 -> sub-s1 in tsv)
+    idx = pd.Index(["sub-s1", "sub-s2"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-s1"

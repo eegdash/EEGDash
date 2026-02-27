@@ -626,7 +626,12 @@ class EEGBIDSDataset:
 
         # Handle case where subject not found in participants.tsv
         if subject not in participants_tsv.index:
-            return {}
+            matched = _match_subject_fallback(subject, subj_val, participants_tsv.index)
+            if matched is not None:
+                subject = matched
+            else:
+                # Return skeleton row — column names with None values
+                return {col: None for col in participants_tsv.columns}
 
         row = participants_tsv.loc[subject]
         # Handle duplicate participant_id entries (e.g., multi-session datasets)
@@ -651,6 +656,77 @@ class EEGBIDSDataset:
 
         """
         return self._get_json_with_inheritance(data_filepath, "eeg.json")
+
+
+def _match_subject_fallback(subject: str, subj_val: str, index: pd.Index) -> str | None:
+    """Try to match a subject ID against participants.tsv index using fuzzy strategies.
+
+    Matching tiers (tried in order):
+    1. Case-insensitive exact match
+    2. Numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1)
+    3. Numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+
+    Parameters
+    ----------
+    subject : str
+        The full subject string (with ``sub-`` prefix).
+    subj_val : str
+        The subject entity value (may or may not have ``sub-`` prefix).
+    index : pd.Index
+        The participants.tsv index to match against.
+
+    Returns
+    -------
+    str or None
+        The matched participant_id string, or None if no match found.
+
+    """
+    # Build a case-insensitive lookup: lowered -> original
+    lower_map = {entry.lower(): entry for entry in index}
+
+    # Tier 1: case-insensitive exact match
+    if subject.lower() in lower_map:
+        return lower_map[subject.lower()]
+
+    # Extract the part after "sub-"
+    bare = subj_val.removeprefix("sub-")
+
+    numeric_match = re.search(r"(\d+)$", bare)
+    if not numeric_match:
+        return None
+
+    digits = numeric_match.group(1)
+    prefix = bare[: numeric_match.start()]
+    stripped = digits.lstrip("0") or "0"
+
+    # Tier 2: numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1, sub-S001)
+    if prefix:
+        candidates_prefix = [
+            f"sub-{prefix}{digits}",
+            f"sub-{prefix}{stripped}",
+            f"sub-{prefix}{stripped.zfill(2)}",
+            f"sub-{prefix}{stripped.zfill(3)}",
+        ]
+        for candidate in candidates_prefix:
+            if candidate in index:
+                return candidate
+            if candidate.lower() in lower_map:
+                return lower_map[candidate.lower()]
+
+    # Tier 3: numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+    candidates_stripped = [
+        f"sub-{digits}",
+        f"sub-{stripped}",
+        f"sub-{stripped.zfill(2)}",
+        f"sub-{stripped.zfill(3)}",
+    ]
+    for candidate in candidates_stripped:
+        if candidate in index:
+            return candidate
+        if candidate.lower() in lower_map:
+            return lower_map[candidate.lower()]
+
+    return None
 
 
 def _is_valid_eeg_file(filepath: Path, allow_symlinks: bool = False) -> bool:

@@ -124,6 +124,7 @@ class EntitiesModel(BaseModel):
     session: str | None = None
     task: str | None = None
     run: str | None = None
+    acquisition: str | None = None
 
 
 class RecordModel(BaseModel):
@@ -758,6 +759,8 @@ class Entities(TypedDict, total=False):
         Task label (e.g., "rest").
     run : str | None
         Run label (e.g., "1" or "01").
+    acquisition : str | None
+        Acquisition label (e.g., "bipolar", "PSG").
 
     """
 
@@ -765,6 +768,7 @@ class Entities(TypedDict, total=False):
     session: str | None
     task: str | None
     run: str | None
+    acquisition: str | None
 
 
 class Record(TypedDict, total=False):
@@ -851,6 +855,7 @@ def create_record(
     session: str | None = None,
     task: str | None = None,
     run: str | None = None,
+    acquisition: str | None = None,
     dep_keys: list[str] | None = None,
     datatype: str = "eeg",
     suffix: str = "eeg",
@@ -874,7 +879,7 @@ def create_record(
         Remote storage base URI (e.g., "s3://openneuro.org/ds000001").
     bids_relpath : str
         BIDS-relative path to the raw file (e.g., "sub-01/eeg/sub-01_task-rest_eeg.vhdr").
-    subject, session, task, run : str, optional
+    subject, session, task, run, acquisition : str, optional
         BIDS entities.
     dep_keys : list[str], optional
         Dependency paths relative to storage_base.
@@ -924,6 +929,7 @@ def create_record(
         "session": session,
         "task": task,
         "run": run,
+        "acquisition": acquisition,
     }
 
     entities_mne: Entities = dict(entities)  # type: ignore[assignment]

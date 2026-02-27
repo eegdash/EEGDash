@@ -630,8 +630,8 @@ class EEGBIDSDataset:
             if matched is not None:
                 subject = matched
             else:
-                # Return skeleton row — column names with None values
-                return {col: None for col in participants_tsv.columns}
+                # Return skeleton row — column names with "n/a" (BIDS standard)
+                return {col: "n/a" for col in participants_tsv.columns}
 
         row = participants_tsv.loc[subject]
         # Handle duplicate participant_id entries (e.g., multi-session datasets)

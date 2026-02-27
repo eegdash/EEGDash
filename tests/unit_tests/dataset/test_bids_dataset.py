@@ -454,7 +454,7 @@ def test_bids_dataset_subject_participant_tsv(tmp_path):
         # 3. Valid participants.tsv but subject not in it → skeleton row
         p_file.write_text("participant_id\tsex\nsub-02\tM\n")
         result = ds.subject_participant_tsv(str(f))
-        assert result == {"sex": None}
+        assert result == {"sex": "n/a"}
 
         # 4. Valid match
         p_file.write_text("participant_id\tsex\nsub-01\tF\n")
@@ -1098,8 +1098,8 @@ def test_subject_participant_tsv_numeric_fallback_no_match(tmp_path):
     ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_nomatch")
     result = ds.subject_participant_tsv(str(f))
 
-    # Skeleton row with column names but None values
-    assert result == {"age": None, "sex": None}
+    # Skeleton row with column names but "n/a" values (BIDS standard)
+    assert result == {"age": "n/a", "sex": "n/a"}
 
 
 def test_subject_participant_tsv_non_numeric_suffix(tmp_path):
@@ -1119,8 +1119,8 @@ def test_subject_participant_tsv_non_numeric_suffix(tmp_path):
     ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_alpha")
     result = ds.subject_participant_tsv(str(f))
 
-    # Skeleton row with column names but None values
-    assert result == {"age": None}
+    # Skeleton row with column names but "n/a" values (BIDS standard)
+    assert result == {"age": "n/a"}
 
 
 def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
@@ -1194,7 +1194,7 @@ def test_subject_participant_tsv_prefix_preserved(tmp_path):
 
 
 def test_subject_participant_tsv_default_skeleton(tmp_path):
-    """Test that unmatched subject returns skeleton dict with None values (not {})."""
+    """Test that unmatched subject returns skeleton dict with 'n/a' values (not {})."""
     from eegdash.dataset.bids_dataset import EEGBIDSDataset
 
     d = tmp_path / "ds_skel"
@@ -1210,8 +1210,8 @@ def test_subject_participant_tsv_default_skeleton(tmp_path):
     ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_skel")
     result = ds.subject_participant_tsv(str(f))
 
-    # Should be a skeleton with column names but all None values
-    assert result == {"age": None, "sex": None, "hand": None}
+    # Should be a skeleton with column names but all "n/a" values (BIDS standard)
+    assert result == {"age": "n/a", "sex": "n/a", "hand": "n/a"}
     # Skeleton is truthy (not empty dict)
     assert result
 

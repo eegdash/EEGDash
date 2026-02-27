@@ -1240,7 +1240,7 @@ def extract_record(
     # Restore participant_tsv metadata if available
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)
     if participant_tsv:
-        has_real_data = any(v is not None for v in participant_tsv.values())
+        has_real_data = any(v not in (None, "n/a") for v in participant_tsv.values())
         if not has_real_data:
             logging.debug(
                 "No participant match for %s, storing column skeleton", bids_relpath

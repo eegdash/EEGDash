@@ -813,6 +813,7 @@ def extract_record(
     session = bids_dataset.get_bids_file_attribute("session", bids_file)
     task = bids_dataset.get_bids_file_attribute("task", bids_file)
     run = bids_dataset.get_bids_file_attribute("run", bids_file)
+    acquisition = bids_dataset.get_bids_file_attribute("acquisition", bids_file)
     modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
     mod_canon = normalize_modality(modality) or "eeg"
 
@@ -1209,6 +1210,7 @@ def extract_record(
         session=session,
         task=task,
         run=str(run) if run is not None else None,
+        acquisition=acquisition,
         dep_keys=dep_keys,
         datatype=datatype,
         suffix=suffix,
@@ -1898,6 +1900,7 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
                 dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
@@ -1949,6 +1952,7 @@ def digest_from_manifest(
                         session=entities.get("session"),
                         task=entities.get("task"),
                         run=entities.get("run"),
+                        acquisition=entities.get("acquisition"),
                         dep_keys=[],
                         datatype=entities.get("datatype", detected_modality),
                         suffix=entities.get("suffix", detected_modality),
@@ -2130,7 +2134,8 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
-                dep_keys=[],  # Can't determine dependencies without actual files
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
                 storage_backend=get_storage_backend(source),
@@ -2172,6 +2177,7 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
                 dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),

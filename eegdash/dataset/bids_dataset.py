@@ -490,6 +490,7 @@ class EEGBIDSDataset:
             "session": entities.get("session", bids_path.session),
             "task": entities.get("task", bids_path.task),
             "run": entities.get("run", bids_path.run),
+            "acquisition": entities.get("acquisition", bids_path.acquisition),
             "modality": entities.get("modality", bids_path.datatype),
         }
 

@@ -136,6 +136,7 @@ def discover_local_bids_records(
             session=bids_path.session or None,
             task=bids_path.task or None,
             run=bids_path.run or None,
+            acquisition=bids_path.acquisition or None,
             dep_keys=[],
             datatype=datatype,
             suffix=suffix,

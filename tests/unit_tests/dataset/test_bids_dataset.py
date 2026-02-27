@@ -1267,3 +1267,11 @@ def test_match_subject_fallback_unit():
     # Prefix-preserved case-insensitive (sub-S01 -> sub-s1 in tsv)
     idx = pd.Index(["sub-s1", "sub-s2"])
     assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-s1"
+
+    # 4-digit zero-padding fallback (sub-01 -> sub-0001)
+    idx = pd.Index(["sub-0001", "sub-0002"])
+    assert _match_subject_fallback("sub-01", "01", idx) == "sub-0001"
+
+    # Prefix-preserved 4-digit padding (sub-S1 -> sub-S0001)
+    idx = pd.Index(["sub-S0001", "sub-S0002"])
+    assert _match_subject_fallback("sub-S1", "S1", idx) == "sub-S0001"

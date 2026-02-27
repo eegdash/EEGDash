@@ -706,6 +706,7 @@ def _match_subject_fallback(subject: str, subj_val: str, index: pd.Index) -> str
             f"sub-{prefix}{stripped}",
             f"sub-{prefix}{stripped.zfill(2)}",
             f"sub-{prefix}{stripped.zfill(3)}",
+            f"sub-{prefix}{stripped.zfill(4)}",
         ]
         for candidate in candidates_prefix:
             if candidate in index:
@@ -719,6 +720,7 @@ def _match_subject_fallback(subject: str, subj_val: str, index: pd.Index) -> str
         f"sub-{stripped}",
         f"sub-{stripped.zfill(2)}",
         f"sub-{stripped.zfill(3)}",
+        f"sub-{stripped.zfill(4)}",
     ]
     for candidate in candidates_stripped:
         if candidate in index:

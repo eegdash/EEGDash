@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from mne_bids import BIDSPath, write_raw_bids
 
-from eegdash.dataset.bids_dataset import EEGBIDSDataset
+from eegdash.dataset.bids_dataset import EEGBIDSDataset, _read_participants_tsv
 
 
 @pytest.fixture
@@ -1369,8 +1369,6 @@ class TestReadParticipantsTsv:
     """Tests for the _read_participants_tsv helper."""
 
     def test_reads_valid_tsv(self, tmp_path):
-        from eegdash.dataset.bids_dataset import _read_participants_tsv
-
         tsv = tmp_path / "participants.tsv"
         tsv.write_text("participant_id\tage\tsex\nsub-01\t25\tM\nsub-02\t30\tF\n")
         df = _read_participants_tsv(tsv)
@@ -1379,20 +1377,14 @@ class TestReadParticipantsTsv:
         assert df.loc["sub-01", "age"] == "25"
 
     def test_missing_file(self, tmp_path):
-        from eegdash.dataset.bids_dataset import _read_participants_tsv
-
         assert _read_participants_tsv(tmp_path / "nonexistent.tsv") is None
 
     def test_empty_tsv(self, tmp_path):
-        from eegdash.dataset.bids_dataset import _read_participants_tsv
-
         tsv = tmp_path / "participants.tsv"
         tsv.write_text("participant_id\tage\n")
         assert _read_participants_tsv(tsv) is None
 
     def test_unreadable_tsv(self, tmp_path):
-        from eegdash.dataset.bids_dataset import _read_participants_tsv
-
         tsv = tmp_path / "participants.tsv"
         tsv.write_bytes(b"\x00\x01\x02\x03")
         assert _read_participants_tsv(tsv) is None

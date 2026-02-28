@@ -902,4 +902,4 @@ def _find_bids_files(
     return unique_files
 
 
-__all__ = ["EEGBIDSDataset", "_read_participants_tsv"]
+__all__ = ["EEGBIDSDataset"]

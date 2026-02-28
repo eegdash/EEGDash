@@ -248,7 +248,7 @@ def _filesystem_get(
         )
 
     try:
-        filesystem.get(s3path, str(filepath), callback=callback)
+        filesystem.get(s3path, str(filepath), callback=callback, recursive=True)
     finally:
         # Ensure callback is closed properly (important for Rich to clean up display)
         if hasattr(callback, "close"):

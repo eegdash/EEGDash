@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 3` :bdg-secondary-line:`Recordings: 1976` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 3` :bdg-secondary-line:`Recordings: 614` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -90,12 +90,9 @@ About This Dataset
 ------------------
 
 An Ecosystem of Technology and Protocols for Adaptive Neuromodulation Research in Humans
-
 This study aims to develop an ecosystem for the purpose of neurmodulation using the Cortec BCI device and BCI2000 software.
-
 Contact: For questions regarding this dataset, please contact
 mivalt.filip@mayo.edu or Miller.Kai@mayo.edu
-
 Funding: NIH U01NS128612
 
 Dataset Information
@@ -118,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004624.v2.0.0 <https://doi.org/10.18112/openneuro.ds004624.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004624>`__ | `Source URL <https://openneuro.org/datasets/ds004624/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004624>`__ | `Source URL <https://openneuro.org/datasets/ds004624>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -155,8 +152,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 3
-      - Recordings: 1976
-      - Tasks: —
+      - Recordings: 614
+      - Tasks: 28
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -176,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 19.3 GB
-      - File count: 1976
+      - File count: 614
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 1590` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 90` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -90,11 +90,8 @@ About This Dataset
 ------------------
 
 This study was conducted at the Rotman Research Institute at Baycrest Hospital in Toronto, Canada.
-
 This dataset contains 30 healthy young adults' MEG (CTF), sMRI, and behavioural data on a picture-word interference (PWI) task. Subjects were shown images of objects one by one and were instructed to retrieve the name of the pictures covertly and judge whether the name ends in a target sound given at the beginning of each task block, by pressing the yes or no buttons with their right hand. Whenever they see an image, they will often also hear a distractor word played through their earphone. The picture and word could be phonologically related, semantically related, or unrelated.
-
 There were 3 runs of the PWI task for each participant. Each run contained 120 trials, containing an equal number of trials for each picture-word condition. Behaviourally, the reaction time and accuracy of their button-pressing response were recorded. Meanwhile, the MEG data was epoched to the picture onset and response onset for event-related analyses. Each subject obtained their own structural MRI for MEG source localization.
-
 Corresponding analysis code can be found under the code folder, with the "analysis walkthrough" documenting more detailed explanation of the analysis.
 
 Dataset Information
@@ -117,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005279.v1.0.3 <https://doi.org/10.18112/openneuro.ds005279.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005279>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005279>`__ | `Source URL <https://openneuro.org/datasets/ds005279/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005279>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005279>`__ | `Source URL <https://openneuro.org/datasets/ds005279>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,7 +151,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 30
-      - Recordings: 1590
+      - Recordings: 90
       - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
@@ -175,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 58.9 GB
-      - File count: 1590
+      - File count: 90
       - Format: BIDS
 
    .. grid-item-card:: License & citation

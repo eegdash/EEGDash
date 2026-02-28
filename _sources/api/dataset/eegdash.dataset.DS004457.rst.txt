@@ -11,11 +11,11 @@ DS004457
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom, Gregory A Worrell, Kai J Miller, Dora Hermes (2023). *Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex*. `10.18112/openneuro.ds004457.v1.0.2 <https://doi.org/10.18112/openneuro.ds004457.v1.0.2>`__
+**Citation:** Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom, Gregory A Worrell, Kai J Miller, Dora Hermes (2023). *Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex*. `10.18112/openneuro.ds004457.v1.0.1 <https://doi.org/10.18112/openneuro.ds004457.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 6` :bdg-secondary-line:`Recordings: 2801` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 5` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds004457,
            title = {Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex},
            author = {Harvey Huang and Nicholas M Gregg and Gabriela Ojeda Valencia and Benjamin H Brinkmann and Brian N Lundstrom and Gregory A Worrell and Kai J Miller and Dora Hermes},
-           doi = {10.18112/openneuro.ds004457.v1.0.2},
-           url = {https://doi.org/10.18112/openneuro.ds004457.v1.0.2},
+           doi = {10.18112/openneuro.ds004457.v1.0.1},
+           url = {https://doi.org/10.18112/openneuro.ds004457.v1.0.1},
          }
 
 
@@ -92,28 +92,20 @@ About This Dataset
 
 **Basis Profile Curve identification in the human ventral temporal cortex**
 
-
 This dataset contains intracranial EEG recordings from five patients during single pulse electrical stimulation as described in:
- 
-* Huang, H., Gregg, N. M., Valencia, G. O., Brinkmann, B. H., Lundstrom, B. N., Worrell, G. A., ... & Hermes, D. (2023). Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. Journal of Neuroscience.
+* H Huang, NM Gregg, G Ojeda Valencia, BH Brinkmann, BN Lundstrom, GA Worrell, KJ Miller, and D Hermes (2022) Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. (Under Review)
 
-DOI: https://doi.org/10.1523/JNEUROSCI.1325-22.2023
-
-Please cite this work when using the data. These data were recorded at the Mayo Clinic in Rochester, MN, as part of the NIH Brain Initiative supported project R01 MH122258 "CRCNS: Processing speed in the human connectome across the lifespan". Research reported in this publication was supported by the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH122258 and by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number T32GM065841. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health. The data was collected by Harvey Huang, Dora Hermes, Nick Gregg, Brian Lundstrom, Cindy Nelson, Gregg Worrell and Kai J. Miller. The BIDS formatting was performed by Harvey Huang, Dora Hermes and Gabriela Ojeda Valencia. 
-
-Data can be analyzed using the Matlab code at: 
+Please cite this work when using the data. These data were recorded at the Mayo Clinic in Rochester, MN, as part of the NIH Brain Initiative supported project R01 MH122258 "CRCNS: Processing speed in the human connectome across the lifespan". Research reported in this publication was supported by the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH122258 and by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number T32GM065841. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health. The data was collected by Harvey Huang, Dora Hermes, Nick Gregg, Brian Lundstrom, Cindy Nelson, Gregg Worrell and Kai J. Miller. The BIDS formatting was performed by Harvey Huang, Dora Hermes and Gabriela Ojeda Valencia.
+Data can be analyzed using the Matlab code at:
 * https://github.com/hharveygit/VTCBPC_JNS_Manu
-
 
 **Format**
 
 Data are formatted according to BIDS version 1.9.9
 
-
 **Single pulse stimulation**
 
 The patient were resting in the hospital bed, while single pulse stimulation was performed with a frequency of ~0.2 Hz. The stimulation had a duration of 200 microseconds, was biphasic and had an amplitude of 6mA.
-
 
 **Contact**
 
@@ -137,9 +129,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004457.v1.0.2 <https://doi.org/10.18112/openneuro.ds004457.v1.0.2>`__
+     - `doi:10.18112/openneuro.ds004457.v1.0.1 <https://doi.org/10.18112/openneuro.ds004457.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004457>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004457>`__ | `Source URL <https://openneuro.org/datasets/ds004457/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004457>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004457>`__ | `Source URL <https://openneuro.org/datasets/ds004457>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,8 +142,8 @@ Dataset Information
       @dataset{ds004457,
         title = {Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex},
         author = {Harvey Huang and Nicholas M Gregg and Gabriela Ojeda Valencia and Benjamin H Brinkmann and Brian N Lundstrom and Gregory A Worrell and Kai J Miller and Dora Hermes},
-        doi = {10.18112/openneuro.ds004457.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds004457.v1.0.2},
+        doi = {10.18112/openneuro.ds004457.v1.0.1},
+        url = {https://doi.org/10.18112/openneuro.ds004457.v1.0.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -175,9 +167,9 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 6
-      - Recordings: 2801
-      - Tasks: 2
+      - Subjects: 5
+      - Recordings: 5
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -196,15 +188,15 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 2801
+      - Size on disk: 10.9 GB
+      - File count: 5
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004457.v1.0.2
+      - DOI: doi:10.18112/openneuro.ds004457.v1.0.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

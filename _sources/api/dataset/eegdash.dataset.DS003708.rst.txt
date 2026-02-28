@@ -11,11 +11,11 @@ DS003708
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (20). *Basis profile curve identification to understand electrical stimulation effects in human brain networks*. `10.18112/openneuro.ds003708.v1.0.4 <https://doi.org/10.18112/openneuro.ds003708.v1.0.4>`__
+**Citation:** Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (2021). *Basis profile curve identification to understand electrical stimulation effects in human brain networks*. `10.18112/openneuro.ds003708.v1.0.0 <https://doi.org/10.18112/openneuro.ds003708.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 2` :bdg-secondary-line:`Recordings: 281` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 1` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -81,38 +81,28 @@ Quickstart
          @dataset{ds003708,
            title = {Basis profile curve identification to understand electrical stimulation effects in human brain networks},
            author = {Dora Hermes and Gabriella Ojeda and Kai J. Miller and Multimodal Neuroimaging Laboratory at Mayo Clinic},
-           doi = {10.18112/openneuro.ds003708.v1.0.4},
-           url = {https://doi.org/10.18112/openneuro.ds003708.v1.0.4},
+           doi = {10.18112/openneuro.ds003708.v1.0.0},
+           url = {https://doi.org/10.18112/openneuro.ds003708.v1.0.0},
          }
 
 
 About This Dataset
 ------------------
 
-This dataset contains intracranial EEG recordings from one patient during single pulse electrical stimulation. These data were recorded at the Mayo Clinic in Rochester, MN, as part of the NIH Brain Initiative supported project R01 MH122258 "CRCNS: Processing speed in the human connectome across the lifespan". 
-
-The overarching goal of this project is to develop a large database of single pulse stimulation data and develop tools to advance our understanding of the human connectome across the lifespan. 
-
-
+This dataset contains intracranial EEG recordings from one patient during single pulse electrical stimulation. These data were recorded at the Mayo Clinic in Rochester, MN, as part of the NIH Brain Initiative supported project R01 MH122258 "CRCNS: Processing speed in the human connectome across the lifespan".
+The overarching goal of this project is to develop a large database of single pulse stimulation data and develop tools to advance our understanding of the human connectome across the lifespan.
 
 **Citing this dataset**
 
-This dataset is part of the paper on 'Basis profile curve identification to understand electrical stimulation effects in human brain networks' by Miller, Mueller and Hermes, 2021, https://www.biorxiv.org/content/10.1101/2021.01.24.428020v1.full. Research reported in this publication was supported by the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH122258. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health. The data was collected by Dora Hermes, Nick Gregg, Brian Lundstrom, Cindy Nelson, Gregg Worrell and Kai J. Miller. The BIDS formatting was performed by Dora Hermes and Gabriella Ojeda Valencia. 
-
-
-
+This dataset is part of the paper on 'Basis profile curve identification to understand electrical stimulation effects in human brain networks' by Miller, Mueller and Hermes, 2021, https://www.biorxiv.org/content/10.1101/2021.01.24.428020v1.full. This project was funded by the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH122258 to Dora Hermes (Mayo Clinic). The data was collected by Dora Hermes, Nick Gregg, Brian Lundstrom, Cindy Nelson, Gregg Worrell and Kai J. Miller. The BIDS formatting was performed by Dora Hermes and Gabriella Ojeda Valencia.
 
 **Format**
 
 It is formatted according to BIDS version 1.3.0
 
-
-
 **Details about the single pulse stimulation experiment**
 
-Patients were resting in the hospital bed, while single pulse stimulation was performed with a frequency of ~0.2 Hz. The stimulation had a duration of 200 microseconds, was biphasic and had an amplitude of 6mA. On the motor cortex stimulation amplitude was sometimes reduced to 1 or 2mA to minimize movement artifacts.  
-
-
+Patients were resting in the hospital bed, while single pulse stimulation was performed with a frequency of ~0.2 Hz. The stimulation had a duration of 200 microseconds, was biphasic and had an amplitude of 6mA. On the motor cortex stimulation amplitude was sometimes reduced to 1 or 2mA to minimize movement artifacts.
 
 **Contact**
 
@@ -130,15 +120,15 @@ Dataset Information
    * - Title
      - Basis profile curve identification to understand electrical stimulation effects in human brain networks
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003708.v1.0.4 <https://doi.org/10.18112/openneuro.ds003708.v1.0.4>`__
+     - `10.18112/openneuro.ds003708.v1.0.0 <https://doi.org/10.18112/openneuro.ds003708.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003708>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003708>`__ | `Source URL <https://openneuro.org/datasets/ds003708/versions/1.0.4>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003708>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003708>`__ | `Source URL <https://openneuro.org/datasets/ds003708>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -149,8 +139,8 @@ Dataset Information
       @dataset{ds003708,
         title = {Basis profile curve identification to understand electrical stimulation effects in human brain networks},
         author = {Dora Hermes and Gabriella Ojeda and Kai J. Miller and Multimodal Neuroimaging Laboratory at Mayo Clinic},
-        doi = {10.18112/openneuro.ds003708.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds003708.v1.0.4},
+        doi = {10.18112/openneuro.ds003708.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds003708.v1.0.0},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -174,8 +164,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 2
-      - Recordings: 281
+      - Subjects: 1
+      - Recordings: 1
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -195,15 +185,15 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
-      - File count: 281
+      - Size on disk: 620.1 MB
+      - File count: 1
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003708.v1.0.4
+      - DOI: 10.18112/openneuro.ds003708.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

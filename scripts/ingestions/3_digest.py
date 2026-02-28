@@ -609,6 +609,20 @@ def extract_dataset_metadata(
         except Exception:
             pass
 
+    # Warn when participants.tsv row count differs from sub-* folder count
+    folder_subjects = {
+        d.name for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")
+    }
+    if participants_path.exists() and subjects_count > 0 and folder_subjects:
+        if subjects_count != len(folder_subjects):
+            logging.warning(
+                "%s: participants.tsv has %d rows but found %d sub-* folders "
+                "(possible naming convention mismatch)",
+                dataset_id,
+                subjects_count,
+                len(folder_subjects),
+            )
+
     # Count subjects from directories if participants.tsv based count is inconsistent or we prefer file based
     # User request: "count only subject from the modalities that are validated"
     # So we should prioritize the count derived from valid files (len(subjects))
@@ -1226,6 +1240,11 @@ def extract_record(
     # Restore participant_tsv metadata if available
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)
     if participant_tsv:
+        has_real_data = any(v not in (None, "n/a") for v in participant_tsv.values())
+        if not has_real_data:
+            logging.debug(
+                "No participant match for %s, storing column skeleton", bids_relpath
+            )
         # Convert numeric strings to floats for better API/Client compatibility
         # but preserve participant_id as string
         for k, v in participant_tsv.items():

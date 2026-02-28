@@ -47,6 +47,24 @@ def _read_tsv_column(tsv_path: Path, column: str) -> list[str]:
     return []
 
 
+def _read_participants_tsv(tsv_path: Path) -> pd.DataFrame | None:
+    """Read and parse a participants.tsv file.
+
+    Returns a DataFrame indexed by participant_id, or None if the file
+    is missing, empty, or unreadable.
+    """
+    if not tsv_path.exists():
+        return None
+    try:
+        df = pd.read_csv(tsv_path, sep="\t", dtype=str)
+    except Exception:
+        return None
+    if df.empty:
+        return None
+    df.set_index("participant_id", inplace=True)
+    return df
+
+
 class EEGBIDSDataset:
     """An interface to a local BIDS dataset containing electrophysiology recordings.
 
@@ -602,18 +620,10 @@ class EEGBIDSDataset:
         )
         if not participants_tsv_files:
             return {}
-        # the participant first column is always 'participant_id' or
-        # some variation like 'participantID'
         participants_tsv_path = participants_tsv_files[0]
-        # Use dtype=str to avoid pandas auto-converting values (e.g., '5F' being interpreted as hex)
-        try:
-            participants_tsv = pd.read_csv(participants_tsv_path, sep="\t", dtype=str)
-        except Exception:
+        participants_tsv = _read_participants_tsv(participants_tsv_path)
+        if participants_tsv is None:
             return {}
-
-        if participants_tsv.empty:
-            return {}
-        participants_tsv.set_index("participant_id", inplace=True)
 
         subj_val = self.get_bids_file_attribute("subject", data_filepath)
         if subj_val is None:
@@ -626,7 +636,12 @@ class EEGBIDSDataset:
 
         # Handle case where subject not found in participants.tsv
         if subject not in participants_tsv.index:
-            return {}
+            matched = _match_subject_fallback(subject, subj_val, participants_tsv.index)
+            if matched is not None:
+                subject = matched
+            else:
+                # Return skeleton row — column names with "n/a" (BIDS standard)
+                return {col: "n/a" for col in participants_tsv.columns}
 
         row = participants_tsv.loc[subject]
         # Handle duplicate participant_id entries (e.g., multi-session datasets)
@@ -635,6 +650,71 @@ class EEGBIDSDataset:
         row_dict = row.to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
+
+    def get_all_participants_tsv(self) -> dict[str, dict[str, Any]]:
+        """Get all rows from participants.tsv as a dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary mapping participant_id to a dict of column values.
+            Returns ``{}`` if no participants.tsv exists or it is empty.
+
+        """
+        df = _read_participants_tsv(self.bidsdir / "participants.tsv")
+        if df is None:
+            return {}
+        result = {}
+        for pid, row in df.iterrows():
+            row_dict = row.to_dict()
+            result[pid] = {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
+        return result
+
+    def get_orphan_participants(self) -> dict[str, dict[str, Any]]:
+        """Get participant rows that have no matching file in the dataset.
+
+        Identifies subjects present in ``participants.tsv`` but with no
+        corresponding recording file in ``self.files``.
+
+        Returns
+        -------
+        dict
+            A dictionary mapping orphan participant_id to their TSV data.
+            Returns ``{}`` if there are no orphans, no TSV, or no files.
+
+        """
+        all_participants = self.get_all_participants_tsv()
+        if not all_participants:
+            return {}
+
+        tsv_index = pd.Index(all_participants.keys())
+
+        # Build the set of TSV IDs matched by at least one file-subject
+        matched_tsv_ids = set()
+        seen_file_subjects = set()
+        for f in self.files:
+            subj_val = self.get_bids_file_attribute("subject", f)
+            if subj_val is None or subj_val in seen_file_subjects:
+                continue
+            seen_file_subjects.add(subj_val)
+
+            subject = f"sub-{subj_val}" if not subj_val.startswith("sub-") else subj_val
+
+            # Direct match
+            if subject in all_participants:
+                matched_tsv_ids.add(subject)
+                continue
+
+            # Fallback match
+            matched = _match_subject_fallback(subject, subj_val, tsv_index)
+            if matched is not None:
+                matched_tsv_ids.add(matched)
+
+        return {
+            pid: data
+            for pid, data in all_participants.items()
+            if pid not in matched_tsv_ids
+        }
 
     def eeg_json(self, data_filepath: str) -> dict[str, Any]:
         """Get the merged eeg.json metadata for a data file.
@@ -651,6 +731,79 @@ class EEGBIDSDataset:
 
         """
         return self._get_json_with_inheritance(data_filepath, "eeg.json")
+
+
+def _match_subject_fallback(subject: str, subj_val: str, index: pd.Index) -> str | None:
+    """Try to match a subject ID against participants.tsv index using fuzzy strategies.
+
+    Matching tiers (tried in order):
+    1. Case-insensitive exact match
+    2. Numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1)
+    3. Numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+
+    Parameters
+    ----------
+    subject : str
+        The full subject string (with ``sub-`` prefix).
+    subj_val : str
+        The subject entity value (may or may not have ``sub-`` prefix).
+    index : pd.Index
+        The participants.tsv index to match against.
+
+    Returns
+    -------
+    str or None
+        The matched participant_id string, or None if no match found.
+
+    """
+    # Build a case-insensitive lookup: lowered -> original
+    lower_map = {entry.lower(): entry for entry in index}
+
+    # Tier 1: case-insensitive exact match
+    if subject.lower() in lower_map:
+        return lower_map[subject.lower()]
+
+    # Extract the part after "sub-"
+    bare = subj_val.removeprefix("sub-")
+
+    numeric_match = re.search(r"(\d+)$", bare)
+    if not numeric_match:
+        return None
+
+    digits = numeric_match.group(1)
+    prefix = bare[: numeric_match.start()]
+    stripped = digits.lstrip("0") or "0"
+
+    # Tier 2: numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1, sub-S001)
+    if prefix:
+        candidates_prefix = [
+            f"sub-{prefix}{digits}",
+            f"sub-{prefix}{stripped}",
+            f"sub-{prefix}{stripped.zfill(2)}",
+            f"sub-{prefix}{stripped.zfill(3)}",
+            f"sub-{prefix}{stripped.zfill(4)}",
+        ]
+        for candidate in candidates_prefix:
+            if candidate in index:
+                return candidate
+            if candidate.lower() in lower_map:
+                return lower_map[candidate.lower()]
+
+    # Tier 3: numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+    candidates_stripped = [
+        f"sub-{digits}",
+        f"sub-{stripped}",
+        f"sub-{stripped.zfill(2)}",
+        f"sub-{stripped.zfill(3)}",
+        f"sub-{stripped.zfill(4)}",
+    ]
+    for candidate in candidates_stripped:
+        if candidate in index:
+            return candidate
+        if candidate.lower() in lower_map:
+            return lower_map[candidate.lower()]
+
+    return None
 
 
 def _is_valid_eeg_file(filepath: Path, allow_symlinks: bool = False) -> bool:

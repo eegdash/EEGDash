@@ -73,6 +73,10 @@ class _VHDRPointerFixer:
         key = match.group(1)  # DataFile or MarkerFile
         old_val = match.group(2).strip()
 
+        annex_key_pattern = re.compile(
+            r"^(SHA256E|MD5E)-[^.]*\.(vmrk|eeg)$", flags=re.IGNORECASE
+        )
+
         # If the pointed file exists, do nothing
         if (self.data_dir / old_val).exists():
             return match.group(0)
@@ -82,7 +86,11 @@ class _VHDRPointerFixer:
 
         # Strategy 1: Check if BIDS filename exists (same stem as .vhdr)
         bids_name = self.vhdr_path.with_suffix(ext).name
-        if (self.data_dir / bids_name).exists():
+        # Do not \"repair\" to an annex-style filename
+        if (
+            not annex_key_pattern.match(bids_name)
+            and (self.data_dir / bids_name).exists()
+        ):
             self.changes = True
             logger.info(
                 f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {bids_name}"
@@ -93,7 +101,11 @@ class _VHDRPointerFixer:
         # This handles typos (rsub- vs sub-, sternbeg vs sternberg) and
         # BIDS renames where original filename was completely different
         fuzzy_match = _find_best_matching_file(self.data_dir, old_val, ext)
-        if fuzzy_match and (self.data_dir / fuzzy_match).exists():
+        if (
+            fuzzy_match
+            and (self.data_dir / fuzzy_match).exists()
+            and not annex_key_pattern.match(fuzzy_match)
+        ):
             self.changes = True
             logger.info(
                 f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {fuzzy_match} (fuzzy match)"
@@ -521,8 +533,10 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
                 if "acq_time" in df.columns:
                     # Check for malformed timestamps: NaN, empty, or very short strings
                     malformed = df["acq_time"].apply(
-                        lambda x: pd.isna(x)
-                        or (isinstance(x, str) and (len(x) < 10 or x.strip() == ""))
+                        lambda x: (
+                            pd.isna(x)
+                            or (isinstance(x, str) and (len(x) < 10 or x.strip() == ""))
+                        )
                     )
 
                     if malformed.any():

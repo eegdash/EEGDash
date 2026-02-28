@@ -1275,3 +1275,124 @@ def test_match_subject_fallback_unit():
     # Prefix-preserved 4-digit padding (sub-S1 -> sub-S0001)
     idx = pd.Index(["sub-S0001", "sub-S0002"])
     assert _match_subject_fallback("sub-S1", "S1", idx) == "sub-S0001"
+
+
+def _make_bids(tmp_path, name, subjects, tsv_content=None):
+    """Helper: create a minimal BIDS dataset with given subject folders."""
+    d = tmp_path / name
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    for subj in subjects:
+        (d / subj / "eeg").mkdir(parents=True)
+        (d / subj / "eeg" / f"{subj}_task-rest_eeg.set").touch()
+    if tsv_content is not None:
+        (d / "participants.tsv").write_text(tsv_content)
+    return d
+
+
+class TestGetAllParticipantsTsv:
+    def test_reads_all_rows(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_allp",
+            ["sub-01"],
+            "participant_id\tage\tsex\nsub-01\t25\tM\nsub-02\t30\tF\n",
+        )
+        result = EEGBIDSDataset(str(d), "ds_allp").get_all_participants_tsv()
+        assert result == {
+            "sub-01": {"age": "25", "sex": "M"},
+            "sub-02": {"age": "30", "sex": "F"},
+        }
+
+    @pytest.mark.parametrize(
+        "tsv,label",
+        [
+            ("participant_id\tage\n", "empty_rows"),
+            (None, "no_file"),
+        ],
+        ids=["empty_rows", "no_file"],
+    )
+    def test_returns_empty(self, tmp_path, tsv, label):
+        d = _make_bids(tmp_path, f"ds_{label}", ["sub-01"], tsv)
+        assert EEGBIDSDataset(str(d), f"ds_{label}").get_all_participants_tsv() == {}
+
+    def test_nan_to_none(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_nan",
+            ["sub-01"],
+            "participant_id\tage\tsex\nsub-01\t25\t\n",
+        )
+        result = EEGBIDSDataset(str(d), "ds_nan").get_all_participants_tsv()
+        assert result["sub-01"] == {"age": "25", "sex": None}
+
+
+class TestGetOrphanParticipants:
+    def test_fallback_orphan(self, tmp_path):
+        """sub-FFE001..003 match sub-001..003 via fallback; sub-004 is orphan."""
+        d = _make_bids(
+            tmp_path,
+            "ds_orph",
+            [f"sub-FFE{str(i).zfill(3)}" for i in range(1, 4)],
+            "participant_id\tage\tsex\n"
+            "sub-001\t25\tM\nsub-002\t30\tF\nsub-003\t22\tM\nsub-004\t28\tF\n",
+        )
+        orphans = EEGBIDSDataset(str(d), "ds_orph").get_orphan_participants()
+        assert orphans == {"sub-004": {"age": "28", "sex": "F"}}
+
+    def test_direct_match_orphan(self, tmp_path):
+        """sub-01/02 match directly; sub-03 has no file."""
+        d = _make_bids(
+            tmp_path,
+            "ds_dir",
+            ["sub-01", "sub-02"],
+            "participant_id\tage\nsub-01\t25\nsub-02\t30\nsub-03\t22\n",
+        )
+        orphans = EEGBIDSDataset(str(d), "ds_dir").get_orphan_participants()
+        assert orphans == {"sub-03": {"age": "22"}}
+
+    def test_no_orphans(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_noo",
+            ["sub-01", "sub-02"],
+            "participant_id\tage\nsub-01\t25\nsub-02\t30\n",
+        )
+        assert EEGBIDSDataset(str(d), "ds_noo").get_orphan_participants() == {}
+
+    def test_no_tsv(self, tmp_path):
+        d = _make_bids(tmp_path, "ds_not", ["sub-01"])
+        assert EEGBIDSDataset(str(d), "ds_not").get_orphan_participants() == {}
+
+
+class TestReadParticipantsTsv:
+    """Tests for the _read_participants_tsv helper."""
+
+    def test_reads_valid_tsv(self, tmp_path):
+        from eegdash.dataset.bids_dataset import _read_participants_tsv
+
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_text("participant_id\tage\tsex\nsub-01\t25\tM\nsub-02\t30\tF\n")
+        df = _read_participants_tsv(tsv)
+        assert df is not None
+        assert list(df.index) == ["sub-01", "sub-02"]
+        assert df.loc["sub-01", "age"] == "25"
+
+    def test_missing_file(self, tmp_path):
+        from eegdash.dataset.bids_dataset import _read_participants_tsv
+
+        assert _read_participants_tsv(tmp_path / "nonexistent.tsv") is None
+
+    def test_empty_tsv(self, tmp_path):
+        from eegdash.dataset.bids_dataset import _read_participants_tsv
+
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_text("participant_id\tage\n")
+        assert _read_participants_tsv(tsv) is None
+
+    def test_unreadable_tsv(self, tmp_path):
+        from eegdash.dataset.bids_dataset import _read_participants_tsv
+
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_bytes(b"\x00\x01\x02\x03")
+        assert _read_participants_tsv(tsv) is None

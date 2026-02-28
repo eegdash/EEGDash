@@ -2388,6 +2388,55 @@ def digest_dataset(
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
 
+    # Append skeleton records for orphan participants (in participants.tsv but no files)
+    try:
+        orphans = bids_dataset.get_orphan_participants()
+        if orphans:
+            logging.info(
+                "%s: %d orphan participant(s) in participants.tsv — appending skeleton records",
+                dataset_id,
+                len(orphans),
+            )
+            storage_base = get_storage_base(dataset_id, source)
+            storage_backend = get_storage_backend(source)
+            detected_modality = bids_dataset.detected_modality
+
+            for pid, pdata in orphans.items():
+                sub_label = pid.removeprefix("sub-")
+                bids_relpath = (
+                    f"{pid}/{detected_modality}/"
+                    f"{pid}_task-na_{detected_modality}.orphan"
+                )
+                record = create_record(
+                    dataset=dataset_id,
+                    storage_base=storage_base,
+                    bids_relpath=bids_relpath,
+                    subject=sub_label,
+                    datatype=detected_modality,
+                    suffix=detected_modality,
+                    storage_backend=storage_backend,
+                    recording_modality=[detected_modality],
+                    digested_at=digested_at,
+                )
+                record = dict(record)
+                record["_is_orphan_participant"] = True
+
+                # Attach participant_tsv metadata
+                participant_tsv = {}
+                for k, v in pdata.items():
+                    if k == "participant_id":
+                        continue
+                    if isinstance(v, str) and v.strip():
+                        try:
+                            v = float(v)
+                        except (ValueError, TypeError):
+                            pass
+                    participant_tsv[k] = v
+                record["participant_tsv"] = participant_tsv
+                records.append(record)
+    except Exception as e:
+        logging.warning("%s: failed to append orphan participants: %s", dataset_id, e)
+
     if not records:
         # Fallback to manifest-based digestion if no records extracted
         if has_manifest:

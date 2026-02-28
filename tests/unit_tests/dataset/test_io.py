@@ -34,6 +34,56 @@ MarkerFile=INTERNAL_NAME.vmrk
     assert repaired is True
 
 
+def test_repair_vhdr_pointers_annex_marker(tmp_path):
+    """VHDR with annex-key MarkerFile should point to BIDS .vmrk."""
+    eeg_dir = tmp_path
+
+    # BIDS-named companion files
+    (eeg_dir / "sub-01_task-rest_eeg.eeg").touch()
+    (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
+
+    vhdr_path = eeg_dir / "sub-01_task-rest_eeg.vhdr"
+    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile=sub-01_task-rest_eeg.eeg
+MarkerFile=SHA256E-s3719--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    # MarkerFile should now reference the BIDS-named file, not the annex key
+    assert "MarkerFile=sub-01_task-rest_eeg.vmrk" in text
+    assert "SHA256E-s3719--" not in text
+
+
+def test_repair_vhdr_pointers_annex_and_internal(tmp_path):
+    """VHDR with internal DataFile and annex-key MarkerFile maps both to BIDS."""
+    eeg_dir = tmp_path
+
+    # BIDS-named companion files
+    (eeg_dir / "sub-01_task-main_run-001_eeg.eeg").touch()
+    (eeg_dir / "sub-01_task-main_run-001_eeg.vmrk").touch()
+
+    vhdr_path = eeg_dir / "sub-01_task-main_run-001_eeg.vhdr"
+    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile=s2_run1_08062017.eeg
+MarkerFile=MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    # Both pointers should now use the BIDS-named companions
+    assert "DataFile=sub-01_task-main_run-001_eeg.eeg" in text
+    assert "MarkerFile=sub-01_task-main_run-001_eeg.vmrk" in text
+    assert "s2_run1_08062017.eeg" not in text
+    assert "MD5E-s11657--" not in text
+
+
 def test_repair_vhdr_no_change_needed(tmp_path):
     """Test that VHDR is untouched if pointers are valid."""
     eeg_dir = tmp_path

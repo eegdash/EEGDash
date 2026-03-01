@@ -67,11 +67,13 @@ DATASET_CANONICAL_MAP = {
     },
     "type": {
         "perception": "Perception",
+        "percep": "Perception",
         "decision making": "Decision-making",
         "decision-making": "Decision-making",
         "rest": "Rest",
         "resting state": "Resting-state",
         "sleep": "Sleep",
+        "experimental": "Experimental",
     },
 }
 

@@ -2287,6 +2287,12 @@ html[data-theme="dark"] #datasets-table tbody tr:hover {
   color: #9f0000;
 }
 
+.tag-type-experimental {
+  background: linear-gradient(135deg, #ccfbf1, #99f6e4);
+  border: 1px solid #14b8a6 !important;
+  color: #0f766e;
+}
+
 .tag-type-generic {
   background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
   border: 1px solid #94a3b8 !important;

@@ -37,6 +37,7 @@
       "sleep": "tag-type-sleep",
       "cognitive": "tag-type-cognitive",
       "clinical": "tag-type-clinical",
+      "experimental": "tag-type-experimental",
       "__default": "tag-type-generic",
     },
   };

@@ -163,6 +163,8 @@ TYPE_COLOR_MAP = {
     "learning": "#c084fc",
     "Motor": "#f59e0b",  # amber-500 - matches modality motor
     "motor": "#f59e0b",
+    "Experimental": "#14b8a6",  # teal-500
+    "experimental": "#14b8a6",
     "Other": "#94a3b8",  # slate-400
     "other": "#94a3b8",
     "Unknown": "#94a3b8",
@@ -230,6 +232,7 @@ CANONICAL_MAP = {
     },
     "type of exp": {
         "perception": "Perception",
+        "percep": "Perception",
         "decision making": "Decision-making",
         "decision-making": "Decision-making",
         "rest": "Rest",
@@ -238,6 +241,7 @@ CANONICAL_MAP = {
         "sleep": "Sleep",
         "cognitive": "Cognitive",
         "clinical": "Clinical",
+        "experimental": "Experimental",
         "other": "Other",
     },
 }
@@ -385,6 +389,7 @@ def generate_css_tag_styles() -> str:
         "Sleep",
         "Cognitive",
         "Clinical",
+        "Experimental",
     ]:
         color = TYPE_COLOR_MAP.get(name, "#94a3b8")
         slug = name.lower()

@@ -481,3 +481,163 @@ def test_eegdashraw_s3file_attribute(tmp_path):
 
     assert ds.s3file == "s3://mybucket/path/to/file"
     assert ds.s3file == ds._raw_uri
+
+
+# Tests for _has_non_numeric_run
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+@pytest.mark.parametrize(
+    "entities,expected",
+    [
+        ({"run": "5H"}, True),
+        ({"run": "1"}, False),
+        ({"run": None}, False),
+        ({}, False),
+        ({"run": "02"}, False),
+        ({"run": "abc"}, True),
+    ],
+    ids=[
+        "non_numeric_5H",
+        "numeric_1",
+        "no_run_none",
+        "no_run_absent",
+        "numeric_02",
+        "non_numeric_abc",
+    ],
+)
+def test_has_non_numeric_run(mock_validate, tmp_path, entities, expected):
+    """Test _has_non_numeric_run detects non-numeric BIDS run values."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds1",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {"backend": "local", "base": str(tmp_path)},
+        "entities": entities,
+    }
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    assert ds._has_non_numeric_run() is expected
+
+
+# Tests for VHDR non-numeric run fallback in _load_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_falls_back_for_non_numeric_run_vhdr(mock_validate, tmp_path):
+    """Test _load_raw falls back to direct BrainVision loading for non-numeric run."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    dataset_id = "ds003190"
+    bids_relpath = "sub-019/eeg/sub-019_ses-03_task-ctos_run-5H_eeg.vhdr"
+    eeg_dir = tmp_path / dataset_id / "sub-019" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    vhdr_path = eeg_dir / "sub-019_ses-03_task-ctos_run-5H_eeg.vhdr"
+    vhdr_path.touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "019", "session": "03", "task": "ctos", "run": "5H"},
+        "entities_mne": {
+            "subject": "019",
+            "session": "03",
+            "task": "ctos",
+            "run": None,
+        },
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    mock_raw = MagicMock()
+
+    with patch("mne_bids.read_raw_bids", side_effect=ValueError("run is not an index")):
+        with patch(
+            "eegdash.dataset.base._load_raw_brainvision_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(vhdr_path)
+    assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_numeric_run_vhdr_does_not_fallback(mock_validate, tmp_path):
+    """Test _load_raw does NOT fall back for VHDR files with numeric runs."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    dataset_id = "ds_test"
+    bids_relpath = "sub-01/eeg/sub-01_task-rest_run-01_eeg.vhdr"
+    eeg_dir = tmp_path / dataset_id / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    (eeg_dir / "sub-01_task-rest_run-01_eeg.vhdr").touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "01", "task": "rest", "run": "01"},
+        "entities_mne": {"subject": "01", "task": "rest", "run": "01"},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with patch("mne_bids.read_raw_bids", side_effect=ValueError("Some other error")):
+        with patch("eegdash.dataset.base._load_raw_brainvision_direct") as mock_direct:
+            with pytest.raises(ValueError, match="Some other error"):
+                ds._load_raw()
+
+    mock_direct.assert_not_called()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_vhdr_fallback_failure_chains_exceptions(mock_validate, tmp_path):
+    """Test that when the VHDR direct fallback also fails, exceptions are chained."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    dataset_id = "ds003190"
+    bids_relpath = "sub-019/eeg/sub-019_ses-03_task-ctos_run-5H_eeg.vhdr"
+    eeg_dir = tmp_path / dataset_id / "sub-019" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    (eeg_dir / "sub-019_ses-03_task-ctos_run-5H_eeg.vhdr").touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "019", "session": "03", "task": "ctos", "run": "5H"},
+        "entities_mne": {
+            "subject": "019",
+            "session": "03",
+            "task": "ctos",
+            "run": None,
+        },
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    original_error = ValueError("run is not an index")
+    fallback_error = IOError("Corrupted VHDR file")
+
+    with patch("mne_bids.read_raw_bids", side_effect=original_error):
+        with patch(
+            "eegdash.dataset.base._load_raw_brainvision_direct",
+            side_effect=fallback_error,
+        ):
+            with pytest.raises(IOError, match="Corrupted VHDR file") as exc_info:
+                ds._load_raw()
+
+    # Verify exception chaining preserves the original MNE-BIDS error
+    assert exc_info.value.__cause__ is original_error

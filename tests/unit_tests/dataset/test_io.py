@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -7,6 +7,7 @@ from eegdash.dataset.io import (
     _find_best_matching_file,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _load_raw_brainvision_direct,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
@@ -364,3 +365,18 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
     (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
     (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
     assert _repair_tsv_encoding(tmp_path) is True
+
+
+# Tests for direct BrainVision loader
+
+
+def test_load_raw_brainvision_direct_calls_mne(tmp_path):
+    """Test _load_raw_brainvision_direct calls mne.io.read_raw_brainvision."""
+    vhdr_path = tmp_path / "sub-01_task-rest_run-5H_eeg.vhdr"
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_brainvision", return_value=mock_raw) as mock_read:
+        result = _load_raw_brainvision_direct(vhdr_path)
+
+    mock_read.assert_called_once_with(str(vhdr_path), preload=False, verbose="ERROR")
+    assert result is mock_raw

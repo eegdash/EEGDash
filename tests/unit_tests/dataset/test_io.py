@@ -88,6 +88,55 @@ MarkerFile=MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vmrk
     assert "MD5E-s11657--" not in text
 
 
+def test_repair_vhdr_annex_key_no_bids_file(tmp_path):
+    """Annex-key pointers rewritten to BIDS names even when target doesn't exist.
+
+    Covers ds002158, ds003688, ds003848, ds005953 where the .vmrk was not
+    downloaded and is only created as a stub *after* repair.
+    """
+    eeg_dir = tmp_path
+
+    # No BIDS-named companion files exist yet
+    vhdr_path = eeg_dir / "sub-01_ses-01_task-visual_run-01_ieeg.vhdr"
+    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile=SHA256E-s9999--abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890.eeg
+MarkerFile=SHA256E-s1808--43036bd24716b3b8a7b2c56f44360206d2872b30480859311989e9e10466598a.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    assert "DataFile=sub-01_ses-01_task-visual_run-01_ieeg.eeg" in text
+    assert "MarkerFile=sub-01_ses-01_task-visual_run-01_ieeg.vmrk" in text
+    assert "SHA256E-" not in text
+
+
+def test_repair_vhdr_annex_key_resolved_symlink(tmp_path):
+    """Annex keys are rewritten even when the annex symlink resolves."""
+    eeg_dir = tmp_path
+
+    # Simulate a resolved annex symlink — file exists with the annex key name
+    annex_eeg = "SHA256E-s5000--aabbccdd11223344aabbccdd11223344aabbccdd11223344aabbccdd11223344.eeg"
+    (eeg_dir / annex_eeg).touch()
+
+    vhdr_path = eeg_dir / "sub-02_task-rest_eeg.vhdr"
+    vhdr_content = f"""Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile={annex_eeg}
+MarkerFile=sub-02_task-rest_eeg.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+    (eeg_dir / "sub-02_task-rest_eeg.vmrk").touch()
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    assert "DataFile=sub-02_task-rest_eeg.eeg" in text
+    assert "SHA256E-" not in text
+
+
 def test_repair_vhdr_no_change_needed(tmp_path):
     """Test that VHDR is untouched if pointers are valid."""
     eeg_dir = tmp_path

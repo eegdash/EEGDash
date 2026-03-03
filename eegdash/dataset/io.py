@@ -60,6 +60,9 @@ def _find_best_matching_file(
     return best_match
 
 
+_ANNEX_KEY_RE = re.compile(r"^(SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE)
+
+
 class _VHDRPointerFixer:
     """Helper class to fix VHDR pointers with state tracking."""
 
@@ -73,23 +76,24 @@ class _VHDRPointerFixer:
         key = match.group(1)  # DataFile or MarkerFile
         old_val = match.group(2).strip()
 
-        annex_key_pattern = re.compile(
-            r"^(SHA256E|MD5E)-[^.]*\.(vmrk|eeg)$", flags=re.IGNORECASE
-        )
+        is_annex_key = bool(_ANNEX_KEY_RE.match(old_val))
 
-        # If the pointed file exists, do nothing
-        if (self.data_dir / old_val).exists():
+        # If the pointed file exists AND it's not an annex key, keep it.
+        # Annex keys are always rewritten: the key-based filename only
+        # resolves inside a git-annex repo, so outside that context
+        # (e.g. S3 download cache) it will always fail.
+        if not is_annex_key and (self.data_dir / old_val).exists():
             return match.group(0)
 
         # Determine expected extension
         ext = ".vmrk" if key == "MarkerFile" else ".eeg"
 
-        # Strategy 1: Check if BIDS filename exists (same stem as .vhdr)
+        # Strategy 1: Use BIDS filename (same stem as .vhdr).
+        # For annex keys we always rewrite — the target file need not
+        # exist yet (a VMRK stub may be generated right after repair).
         bids_name = self.vhdr_path.with_suffix(ext).name
-        # Do not \"repair\" to an annex-style filename
-        if (
-            not annex_key_pattern.match(bids_name)
-            and (self.data_dir / bids_name).exists()
+        if not _ANNEX_KEY_RE.match(bids_name) and (
+            is_annex_key or (self.data_dir / bids_name).exists()
         ):
             self.changes = True
             logger.info(
@@ -104,7 +108,7 @@ class _VHDRPointerFixer:
         if (
             fuzzy_match
             and (self.data_dir / fuzzy_match).exists()
-            and not annex_key_pattern.match(fuzzy_match)
+            and not _ANNEX_KEY_RE.match(fuzzy_match)
         ):
             self.changes = True
             logger.info(

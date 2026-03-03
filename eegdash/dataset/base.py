@@ -197,17 +197,17 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
+            # Generate VMRK stub first so pointer repair can find the target
+            vmrk_path = self.filecache.with_suffix(".vmrk")
+            if not vmrk_path.exists():
+                _generate_vmrk_stub(vmrk_path, self.filecache.name)
+
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
                 _generate_vhdr_from_metadata(self.filecache, self.record)
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
-
-            # Also generate VMRK stub if missing (common issue with some datasets)
-            vmrk_path = self.filecache.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, self.filecache.name)
 
         if self._raw is None:
             try:

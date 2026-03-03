@@ -327,6 +327,65 @@ DataFile={vhdr_name.replace(".vhdr", ".eeg")}
         return False
 
 
+# Match digits separated by a comma that looks like a European decimal separator,
+# e.g. "4,988" → "4.988".  This intentionally treats ALL digit,digit patterns as
+# decimals.  Thousands separators like "10,000" would also be rewritten, but in
+# practice European-locale datasets that use comma-as-decimal use dot or space for
+# thousands grouping, so the ambiguity does not arise in real BIDS TSV files.
+_DECIMAL_COMMA_RE = re.compile(r"(?<!\w)(\d+),(\d+)(?!\w)")
+
+
+def _repair_tsv_decimal_separators(data_dir: Path) -> bool:
+    """Fix TSV files using comma as decimal separator instead of dot.
+
+    Some European datasets use comma as decimal separator (e.g., ``5,004``
+    instead of ``5.004``).  This converts commas to dots in numeric columns
+    of TSV files that are likely to contain floating-point values.
+
+    Parameters
+    ----------
+    data_dir : Path
+        Directory containing TSV files to check.
+
+    Returns
+    -------
+    bool
+        True if any files were repaired, False otherwise.
+
+    """
+    if not data_dir.exists():
+        return False
+
+    # Only target TSV files that typically contain numeric columns
+    target_patterns = ("*_events.tsv", "*_electrodes.tsv", "*_channels.tsv")
+    tsv_paths = []
+    for pat in target_patterns:
+        tsv_paths.extend(data_dir.glob(pat))
+
+    if not tsv_paths:
+        return False
+
+    repaired_any = False
+    for tsv_path in tsv_paths:
+        try:
+            content = tsv_path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        new_content = _DECIMAL_COMMA_RE.sub(r"\1.\2", content)
+        if new_content != content:
+            try:
+                tsv_path.write_text(new_content, encoding="utf-8")
+                logger.info(
+                    f"Repaired decimal separators (comma -> dot): {tsv_path.name}"
+                )
+                repaired_any = True
+            except Exception as e:
+                logger.warning(f"Failed to write repaired TSV {tsv_path.name}: {e}")
+
+    return repaired_any
+
+
 def _repair_tsv_encoding(data_dir: Path) -> bool:
     """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
 

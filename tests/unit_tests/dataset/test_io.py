@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 import pytest
@@ -5,6 +6,7 @@ import pytest
 from eegdash.dataset.io import (
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
+    _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _repair_tsv_encoding,
@@ -364,3 +366,67 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
     (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
     (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
     assert _repair_tsv_encoding(tmp_path) is True
+
+
+# Tests for coordsystem.json generation with datatype-specific keys
+
+
+@pytest.mark.parametrize(
+    "datatype,expected_prefix",
+    [("eeg", "EEG"), ("ieeg", "iEEG"), ("meg", "MEG")],
+    ids=["eeg", "ieeg", "meg"],
+)
+def test_generate_coordsystem_json_datatype_keys(tmp_path, datatype, expected_prefix):
+    """Generated coordsystem.json uses correct keys per BIDS datatype."""
+    electrodes = tmp_path / "sub-01_space-MNI_electrodes.tsv"
+    electrodes.write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+
+    assert _generate_coordsystem_json(electrodes, datatype=datatype) is True
+
+    coordsystem = tmp_path / "sub-01_space-MNI_coordsystem.json"
+    assert coordsystem.exists()
+    data = json.loads(coordsystem.read_text())
+    assert f"{expected_prefix}CoordinateSystem" in data
+    assert data[f"{expected_prefix}CoordinateSystem"] == "MNI"
+    assert f"{expected_prefix}CoordinateUnits" in data
+    assert data[f"{expected_prefix}CoordinateUnits"] == "m"
+
+
+def test_generate_coordsystem_json_no_space_entity(tmp_path):
+    """Coordsystem defaults to 'Other' when electrodes filename has no space entity."""
+    electrodes = tmp_path / "sub-01_electrodes.tsv"
+    electrodes.write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+
+    assert _generate_coordsystem_json(electrodes, datatype="ieeg") is True
+
+    coordsystem = tmp_path / "sub-01_coordsystem.json"
+    data = json.loads(coordsystem.read_text())
+    assert data["iEEGCoordinateSystem"] == "Other"
+
+
+def test_generate_coordsystem_json_default_datatype(tmp_path):
+    """Default datatype is 'eeg' when not specified."""
+    electrodes = tmp_path / "sub-01_electrodes.tsv"
+    electrodes.write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+
+    assert _generate_coordsystem_json(electrodes) is True
+
+    coordsystem = tmp_path / "sub-01_coordsystem.json"
+    data = json.loads(coordsystem.read_text())
+    assert "EEGCoordinateSystem" in data
+
+
+def test_ensure_coordsystem_symlink_generates_ieeg_keys(tmp_path):
+    """_ensure_coordsystem_symlink infers ieeg datatype from directory name."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+
+    _ensure_coordsystem_symlink(ieeg_dir)
+
+    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
+    assert coordsystem.exists()
+    data = json.loads(coordsystem.read_text())
+    assert "iEEGCoordinateSystem" in data
+    assert "iEEGCoordinateUnits" in data

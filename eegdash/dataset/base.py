@@ -26,6 +26,7 @@ from ..schemas import validate_record
 from .exceptions import DataIntegrityError
 from .io import (
     _ensure_coordsystem_symlink,
+    _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _repair_snirf_bids_metadata,
@@ -203,17 +204,33 @@ class EEGDashRaw(RawDataset):
                 )
                 raise
 
+    def _read_raw_bids(self) -> BaseRaw:
+        """Call ``mne_bids.read_raw_bids`` with the standard arguments."""
+        return mne_bids.read_raw_bids(
+            bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
+        )
+
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
 
-        For SNIRF (fNIRS) files, if initial loading fails, applies on-the-fly
-        fixes to BIDS metadata (channels.tsv, scans.tsv) and retries.
+        Applies on-the-fly fixes and retries for known failure modes:
+
+        - **iEEG** missing ``coordsystem.json``: mne-bids raises
+          ``RuntimeError`` because coordinates are mandatory for intracranial
+          data. We generate a minimal ``coordsystem.json`` with the correct
+          ``iEEGCoordinateSystem`` keys and retry.
+        - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
+          ``scans.tsv`` and retries.
         """
         try:
-            # First attempt: standard MNE-BIDS loading
-            return mne_bids.read_raw_bids(
-                bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
-            )
+            return self._read_raw_bids()
+        except RuntimeError as first_error:
+            # mne-bids raises RuntimeError with this message when
+            # electrodes.tsv exists but coordsystem.json is missing.
+            # Fragile string match — tied to mne-bids wording (PR #1523).
+            if "coordsystem.json is REQUIRED" in str(first_error):
+                return self._retry_with_generated_coordsystem(first_error)
+            raise
         except Exception as first_error:
             # For SNIRF files, try to fix and retry
             if self.filecache and self.filecache.suffix.lower() == ".snirf":
@@ -221,18 +238,43 @@ class EEGDashRaw(RawDataset):
                     "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
                 )
                 if _repair_snirf_bids_metadata(self.filecache, self.record):
-                    # Retry after fix
                     try:
-                        return mne_bids.read_raw_bids(
-                            bids_path=self.bidspath,
-                            verbose="ERROR",
-                            on_ch_mismatch="rename",
-                        )
+                        return self._read_raw_bids()
                     except Exception as retry_error:
                         logger.error(f"Retry also failed: {retry_error}")
                         raise retry_error from first_error
             # Not a SNIRF or fix didn't help - re-raise original error
             raise
+
+    def _retry_with_generated_coordsystem(self, first_error: Exception) -> BaseRaw:
+        """Generate a minimal coordsystem.json on-the-fly and retry loading.
+
+        This handles the case where mne-bids raises ``RuntimeError`` for
+        missing ``coordsystem.json`` — particularly strict for iEEG where
+        coordinates are always required.
+        """
+        data_dir = self.filecache.parent if self.filecache else None
+        if data_dir is None or not data_dir.exists():
+            raise first_error
+
+        datatype = data_dir.name  # eeg, ieeg, meg
+        electrodes_files = list(data_dir.glob("*_electrodes.tsv"))
+        if not electrodes_files:
+            raise first_error
+
+        logger.warning(
+            f"Missing coordsystem.json for {datatype} data, "
+            "generating minimal one and retrying..."
+        )
+        if _generate_coordsystem_json(electrodes_files[0], datatype=datatype):
+            try:
+                return self._read_raw_bids()
+            except Exception as retry_error:
+                logger.error(
+                    f"Retry after coordsystem generation also failed: {retry_error}"
+                )
+                raise retry_error from first_error
+        raise first_error
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

@@ -164,22 +164,25 @@ def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
     return False
 
 
-# TO-DO: fix this when mne-bids is fixed
 def _ensure_coordsystem_symlink(data_dir: Path) -> None:
     """Ensure coordsystem.json exists in the data directory using symlinks if needed.
 
     MNE-BIDS can be strict about coordsystem.json location. If it's missing
-    in the EEG directory but present in the subject root, this function
-    creates a symlink.
+    in the data directory but present in the subject root, this function
+    creates a symlink. Otherwise it generates a minimal one with the correct
+    datatype-specific keys (EEG vs iEEG vs MEG).
 
     Parameters
     ----------
     data_dir : Path
-        The directory containing the EEG data files (e.g. sub-01/eeg/).
+        The directory containing the data files (e.g. sub-01/eeg/, sub-01/ieeg/).
 
     """
     if not data_dir.exists():
         return
+
+    # Infer BIDS datatype from directory name (eeg, ieeg, meg, …)
+    datatype = data_dir.name
 
     try:
         # Check if we have electrodes.tsv here (implies need for coordsystem)
@@ -216,13 +219,15 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
             # No coordsystem.json found anywhere — generate a minimal one
             # Infer the coordinate system from the electrodes filename
             # (e.g. "sub-01_ses-01_space-CapTrak_electrodes.tsv")
-            _generate_coordsystem_json(electrodes_files[0])
+            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
 
     except Exception as e:
         logger.warning(f"Error checking coordsystem symlinks: {e}")
 
 
-def _generate_coordsystem_json(electrodes_tsv: Path) -> bool:
+def _generate_coordsystem_json(
+    electrodes_tsv: Path, datatype: str = "eeg"
+) -> bool:
     """Generate a minimal coordsystem.json from the electrodes.tsv filename.
 
     BIDS requires coordsystem.json whenever electrodes.tsv exists. Some
@@ -230,10 +235,18 @@ def _generate_coordsystem_json(electrodes_tsv: Path) -> bool:
     extracting the coordinate system from the ``space-<label>`` entity
     in the electrodes filename.
 
+    The JSON keys are datatype-specific per BIDS:
+
+    - iEEG: ``iEEGCoordinateSystem`` / ``iEEGCoordinateUnits``
+    - MEG:  ``MEGCoordinateSystem``  / ``MEGCoordinateUnits``
+    - EEG (default): ``EEGCoordinateSystem`` / ``EEGCoordinateUnits``
+
     Parameters
     ----------
     electrodes_tsv : Path
         Path to the electrodes.tsv file.
+    datatype : str
+        BIDS datatype (``"eeg"``, ``"ieeg"``, or ``"meg"``).
 
     Returns
     -------
@@ -252,15 +265,25 @@ def _generate_coordsystem_json(electrodes_tsv: Path) -> bool:
         coordsystem_name = name.replace("_electrodes", "_coordsystem") + ".json"
         coordsystem_path = electrodes_tsv.parent / coordsystem_name
 
+        # BIDS uses datatype-specific keys for coordinate system metadata
+        _COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
+        prefix = _COORD_PREFIX.get(datatype)
+        if prefix is None:
+            logger.warning(
+                f"Unexpected datatype {datatype!r} for coordsystem generation, "
+                f"expected one of {set(_COORD_PREFIX)}. Defaulting to EEG keys."
+            )
+            prefix = "EEG"
+
         coordsystem_data = {
-            "EEGCoordinateSystem": coord_system,
-            "EEGCoordinateUnits": "m",
+            f"{prefix}CoordinateSystem": coord_system,
+            f"{prefix}CoordinateUnits": "m",
         }
 
         coordsystem_path.write_text(json.dumps(coordsystem_data, indent=2))
         logger.info(
             f"Generated minimal coordsystem.json: {coordsystem_path.name} "
-            f"(system={coord_system})"
+            f"(datatype={datatype}, system={coord_system})"
         )
         return True
     except Exception as e:

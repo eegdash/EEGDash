@@ -578,3 +578,27 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
         logger.warning(f"Error fixing scans.tsv: {e}")
 
     return repairs_made
+
+
+def _load_raw_brainvision_direct(vhdr_path: Path):
+    """Load a BrainVision file directly, bypassing MNE-BIDS.
+
+    Used as a fallback when MNE-BIDS cannot handle non-numeric BIDS run
+    values (e.g. ``run-5H``).  The signal data, channel names, and sampling
+    frequency from the VHDR header are preserved; BIDS sidecar integration
+    (channels.tsv, eeg.json) is skipped.
+
+    Parameters
+    ----------
+    vhdr_path : Path
+        Path to the ``.vhdr`` file.
+
+    Returns
+    -------
+    mne.io.BaseRaw
+        The loaded Raw object.
+
+    """
+    import mne
+
+    return mne.io.read_raw_brainvision(str(vhdr_path), preload=False, verbose="ERROR")

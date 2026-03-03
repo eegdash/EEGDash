@@ -225,9 +225,7 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
         logger.warning(f"Error checking coordsystem symlinks: {e}")
 
 
-def _generate_coordsystem_json(
-    electrodes_tsv: Path, datatype: str = "eeg"
-) -> bool:
+def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> bool:
     """Generate a minimal coordsystem.json from the electrodes.tsv filename.
 
     BIDS requires coordsystem.json whenever electrodes.tsv exists. Some

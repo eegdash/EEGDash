@@ -28,6 +28,7 @@ from .io import (
     _ensure_coordsystem_symlink,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _load_raw_brainvision_direct,
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
@@ -148,6 +149,17 @@ class EEGDashRaw(RawDataset):
 
         self._raw = None
 
+    def _has_non_numeric_run(self) -> bool:
+        """Return True when the original BIDS run entity exists but is non-numeric.
+
+        MNE-BIDS requires numeric run values.  Non-numeric values like
+        ``"5H"`` cause ``BIDSPath`` to fail, so we detect them here to
+        trigger a direct-loading fallback.
+        """
+        entities = self.record.get("entities") or {}
+        run = entities.get("run")
+        return run is not None and not str(run).isdigit()
+
     def _download_required_files(self) -> None:
         if self._raw_uri is not None:
             filesystem = downloader.get_s3_filesystem()
@@ -233,7 +245,23 @@ class EEGDashRaw(RawDataset):
                     except Exception as retry_error:
                         logger.error(f"Retry also failed: {retry_error}")
                         raise retry_error from first_error
-            # Not a SNIRF or fix didn't help - re-raise original error
+            # For VHDR files with non-numeric run values (e.g. run-5H),
+            # fall back to direct mne.io.read_raw_brainvision()
+            if (
+                self.filecache
+                and self.filecache.suffix.lower() == ".vhdr"
+                and self._has_non_numeric_run()
+            ):
+                logger.warning(
+                    "MNE-BIDS failed for VHDR with non-numeric run, "
+                    "falling back to direct mne.io.read_raw_brainvision()."
+                )
+                try:
+                    return _load_raw_brainvision_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
+
+            # Not a fixable case - re-raise original error
             raise
 
     def __len__(self) -> int:

@@ -7,6 +7,7 @@ from eegdash.dataset.io import (
     _find_best_matching_file,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
@@ -364,3 +365,69 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
     (tmp_path / "participants.tsv").write_text("id\nsub-01\n", encoding="utf-8")
     (tmp_path / "channels.tsv").write_bytes("name\tunits\nFp1\tµV\n".encode("latin-1"))
     assert _repair_tsv_encoding(tmp_path) is True
+
+
+# Tests for TSV decimal separator repair
+
+
+def test_repair_tsv_decimal_separators_events(tmp_path):
+    """Test comma-to-dot conversion in events.tsv numeric fields."""
+    tsv_path = tmp_path / "sub-01_task-sitstand_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\ttrial_type\tsample\n"
+        "4,988\t0,5\trest\t1247\n"
+        "10,512\t1,0\tmotor\t2628\n"
+    )
+
+    assert _repair_tsv_decimal_separators(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "4.988" in content
+    assert "0.5" in content
+    assert "10.512" in content
+    assert "1.0" in content
+    # Non-numeric content preserved
+    assert "rest" in content
+    assert "motor" in content
+    # Integer values untouched
+    assert "1247" in content
+
+
+def test_repair_tsv_decimal_separators_electrodes(tmp_path):
+    """Test comma-to-dot conversion in electrodes.tsv."""
+    tsv_path = tmp_path / "sub-01_electrodes.tsv"
+    tsv_path.write_text("name\tx\ty\tz\nFp1\t5,004\t3,2\t1,001\n")
+
+    assert _repair_tsv_decimal_separators(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "5.004" in content
+    assert "3.2" in content
+    assert "1.001" in content
+
+
+def test_repair_tsv_decimal_separators_no_commas(tmp_path):
+    """Test no repair when file already uses dots."""
+    tsv_path = tmp_path / "sub-01_task-rest_events.tsv"
+    tsv_path.write_text("onset\tduration\n4.988\t0.5\n")
+
+    assert _repair_tsv_decimal_separators(tmp_path) is False
+
+
+def test_repair_tsv_decimal_separators_no_target_files(tmp_path):
+    """Test no repair when directory has no matching TSV files."""
+    (tmp_path / "participants.tsv").write_text("id\nsub-01\n")
+    assert _repair_tsv_decimal_separators(tmp_path) is False
+
+
+def test_repair_tsv_decimal_separators_nonexistent_dir(tmp_path):
+    """Test returns False for nonexistent directory."""
+    assert _repair_tsv_decimal_separators(tmp_path / "missing") is False
+
+
+def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
+    """Test that tab-separated values are not confused with decimal commas."""
+    tsv_path = tmp_path / "sub-01_task-rest_channels.tsv"
+    tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tµV\n")
+
+    assert _repair_tsv_decimal_separators(tmp_path) is False

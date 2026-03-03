@@ -29,6 +29,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _repair_snirf_bids_metadata,
+    _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
@@ -179,6 +180,7 @@ class EEGDashRaw(RawDataset):
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
+            _repair_tsv_decimal_separators(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":

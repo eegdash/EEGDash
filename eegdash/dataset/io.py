@@ -599,65 +599,135 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
         logger.warning(f"Error reading SNIRF for channel repair: {e}")
 
     # ==== Fix 2: Remove malformed scans.tsv entries ====
-    try:
-        scans_files = list(data_dir.parent.glob("*_scans.tsv"))
-        if not scans_files:
-            scans_files = list(data_dir.parent.glob("scans.tsv"))
-
-        for scans_tsv in scans_files:
-            try:
-                import pandas as pd
-
-                df = pd.read_csv(scans_tsv, sep="\t")
-
-                if "acq_time" in df.columns:
-                    # Check for malformed timestamps: NaN, empty, or very short strings
-                    malformed = df["acq_time"].apply(
-                        lambda x: (
-                            pd.isna(x)
-                            or (isinstance(x, str) and (len(x) < 10 or x.strip() == ""))
-                        )
-                    )
-
-                    if malformed.any():
-                        repairs_made = True
-
-                        # Convert column to string type, then replace malformed values
-                        df["acq_time"] = df["acq_time"].astype(str)
-                        df.loc[malformed, "acq_time"] = "n/a"
-                        df.to_csv(scans_tsv, sep="\t", index=False)
-                        logger.info(
-                            f"Fixed {malformed.sum()} malformed timestamps in {scans_tsv.name}"
-                        )
-
-            except Exception as e:
-                logger.warning(f"Could not repair scans.tsv: {e}")
-
-    except Exception as e:
-        logger.warning(f"Error fixing scans.tsv: {e}")
+    if _repair_scans_tsv_timestamps(data_dir):
+        repairs_made = True
 
     return repairs_made
 
 
-def _load_raw_brainvision_direct(vhdr_path: Path):
-    """Load a BrainVision file directly, bypassing MNE-BIDS.
+def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
+    """Fix invalid timestamps in ``*_scans.tsv`` files.
 
-    Used as a fallback when MNE-BIDS cannot handle non-numeric BIDS run
-    values (e.g. ``run-5H``).  The signal data, channel names, and sampling
-    frequency from the VHDR header are preserved; BIDS sidecar integration
-    (channels.tsv, eeg.json) is skipped.
+    ``mne_bids.read_raw_bids()`` parses ``acq_time`` values via
+    ``datetime.fromisoformat()``.  Some datasets contain malformed
+    timestamps (seconds >= 60, NaN values, truncated strings) that crash
+    the parser.  This function replaces any unparsable ``acq_time``
+    entries with ``"n/a"`` so that loading can proceed.
 
     Parameters
     ----------
-    vhdr_path : Path
-        Path to the ``.vhdr`` file.
+    data_dir : Path
+        The directory containing the data file (e.g. ``sub-01/eeg/``).
+        Scans files are searched in both ``data_dir`` *and* its parent
+        (session-level ``scans.tsv``).
+
+    Returns
+    -------
+    bool
+        True if any timestamps were repaired, False otherwise.
+
+    """
+    from datetime import datetime
+
+    search_dirs = [data_dir]
+    if data_dir.parent.exists():
+        search_dirs.append(data_dir.parent)
+
+    repaired_any = False
+    seen: set[Path] = set()
+
+    for d in search_dirs:
+        for scans_tsv in list(d.glob("*_scans.tsv")) + list(d.glob("scans.tsv")):
+            if scans_tsv in seen:
+                continue
+            seen.add(scans_tsv)
+
+            try:
+                lines = scans_tsv.read_text(encoding="utf-8").splitlines()
+            except Exception:
+                continue
+
+            if not lines:
+                continue
+
+            header = lines[0].split("\t")
+            try:
+                acq_idx = header.index("acq_time")
+            except ValueError:
+                continue
+
+            new_lines = [lines[0]]
+            changed = False
+            for line in lines[1:]:
+                cols = line.split("\t")
+                if acq_idx < len(cols):
+                    ts = cols[acq_idx].strip()
+                    if ts and ts.lower() != "n/a":
+                        try:
+                            datetime.fromisoformat(ts)
+                        except (ValueError, TypeError):
+                            cols[acq_idx] = "n/a"
+                            changed = True
+                new_lines.append("\t".join(cols))
+
+            if changed:
+                try:
+                    scans_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+                    logger.info(f"Repaired invalid timestamps in {scans_tsv.name}")
+                    repaired_any = True
+                except Exception as e:
+                    logger.warning(
+                        f"Failed to write repaired scans.tsv {scans_tsv.name}: {e}"
+                    )
+
+    return repaired_any
+
+
+def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
+    """Load a data file directly via MNE readers, bypassing MNE-BIDS.
+
+    Used as a fallback when MNE-BIDS entity validation rejects the
+    filename (e.g. hyphens in ``task-`` entities) but the underlying
+    data file is perfectly readable.
+
+    Parameters
+    ----------
+    filepath : Path
+        Path to the data file.
 
     Returns
     -------
     mne.io.BaseRaw
         The loaded Raw object.
 
+    Raises
+    ------
+    ValueError
+        If the file extension is not supported.
+
     """
     import mne
 
-    return mne.io.read_raw_brainvision(str(vhdr_path), preload=False, verbose="ERROR")
+    _EXT_TO_READER = {
+        ".vhdr": mne.io.read_raw_brainvision,
+        ".edf": mne.io.read_raw_edf,
+        ".bdf": mne.io.read_raw_bdf,
+        ".set": mne.io.read_raw_eeglab,
+        ".fif": mne.io.read_raw_fif,
+        ".cnt": mne.io.read_raw_cnt,
+    }
+
+    ext = filepath.suffix.lower()
+    reader = _EXT_TO_READER.get(ext)
+    if reader is None:
+        raise ValueError(
+            f"No direct reader for extension {ext!r}. "
+            f"Supported: {sorted(_EXT_TO_READER)}"
+        )
+
+    logger.warning(
+        "Falling back to direct %s reader for %s (bypassing MNE-BIDS).",
+        ext,
+        filepath.name,
+    )
+    return reader(str(filepath), preload=False, verbose="ERROR")

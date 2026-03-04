@@ -1,5 +1,5 @@
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -9,7 +9,6 @@ from eegdash.dataset.io import (
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
-    _load_raw_brainvision_direct,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
@@ -498,18 +497,3 @@ def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
     tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tµV\n")
 
     assert _repair_tsv_decimal_separators(tmp_path) is False
-
-
-# Tests for direct BrainVision loader
-
-
-def test_load_raw_brainvision_direct_calls_mne(tmp_path):
-    """Test _load_raw_brainvision_direct calls mne.io.read_raw_brainvision."""
-    vhdr_path = tmp_path / "sub-01_task-rest_run-5H_eeg.vhdr"
-
-    mock_raw = MagicMock()
-    with patch("mne.io.read_raw_brainvision", return_value=mock_raw) as mock_read:
-        result = _load_raw_brainvision_direct(vhdr_path)
-
-    mock_read.assert_called_once_with(str(vhdr_path), preload=False, verbose="ERROR")
-    assert result is mock_raw

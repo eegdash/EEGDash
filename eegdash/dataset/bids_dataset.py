@@ -265,12 +265,17 @@ class EEGBIDSDataset:
                     if run_match:
                         run_val = run_match.group(1)
 
+            # BIDSPath requires run to be numeric or None
+            run_for_bidspath = run_val
+            if run_val is not None and not str(run_val).isdigit():
+                run_for_bidspath = None
+
             bids_path = BIDSPath(
                 subject=entities.get("subject"),
                 session=entities.get("session"),
                 task=task_val,
                 acquisition=entities.get("acquisition"),
-                run=run_val,
+                run=run_for_bidspath,
                 processing=entities.get("processing"),
                 recording=entities.get("recording"),
                 space=entities.get("space"),

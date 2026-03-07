@@ -234,22 +234,16 @@ class EEGDashRaw(RawDataset):
             companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
 
             try:
-                exists = filesystem.exists(companion_uri)
-            except Exception:
-                exists = False
-
-            if not exists:
+                downloader.download_s3_file(
+                    companion_uri, local_path, filesystem=filesystem
+                )
+            except FileNotFoundError:
                 logger.warning(
                     "Companion file %s not found on S3 for %s",
                     ext,
                     self._raw_uri,
                 )
                 continue
-
-            logger.info("Downloading companion %s for %s", ext, self.filecache.name)
-            downloader.download_s3_file(
-                companion_uri, local_path, filesystem=filesystem
-            )
 
     def _ensure_ctf_directory_complete(self) -> None:
         """Verify a CTF ``.ds`` directory has the required internal files.

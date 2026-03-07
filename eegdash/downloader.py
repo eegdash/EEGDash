@@ -9,7 +9,6 @@ AWS S3 storage, with support for caching and progress tracking. It handles the c
 between the EEGDash metadata database and the actual EEG data stored in the cloud.
 """
 
-import logging
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -18,7 +17,7 @@ import s3fs
 from fsspec.callbacks import Callback, TqdmCallback
 from rich.console import Console
 
-logger = logging.getLogger("eegdash")
+from .logging import logger
 
 
 def get_s3_filesystem() -> s3fs.S3FileSystem:

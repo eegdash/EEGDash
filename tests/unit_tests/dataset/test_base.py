@@ -1042,30 +1042,28 @@ def test_download_companion_files_set_fdt(tmp_path):
     """Companion .fdt should be downloaded for .set files."""
     ds = _make_s3_raw(tmp_path, ".set")
     mock_fs = MagicMock()
-    mock_fs.exists.return_value = True
 
     with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
         ds._download_companion_files(mock_fs)
 
     expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.fdt"
     expected_local = ds.filecache.with_suffix(".fdt")
-    mock_fs.exists.assert_called_once_with(expected_uri)
     mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
 
 
-def test_download_companion_files_vhdr_eeg_vmrk(tmp_path):
-    """Both .eeg and .vmrk companions should be downloaded for .vhdr files."""
+def test_download_companion_files_vhdr_eeg_vmrk_dat(tmp_path):
+    """All .eeg, .vmrk, and .dat companions should be downloaded for .vhdr files."""
     ds = _make_s3_raw(tmp_path, ".vhdr")
     mock_fs = MagicMock()
-    mock_fs.exists.return_value = True
 
     with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
         ds._download_companion_files(mock_fs)
 
-    assert mock_dl.call_count == 2
+    assert mock_dl.call_count == 3
     uris = [call.args[0] for call in mock_dl.call_args_list]
     assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
     assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.dat" in uris
 
 
 def test_download_companion_files_skips_existing(tmp_path):
@@ -1081,7 +1079,6 @@ def test_download_companion_files_skips_existing(tmp_path):
     with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
         ds._download_companion_files(mock_fs)
 
-    mock_fs.exists.assert_not_called()
     mock_dl.assert_not_called()
 
 
@@ -1089,15 +1086,16 @@ def test_download_companion_files_warns_on_missing_s3(tmp_path):
     """A warning should be logged when companion is not on S3."""
     ds = _make_s3_raw(tmp_path, ".set")
     mock_fs = MagicMock()
-    mock_fs.exists.return_value = False
 
     with (
-        patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl,
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=FileNotFoundError,
+        ),
         patch("eegdash.dataset.base.logger") as mock_logger,
     ):
         ds._download_companion_files(mock_fs)
 
-    mock_dl.assert_not_called()
     mock_logger.warning.assert_called_once()
     assert ".fdt" in mock_logger.warning.call_args[0][1]
 
@@ -1110,5 +1108,4 @@ def test_download_companion_files_noop_for_unrelated_format(tmp_path):
     with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
         ds._download_companion_files(mock_fs)
 
-    mock_fs.exists.assert_not_called()
     mock_dl.assert_not_called()

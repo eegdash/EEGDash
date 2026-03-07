@@ -1149,16 +1149,6 @@ def extract_record(
         except ValueError:
             pass
 
-    if ext == ".vhdr":
-        # BrainVision .vhdr may also reference a .dat data file
-        dat_file = bids_file_path.with_suffix(".dat")
-        if dat_file.exists() or dat_file.is_symlink():
-            try:
-                dat_relpath = dat_file.relative_to(bids_dataset.bidsdir)
-                dep_keys.append(str(dat_relpath))
-            except ValueError:
-                pass
-
     # Validate companion files exist
     companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
     data_integrity_issues = []

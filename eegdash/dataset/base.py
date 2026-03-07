@@ -54,6 +54,10 @@ _UNRECOVERABLE_PATTERNS = [
     "iteration over a 0-d array",
     "cannot reshape array",
     "setting an array element with a sequence",
+    # Hardware / format-level issues that no metadata repair can fix
+    "incorrect number of samples",
+    "mandatory HPI information missing",
+    "FIFFV_COIL_NONE not supported",
 ]
 
 
@@ -339,10 +343,17 @@ class EEGDashRaw(RawDataset):
         try:
             return self._read_raw_bids()
         except RuntimeError as first_error:
-            if "coordsystem.json is REQUIRED" in str(first_error):
+            msg = str(first_error)
+            if "coordsystem.json is REQUIRED" in msg:
                 return self._retry_with_generated_coordsystem(first_error)
-            if "Illegal date" in str(first_error):
+            if "Illegal date" in msg:
                 return self._retry_with_ctf_date_patch(first_error)
+            if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                raise DataIntegrityError(
+                    message=f"Cannot read data file: {msg}",
+                    record=self.record,
+                    issues=[msg],
+                ) from first_error
             raise
         except (TypeError, ValueError, OSError) as first_error:
             msg = str(first_error)
@@ -357,6 +368,11 @@ class EEGDashRaw(RawDataset):
                     record=self.record,
                     issues=[msg],
                 ) from first_error
+
+            # Projector channels not found in data — bypass MNE-BIDS
+            # channel renaming and remove projectors from the raw object.
+            if "projector channels not found" in msg and self.filecache:
+                return self._retry_without_projectors(first_error)
 
             # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
             if "second must be" in msg or "does not match format" in msg:
@@ -411,6 +427,12 @@ class EEGDashRaw(RawDataset):
                 except Exception as fallback_error:
                     raise fallback_error from first_error
 
+            raise
+        except AssertionError as first_error:
+            # Annotation assertion errors (duration/crop mismatch) triggered
+            # by malformed *_events.tsv.  Hide the events file and retry.
+            if self.filecache and self.filecache.parent.exists():
+                return self._retry_without_events_tsv(first_error)
             raise
         except Exception as first_error:
             # For SNIRF files, try to fix and retry
@@ -468,6 +490,56 @@ class EEGDashRaw(RawDataset):
             return self._read_raw_bids()
         finally:
             ctf_info._convert_time = orig
+
+    def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
+        """Fall back to a direct reader and strip projectors.
+
+        MNE-BIDS channel renaming can cause a mismatch between projector
+        channel names and the renamed data channels, triggering
+        ``ValueError: projector channels not found in data``.  Loading
+        via the format-specific reader bypasses the rename and lets us
+        delete the offending projectors safely.
+        """
+        logger.warning(
+            "Projector channel mismatch — retrying with direct reader "
+            "and removing projectors."
+        )
+        try:
+            raw = _load_raw_direct(self.filecache)
+        except Exception as fallback_error:
+            raise fallback_error from first_error
+        if raw.info.get("projs"):
+            raw.del_proj()
+        return raw
+
+    def _retry_without_events_tsv(self, first_error: Exception) -> BaseRaw:
+        """Temporarily hide ``*_events.tsv`` and retry loading.
+
+        Some datasets have malformed events files that cause
+        ``AssertionError`` inside MNE-BIDS annotation handling.  The
+        underlying data is fine — only the event markers are broken.
+        """
+        data_dir = self.filecache.parent
+        events_files = list(data_dir.glob("*_events.tsv"))
+        if not events_files:
+            raise first_error
+
+        hidden = []
+        try:
+            for ef in events_files:
+                dest = ef.with_suffix(".tsv._hidden")
+                ef.rename(dest)
+                hidden.append((dest, ef))
+            logger.warning(
+                "Hiding %d events.tsv file(s) and retrying load.", len(hidden)
+            )
+            return self._read_raw_bids()
+        except Exception as retry_error:
+            raise retry_error from first_error
+        finally:
+            for src, dst in hidden:
+                if src.exists():
+                    src.rename(dst)
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

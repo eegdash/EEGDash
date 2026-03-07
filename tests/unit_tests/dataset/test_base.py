@@ -1004,3 +1004,118 @@ def test_load_raw_direct_calls_correct_reader(tmp_path):
 
     mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+# ── Projector channels not found → direct reader + del_proj ──
+
+
+def test_load_raw_projector_channels_not_found_retries(tmp_path):
+    """ValueError('projector channels not found') falls back to direct reader and del_proj."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds006545", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    mock_raw = MagicMock()
+    mock_raw.info = {"projs": [MagicMock()]}
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("projector channels not found in data"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    mock_raw.del_proj.assert_called_once()
+    assert result is mock_raw
+
+
+# ── AssertionError → hide events.tsv and retry ──
+
+
+def test_load_raw_assertion_error_retries_without_events(tmp_path):
+    """AssertionError hides events.tsv, retries, and restores the file."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    # Create an events.tsv in the data directory
+    events_tsv = ds.filecache.parent / "sub-01_task-rest_events.tsv"
+    events_tsv.write_text("onset\tduration\n1.0\t0.5\n")
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=[AssertionError("duration mismatch"), mock_raw],
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+    # events.tsv should be restored
+    assert events_tsv.exists()
+    assert not events_tsv.with_suffix(".tsv._hidden").exists()
+
+
+def test_load_raw_assertion_error_no_events_raises(tmp_path):
+    """AssertionError with no events.tsv re-raises."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+    # No events.tsv created
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AssertionError("duration mismatch"),
+    ):
+        with pytest.raises(AssertionError, match="duration mismatch"):
+            ds._load_raw()
+
+
+def test_load_raw_assertion_error_restores_events_on_failure(tmp_path):
+    """Both attempts fail → events.tsv is still restored."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    events_tsv = ds.filecache.parent / "sub-01_task-rest_events.tsv"
+    events_tsv.write_text("onset\tduration\n1.0\t0.5\n")
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AssertionError("duration mismatch"),
+    ):
+        with pytest.raises(AssertionError):
+            ds._load_raw()
+
+    # events.tsv must be restored even when retry fails
+    assert events_tsv.exists()
+    assert not events_tsv.with_suffix(".tsv._hidden").exists()
+
+
+# ── RuntimeError unrecoverable patterns → DataIntegrityError ──
+
+
+@pytest.mark.parametrize(
+    "error_msg",
+    [
+        "incorrect number of samples in the data",
+        "mandatory HPI information missing from file",
+        "FIFFV_COIL_NONE not supported for head-based coordinate frame",
+    ],
+    ids=["incorrect_samples", "mandatory_hpi", "coil_none"],
+)
+def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
+    tmp_path, error_msg
+):
+    """RuntimeError with unrecoverable pattern becomes DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_corrupt", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    with patch("mne_bids.read_raw_bids", side_effect=RuntimeError(error_msg)):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()

@@ -54,6 +54,9 @@ _UNRECOVERABLE_PATTERNS = [
     "iteration over a 0-d array",
     "cannot reshape array",
     "setting an array element with a sequence",
+    # EEGLAB reader errors from non-standard .set structures
+    "allowed values",
+    "has no attribute",
 ]
 
 
@@ -344,13 +347,13 @@ class EEGDashRaw(RawDataset):
             if "Illegal date" in str(first_error):
                 return self._retry_with_ctf_date_patch(first_error)
             raise
-        except (TypeError, ValueError, OSError) as first_error:
+        except (TypeError, ValueError, OSError, AttributeError) as first_error:
             msg = str(first_error)
 
             # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
             # or any TypeError from array/parsing failures in scipy/numpy)
             if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
-                first_error, TypeError
+                first_error, (TypeError, AttributeError)
             ):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",

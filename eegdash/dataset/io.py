@@ -10,9 +10,22 @@ import os
 import re
 from difflib import SequenceMatcher
 from pathlib import Path
+from time import strptime
 from typing import Any
 
 from ..logging import logger
+
+
+def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
+    """Try numeric dash date formats and delegate to orig (MNE's _convert_time)."""
+    for fmt in ("%d-%m-%Y", "%m-%d-%Y", "%Y-%m-%d"):
+        try:
+            date = strptime(date_str.strip(), fmt)
+            normalized = f"{date.tm_mday:02d}/{date.tm_mon:02d}/{date.tm_year}"
+            return orig(normalized, time_str)
+        except ValueError:
+            continue
+    return orig(date_str, time_str)
 
 
 def _find_best_matching_file(

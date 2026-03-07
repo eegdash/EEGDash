@@ -337,9 +337,8 @@ class EEGDashRaw(RawDataset):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
-        - **Empty/malformed channels.tsv** (KeyError: 'name'): repairs the
-          channels.tsv in-place (adds missing header or renames first column)
-          and retries.
+        - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
+          files or renames the first column to 'name' and retries.
         """
         try:
             return self._read_raw_bids()

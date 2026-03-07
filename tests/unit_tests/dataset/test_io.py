@@ -625,17 +625,17 @@ def test_repair_events_tsv_nonexistent_dir(tmp_path):
 
 
 def test_repair_channels_tsv_empty_file(tmp_path):
-    """Empty channels.tsv is overwritten with 'name' header."""
+    """Empty channels.tsv is removed so MNE-BIDS skips gracefully."""
     (tmp_path / "sub-01_channels.tsv").write_text("")
     assert _repair_channels_tsv(tmp_path) is True
-    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+    assert not (tmp_path / "sub-01_channels.tsv").exists()
 
 
 def test_repair_channels_tsv_whitespace_only(tmp_path):
-    """Whitespace-only channels.tsv is overwritten with 'name' header."""
+    """Whitespace-only channels.tsv is removed."""
     (tmp_path / "sub-01_channels.tsv").write_text("   \n\n  \t  \n")
     assert _repair_channels_tsv(tmp_path) is True
-    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+    assert not (tmp_path / "sub-01_channels.tsv").exists()
 
 
 def test_repair_channels_tsv_missing_name_column(tmp_path):
@@ -683,10 +683,10 @@ def test_repair_channels_tsv_bom_valid(tmp_path):
 
 
 def test_repair_channels_tsv_bom_empty(tmp_path):
-    """BOM-only file (no real content) is overwritten with 'name' header."""
+    """BOM-only file (no real content) is removed."""
     (tmp_path / "sub-01_channels.tsv").write_bytes(b"\xef\xbb\xbf")
     assert _repair_channels_tsv(tmp_path) is True
-    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+    assert not (tmp_path / "sub-01_channels.tsv").exists()
 
 
 def test_repair_channels_tsv_multiple_files(tmp_path):
@@ -696,4 +696,4 @@ def test_repair_channels_tsv_multiple_files(tmp_path):
     (tmp_path / "sub-02_channels.tsv").write_text("")
     assert _repair_channels_tsv(tmp_path) is True
     assert (tmp_path / "sub-01_channels.tsv").read_text() == good
-    assert (tmp_path / "sub-02_channels.tsv").read_text() == "name\n"
+    assert not (tmp_path / "sub-02_channels.tsv").exists()

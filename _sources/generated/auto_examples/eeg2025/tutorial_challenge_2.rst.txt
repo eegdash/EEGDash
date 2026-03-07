@@ -679,71 +679,71 @@ Filter out recordings that are too short or missing p_factor
     Params size (MB): 0.22
     Estimated Total Size (MB): 16.97
     ================================================================================================================================================================
-    Epoch 0 - step 0, loss: 0.6644558310508728
-    Epoch 0 - step 1, loss: 0.6544022560119629
-    Epoch 0 - step 2, loss: 0.7507510185241699
-    Epoch 0 - step 3, loss: 0.6601788997650146
-    Epoch 0 - step 4, loss: 0.6725591421127319
-    Epoch 0 - step 5, loss: 0.6057100296020508
-    Epoch 0 - step 6, loss: 0.702682614326477
-    Epoch 0 - step 7, loss: 0.69672691822052
-    Epoch 0 - step 8, loss: 0.6690298318862915
-    Epoch 0 - step 9, loss: 0.6559864282608032
-    Epoch 0 - step 10, loss: 0.5961885452270508
-    Epoch 0 - step 11, loss: 0.6025055050849915
-    Epoch 0 - step 12, loss: 0.5965379476547241
-    Epoch 0 - step 13, loss: 0.6909326314926147
-    Epoch 0 - step 14, loss: 0.6221745610237122
-    Epoch 0 - step 15, loss: 0.6244534254074097
-    Epoch 0 - step 16, loss: 0.5876757502555847
-    Epoch 0 - step 17, loss: 0.6167663335800171
-    Epoch 0 - step 18, loss: 0.5961083769798279
-    Epoch 0 - step 19, loss: 0.6294801235198975
-    Epoch 0 - step 20, loss: 0.6989728212356567
-    Epoch 0 - step 21, loss: 0.7120134830474854
-    Epoch 0 - step 22, loss: 0.6515358090400696
-    Epoch 0 - step 23, loss: 0.6852877736091614
-    Epoch 0 - step 24, loss: 0.5945227146148682
-    Epoch 0 - step 25, loss: 0.5772635340690613
-    Epoch 0 - step 26, loss: 0.64714515209198
-    Epoch 0 - step 27, loss: 0.7122007012367249
-    Epoch 0 - step 28, loss: 0.6645172238349915
-    Epoch 0 - step 29, loss: 0.6839629411697388
-    Epoch 0 - step 30, loss: 0.6121034622192383
-    Epoch 0 - step 31, loss: 0.7011086940765381
-    Epoch 0 - step 32, loss: 0.7426900267601013
-    Epoch 0 - step 33, loss: 0.6075350046157837
-    Epoch 0 - step 34, loss: 0.6090067625045776
-    Epoch 0 - step 35, loss: 0.6708471775054932
-    Epoch 0 - step 36, loss: 0.6353563070297241
-    Epoch 0 - step 37, loss: 0.676171600818634
-    Epoch 0 - step 38, loss: 0.6180329322814941
-    Epoch 0 - step 39, loss: 0.6524000763893127
-    Epoch 0 - step 40, loss: 0.6990872621536255
-    Epoch 0 - step 41, loss: 0.6467276811599731
-    Epoch 0 - step 42, loss: 0.6199174523353577
-    Epoch 0 - step 43, loss: 0.6977792382240295
-    Epoch 0 - step 44, loss: 0.5874588489532471
-    Epoch 0 - step 45, loss: 0.6529496312141418
-    Epoch 0 - step 46, loss: 0.6409186124801636
-    Epoch 0 - step 47, loss: 0.6263998746871948
-    Epoch 0 - step 48, loss: 0.6226476430892944
-    Epoch 0 - step 49, loss: 0.641219973564148
-    Epoch 0 - step 50, loss: 0.6932371854782104
-    Epoch 0 - step 51, loss: 0.6481631994247437
-    Epoch 0 - step 52, loss: 0.6132934093475342
-    Epoch 0 - step 53, loss: 0.6493587493896484
-    Epoch 0 - step 54, loss: 0.6320989727973938
-    Epoch 0 - step 55, loss: 0.6324126124382019
-    Epoch 0 - step 56, loss: 0.6163764595985413
-    Epoch 0 - step 57, loss: 0.6721038818359375
-    Epoch 0 - step 58, loss: 0.6379768252372742
-    Epoch 0 - step 59, loss: 0.6260547637939453
-    Epoch 0 - step 60, loss: 0.662911593914032
-    Epoch 0 - step 61, loss: 0.6613896489143372
-    Epoch 0 - step 62, loss: 0.648414671421051
-    Epoch 0 - step 63, loss: 0.6726469993591309
-    Epoch 0 - step 64, loss: 0.7961726188659668
+    Epoch 0 - step 0, loss: 0.6568021178245544
+    Epoch 0 - step 1, loss: 0.6629083156585693
+    Epoch 0 - step 2, loss: 0.7313889265060425
+    Epoch 0 - step 3, loss: 0.6835837364196777
+    Epoch 0 - step 4, loss: 0.6748065948486328
+    Epoch 0 - step 5, loss: 0.6347012519836426
+    Epoch 0 - step 6, loss: 0.7174149751663208
+    Epoch 0 - step 7, loss: 0.7030618786811829
+    Epoch 0 - step 8, loss: 0.6789870262145996
+    Epoch 0 - step 9, loss: 0.6576055884361267
+    Epoch 0 - step 10, loss: 0.6422647833824158
+    Epoch 0 - step 11, loss: 0.6196034550666809
+    Epoch 0 - step 12, loss: 0.5799425840377808
+    Epoch 0 - step 13, loss: 0.7133116126060486
+    Epoch 0 - step 14, loss: 0.6277389526367188
+    Epoch 0 - step 15, loss: 0.6455687284469604
+    Epoch 0 - step 16, loss: 0.604901909828186
+    Epoch 0 - step 17, loss: 0.6186438798904419
+    Epoch 0 - step 18, loss: 0.6001079082489014
+    Epoch 0 - step 19, loss: 0.6678145527839661
+    Epoch 0 - step 20, loss: 0.7172729969024658
+    Epoch 0 - step 21, loss: 0.7034422755241394
+    Epoch 0 - step 22, loss: 0.6253561973571777
+    Epoch 0 - step 23, loss: 0.6983994245529175
+    Epoch 0 - step 24, loss: 0.6233708262443542
+    Epoch 0 - step 25, loss: 0.5935716032981873
+    Epoch 0 - step 26, loss: 0.6555293798446655
+    Epoch 0 - step 27, loss: 0.7232413291931152
+    Epoch 0 - step 28, loss: 0.6738934516906738
+    Epoch 0 - step 29, loss: 0.7002692818641663
+    Epoch 0 - step 30, loss: 0.599602997303009
+    Epoch 0 - step 31, loss: 0.6974496245384216
+    Epoch 0 - step 32, loss: 0.7348558902740479
+    Epoch 0 - step 33, loss: 0.6455426216125488
+    Epoch 0 - step 34, loss: 0.6371573209762573
+    Epoch 0 - step 35, loss: 0.6867872476577759
+    Epoch 0 - step 36, loss: 0.6409160494804382
+    Epoch 0 - step 37, loss: 0.7075710296630859
+    Epoch 0 - step 38, loss: 0.6082785725593567
+    Epoch 0 - step 39, loss: 0.6335732936859131
+    Epoch 0 - step 40, loss: 0.6908332705497742
+    Epoch 0 - step 41, loss: 0.6714541912078857
+    Epoch 0 - step 42, loss: 0.6209651231765747
+    Epoch 0 - step 43, loss: 0.721009373664856
+    Epoch 0 - step 44, loss: 0.6140526533126831
+    Epoch 0 - step 45, loss: 0.6784712076187134
+    Epoch 0 - step 46, loss: 0.6261102557182312
+    Epoch 0 - step 47, loss: 0.6496260166168213
+    Epoch 0 - step 48, loss: 0.6508193612098694
+    Epoch 0 - step 49, loss: 0.6595833897590637
+    Epoch 0 - step 50, loss: 0.6879158616065979
+    Epoch 0 - step 51, loss: 0.6694214344024658
+    Epoch 0 - step 52, loss: 0.625523567199707
+    Epoch 0 - step 53, loss: 0.6599848866462708
+    Epoch 0 - step 54, loss: 0.6278465390205383
+    Epoch 0 - step 55, loss: 0.6393705606460571
+    Epoch 0 - step 56, loss: 0.6475146412849426
+    Epoch 0 - step 57, loss: 0.6656284928321838
+    Epoch 0 - step 58, loss: 0.6394800543785095
+    Epoch 0 - step 59, loss: 0.6673003435134888
+    Epoch 0 - step 60, loss: 0.6586776375770569
+    Epoch 0 - step 61, loss: 0.6452045440673828
+    Epoch 0 - step 62, loss: 0.6556781530380249
+    Epoch 0 - step 63, loss: 0.6723380088806152
+    Epoch 0 - step 64, loss: 0.7424324154853821
     Model saved as 'weights_challenge_2.pt'
 
 
@@ -752,7 +752,7 @@ Filter out recordings that are too short or missing p_factor
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 46.833 seconds)
+   **Total running time of the script:** (8 minutes 48.592 seconds)
 
 **Estimated memory usage:**  1743 MB
 

@@ -24,6 +24,7 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
+from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
     _convert_time_with_numeric_dash,
@@ -195,12 +196,57 @@ class EEGDashRaw(RawDataset):
                 self._raw_uri, self.filecache, filesystem=filesystem
             )
 
+            # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
+            # that may not have been included in dep_keys.
+            self._download_companion_files(filesystem)
+
         # CTF MEG .ds directories require internal files (.meg4, .res4, etc.)
         if self.filecache and self.filecache.suffix == ".ds":
             self._ensure_ctf_directory_complete()
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    def _download_companion_files(self, filesystem) -> None:
+        """Download companion files for formats that require them.
+
+        Some EEG file formats store data across multiple files (e.g.,
+        EEGLAB ``.set`` + ``.fdt``, BrainVision ``.vhdr`` + ``.eeg`` +
+        ``.vmrk``).  When the ingestion pipeline does not list these in
+        ``dep_keys``, they are never fetched.  This method inspects
+        ``_COMPANION_FILES`` and attempts to download any missing
+        companions from S3.
+        """
+        suffix = self.filecache.suffix.lower()
+        companions = _COMPANION_FILES.get(suffix)
+        if not companions:
+            return
+
+        for ext in companions:
+            local_path = self.filecache.with_suffix(ext)
+            if local_path.exists():
+                continue
+
+            # Derive S3 URI by replacing the primary file's extension
+            companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
+
+            try:
+                exists = filesystem.exists(companion_uri)
+            except Exception:
+                exists = False
+
+            if not exists:
+                logger.warning(
+                    "Companion file %s not found on S3 for %s",
+                    ext,
+                    self._raw_uri,
+                )
+                continue
+
+            logger.info("Downloading companion %s for %s", ext, self.filecache.name)
+            downloader.download_s3_file(
+                companion_uri, local_path, filesystem=filesystem
+            )
 
     def _ensure_ctf_directory_complete(self) -> None:
         """Verify a CTF ``.ds`` directory has the required internal files.

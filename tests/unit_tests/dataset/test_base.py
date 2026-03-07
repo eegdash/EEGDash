@@ -1004,3 +1004,111 @@ def test_load_raw_direct_calls_correct_reader(tmp_path):
 
     mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+# ── _download_companion_files tests ──
+
+
+def _make_s3_raw(tmp_path, ext, record_overrides=None):
+    """Helper to create an EEGDashRaw with S3 backend for companion tests."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_test",
+        "bids_relpath": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org/ds_test",
+            "raw_key": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        },
+        "subject": "01",
+        "session": None,
+        "run": None,
+        "task": "rest",
+        "modality": "eeg",
+        "suffix": "eeg",
+        "datatype": "eeg",
+        "extension": ext,
+        "entities_mne": {"subject": "01", "task": "rest"},
+        "entities": {"subject": "01", "task": "rest"},
+    }
+    if record_overrides:
+        record.update(record_overrides)
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
+def test_download_companion_files_set_fdt(tmp_path):
+    """Companion .fdt should be downloaded for .set files."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+    mock_fs.exists.return_value = True
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.fdt"
+    expected_local = ds.filecache.with_suffix(".fdt")
+    mock_fs.exists.assert_called_once_with(expected_uri)
+    mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
+
+
+def test_download_companion_files_vhdr_eeg_vmrk(tmp_path):
+    """Both .eeg and .vmrk companions should be downloaded for .vhdr files."""
+    ds = _make_s3_raw(tmp_path, ".vhdr")
+    mock_fs = MagicMock()
+    mock_fs.exists.return_value = True
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    assert mock_dl.call_count == 2
+    uris = [call.args[0] for call in mock_dl.call_args_list]
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
+
+
+def test_download_companion_files_skips_existing(tmp_path):
+    """Already-downloaded companion files should be skipped."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    # Create the .fdt locally so it's already present
+    fdt_path = ds.filecache.with_suffix(".fdt")
+    fdt_path.parent.mkdir(parents=True, exist_ok=True)
+    fdt_path.touch()
+
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_fs.exists.assert_not_called()
+    mock_dl.assert_not_called()
+
+
+def test_download_companion_files_warns_on_missing_s3(tmp_path):
+    """A warning should be logged when companion is not on S3."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+    mock_fs.exists.return_value = False
+
+    with (
+        patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl,
+        patch("eegdash.dataset.base.logger") as mock_logger,
+    ):
+        ds._download_companion_files(mock_fs)
+
+    mock_dl.assert_not_called()
+    mock_logger.warning.assert_called_once()
+    assert ".fdt" in mock_logger.warning.call_args[0][1]
+
+
+def test_download_companion_files_noop_for_unrelated_format(tmp_path):
+    """Formats without companions (e.g. .edf) should be a no-op."""
+    ds = _make_s3_raw(tmp_path, ".edf")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_fs.exists.assert_not_called()
+    mock_dl.assert_not_called()

@@ -46,7 +46,7 @@ from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
-from eegdash.dataset.bids_dataset import EEGBIDSDataset
+from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
 from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import Storage, create_dataset, create_record
 
@@ -1137,29 +1137,27 @@ def extract_record(
                         pass
 
     # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
+    # Always add BIDS-standard companions to dep_keys so the download
+    # pipeline fetches them even when the local git-annex clone is incomplete.
     ext = bids_file_path.suffix.lower()
-    if ext == ".set":
-        # EEGLAB .set files may have a companion .fdt file with the same stem
-        fdt_file = bids_file_path.with_suffix(".fdt")
-        if fdt_file.exists() or fdt_file.is_symlink():
+    companion_exts = _COMPANION_FILES.get(ext, [])
+    for comp_ext in companion_exts:
+        comp_file = bids_file_path.with_suffix(comp_ext)
+        try:
+            comp_relpath = comp_file.relative_to(bids_dataset.bidsdir)
+            dep_keys.append(str(comp_relpath))
+        except ValueError:
+            pass
+
+    if ext == ".vhdr":
+        # BrainVision .vhdr may also reference a .dat data file
+        dat_file = bids_file_path.with_suffix(".dat")
+        if dat_file.exists() or dat_file.is_symlink():
             try:
-                fdt_relpath = fdt_file.relative_to(bids_dataset.bidsdir)
-                dep_keys.append(str(fdt_relpath))
+                dat_relpath = dat_file.relative_to(bids_dataset.bidsdir)
+                dep_keys.append(str(dat_relpath))
             except ValueError:
                 pass
-    elif ext == ".vhdr":
-        # BrainVision .vhdr files have .vmrk (markers) and .eeg (data) companions
-        # First try standard BIDS names (matching the .vhdr stem)
-        found_bv_exts = set()
-        for bv_ext in [".vmrk", ".eeg", ".dat"]:
-            bv_file = bids_file_path.with_suffix(bv_ext)
-            if bv_file.exists() or bv_file.is_symlink():
-                try:
-                    bv_relpath = bv_file.relative_to(bids_dataset.bidsdir)
-                    dep_keys.append(str(bv_relpath))
-                    found_bv_exts.add(bv_ext)
-                except ValueError:
-                    pass
 
     # Validate companion files exist
     companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)

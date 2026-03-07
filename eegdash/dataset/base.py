@@ -187,10 +187,13 @@ class EEGDashRaw(RawDataset):
             filesystem = downloader.get_s3_filesystem()
 
             # Download deps first (sidecars, companions), then raw.
+            # skip_missing=True because dep_keys may include companion files
+            # that don't exist on S3 (e.g., .fdt listed but never uploaded).
             downloader.download_files(
                 list(zip(self._dep_uris, self._dep_paths, strict=False)),
                 filesystem=filesystem,
                 skip_existing=True,
+                skip_missing=True,
             )
             downloader.download_s3_file(
                 self._raw_uri, self.filecache, filesystem=filesystem

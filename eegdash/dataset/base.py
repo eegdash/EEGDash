@@ -363,7 +363,7 @@ class EEGDashRaw(RawDataset):
                 ) from first_error
 
             # Malformed channels.tsv (empty or missing 'name' column)
-            if isinstance(first_error, KeyError) and "name" in str(first_error):
+            if isinstance(first_error, KeyError) and first_error.args == ("name",):
                 if self.filecache and _repair_channels_tsv(self.filecache.parent):
                     logger.info("Repaired malformed channels.tsv, retrying load...")
                     try:

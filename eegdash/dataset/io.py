@@ -797,8 +797,8 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
 
     for tsv_path in tsv_files:
         try:
-            raw = tsv_path.read_text(encoding="utf-8-sig")
-            stripped = raw.strip()
+            content = tsv_path.read_text(encoding="utf-8-sig")
+            stripped = content.strip()
 
             if not stripped:
                 # Empty or whitespace-only — remove so MNE-BIDS skips
@@ -808,16 +808,15 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
                 repaired_any = True
                 continue
 
-            header_line = stripped.split("\n", 1)[0]
-            columns = header_line.split("\t")
+            parts = stripped.split("\n", 1)
+            columns = parts[0].split("\t")
 
-            if "name" not in [c.strip().lower() for c in columns]:
+            if "name" not in [c.strip() for c in columns]:
                 # First column must be 'name' per BIDS spec — rename it
                 columns[0] = "name"
                 new_header = "\t".join(columns)
-                rest = stripped.split("\n", 1)
-                if len(rest) > 1:
-                    new_content = new_header + "\n" + rest[1] + "\n"
+                if len(parts) > 1:
+                    new_content = new_header + "\n" + parts[1] + "\n"
                 else:
                     new_content = new_header + "\n"
                 tsv_path.write_text(new_content, encoding="utf-8")

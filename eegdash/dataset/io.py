@@ -13,7 +13,10 @@ from pathlib import Path
 from time import strptime
 from typing import Any
 
+import mne
 import numpy as np
+from mne.io.eeglab import _eeglab as mne_eeglab
+from scipy.io import loadmat, savemat
 
 from ..logging import logger
 
@@ -1012,8 +1015,6 @@ def _eeglab_get_first_eeg(mat_root: dict) -> dict | None:
 def _eeglab_load_first_eeg(set_path: Path) -> dict | None:
     """Load a .set file and return the first EEG struct as a dict, or None."""
     try:
-        from scipy.io import loadmat
-
         mat = loadmat(
             str(set_path),
             squeeze_me=True,
@@ -1026,8 +1027,6 @@ def _eeglab_load_first_eeg(set_path: Path) -> dict | None:
     except Exception as e:
         logger.debug("Could not read .set with scipy: %s", e)
     try:
-        from mne.io.eeglab import _eeglab as mne_eeglab
-
         mat = mne_eeglab._readmat(str(set_path), preload=True)
         eeg = _eeglab_get_first_eeg(mat)
         return eeg if isinstance(eeg, dict) else None
@@ -1125,8 +1124,6 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
     ) / srate  # EEGLAB xmax is last time point in sec
 
     try:
-        from scipy.io import savemat
-
         savemat(str(set_path), repaired, do_compression=False)
         logger.info(
             "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
@@ -1158,8 +1155,6 @@ def _load_raw_eeglab_alleeg(filepath: Path):
         Raw instance (preload=True).
 
     """
-    import mne
-
     eeg = _eeglab_load_first_eeg(filepath)
     if eeg is None:
         raise ValueError("No EEG or ALLEEG found in .set file")

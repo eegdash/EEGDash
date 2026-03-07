@@ -265,19 +265,12 @@ class EEGBIDSDataset:
                     if run_match:
                         run_val = run_match.group(1)
 
-            # BIDSPath enforces "run" to be an index; accept numeric strings,
-            # but drop non-numeric runs (e.g., "5F") while preserving them
-            # in the entity cache.
-            run_for_bidspath = None
-            if run_val is not None and str(run_val).isdigit():
-                run_for_bidspath = run_val
-
             bids_path = BIDSPath(
                 subject=entities.get("subject"),
                 session=entities.get("session"),
                 task=task_val,
                 acquisition=entities.get("acquisition"),
-                run=run_for_bidspath,
+                run=run_val,
                 processing=entities.get("processing"),
                 recording=entities.get("recording"),
                 space=entities.get("space"),
@@ -286,6 +279,7 @@ class EEGBIDSDataset:
                 datatype=modality,
                 extension=filepath.suffix,
                 root=self.bidsdir,
+                check=False,
             )
             self._bids_path_cache[data_filepath] = bids_path
             self._bids_entity_cache[data_filepath] = {

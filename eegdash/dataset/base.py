@@ -62,6 +62,9 @@ _UNRECOVERABLE_PATTERNS = [
     "setting an array element with a sequence",
     # EEGLAB reader: invalid file extension check
     "EEGLAB file extension",
+    # EEGLAB reader errors from non-standard .set structures
+    "allowed values",
+    "has no attribute",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
     # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and

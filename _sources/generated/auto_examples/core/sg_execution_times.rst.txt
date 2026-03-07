@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**02:54.159** total execution time for 4 files **from generated/auto_examples/core**:
+**02:20.072** total execution time for 4 files **from generated/auto_examples/core**:
 
 .. container::
 
@@ -33,14 +33,14 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_minimal.py` (``tutorial_minimal.py``)
-     - 02:40.001
-     - 5470.4
+     - 02:05.840
+     - 5463.4
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``tutorial_eoec.py``)
-     - 00:07.694
-     - 1367.8
+     - 00:07.682
+     - 1393.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``tutorial_feature_extractor_open_close_eye.py``)
-     - 00:06.465
-     - 1287.4
+     - 00:06.550
+     - 1266.9
    * - :ref:`sphx_glr_generated_auto_examples_core_p300_transfer_learning.py` (``p300_transfer_learning.py``)
      - 00:00.000
      - 0.0

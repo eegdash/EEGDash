@@ -1,15 +1,22 @@
 import json
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from eegdash.dataset.io import (
     _convert_time_with_numeric_dash,
+    _eeglab_ch_names_from_eeg,
+    _eeglab_fdt_path,
+    _eeglab_get_first_eeg,
+    _eeglab_load_first_eeg,
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _load_raw_eeglab_alleeg,
+    _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
@@ -618,3 +625,252 @@ def test_repair_events_tsv_no_nan(tmp_path):
 def test_repair_events_tsv_nonexistent_dir(tmp_path):
     """Returns False for nonexistent directory."""
     assert _repair_events_tsv_nan_samples(tmp_path / "missing") is False
+
+
+# ── EEGLAB helpers and _repair_eeglab_fdt ──
+
+
+def test_eeglab_get_first_eeg_flat():
+    """Flat dict with nbchan/pnts returns the same dict."""
+    mat = {"nbchan": 2, "pnts": 100, "srate": 250.0}
+    out = _eeglab_get_first_eeg(mat)
+    assert out is mat
+
+
+def test_eeglab_get_first_eeg_eeg_key():
+    """Dict with EEG key returns nested struct as dict."""
+    inner = {"nbchan": 2, "pnts": 50}
+    mat = {"EEG": inner}
+    out = _eeglab_get_first_eeg(mat)
+    assert out == inner
+
+
+def test_eeglab_get_first_eeg_no_eeg_returns_none():
+    """Dict without EEG/ALLEEG/nbchan returns None."""
+    assert _eeglab_get_first_eeg({}) is None
+    assert _eeglab_get_first_eeg({"other": 1}) is None
+
+
+def test_eeglab_fdt_path_external(tmp_path):
+    """External data string resolves to .fdt path."""
+    set_path = tmp_path / "sub-01_task-rest_eeg.set"
+    (tmp_path / "sub-01_task-rest_eeg.fdt").touch()
+    eeg = {"data": "sub-01_task-rest_eeg.fdt"}
+    out = _eeglab_fdt_path(set_path, eeg)
+    assert out is not None
+    assert out.name == "sub-01_task-rest_eeg.fdt"
+
+
+def test_eeglab_fdt_path_fallback_suffix(tmp_path):
+    """When data ref file missing, fallback to .set.with_suffix(.fdt)."""
+    set_path = tmp_path / "file.set"
+    fdt_path = tmp_path / "file.fdt"
+    fdt_path.touch()
+    eeg = {"data": "missing.fdt"}
+    out = _eeglab_fdt_path(set_path, eeg)
+    assert out == fdt_path
+
+
+def test_eeglab_fdt_path_inline_returns_none():
+    """Inline data (non-string) returns None."""
+    set_path = Path("/tmp/file.set")
+    eeg = {"data": [1.0, 2.0]}
+    assert _eeglab_fdt_path(set_path, eeg) is None
+
+
+def test_eeglab_ch_names_from_eeg_fallback():
+    """No chanlocs yields CH1, CH2, ..."""
+    eeg = {}
+    assert _eeglab_ch_names_from_eeg(eeg, 3) == ["CH1", "CH2", "CH3"]
+
+
+def test_eeglab_ch_names_from_eeg_labels():
+    """Chanlocs with labels yield those names."""
+    eeg = {"chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}]}
+    assert _eeglab_ch_names_from_eeg(eeg, 2) == ["Fp1", "Fp2"]
+
+
+def test_repair_eeglab_fdt_nonexistent(tmp_path):
+    """Nonexistent path or non-.set returns False."""
+    assert _repair_eeglab_fdt(tmp_path / "missing.set") is False
+    (tmp_path / "file.txt").touch()
+    assert _repair_eeglab_fdt(tmp_path / "file.txt") is False
+
+
+def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
+    """Truncated .fdt: repair updates .set header (pnts) and returns True."""
+    pytest.importorskip("scipy")
+    from scipy.io import loadmat, savemat
+
+    set_path = tmp_path / "test.set"
+    fdt_path = tmp_path / "test.fdt"
+    nbchan, pnts_orig = 2, 100
+    # .fdt smaller than header: only 8 bytes (1 sample per channel)
+    fdt_path.write_bytes(b"\x00" * 8)
+    eeg = {
+        "nbchan": nbchan,
+        "pnts": pnts_orig,
+        "srate": 250.0,
+        "xmax": (pnts_orig - 1) / 250.0,
+        "data": "test.fdt",
+    }
+    savemat(str(set_path), eeg, do_compression=False)
+
+    result = _repair_eeglab_fdt(set_path)
+    assert result is True
+
+    mat = loadmat(
+        str(set_path), squeeze_me=True, mat_dtype=False, struct_as_record=False
+    )
+    eeg_after = _eeglab_get_first_eeg(mat)
+    assert eeg_after is not None
+    assert int(eeg_after["pnts"]) == 1  # 8 / 4 / 2
+
+
+def test_eeglab_get_first_eeg_alleeg():
+    """Dict with ALLEEG key returns first element as dict."""
+    first_eeg = {"nbchan": 1, "pnts": 10}
+    mat = {"ALLEEG": [first_eeg]}
+    out = _eeglab_get_first_eeg(mat)
+    assert out == first_eeg
+
+
+def test_eeglab_get_first_eeg_alleeg_empty_returns_none():
+    """ALLEEG empty array returns None."""
+    import numpy as np
+
+    mat = {"ALLEEG": np.array([], dtype=object)}
+    out = _eeglab_get_first_eeg(mat)
+    assert out is None
+
+
+def test_eeglab_load_first_eeg_returns_eeg_when_valid_set(tmp_path):
+    """Valid .set file returns first EEG dict."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "valid.set"
+    eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "valid.fdt"}
+    savemat(str(set_path), eeg, do_compression=False)
+    out = _eeglab_load_first_eeg(set_path)
+    assert out is not None
+    assert int(out["nbchan"]) == 2 and int(out["pnts"]) == 10
+
+
+def test_eeglab_load_first_eeg_nonexistent_returns_none(tmp_path):
+    """Nonexistent .set returns None."""
+    assert _eeglab_load_first_eeg(tmp_path / "missing.set") is None
+
+
+def test_repair_eeglab_fdt_no_fdt_file_returns_false(tmp_path):
+    """Valid .set but no .fdt file returns False."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "nofdt.set"
+    eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "nofdt.fdt"}
+    savemat(str(set_path), eeg, do_compression=False)
+    assert _repair_eeglab_fdt(set_path) is False
+
+
+def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
+    """.set + .fdt with full size: no repair, returns False."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "full.set"
+    fdt_path = tmp_path / "full.fdt"
+    nbchan, pnts = 2, 10
+    fdt_path.write_bytes(b"\x00" * (nbchan * pnts * 4))
+    eeg = {"nbchan": nbchan, "pnts": pnts, "srate": 250.0, "data": "full.fdt"}
+    savemat(str(set_path), eeg, do_compression=False)
+    assert _repair_eeglab_fdt(set_path) is False
+
+
+def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
+    """.fdt too small for nbchan (actual_pnts <= 0) returns False."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "tiny.set"
+    fdt_path = tmp_path / "tiny.fdt"
+    fdt_path.write_bytes(b"\x00" * 4)  # 4 bytes, 2 channels -> 0 samples
+    eeg = {"nbchan": 2, "pnts": 100, "srate": 250.0, "data": "tiny.fdt"}
+    savemat(str(set_path), eeg, do_compression=False)
+    assert _repair_eeglab_fdt(set_path) is False
+
+
+def test_load_raw_eeglab_alleeg_no_eeg_raises(tmp_path):
+    """Nonexistent or invalid .set raises ValueError."""
+    with pytest.raises(ValueError, match="No EEG or ALLEEG"):
+        _load_raw_eeglab_alleeg(tmp_path / "missing.set")
+
+
+def test_load_raw_eeglab_alleeg_success(tmp_path):
+    """Minimal .set + .fdt loads to MNE Raw."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "raw.set"
+    fdt_path = tmp_path / "raw.fdt"
+    nbchan, pnts = 2, 4
+    fdt_path.write_bytes(b"\x00" * (nbchan * pnts * 4))
+    eeg = {
+        "nbchan": nbchan,
+        "pnts": pnts,
+        "srate": 250.0,
+        "data": "raw.fdt",
+        "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
+    }
+    savemat(str(set_path), eeg, do_compression=False)
+    raw = _load_raw_eeglab_alleeg(set_path)
+    assert raw is not None
+    assert raw.info["nchan"] == nbchan
+    assert raw.times.size == pnts
+
+
+def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
+    """External .fdt smaller than header: padding branch is used."""
+    pytest.importorskip("scipy")
+    from scipy.io import savemat
+
+    set_path = tmp_path / "trunc.set"
+    fdt_path = tmp_path / "trunc.fdt"
+    nbchan, pnts = 2, 8
+    # Only 4 bytes (1 sample total) so padding is applied
+    fdt_path.write_bytes(b"\x00" * 4)
+    eeg = {
+        "nbchan": nbchan,
+        "pnts": pnts,
+        "srate": 250.0,
+        "data": "trunc.fdt",
+        "chanlocs": [{"labels": "A"}, {"labels": "B"}],
+    }
+    savemat(str(set_path), eeg, do_compression=False)
+    raw = _load_raw_eeglab_alleeg(set_path)
+    assert raw is not None
+    assert raw.info["nchan"] == nbchan
+    assert raw.times.size == pnts
+
+
+def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
+    """Inline data (array in .set) uses else branch."""
+    pytest.importorskip("scipy")
+    import numpy as np
+    from scipy.io import savemat
+
+    set_path = tmp_path / "inline.set"
+    nbchan, pnts = 2, 4
+    data = np.zeros((nbchan, pnts), order="F", dtype=np.float64)
+    eeg = {
+        "nbchan": nbchan,
+        "pnts": pnts,
+        "srate": 250.0,
+        "data": data,
+        "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
+    }
+    savemat(str(set_path), eeg, do_compression=False)
+    raw = _load_raw_eeglab_alleeg(set_path)
+    assert raw is not None
+    assert raw.info["nchan"] == nbchan
+    assert raw.times.size == pnts

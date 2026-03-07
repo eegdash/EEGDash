@@ -32,6 +32,8 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _load_raw_eeglab_alleeg,
+    _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
@@ -296,6 +298,10 @@ class EEGDashRaw(RawDataset):
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
 
+        # Repair .set header when .fdt is truncated (pnts -> actual size)
+        if self.filecache and self.filecache.suffix.lower() == ".set":
+            _repair_eeglab_fdt(self.filecache)
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
@@ -338,6 +344,21 @@ class EEGDashRaw(RawDataset):
         """
         try:
             return self._read_raw_bids()
+        except NotImplementedError as first_error:
+            msg = str(first_error)
+            if (
+                "ALLEEG" in msg
+                and self.filecache
+                and self.filecache.suffix.lower() == ".set"
+            ):
+                logger.info(
+                    "EEGLAB file contains ALLEEG array; loading first dataset (bypassing MNE-BIDS)."
+                )
+                try:
+                    return _load_raw_eeglab_alleeg(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
+            raise
         except RuntimeError as first_error:
             if "coordsystem.json is REQUIRED" in str(first_error):
                 return self._retry_with_generated_coordsystem(first_error)

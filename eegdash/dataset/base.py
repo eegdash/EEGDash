@@ -56,8 +56,6 @@ _UNRECOVERABLE_PATTERNS = [
     "setting an array element with a sequence",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
-    "mandatory HPI",
-    "FIFFV_COIL_NONE",
 ]
 
 
@@ -348,6 +346,8 @@ class EEGDashRaw(RawDataset):
                 return self._retry_with_generated_coordsystem(first_error)
             if "Illegal date" in msg:
                 return self._retry_with_ctf_date_patch(first_error)
+            if "mandatory HPI" in msg and self.filecache:
+                return self._retry_with_ctf_hpi_fix(first_error)
             if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",
@@ -357,6 +357,21 @@ class EEGDashRaw(RawDataset):
             raise
         except (TypeError, ValueError, OSError, KeyError) as first_error:
             msg = str(first_error)
+
+            # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
+            # the data is readable, just the montage lookup fails.
+            if (
+                isinstance(first_error, KeyError)
+                and "FIFFV_COIL_NONE" in msg
+                and self.filecache
+            ):
+                logger.warning(
+                    "FIFFV_COIL_NONE montage error — falling back to direct reader."
+                )
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
 
             # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
             # or any TypeError from array/parsing failures in scipy/numpy)
@@ -490,6 +505,37 @@ class EEGDashRaw(RawDataset):
             return self._read_raw_bids()
         finally:
             ctf_info._convert_time = orig
+
+    def _retry_with_ctf_hpi_fix(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read after extending the HPI coil-kind dictionary.
+
+        Some CTF ``.hc`` files use ``"Nasion"`` / ``"LPA"`` / ``"RPA"``
+        instead of the lowercase ``"nasion"`` / ``"left ear"`` /
+        ``"right ear"`` that MNE expects.  This patches the lookup dict
+        to accept both forms.
+        """
+        import mne.io.ctf.hc as ctf_hc
+        from mne.io.ctf.constants import CTF
+
+        orig_dict = ctf_hc._kind_dict
+        patched = dict(orig_dict)
+        patched.update(
+            {
+                "Nasion": CTF.CTFV_COIL_NAS,
+                "LPA": CTF.CTFV_COIL_LPA,
+                "RPA": CTF.CTFV_COIL_RPA,
+            }
+        )
+        try:
+            ctf_hc._kind_dict = patched
+            logger.warning(
+                "CTF HPI coil-kind mismatch — retrying with extended kind dict."
+            )
+            return self._read_raw_bids()
+        except Exception as retry_error:
+            raise retry_error from first_error
+        finally:
+            ctf_hc._kind_dict = orig_dict
 
     def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
         """Fall back to a direct reader and strip projectors.

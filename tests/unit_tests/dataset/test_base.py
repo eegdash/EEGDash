@@ -1097,18 +1097,7 @@ def test_load_raw_assertion_error_restores_events_on_failure(tmp_path):
 # ── RuntimeError unrecoverable patterns → DataIntegrityError ──
 
 
-@pytest.mark.parametrize(
-    "error_msg",
-    [
-        "incorrect number of samples in the data",
-        "Some of the mandatory HPI device-coordinate info was not there.",
-        "FIFFV_COIL_NONE",
-    ],
-    ids=["incorrect_samples", "mandatory_hpi", "coil_none"],
-)
-def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
-    tmp_path, error_msg
-):
+def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(tmp_path):
     """RuntimeError with unrecoverable pattern becomes DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
@@ -1116,6 +1105,59 @@ def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
         tmp_path, "ds_corrupt", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
     )
 
-    with patch("mne_bids.read_raw_bids", side_effect=RuntimeError(error_msg)):
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError("incorrect number of samples in the data"),
+    ):
         with pytest.raises(DataIntegrityError, match="Cannot read data file"):
             ds._load_raw()
+
+
+# ── CTF mandatory HPI fix → retry with patched kind dict ──
+
+
+def test_load_raw_mandatory_hpi_retries_with_fix(tmp_path):
+    """RuntimeError('mandatory HPI') retries with extended _kind_dict."""
+    ds = _make_local_eegdashraw(
+        tmp_path,
+        "ds006502",
+        "sub-01/ses-meg1/meg/sub-01_ses-meg1_task-rest_run-1_meg.ds",
+        ext=".ds",
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=[
+            RuntimeError(
+                "Some of the mandatory HPI device-coordinate info was not there."
+            ),
+            mock_raw,
+        ],
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+
+
+# ── KeyError FIFFV_COIL_NONE → direct reader fallback ──
+
+
+def test_load_raw_fiffv_coil_none_keyerror_falls_back(tmp_path):
+    """KeyError('FIFFV_COIL_NONE') from montage falls back to direct reader."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.set", ext=".set"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=KeyError("0 (FIFFV_COIL_NONE)"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw

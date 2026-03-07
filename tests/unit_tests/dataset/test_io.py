@@ -724,6 +724,7 @@ def test_repair_events_tsv_mixed_nan_types(tmp_path):
     assert "5.0" in lines[2]
 
 
+
 # ── EEGLAB fallback loader tests ──────────────────────────────────────
 
 

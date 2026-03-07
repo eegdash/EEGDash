@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import re
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -25,12 +26,14 @@ from ..logging import logger
 from ..schemas import validate_record
 from .exceptions import DataIntegrityError
 from .io import (
+    _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
     _repair_events_tsv_nan_samples,
+    _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
@@ -267,12 +270,17 @@ class EEGDashRaw(RawDataset):
 
         self._download_required_files()
 
+        # Helper: Fix participants.tsv ID padding to match sub-* folder names
+        if self.bids_root and self.bids_root.exists():
+            _repair_participants_tsv_ids(self.bids_root)
+
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
+            _repair_events_tsv_nan_samples(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -319,14 +327,22 @@ class EEGDashRaw(RawDataset):
           ``DataIntegrityError`` for clean error reporting.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
+        - **participants.tsv subject mismatches**: repairs ``participant_id``
+          values to match ``sub-*`` folder names and retries.
+        - **events.tsv rows with NaN onset/sample**: drops broken rows and
+          retries, then falls back to direct MNE loading if needed.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
+        - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
+          MNE's CTF date parser to try %d-%m-%Y and retries.
         """
         try:
             return self._read_raw_bids()
         except RuntimeError as first_error:
             if "coordsystem.json is REQUIRED" in str(first_error):
                 return self._retry_with_generated_coordsystem(first_error)
+            if "Illegal date" in str(first_error):
+                return self._retry_with_ctf_date_patch(first_error)
             raise
         except (TypeError, ValueError, OSError) as first_error:
             msg = str(first_error)
@@ -348,6 +364,17 @@ class EEGDashRaw(RawDataset):
                     self.filecache.parent
                 ):
                     logger.info("Repaired scans.tsv timestamps, retrying load...")
+                    try:
+                        return self._read_raw_bids()
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+            # Subject/session ID mismatch between folders and participants.tsv
+            if "is not in list" in msg and self.bids_root:
+                if _repair_participants_tsv_ids(self.bids_root):
+                    logger.info(
+                        "Repaired participants.tsv ID padding, retrying load..."
+                    )
                     try:
                         return self._read_raw_bids()
                     except Exception as retry_error:
@@ -440,6 +467,17 @@ class EEGDashRaw(RawDataset):
                 )
                 raise retry_error from first_error
         raise first_error
+
+    def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read after patching MNE to accept numeric dash dates (e.g. 14-10-1925)."""
+        import mne.io.ctf.info as ctf_info
+
+        orig = ctf_info._convert_time
+        try:
+            ctf_info._convert_time = partial(_convert_time_with_numeric_dash, orig=orig)
+            return self._read_raw_bids()
+        finally:
+            ctf_info._convert_time = orig
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

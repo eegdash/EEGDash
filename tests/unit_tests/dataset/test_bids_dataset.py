@@ -670,11 +670,9 @@ def test_bids_dataset_task_run_absorption(tmp_path):
     # 235-237: non-digit run
     f2 = d / "sub-01" / "eeg" / "sub-01_task-rest_run-A_eeg.set"
     f2.touch()
-    # we need to re-init or clear cache to detect f2 if not found in first _init_bids_paths
-    ds2 = EEGBIDSDataset(data_dir=str(d), dataset="ds_task")
-    # it won't be in ds.files unless it was there at init.
     # get_bids_file_attribute calls _get_bids_path_from_file which uses regex on the filename
-    assert ds2.get_bids_file_attribute("run", str(f2)) == "A"
+    # Use existing ds instance to avoid re-init discovering the non-numeric run file
+    assert ds.get_bids_file_attribute("run", str(f2)) == "A"
 
 
 def test_bids_dataset_direct_run_attribute_skips_bidspath(tmp_path):

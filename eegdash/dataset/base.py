@@ -32,6 +32,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
@@ -262,6 +263,10 @@ class EEGDashRaw(RawDataset):
 
         self._download_required_files()
 
+        # Helper: Fix participants.tsv ID padding to match sub-* folder names
+        if self.bids_root and self.bids_root.exists():
+            _repair_participants_tsv_ids(self.bids_root)
+
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
@@ -343,6 +348,17 @@ class EEGDashRaw(RawDataset):
                     self.filecache.parent
                 ):
                     logger.info("Repaired scans.tsv timestamps, retrying load...")
+                    try:
+                        return self._read_raw_bids()
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+            # Subject/session ID mismatch between folders and participants.tsv
+            if "is not in list" in msg and self.bids_root:
+                if _repair_participants_tsv_ids(self.bids_root):
+                    logger.info(
+                        "Repaired participants.tsv ID padding, retrying load..."
+                    )
                     try:
                         return self._read_raw_bids()
                     except Exception as retry_error:

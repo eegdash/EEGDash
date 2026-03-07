@@ -30,6 +30,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _repair_events_tsv_nan_samples,
     _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
@@ -49,7 +50,6 @@ _UNRECOVERABLE_PATTERNS = [
     "buffer size must be",
     "iteration over a 0-d array",
     "cannot reshape array",
-    "cannot convert float NaN to integer",
     "setting an array element with a sequence",
 ]
 
@@ -273,6 +273,7 @@ class EEGDashRaw(RawDataset):
             _repair_tsv_encoding(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
+            _repair_events_tsv_nan_samples(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -358,6 +359,22 @@ class EEGDashRaw(RawDataset):
                         return self._read_raw_bids()
                     except Exception as retry_error:
                         raise retry_error from first_error
+
+            # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
+            if "cannot convert float NaN to integer" in msg and self.filecache:
+                if _repair_events_tsv_nan_samples(self.filecache.parent):
+                    logger.info(
+                        "Repaired events.tsv NaN samples, retrying load..."
+                    )
+                    try:
+                        return self._read_raw_bids()
+                    except Exception:
+                        pass  # fall through to direct reader
+                # Data itself is fine, only events are broken — use direct reader
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
 
             # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
             if "Unallowed" in msg and self.filecache:

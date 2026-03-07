@@ -720,6 +720,61 @@ def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
             ds._load_raw()
 
 
+# ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
+
+
+def test_load_raw_nan_events_repair_and_retry(tmp_path):
+    """NaN in events.tsv sample column should trigger repair then retry."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise ValueError("cannot convert float NaN to integer")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_events_tsv_nan_samples", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once()
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_nan_events_fallback_to_direct(tmp_path):
+    """NaN events repair fails → falls back to direct MNE reader."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("cannot convert float NaN to integer"),
+    ):
+        with patch(
+            "eegdash.dataset.base._repair_events_tsv_nan_samples",
+            return_value=False,
+        ):
+            with patch(
+                "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+            ) as mock_direct:
+                result = ds._load_raw()
+
+    mock_direct.assert_called_once()
+    assert result is mock_raw
+
+
 # ── Error 1: Invalid scans.tsv timestamp → repair + retry ──
 
 

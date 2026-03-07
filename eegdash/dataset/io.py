@@ -687,6 +687,77 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
     return repaired_any
 
 
+def _repair_events_tsv_nan_samples(data_dir: Path) -> bool:
+    """Drop rows with NaN onset/sample from ``*_events.tsv`` files.
+
+    Some EEGLAB datasets export events with NaN onset and sample values.
+    ``mne_bids.read_raw_bids()`` tries to convert the ``sample`` column
+    to ``int`` and crashes on NaN.  This removes those rows so loading
+    can proceed — the underlying data is fine, only the event markers
+    are incomplete.
+
+    Parameters
+    ----------
+    data_dir : Path
+        Directory containing the events TSV files.
+
+    Returns
+    -------
+    bool
+        True if any files were repaired, False otherwise.
+
+    """
+    if not data_dir.exists():
+        return False
+
+    repaired_any = False
+    for events_tsv in data_dir.glob("*_events.tsv"):
+        try:
+            lines = events_tsv.read_text(encoding="utf-8").splitlines()
+        except Exception:
+            continue
+
+        if len(lines) < 2:
+            continue
+
+        header = lines[0]
+        cols = header.split("\t")
+
+        # Find onset or sample column
+        onset_idx = None
+        for col_name in ("onset", "sample"):
+            if col_name in cols:
+                onset_idx = cols.index(col_name)
+                break
+        if onset_idx is None:
+            continue
+
+        new_lines = [header]
+        dropped = 0
+        for line in lines[1:]:
+            fields = line.split("\t")
+            if onset_idx < len(fields):
+                val = fields[onset_idx].strip().lower()
+                if val in ("nan", "n/a", ""):
+                    dropped += 1
+                    continue
+            new_lines.append(line)
+
+        if dropped > 0:
+            try:
+                events_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+                logger.info(
+                    "Repaired %s: dropped %d rows with NaN onset/sample",
+                    events_tsv.name,
+                    dropped,
+                )
+                repaired_any = True
+            except Exception as e:
+                logger.warning("Failed to write repaired %s: %s", events_tsv.name, e)
+
+    return repaired_any
+
+
 def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
     """Load a data file directly via MNE readers, bypassing MNE-BIDS.
 

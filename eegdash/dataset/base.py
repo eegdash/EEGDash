@@ -44,6 +44,13 @@ _UNRECOVERABLE_PATTERNS = [
     "invalid literal for int",
     "Could not find any data",
     "no valid samples",
+    # NumPy / SciPy array errors from corrupt MAT / EEGLAB files
+    "buffer is too small for requested array",
+    "buffer size must be",
+    "iteration over a 0-d array",
+    "cannot reshape array",
+    "cannot convert float NaN to integer",
+    "setting an array element with a sequence",
 ]
 
 
@@ -307,8 +314,9 @@ class EEGDashRaw(RawDataset):
           ``iEEGCoordinateSystem`` keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
-        - **Unrecoverable corruption** (Bad EDF, empty MEG data, etc.):
-          raises ``DataIntegrityError`` for clean error reporting.
+        - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
+          MAT/EEGLAB files with array errors, etc.): raises
+          ``DataIntegrityError`` for clean error reporting.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
@@ -320,11 +328,20 @@ class EEGDashRaw(RawDataset):
             if "coordsystem.json is REQUIRED" in str(first_error):
                 return self._retry_with_generated_coordsystem(first_error)
             raise
-        except (ValueError, OSError) as first_error:
+        except (TypeError, ValueError, OSError) as first_error:
             msg = str(first_error)
 
-            # Unrecoverable data corruption (bad EDF, empty MEG, etc.)
+            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT, etc.)
             if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                raise DataIntegrityError(
+                    message=f"Cannot read data file: {msg}",
+                    record=self.record,
+                    issues=[msg],
+                ) from first_error
+
+            # TypeError is almost always unrecoverable array corruption
+            # (e.g. scipy.io.loadmat failing on corrupt EEGLAB .set files)
+            if isinstance(first_error, TypeError):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",
                     record=self.record,

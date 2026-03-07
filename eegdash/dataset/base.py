@@ -11,7 +11,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import re
 from functools import partial
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import mne_bids
@@ -55,6 +55,64 @@ _UNRECOVERABLE_PATTERNS = [
     "cannot reshape array",
     "setting an array element with a sequence",
 ]
+
+_SPLIT_FIF_MISSING_RE = re.compile(
+    r"Split raw file detected but next file (?P<path>.+?) does not exist"
+)
+_SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
+_SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+
+
+def _parse_split_fif_missing_path(message: str) -> Path | None:
+    """Extract the missing continuation path from an MNE split FIF error."""
+    match = _SPLIT_FIF_MISSING_RE.search(message)
+    if match is None:
+        return None
+    return Path(match.group("path").strip().strip("'\""))
+
+
+def _increment_name_match(name: str, match: re.Match[str]) -> str:
+    """Increment the numeric portion captured by ``match`` in ``name``."""
+    width = len(match.group("num"))
+    next_num = int(match.group("num")) + 1
+    return f"{name[: match.start('num')]}{next_num:0{width}d}{name[match.end('num') :]}"
+
+
+def _iter_split_fif_candidates(
+    current_key: str,
+    current_path: Path,
+    expected_path: Path | None,
+) -> list[tuple[str, Path]]:
+    """Return candidate remote/local paths for the next FIF continuation."""
+    key_path = PurePosixPath(current_key)
+    current_name = key_path.name
+    candidate_names: list[str] = []
+
+    if expected_path is not None and expected_path.suffix.lower() == ".fif":
+        candidate_names.append(expected_path.name)
+
+    if match := _SPLIT_PART_RE.search(current_name):
+        candidate_names.append(_increment_name_match(current_name, match))
+    else:
+        if match := _SPLIT_ENTITY_RE.search(current_name):
+            candidate_names.append(_increment_name_match(current_name, match))
+
+        if current_name.lower().endswith(".fif"):
+            candidate_names.append(f"{current_name[:-4]}-1{current_name[-4:]}")
+
+    candidates: list[tuple[str, Path]] = []
+    seen: set[str] = set()
+    for candidate_name in candidate_names:
+        if candidate_name == current_name or candidate_name in seen:
+            continue
+        seen.add(candidate_name)
+        candidates.append(
+            (
+                str(key_path.parent / candidate_name),
+                current_path.with_name(candidate_name),
+            )
+        )
+    return candidates
 
 
 class EEGDashRaw(RawDataset):
@@ -165,6 +223,7 @@ class EEGDashRaw(RawDataset):
             task=entities_mne.get("task"),
             run=entities_mne.get("run"),
             acquisition=acq_val,
+            split=entities_mne.get("split"),
             check=False,
         )
 
@@ -311,6 +370,60 @@ class EEGDashRaw(RawDataset):
             bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
         )
 
+    def _download_split_fif_continuation(
+        self,
+        *,
+        current_key: str,
+        current_path: Path,
+        error_message: str,
+        attempted_keys: set[str],
+    ) -> tuple[str, Path] | None:
+        """Download the next split FIF continuation file, if it exists."""
+        storage = self.record.get("storage", {})
+        backend = storage.get("backend")
+        base = str(storage.get("base", "")).rstrip("/")
+        if backend not in ("s3", "https") or not base:
+            return None
+
+        expected_path = _parse_split_fif_missing_path(error_message)
+        candidates = _iter_split_fif_candidates(
+            current_key=current_key,
+            current_path=current_path,
+            expected_path=expected_path,
+        )
+        if not candidates:
+            return None
+
+        filesystem = downloader.get_s3_filesystem()
+        failures: list[str] = []
+        for next_key, next_path in candidates:
+            if next_key in attempted_keys:
+                continue
+            attempted_keys.add(next_key)
+            next_uri = downloader.get_s3path(base, next_key)
+            try:
+                logger.info(
+                    "Split FIF continuation missing; attempting download %s -> %s",
+                    next_uri,
+                    next_path,
+                )
+                downloader.download_s3_file(
+                    next_uri,
+                    next_path,
+                    filesystem=filesystem,
+                )
+                return next_key, next_path
+            except Exception as error:
+                failures.append(f"{next_uri}: {error}")
+
+        if failures:
+            logger.warning(
+                "Unable to download split FIF continuation for %s. Tried %s",
+                current_key,
+                "; ".join(failures),
+            )
+        return None
+
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
 
@@ -331,102 +444,124 @@ class EEGDashRaw(RawDataset):
           values to match ``sub-*`` folder names and retries.
         - **events.tsv rows with NaN onset/sample**: drops broken rows and
           retries, then falls back to direct MNE loading if needed.
+        - **Split FIF continuations missing locally**: derives the next split
+          key, downloads it from remote storage, and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
         """
-        try:
-            return self._read_raw_bids()
-        except RuntimeError as first_error:
-            if "coordsystem.json is REQUIRED" in str(first_error):
-                return self._retry_with_generated_coordsystem(first_error)
-            if "Illegal date" in str(first_error):
-                return self._retry_with_ctf_date_patch(first_error)
-            raise
-        except (TypeError, ValueError, OSError) as first_error:
-            msg = str(first_error)
+        current_split_key = self.record.get("storage", {}).get("raw_key")
+        current_split_path = self.filecache
+        attempted_split_keys: set[str] = set()
 
-            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
-            # or any TypeError from array/parsing failures in scipy/numpy)
-            if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
-                first_error, TypeError
-            ):
-                raise DataIntegrityError(
-                    message=f"Cannot read data file: {msg}",
-                    record=self.record,
-                    issues=[msg],
-                ) from first_error
+        while True:
+            try:
+                return self._read_raw_bids()
+            except RuntimeError as first_error:
+                if "coordsystem.json is REQUIRED" in str(first_error):
+                    return self._retry_with_generated_coordsystem(first_error)
+                if "Illegal date" in str(first_error):
+                    return self._retry_with_ctf_date_patch(first_error)
+                raise
+            except (TypeError, ValueError, OSError) as first_error:
+                msg = str(first_error)
 
-            # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
-            if "second must be" in msg or "does not match format" in msg:
-                if self.filecache and _repair_scans_tsv_timestamps(
-                    self.filecache.parent
+                if (
+                    current_split_key
+                    and current_split_path
+                    and ("Split raw file detected but next file" in msg)
                 ):
-                    logger.info("Repaired scans.tsv timestamps, retrying load...")
-                    try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
+                    split_download = self._download_split_fif_continuation(
+                        current_key=current_split_key,
+                        current_path=current_split_path,
+                        error_message=msg,
+                        attempted_keys=attempted_split_keys,
+                    )
+                    if split_download is not None:
+                        current_split_key, current_split_path = split_download
+                        continue
 
-            # Subject/session ID mismatch between folders and participants.tsv
-            if "is not in list" in msg and self.bids_root:
-                if _repair_participants_tsv_ids(self.bids_root):
-                    logger.info(
-                        "Repaired participants.tsv ID padding, retrying load..."
+                # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
+                # or any TypeError from array/parsing failures in scipy/numpy)
+                if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
+                    first_error, TypeError
+                ):
+                    raise DataIntegrityError(
+                        message=f"Cannot read data file: {msg}",
+                        record=self.record,
+                        issues=[msg],
+                    ) from first_error
+
+                # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
+                if "second must be" in msg or "does not match format" in msg:
+                    if self.filecache and _repair_scans_tsv_timestamps(
+                        self.filecache.parent
+                    ):
+                        logger.info("Repaired scans.tsv timestamps, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Subject/session ID mismatch between folders and participants.tsv
+                if "is not in list" in msg and self.bids_root:
+                    if _repair_participants_tsv_ids(self.bids_root):
+                        logger.info(
+                            "Repaired participants.tsv ID padding, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
+                if "cannot convert float NaN to integer" in msg and self.filecache:
+                    if _repair_events_tsv_nan_samples(self.filecache.parent):
+                        logger.info("Repaired events.tsv NaN samples, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
+                if "Unallowed" in msg and self.filecache:
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
+                # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
+                if (
+                    self.filecache
+                    and self.filecache.suffix.lower() == ".vhdr"
+                    and self._has_non_numeric_run()
+                ):
+                    logger.warning(
+                        "MNE-BIDS failed for VHDR with non-numeric run, "
+                        "falling back to direct MNE reader."
                     )
                     try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
 
-            # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
-            if "cannot convert float NaN to integer" in msg and self.filecache:
-                if _repair_events_tsv_nan_samples(self.filecache.parent):
-                    logger.info("Repaired events.tsv NaN samples, retrying load...")
-                    try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
+                raise
+            except Exception as first_error:
+                # For SNIRF files, try to fix and retry
+                if self.filecache and self.filecache.suffix.lower() == ".snirf":
+                    logger.warning(
+                        "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
+                    )
+                    if _repair_snirf_bids_metadata(self.filecache, self.record):
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            logger.error(f"Retry also failed: {retry_error}")
+                            raise retry_error from first_error
 
-            # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
-            if "Unallowed" in msg and self.filecache:
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
-
-            # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
-            if (
-                self.filecache
-                and self.filecache.suffix.lower() == ".vhdr"
-                and self._has_non_numeric_run()
-            ):
-                logger.warning(
-                    "MNE-BIDS failed for VHDR with non-numeric run, "
-                    "falling back to direct MNE reader."
-                )
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
-
-            raise
-        except Exception as first_error:
-            # For SNIRF files, try to fix and retry
-            if self.filecache and self.filecache.suffix.lower() == ".snirf":
-                logger.warning(
-                    "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
-                )
-                if _repair_snirf_bids_metadata(self.filecache, self.record):
-                    try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        logger.error(f"Retry also failed: {retry_error}")
-                        raise retry_error from first_error
-
-            # Not a fixable case - re-raise original error
-            raise
+                # Not a fixable case - re-raise original error
+                raise
 
     def _retry_with_generated_coordsystem(self, first_error: Exception) -> BaseRaw:
         """Generate a minimal coordsystem.json on-the-fly and retry loading.

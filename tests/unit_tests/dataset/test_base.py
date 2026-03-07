@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 
@@ -705,6 +705,25 @@ def _make_local_eegdashraw(tmp_path, dataset_id, bids_relpath, ext=".edf", **ext
         return EEGDashRaw(record, cache_dir=str(tmp_path))
 
 
+def _make_remote_eegdashraw(tmp_path, dataset_id, bids_relpath, **extra):
+    """Helper: create an EEGDashRaw with an S3 backend and minimal record."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "s3",
+            "base": "s3://bucket",
+            "raw_key": bids_relpath,
+        },
+        "entities": extra.get("entities", {"subject": "01", "task": "rest"}),
+        "entities_mne": extra.get("entities_mne", {"subject": "01", "task": "rest"}),
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
 # ── Error 2 / 3: Unrecoverable data corruption → DataIntegrityError ──
 
 
@@ -872,6 +891,112 @@ def test_load_raw_unallowed_entity_falls_back_to_direct(tmp_path):
 
     mock_direct.assert_called_once_with(ds.filecache)
     assert result is mock_raw
+
+
+def test_load_raw_downloads_split_fif_continuations_until_load_succeeds(tmp_path):
+    """Missing FIF continuations should be downloaded and retried on demand."""
+    ds = _make_remote_eegdashraw(
+        tmp_path, "ds_split", "sub-01/meg/sub-01_task-rest_meg.fif"
+    )
+    mock_raw = MagicMock()
+    annex_next = (
+        "/tmp/.git/annex/objects/ab/cd/MD5E-s1055433547--90f455363b16dec91282c634cfb710fd.fif/"
+        "MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif"
+    )
+    second_next = ds.filecache.with_name("sub-01_task-rest_meg-2.fif")
+    mock_fs = object()
+
+    def download_side_effect(s3_path, local_path, filesystem=None):
+        if "MD5E-s1055433547" in s3_path:
+            raise FileNotFoundError("not found")
+        return local_path
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=[
+            ValueError(
+                f"Split raw file detected but next file {annex_next} does not exist"
+            ),
+            ValueError(
+                f"Split raw file detected but next file {second_next} does not exist"
+            ),
+            mock_raw,
+        ],
+    ) as mock_read:
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                side_effect=download_side_effect,
+            ) as mock_download:
+                result = ds._load_raw()
+
+    assert result is mock_raw
+    assert mock_read.call_count == 3
+    assert mock_download.call_args_list == [
+        call(
+            "s3://bucket/sub-01/meg/MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif",
+            ds.filecache.with_name(
+                "MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif"
+            ),
+            filesystem=mock_fs,
+        ),
+        call(
+            "s3://bucket/sub-01/meg/sub-01_task-rest_meg-1.fif",
+            ds.filecache.with_name("sub-01_task-rest_meg-1.fif"),
+            filesystem=mock_fs,
+        ),
+        call(
+            "s3://bucket/sub-01/meg/sub-01_task-rest_meg-2.fif",
+            ds.filecache.with_name("sub-01_task-rest_meg-2.fif"),
+            filesystem=mock_fs,
+        ),
+    ]
+
+
+def test_load_raw_downloads_bids_split_continuation_and_preserves_split_entity(
+    tmp_path,
+):
+    """Split entity records should preserve split in BIDSPath and fetch split-02."""
+    ds = _make_remote_eegdashraw(
+        tmp_path,
+        "ds_split",
+        "sub-01/meg/sub-01_task-rest_split-01_meg.fif",
+        entities={"subject": "01", "task": "rest", "split": "01"},
+        entities_mne={"subject": "01", "task": "rest", "split": "01"},
+    )
+    mock_raw = MagicMock()
+    expected_next = ds.filecache.with_name("sub-01_task-rest_split-02_meg.fif")
+    mock_fs = object()
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=[
+            ValueError(
+                f"Split raw file detected but next file {expected_next} does not exist"
+            ),
+            mock_raw,
+        ],
+    ):
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                return_value=expected_next,
+            ) as mock_download:
+                result = ds._load_raw()
+
+    assert ds.bidspath.split == "01"
+    assert result is mock_raw
+    mock_download.assert_called_once_with(
+        "s3://bucket/sub-01/meg/sub-01_task-rest_split-02_meg.fif",
+        expected_next,
+        filesystem=mock_fs,
+    )
 
 
 # ── Error 4: CTF .ds directory completeness ──

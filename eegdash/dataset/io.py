@@ -699,6 +699,7 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
 
     return repaired_any
 
+
 def _repair_events_tsv_nan_samples(data_dir: Path) -> bool:
     """Drop rows with NaN onset/sample from ``*_events.tsv`` files.
 

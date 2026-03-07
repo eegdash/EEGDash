@@ -383,9 +383,7 @@ class EEGDashRaw(RawDataset):
             # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
             if "cannot convert float NaN to integer" in msg and self.filecache:
                 if _repair_events_tsv_nan_samples(self.filecache.parent):
-                    logger.info(
-                        "Repaired events.tsv NaN samples, retrying load..."
-                    )
+                    logger.info("Repaired events.tsv NaN samples, retrying load...")
                     try:
                         return self._read_raw_bids()
                     except Exception as retry_err:

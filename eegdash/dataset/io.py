@@ -719,9 +719,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
 
     # Collect actual sub-* folder names
     folder_ids = {
-        d.name
-        for d in bids_root.iterdir()
-        if d.is_dir() and d.name.startswith("sub-")
+        d.name for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")
     }
     if not folder_ids:
         return False
@@ -831,8 +829,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     try:
         participants_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
         logger.info(
-            "Repaired participants.tsv "
-            "(aligned participant_id with sub-* folder names)"
+            "Repaired participants.tsv (aligned participant_id with sub-* folder names)"
         )
         return True
     except Exception as e:

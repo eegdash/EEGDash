@@ -32,6 +32,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _load_raw_eeglab_fallback,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
@@ -54,9 +55,8 @@ _UNRECOVERABLE_PATTERNS = [
     "iteration over a 0-d array",
     "cannot reshape array",
     "setting an array element with a sequence",
-    # EEGLAB reader errors from non-standard .set structures
-    "Allowed values",
-    "has no attribute",
+    # EEGLAB reader: invalid file extension check
+    "EEGLAB file extension",
 ]
 
 
@@ -355,6 +355,15 @@ class EEGDashRaw(RawDataset):
             if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
                 first_error, (TypeError, AttributeError)
             ):
+                # Try EEGLAB fallback for .set files before giving up
+                if self.filecache and self.filecache.suffix.lower() == ".set":
+                    try:
+                        return _load_raw_eeglab_fallback(
+                            self.filecache, bids_root=self.bids_root
+                        )
+                    except Exception:
+                        pass  # Fall through to DataIntegrityError
+
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",
                     record=self.record,

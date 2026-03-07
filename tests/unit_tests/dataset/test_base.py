@@ -764,7 +764,7 @@ def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
         (TypeError, "argument of type 'NoneType' is not iterable"),
         (
             ValueError,
-            "Allowed values are '.set' and '.fdt', but got '' instead.",
+            "Invalid value for the 'EEGLAB file extension' parameter",
         ),
     ],
     ids=[
@@ -775,10 +775,8 @@ def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
         "extension_mismatch",
     ],
 )
-def test_load_raw_eeglab_errors_raise_data_integrity_error(
-    tmp_path, exc_type, error_msg
-):
-    """All EEGLAB reader errors must become DataIntegrityError."""
+def test_load_raw_eeglab_errors_try_fallback_then_raise(tmp_path, exc_type, error_msg):
+    """EEGLAB reader errors try fallback; if fallback fails, raise DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
     ds = _make_local_eegdashraw(
@@ -786,8 +784,53 @@ def test_load_raw_eeglab_errors_raise_data_integrity_error(
     )
 
     with patch("mne_bids.read_raw_bids", side_effect=exc_type(error_msg)):
-        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
-            ds._load_raw()
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            side_effect=ValueError("fallback failed"),
+        ):
+            with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+                ds._load_raw()
+
+
+def test_load_raw_eeglab_fallback_success(tmp_path):
+    """When MNE reader fails but EEGLAB fallback succeeds, return fallback result."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_ok", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("argument of type 'NoneType' is not iterable"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            return_value=mock_raw,
+        ) as mock_fallback:
+            result = ds._load_raw()
+
+    assert result is mock_raw
+    mock_fallback.assert_called_once()
+
+
+def test_load_raw_eeglab_fallback_failure_raises_data_integrity(tmp_path):
+    """When both MNE reader and EEGLAB fallback fail, raise DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_bad", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AttributeError("'Bunch' object has no attribute 'chanlocs'"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            side_effect=ValueError("Cannot parse .set file"),
+        ):
+            with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+                ds._load_raw()
 
 
 # ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──

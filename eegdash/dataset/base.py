@@ -273,7 +273,6 @@ class EEGDashRaw(RawDataset):
             _repair_tsv_encoding(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
-            _repair_events_tsv_nan_samples(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -332,17 +331,11 @@ class EEGDashRaw(RawDataset):
         except (TypeError, ValueError, OSError) as first_error:
             msg = str(first_error)
 
-            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT, etc.)
-            if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
-                raise DataIntegrityError(
-                    message=f"Cannot read data file: {msg}",
-                    record=self.record,
-                    issues=[msg],
-                ) from first_error
-
-            # TypeError is almost always unrecoverable array corruption
-            # (e.g. scipy.io.loadmat failing on corrupt EEGLAB .set files)
-            if isinstance(first_error, TypeError):
+            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
+            # or any TypeError from array/parsing failures in scipy/numpy)
+            if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
+                first_error, TypeError
+            ):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",
                     record=self.record,
@@ -368,8 +361,11 @@ class EEGDashRaw(RawDataset):
                     )
                     try:
                         return self._read_raw_bids()
-                    except Exception:
-                        pass  # fall through to direct reader
+                    except Exception as retry_err:
+                        logger.debug(
+                            "BIDS retry after events repair failed: %s",
+                            retry_err,
+                        )
                 # Data itself is fine, only events are broken — use direct reader
                 try:
                     return _load_raw_direct(self.filecache)

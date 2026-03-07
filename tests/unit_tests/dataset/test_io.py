@@ -618,3 +618,69 @@ def test_repair_events_tsv_no_nan(tmp_path):
 def test_repair_events_tsv_nonexistent_dir(tmp_path):
     """Returns False for nonexistent directory."""
     assert _repair_events_tsv_nan_samples(tmp_path / "missing") is False
+
+
+def test_repair_events_tsv_all_nan_rows(tmp_path):
+    """Events.tsv where ALL data rows are NaN -> only header remains."""
+    events = "onset\tduration\tsample\tvalue\nnan\tnan\tnan\t1\nnan\tnan\tnan\t2\n"
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is True
+
+    content = (tmp_path / "sub-01_task-x_events.tsv").read_text()
+    lines = content.splitlines()
+    assert len(lines) == 1  # only header
+    assert lines[0].startswith("onset")
+
+
+def test_repair_events_tsv_na_strings(tmp_path):
+    """Rows with 'n/a' in onset column should be dropped."""
+    events = (
+        "onset\tduration\tsample\tvalue\n"
+        "1.0\t0.0\t256\t1\n"
+        "n/a\t0.0\t512\t2\n"
+        "3.0\t0.0\t768\t3\n"
+    )
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is True
+
+    lines = (tmp_path / "sub-01_task-x_events.tsv").read_text().splitlines()
+    assert len(lines) == 3  # header + 2 valid rows
+    assert all("n/a" not in line for line in lines)
+
+
+def test_repair_events_tsv_empty_onset(tmp_path):
+    """Rows with empty onset field should be dropped."""
+    events = (
+        "onset\tduration\tsample\tvalue\n"
+        "1.0\t0.0\t256\t1\n"
+        "\t0.0\t512\t2\n"
+        "3.0\t0.0\t768\t3\n"
+    )
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is True
+
+    lines = (tmp_path / "sub-01_task-x_events.tsv").read_text().splitlines()
+    assert len(lines) == 3  # header + 2 valid rows
+
+
+def test_repair_events_tsv_mixed_nan_types(tmp_path):
+    """Mix of nan, n/a, and empty values all get dropped."""
+    events = (
+        "onset\tduration\tsample\tvalue\n"
+        "1.0\t0.0\t256\t1\n"
+        "nan\tnan\tnan\t2\n"
+        "n/a\t0.0\t512\t3\n"
+        "\t0.0\t768\t4\n"
+        "5.0\t0.0\t1280\t5\n"
+    )
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is True
+
+    lines = (tmp_path / "sub-01_task-x_events.tsv").read_text().splitlines()
+    assert len(lines) == 3  # header + 2 valid rows (1.0 and 5.0)
+    assert "1.0" in lines[1]
+    assert "5.0" in lines[2]

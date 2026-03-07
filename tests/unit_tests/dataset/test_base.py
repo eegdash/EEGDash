@@ -1004,3 +1004,25 @@ def test_load_raw_direct_calls_correct_reader(tmp_path):
 
     mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+def test_load_raw_snirf_array_error_raises_data_integrity_error(tmp_path):
+    """ds005929: ValueError('setting an array element with a sequence') from SNIRF
+    must be caught by _UNRECOVERABLE_PATTERNS as DataIntegrityError, NOT fall
+    through to the generic SNIRF `except Exception` handler.
+    """
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path,
+        "ds005929",
+        "sub-01/nirs/sub-01_task-rest_nirs.snirf",
+        ext=".snirf",
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("setting an array element with a sequence"),
+    ):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()

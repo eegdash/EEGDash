@@ -687,6 +687,159 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
     return repaired_any
 
 
+def _repair_participants_tsv_ids(bids_root: Path) -> bool:
+    """Align ``participant_id`` values in ``participants.tsv`` with ``sub-*`` folders.
+
+    Some BIDS datasets have mismatches between folder names and
+    ``participants.tsv`` entries — different zero-padding (``sub-001`` vs
+    ``sub-01``), stripped prefixes (``sub-FFE001`` vs ``sub-001``), or
+    missing rows entirely.  ``mne_bids.read_raw_bids`` performs a strict
+    lookup that fails when these diverge.
+
+    This function uses the same fuzzy-matching logic as the digestion
+    pipeline (``_match_subject_fallback``) to rename mismatched TSV entries,
+    and adds placeholder rows for folders that have no TSV entry at all.
+
+    Parameters
+    ----------
+    bids_root : Path
+        Root directory of the BIDS dataset.
+
+    Returns
+    -------
+    bool
+        True if the file was repaired, False otherwise.
+
+    """
+    from .bids_dataset import _match_subject_fallback
+
+    participants_tsv = bids_root / "participants.tsv"
+    if not participants_tsv.exists():
+        return False
+
+    # Collect actual sub-* folder names
+    folder_ids = {
+        d.name
+        for d in bids_root.iterdir()
+        if d.is_dir() and d.name.startswith("sub-")
+    }
+    if not folder_ids:
+        return False
+
+    try:
+        content = participants_tsv.read_text(encoding="utf-8-sig")
+        lines = content.splitlines()
+    except Exception:
+        return False
+    if not lines:
+        return False
+
+    header = lines[0].split("\t")
+    try:
+        pid_idx = header.index("participant_id")
+    except ValueError:
+        return False
+
+    n_cols = len(header)
+
+    # --- Pass 1: rename mismatched TSV entries to match folders ---
+    # For each folder not yet in TSV, try to find a TSV entry that
+    # fuzzy-matches it via _match_subject_fallback (same logic as digestion).
+    import pandas as pd
+
+    tsv_ids = []
+    for line in lines[1:]:
+        cols = line.split("\t")
+        if pid_idx < len(cols):
+            tsv_ids.append(cols[pid_idx].strip())
+    tsv_index = pd.Index(tsv_ids)
+
+    # Build mapping: tsv_id -> folder_id for entries that need renaming.
+    # Two directions are tried so that _match_subject_fallback's Tier 3
+    # (prefix-stripping) works regardless of which side has the prefix.
+    rename_map: dict[str, str] = {}
+    matched_tsv_ids: set[str] = set()
+    matched_folder_ids: set[str] = set()
+
+    # Direction 1 (folder → TSV): for each folder missing from TSV, find
+    # the TSV entry it matches.
+    for folder_id in folder_ids:
+        if folder_id in tsv_ids:
+            matched_tsv_ids.add(folder_id)
+            matched_folder_ids.add(folder_id)
+            continue
+        subj_val = folder_id.removeprefix("sub-")
+        matched_tsv = _match_subject_fallback(folder_id, subj_val, tsv_index)
+        if matched_tsv is not None and matched_tsv not in matched_tsv_ids:
+            rename_map[matched_tsv] = folder_id
+            matched_tsv_ids.add(matched_tsv)
+            matched_folder_ids.add(folder_id)
+
+    # Direction 2 (TSV → folder): for each TSV entry still unmatched, see
+    # if it matches a folder (covers cases like sub-SD_1010 → sub-1010
+    # where the TSV has a prefix the folder lacks).
+    folder_index = pd.Index(sorted(folder_ids))
+    for tsv_id in tsv_ids:
+        if tsv_id in matched_tsv_ids or tsv_id in folder_ids:
+            continue
+        subj_val = tsv_id.removeprefix("sub-")
+        matched_folder = _match_subject_fallback(tsv_id, subj_val, folder_index)
+        if (
+            matched_folder is not None
+            and matched_folder not in matched_folder_ids
+            and tsv_id not in rename_map
+        ):
+            rename_map[tsv_id] = matched_folder
+            matched_tsv_ids.add(tsv_id)
+            matched_folder_ids.add(matched_folder)
+
+    # Apply renames to lines
+    new_lines = [lines[0]]
+    changed = False
+    for line in lines[1:]:
+        cols = line.split("\t")
+        if pid_idx >= len(cols):
+            new_lines.append(line)
+            continue
+
+        tsv_id = cols[pid_idx].strip()
+        if tsv_id in rename_map:
+            cols[pid_idx] = rename_map[tsv_id]
+            new_lines.append("\t".join(cols))
+            changed = True
+        else:
+            new_lines.append(line)
+
+    # --- Pass 2: add placeholder rows for folders still missing ---
+    # Collect all participant_ids now present after renames
+    current_ids = set()
+    for line in new_lines[1:]:
+        cols = line.split("\t")
+        if pid_idx < len(cols):
+            current_ids.add(cols[pid_idx].strip())
+
+    missing_folders = sorted(folder_ids - current_ids)
+    for folder_id in missing_folders:
+        placeholder = ["n/a"] * n_cols
+        placeholder[pid_idx] = folder_id
+        new_lines.append("\t".join(placeholder))
+        changed = True
+
+    if not changed:
+        return False
+
+    try:
+        participants_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+        logger.info(
+            "Repaired participants.tsv "
+            "(aligned participant_id with sub-* folder names)"
+        )
+        return True
+    except Exception as e:
+        logger.warning(f"Failed to write repaired participants.tsv: {e}")
+        return False
+
+
 def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
     """Load a data file directly via MNE readers, bypassing MNE-BIDS.
 

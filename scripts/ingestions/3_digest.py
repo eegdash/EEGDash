@@ -47,6 +47,7 @@ from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
+from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import Storage, create_dataset, create_record
 
 # Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
@@ -2313,6 +2314,9 @@ def digest_dataset(
 
     # Generate timestamp
     digested_at = datetime.now(timezone.utc).isoformat()
+
+    # Repair participants.tsv ID mismatches before BIDS parsing
+    _repair_participants_tsv_ids(dataset_dir)
 
     # Load BIDS dataset
     try:

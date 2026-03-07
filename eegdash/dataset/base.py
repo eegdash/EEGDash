@@ -348,6 +348,10 @@ class EEGDashRaw(RawDataset):
                 return self._retry_with_ctf_date_patch(first_error)
             if "mandatory HPI" in msg and self.filecache:
                 return self._retry_with_ctf_hpi_fix(first_error)
+            # Projector channel type conflict during MNE-BIDS channel
+            # renaming — the direct reader bypasses this.
+            if "in projector" in msg and self.filecache:
+                return self._retry_without_projectors(first_error)
             if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",

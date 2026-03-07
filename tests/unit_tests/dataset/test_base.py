@@ -1032,6 +1032,31 @@ def test_load_raw_projector_channels_not_found_retries(tmp_path):
     assert result is mock_raw
 
 
+def test_load_raw_projector_type_conflict_retries(tmp_path):
+    """RuntimeError('in projector') falls back to direct reader and del_proj."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds002712", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    mock_raw = MagicMock()
+    mock_raw.info = {"projs": [MagicMock()]}
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(
+            'Cannot change channel type for channel MEG0113 in projector "PCA-v1"'
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    mock_raw.del_proj.assert_called_once()
+    assert result is mock_raw
+
+
 # ── AssertionError → hide events.tsv and retry ──
 
 

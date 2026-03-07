@@ -1122,7 +1122,19 @@ def test_load_raw_assertion_error_restores_events_on_failure(tmp_path):
 # ── RuntimeError unrecoverable patterns → DataIntegrityError ──
 
 
-def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(tmp_path):
+@pytest.mark.parametrize(
+    "error_msg",
+    [
+        "incorrect number of samples in the data",
+        "MNE only supports reading continuous wave amplitude and processed "
+        "haemoglobin SNIRF files. Expected type code 1 or 99999 but received "
+        "type code 301",
+    ],
+    ids=["fif-samples", "snirf-td-nirs"],
+)
+def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
+    tmp_path, error_msg
+):
     """RuntimeError with unrecoverable pattern becomes DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
@@ -1132,7 +1144,7 @@ def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(tmp_path):
 
     with patch(
         "mne_bids.read_raw_bids",
-        side_effect=RuntimeError("incorrect number of samples in the data"),
+        side_effect=RuntimeError(error_msg),
     ):
         with pytest.raises(DataIntegrityError, match="Cannot read data file"):
             ds._load_raw()

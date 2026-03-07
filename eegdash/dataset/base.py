@@ -56,6 +56,9 @@ _UNRECOVERABLE_PATTERNS = [
     "setting an array element with a sequence",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
+    # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
+    # processed haemoglobin (99999); time-domain moments are unsupported.
+    "only supports reading continuous",
 ]
 
 

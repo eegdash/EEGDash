@@ -764,7 +764,7 @@ def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
         (TypeError, "argument of type 'NoneType' is not iterable"),
         (
             ValueError,
-            "EEGLAB file extension .set is not one of the allowed values",
+            "Allowed values are '.set' and '.fdt', but got '' instead.",
         ),
     ],
     ids=[

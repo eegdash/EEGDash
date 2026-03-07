@@ -55,7 +55,7 @@ _UNRECOVERABLE_PATTERNS = [
     "cannot reshape array",
     "setting an array element with a sequence",
     # EEGLAB reader errors from non-standard .set structures
-    "allowed values",
+    "Allowed values",
     "has no attribute",
 ]
 

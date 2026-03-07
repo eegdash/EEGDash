@@ -386,16 +386,8 @@ class EEGDashRaw(RawDataset):
                     logger.info("Repaired events.tsv NaN samples, retrying load...")
                     try:
                         return self._read_raw_bids()
-                    except Exception as retry_err:
-                        logger.debug(
-                            "BIDS retry after events repair failed: %s",
-                            retry_err,
-                        )
-                # Data itself is fine, only events are broken — use direct reader
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
+                    except Exception as retry_error:
+                        raise retry_error from first_error
 
             # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
             if "Unallowed" in msg and self.filecache:

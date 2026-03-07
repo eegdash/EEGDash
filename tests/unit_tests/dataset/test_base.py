@@ -785,13 +785,11 @@ def test_load_raw_nan_events_repair_and_retry(tmp_path):
     assert call_count == 2
 
 
-def test_load_raw_nan_events_fallback_to_direct(tmp_path):
-    """NaN events repair fails → falls back to direct MNE reader."""
+def test_load_raw_nan_events_repair_fails_propagates(tmp_path):
+    """NaN events repair fails → error propagates (no direct reader fallback)."""
     ds = _make_local_eegdashraw(
         tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
     )
-
-    mock_raw = MagicMock()
 
     with patch(
         "mne_bids.read_raw_bids",
@@ -801,13 +799,8 @@ def test_load_raw_nan_events_fallback_to_direct(tmp_path):
             "eegdash.dataset.base._repair_events_tsv_nan_samples",
             return_value=False,
         ):
-            with patch(
-                "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
-            ) as mock_direct:
-                result = ds._load_raw()
-
-    mock_direct.assert_called_once()
-    assert result is mock_raw
+            with pytest.raises(ValueError, match="cannot convert float NaN to integer"):
+                ds._load_raw()
 
 
 # ── Error 1: Invalid scans.tsv timestamp → repair + retry ──

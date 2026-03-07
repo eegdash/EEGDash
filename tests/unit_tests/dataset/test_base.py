@@ -1101,8 +1101,8 @@ def test_load_raw_assertion_error_restores_events_on_failure(tmp_path):
     "error_msg",
     [
         "incorrect number of samples in the data",
-        "mandatory HPI information missing from file",
-        "FIFFV_COIL_NONE not supported for head-based coordinate frame",
+        "Some of the mandatory HPI device-coordinate info was not there.",
+        "FIFFV_COIL_NONE",
     ],
     ids=["incorrect_samples", "mandatory_hpi", "coil_none"],
 )

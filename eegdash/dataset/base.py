@@ -56,8 +56,8 @@ _UNRECOVERABLE_PATTERNS = [
     "setting an array element with a sequence",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
-    "mandatory HPI information missing",
-    "FIFFV_COIL_NONE not supported",
+    "mandatory HPI",
+    "FIFFV_COIL_NONE",
 ]
 
 
@@ -355,7 +355,7 @@ class EEGDashRaw(RawDataset):
                     issues=[msg],
                 ) from first_error
             raise
-        except (TypeError, ValueError, OSError) as first_error:
+        except (TypeError, ValueError, OSError, KeyError) as first_error:
             msg = str(first_error)
 
             # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,

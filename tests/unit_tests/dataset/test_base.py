@@ -732,6 +732,77 @@ def test_load_raw_unrecoverable_raises_data_integrity_error(tmp_path, error_msg)
             ds._load_raw()
 
 
+@pytest.mark.parametrize(
+    "error_msg",
+    [
+        "buffer is too small for requested array",
+        "iteration over a 0-d array",
+        "cannot reshape array of size 0 into shape (64,1000)",
+        "setting an array element with a sequence",
+    ],
+    ids=["buffer_small", "0d_array", "cannot_reshape", "array_element_sequence"],
+)
+def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
+    """TypeError from corrupt MAT/EEGLAB files must become DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_corrupt", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    with patch("mne_bids.read_raw_bids", side_effect=TypeError(error_msg)):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()
+
+
+# ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
+
+
+def test_load_raw_nan_events_repair_and_retry(tmp_path):
+    """NaN in events.tsv sample column should trigger repair then retry."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise ValueError("cannot convert float NaN to integer")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_events_tsv_nan_samples", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once()
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_nan_events_repair_fails_propagates(tmp_path):
+    """NaN events repair fails → error propagates (no direct reader fallback)."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("cannot convert float NaN to integer"),
+    ):
+        with patch(
+            "eegdash.dataset.base._repair_events_tsv_nan_samples",
+            return_value=False,
+        ):
+            with pytest.raises(ValueError, match="cannot convert float NaN to integer"):
+                ds._load_raw()
+
+
 # ── Error 1: Invalid scans.tsv timestamp → repair + retry ──
 
 

@@ -675,6 +675,29 @@ def test_bids_dataset_task_run_absorption(tmp_path):
     assert ds.get_bids_file_attribute("run", str(f2)) == "A"
 
 
+def test_bids_dataset_direct_run_attribute_skips_bidspath(tmp_path):
+    from unittest.mock import patch
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_task"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_run-A_eeg.set"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_task")
+
+    with patch.object(
+        EEGBIDSDataset,
+        "_get_bids_path_from_file",
+        side_effect=ValueError("run is not an index (Got A)"),
+    ):
+        assert ds.get_bids_file_attribute("run", str(f)) == "A"
+        assert ds.get_bids_file_attribute("task", str(f)) == "rest"
+
+
 def test_bids_dataset_inheritance_break(tmp_path):
     # bids_dataset.py 306
     from eegdash.dataset.bids_dataset import EEGBIDSDataset

@@ -32,6 +32,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
@@ -47,6 +48,12 @@ _UNRECOVERABLE_PATTERNS = [
     "invalid literal for int",
     "Could not find any data",
     "no valid samples",
+    # NumPy / SciPy array errors from corrupt MAT / EEGLAB files
+    "buffer is too small for requested array",
+    "buffer size must be",
+    "iteration over a 0-d array",
+    "cannot reshape array",
+    "setting an array element with a sequence",
 ]
 
 
@@ -273,6 +280,7 @@ class EEGDashRaw(RawDataset):
             _repair_tsv_encoding(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
+            _repair_events_tsv_nan_samples(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -314,10 +322,15 @@ class EEGDashRaw(RawDataset):
           ``iEEGCoordinateSystem`` keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
-        - **Unrecoverable corruption** (Bad EDF, empty MEG data, etc.):
-          raises ``DataIntegrityError`` for clean error reporting.
+        - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
+          MAT/EEGLAB files with array errors, etc.): raises
+          ``DataIntegrityError`` for clean error reporting.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
+        - **participants.tsv subject mismatches**: repairs ``participant_id``
+          values to match ``sub-*`` folder names and retries.
+        - **events.tsv rows with NaN onset/sample**: drops broken rows and
+          retries, then falls back to direct MNE loading if needed.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
@@ -331,11 +344,14 @@ class EEGDashRaw(RawDataset):
             if "Illegal date" in str(first_error):
                 return self._retry_with_ctf_date_patch(first_error)
             raise
-        except (ValueError, OSError) as first_error:
+        except (TypeError, ValueError, OSError) as first_error:
             msg = str(first_error)
 
-            # Unrecoverable data corruption (bad EDF, empty MEG, etc.)
-            if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
+            # or any TypeError from array/parsing failures in scipy/numpy)
+            if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
+                first_error, TypeError
+            ):
                 raise DataIntegrityError(
                     message=f"Cannot read data file: {msg}",
                     record=self.record,
@@ -359,6 +375,15 @@ class EEGDashRaw(RawDataset):
                     logger.info(
                         "Repaired participants.tsv ID padding, retrying load..."
                     )
+                    try:
+                        return self._read_raw_bids()
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+            # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
+            if "cannot convert float NaN to integer" in msg and self.filecache:
+                if _repair_events_tsv_nan_samples(self.filecache.parent):
+                    logger.info("Repaired events.tsv NaN samples, retrying load...")
                     try:
                         return self._read_raw_bids()
                     except Exception as retry_error:

@@ -1,9 +1,10 @@
 import json
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from eegdash.dataset.io import (
+    _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
     _generate_coordsystem_json,
@@ -13,6 +14,43 @@ from eegdash.dataset.io import (
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
+
+
+def test_convert_time_with_numeric_dash_dd_mm_yyyy():
+    """Numeric dash date 14-10-1925 (DD-MM-YYYY) is normalized to 14/10/1925 and delegated."""
+    orig = MagicMock(return_value=12345.0)
+    out = _convert_time_with_numeric_dash("14-10-1925", "12:00:00", orig=orig)
+    assert out == 12345.0
+    orig.assert_called_once_with("14/10/1925", "12:00:00")
+
+
+def test_convert_time_with_numeric_dash_mm_dd_yyyy():
+    """Numeric dash date 10-14-1925 (MM-DD-YYYY) is normalized and delegated."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("10-14-1925", "00:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "00:00:00")
+
+
+def test_convert_time_with_numeric_dash_iso():
+    """ISO-style YYYY-MM-DD is normalized to dd/mm/yyyy and delegated."""
+    orig = MagicMock(return_value=1.0)
+    _convert_time_with_numeric_dash("1925-10-14", "01:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "01:00:00")
+
+
+def test_convert_time_with_numeric_dash_fallback():
+    """Unsupported date format is passed through to orig unchanged."""
+    orig = MagicMock(return_value=999.0)
+    out = _convert_time_with_numeric_dash("14/Oct/1925", "12:00:00", orig=orig)
+    assert out == 999.0
+    orig.assert_called_once_with("14/Oct/1925", "12:00:00")
+
+
+def test_convert_time_with_numeric_dash_strips_whitespace():
+    """Date string is stripped before parsing."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("  14-10-1925  ", "00:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "00:00:00")
 
 
 def test_repair_vhdr_pointers(tmp_path):

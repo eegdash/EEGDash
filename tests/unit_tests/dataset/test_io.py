@@ -2,7 +2,9 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import numpy as np
 import pytest
+from scipy.io import loadmat, savemat
 
 from eegdash.dataset.io import (
     _convert_time_with_numeric_dash,
@@ -700,7 +702,6 @@ def test_repair_eeglab_fdt_nonexistent(tmp_path):
 def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
     """Truncated .fdt: repair updates .set header (pnts) and returns True."""
     pytest.importorskip("scipy")
-    from scipy.io import loadmat, savemat
 
     set_path = tmp_path / "test.set"
     fdt_path = tmp_path / "test.fdt"
@@ -737,8 +738,6 @@ def test_eeglab_get_first_eeg_alleeg():
 
 def test_eeglab_get_first_eeg_alleeg_empty_returns_none():
     """ALLEEG empty array returns None."""
-    import numpy as np
-
     mat = {"ALLEEG": np.array([], dtype=object)}
     out = _eeglab_get_first_eeg(mat)
     assert out is None
@@ -747,7 +746,6 @@ def test_eeglab_get_first_eeg_alleeg_empty_returns_none():
 def test_eeglab_load_first_eeg_returns_eeg_when_valid_set(tmp_path):
     """Valid .set file returns first EEG dict."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "valid.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "valid.fdt"}
@@ -765,7 +763,6 @@ def test_eeglab_load_first_eeg_nonexistent_returns_none(tmp_path):
 def test_repair_eeglab_fdt_no_fdt_file_returns_false(tmp_path):
     """Valid .set but no .fdt file returns False."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "nofdt.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "nofdt.fdt"}
@@ -776,7 +773,6 @@ def test_repair_eeglab_fdt_no_fdt_file_returns_false(tmp_path):
 def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
     """.set + .fdt with full size: no repair, returns False."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "full.set"
     fdt_path = tmp_path / "full.fdt"
@@ -790,7 +786,6 @@ def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
 def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
     """.fdt too small for nbchan (actual_pnts <= 0) returns False."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "tiny.set"
     fdt_path = tmp_path / "tiny.fdt"
@@ -809,7 +804,6 @@ def test_load_raw_eeglab_alleeg_no_eeg_raises(tmp_path):
 def test_load_raw_eeglab_alleeg_success(tmp_path):
     """Minimal .set + .fdt loads to MNE Raw."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "raw.set"
     fdt_path = tmp_path / "raw.fdt"
@@ -832,7 +826,6 @@ def test_load_raw_eeglab_alleeg_success(tmp_path):
 def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
     """External .fdt smaller than header: padding branch is used."""
     pytest.importorskip("scipy")
-    from scipy.io import savemat
 
     set_path = tmp_path / "trunc.set"
     fdt_path = tmp_path / "trunc.fdt"
@@ -856,8 +849,6 @@ def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
 def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
     """Inline data (array in .set) uses else branch."""
     pytest.importorskip("scipy")
-    import numpy as np
-    from scipy.io import savemat
 
     set_path = tmp_path / "inline.set"
     nbchan, pnts = 2, 4

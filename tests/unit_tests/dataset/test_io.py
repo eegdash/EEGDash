@@ -10,6 +10,7 @@ from eegdash.dataset.io import (
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
@@ -584,3 +585,36 @@ def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
     tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tµV\n")
 
     assert _repair_tsv_decimal_separators(tmp_path) is False
+
+
+# ── _repair_events_tsv_nan_samples ──
+
+
+def test_repair_events_tsv_drops_nan_rows(tmp_path):
+    """Rows with NaN onset should be dropped from events.tsv."""
+    events = (
+        "onset\tduration\tsample\tvalue\n"
+        "1.5\t0.0\t384\t1\n"
+        "nan\tnan\tnan\t2\n"
+        "3.0\t0.0\t768\t3\n"
+    )
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is True
+
+    lines = (tmp_path / "sub-01_task-x_events.tsv").read_text().splitlines()
+    assert len(lines) == 3  # header + 2 valid rows
+    assert "nan" not in "\t".join(lines)
+
+
+def test_repair_events_tsv_no_nan(tmp_path):
+    """No change when events.tsv has no NaN values."""
+    events = "onset\tduration\tsample\tvalue\n1.0\t0.0\t256\t1\n"
+    (tmp_path / "sub-01_task-x_events.tsv").write_text(events)
+
+    assert _repair_events_tsv_nan_samples(tmp_path) is False
+
+
+def test_repair_events_tsv_nonexistent_dir(tmp_path):
+    """Returns False for nonexistent directory."""
+    assert _repair_events_tsv_nan_samples(tmp_path / "missing") is False

@@ -220,21 +220,9 @@ class EEGBIDSDataset:
                     # Continue searching for other extensions and modalities to ensure
                     # we capture all data (e.g., mixed EEG/MEG datasets).
 
-    def _get_bids_path_from_file(self, data_filepath: str):
-        """Get a BIDSPath object for a data file with caching.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        BIDSPath
-            The BIDSPath object for the file.
-
-        """
-        if data_filepath not in self._bids_path_cache:
+    def _get_bids_entities_from_file(self, data_filepath: str) -> dict[str, Any]:
+        """Parse BIDS filename entities for a data file with caching."""
+        if data_filepath not in self._bids_entity_cache:
             filepath = Path(data_filepath)
 
             # Detect modality from the directory path
@@ -265,7 +253,44 @@ class EEGBIDSDataset:
                     if run_match:
                         run_val = run_match.group(1)
 
-            # BIDSPath requires run to be numeric or None
+            self._bids_entity_cache[data_filepath] = {
+                "subject": entities.get("subject"),
+                "session": entities.get("session"),
+                "task": task_val,
+                "acquisition": entities.get("acquisition"),
+                "run": run_val,
+                "processing": entities.get("processing"),
+                "recording": entities.get("recording"),
+                "space": entities.get("space"),
+                "split": entities.get("split"),
+                "description": entities.get("description"),
+                "modality": modality,
+            }
+
+        return self._bids_entity_cache[data_filepath]
+
+    def _get_bids_path_from_file(self, data_filepath: str):
+        """Get a BIDSPath object for a data file with caching.
+
+        Parameters
+        ----------
+        data_filepath : str
+            The path to the data file.
+
+        Returns
+        -------
+        BIDSPath
+            The BIDSPath object for the file.
+
+        """
+        if data_filepath not in self._bids_path_cache:
+            filepath = Path(data_filepath)
+            entities = self._get_bids_entities_from_file(data_filepath)
+            task_val = entities.get("task")
+            run_val = entities.get("run")
+
+            # BIDSPath requires run to be numeric or None; preserve the
+            # original non-numeric value in the entity cache for attribute lookups.
             run_for_bidspath = run_val
             if run_val is not None and not str(run_val).isdigit():
                 run_for_bidspath = None
@@ -281,25 +306,12 @@ class EEGBIDSDataset:
                 space=entities.get("space"),
                 split=entities.get("split"),
                 description=entities.get("description"),
-                datatype=modality,
+                datatype=entities.get("modality"),
                 extension=filepath.suffix,
                 root=self.bidsdir,
                 check=False,
             )
             self._bids_path_cache[data_filepath] = bids_path
-            self._bids_entity_cache[data_filepath] = {
-                "subject": entities.get("subject"),
-                "session": entities.get("session"),
-                "task": task_val,
-                "acquisition": entities.get("acquisition"),
-                "run": run_val,
-                "processing": entities.get("processing"),
-                "recording": entities.get("recording"),
-                "space": entities.get("space"),
-                "split": entities.get("split"),
-                "description": entities.get("description"),
-                "modality": modality,
-            }
 
         return self._bids_path_cache[data_filepath]
 
@@ -498,17 +510,15 @@ class EEGBIDSDataset:
             The value of the requested attribute, or None if not found.
 
         """
-        bids_path = self._get_bids_path_from_file(data_filepath)
-        entities = self._bids_entity_cache.get(data_filepath, {})
+        entities = self._get_bids_entities_from_file(data_filepath)
 
-        # Direct BIDSPath properties for entities
         direct_attrs = {
-            "subject": entities.get("subject", bids_path.subject),
-            "session": entities.get("session", bids_path.session),
-            "task": entities.get("task", bids_path.task),
-            "run": entities.get("run", bids_path.run),
-            "acquisition": entities.get("acquisition", bids_path.acquisition),
-            "modality": entities.get("modality", bids_path.datatype),
+            "subject": entities.get("subject"),
+            "session": entities.get("session"),
+            "task": entities.get("task"),
+            "run": entities.get("run"),
+            "acquisition": entities.get("acquisition"),
+            "modality": entities.get("modality"),
         }
 
         if attribute in direct_attrs:
@@ -516,7 +526,7 @@ class EEGBIDSDataset:
 
         # For JSON-based attributes, read the modality-specific JSON file
         # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG, nirs.json for NIRS)
-        modality = bids_path.datatype or "eeg"
+        modality = entities.get("modality") or "eeg"
         json_filename = f"{modality}.json"
         modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
 

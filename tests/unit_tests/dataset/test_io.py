@@ -50,7 +50,7 @@ def test_convert_time_with_numeric_dash_iso():
 
 
 def test_convert_time_with_numeric_dash_fallback():
-    """Completely unparseable date is passed through to orig unchanged."""
+    """Completely unparsable date is passed through to orig unchanged."""
     orig = MagicMock(return_value=999.0)
     out = _convert_time_with_numeric_dash("not-a-date", "12:00:00", orig=orig)
     assert out == 999.0

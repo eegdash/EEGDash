@@ -63,7 +63,7 @@ _UNRECOVERABLE_PATTERNS = [
     # EEGLAB reader: invalid file extension check
     "EEGLAB file extension",
     # EEGLAB reader errors from non-standard .set structures
-    "allowed values",
+    "Allowed values",
     "has no attribute",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",

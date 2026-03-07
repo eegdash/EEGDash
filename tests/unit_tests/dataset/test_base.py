@@ -105,6 +105,41 @@ def test_base_ensure_raw_failure(tmp_path):
                 assert len(ds) == 0
 
 
+def test_load_raw_retries_on_ctf_illegal_date(tmp_path):
+    """When _read_raw_bids raises 'Illegal date', _load_raw patches CTF parser and retries."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.base import EEGDashRaw
+
+    (tmp_path / "sub-01" / "sub-01_meg.ds").mkdir(
+        parents=True
+    )  # CTF .ds is a directory
+    record = {
+        "dataset": "ds",
+        "bids_relpath": "sub-01/sub-01_meg.ds",
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path),
+            "raw_key": "sub-01/sub-01_meg.ds",
+        },
+    }
+    mock_raw = MagicMock()
+
+    with patch("eegdash.dataset.base.validate_record", return_value=[]):
+        ds = EEGDashRaw(record, str(tmp_path))
+        with patch.object(ds, "_download_required_files"):
+            with patch(
+                "eegdash.dataset.base.mne_bids.read_raw_bids",
+                side_effect=[
+                    RuntimeError("Illegal date: 14-10-1925."),
+                    mock_raw,
+                ],
+            ):
+                result = ds._load_raw()
+
+    assert result is mock_raw
+
+
 def test_base_len_from_metadata(tmp_path):
     from unittest.mock import patch
 

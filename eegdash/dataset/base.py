@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import re
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +26,7 @@ from ..logging import logger
 from ..schemas import validate_record
 from .exceptions import DataIntegrityError
 from .io import (
+    _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
@@ -318,12 +320,16 @@ class EEGDashRaw(RawDataset):
           the scans.tsv and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
+        - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
+          MNE's CTF date parser to try %d-%m-%Y and retries.
         """
         try:
             return self._read_raw_bids()
         except RuntimeError as first_error:
             if "coordsystem.json is REQUIRED" in str(first_error):
                 return self._retry_with_generated_coordsystem(first_error)
+            if "Illegal date" in str(first_error):
+                return self._retry_with_ctf_date_patch(first_error)
             raise
         except (ValueError, OSError) as first_error:
             msg = str(first_error)
@@ -426,6 +432,17 @@ class EEGDashRaw(RawDataset):
                 )
                 raise retry_error from first_error
         raise first_error
+
+    def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read after patching MNE to accept numeric dash dates (e.g. 14-10-1925)."""
+        import mne.io.ctf.info as ctf_info
+
+        orig = ctf_info._convert_time
+        try:
+            ctf_info._convert_time = partial(_convert_time_with_numeric_dash, orig=orig)
+            return self._read_raw_bids()
+        finally:
+            ctf_info._convert_time = orig
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

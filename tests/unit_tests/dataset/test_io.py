@@ -10,6 +10,7 @@ from eegdash.dataset.io import (
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
+    _repair_channels_tsv,
     _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
@@ -618,3 +619,81 @@ def test_repair_events_tsv_no_nan(tmp_path):
 def test_repair_events_tsv_nonexistent_dir(tmp_path):
     """Returns False for nonexistent directory."""
     assert _repair_events_tsv_nan_samples(tmp_path / "missing") is False
+
+
+# ---------- _repair_channels_tsv ----------
+
+
+def test_repair_channels_tsv_empty_file(tmp_path):
+    """Empty channels.tsv is overwritten with 'name' header."""
+    (tmp_path / "sub-01_channels.tsv").write_text("")
+    assert _repair_channels_tsv(tmp_path) is True
+    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+
+
+def test_repair_channels_tsv_whitespace_only(tmp_path):
+    """Whitespace-only channels.tsv is overwritten with 'name' header."""
+    (tmp_path / "sub-01_channels.tsv").write_text("   \n\n  \t  \n")
+    assert _repair_channels_tsv(tmp_path) is True
+    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+
+
+def test_repair_channels_tsv_missing_name_column(tmp_path):
+    """First column is renamed to 'name' when header lacks it."""
+    content = "foo\ttype\tunits\nEEG1\teeg\tuV\nEEG2\teeg\tuV\n"
+    (tmp_path / "sub-01_channels.tsv").write_text(content)
+    assert _repair_channels_tsv(tmp_path) is True
+    lines = (tmp_path / "sub-01_channels.tsv").read_text().splitlines()
+    assert lines[0] == "name\ttype\tunits"
+    assert lines[1] == "EEG1\teeg\tuV"
+    assert lines[2] == "EEG2\teeg\tuV"
+
+
+def test_repair_channels_tsv_valid_file(tmp_path):
+    """Valid channels.tsv with 'name' column is left unchanged."""
+    content = "name\ttype\tunits\nEEG1\teeg\tuV\n"
+    (tmp_path / "sub-01_channels.tsv").write_text(content)
+    assert _repair_channels_tsv(tmp_path) is False
+    assert (tmp_path / "sub-01_channels.tsv").read_text() == content
+
+
+def test_repair_channels_tsv_header_only(tmp_path):
+    """Header-only channels.tsv with 'name' is left unchanged."""
+    content = "name\ttype\tunits\n"
+    (tmp_path / "sub-01_channels.tsv").write_text(content)
+    assert _repair_channels_tsv(tmp_path) is False
+
+
+def test_repair_channels_tsv_nonexistent_dir(tmp_path):
+    """Returns False for nonexistent directory."""
+    assert _repair_channels_tsv(tmp_path / "missing") is False
+
+
+def test_repair_channels_tsv_no_channels_files(tmp_path):
+    """Returns False when no *_channels.tsv files exist."""
+    (tmp_path / "sub-01_events.tsv").write_text("onset\tduration\n")
+    assert _repair_channels_tsv(tmp_path) is False
+
+
+def test_repair_channels_tsv_bom_valid(tmp_path):
+    """BOM + valid header is left unchanged."""
+    content = "name\ttype\tunits\nEEG1\teeg\tuV\n"
+    (tmp_path / "sub-01_channels.tsv").write_text(content, encoding="utf-8-sig")
+    assert _repair_channels_tsv(tmp_path) is False
+
+
+def test_repair_channels_tsv_bom_empty(tmp_path):
+    """BOM-only file (no real content) is overwritten with 'name' header."""
+    (tmp_path / "sub-01_channels.tsv").write_bytes(b"\xef\xbb\xbf")
+    assert _repair_channels_tsv(tmp_path) is True
+    assert (tmp_path / "sub-01_channels.tsv").read_text() == "name\n"
+
+
+def test_repair_channels_tsv_multiple_files(tmp_path):
+    """Only bad files are repaired; good files are unchanged."""
+    good = "name\ttype\tunits\nEEG1\teeg\tuV\n"
+    (tmp_path / "sub-01_channels.tsv").write_text(good)
+    (tmp_path / "sub-02_channels.tsv").write_text("")
+    assert _repair_channels_tsv(tmp_path) is True
+    assert (tmp_path / "sub-01_channels.tsv").read_text() == good
+    assert (tmp_path / "sub-02_channels.tsv").read_text() == "name\n"

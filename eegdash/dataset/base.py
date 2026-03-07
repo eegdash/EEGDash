@@ -32,6 +32,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _repair_channels_tsv,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
@@ -281,6 +282,7 @@ class EEGDashRaw(RawDataset):
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
             _repair_events_tsv_nan_samples(self.filecache.parent)
+            _repair_channels_tsv(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -335,6 +337,9 @@ class EEGDashRaw(RawDataset):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
+        - **Empty/malformed channels.tsv** (KeyError: 'name'): repairs the
+          channels.tsv in-place (adds missing header or renames first column)
+          and retries.
         """
         try:
             return self._read_raw_bids()
@@ -344,7 +349,7 @@ class EEGDashRaw(RawDataset):
             if "Illegal date" in str(first_error):
                 return self._retry_with_ctf_date_patch(first_error)
             raise
-        except (TypeError, ValueError, OSError) as first_error:
+        except (TypeError, ValueError, KeyError, OSError) as first_error:
             msg = str(first_error)
 
             # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
@@ -357,6 +362,15 @@ class EEGDashRaw(RawDataset):
                     record=self.record,
                     issues=[msg],
                 ) from first_error
+
+            # Malformed channels.tsv (empty or missing 'name' column)
+            if isinstance(first_error, KeyError) and "name" in str(first_error):
+                if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                    logger.info("Repaired malformed channels.tsv, retrying load...")
+                    try:
+                        return self._read_raw_bids()
+                    except Exception as retry_error:
+                        raise retry_error from first_error
 
             # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
             if "second must be" in msg or "does not match format" in msg:

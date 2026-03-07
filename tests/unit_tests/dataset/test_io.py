@@ -4,16 +4,53 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from eegdash.dataset.io import (
+    _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
-    _load_raw_brainvision_direct,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
+
+
+def test_convert_time_with_numeric_dash_dd_mm_yyyy():
+    """Numeric dash date 14-10-1925 (DD-MM-YYYY) is normalized to 14/10/1925 and delegated."""
+    orig = MagicMock(return_value=12345.0)
+    out = _convert_time_with_numeric_dash("14-10-1925", "12:00:00", orig=orig)
+    assert out == 12345.0
+    orig.assert_called_once_with("14/10/1925", "12:00:00")
+
+
+def test_convert_time_with_numeric_dash_mm_dd_yyyy():
+    """Numeric dash date 10-14-1925 (MM-DD-YYYY) is normalized and delegated."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("10-14-1925", "00:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "00:00:00")
+
+
+def test_convert_time_with_numeric_dash_iso():
+    """ISO-style YYYY-MM-DD is normalized to dd/mm/yyyy and delegated."""
+    orig = MagicMock(return_value=1.0)
+    _convert_time_with_numeric_dash("1925-10-14", "01:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "01:00:00")
+
+
+def test_convert_time_with_numeric_dash_fallback():
+    """Unsupported date format is passed through to orig unchanged."""
+    orig = MagicMock(return_value=999.0)
+    out = _convert_time_with_numeric_dash("14/Oct/1925", "12:00:00", orig=orig)
+    assert out == 999.0
+    orig.assert_called_once_with("14/Oct/1925", "12:00:00")
+
+
+def test_convert_time_with_numeric_dash_strips_whitespace():
+    """Date string is stripped before parsing."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("  14-10-1925  ", "00:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "00:00:00")
 
 
 def test_repair_vhdr_pointers(tmp_path):
@@ -86,6 +123,55 @@ MarkerFile=MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vmrk
     assert "MarkerFile=sub-01_task-main_run-001_eeg.vmrk" in text
     assert "s2_run1_08062017.eeg" not in text
     assert "MD5E-s11657--" not in text
+
+
+def test_repair_vhdr_annex_key_no_bids_file(tmp_path):
+    """Annex-key pointers rewritten to BIDS names even when target doesn't exist.
+
+    Covers ds002158, ds003688, ds003848, ds005953 where the .vmrk was not
+    downloaded and is only created as a stub *after* repair.
+    """
+    eeg_dir = tmp_path
+
+    # No BIDS-named companion files exist yet
+    vhdr_path = eeg_dir / "sub-01_ses-01_task-visual_run-01_ieeg.vhdr"
+    vhdr_content = """Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile=SHA256E-s9999--abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890.eeg
+MarkerFile=SHA256E-s1808--43036bd24716b3b8a7b2c56f44360206d2872b30480859311989e9e10466598a.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    assert "DataFile=sub-01_ses-01_task-visual_run-01_ieeg.eeg" in text
+    assert "MarkerFile=sub-01_ses-01_task-visual_run-01_ieeg.vmrk" in text
+    assert "SHA256E-" not in text
+
+
+def test_repair_vhdr_annex_key_resolved_symlink(tmp_path):
+    """Annex keys are rewritten even when the annex symlink resolves."""
+    eeg_dir = tmp_path
+
+    # Simulate a resolved annex symlink — file exists with the annex key name
+    annex_eeg = "SHA256E-s5000--aabbccdd11223344aabbccdd11223344aabbccdd11223344aabbccdd11223344.eeg"
+    (eeg_dir / annex_eeg).touch()
+
+    vhdr_path = eeg_dir / "sub-02_task-rest_eeg.vhdr"
+    vhdr_content = f"""Brain Vision Data Exchange Header File Version 1.0
+[Common Infos]
+DataFile={annex_eeg}
+MarkerFile=sub-02_task-rest_eeg.vmrk
+"""
+    vhdr_path.write_text(vhdr_content)
+    (eeg_dir / "sub-02_task-rest_eeg.vmrk").touch()
+
+    repaired = _repair_vhdr_pointers(vhdr_path)
+    assert repaired is True
+    text = vhdr_path.read_text()
+    assert "DataFile=sub-02_task-rest_eeg.eeg" in text
+    assert "SHA256E-" not in text
 
 
 def test_repair_vhdr_no_change_needed(tmp_path):
@@ -498,18 +584,3 @@ def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
     tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tµV\n")
 
     assert _repair_tsv_decimal_separators(tmp_path) is False
-
-
-# Tests for direct BrainVision loader
-
-
-def test_load_raw_brainvision_direct_calls_mne(tmp_path):
-    """Test _load_raw_brainvision_direct calls mne.io.read_raw_brainvision."""
-    vhdr_path = tmp_path / "sub-01_task-rest_run-5H_eeg.vhdr"
-
-    mock_raw = MagicMock()
-    with patch("mne.io.read_raw_brainvision", return_value=mock_raw) as mock_read:
-        result = _load_raw_brainvision_direct(vhdr_path)
-
-    mock_read.assert_called_once_with(str(vhdr_path), preload=False, verbose="ERROR")
-    assert result is mock_raw

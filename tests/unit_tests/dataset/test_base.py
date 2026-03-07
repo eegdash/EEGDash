@@ -105,6 +105,41 @@ def test_base_ensure_raw_failure(tmp_path):
                 assert len(ds) == 0
 
 
+def test_load_raw_retries_on_ctf_illegal_date(tmp_path):
+    """When _read_raw_bids raises 'Illegal date', _load_raw patches CTF parser and retries."""
+    from unittest.mock import MagicMock, patch
+
+    from eegdash.dataset.base import EEGDashRaw
+
+    (tmp_path / "sub-01" / "sub-01_meg.ds").mkdir(
+        parents=True
+    )  # CTF .ds is a directory
+    record = {
+        "dataset": "ds",
+        "bids_relpath": "sub-01/sub-01_meg.ds",
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path),
+            "raw_key": "sub-01/sub-01_meg.ds",
+        },
+    }
+    mock_raw = MagicMock()
+
+    with patch("eegdash.dataset.base.validate_record", return_value=[]):
+        ds = EEGDashRaw(record, str(tmp_path))
+        with patch.object(ds, "_download_required_files"):
+            with patch(
+                "eegdash.dataset.base.mne_bids.read_raw_bids",
+                side_effect=[
+                    RuntimeError("Illegal date: 14-10-1925."),
+                    mock_raw,
+                ],
+            ):
+                result = ds._load_raw()
+
+    assert result is mock_raw
+
+
 def test_base_len_from_metadata(tmp_path):
     from unittest.mock import patch
 
@@ -557,7 +592,7 @@ def test_load_raw_falls_back_for_non_numeric_run_vhdr(mock_validate, tmp_path):
 
     with patch("mne_bids.read_raw_bids", side_effect=ValueError("run is not an index")):
         with patch(
-            "eegdash.dataset.base._load_raw_brainvision_direct", return_value=mock_raw
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
         ) as mock_direct:
             result = ds._load_raw()
 
@@ -591,7 +626,7 @@ def test_load_raw_numeric_run_vhdr_does_not_fallback(mock_validate, tmp_path):
     ds = EEGDashRaw(record, cache_dir=str(tmp_path))
 
     with patch("mne_bids.read_raw_bids", side_effect=ValueError("Some other error")):
-        with patch("eegdash.dataset.base._load_raw_brainvision_direct") as mock_direct:
+        with patch("eegdash.dataset.base._load_raw_direct") as mock_direct:
             with pytest.raises(ValueError, match="Some other error"):
                 ds._load_raw()
 
@@ -633,7 +668,7 @@ def test_load_raw_vhdr_fallback_failure_chains_exceptions(mock_validate, tmp_pat
 
     with patch("mne_bids.read_raw_bids", side_effect=original_error):
         with patch(
-            "eegdash.dataset.base._load_raw_brainvision_direct",
+            "eegdash.dataset.base._load_raw_direct",
             side_effect=fallback_error,
         ):
             with pytest.raises(IOError, match="Corrupted VHDR file") as exc_info:
@@ -641,3 +676,260 @@ def test_load_raw_vhdr_fallback_failure_chains_exceptions(mock_validate, tmp_pat
 
     # Verify exception chaining preserves the original MNE-BIDS error
     assert exc_info.value.__cause__ is original_error
+
+
+# ─── Tests for new error handlers ───────────────────────────────────────
+
+
+def _make_local_eegdashraw(tmp_path, dataset_id, bids_relpath, ext=".edf", **extra):
+    """Helper: create an EEGDashRaw with a local backend and minimal record."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    parts = bids_relpath.split("/")
+    data_dir = tmp_path / dataset_id / "/".join(parts[:-1])
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (tmp_path / dataset_id / bids_relpath).touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": extra.get("entities", {"subject": "01", "task": "rest"}),
+        "entities_mne": extra.get("entities_mne", {"subject": "01", "task": "rest"}),
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
+# ── Error 2 / 3: Unrecoverable data corruption → DataIntegrityError ──
+
+
+@pytest.mark.parametrize(
+    "error_msg",
+    [
+        "Bad EDF+ header: invalid data record count",
+        "invalid literal for int() with base 10: 'abc'",
+        "Could not find any data in the raw file",
+        "no valid samples found in data",
+    ],
+    ids=["bad_edf", "invalid_int", "no_data", "no_samples"],
+)
+def test_load_raw_unrecoverable_raises_data_integrity_error(tmp_path, error_msg):
+    """Unrecoverable ValueError/OSError must become DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_corrupt", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    exc_cls = OSError if "Could not find" in error_msg else ValueError
+    with patch("mne_bids.read_raw_bids", side_effect=exc_cls(error_msg)):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()
+
+
+# ── Error 1: Invalid scans.tsv timestamp → repair + retry ──
+
+
+def test_load_raw_repairs_bad_scans_timestamp_and_retries(tmp_path):
+    """'second must be' error should trigger timestamp repair then retry."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise ValueError("second must be in 0..59")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_scans_tsv_timestamps", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once()
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_timestamp_repair_fails_still_raises(tmp_path):
+    """If timestamp repair returns False, original ValueError re-raises."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("second must be in 0..59"),
+    ):
+        with patch(
+            "eegdash.dataset.base._repair_scans_tsv_timestamps",
+            return_value=False,
+        ):
+            with pytest.raises(ValueError, match="second must be"):
+                ds._load_raw()
+
+
+# ── Error 5: Unallowed BIDS entity → direct reader fallback ──
+
+
+def test_load_raw_unallowed_entity_falls_back_to_direct(tmp_path):
+    """'Unallowed' ValueError should fall back to _load_raw_direct."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005752", "sub-01/eeg/sub-01_task-my-task_eeg.edf"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("Unallowed -, _, or / in task"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+# ── Error 4: CTF .ds directory completeness ──
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_ensure_ctf_directory_complete_passes_when_files_exist(mock_validate, tmp_path):
+    """CTF check should pass when .meg4 and .res4 exist."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    dataset_id = "ds005279"
+    bids_relpath = "sub-01/meg/sub-01_task-rest_meg.ds"
+    ds_dir = tmp_path / dataset_id / "sub-01" / "meg" / "sub-01_task-rest_meg.ds"
+    ds_dir.mkdir(parents=True)
+    (ds_dir / "sub-01_task-rest_meg.meg4").touch()
+    (ds_dir / "sub-01_task-rest_meg.res4").touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "01", "task": "rest"},
+        "entities_mne": {"subject": "01", "task": "rest"},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    # Should not raise — files exist
+    ds._ensure_ctf_directory_complete()
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_ensure_ctf_directory_incomplete_raises(mock_validate, tmp_path):
+    """CTF check should raise DataIntegrityError when files are missing."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    dataset_id = "ds005279"
+    bids_relpath = "sub-01/meg/sub-01_task-rest_meg.ds"
+    ds_dir = tmp_path / dataset_id / "sub-01" / "meg" / "sub-01_task-rest_meg.ds"
+    ds_dir.mkdir(parents=True)
+    # Only create .res4, missing .meg4
+    (ds_dir / "sub-01_task-rest_meg.res4").touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "01", "task": "rest"},
+        "entities_mne": {"subject": "01", "task": "rest"},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with pytest.raises(DataIntegrityError, match="CTF .ds directory incomplete"):
+        ds._ensure_ctf_directory_complete()
+
+
+# ── _repair_scans_tsv_timestamps standalone tests ──
+
+
+def test_repair_scans_tsv_timestamps_fixes_bad_seconds(tmp_path):
+    """Timestamps with seconds >= 60 should be replaced with n/a."""
+    from eegdash.dataset.io import _repair_scans_tsv_timestamps
+
+    scans = tmp_path / "sub-01_scans.tsv"
+    scans.write_text(
+        "filename\tacq_time\n"
+        "eeg/file1.edf\t2020-01-01T12:30:60\n"
+        "eeg/file2.edf\t2020-01-01T12:30:45\n"
+    )
+
+    assert _repair_scans_tsv_timestamps(tmp_path) is True
+
+    lines = scans.read_text().strip().split("\n")
+    assert lines[1].split("\t")[1] == "n/a"
+    assert lines[2].split("\t")[1] == "2020-01-01T12:30:45"
+
+
+def test_repair_scans_tsv_timestamps_noop_when_valid(tmp_path):
+    """No changes when all timestamps are valid."""
+    from eegdash.dataset.io import _repair_scans_tsv_timestamps
+
+    scans = tmp_path / "sub-01_scans.tsv"
+    scans.write_text("filename\tacq_time\neeg/file1.edf\t2020-01-01T12:30:45\n")
+
+    assert _repair_scans_tsv_timestamps(tmp_path) is False
+
+
+def test_repair_scans_tsv_timestamps_handles_na(tmp_path):
+    """Existing n/a values should not be modified."""
+    from eegdash.dataset.io import _repair_scans_tsv_timestamps
+
+    scans = tmp_path / "sub-01_scans.tsv"
+    scans.write_text("filename\tacq_time\neeg/file1.edf\tn/a\n")
+
+    assert _repair_scans_tsv_timestamps(tmp_path) is False
+
+
+# ── _load_raw_direct standalone tests ──
+
+
+def test_load_raw_direct_unsupported_extension():
+    """Unsupported extension should raise ValueError."""
+    from pathlib import Path
+
+    from eegdash.dataset.io import _load_raw_direct
+
+    with pytest.raises(ValueError, match="No direct reader"):
+        _load_raw_direct(Path("/tmp/test.xyz"))
+
+
+def test_load_raw_direct_calls_correct_reader(tmp_path):
+    """_load_raw_direct should map extensions to correct MNE readers."""
+    from eegdash.dataset.io import _load_raw_direct
+
+    edf_path = tmp_path / "test.edf"
+    edf_path.touch()
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_edf", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(edf_path)
+
+    mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
+    assert result is mock_raw

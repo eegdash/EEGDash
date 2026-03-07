@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import re
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -25,16 +26,27 @@ from ..logging import logger
 from ..schemas import validate_record
 from .exceptions import DataIntegrityError
 from .io import (
+    _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
-    _load_raw_brainvision_direct,
+    _load_raw_direct,
+    _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_vhdr_pointers,
 )
+
+# Error messages indicating unrecoverable data corruption — the source
+# file itself is broken and no amount of BIDS-metadata repair will help.
+_UNRECOVERABLE_PATTERNS = [
+    "Bad EDF",
+    "invalid literal for int",
+    "Could not find any data",
+    "no valid samples",
+]
 
 
 class EEGDashRaw(RawDataset):
@@ -175,8 +187,69 @@ class EEGDashRaw(RawDataset):
                 self._raw_uri, self.filecache, filesystem=filesystem
             )
 
+        # CTF MEG .ds directories require internal files (.meg4, .res4, etc.)
+        if self.filecache and self.filecache.suffix == ".ds":
+            self._ensure_ctf_directory_complete()
+
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    def _ensure_ctf_directory_complete(self) -> None:
+        """Verify a CTF ``.ds`` directory has the required internal files.
+
+        CTF MEG datasets are stored as directories containing ``.meg4``
+        (data), ``.res4`` (header), and other supporting files.  When
+        downloading from S3 the individual dependency keys may not
+        include all internal files.  This method checks for the minimum
+        required files and, if missing, attempts a recursive download of
+        the entire ``.ds`` S3 prefix.
+        """
+        ds_dir = self.filecache
+        if not ds_dir.exists():
+            ds_dir.mkdir(parents=True, exist_ok=True)
+
+        required_exts = (".meg4", ".res4")
+        missing = [ext for ext in required_exts if not list(ds_dir.glob(f"*{ext}"))]
+
+        if not missing:
+            return
+
+        # Attempt recursive S3 download of the full .ds prefix
+        if self._raw_uri is not None:
+            logger.info(
+                "CTF .ds directory missing %s — attempting recursive S3 download.",
+                ", ".join(missing),
+            )
+            try:
+                filesystem = downloader.get_s3_filesystem()
+                # Strip protocol prefix for s3fs operations
+                s3_prefix = re.sub(r"^s3://", "", self._raw_uri)
+                remote_files = filesystem.ls(s3_prefix, detail=False)
+                pairs = []
+                for remote in remote_files:
+                    fname = Path(remote).name
+                    local = ds_dir / fname
+                    pairs.append((f"s3://{remote}", local))
+                if pairs:
+                    downloader.download_files(
+                        pairs, filesystem=filesystem, skip_existing=True
+                    )
+            except Exception as e:
+                logger.warning("Recursive CTF download failed: %s", e)
+
+        # Re-check after download attempt
+        still_missing = [
+            ext for ext in required_exts if not list(ds_dir.glob(f"*{ext}"))
+        ]
+        if still_missing:
+            raise DataIntegrityError(
+                message=(
+                    f"CTF .ds directory incomplete — missing {', '.join(still_missing)} "
+                    f"in {ds_dir}"
+                ),
+                record=self.record,
+                issues=[f"Missing required CTF file(s): {', '.join(still_missing)}"],
+            )
 
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally.
@@ -194,20 +267,21 @@ class EEGDashRaw(RawDataset):
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
+            _repair_scans_tsv_timestamps(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
+            # Generate VMRK stub first so pointer repair can find the target
+            vmrk_path = self.filecache.with_suffix(".vmrk")
+            if not vmrk_path.exists():
+                _generate_vmrk_stub(vmrk_path, self.filecache.name)
+
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
                 _generate_vhdr_from_metadata(self.filecache, self.record)
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
-
-            # Also generate VMRK stub if missing (common issue with some datasets)
-            vmrk_path = self.filecache.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, self.filecache.name)
 
         if self._raw is None:
             try:
@@ -235,15 +309,67 @@ class EEGDashRaw(RawDataset):
           ``iEEGCoordinateSystem`` keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
+        - **Unrecoverable corruption** (Bad EDF, empty MEG data, etc.):
+          raises ``DataIntegrityError`` for clean error reporting.
+        - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
+          the scans.tsv and retries.
+        - **Invalid BIDS entity characters** (hyphens in task, etc.):
+          falls back to direct MNE reader.
+        - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
+          MNE's CTF date parser to try %d-%m-%Y and retries.
         """
         try:
             return self._read_raw_bids()
         except RuntimeError as first_error:
-            # mne-bids raises RuntimeError with this message when
-            # electrodes.tsv exists but coordsystem.json is missing.
-            # Fragile string match — tied to mne-bids wording (PR #1523).
             if "coordsystem.json is REQUIRED" in str(first_error):
                 return self._retry_with_generated_coordsystem(first_error)
+            if "Illegal date" in str(first_error):
+                return self._retry_with_ctf_date_patch(first_error)
+            raise
+        except (ValueError, OSError) as first_error:
+            msg = str(first_error)
+
+            # Unrecoverable data corruption (bad EDF, empty MEG, etc.)
+            if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                raise DataIntegrityError(
+                    message=f"Cannot read data file: {msg}",
+                    record=self.record,
+                    issues=[msg],
+                ) from first_error
+
+            # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
+            if "second must be" in msg or "does not match format" in msg:
+                if self.filecache and _repair_scans_tsv_timestamps(
+                    self.filecache.parent
+                ):
+                    logger.info("Repaired scans.tsv timestamps, retrying load...")
+                    try:
+                        return self._read_raw_bids()
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+            # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
+            if "Unallowed" in msg and self.filecache:
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
+
+            # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
+            if (
+                self.filecache
+                and self.filecache.suffix.lower() == ".vhdr"
+                and self._has_non_numeric_run()
+            ):
+                logger.warning(
+                    "MNE-BIDS failed for VHDR with non-numeric run, "
+                    "falling back to direct MNE reader."
+                )
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise fallback_error from first_error
+
             raise
         except Exception as first_error:
             # For SNIRF files, try to fix and retry
@@ -257,21 +383,6 @@ class EEGDashRaw(RawDataset):
                     except Exception as retry_error:
                         logger.error(f"Retry also failed: {retry_error}")
                         raise retry_error from first_error
-            # For VHDR files with non-numeric run values (e.g. run-5H),
-            # fall back to direct mne.io.read_raw_brainvision()
-            if (
-                self.filecache
-                and self.filecache.suffix.lower() == ".vhdr"
-                and self._has_non_numeric_run()
-            ):
-                logger.warning(
-                    "MNE-BIDS failed for VHDR with non-numeric run, "
-                    "falling back to direct mne.io.read_raw_brainvision()."
-                )
-                try:
-                    return _load_raw_brainvision_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
 
             # Not a fixable case - re-raise original error
             raise
@@ -305,6 +416,17 @@ class EEGDashRaw(RawDataset):
                 )
                 raise retry_error from first_error
         raise first_error
+
+    def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read after patching MNE to accept numeric dash dates (e.g. 14-10-1925)."""
+        import mne.io.ctf.info as ctf_info
+
+        orig = ctf_info._convert_time
+        try:
+            ctf_info._convert_time = partial(_convert_time_with_numeric_dash, orig=orig)
+            return self._read_raw_bids()
+        finally:
+            ctf_info._convert_time = orig
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

@@ -10,9 +10,22 @@ import os
 import re
 from difflib import SequenceMatcher
 from pathlib import Path
+from time import strptime
 from typing import Any
 
 from ..logging import logger
+
+
+def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
+    """Try numeric dash date formats and delegate to orig (MNE's _convert_time)."""
+    for fmt in ("%d-%m-%Y", "%m-%d-%Y", "%Y-%m-%d"):
+        try:
+            date = strptime(date_str.strip(), fmt)
+            normalized = f"{date.tm_mday:02d}/{date.tm_mon:02d}/{date.tm_year}"
+            return orig(normalized, time_str)
+        except ValueError:
+            continue
+    return orig(date_str, time_str)
 
 
 def _find_best_matching_file(
@@ -60,6 +73,9 @@ def _find_best_matching_file(
     return best_match
 
 
+_ANNEX_KEY_RE = re.compile(r"^(SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE)
+
+
 class _VHDRPointerFixer:
     """Helper class to fix VHDR pointers with state tracking."""
 
@@ -73,23 +89,24 @@ class _VHDRPointerFixer:
         key = match.group(1)  # DataFile or MarkerFile
         old_val = match.group(2).strip()
 
-        annex_key_pattern = re.compile(
-            r"^(SHA256E|MD5E)-[^.]*\.(vmrk|eeg)$", flags=re.IGNORECASE
-        )
+        is_annex_key = bool(_ANNEX_KEY_RE.match(old_val))
 
-        # If the pointed file exists, do nothing
-        if (self.data_dir / old_val).exists():
+        # If the pointed file exists AND it's not an annex key, keep it.
+        # Annex keys are always rewritten: the key-based filename only
+        # resolves inside a git-annex repo, so outside that context
+        # (e.g. S3 download cache) it will always fail.
+        if not is_annex_key and (self.data_dir / old_val).exists():
             return match.group(0)
 
         # Determine expected extension
         ext = ".vmrk" if key == "MarkerFile" else ".eeg"
 
-        # Strategy 1: Check if BIDS filename exists (same stem as .vhdr)
+        # Strategy 1: Use BIDS filename (same stem as .vhdr).
+        # For annex keys we always rewrite — the target file need not
+        # exist yet (a VMRK stub may be generated right after repair).
         bids_name = self.vhdr_path.with_suffix(ext).name
-        # Do not \"repair\" to an annex-style filename
-        if (
-            not annex_key_pattern.match(bids_name)
-            and (self.data_dir / bids_name).exists()
+        if not _ANNEX_KEY_RE.match(bids_name) and (
+            is_annex_key or (self.data_dir / bids_name).exists()
         ):
             self.changes = True
             logger.info(
@@ -104,7 +121,7 @@ class _VHDRPointerFixer:
         if (
             fuzzy_match
             and (self.data_dir / fuzzy_match).exists()
-            and not annex_key_pattern.match(fuzzy_match)
+            and not _ANNEX_KEY_RE.match(fuzzy_match)
         ):
             self.changes = True
             logger.info(
@@ -599,65 +616,135 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
         logger.warning(f"Error reading SNIRF for channel repair: {e}")
 
     # ==== Fix 2: Remove malformed scans.tsv entries ====
-    try:
-        scans_files = list(data_dir.parent.glob("*_scans.tsv"))
-        if not scans_files:
-            scans_files = list(data_dir.parent.glob("scans.tsv"))
-
-        for scans_tsv in scans_files:
-            try:
-                import pandas as pd
-
-                df = pd.read_csv(scans_tsv, sep="\t")
-
-                if "acq_time" in df.columns:
-                    # Check for malformed timestamps: NaN, empty, or very short strings
-                    malformed = df["acq_time"].apply(
-                        lambda x: (
-                            pd.isna(x)
-                            or (isinstance(x, str) and (len(x) < 10 or x.strip() == ""))
-                        )
-                    )
-
-                    if malformed.any():
-                        repairs_made = True
-
-                        # Convert column to string type, then replace malformed values
-                        df["acq_time"] = df["acq_time"].astype(str)
-                        df.loc[malformed, "acq_time"] = "n/a"
-                        df.to_csv(scans_tsv, sep="\t", index=False)
-                        logger.info(
-                            f"Fixed {malformed.sum()} malformed timestamps in {scans_tsv.name}"
-                        )
-
-            except Exception as e:
-                logger.warning(f"Could not repair scans.tsv: {e}")
-
-    except Exception as e:
-        logger.warning(f"Error fixing scans.tsv: {e}")
+    if _repair_scans_tsv_timestamps(data_dir):
+        repairs_made = True
 
     return repairs_made
 
 
-def _load_raw_brainvision_direct(vhdr_path: Path):
-    """Load a BrainVision file directly, bypassing MNE-BIDS.
+def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
+    """Fix invalid timestamps in ``*_scans.tsv`` files.
 
-    Used as a fallback when MNE-BIDS cannot handle non-numeric BIDS run
-    values (e.g. ``run-5H``).  The signal data, channel names, and sampling
-    frequency from the VHDR header are preserved; BIDS sidecar integration
-    (channels.tsv, eeg.json) is skipped.
+    ``mne_bids.read_raw_bids()`` parses ``acq_time`` values via
+    ``datetime.fromisoformat()``.  Some datasets contain malformed
+    timestamps (seconds >= 60, NaN values, truncated strings) that crash
+    the parser.  This function replaces any unparsable ``acq_time``
+    entries with ``"n/a"`` so that loading can proceed.
 
     Parameters
     ----------
-    vhdr_path : Path
-        Path to the ``.vhdr`` file.
+    data_dir : Path
+        The directory containing the data file (e.g. ``sub-01/eeg/``).
+        Scans files are searched in both ``data_dir`` *and* its parent
+        (session-level ``scans.tsv``).
+
+    Returns
+    -------
+    bool
+        True if any timestamps were repaired, False otherwise.
+
+    """
+    from datetime import datetime
+
+    search_dirs = [data_dir]
+    if data_dir.parent.exists():
+        search_dirs.append(data_dir.parent)
+
+    repaired_any = False
+    seen: set[Path] = set()
+
+    for d in search_dirs:
+        for scans_tsv in list(d.glob("*_scans.tsv")) + list(d.glob("scans.tsv")):
+            if scans_tsv in seen:
+                continue
+            seen.add(scans_tsv)
+
+            try:
+                lines = scans_tsv.read_text(encoding="utf-8").splitlines()
+            except Exception:
+                continue
+
+            if not lines:
+                continue
+
+            header = lines[0].split("\t")
+            try:
+                acq_idx = header.index("acq_time")
+            except ValueError:
+                continue
+
+            new_lines = [lines[0]]
+            changed = False
+            for line in lines[1:]:
+                cols = line.split("\t")
+                if acq_idx < len(cols):
+                    ts = cols[acq_idx].strip()
+                    if ts and ts.lower() != "n/a":
+                        try:
+                            datetime.fromisoformat(ts)
+                        except (ValueError, TypeError):
+                            cols[acq_idx] = "n/a"
+                            changed = True
+                new_lines.append("\t".join(cols))
+
+            if changed:
+                try:
+                    scans_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+                    logger.info(f"Repaired invalid timestamps in {scans_tsv.name}")
+                    repaired_any = True
+                except Exception as e:
+                    logger.warning(
+                        f"Failed to write repaired scans.tsv {scans_tsv.name}: {e}"
+                    )
+
+    return repaired_any
+
+
+def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
+    """Load a data file directly via MNE readers, bypassing MNE-BIDS.
+
+    Used as a fallback when MNE-BIDS entity validation rejects the
+    filename (e.g. hyphens in ``task-`` entities) but the underlying
+    data file is perfectly readable.
+
+    Parameters
+    ----------
+    filepath : Path
+        Path to the data file.
 
     Returns
     -------
     mne.io.BaseRaw
         The loaded Raw object.
 
+    Raises
+    ------
+    ValueError
+        If the file extension is not supported.
+
     """
     import mne
 
-    return mne.io.read_raw_brainvision(str(vhdr_path), preload=False, verbose="ERROR")
+    _EXT_TO_READER = {
+        ".vhdr": mne.io.read_raw_brainvision,
+        ".edf": mne.io.read_raw_edf,
+        ".bdf": mne.io.read_raw_bdf,
+        ".set": mne.io.read_raw_eeglab,
+        ".fif": mne.io.read_raw_fif,
+        ".cnt": mne.io.read_raw_cnt,
+    }
+
+    ext = filepath.suffix.lower()
+    reader = _EXT_TO_READER.get(ext)
+    if reader is None:
+        raise ValueError(
+            f"No direct reader for extension {ext!r}. "
+            f"Supported: {sorted(_EXT_TO_READER)}"
+        )
+
+    logger.warning(
+        "Falling back to direct %s reader for %s (bypassing MNE-BIDS).",
+        ext,
+        filepath.name,
+    )
+    return reader(str(filepath), preload=False, verbose="ERROR")

@@ -238,7 +238,7 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
         return None
 
 
-def _parse_fif_with_mne(fif_path: Path) -> dict[str, Any] | None:
+def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
     """Parse metadata from FIF file using MNE.
 
     Uses ``on_split_missing="warn"`` so that git-annex datasets where
@@ -252,27 +252,36 @@ def _parse_fif_with_mne(fif_path: Path) -> dict[str, Any] | None:
 
     Returns
     -------
-    dict[str, Any] | None
-        Dictionary with sampling_frequency, nchans, ch_names,
-        or None if parsing fails.
+    tuple[dict[str, Any] | None, bool]
+        A tuple of (metadata dict or None, is_split flag).
+        The is_split flag is True when MNE detects a split raw file.
 
     """
     # Check if file exists and is readable (not a broken git-annex symlink)
     if not fif_path.exists():
-        return None
+        return None, False
     try:
         resolved = fif_path.resolve()
         if not resolved.exists():
-            return None
+            return None, False
     except (OSError, RuntimeError):
-        return None
+        return None, False
 
     try:
         import mne
+        import warnings as _warnings
 
-        raw = mne.io.read_raw_fif(
-            str(fif_path), preload=False, on_split_missing="warn", verbose=False
-        )
+        is_split = False
+        with _warnings.catch_warnings(record=True) as caught:
+            _warnings.simplefilter("always")
+            raw = mne.io.read_raw_fif(
+                str(fif_path), preload=False, on_split_missing="warn", verbose=False
+            )
+        for w in caught:
+            if "split" in str(w.message).lower():
+                is_split = True
+                break
+
         try:
             result: dict[str, Any] = {}
 
@@ -285,7 +294,7 @@ def _parse_fif_with_mne(fif_path: Path) -> dict[str, Any] | None:
                 result["ch_names"] = list(ch_names)
                 result["nchans"] = len(ch_names)
 
-            return result if result else None
+            return (result if result else None), is_split
         finally:
             try:
                 raw.close()
@@ -293,7 +302,7 @@ def _parse_fif_with_mne(fif_path: Path) -> dict[str, Any] | None:
                 pass
 
     except Exception:
-        return None
+        return None, False
 
 
 # Companion files required for different formats
@@ -1047,8 +1056,10 @@ def extract_record(
                 ch_names = edf_metadata.get("ch_names")
 
     # FIF fallback using MNE (handles missing split continuations in git-annex datasets)
+    fif_is_split = False
+    fif_continuations_ok = True
     if (not sampling_frequency or not nchans) and ext == ".fif":
-        fif_metadata = _parse_fif_with_mne(bids_file_path)
+        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
         if fif_metadata:
             if not sampling_frequency:
                 sampling_frequency = fif_metadata.get("sampling_frequency")
@@ -1160,6 +1171,25 @@ def extract_record(
                     found_bv_exts.add(bv_ext)
                 except ValueError:
                     pass
+    elif ext == ".fif":
+        # Check filesystem for split FIF continuation files
+        if not fif_is_split:
+            cont_check = bids_file_path.parent / f"{bids_file_path.stem}-1{ext}"
+            if cont_check.exists() or cont_check.is_symlink():
+                fif_is_split = True
+
+        if fif_is_split:
+            fif_continuations_ok = True
+            for i in range(1, 100):
+                cont = bids_file_path.parent / f"{bids_file_path.stem}-{i}{ext}"
+                if not cont.exists() and not cont.is_symlink():
+                    break
+                if cont.is_symlink() and not cont.resolve().exists():
+                    fif_continuations_ok = False
+                try:
+                    dep_keys.append(str(cont.relative_to(bids_dataset.bidsdir)))
+                except ValueError:
+                    pass
 
     # Validate companion files exist
     companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
@@ -1172,6 +1202,12 @@ def extract_record(
 
     for warning in companion_validation.get("warnings", []):
         logging.info("Companion file note for %s: %s", bids_relpath, warning)
+
+    # Flag split FIF files with missing continuation files
+    if ext == ".fif" and fif_is_split and not fif_continuations_ok:
+        data_integrity_issues.append(
+            "Split FIF: continuation files not available in source"
+        )
 
     # Validate extracted metadata
     # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
@@ -2388,6 +2424,18 @@ def digest_dataset(
             record = extract_record(
                 bids_dataset, bids_file, dataset_id, source, digested_at
             )
+            # Skip records for split FIF files with missing continuations
+            if any(
+                "Split FIF" in issue
+                for issue in record.get("_data_integrity_issues", [])
+            ):
+                errors.append(
+                    {
+                        "file": str(bids_file),
+                        "error": "Split FIF without continuation files — skipped",
+                    }
+                )
+                continue
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})

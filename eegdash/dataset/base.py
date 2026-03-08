@@ -257,9 +257,16 @@ class EEGDashRaw(RawDataset):
                 skip_existing=True,
                 skip_missing=True,
             )
-            downloader.download_s3_file(
-                self._raw_uri, self.filecache, filesystem=filesystem
-            )
+            try:
+                downloader.download_s3_file(
+                    self._raw_uri, self.filecache, filesystem=filesystem
+                )
+            except FileNotFoundError:
+                raise DataIntegrityError(
+                    message=(f"Primary data file not found on S3: {self._raw_uri}"),
+                    record=self.record,
+                    issues=[f"Missing S3 file: {self._raw_uri}"],
+                )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -300,12 +307,58 @@ class EEGDashRaw(RawDataset):
                     companion_uri, local_path, filesystem=filesystem
                 )
             except FileNotFoundError:
-                logger.warning(
-                    "Companion file %s not found on S3 for %s",
-                    ext,
-                    self._raw_uri,
-                )
+                # For .set files, the .fdt may have a non-BIDS name embedded
+                # in the header (e.g. "1673.s.1hzHighpass.fdt").
+                if suffix == ".set" and ext == ".fdt":
+                    self._download_embedded_fdt(filesystem)
+                else:
+                    logger.warning(
+                        "Companion file %s not found on S3 for %s",
+                        ext,
+                        self._raw_uri,
+                    )
                 continue
+
+    def _download_embedded_fdt(self, filesystem) -> None:
+        """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.
+
+        Some EEGLAB ``.set`` files store data in ``.fdt`` files whose names
+        do not follow BIDS conventions (e.g. ``1673.s.1hzHighpass.fdt``
+        instead of ``sub-1673_task-Baseline_eeg.fdt``).  This parses the
+        ``.set`` MATLAB header to discover the actual filename and
+        downloads it from the same S3 directory.
+        """
+        try:
+            import scipy.io
+
+            mat = scipy.io.loadmat(
+                str(self.filecache), struct_as_record=False, squeeze_me=True
+            )
+            eeg = mat.get("EEG")
+            if eeg is None or not hasattr(eeg, "datfile") or not eeg.datfile:
+                return
+            datfile = eeg.datfile
+            if hasattr(datfile, "item"):
+                datfile = datfile.item()
+            datfile = str(datfile)
+        except Exception:
+            return
+
+        local_path = self.filecache.parent / datfile
+        if local_path.exists():
+            return
+
+        base_uri = self._raw_uri.rsplit("/", 1)[0]
+        fdt_uri = f"{base_uri}/{datfile}"
+        try:
+            downloader.download_s3_file(fdt_uri, local_path, filesystem=filesystem)
+            logger.info("Downloaded embedded .fdt companion: %s", datfile)
+        except FileNotFoundError:
+            logger.warning(
+                "Embedded .fdt %s not found on S3 for %s",
+                datfile,
+                self._raw_uri,
+            )
 
     def _ensure_ctf_directory_complete(self) -> None:
         """Verify a CTF ``.ds`` directory has the required internal files.
@@ -500,6 +553,12 @@ class EEGDashRaw(RawDataset):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
+        - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
+          falls back to direct MNE reader.
+        - **Split FIF** (record points to split-02+ file): direct MNE reader
+          loads with ``on_split_missing="warn"`` so partial data is returned.
+        - **Bad record metadata** (e.g. ``.json`` extension, missing ``task``
+          entity): raises ``DataIntegrityError`` for clean error reporting.
         """
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
@@ -528,6 +587,15 @@ class EEGDashRaw(RawDataset):
                     return self._retry_with_generated_coordsystem(first_error)
                 if "Illegal date" in str(first_error):
                     return self._retry_with_ctf_date_patch(first_error)
+
+                # Bad record metadata (e.g. .json extension, missing task entity)
+                msg = str(first_error)
+                if "must contain" in msg and "task" in msg:
+                    raise DataIntegrityError(
+                        message=f"Bad record metadata: {msg}",
+                        record=self.record,
+                        issues=[msg],
+                    ) from first_error
                 raise
             except (TypeError, ValueError, OSError) as first_error:
                 msg = str(first_error)
@@ -608,6 +676,27 @@ class EEGDashRaw(RawDataset):
                     )
                     try:
                         return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
+                # Missing sidecar or data file (FileNotFoundError is a subclass
+                # of OSError) — bypass MNE-BIDS and load directly with MNE.
+                if isinstance(first_error, FileNotFoundError) and self.filecache:
+                    logger.warning(
+                        "MNE-BIDS failed due to missing file (%s), "
+                        "falling back to direct MNE reader.",
+                        msg,
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except FileNotFoundError as fallback_error:
+                        # Both MNE-BIDS and direct reader can't find a
+                        # required file (e.g. .fdt missing from S3).
+                        raise DataIntegrityError(
+                            message=f"Required data file missing: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
                     except Exception as fallback_error:
                         raise fallback_error from first_error
 

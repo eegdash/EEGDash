@@ -971,6 +971,14 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         ext,
         filepath.name,
     )
+
+    # Split FIF files: MNE needs on_split_missing="warn" to load a
+    # partial split without crashing when other splits are absent.
+    if ext == ".fif":
+        return reader(
+            str(filepath), preload=False, verbose="ERROR", on_split_missing="warn"
+        )
+
     return reader(str(filepath), preload=False, verbose="ERROR")
 
 

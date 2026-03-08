@@ -1129,3 +1129,213 @@ def test_load_raw_direct_calls_correct_reader(tmp_path):
 
     mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+def test_load_raw_direct_fif_passes_on_split_missing(tmp_path):
+    """_load_raw_direct should pass on_split_missing='warn' for .fif files."""
+    from eegdash.dataset.io import _load_raw_direct
+
+    fif_path = tmp_path / "test.fif"
+    fif_path.touch()
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_fif", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(fif_path)
+
+    mock_reader.assert_called_once_with(
+        str(fif_path), preload=False, verbose="ERROR", on_split_missing="warn"
+    )
+    assert result is mock_raw
+
+
+# ── _download_companion_files tests ──
+
+
+def _make_s3_raw(tmp_path, ext, record_overrides=None):
+    """Helper to create an EEGDashRaw with S3 backend for companion tests."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_test",
+        "bids_relpath": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org/ds_test",
+            "raw_key": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        },
+        "subject": "01",
+        "session": None,
+        "run": None,
+        "task": "rest",
+        "modality": "eeg",
+        "suffix": "eeg",
+        "datatype": "eeg",
+        "extension": ext,
+        "entities_mne": {"subject": "01", "task": "rest"},
+        "entities": {"subject": "01", "task": "rest"},
+    }
+    if record_overrides:
+        record.update(record_overrides)
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
+def test_download_companion_files_set_fdt(tmp_path):
+    """Companion .fdt should be downloaded for .set files."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.fdt"
+    expected_local = ds.filecache.with_suffix(".fdt")
+    mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
+
+
+def test_download_companion_files_vhdr_eeg_vmrk_dat(tmp_path):
+    """All .eeg, .vmrk, and .dat companions should be downloaded for .vhdr files."""
+    ds = _make_s3_raw(tmp_path, ".vhdr")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    assert mock_dl.call_count == 3
+    uris = [call.args[0] for call in mock_dl.call_args_list]
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.dat" in uris
+
+
+def test_download_companion_files_skips_existing(tmp_path):
+    """Already-downloaded companion files should be skipped."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    # Create the .fdt locally so it's already present
+    fdt_path = ds.filecache.with_suffix(".fdt")
+    fdt_path.parent.mkdir(parents=True, exist_ok=True)
+    fdt_path.touch()
+
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_download_companion_files_tries_embedded_fdt_on_missing(tmp_path):
+    """When BIDS-named .fdt is missing, _download_embedded_fdt is tried."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+
+    with (
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=FileNotFoundError,
+        ),
+        patch.object(ds, "_download_embedded_fdt") as mock_embedded,
+    ):
+        ds._download_companion_files(mock_fs)
+
+    mock_embedded.assert_called_once_with(mock_fs)
+
+
+def test_download_companion_files_noop_for_unrelated_format(tmp_path):
+    """Formats without companions (e.g. .edf) should be a no-op."""
+    ds = _make_s3_raw(tmp_path, ".edf")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_download_embedded_fdt_parses_set_header(tmp_path):
+    """_download_embedded_fdt parses the .set header to find .fdt name."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    # Create a minimal fake .set file with an EEG.datfile field
+    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+
+    import numpy as np
+
+    try:
+        import scipy.io
+
+        eeg_struct = {"datfile": np.array(["custom_data.fdt"])}
+        scipy.io.savemat(
+            str(ds.filecache),
+            {"EEG": eeg_struct},
+        )
+    except ImportError:
+        pytest.skip("scipy not available")
+
+    mock_fs = MagicMock()
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_embedded_fdt(mock_fs)
+
+    expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/custom_data.fdt"
+    expected_local = ds.filecache.parent / "custom_data.fdt"
+    mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
+
+
+def test_download_embedded_fdt_skips_when_exists(tmp_path):
+    """_download_embedded_fdt does not re-download if file already exists."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+
+    import numpy as np
+
+    try:
+        import scipy.io
+
+        eeg_struct = {"datfile": np.array(["custom_data.fdt"])}
+        scipy.io.savemat(str(ds.filecache), {"EEG": eeg_struct})
+    except ImportError:
+        pytest.skip("scipy not available")
+
+    # Pre-create the embedded .fdt file
+    (ds.filecache.parent / "custom_data.fdt").touch()
+
+    mock_fs = MagicMock()
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_embedded_fdt(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_load_raw_falls_back_on_file_not_found(tmp_path):
+    """FileNotFoundError from read_raw_bids falls back to _load_raw_direct."""
+    ds = _make_s3_raw(tmp_path, ".bdf")
+    mock_raw = MagicMock()
+
+    with (
+        patch.object(ds, "_read_raw_bids", side_effect=FileNotFoundError("missing")),
+        patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct,
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+    mock_direct.assert_called_once_with(ds.filecache)
+
+
+def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
+    """RuntimeError about missing 'task' raises DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_s3_raw(tmp_path, ".json")
+
+    with (
+        patch.object(
+            ds,
+            "_read_raw_bids",
+            side_effect=RuntimeError(
+                '"bids_path" must contain `root`, `subject`, and `task`'
+            ),
+        ),
+        pytest.raises(DataIntegrityError, match="Bad record metadata"),
+    ):
+        ds._load_raw()

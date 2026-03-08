@@ -268,8 +268,9 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
         return None, False
 
     try:
-        import mne
         import warnings as _warnings
+
+        import mne
 
         is_split = False
         with _warnings.catch_warnings(record=True) as caught:

@@ -13,6 +13,11 @@ from pathlib import Path
 from time import strptime
 from typing import Any
 
+import mne
+import numpy as np
+from mne.io.eeglab import _eeglab as mne_eeglab
+from scipy.io import loadmat, savemat
+
 from ..logging import logger
 
 
@@ -944,8 +949,6 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         If the file extension is not supported.
 
     """
-    import mne
-
     _EXT_TO_READER = {
         ".vhdr": mne.io.read_raw_brainvision,
         ".edf": mne.io.read_raw_edf,
@@ -969,3 +972,221 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         filepath.name,
     )
     return reader(str(filepath), preload=False, verbose="ERROR")
+
+
+# EEGLAB .fdt stores single-precision floats (4 bytes per sample)
+_EEGLAB_BYTES_PER_SAMPLE = 4
+# EEGLAB stores data in microvolts; MNE expects volts
+_EEGLAB_UV_TO_V = 1e-6
+
+
+def _eeglab_get_first_eeg(mat_root: dict) -> dict | None:
+    """Get the first EEG struct from a loaded .set (EEG or ALLEEG) as a dict."""
+    if "ALLEEG" in mat_root:
+        arr = np.atleast_1d(np.asarray(mat_root["ALLEEG"], dtype=object))
+        if arr.size == 0:
+            return None
+        first = arr.flat[0]
+    elif "EEG" in mat_root:
+        first = mat_root["EEG"]
+    elif isinstance(mat_root, dict) and "nbchan" in mat_root and "pnts" in mat_root:
+        # pymatreader / v7.3 sometimes returns EEG fields at top level (no EEG/ALLEEG key)
+        return mat_root
+    else:
+        return None
+    if isinstance(first, dict):
+        out = first.get("EEG", first)
+        return out if isinstance(out, dict) else first
+    if hasattr(first, "dtype") and getattr(first.dtype, "names", None):
+        out = {n: first[n] for n in first.dtype.names}
+        nested = out.get("EEG")
+        if isinstance(nested, dict):
+            return nested
+        if hasattr(nested, "dtype") and getattr(nested.dtype, "names", None):
+            return {n: nested[n] for n in nested.dtype.names}
+        return out
+    if hasattr(first, "_fieldnames"):
+        return {n: getattr(first, n) for n in first._fieldnames}
+    return None
+
+
+def _eeglab_load_first_eeg(set_path: Path) -> dict | None:
+    """Load a .set file and return the first EEG struct as a dict, or None."""
+    try:
+        mat = loadmat(
+            str(set_path),
+            squeeze_me=True,
+            mat_dtype=False,
+            struct_as_record=False,
+        )
+        eeg = _eeglab_get_first_eeg(mat)
+        if eeg is not None and isinstance(eeg, dict):
+            return eeg
+    except Exception as e:
+        logger.debug("Could not read .set with scipy: %s", e)
+    try:
+        mat = mne_eeglab._readmat(str(set_path), preload=True)
+        eeg = _eeglab_get_first_eeg(mat)
+        return eeg if isinstance(eeg, dict) else None
+    except Exception as e:
+        logger.debug("Could not read .set with MNE _readmat: %s", e)
+        return None
+
+
+def _eeglab_fdt_path(set_path: Path, eeg: dict) -> Path | None:
+    """Return the path to the companion .fdt when data is external (string), else None."""
+    data_ref = eeg.get("data")
+    if not isinstance(data_ref, str):
+        return None
+    p = set_path.parent / data_ref
+    if not p.exists():
+        p = set_path.with_suffix(".fdt")
+    return p
+
+
+def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
+    """Build channel names from EEG struct chanlocs; fallback to CH1, CH2, ..."""
+    chanlocs = eeg.get("chanlocs", [])
+    n_loc = len(np.atleast_1d(chanlocs)) if chanlocs is not None else 0
+    ch_names = []
+    for i in range(nbchan):
+        if i < n_loc:
+            c = np.atleast_1d(chanlocs)[i]
+            try:
+                if isinstance(c, dict) and "labels" in c:
+                    lab = c["labels"]
+                elif (
+                    hasattr(c, "dtype")
+                    and getattr(c.dtype, "names", None)
+                    and "labels" in (c.dtype.names or ())
+                ):
+                    lab = c["labels"]
+                else:
+                    lab = None
+                if lab is not None:
+                    ch_names.append(str(lab).strip())
+                    continue
+            except Exception:
+                pass
+        ch_names.append(f"CH{i + 1}")
+    return ch_names
+
+
+def _repair_eeglab_fdt(set_path: Path) -> bool:
+    """Update .set header so pnts matches the actual .fdt size (no data change).
+
+    When the companion .fdt is truncated, rewrites the .set file so the
+    declared number of samples (pnts) matches the bytes in the .fdt. The
+    standard MNE reader can then load the file; no padding, no custom loader.
+
+    Reads with scipy first (v5/v7), then MNE _readmat (v7.3). Always writes
+    a flat v5/v7 .set via scipy so all formats are supported.
+
+    Parameters
+    ----------
+    set_path : Path
+        Path to the .set file.
+
+    Returns
+    -------
+    bool
+        True if the .set was modified, False otherwise.
+
+    """
+    if not set_path.exists() or set_path.suffix.lower() != ".set":
+        return False
+
+    eeg = _eeglab_load_first_eeg(set_path)
+    if eeg is None:
+        return False
+
+    nbchan = int(eeg.get("nbchan", 1))
+    pnts = int(eeg.get("pnts", 1))
+    fdt_path = _eeglab_fdt_path(set_path, eeg)
+    if fdt_path is None or not fdt_path.exists():
+        return False
+    expected_bytes = nbchan * pnts * _EEGLAB_BYTES_PER_SAMPLE
+    fdt_size = fdt_path.stat().st_size
+    if fdt_size >= expected_bytes:
+        return False
+
+    actual_pnts = fdt_size // _EEGLAB_BYTES_PER_SAMPLE // nbchan
+    if actual_pnts <= 0:
+        return False
+
+    srate = float(eeg.get("srate", 1.0)) or 1.0
+    repaired = dict(eeg)
+    repaired["pnts"] = actual_pnts
+    repaired["xmax"] = (
+        actual_pnts - 1
+    ) / srate  # EEGLAB xmax is last time point in sec
+
+    try:
+        savemat(str(set_path), repaired, do_compression=False)
+        logger.info(
+            "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
+            set_path.name,
+            pnts,
+            actual_pnts,
+        )
+        return True
+    except Exception as e:
+        logger.warning("Failed to rewrite .set %s: %s", set_path.name, e)
+        return False
+
+
+def _load_raw_eeglab_alleeg(filepath: Path):
+    """Load an EEGLAB .set that contains an ALLEEG array (use first dataset).
+
+    Fallback when MNE raises NotImplementedError for ALLEEG. Returns an
+    MNE Raw instance built from the first EEG in the array. Supports
+    both v5/v7 and v7.3 .set files via the shared loader.
+
+    Parameters
+    ----------
+    filepath : Path
+        Path to the .set file.
+
+    Returns
+    -------
+    mne.io.Raw
+        Raw instance (preload=True).
+
+    """
+    eeg = _eeglab_load_first_eeg(filepath)
+    if eeg is None:
+        raise ValueError("No EEG or ALLEEG found in .set file")
+
+    nbchan = int(eeg.get("nbchan", 1))
+    pnts = int(eeg.get("pnts", 1))
+    srate = float(eeg.get("srate", 1.0))
+    ch_names = _eeglab_ch_names_from_eeg(eeg, nbchan)
+
+    data_ref = eeg.get("data")
+    if isinstance(data_ref, str):
+        data_fname = _eeglab_fdt_path(filepath, eeg)
+        data = np.fromfile(data_fname, dtype="<f4", count=nbchan * pnts)
+        if data.size != nbchan * pnts:
+            data = np.pad(
+                data.astype(np.float64),
+                (0, nbchan * pnts - data.size),
+                mode="constant",
+                constant_values=0,
+            )
+        else:
+            data = data.astype(np.float64)
+        data = data.reshape(nbchan, pnts, order="F")
+    else:
+        data = np.asarray(data_ref, dtype=np.float64)
+        if data.ndim == 1:
+            data = data.reshape(nbchan, -1, order="F")
+        elif data.shape[0] != nbchan or data.shape[1] != pnts:
+            data = data[:nbchan, :pnts]
+
+    info = mne.create_info(ch_names, srate, ch_types="eeg")
+    raw = mne.io.RawArray(data * _EEGLAB_UV_TO_V, info, verbose="ERROR")
+    logger.warning(
+        "Loaded ALLEEG .set using first dataset: %s",
+        filepath.name,
+    )
+    return raw

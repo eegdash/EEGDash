@@ -765,12 +765,53 @@ def test_load_raw_type_error_raises_data_integrity_error(tmp_path, error_msg):
     """TypeError from corrupt MAT/EEGLAB files must become DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
+    # Use .edf (not .set) so buffer_small doesn't trigger the latin-1 retry
     ds = _make_local_eegdashraw(
-        tmp_path, "ds_corrupt", "sub-01/eeg/sub-01_task-rest_eeg.set"
+        tmp_path, "ds_corrupt", "sub-01/eeg/sub-01_task-rest_eeg.edf"
     )
 
     with patch("mne_bids.read_raw_bids", side_effect=TypeError(error_msg)):
         with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()
+
+
+# ── EEGLAB .set char-encoding retry with uint16_codec='latin-1' ──
+
+
+def test_load_raw_set_buffer_error_retries_with_latin1(tmp_path):
+    """EEGLAB .set 'buffer is too small' retries with uint16_codec='latin-1'."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004166", "sub-01/eeg/sub-01_ses-01_task-WM_run-1_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise TypeError("buffer is too small for requested array")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_set_buffer_error_retry_fails_propagates(tmp_path):
+    """EEGLAB .set latin-1 retry also fails -> error propagates."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004166", "sub-01/eeg/sub-01_ses-01_task-WM_run-1_eeg.set"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("buffer is too small for requested array"),
+    ):
+        with pytest.raises(TypeError, match="buffer is too small"):
             ds._load_raw()
 
 
@@ -1207,6 +1248,28 @@ def test_load_raw_direct_calls_correct_reader(tmp_path):
 
     mock_reader.assert_called_once_with(str(edf_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+def test_load_raw_snirf_array_error_raises_data_integrity_error(tmp_path):
+    """ds005929: ValueError('setting an array element with a sequence') from SNIRF
+    must be caught by _UNRECOVERABLE_PATTERNS as DataIntegrityError, NOT fall
+    through to the generic SNIRF `except Exception` handler.
+    """
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path,
+        "ds005929",
+        "sub-01/nirs/sub-01_task-rest_nirs.snirf",
+        ext=".snirf",
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("setting an array element with a sequence"),
+    ):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()
 
 
 # ── Projector channels not found → direct reader + del_proj ──

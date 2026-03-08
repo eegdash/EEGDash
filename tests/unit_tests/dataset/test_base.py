@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 
@@ -705,6 +705,25 @@ def _make_local_eegdashraw(tmp_path, dataset_id, bids_relpath, ext=".edf", **ext
         return EEGDashRaw(record, cache_dir=str(tmp_path))
 
 
+def _make_remote_eegdashraw(tmp_path, dataset_id, bids_relpath, **extra):
+    """Helper: create an EEGDashRaw with an S3 backend and minimal record."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "s3",
+            "base": "s3://bucket",
+            "raw_key": bids_relpath,
+        },
+        "entities": extra.get("entities", {"subject": "01", "task": "rest"}),
+        "entities_mne": extra.get("entities_mne", {"subject": "01", "task": "rest"}),
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
 # ── Error 2 / 3: Unrecoverable data corruption → DataIntegrityError ──
 
 
@@ -794,6 +813,84 @@ def test_load_raw_set_buffer_error_retry_fails_propagates(tmp_path):
     ):
         with pytest.raises(TypeError, match="buffer is too small"):
             ds._load_raw()
+
+
+@pytest.mark.parametrize(
+    "exc_type, error_msg",
+    [
+        (AttributeError, "'numpy.ndarray' object has no attribute 'get'"),
+        (AttributeError, "'Bunch' object has no attribute 'chanlocs'"),
+        (TypeError, "Expecting matrix here"),
+        (TypeError, "argument of type 'NoneType' is not iterable"),
+        (
+            ValueError,
+            "Invalid value for the 'EEGLAB file extension' parameter",
+        ),
+    ],
+    ids=[
+        "chaninfo_ndarray",
+        "missing_chanlocs",
+        "malformed_mat",
+        "nonetype_iterable",
+        "extension_mismatch",
+    ],
+)
+def test_load_raw_eeglab_errors_try_fallback_then_raise(tmp_path, exc_type, error_msg):
+    """EEGLAB reader errors try fallback; if fallback fails, raise DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_corrupt", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    with patch("mne_bids.read_raw_bids", side_effect=exc_type(error_msg)):
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            side_effect=ValueError("fallback failed"),
+        ):
+            with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+                ds._load_raw()
+
+
+def test_load_raw_eeglab_fallback_success(tmp_path):
+    """When MNE reader fails but EEGLAB fallback succeeds, return fallback result."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_ok", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("argument of type 'NoneType' is not iterable"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            return_value=mock_raw,
+        ) as mock_fallback:
+            result = ds._load_raw()
+
+    assert result is mock_raw
+    mock_fallback.assert_called_once()
+
+
+def test_load_raw_eeglab_fallback_failure_raises_data_integrity(tmp_path):
+    """When both MNE reader and EEGLAB fallback fail, raise DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_bad", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AttributeError("'Bunch' object has no attribute 'chanlocs'"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_eeglab_fallback",
+            side_effect=ValueError("Cannot parse .set file"),
+        ):
+            with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+                ds._load_raw()
 
 
 # ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
@@ -913,6 +1010,112 @@ def test_load_raw_unallowed_entity_falls_back_to_direct(tmp_path):
 
     mock_direct.assert_called_once_with(ds.filecache)
     assert result is mock_raw
+
+
+def test_load_raw_downloads_split_fif_continuations_until_load_succeeds(tmp_path):
+    """Missing FIF continuations should be downloaded and retried on demand."""
+    ds = _make_remote_eegdashraw(
+        tmp_path, "ds_split", "sub-01/meg/sub-01_task-rest_meg.fif"
+    )
+    mock_raw = MagicMock()
+    annex_next = (
+        "/tmp/.git/annex/objects/ab/cd/MD5E-s1055433547--90f455363b16dec91282c634cfb710fd.fif/"
+        "MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif"
+    )
+    second_next = ds.filecache.with_name("sub-01_task-rest_meg-2.fif")
+    mock_fs = object()
+
+    def download_side_effect(s3_path, local_path, filesystem=None):
+        if "MD5E-s1055433547" in s3_path:
+            raise FileNotFoundError("not found")
+        return local_path
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=[
+            ValueError(
+                f"Split raw file detected but next file {annex_next} does not exist"
+            ),
+            ValueError(
+                f"Split raw file detected but next file {second_next} does not exist"
+            ),
+            mock_raw,
+        ],
+    ) as mock_read:
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                side_effect=download_side_effect,
+            ) as mock_download:
+                result = ds._load_raw()
+
+    assert result is mock_raw
+    assert mock_read.call_count == 3
+    assert mock_download.call_args_list == [
+        call(
+            "s3://bucket/sub-01/meg/MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif",
+            ds.filecache.with_name(
+                "MD5E-s1055433547--90f455363b16dec91282c634cfb710fd-1.fif"
+            ),
+            filesystem=mock_fs,
+        ),
+        call(
+            "s3://bucket/sub-01/meg/sub-01_task-rest_meg-1.fif",
+            ds.filecache.with_name("sub-01_task-rest_meg-1.fif"),
+            filesystem=mock_fs,
+        ),
+        call(
+            "s3://bucket/sub-01/meg/sub-01_task-rest_meg-2.fif",
+            ds.filecache.with_name("sub-01_task-rest_meg-2.fif"),
+            filesystem=mock_fs,
+        ),
+    ]
+
+
+def test_load_raw_downloads_bids_split_continuation_and_preserves_split_entity(
+    tmp_path,
+):
+    """Split entity records should preserve split in BIDSPath and fetch split-02."""
+    ds = _make_remote_eegdashraw(
+        tmp_path,
+        "ds_split",
+        "sub-01/meg/sub-01_task-rest_split-01_meg.fif",
+        entities={"subject": "01", "task": "rest", "split": "01"},
+        entities_mne={"subject": "01", "task": "rest", "split": "01"},
+    )
+    mock_raw = MagicMock()
+    expected_next = ds.filecache.with_name("sub-01_task-rest_split-02_meg.fif")
+    mock_fs = object()
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=[
+            ValueError(
+                f"Split raw file detected but next file {expected_next} does not exist"
+            ),
+            mock_raw,
+        ],
+    ):
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                return_value=expected_next,
+            ) as mock_download:
+                result = ds._load_raw()
+
+    assert ds.bidspath.split == "01"
+    assert result is mock_raw
+    mock_download.assert_called_once_with(
+        "s3://bucket/sub-01/meg/sub-01_task-rest_split-02_meg.fif",
+        expected_next,
+        filesystem=mock_fs,
+    )
 
 
 # ── Error 4: CTF .ds directory completeness ──
@@ -1067,3 +1270,407 @@ def test_load_raw_snirf_array_error_raises_data_integrity_error(tmp_path):
     ):
         with pytest.raises(DataIntegrityError, match="Cannot read data file"):
             ds._load_raw()
+
+
+# ── Projector channels not found → direct reader + del_proj ──
+
+
+def test_load_raw_projector_channels_not_found_retries(tmp_path):
+    """ValueError('projector channels not found') falls back to direct reader and del_proj."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds006545", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    mock_raw = MagicMock()
+    mock_raw.info = {"projs": [MagicMock()]}
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("projector channels not found in data"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    mock_raw.del_proj.assert_called_once()
+    assert result is mock_raw
+
+
+def test_load_raw_projector_type_conflict_retries(tmp_path):
+    """RuntimeError('in projector') falls back to direct reader and del_proj."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds002712", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    mock_raw = MagicMock()
+    mock_raw.info = {"projs": [MagicMock()]}
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(
+            'Cannot change channel type for channel MEG0113 in projector "PCA-v1"'
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    mock_raw.del_proj.assert_called_once()
+    assert result is mock_raw
+
+
+# ── AssertionError → hide events.tsv and retry ──
+
+
+def test_load_raw_assertion_error_retries_without_events(tmp_path):
+    """AssertionError hides events.tsv, retries, and restores the file."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    # Create an events.tsv in the data directory
+    events_tsv = ds.filecache.parent / "sub-01_task-rest_events.tsv"
+    events_tsv.write_text("onset\tduration\n1.0\t0.5\n")
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=[AssertionError("duration mismatch"), mock_raw],
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+    # events.tsv should be restored
+    assert events_tsv.exists()
+    assert not events_tsv.with_suffix(".tsv._hidden").exists()
+
+
+def test_load_raw_assertion_error_no_events_raises(tmp_path):
+    """AssertionError with no events.tsv re-raises."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+    # No events.tsv created
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AssertionError("duration mismatch"),
+    ):
+        with pytest.raises(AssertionError, match="duration mismatch"):
+            ds._load_raw()
+
+
+def test_load_raw_assertion_error_restores_events_on_failure(tmp_path):
+    """Both attempts fail → events.tsv is still restored."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    events_tsv = ds.filecache.parent / "sub-01_task-rest_events.tsv"
+    events_tsv.write_text("onset\tduration\n1.0\t0.5\n")
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=AssertionError("duration mismatch"),
+    ):
+        with pytest.raises(AssertionError):
+            ds._load_raw()
+
+    # events.tsv must be restored even when retry fails
+    assert events_tsv.exists()
+    assert not events_tsv.with_suffix(".tsv._hidden").exists()
+
+
+# ── RuntimeError unrecoverable patterns → DataIntegrityError ──
+
+
+@pytest.mark.parametrize(
+    "error_msg",
+    [
+        "incorrect number of samples in the data",
+        "MNE only supports reading continuous wave amplitude and processed "
+        "haemoglobin SNIRF files. Expected type code 1 or 99999 but received "
+        "type code 301",
+    ],
+    ids=["fif-samples", "snirf-td-nirs"],
+)
+def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
+    tmp_path, error_msg
+):
+    """RuntimeError with unrecoverable pattern becomes DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_corrupt", "sub-01/meg/sub-01_task-rest_meg.fif", ext=".fif"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(error_msg),
+    ):
+        with pytest.raises(DataIntegrityError, match="Cannot read data file"):
+            ds._load_raw()
+
+
+# ── CTF mandatory HPI fix → retry with patched kind dict ──
+
+
+def test_load_raw_mandatory_hpi_retries_with_fix(tmp_path):
+    """RuntimeError('mandatory HPI') retries with extended _kind_dict."""
+    ds = _make_local_eegdashraw(
+        tmp_path,
+        "ds006502",
+        "sub-01/ses-meg1/meg/sub-01_ses-meg1_task-rest_run-1_meg.ds",
+        ext=".ds",
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=[
+            RuntimeError(
+                "Some of the mandatory HPI device-coordinate info was not there."
+            ),
+            mock_raw,
+        ],
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+
+
+# ── KeyError FIFFV_COIL_NONE → direct reader fallback ──
+
+
+def test_load_raw_fiffv_coil_none_keyerror_falls_back(tmp_path):
+    """KeyError('FIFFV_COIL_NONE') from montage falls back to direct reader."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003690", "sub-01/eeg/sub-01_task-rest_eeg.set", ext=".set"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=KeyError("0 (FIFFV_COIL_NONE)"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_direct_fif_passes_on_split_missing(tmp_path):
+    """_load_raw_direct should pass on_split_missing='warn' for .fif files."""
+    from eegdash.dataset.io import _load_raw_direct
+
+    fif_path = tmp_path / "test.fif"
+    fif_path.touch()
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_fif", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(fif_path)
+
+    mock_reader.assert_called_once_with(
+        str(fif_path), preload=False, verbose="ERROR", on_split_missing="warn"
+    )
+    assert result is mock_raw
+
+
+# ── _download_companion_files tests ──
+
+
+def _make_s3_raw(tmp_path, ext, record_overrides=None):
+    """Helper to create an EEGDashRaw with S3 backend for companion tests."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds_test",
+        "bids_relpath": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org/ds_test",
+            "raw_key": f"sub-01/eeg/sub-01_task-rest_eeg{ext}",
+        },
+        "subject": "01",
+        "session": None,
+        "run": None,
+        "task": "rest",
+        "modality": "eeg",
+        "suffix": "eeg",
+        "datatype": "eeg",
+        "extension": ext,
+        "entities_mne": {"subject": "01", "task": "rest"},
+        "entities": {"subject": "01", "task": "rest"},
+    }
+    if record_overrides:
+        record.update(record_overrides)
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        return EEGDashRaw(record, cache_dir=str(tmp_path))
+
+
+def test_download_companion_files_set_fdt(tmp_path):
+    """Companion .fdt should be downloaded for .set files."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.fdt"
+    expected_local = ds.filecache.with_suffix(".fdt")
+    mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
+
+
+def test_download_companion_files_vhdr_eeg_vmrk_dat(tmp_path):
+    """All .eeg, .vmrk, and .dat companions should be downloaded for .vhdr files."""
+    ds = _make_s3_raw(tmp_path, ".vhdr")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    assert mock_dl.call_count == 3
+    uris = [call.args[0] for call in mock_dl.call_args_list]
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
+    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.dat" in uris
+
+
+def test_download_companion_files_skips_existing(tmp_path):
+    """Already-downloaded companion files should be skipped."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    # Create the .fdt locally so it's already present
+    fdt_path = ds.filecache.with_suffix(".fdt")
+    fdt_path.parent.mkdir(parents=True, exist_ok=True)
+    fdt_path.touch()
+
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_download_companion_files_tries_embedded_fdt_on_missing(tmp_path):
+    """When BIDS-named .fdt is missing, _download_embedded_fdt is tried."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    mock_fs = MagicMock()
+
+    with (
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=FileNotFoundError,
+        ),
+        patch.object(ds, "_download_embedded_fdt") as mock_embedded,
+    ):
+        ds._download_companion_files(mock_fs)
+
+    mock_embedded.assert_called_once_with(mock_fs)
+
+
+def test_download_companion_files_noop_for_unrelated_format(tmp_path):
+    """Formats without companions (e.g. .edf) should be a no-op."""
+    ds = _make_s3_raw(tmp_path, ".edf")
+    mock_fs = MagicMock()
+
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_companion_files(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_download_embedded_fdt_parses_set_header(tmp_path):
+    """_download_embedded_fdt parses the .set header to find .fdt name."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    # Create a minimal fake .set file with an EEG.datfile field
+    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+
+    import numpy as np
+
+    try:
+        import scipy.io
+
+        eeg_struct = {"datfile": np.array(["custom_data.fdt"])}
+        scipy.io.savemat(
+            str(ds.filecache),
+            {"EEG": eeg_struct},
+        )
+    except ImportError:
+        pytest.skip("scipy not available")
+
+    mock_fs = MagicMock()
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_embedded_fdt(mock_fs)
+
+    expected_uri = "s3://openneuro.org/ds_test/sub-01/eeg/custom_data.fdt"
+    expected_local = ds.filecache.parent / "custom_data.fdt"
+    mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
+
+
+def test_download_embedded_fdt_skips_when_exists(tmp_path):
+    """_download_embedded_fdt does not re-download if file already exists."""
+    ds = _make_s3_raw(tmp_path, ".set")
+    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+
+    import numpy as np
+
+    try:
+        import scipy.io
+
+        eeg_struct = {"datfile": np.array(["custom_data.fdt"])}
+        scipy.io.savemat(str(ds.filecache), {"EEG": eeg_struct})
+    except ImportError:
+        pytest.skip("scipy not available")
+
+    # Pre-create the embedded .fdt file
+    (ds.filecache.parent / "custom_data.fdt").touch()
+
+    mock_fs = MagicMock()
+    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
+        ds._download_embedded_fdt(mock_fs)
+
+    mock_dl.assert_not_called()
+
+
+def test_load_raw_falls_back_on_file_not_found(tmp_path):
+    """FileNotFoundError from read_raw_bids falls back to _load_raw_direct."""
+    ds = _make_s3_raw(tmp_path, ".bdf")
+    mock_raw = MagicMock()
+
+    with (
+        patch.object(ds, "_read_raw_bids", side_effect=FileNotFoundError("missing")),
+        patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct,
+    ):
+        result = ds._load_raw()
+
+    assert result is mock_raw
+    mock_direct.assert_called_once_with(ds.filecache)
+
+
+def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
+    """RuntimeError about missing 'task' raises DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_s3_raw(tmp_path, ".json")
+
+    with (
+        patch.object(
+            ds,
+            "_read_raw_bids",
+            side_effect=RuntimeError(
+                '"bids_path" must contain `root`, `subject`, and `task`'
+            ),
+        ),
+        pytest.raises(DataIntegrityError, match="Bad record metadata"),
+    ):
+        ds._load_raw()

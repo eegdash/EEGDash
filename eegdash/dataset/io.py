@@ -1077,6 +1077,219 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
     return reader(str(filepath), preload=False, verbose="ERROR")
 
 
+def _parse_set_metadata(set_path: Path) -> dict:
+    """Extract metadata from an EEGLAB .set file.
+
+    Returns dict with keys: srate, nbchan, pnts, ch_names, data (if embedded).
+    Raises ValueError if the file cannot be parsed.
+    """
+    import numpy as np
+
+    set_path = Path(set_path)
+
+    # Try scipy.io first (MATLAB v5 format)
+    try:
+        import scipy.io
+
+        mat = scipy.io.loadmat(str(set_path), struct_as_record=False, squeeze_me=True)
+        if "EEG" not in mat:
+            raise ValueError("No EEG structure found in .set file")
+
+        eeg = mat["EEG"]
+        result: dict = {}
+
+        for attr in ("srate", "nbchan", "pnts"):
+            val = getattr(eeg, attr, None)
+            if val is None:
+                raise ValueError(f"Missing required field '{attr}' in .set")
+            if hasattr(val, "item"):
+                val = val.item()
+            result[attr] = float(val) if attr == "srate" else int(val)
+
+        # Channel names from chanlocs
+        ch_names = []
+        if hasattr(eeg, "chanlocs") and eeg.chanlocs is not None:
+            chanlocs = eeg.chanlocs
+            if hasattr(chanlocs, "__iter__") and not isinstance(chanlocs, str):
+                for ch in chanlocs:
+                    if hasattr(ch, "labels"):
+                        label = ch.labels
+                        if hasattr(label, "item"):
+                            label = label.item()
+                        ch_names.append(str(label))
+            elif hasattr(chanlocs, "labels"):
+                label = chanlocs.labels
+                if hasattr(label, "item"):
+                    label = label.item()
+                ch_names.append(str(label))
+        result["ch_names"] = ch_names if ch_names else []
+
+        # Check for embedded data
+        if hasattr(eeg, "data") and isinstance(eeg.data, np.ndarray):
+            if eeg.data.ndim >= 2:
+                result["data"] = eeg.data.astype(np.float32)
+
+        return result
+
+    except ImportError:
+        pass
+    except ValueError:
+        raise
+    except Exception:
+        pass
+
+    # Try h5py for HDF5-based .set files
+    try:
+        import h5py
+
+        with h5py.File(str(set_path), "r") as f:
+            if "EEG" not in f:
+                raise ValueError("No EEG structure found in .set file (HDF5)")
+
+            eeg = f["EEG"]
+            result = {}
+
+            for key in ("srate", "nbchan", "pnts"):
+                if key not in eeg:
+                    raise ValueError(f"Missing required field '{key}' in .set")
+                result[key] = (
+                    float(eeg[key][0, 0]) if key == "srate" else int(eeg[key][0, 0])
+                )
+
+            result["ch_names"] = []
+            return result
+
+    except ImportError:
+        pass
+    except ValueError:
+        raise
+
+    raise ValueError("Cannot parse .set file: neither scipy nor h5py succeeded")
+
+
+def _read_bids_channels_tsv(
+    data_dir: Path,
+) -> tuple[list[str], list[str]] | None:
+    """Read channel names and types from a BIDS channels.tsv sidecar.
+
+    Returns (ch_names, ch_types) or None if no channels.tsv found.
+    """
+    import csv
+
+    tsv_files = list(data_dir.glob("*_channels.tsv"))
+    if not tsv_files:
+        return None
+
+    tsv_path = tsv_files[0]
+    bids_to_mne = {
+        "EEG": "eeg",
+        "EOG": "eog",
+        "ECG": "ecg",
+        "EMG": "emg",
+        "MISC": "misc",
+        "STIM": "stim",
+        "REF": "eeg",
+    }
+
+    ch_names = []
+    ch_types = []
+    with open(tsv_path, newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
+        for row in reader:
+            name = row.get("name", "").strip()
+            if name:
+                ch_names.append(name)
+                bids_type = row.get("type", "EEG").strip().upper()
+                ch_types.append(bids_to_mne.get(bids_type, "eeg"))
+
+    return (ch_names, ch_types) if ch_names else None
+
+
+def _load_raw_eeglab_fallback(set_path: Path, bids_root: Path | None = None):
+    """Load EEGLAB .set/.fdt bypassing MNE's read_raw_eeglab.
+
+    Fallback for when MNE's reader fails on non-standard .set structures.
+    Extracts metadata from .set, reads raw data from .fdt, returns RawArray.
+    """
+    import mne
+    import numpy as np
+
+    set_path = Path(set_path)
+    meta = _parse_set_metadata(set_path)
+
+    n_channels = meta["nbchan"]
+    n_samples = meta["pnts"]
+    sfreq = meta["srate"]
+
+    # --- Resolve data array ---
+    data = None
+    fdt_path = set_path.with_suffix(".fdt")
+
+    if fdt_path.exists():
+        expected_size = n_channels * n_samples * 4  # float32
+        actual_size = fdt_path.stat().st_size
+        if actual_size != expected_size:
+            raise ValueError(
+                f"FDT size mismatch: expected {expected_size} bytes "
+                f"({n_channels} ch x {n_samples} pts x 4), got {actual_size}"
+            )
+        data = np.fromfile(str(fdt_path), dtype=np.float32).reshape(
+            (n_channels, n_samples), order="C"
+        )
+    elif "data" in meta:
+        data = meta["data"]
+        # Ensure correct shape
+        if data.shape != (n_channels, n_samples):
+            if data.size == n_channels * n_samples:
+                data = data.reshape((n_channels, n_samples))
+            else:
+                raise ValueError(
+                    f"Embedded data shape {data.shape} does not match "
+                    f"metadata ({n_channels} ch x {n_samples} pts)"
+                )
+    else:
+        raise ValueError(
+            f"No data source: .fdt file not found at {fdt_path} "
+            "and no embedded data in .set"
+        )
+
+    # --- Resolve channel names and types ---
+    ch_names = None
+    ch_types = None
+
+    # Try BIDS sidecar first
+    if bids_root or set_path.parent:
+        bids_info = _read_bids_channels_tsv(set_path.parent)
+        if bids_info and len(bids_info[0]) == n_channels:
+            ch_names, ch_types = bids_info
+
+    # Fall back to .set chanlocs
+    if ch_names is None and meta["ch_names"] and len(meta["ch_names"]) == n_channels:
+        ch_names = meta["ch_names"]
+
+    # Generate defaults
+    if ch_names is None:
+        ch_names = [f"EEG{i + 1:03d}" for i in range(n_channels)]
+
+    if ch_types is None:
+        ch_types = ["eeg"] * n_channels
+
+    # --- Scale: EEGLAB stores microvolts, MNE expects volts ---
+    data = data.astype(np.float64) * 1e-6
+
+    info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+    raw = mne.io.RawArray(data, info, verbose="ERROR")
+
+    logger.warning(
+        "Loaded %s via EEGLAB fallback (%d ch, %.1f s, %.0f Hz).",
+        set_path.name,
+        n_channels,
+        n_samples / sfreq,
+        sfreq,
+    )
+    return raw
+
+
 # EEGLAB .fdt stores single-precision floats (4 bytes per sample)
 _EEGLAB_BYTES_PER_SAMPLE = 4
 # EEGLAB stores data in microvolts; MNE expects volts

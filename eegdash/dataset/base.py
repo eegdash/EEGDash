@@ -11,9 +11,10 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import re
 from functools import partial
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
+import mne.io.ctf.info as ctf_info
 import mne_bids
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
@@ -24,6 +25,7 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
+from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
     _convert_time_with_numeric_dash,
@@ -32,7 +34,9 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_direct,
+    _load_raw_eeglab_alleeg,
     _repair_channels_tsv,
+    _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
     _repair_scans_tsv_timestamps,
@@ -56,6 +60,64 @@ _UNRECOVERABLE_PATTERNS = [
     "cannot reshape array",
     "setting an array element with a sequence",
 ]
+
+_SPLIT_FIF_MISSING_RE = re.compile(
+    r"Split raw file detected but next file (?P<path>.+?) does not exist"
+)
+_SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
+_SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+
+
+def _parse_split_fif_missing_path(message: str) -> Path | None:
+    """Extract the missing continuation path from an MNE split FIF error."""
+    match = _SPLIT_FIF_MISSING_RE.search(message)
+    if match is None:
+        return None
+    return Path(match.group("path").strip().strip("'\""))
+
+
+def _increment_name_match(name: str, match: re.Match[str]) -> str:
+    """Increment the numeric portion captured by ``match`` in ``name``."""
+    width = len(match.group("num"))
+    next_num = int(match.group("num")) + 1
+    return f"{name[: match.start('num')]}{next_num:0{width}d}{name[match.end('num') :]}"
+
+
+def _iter_split_fif_candidates(
+    current_key: str,
+    current_path: Path,
+    expected_path: Path | None,
+) -> list[tuple[str, Path]]:
+    """Return candidate remote/local paths for the next FIF continuation."""
+    key_path = PurePosixPath(current_key)
+    current_name = key_path.name
+    candidate_names: list[str] = []
+
+    if expected_path is not None and expected_path.suffix.lower() == ".fif":
+        candidate_names.append(expected_path.name)
+
+    if match := _SPLIT_PART_RE.search(current_name):
+        candidate_names.append(_increment_name_match(current_name, match))
+    else:
+        if match := _SPLIT_ENTITY_RE.search(current_name):
+            candidate_names.append(_increment_name_match(current_name, match))
+
+        if current_name.lower().endswith(".fif"):
+            candidate_names.append(f"{current_name[:-4]}-1{current_name[-4:]}")
+
+    candidates: list[tuple[str, Path]] = []
+    seen: set[str] = set()
+    for candidate_name in candidate_names:
+        if candidate_name == current_name or candidate_name in seen:
+            continue
+        seen.add(candidate_name)
+        candidates.append(
+            (
+                str(key_path.parent / candidate_name),
+                current_path.with_name(candidate_name),
+            )
+        )
+    return candidates
 
 
 class EEGDashRaw(RawDataset):
@@ -166,6 +228,7 @@ class EEGDashRaw(RawDataset):
             task=entities_mne.get("task"),
             run=entities_mne.get("run"),
             acquisition=acq_val,
+            split=entities_mne.get("split"),
             check=False,
         )
 
@@ -187,14 +250,28 @@ class EEGDashRaw(RawDataset):
             filesystem = downloader.get_s3_filesystem()
 
             # Download deps first (sidecars, companions), then raw.
+            # skip_missing=True because dep_keys may include companion files
+            # that don't exist on S3 (e.g., .fdt listed but never uploaded).
             downloader.download_files(
                 list(zip(self._dep_uris, self._dep_paths, strict=False)),
                 filesystem=filesystem,
                 skip_existing=True,
+                skip_missing=True,
             )
-            downloader.download_s3_file(
-                self._raw_uri, self.filecache, filesystem=filesystem
-            )
+            try:
+                downloader.download_s3_file(
+                    self._raw_uri, self.filecache, filesystem=filesystem
+                )
+            except FileNotFoundError:
+                raise DataIntegrityError(
+                    message=(f"Primary data file not found on S3: {self._raw_uri}"),
+                    record=self.record,
+                    issues=[f"Missing S3 file: {self._raw_uri}"],
+                )
+
+            # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
+            # that may not have been included in dep_keys.
+            self._download_companion_files(filesystem)
 
         # CTF MEG .ds directories require internal files (.meg4, .res4, etc.)
         if self.filecache and self.filecache.suffix == ".ds":
@@ -202,6 +279,87 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    def _download_companion_files(self, filesystem) -> None:
+        """Download companion files for formats that require them.
+
+        Some EEG file formats store data across multiple files (e.g.,
+        EEGLAB ``.set`` + ``.fdt``, BrainVision ``.vhdr`` + ``.eeg`` +
+        ``.vmrk``).  When the ingestion pipeline does not list these in
+        ``dep_keys``, they are never fetched.  This method inspects
+        ``_COMPANION_FILES`` and attempts to download any missing
+        companions from S3.
+        """
+        suffix = self.filecache.suffix.lower()
+        companions = _COMPANION_FILES.get(suffix)
+        if not companions:
+            return
+
+        for ext in companions:
+            local_path = self.filecache.with_suffix(ext)
+            if local_path.exists():
+                continue
+
+            # Derive S3 URI by replacing the primary file's extension
+            companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
+
+            try:
+                downloader.download_s3_file(
+                    companion_uri, local_path, filesystem=filesystem
+                )
+            except FileNotFoundError:
+                # For .set files, the .fdt may have a non-BIDS name embedded
+                # in the header (e.g. "1673.s.1hzHighpass.fdt").
+                if suffix == ".set" and ext == ".fdt":
+                    self._download_embedded_fdt(filesystem)
+                else:
+                    logger.warning(
+                        "Companion file %s not found on S3 for %s",
+                        ext,
+                        self._raw_uri,
+                    )
+                continue
+
+    def _download_embedded_fdt(self, filesystem) -> None:
+        """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.
+
+        Some EEGLAB ``.set`` files store data in ``.fdt`` files whose names
+        do not follow BIDS conventions (e.g. ``1673.s.1hzHighpass.fdt``
+        instead of ``sub-1673_task-Baseline_eeg.fdt``).  This parses the
+        ``.set`` MATLAB header to discover the actual filename and
+        downloads it from the same S3 directory.
+        """
+        try:
+            import scipy.io
+
+            mat = scipy.io.loadmat(
+                str(self.filecache), struct_as_record=False, squeeze_me=True
+            )
+            eeg = mat.get("EEG")
+            if eeg is None or not hasattr(eeg, "datfile") or not eeg.datfile:
+                return
+            datfile = eeg.datfile
+            if hasattr(datfile, "item"):
+                datfile = datfile.item()
+            datfile = str(datfile)
+        except Exception:
+            return
+
+        local_path = self.filecache.parent / datfile
+        if local_path.exists():
+            return
+
+        base_uri = self._raw_uri.rsplit("/", 1)[0]
+        fdt_uri = f"{base_uri}/{datfile}"
+        try:
+            downloader.download_s3_file(fdt_uri, local_path, filesystem=filesystem)
+            logger.info("Downloaded embedded .fdt companion: %s", datfile)
+        except FileNotFoundError:
+            logger.warning(
+                "Embedded .fdt %s not found on S3 for %s",
+                datfile,
+                self._raw_uri,
+            )
 
     def _ensure_ctf_directory_complete(self) -> None:
         """Verify a CTF ``.ds`` directory has the required internal files.
@@ -298,6 +456,10 @@ class EEGDashRaw(RawDataset):
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
 
+        # Repair .set header when .fdt is truncated (pnts -> actual size)
+        if self.filecache and self.filecache.suffix.lower() == ".set":
+            _repair_eeglab_fdt(self.filecache)
+
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
@@ -312,6 +474,60 @@ class EEGDashRaw(RawDataset):
         return mne_bids.read_raw_bids(
             bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
         )
+
+    def _download_split_fif_continuation(
+        self,
+        *,
+        current_key: str,
+        current_path: Path,
+        error_message: str,
+        attempted_keys: set[str],
+    ) -> tuple[str, Path] | None:
+        """Download the next split FIF continuation file, if it exists."""
+        storage = self.record.get("storage", {})
+        backend = storage.get("backend")
+        base = str(storage.get("base", "")).rstrip("/")
+        if backend not in ("s3", "https") or not base:
+            return None
+
+        expected_path = _parse_split_fif_missing_path(error_message)
+        candidates = _iter_split_fif_candidates(
+            current_key=current_key,
+            current_path=current_path,
+            expected_path=expected_path,
+        )
+        if not candidates:
+            return None
+
+        filesystem = downloader.get_s3_filesystem()
+        failures: list[str] = []
+        for next_key, next_path in candidates:
+            if next_key in attempted_keys:
+                continue
+            attempted_keys.add(next_key)
+            next_uri = downloader.get_s3path(base, next_key)
+            try:
+                logger.info(
+                    "Split FIF continuation missing; attempting download %s -> %s",
+                    next_uri,
+                    next_path,
+                )
+                downloader.download_s3_file(
+                    next_uri,
+                    next_path,
+                    filesystem=filesystem,
+                )
+                return next_key, next_path
+            except Exception as error:
+                failures.append(f"{next_uri}: {error}")
+
+        if failures:
+            logger.warning(
+                "Unable to download split FIF continuation for %s. Tried %s",
+                current_key,
+                "; ".join(failures),
+            )
+        return None
 
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
@@ -333,113 +549,186 @@ class EEGDashRaw(RawDataset):
           values to match ``sub-*`` folder names and retries.
         - **events.tsv rows with NaN onset/sample**: drops broken rows and
           retries, then falls back to direct MNE loading if needed.
+        - **Split FIF continuations missing locally**: derives the next split
+          key, downloads it from remote storage, and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
           files or renames the first column to 'name' and retries.
+        - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
+          falls back to direct MNE reader.
+        - **Split FIF** (record points to split-02+ file): direct MNE reader
+          loads with ``on_split_missing="warn"`` so partial data is returned.
+        - **Bad record metadata** (e.g. ``.json`` extension, missing ``task``
+          entity): raises ``DataIntegrityError`` for clean error reporting.
         """
-        try:
-            return self._read_raw_bids()
-        except RuntimeError as first_error:
-            if "coordsystem.json is REQUIRED" in str(first_error):
-                return self._retry_with_generated_coordsystem(first_error)
-            if "Illegal date" in str(first_error):
-                return self._retry_with_ctf_date_patch(first_error)
-            raise
-        except (TypeError, ValueError, KeyError, OSError) as first_error:
-            msg = str(first_error)
+        current_split_key = self.record.get("storage", {}).get("raw_key")
+        current_split_path = self.filecache
+        attempted_split_keys: set[str] = set()
 
-            # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
-            # or any TypeError from array/parsing failures in scipy/numpy)
-            if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
-                first_error, TypeError
-            ):
-                raise DataIntegrityError(
-                    message=f"Cannot read data file: {msg}",
-                    record=self.record,
-                    issues=[msg],
-                ) from first_error
-
-            # Malformed channels.tsv (empty or missing 'name' column)
-            if isinstance(first_error, KeyError) and first_error.args == ("name",):
-                if self.filecache and _repair_channels_tsv(self.filecache.parent):
-                    logger.info("Repaired malformed channels.tsv, retrying load...")
-                    try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
-
-            # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
-            if "second must be" in msg or "does not match format" in msg:
-                if self.filecache and _repair_scans_tsv_timestamps(
-                    self.filecache.parent
+        while True:
+            try:
+                return self._read_raw_bids()
+            except NotImplementedError as first_error:
+                msg = str(first_error)
+                if (
+                    "ALLEEG" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".set"
                 ):
-                    logger.info("Repaired scans.tsv timestamps, retrying load...")
-                    try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
-
-            # Subject/session ID mismatch between folders and participants.tsv
-            if "is not in list" in msg and self.bids_root:
-                if _repair_participants_tsv_ids(self.bids_root):
                     logger.info(
-                        "Repaired participants.tsv ID padding, retrying load..."
+                        "EEGLAB file contains ALLEEG array; loading first dataset (bypassing MNE-BIDS)."
                     )
                     try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
+                        return _load_raw_eeglab_alleeg(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+                raise
+            except RuntimeError as first_error:
+                if "coordsystem.json is REQUIRED" in str(first_error):
+                    return self._retry_with_generated_coordsystem(first_error)
+                if "Illegal date" in str(first_error):
+                    return self._retry_with_ctf_date_patch(first_error)
 
-            # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
-            if "cannot convert float NaN to integer" in msg and self.filecache:
-                if _repair_events_tsv_nan_samples(self.filecache.parent):
-                    logger.info("Repaired events.tsv NaN samples, retrying load...")
+                # Bad record metadata (e.g. .json extension, missing task entity)
+                msg = str(first_error)
+                if "must contain" in msg and "task" in msg:
+                    raise DataIntegrityError(
+                        message=f"Bad record metadata: {msg}",
+                        record=self.record,
+                        issues=[msg],
+                    ) from first_error
+                raise
+            except (TypeError, ValueError, OSError, KeyError) as first_error:
+                msg = str(first_error)
+
+                if (
+                    current_split_key
+                    and current_split_path
+                    and ("Split raw file detected but next file" in msg)
+                ):
+                    split_download = self._download_split_fif_continuation(
+                        current_key=current_split_key,
+                        current_path=current_split_path,
+                        error_message=msg,
+                        attempted_keys=attempted_split_keys,
+                    )
+                    if split_download is not None:
+                        current_split_key, current_split_path = split_download
+                        continue
+
+                # Malformed channels.tsv (empty or missing 'name' column)
+                if isinstance(first_error, KeyError) and first_error.args == ("name",):
+                    if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                        logger.info("Repaired malformed channels.tsv, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
+                # or any TypeError from array/parsing failures in scipy/numpy)
+                if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
+                    first_error, TypeError
+                ):
+                    raise DataIntegrityError(
+                        message=f"Cannot read data file: {msg}",
+                        record=self.record,
+                        issues=[msg],
+                    ) from first_error
+
+                # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
+                if "second must be" in msg or "does not match format" in msg:
+                    if self.filecache and _repair_scans_tsv_timestamps(
+                        self.filecache.parent
+                    ):
+                        logger.info("Repaired scans.tsv timestamps, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Subject/session ID mismatch between folders and participants.tsv
+                if "is not in list" in msg and self.bids_root:
+                    if _repair_participants_tsv_ids(self.bids_root):
+                        logger.info(
+                            "Repaired participants.tsv ID padding, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
+                if "cannot convert float NaN to integer" in msg and self.filecache:
+                    if _repair_events_tsv_nan_samples(self.filecache.parent):
+                        logger.info("Repaired events.tsv NaN samples, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
+                if "Unallowed" in msg and self.filecache:
                     try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        raise retry_error from first_error
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
 
-            # Invalid BIDS entity characters (hyphens/underscores in task, etc.)
-            if "Unallowed" in msg and self.filecache:
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
-
-            # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
-            if (
-                self.filecache
-                and self.filecache.suffix.lower() == ".vhdr"
-                and self._has_non_numeric_run()
-            ):
-                logger.warning(
-                    "MNE-BIDS failed for VHDR with non-numeric run, "
-                    "falling back to direct MNE reader."
-                )
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
-
-            raise
-        except Exception as first_error:
-            # For SNIRF files, try to fix and retry
-            if self.filecache and self.filecache.suffix.lower() == ".snirf":
-                logger.warning(
-                    "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
-                )
-                if _repair_snirf_bids_metadata(self.filecache, self.record):
+                # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
+                if (
+                    self.filecache
+                    and self.filecache.suffix.lower() == ".vhdr"
+                    and self._has_non_numeric_run()
+                ):
+                    logger.warning(
+                        "MNE-BIDS failed for VHDR with non-numeric run, "
+                        "falling back to direct MNE reader."
+                    )
                     try:
-                        return self._read_raw_bids()
-                    except Exception as retry_error:
-                        logger.error(f"Retry also failed: {retry_error}")
-                        raise retry_error from first_error
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
 
-            # Not a fixable case - re-raise original error
-            raise
+                # Missing sidecar or data file (FileNotFoundError is a subclass
+                # of OSError) — bypass MNE-BIDS and load directly with MNE.
+                if isinstance(first_error, FileNotFoundError) and self.filecache:
+                    logger.warning(
+                        "MNE-BIDS failed due to missing file (%s), "
+                        "falling back to direct MNE reader.",
+                        msg,
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except FileNotFoundError as fallback_error:
+                        # Both MNE-BIDS and direct reader can't find a
+                        # required file (e.g. .fdt missing from S3).
+                        raise DataIntegrityError(
+                            message=f"Required data file missing: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
+                raise
+            except Exception as first_error:
+                # For SNIRF files, try to fix and retry
+                if self.filecache and self.filecache.suffix.lower() == ".snirf":
+                    logger.warning(
+                        "Initial load failed for SNIRF file, attempting to fix BIDS metadata..."
+                    )
+                    if _repair_snirf_bids_metadata(self.filecache, self.record):
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            logger.error(f"Retry also failed: {retry_error}")
+                            raise retry_error from first_error
+
+                # Not a fixable case - re-raise original error
+                raise
 
     def _retry_with_generated_coordsystem(self, first_error: Exception) -> BaseRaw:
         """Generate a minimal coordsystem.json on-the-fly and retry loading.
@@ -473,8 +762,6 @@ class EEGDashRaw(RawDataset):
 
     def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
         """Retry CTF read after patching MNE to accept numeric dash dates (e.g. 14-10-1925)."""
-        import mne.io.ctf.info as ctf_info
-
         orig = ctf_info._convert_time
         try:
             ctf_info._convert_time = partial(_convert_time_with_numeric_dash, orig=orig)

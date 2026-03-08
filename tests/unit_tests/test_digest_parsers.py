@@ -1,6 +1,7 @@
 """Tests for format-specific fallback parsers in the digestion script."""
 
 import sys
+import warnings
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -31,15 +32,19 @@ def fif_parser():
 
 
 def test_parse_fif_nonexistent_file(fif_parser, tmp_path):
-    """Returns None for a file that does not exist."""
-    assert fif_parser(tmp_path / "nonexistent.fif") is None
+    """Returns (None, False) for a file that does not exist."""
+    result, is_split = fif_parser(tmp_path / "nonexistent.fif")
+    assert result is None
+    assert is_split is False
 
 
 def test_parse_fif_broken_symlink(fif_parser, tmp_path):
-    """Returns None for a broken symlink (git-annex stub)."""
+    """Returns (None, False) for a broken symlink (git-annex stub)."""
     link = tmp_path / "broken.fif"
     link.symlink_to(tmp_path / "target_does_not_exist.fif")
-    assert fif_parser(link) is None
+    result, is_split = fif_parser(link)
+    assert result is None
+    assert is_split is False
 
 
 def test_parse_fif_extracts_metadata(fif_parser, tmp_path):
@@ -54,15 +59,16 @@ def test_parse_fif_extracts_metadata(fif_parser, tmp_path):
     fif_path = tmp_path / "test_raw.fif"
     raw.save(str(fif_path), overwrite=True, verbose=False)
 
-    result = fif_parser(fif_path)
+    result, is_split = fif_parser(fif_path)
     assert result is not None
     assert result["sampling_frequency"] == 256.0
     assert result["nchans"] == 3
     assert result["ch_names"] == ["EEG1", "EEG2", "EEG3"]
+    assert is_split is False
 
 
 def test_parse_fif_passes_on_split_missing_warn(fif_parser, tmp_path):
-    """Calls read_raw_fif with on_split_missing='warn'."""
+    """Calls read_raw_fif with on_split_missing='warn' and detects split files."""
     fif_path = tmp_path / "test.fif"
     fif_path.touch()
 
@@ -70,18 +76,40 @@ def test_parse_fif_passes_on_split_missing_warn(fif_parser, tmp_path):
     mock_raw.info = {"sfreq": 1000.0, "ch_names": ["MEG1"]}
 
     with patch("mne.io.read_raw_fif", return_value=mock_raw) as mock_read:
-        result = fif_parser(fif_path)
+        result, is_split = fif_parser(fif_path)
 
     mock_read.assert_called_once_with(
         str(fif_path), preload=False, on_split_missing="warn", verbose=False
     )
     assert result["sampling_frequency"] == 1000.0
     assert result["nchans"] == 1
+    assert is_split is False
+
+
+def test_parse_fif_detects_split_warning(fif_parser, tmp_path):
+    """Sets is_split=True when MNE emits a split raw file warning."""
+    fif_path = tmp_path / "test.fif"
+    fif_path.touch()
+
+    mock_raw = MagicMock()
+    mock_raw.info = {"sfreq": 1000.0, "ch_names": ["MEG1"]}
+
+    def fake_read(*args, **kwargs):
+        warnings.warn("Split raw file detected. Missing continuation not found.")
+        return mock_raw
+
+    with patch("mne.io.read_raw_fif", side_effect=fake_read):
+        result, is_split = fif_parser(fif_path)
+
+    assert result["sampling_frequency"] == 1000.0
+    assert is_split is True
 
 
 def test_parse_fif_returns_none_on_read_error(fif_parser, tmp_path):
-    """Returns None when MNE cannot read the file."""
+    """Returns (None, False) when MNE cannot read the file."""
     fif_path = tmp_path / "bad.fif"
     fif_path.write_bytes(b"not a fif file")
 
-    assert fif_parser(fif_path) is None
+    result, is_split = fif_parser(fif_path)
+    assert result is None
+    assert is_split is False

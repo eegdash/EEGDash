@@ -59,6 +59,11 @@ _UNRECOVERABLE_PATTERNS = [
     "iteration over a 0-d array",
     "cannot reshape array",
     "setting an array element with a sequence",
+    # Hardware / format-level issues that no metadata repair can fix
+    "incorrect number of samples",
+    # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
+    # processed haemoglobin (99999); time-domain moments are unsupported.
+    "only supports reading continuous",
 ]
 
 _SPLIT_FIF_MISSING_RE = re.compile(
@@ -592,8 +597,26 @@ class EEGDashRaw(RawDataset):
                 if "Illegal date" in str(first_error):
                     return self._retry_with_ctf_date_patch(first_error)
 
-                # Bad record metadata (e.g. .json extension, missing task entity)
                 msg = str(first_error)
+
+                # CTF mandatory HPI coil-kind mismatch
+                if "mandatory HPI" in msg and self.filecache:
+                    return self._retry_with_ctf_hpi_fix(first_error)
+
+                # Projector channel type conflict during MNE-BIDS channel
+                # renaming — the direct reader bypasses this.
+                if "in projector" in msg and self.filecache:
+                    return self._retry_without_projectors(first_error)
+
+                # Unrecoverable patterns in RuntimeError
+                if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                    raise DataIntegrityError(
+                        message=f"Cannot read data file: {msg}",
+                        record=self.record,
+                        issues=[msg],
+                    ) from first_error
+
+                # Bad record metadata (e.g. .json extension, missing task entity)
                 if "must contain" in msg and "task" in msg:
                     raise DataIntegrityError(
                         message=f"Bad record metadata: {msg}",
@@ -619,6 +642,21 @@ class EEGDashRaw(RawDataset):
                         current_split_key, current_split_path = split_download
                         continue
 
+                # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
+                # the data is readable, just the montage lookup fails.
+                if (
+                    isinstance(first_error, KeyError)
+                    and "FIFFV_COIL_NONE" in msg
+                    and self.filecache
+                ):
+                    logger.warning(
+                        "FIFFV_COIL_NONE montage error — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
                     if self.filecache and _repair_channels_tsv(self.filecache.parent):
@@ -638,6 +676,11 @@ class EEGDashRaw(RawDataset):
                         record=self.record,
                         issues=[msg],
                     ) from first_error
+
+                # Projector channels not found in data — bypass MNE-BIDS
+                # channel renaming and remove projectors from the raw object.
+                if "projector channels not found" in msg and self.filecache:
+                    return self._retry_without_projectors(first_error)
 
                 # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
                 if "second must be" in msg or "does not match format" in msg:
@@ -714,6 +757,12 @@ class EEGDashRaw(RawDataset):
                         raise fallback_error from first_error
 
                 raise
+            except AssertionError as first_error:
+                # Annotation assertion errors (duration/crop mismatch) triggered
+                # by malformed *_events.tsv.  Hide the events file and retry.
+                if self.filecache and self.filecache.parent.exists():
+                    return self._retry_without_events_tsv(first_error)
+                raise
             except Exception as first_error:
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":
@@ -768,6 +817,87 @@ class EEGDashRaw(RawDataset):
             return self._read_raw_bids()
         finally:
             ctf_info._convert_time = orig
+
+    def _retry_with_ctf_hpi_fix(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read after extending the HPI coil-kind dictionary.
+
+        Some CTF ``.hc`` files use ``"Nasion"`` / ``"LPA"`` / ``"RPA"``
+        instead of the lowercase ``"nasion"`` / ``"left ear"`` /
+        ``"right ear"`` that MNE expects.  This patches the lookup dict
+        to accept both forms.
+        """
+        import mne.io.ctf.hc as ctf_hc
+        from mne.io.ctf.constants import CTF
+
+        orig_dict = ctf_hc._kind_dict
+        patched = dict(orig_dict)
+        patched.update(
+            {
+                "Nasion": CTF.CTFV_COIL_NAS,
+                "LPA": CTF.CTFV_COIL_LPA,
+                "RPA": CTF.CTFV_COIL_RPA,
+            }
+        )
+        try:
+            ctf_hc._kind_dict = patched
+            logger.warning(
+                "CTF HPI coil-kind mismatch — retrying with extended kind dict."
+            )
+            return self._read_raw_bids()
+        except Exception as retry_error:
+            raise retry_error from first_error
+        finally:
+            ctf_hc._kind_dict = orig_dict
+
+    def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
+        """Fall back to a direct reader and strip projectors.
+
+        MNE-BIDS channel renaming can cause a mismatch between projector
+        channel names and the renamed data channels, triggering
+        ``ValueError: projector channels not found in data``.  Loading
+        via the format-specific reader bypasses the rename and lets us
+        delete the offending projectors safely.
+        """
+        logger.warning(
+            "Projector channel mismatch — retrying with direct reader "
+            "and removing projectors."
+        )
+        try:
+            raw = _load_raw_direct(self.filecache)
+        except Exception as fallback_error:
+            raise fallback_error from first_error
+        if raw.info.get("projs"):
+            raw.del_proj()
+        return raw
+
+    def _retry_without_events_tsv(self, first_error: Exception) -> BaseRaw:
+        """Temporarily hide ``*_events.tsv`` and retry loading.
+
+        Some datasets have malformed events files that cause
+        ``AssertionError`` inside MNE-BIDS annotation handling.  The
+        underlying data is fine — only the event markers are broken.
+        """
+        data_dir = self.filecache.parent
+        events_files = list(data_dir.glob("*_events.tsv"))
+        if not events_files:
+            raise first_error
+
+        hidden = []
+        try:
+            for ef in events_files:
+                dest = ef.with_suffix(".tsv._hidden")
+                ef.rename(dest)
+                hidden.append((dest, ef))
+            logger.warning(
+                "Hiding %d events.tsv file(s) and retrying load.", len(hidden)
+            )
+            return self._read_raw_bids()
+        except Exception as retry_error:
+            raise retry_error from first_error
+        finally:
+            for src, dst in hidden:
+                if src.exists():
+                    src.rename(dst)
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

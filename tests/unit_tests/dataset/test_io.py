@@ -50,11 +50,39 @@ def test_convert_time_with_numeric_dash_iso():
 
 
 def test_convert_time_with_numeric_dash_fallback():
-    """Unsupported date format is passed through to orig unchanged."""
+    """Completely unparsable date is passed through to orig unchanged."""
     orig = MagicMock(return_value=999.0)
-    out = _convert_time_with_numeric_dash("14/Oct/1925", "12:00:00", orig=orig)
+    out = _convert_time_with_numeric_dash("not-a-date", "12:00:00", orig=orig)
     assert out == 999.0
-    orig.assert_called_once_with("14/Oct/1925", "12:00:00")
+    orig.assert_called_once_with("not-a-date", "12:00:00")
+
+
+def test_convert_time_locale_german_okt():
+    """German month abbreviation 'Okt' is normalised to numeric date."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("14-Okt-1925", "12:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "12:00:00")
+
+
+def test_convert_time_locale_italian_ott():
+    """Italian month abbreviation 'Ott' is normalised to numeric date."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("14-Ott-1925", "12:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "12:00:00")
+
+
+def test_convert_time_locale_german_maerz():
+    """German month abbreviation 'Mär' is normalised to numeric date."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("05-Mär-2000", "09:00:00", orig=orig)
+    orig.assert_called_once_with("05/03/2000", "09:00:00")
+
+
+def test_convert_time_locale_already_english():
+    """English month abbreviation passes through dateutil unchanged."""
+    orig = MagicMock(return_value=0.0)
+    _convert_time_with_numeric_dash("14-Oct-1925", "12:00:00", orig=orig)
+    orig.assert_called_once_with("14/10/1925", "12:00:00")
 
 
 def test_convert_time_with_numeric_dash_strips_whitespace():

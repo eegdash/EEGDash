@@ -460,35 +460,25 @@ class EEGDashRaw(RawDataset):
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
         attempted_split_keys: set[str] = set()
-        try:
-            return self._read_raw_bids()
-        except NotImplementedError as first_error:
-            msg = str(first_error)
-            if (
-                "ALLEEG" in msg
-                and self.filecache
-                and self.filecache.suffix.lower() == ".set"
-            ):
-                logger.info(
-                    "EEGLAB file contains ALLEEG array; loading first dataset (bypassing MNE-BIDS)."
-                )
-                try:
-                    return _load_raw_eeglab_alleeg(self.filecache)
-                except Exception as fallback_error:
-                    raise fallback_error from first_error
-            raise
-        except RuntimeError as first_error:
-            if "coordsystem.json is REQUIRED" in str(first_error):
-                return self._retry_with_generated_coordsystem(first_error)
-            if "Illegal date" in str(first_error):
-                return self._retry_with_ctf_date_patch(first_error)
-            raise
-        except (TypeError, ValueError, OSError) as first_error:
-            msg = str(first_error)
 
         while True:
             try:
                 return self._read_raw_bids()
+            except NotImplementedError as first_error:
+                msg = str(first_error)
+                if (
+                    "ALLEEG" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".set"
+                ):
+                    logger.info(
+                        "EEGLAB file contains ALLEEG array; loading first dataset (bypassing MNE-BIDS)."
+                    )
+                    try:
+                        return _load_raw_eeglab_alleeg(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+                raise
             except RuntimeError as first_error:
                 if "coordsystem.json is REQUIRED" in str(first_error):
                     return self._retry_with_generated_coordsystem(first_error)

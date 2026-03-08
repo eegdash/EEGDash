@@ -22,7 +22,7 @@ from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES,
 # These files must be downloaded together with the primary file
 _COMPANION_FILES = {
     ".set": [".fdt"],  # EEGLAB: data file
-    ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
+    ".vhdr": [".eeg", ".vmrk", ".dat"],  # BrainVision: data + marker files
 }
 
 # Modality directory aliases - different sources use different naming conventions

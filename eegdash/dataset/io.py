@@ -13,8 +13,12 @@ from pathlib import Path
 from time import strptime
 from typing import Any
 
+import mne
+import numpy as np
 from dateutil.parser import parse as _dateutil_parse
 from dateutil.parser import parserinfo
+from mne.io.eeglab import _eeglab as mne_eeglab
+from scipy.io import loadmat, savemat
 
 from ..logging import logger
 
@@ -807,6 +811,66 @@ def _repair_events_tsv_nan_samples(data_dir: Path) -> bool:
     return repaired_any
 
 
+def _repair_channels_tsv(data_dir: Path) -> bool:
+    r"""Repair empty or malformed ``*_channels.tsv`` files in *data_dir*.
+
+    MNE-BIDS skips channel metadata when ``channels.tsv`` is absent but
+    raises ``KeyError: 'name'`` when the file exists and is empty or lacks
+    the required ``name`` column.  This function fixes such files:
+
+    * **Empty / whitespace-only** → removed so MNE-BIDS skips channel
+      metadata gracefully (an empty file has no data to preserve).
+    * **Has content but no ``name`` column** → the first column header is
+      renamed to ``name`` (per BIDS spec the first column must be ``name``).
+
+    Returns ``True`` if any file was repaired.
+    """
+    if not data_dir.is_dir():
+        return False
+
+    repaired_any = False
+
+    try:
+        tsv_files = list(data_dir.glob("*_channels.tsv"))
+    except Exception:
+        return False
+
+    for tsv_path in tsv_files:
+        try:
+            content = tsv_path.read_text(encoding="utf-8-sig")
+            stripped = content.strip()
+
+            if not stripped:
+                # Empty or whitespace-only — remove so MNE-BIDS skips
+                # channel metadata gracefully (no data to preserve).
+                tsv_path.unlink()
+                logger.info("Removed empty channels.tsv: %s", tsv_path.name)
+                repaired_any = True
+                continue
+
+            parts = stripped.split("\n", 1)
+            columns = parts[0].split("\t")
+
+            if "name" not in [c.strip() for c in columns]:
+                # First column must be 'name' per BIDS spec — rename it
+                columns[0] = "name"
+                new_header = "\t".join(columns)
+                if len(parts) > 1:
+                    new_content = new_header + "\n" + parts[1] + "\n"
+                else:
+                    new_content = new_header + "\n"
+                tsv_path.write_text(new_content, encoding="utf-8")
+                logger.info(
+                    "Repaired channels.tsv (renamed first column to 'name'): %s",
+                    tsv_path.name,
+                )
+                repaired_any = True
+        except Exception as exc:
+            logger.warning("Failed to repair %s: %s", tsv_path.name, exc)
+
+    return repaired_any
+
+
 def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     """Align ``participant_id`` values in ``participants.tsv`` with ``sub-*`` folders.
 
@@ -980,8 +1044,6 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         If the file extension is not supported.
 
     """
-    import mne
-
     _EXT_TO_READER = {
         ".vhdr": mne.io.read_raw_brainvision,
         ".edf": mne.io.read_raw_edf,
@@ -1004,4 +1066,230 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         ext,
         filepath.name,
     )
+
+    # Split FIF files: MNE needs on_split_missing="warn" to load a
+    # partial split without crashing when other splits are absent.
+    if ext == ".fif":
+        return reader(
+            str(filepath), preload=False, verbose="ERROR", on_split_missing="warn"
+        )
+
     return reader(str(filepath), preload=False, verbose="ERROR")
+
+
+# EEGLAB .fdt stores single-precision floats (4 bytes per sample)
+_EEGLAB_BYTES_PER_SAMPLE = 4
+# EEGLAB stores data in microvolts; MNE expects volts
+_EEGLAB_UV_TO_V = 1e-6
+
+
+def _eeglab_get_first_eeg(mat_root: dict) -> dict | None:
+    """Get the first EEG struct from a loaded .set (EEG or ALLEEG) as a dict."""
+    if "ALLEEG" in mat_root:
+        arr = np.atleast_1d(np.asarray(mat_root["ALLEEG"], dtype=object))
+        if arr.size == 0:
+            return None
+        first = arr.flat[0]
+    elif "EEG" in mat_root:
+        first = mat_root["EEG"]
+    elif isinstance(mat_root, dict) and "nbchan" in mat_root and "pnts" in mat_root:
+        # pymatreader / v7.3 sometimes returns EEG fields at top level (no EEG/ALLEEG key)
+        return mat_root
+    else:
+        return None
+    if isinstance(first, dict):
+        out = first.get("EEG", first)
+        return out if isinstance(out, dict) else first
+    if hasattr(first, "dtype") and getattr(first.dtype, "names", None):
+        out = {n: first[n] for n in first.dtype.names}
+        nested = out.get("EEG")
+        if isinstance(nested, dict):
+            return nested
+        if hasattr(nested, "dtype") and getattr(nested.dtype, "names", None):
+            return {n: nested[n] for n in nested.dtype.names}
+        return out
+    if hasattr(first, "_fieldnames"):
+        return {n: getattr(first, n) for n in first._fieldnames}
+    return None
+
+
+def _eeglab_load_first_eeg(set_path: Path) -> dict | None:
+    """Load a .set file and return the first EEG struct as a dict, or None."""
+    try:
+        mat = loadmat(
+            str(set_path),
+            squeeze_me=True,
+            mat_dtype=False,
+            struct_as_record=False,
+        )
+        eeg = _eeglab_get_first_eeg(mat)
+        if eeg is not None and isinstance(eeg, dict):
+            return eeg
+    except Exception as e:
+        logger.debug("Could not read .set with scipy: %s", e)
+    try:
+        mat = mne_eeglab._readmat(str(set_path), preload=True)
+        eeg = _eeglab_get_first_eeg(mat)
+        return eeg if isinstance(eeg, dict) else None
+    except Exception as e:
+        logger.debug("Could not read .set with MNE _readmat: %s", e)
+        return None
+
+
+def _eeglab_fdt_path(set_path: Path, eeg: dict) -> Path | None:
+    """Return the path to the companion .fdt when data is external (string), else None."""
+    data_ref = eeg.get("data")
+    if not isinstance(data_ref, str):
+        return None
+    p = set_path.parent / data_ref
+    if not p.exists():
+        p = set_path.with_suffix(".fdt")
+    return p
+
+
+def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
+    """Build channel names from EEG struct chanlocs; fallback to CH1, CH2, ..."""
+    chanlocs = eeg.get("chanlocs", [])
+    n_loc = len(np.atleast_1d(chanlocs)) if chanlocs is not None else 0
+    ch_names = []
+    for i in range(nbchan):
+        if i < n_loc:
+            c = np.atleast_1d(chanlocs)[i]
+            try:
+                if isinstance(c, dict) and "labels" in c:
+                    lab = c["labels"]
+                elif (
+                    hasattr(c, "dtype")
+                    and getattr(c.dtype, "names", None)
+                    and "labels" in (c.dtype.names or ())
+                ):
+                    lab = c["labels"]
+                else:
+                    lab = None
+                if lab is not None:
+                    ch_names.append(str(lab).strip())
+                    continue
+            except Exception:
+                pass
+        ch_names.append(f"CH{i + 1}")
+    return ch_names
+
+
+def _repair_eeglab_fdt(set_path: Path) -> bool:
+    """Update .set header so pnts matches the actual .fdt size (no data change).
+
+    When the companion .fdt is truncated, rewrites the .set file so the
+    declared number of samples (pnts) matches the bytes in the .fdt. The
+    standard MNE reader can then load the file; no padding, no custom loader.
+
+    Reads with scipy first (v5/v7), then MNE _readmat (v7.3). Always writes
+    a flat v5/v7 .set via scipy so all formats are supported.
+
+    Parameters
+    ----------
+    set_path : Path
+        Path to the .set file.
+
+    Returns
+    -------
+    bool
+        True if the .set was modified, False otherwise.
+
+    """
+    if not set_path.exists() or set_path.suffix.lower() != ".set":
+        return False
+
+    eeg = _eeglab_load_first_eeg(set_path)
+    if eeg is None:
+        return False
+
+    nbchan = int(eeg.get("nbchan", 1))
+    pnts = int(eeg.get("pnts", 1))
+    fdt_path = _eeglab_fdt_path(set_path, eeg)
+    if fdt_path is None or not fdt_path.exists():
+        return False
+    expected_bytes = nbchan * pnts * _EEGLAB_BYTES_PER_SAMPLE
+    fdt_size = fdt_path.stat().st_size
+    if fdt_size >= expected_bytes:
+        return False
+
+    actual_pnts = fdt_size // _EEGLAB_BYTES_PER_SAMPLE // nbchan
+    if actual_pnts <= 0:
+        return False
+
+    srate = float(eeg.get("srate", 1.0)) or 1.0
+    repaired = dict(eeg)
+    repaired["pnts"] = actual_pnts
+    repaired["xmax"] = (
+        actual_pnts - 1
+    ) / srate  # EEGLAB xmax is last time point in sec
+
+    try:
+        savemat(str(set_path), repaired, do_compression=False)
+        logger.info(
+            "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
+            set_path.name,
+            pnts,
+            actual_pnts,
+        )
+        return True
+    except Exception as e:
+        logger.warning("Failed to rewrite .set %s: %s", set_path.name, e)
+        return False
+
+
+def _load_raw_eeglab_alleeg(filepath: Path):
+    """Load an EEGLAB .set that contains an ALLEEG array (use first dataset).
+
+    Fallback when MNE raises NotImplementedError for ALLEEG. Returns an
+    MNE Raw instance built from the first EEG in the array. Supports
+    both v5/v7 and v7.3 .set files via the shared loader.
+
+    Parameters
+    ----------
+    filepath : Path
+        Path to the .set file.
+
+    Returns
+    -------
+    mne.io.Raw
+        Raw instance (preload=True).
+
+    """
+    eeg = _eeglab_load_first_eeg(filepath)
+    if eeg is None:
+        raise ValueError("No EEG or ALLEEG found in .set file")
+
+    nbchan = int(eeg.get("nbchan", 1))
+    pnts = int(eeg.get("pnts", 1))
+    srate = float(eeg.get("srate", 1.0))
+    ch_names = _eeglab_ch_names_from_eeg(eeg, nbchan)
+
+    data_ref = eeg.get("data")
+    if isinstance(data_ref, str):
+        data_fname = _eeglab_fdt_path(filepath, eeg)
+        data = np.fromfile(data_fname, dtype="<f4", count=nbchan * pnts)
+        if data.size != nbchan * pnts:
+            data = np.pad(
+                data.astype(np.float64),
+                (0, nbchan * pnts - data.size),
+                mode="constant",
+                constant_values=0,
+            )
+        else:
+            data = data.astype(np.float64)
+        data = data.reshape(nbchan, pnts, order="F")
+    else:
+        data = np.asarray(data_ref, dtype=np.float64)
+        if data.ndim == 1:
+            data = data.reshape(nbchan, -1, order="F")
+        elif data.shape[0] != nbchan or data.shape[1] != pnts:
+            data = data[:nbchan, :pnts]
+
+    info = mne.create_info(ch_names, srate, ch_types="eeg")
+    raw = mne.io.RawArray(data * _EEGLAB_UV_TO_V, info, verbose="ERROR")
+    logger.warning(
+        "Loaded ALLEEG .set using first dataset: %s",
+        filepath.name,
+    )
+    return raw

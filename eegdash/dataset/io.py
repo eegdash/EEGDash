@@ -15,14 +15,40 @@ from typing import Any
 
 import mne
 import numpy as np
+from dateutil.parser import parse as _dateutil_parse
+from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
 from scipy.io import loadmat, savemat
 
 from ..logging import logger
 
 
+class _MultiLocaleParserInfo(parserinfo):
+    """``parserinfo`` subclass that recognises non-English month abbreviations.
+
+    Covers German, Italian, French, Spanish, and Dutch short-month names
+    commonly found in CTF MEG date headers.
+    """
+
+    MONTHS = [
+        ("Jan", "Ene", "Gen"),  # January
+        ("Feb", "Fév", "Fev"),  # February
+        ("Mar", "Mär", "Mrt"),  # March
+        ("Apr", "Avr"),  # April
+        ("May", "Mai", "Mei"),  # May
+        ("Jun", "Giu"),  # June
+        ("Jul",),  # July
+        ("Aug", "Aoû", "Aou", "Ago"),  # August
+        ("Sep", "Set"),  # September
+        ("Oct", "Okt", "Ott"),  # October
+        ("Nov",),  # November
+        ("Dec", "Dez", "Dic"),  # December
+    ]
+
+
 def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
-    """Try numeric dash date formats and delegate to orig (MNE's _convert_time)."""
+    """Try numeric dash date formats, then locale month names, then delegate to orig."""
+    # Pass 1: purely numeric dash dates (e.g. 14-10-1925)
     for fmt in ("%d-%m-%Y", "%m-%d-%Y", "%Y-%m-%d"):
         try:
             date = strptime(date_str.strip(), fmt)
@@ -30,6 +56,15 @@ def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
             return orig(normalized, time_str)
         except ValueError:
             continue
+
+    # Pass 2: locale month abbreviations (e.g. 14-Okt-1925, 14-Ott-1925)
+    try:
+        dt = _dateutil_parse(date_str.strip(), parserinfo=_MultiLocaleParserInfo())
+        normalized = f"{dt.day:02d}/{dt.month:02d}/{dt.year}"
+        return orig(normalized, time_str)
+    except (ValueError, TypeError):
+        pass
+
     return orig(date_str, time_str)
 
 

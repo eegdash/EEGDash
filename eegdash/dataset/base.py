@@ -35,6 +35,7 @@ from .io import (
     _generate_vmrk_stub,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
+    _repair_channels_tsv,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
@@ -439,6 +440,7 @@ class EEGDashRaw(RawDataset):
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
             _repair_events_tsv_nan_samples(self.filecache.parent)
+            _repair_channels_tsv(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
@@ -553,6 +555,8 @@ class EEGDashRaw(RawDataset):
           falls back to direct MNE reader.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
+        - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
+          files or renames the first column to 'name' and retries.
         - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
           falls back to direct MNE reader.
         - **Split FIF** (record points to split-02+ file): direct MNE reader
@@ -597,7 +601,7 @@ class EEGDashRaw(RawDataset):
                         issues=[msg],
                     ) from first_error
                 raise
-            except (TypeError, ValueError, OSError) as first_error:
+            except (TypeError, ValueError, OSError, KeyError) as first_error:
                 msg = str(first_error)
 
                 if (
@@ -614,6 +618,15 @@ class EEGDashRaw(RawDataset):
                     if split_download is not None:
                         current_split_key, current_split_path = split_download
                         continue
+
+                # Malformed channels.tsv (empty or missing 'name' column)
+                if isinstance(first_error, KeyError) and first_error.args == ("name",):
+                    if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                        logger.info("Repaired malformed channels.tsv, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
                 # or any TypeError from array/parsing failures in scipy/numpy)

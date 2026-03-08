@@ -776,6 +776,66 @@ def _repair_events_tsv_nan_samples(data_dir: Path) -> bool:
     return repaired_any
 
 
+def _repair_channels_tsv(data_dir: Path) -> bool:
+    r"""Repair empty or malformed ``*_channels.tsv`` files in *data_dir*.
+
+    MNE-BIDS skips channel metadata when ``channels.tsv`` is absent but
+    raises ``KeyError: 'name'`` when the file exists and is empty or lacks
+    the required ``name`` column.  This function fixes such files:
+
+    * **Empty / whitespace-only** → removed so MNE-BIDS skips channel
+      metadata gracefully (an empty file has no data to preserve).
+    * **Has content but no ``name`` column** → the first column header is
+      renamed to ``name`` (per BIDS spec the first column must be ``name``).
+
+    Returns ``True`` if any file was repaired.
+    """
+    if not data_dir.is_dir():
+        return False
+
+    repaired_any = False
+
+    try:
+        tsv_files = list(data_dir.glob("*_channels.tsv"))
+    except Exception:
+        return False
+
+    for tsv_path in tsv_files:
+        try:
+            content = tsv_path.read_text(encoding="utf-8-sig")
+            stripped = content.strip()
+
+            if not stripped:
+                # Empty or whitespace-only — remove so MNE-BIDS skips
+                # channel metadata gracefully (no data to preserve).
+                tsv_path.unlink()
+                logger.info("Removed empty channels.tsv: %s", tsv_path.name)
+                repaired_any = True
+                continue
+
+            parts = stripped.split("\n", 1)
+            columns = parts[0].split("\t")
+
+            if "name" not in [c.strip() for c in columns]:
+                # First column must be 'name' per BIDS spec — rename it
+                columns[0] = "name"
+                new_header = "\t".join(columns)
+                if len(parts) > 1:
+                    new_content = new_header + "\n" + parts[1] + "\n"
+                else:
+                    new_content = new_header + "\n"
+                tsv_path.write_text(new_content, encoding="utf-8")
+                logger.info(
+                    "Repaired channels.tsv (renamed first column to 'name'): %s",
+                    tsv_path.name,
+                )
+                repaired_any = True
+        except Exception as exc:
+            logger.warning("Failed to repair %s: %s", tsv_path.name, exc)
+
+    return repaired_any
+
+
 def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     """Align ``participant_id`` values in ``participants.tsv`` with ``sub-*`` folders.
 

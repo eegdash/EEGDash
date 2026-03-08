@@ -658,6 +658,119 @@ def test_repair_events_tsv_nonexistent_dir(tmp_path):
     assert _repair_events_tsv_nan_samples(tmp_path / "missing") is False
 
 
+# ── EEGLAB fallback loader tests ──────────────────────────────────────
+
+
+def _create_minimal_set_fdt(tmp_path, n_channels=3, n_samples=100, sfreq=256.0):
+    """Helper: create a minimal .set + .fdt pair for testing."""
+    import numpy as np
+    import scipy.io
+
+    set_path = tmp_path / "test.set"
+    fdt_path = tmp_path / "test.fdt"
+
+    # Create data and write .fdt
+    data = np.random.randn(n_channels, n_samples).astype(np.float32)
+    data.tofile(str(fdt_path))
+
+    # Build a minimal EEG struct as a dict of numpy arrays (scipy-compatible)
+    eeg = {
+        "srate": np.array([[sfreq]]),
+        "nbchan": np.array([[n_channels]]),
+        "pnts": np.array([[n_samples]]),
+        "datfile": np.array(["test.fdt"]),
+        "data": np.array(["test.fdt"]),
+    }
+
+    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    return set_path, fdt_path, data
+
+
+def test_load_raw_eeglab_fallback_with_fdt(tmp_path):
+    """Fallback loader reads .set metadata + .fdt binary and returns RawArray."""
+    from eegdash.dataset.io import _load_raw_eeglab_fallback
+
+    set_path, _, data = _create_minimal_set_fdt(
+        tmp_path, n_channels=3, n_samples=100, sfreq=256.0
+    )
+
+    raw = _load_raw_eeglab_fallback(set_path)
+
+    assert raw.info["sfreq"] == 256.0
+    assert len(raw.ch_names) == 3
+    assert raw.n_times == 100
+    # Default channel names when no chanlocs
+    assert raw.ch_names == ["EEG001", "EEG002", "EEG003"]
+
+
+def test_load_raw_eeglab_fallback_with_bids_channels(tmp_path):
+    """Channel names/types from BIDS channels.tsv take priority."""
+    from eegdash.dataset.io import _load_raw_eeglab_fallback
+
+    set_path, _, _ = _create_minimal_set_fdt(
+        tmp_path, n_channels=3, n_samples=100, sfreq=256.0
+    )
+
+    # Write a channels.tsv sidecar
+    channels_tsv = tmp_path / "sub-01_task-rest_channels.tsv"
+    channels_tsv.write_text(
+        "name\ttype\tunits\nFz\tEEG\tuV\nCz\tEEG\tuV\nEOG1\tEOG\tuV\n"
+    )
+
+    raw = _load_raw_eeglab_fallback(set_path)
+
+    assert raw.ch_names == ["Fz", "Cz", "EOG1"]
+    assert raw.get_channel_types() == ["eeg", "eeg", "eog"]
+
+
+def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
+    """Raises ValueError when no .fdt and no embedded data."""
+    import numpy as np
+    import scipy.io
+
+    from eegdash.dataset.io import _load_raw_eeglab_fallback
+
+    set_path = tmp_path / "test.set"
+
+    eeg = {
+        "srate": np.array([[256.0]]),
+        "nbchan": np.array([[3]]),
+        "pnts": np.array([[100]]),
+        "datfile": np.array([""]),
+        "data": np.array(["test.fdt"]),
+    }
+    scipy.io.savemat(str(set_path), {"EEG": eeg})
+
+    with pytest.raises(ValueError, match="No data source"):
+        _load_raw_eeglab_fallback(set_path)
+
+
+def test_load_raw_eeglab_fallback_size_mismatch_raises(tmp_path):
+    """Raises ValueError when .fdt size doesn't match metadata."""
+    import numpy as np
+    import scipy.io
+
+    from eegdash.dataset.io import _load_raw_eeglab_fallback
+
+    set_path = tmp_path / "test.set"
+    fdt_path = tmp_path / "test.fdt"
+
+    # Write wrong-sized .fdt (too small)
+    np.zeros(10, dtype=np.float32).tofile(str(fdt_path))
+
+    eeg = {
+        "srate": np.array([[256.0]]),
+        "nbchan": np.array([[3]]),
+        "pnts": np.array([[100]]),
+        "datfile": np.array(["test.fdt"]),
+        "data": np.array(["test.fdt"]),
+    }
+    scipy.io.savemat(str(set_path), {"EEG": eeg})
+
+    with pytest.raises(ValueError, match="FDT size mismatch"):
+        _load_raw_eeglab_fallback(set_path)
+
+
 # ---------- _repair_channels_tsv ----------
 
 

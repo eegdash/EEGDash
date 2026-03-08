@@ -35,6 +35,7 @@ from .io import (
     _generate_vmrk_stub,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
+    _load_raw_eeglab_fallback,
     _repair_channels_tsv,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
@@ -59,6 +60,8 @@ _UNRECOVERABLE_PATTERNS = [
     "iteration over a 0-d array",
     "cannot reshape array",
     "setting an array element with a sequence",
+    # EEGLAB reader: invalid file extension check
+    "EEGLAB file extension",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
     # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
@@ -624,7 +627,7 @@ class EEGDashRaw(RawDataset):
                         issues=[msg],
                     ) from first_error
                 raise
-            except (TypeError, ValueError, OSError, KeyError) as first_error:
+            except (TypeError, ValueError, OSError, KeyError, AttributeError) as first_error:
                 msg = str(first_error)
 
                 if (
@@ -667,10 +670,20 @@ class EEGDashRaw(RawDataset):
                             raise retry_error from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
-                # or any TypeError from array/parsing failures in scipy/numpy)
+                # or any TypeError/AttributeError from array/parsing failures
+                # in scipy/numpy)
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
-                    first_error, TypeError
+                    first_error, (TypeError, AttributeError)
                 ):
+                    # Try EEGLAB fallback for .set files before giving up
+                    if self.filecache and self.filecache.suffix.lower() == ".set":
+                        try:
+                            return _load_raw_eeglab_fallback(
+                                self.filecache, bids_root=self.bids_root
+                            )
+                        except Exception:
+                            pass  # Fall through to DataIntegrityError
+
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
                         record=self.record,

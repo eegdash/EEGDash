@@ -477,10 +477,13 @@ class EEGDashRaw(RawDataset):
                 )
                 raise
 
-    def _read_raw_bids(self) -> BaseRaw:
+    def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments."""
         return mne_bids.read_raw_bids(
-            bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
+            bids_path=self.bidspath,
+            extra_params=extra_params,
+            verbose="ERROR",
+            on_ch_mismatch="rename",
         )
 
     def _download_split_fif_continuation(
@@ -548,6 +551,9 @@ class EEGDashRaw(RawDataset):
           ``iEEGCoordinateSystem`` keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
+        - **EEGLAB char-encoding** (``.set`` files with non-UTF char fields):
+          ``scipy.io.loadmat`` raises ``TypeError: buffer is too small``.
+          Retries with ``uint16_codec='latin-1'`` via ``extra_params``.
         - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
           MAT/EEGLAB files with array errors, etc.): raises
           ``DataIntegrityError`` for clean error reporting.
@@ -668,6 +674,24 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # EEGLAB .set files with non-UTF char fields: scipy.io.loadmat
+                # crashes with "buffer is too small" in read_char.  Retry with
+                # uint16_codec='latin-1' before giving up.
+                if (
+                    isinstance(first_error, TypeError)
+                    and "buffer is too small" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".set"
+                ):
+                    logger.info(
+                        "EEGLAB char-encoding error, retrying with "
+                        "uint16_codec='latin-1'..."
+                    )
+                    try:
+                        return self._read_raw_bids(extra_params={"uint16_codec": "latin-1"})
+                    except Exception as retry_error:
+                        raise retry_error from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
                 # or any TypeError/AttributeError from array/parsing failures

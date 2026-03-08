@@ -14,6 +14,7 @@ from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+import mne.io.ctf.info as ctf_info
 import mne_bids
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
@@ -616,8 +617,6 @@ class EEGDashRaw(RawDataset):
 
     def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
         """Retry CTF read after patching MNE to accept numeric dash dates (e.g. 14-10-1925)."""
-        import mne.io.ctf.info as ctf_info
-
         orig = ctf_info._convert_time
         try:
             ctf_info._convert_time = partial(_convert_time_with_numeric_dash, orig=orig)

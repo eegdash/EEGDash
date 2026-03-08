@@ -633,7 +633,13 @@ class EEGDashRaw(RawDataset):
                         issues=[msg],
                     ) from first_error
                 raise
-            except (TypeError, ValueError, OSError, KeyError, AttributeError) as first_error:
+            except (
+                TypeError,
+                ValueError,
+                OSError,
+                KeyError,
+                AttributeError,
+            ) as first_error:
                 msg = str(first_error)
 
                 if (
@@ -689,7 +695,9 @@ class EEGDashRaw(RawDataset):
                         "uint16_codec='latin-1'..."
                     )
                     try:
-                        return self._read_raw_bids(extra_params={"uint16_codec": "latin-1"})
+                        return self._read_raw_bids(
+                            extra_params={"uint16_codec": "latin-1"}
+                        )
                     except Exception as retry_error:
                         raise retry_error from first_error
 

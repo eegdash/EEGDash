@@ -24,11 +24,13 @@ import re
 import sys
 import urllib.error
 import urllib.request
+import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import mne
 import numpy as np
 import pandas as pd
 from _constants import (
@@ -208,8 +210,6 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
         return None
 
     try:
-        import mne
-
         # Read with preload=False to avoid loading data into memory
         # verbose=False to suppress MNE's logging
         raw = mne.io.read_raw_edf(str(edf_path), preload=False, verbose=False)
@@ -268,13 +268,9 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
         return None, False
 
     try:
-        import warnings as _warnings
-
-        import mne
-
         is_split = False
-        with _warnings.catch_warnings(record=True) as caught:
-            _warnings.simplefilter("always")
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
             raw = mne.io.read_raw_fif(
                 str(fif_path), preload=False, on_split_missing="warn", verbose=False
             )

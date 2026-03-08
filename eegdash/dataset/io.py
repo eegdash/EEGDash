@@ -13,6 +13,8 @@ from pathlib import Path
 from time import strptime
 from typing import Any
 
+import mne
+
 from ..logging import logger
 
 
@@ -944,8 +946,6 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         If the file extension is not supported.
 
     """
-    import mne
-
     _EXT_TO_READER = {
         ".vhdr": mne.io.read_raw_brainvision,
         ".edf": mne.io.read_raw_edf,

@@ -1674,3 +1674,271 @@ def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
         pytest.raises(DataIntegrityError, match="Bad record metadata"),
     ):
         ds._load_raw()
+
+
+# ── EEGLAB epoch files (trials > 1) → read_epochs_eeglab handler ──
+
+
+def test_load_raw_eeglab_epochs_trial_error_uses_epoch_loader(tmp_path):
+    """TypeError('number of trials is') triggers _load_raw_from_eeglab_epochs."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_epoch", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("number of trials is 40, not 1"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_from_eeglab_epochs",
+            return_value=mock_raw,
+        ) as mock_epoch:
+            result = ds._load_raw()
+
+    mock_epoch.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_eeglab_epochs_fallback_failure_raises_data_integrity(tmp_path):
+    """When epoch loader also fails, DataIntegrityError is raised."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_epoch_bad", "sub-01/eeg/sub-01_task-rest_eeg.set"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=TypeError("number of trials is 10, not 1"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_from_eeglab_epochs",
+            side_effect=ValueError("corrupted epoch data"),
+        ):
+            with pytest.raises(DataIntegrityError, match="Cannot read epoched EEGLAB"):
+                ds._load_raw()
+
+
+# ── CTF trial-size mismatch → direct reader fallback ──
+
+
+def test_load_raw_ctf_trial_size_mismatch_falls_back(tmp_path):
+    """RuntimeError about trial size mismatch falls back to direct reader."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_ctf", "sub-01/meg/sub-01_task-rest_meg.ds", ext=".ds"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
+    """CTF trial size mismatch + direct reader failure → DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds_ctf_bad", "sub-01/meg/sub-01_task-rest_meg.ds", ext=".ds"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct",
+            side_effect=ValueError("cannot read CTF"),
+        ):
+            with pytest.raises(DataIntegrityError, match="CTF trial size mismatch"):
+                ds._load_raw()
+
+
+# ── configparser.NoOptionError (missing MarkerFile) → repair + retry ──
+
+
+def test_load_raw_no_option_error_markerfile_repairs_and_retries(tmp_path):
+    """configparser.NoOptionError for markerfile triggers VHDR repair then retry."""
+    import configparser
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise configparser.NoOptionError("markerfile", "Common Infos")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_no_option_error_repair_fails_reraises(tmp_path):
+    """configparser.NoOptionError when repair returns False → re-raises."""
+    import configparser
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
+    )
+
+    error = configparser.NoOptionError("markerfile", "Common Infos")
+    with patch("mne_bids.read_raw_bids", side_effect=error):
+        with patch(
+            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=False
+        ):
+            with pytest.raises(configparser.NoOptionError):
+                ds._load_raw()
+
+
+def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
+    """configparser.NoOptionError for non-markerfile option → re-raises."""
+    import configparser
+
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
+    )
+
+    error = configparser.NoOptionError("datafile", "Common Infos")
+    with patch("mne_bids.read_raw_bids", side_effect=error):
+        with pytest.raises(configparser.NoOptionError):
+            ds._load_raw()
+
+
+# ── UnicodeDecodeError → repair TSV encoding + retry ──
+
+
+def test_load_raw_unicode_decode_error_repairs_encoding(tmp_path):
+    """UnicodeDecodeError triggers TSV encoding repair then retry."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_tsv_encoding", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once_with(ds.filecache.parent)
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_unicode_decode_error_repair_fails_reraises(tmp_path):
+    """UnicodeDecodeError when encoding repair returns False → re-raises."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    error = UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
+    with patch("mne_bids.read_raw_bids", side_effect=error):
+        with patch("eegdash.dataset.base._repair_tsv_encoding", return_value=False):
+            with pytest.raises(UnicodeDecodeError):
+                ds._load_raw()
+
+
+# ── scans.tsv path mismatch → direct reader fallback ──
+
+
+def test_load_raw_scans_tsv_mismatch_falls_back_to_direct(tmp_path):
+    """'is not in list. Did you mean' falls back to direct reader."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005795", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError(
+            "eeg/sub-01_task-rest_eeg.vhdr is not in list. "
+            "Did you mean func/sub-01_task-rest_bold.nii.gz?"
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_scans_tsv_mismatch_fallback_fails_chains(tmp_path):
+    """scans.tsv mismatch direct reader failure chains exceptions."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005795", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
+    )
+
+    original = ValueError(
+        "eeg/sub-01_task-rest_eeg.vhdr is not in list. "
+        "Did you mean func/sub-01_task-rest_bold.nii.gz?"
+    )
+    fallback = IOError("cannot read file")
+
+    with patch("mne_bids.read_raw_bids", side_effect=original):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct",
+            side_effect=fallback,
+        ):
+            with pytest.raises(IOError, match="cannot read file") as exc_info:
+                ds._load_raw()
+
+    assert exc_info.value.__cause__ is original
+
+
+def test_load_raw_is_not_in_list_without_did_you_mean_tries_participants(tmp_path):
+    """'is not in list' without 'Did you mean' triggers participants.tsv repair."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds005795", "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise ValueError("sub-01 is not in list")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_participants_tsv_ids", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once()
+    assert result is mock_raw

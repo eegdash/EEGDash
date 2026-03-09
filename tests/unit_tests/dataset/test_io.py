@@ -18,11 +18,13 @@ from eegdash.dataset.io import (
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
     _load_raw_eeglab_alleeg,
+    _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
 
@@ -1151,3 +1153,120 @@ def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
     assert raw is not None
     assert raw.info["nchan"] == nbchan
     assert raw.times.size == pnts
+
+
+# ── _load_raw_from_eeglab_epochs ──────────────────────────────────────
+
+
+def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
+    """Epoched EEGLAB data is concatenated into continuous RawArray."""
+    import mne
+
+    n_epochs, n_channels, n_times = 3, 2, 100
+    sfreq = 256.0
+    data = np.random.randn(n_epochs, n_channels, n_times) * 1e-6
+
+    info = mne.create_info(ch_names=["Fz", "Cz"], sfreq=sfreq, ch_types="eeg")
+    epochs = mne.EpochsArray(data, info)
+
+    set_path = tmp_path / "epoched.set"
+
+    with patch("mne.io.read_epochs_eeglab", return_value=epochs) as mock_read:
+        raw = _load_raw_from_eeglab_epochs(set_path)
+
+    mock_read.assert_called_once_with(str(set_path), verbose="ERROR")
+    assert raw.info["nchan"] == n_channels
+    assert raw.n_times == n_epochs * n_times
+    assert "3 epochs" in raw.info["description"]
+    assert raw.ch_names == ["Fz", "Cz"]
+
+
+# ── _repair_vhdr_missing_markerfile ───────────────────────────────────
+
+
+def test_repair_vhdr_missing_markerfile_adds_entry(tmp_path):
+    """VHDR without MarkerFile gets one inserted into [Common Infos]."""
+    vhdr_path = tmp_path / "sub-01_task-rest_eeg.vhdr"
+    vhdr_content = (
+        "Brain Vision Data Exchange Header File Version 1.0\n"
+        "[Common Infos]\n"
+        "DataFile=sub-01_task-rest_eeg.eeg\n"
+        "\n"
+        "[Binary Infos]\n"
+        "BinaryFormat=IEEE_FLOAT_32\n"
+    )
+    vhdr_path.write_text(vhdr_content)
+
+    result = _repair_vhdr_missing_markerfile(vhdr_path)
+    assert result is True
+
+    text = vhdr_path.read_text()
+    assert "MarkerFile=sub-01_task-rest_eeg.vmrk" in text
+    # VMRK stub should be generated
+    assert (tmp_path / "sub-01_task-rest_eeg.vmrk").exists()
+
+
+def test_repair_vhdr_missing_markerfile_noop_when_present(tmp_path):
+    """No change when MarkerFile is already present."""
+    vhdr_path = tmp_path / "sub-01_task-rest_eeg.vhdr"
+    vhdr_content = (
+        "[Common Infos]\n"
+        "DataFile=sub-01_task-rest_eeg.eeg\n"
+        "MarkerFile=sub-01_task-rest_eeg.vmrk\n"
+    )
+    vhdr_path.write_text(vhdr_content)
+
+    result = _repair_vhdr_missing_markerfile(vhdr_path)
+    assert result is False
+
+
+def test_repair_vhdr_missing_markerfile_case_insensitive(tmp_path):
+    """MarkerFile detection is case-insensitive."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_content = "[Common Infos]\nmarkerfile=test.vmrk\n"
+    vhdr_path.write_text(vhdr_content)
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is False
+
+
+def test_repair_vhdr_missing_markerfile_no_common_infos(tmp_path):
+    """Returns False when [Common Infos] section is missing."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_path.write_text("[Binary Infos]\nBinaryFormat=IEEE_FLOAT_32\n")
+
+    assert _repair_vhdr_missing_markerfile(vhdr_path) is False
+
+
+def test_repair_vhdr_missing_markerfile_nonexistent(tmp_path):
+    """Returns False for nonexistent file."""
+    assert _repair_vhdr_missing_markerfile(tmp_path / "missing.vhdr") is False
+
+
+def test_repair_vhdr_missing_markerfile_wrong_extension(tmp_path):
+    """Returns False for non-.vhdr file."""
+    txt_path = tmp_path / "test.txt"
+    txt_path.write_text("[Common Infos]\nDataFile=test.eeg\n")
+    assert _repair_vhdr_missing_markerfile(txt_path) is False
+
+
+def test_repair_vhdr_missing_markerfile_preserves_existing_vmrk(tmp_path):
+    """Existing VMRK file is not overwritten."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vmrk_path = tmp_path / "test.vmrk"
+    vmrk_path.write_text("Custom VMRK content")
+
+    vhdr_content = "[Common Infos]\nDataFile=test.eeg\n"
+    vhdr_path.write_text(vhdr_content)
+
+    result = _repair_vhdr_missing_markerfile(vhdr_path)
+    assert result is True
+    assert vmrk_path.read_text() == "Custom VMRK content"
+
+
+def test_repair_vhdr_missing_markerfile_write_error(tmp_path):
+    """Returns False when write fails."""
+    vhdr_path = tmp_path / "test.vhdr"
+    vhdr_path.write_text("[Common Infos]\nDataFile=test.eeg\n")
+
+    with patch("pathlib.Path.write_text", side_effect=OSError("disk full")):
+        assert _repair_vhdr_missing_markerfile(vhdr_path) is False

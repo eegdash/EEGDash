@@ -1732,9 +1732,7 @@ def test_load_raw_ctf_trial_size_mismatch_falls_back(tmp_path):
     mock_raw = MagicMock()
     with patch(
         "mne_bids.read_raw_bids",
-        side_effect=RuntimeError(
-            "Data size is not an even multiple of the trial size"
-        ),
+        side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
     ):
         with patch(
             "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
@@ -1755,17 +1753,13 @@ def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
 
     with patch(
         "mne_bids.read_raw_bids",
-        side_effect=RuntimeError(
-            "Data size is not an even multiple of the trial size"
-        ),
+        side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
     ):
         with patch(
             "eegdash.dataset.base._load_raw_direct",
             side_effect=ValueError("cannot read CTF"),
         ):
-            with pytest.raises(
-                DataIntegrityError, match="CTF trial size mismatch"
-            ):
+            with pytest.raises(DataIntegrityError, match="CTF trial size mismatch"):
                 ds._load_raw()
 
 
@@ -1848,9 +1842,7 @@ def test_load_raw_unicode_decode_error_repairs_encoding(tmp_path):
         nonlocal call_count
         call_count += 1
         if call_count == 1:
-            raise UnicodeDecodeError(
-                "utf-8", b"\xb5", 0, 1, "invalid start byte"
-            )
+            raise UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
         return mock_raw
 
     with patch("mne_bids.read_raw_bids", side_effect=side_effect):
@@ -1872,9 +1864,7 @@ def test_load_raw_unicode_decode_error_repair_fails_reraises(tmp_path):
 
     error = UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
     with patch("mne_bids.read_raw_bids", side_effect=error):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_encoding", return_value=False
-        ):
+        with patch("eegdash.dataset.base._repair_tsv_encoding", return_value=False):
             with pytest.raises(UnicodeDecodeError):
                 ds._load_raw()
 

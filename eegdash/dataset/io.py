@@ -264,9 +264,7 @@ def _repair_vhdr_missing_markerfile(vhdr_path: Path) -> bool:
 
     try:
         vhdr_path.write_text(new_content, encoding="utf-8")
-        logger.info(
-            "Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name
-        )
+        logger.info("Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name)
     except Exception as e:
         logger.warning("Failed to write MarkerFile to VHDR: %s", e)
         return False
@@ -1383,8 +1381,7 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
 
     raw.info["description"] = (
-        f"Converted from {n_epochs} epochs "
-        f"({n_times / epochs.info['sfreq']:.3f}s each)"
+        f"Converted from {n_epochs} epochs ({n_times / epochs.info['sfreq']:.3f}s each)"
     )
 
     logger.warning(

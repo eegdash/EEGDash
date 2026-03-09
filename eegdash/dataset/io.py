@@ -1380,6 +1380,17 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     # read_epochs_eeglab already converts µV → V, so no extra scaling needed
     raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
 
+    # Preserve epoch event labels as annotations on the continuous raw
+    if epochs.event_id:
+        event_desc = {v: k for k, v in epochs.event_id.items()}
+        annotations = mne.annotations_from_events(
+            events=epochs.events,
+            event_desc=event_desc,
+            sfreq=epochs.info["sfreq"],
+            orig_time=raw.info.get("meas_date"),
+        )
+        raw.set_annotations(annotations)
+
     raw.info["description"] = (
         f"Converted from {n_epochs} epochs ({n_times / epochs.info['sfreq']:.3f}s each)"
     )

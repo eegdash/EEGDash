@@ -1171,7 +1171,9 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
 
     set_path = tmp_path / "epoched.set"
 
-    with patch("mne.io.read_epochs_eeglab", return_value=epochs) as mock_read:
+    with patch(
+        "mne.io.read_epochs_eeglab", return_value=epochs
+    ) as mock_read:
         raw = _load_raw_from_eeglab_epochs(set_path)
 
     mock_read.assert_called_once_with(str(set_path), verbose="ERROR")

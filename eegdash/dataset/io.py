@@ -264,7 +264,9 @@ def _repair_vhdr_missing_markerfile(vhdr_path: Path) -> bool:
 
     try:
         vhdr_path.write_text(new_content, encoding="utf-8")
-        logger.info("Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name)
+        logger.info(
+            "Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name
+        )
     except Exception as e:
         logger.warning("Failed to write MarkerFile to VHDR: %s", e)
         return False
@@ -1346,7 +1348,9 @@ def _load_raw_eeglab_fallback(set_path: Path, bids_root: Path | None = None):
     return raw
 
 
-def _load_raw_from_eeglab_epochs(set_path: Path):
+def _load_raw_from_eeglab_epochs(
+    set_path: Path, bids_root: Path | None = None
+):
     """Load an EEGLAB .set file containing epoched data as continuous Raw.
 
     When MNE raises ``TypeError`` because the ``.set`` file contains multiple
@@ -1357,6 +1361,8 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     ----------
     set_path : Path
         Path to the EEGLAB .set file.
+    bids_root : Path | None
+        Optional BIDS root for channel info lookup.
 
     Returns
     -------
@@ -1365,7 +1371,6 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
 
     """
     import mne
-    import numpy as np
 
     set_path = Path(set_path)
     logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
@@ -1374,14 +1379,15 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     data = epochs.get_data()  # (n_epochs, n_channels, n_times)
     n_epochs, n_channels, n_times = data.shape
 
-    # Concatenate epochs into continuous data (channel-major order)
-    data_concat = np.ascontiguousarray(data.transpose(1, 0, 2)).reshape(n_channels, -1)
+    # Concatenate epochs into continuous data
+    data_concat = data.transpose(1, 0, 2).reshape(n_channels, -1)
 
     # read_epochs_eeglab already converts µV → V, so no extra scaling needed
     raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
 
     raw.info["description"] = (
-        f"Converted from {n_epochs} epochs ({n_times / epochs.info['sfreq']:.3f}s each)"
+        f"Converted from {n_epochs} epochs "
+        f"({n_times / epochs.info['sfreq']:.3f}s each)"
     )
 
     logger.warning(

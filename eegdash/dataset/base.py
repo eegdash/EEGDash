@@ -469,6 +469,8 @@ class EEGDashRaw(RawDataset):
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
+                # Add missing MarkerFile entry if absent
+                _repair_vhdr_missing_markerfile(self.filecache)
 
         # Repair .set header when .fdt is truncated (pnts -> actual size)
         if self.filecache and self.filecache.suffix.lower() == ".set":
@@ -681,7 +683,9 @@ class EEGDashRaw(RawDataset):
                 if isinstance(first_error, UnicodeDecodeError) and self.filecache:
                     data_dir = self.filecache.parent
                     if _repair_tsv_encoding(data_dir):
-                        logger.info("Repaired non-UTF-8 TSV encoding, retrying load...")
+                        logger.info(
+                            "Repaired non-UTF-8 TSV encoding, retrying load..."
+                        )
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
@@ -723,7 +727,9 @@ class EEGDashRaw(RawDataset):
                         "loading via read_epochs_eeglab."
                     )
                     try:
-                        return _load_raw_from_eeglab_epochs(self.filecache)
+                        return _load_raw_from_eeglab_epochs(
+                            self.filecache, bids_root=self.bids_root
+                        )
                     except Exception as fallback_error:
                         raise DataIntegrityError(
                             message=f"Cannot read epoched EEGLAB file: {fallback_error}",

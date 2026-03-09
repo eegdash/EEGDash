@@ -1159,7 +1159,7 @@ def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
 
 
 def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
-    """Epoched EEGLAB data is concatenated into continuous RawArray."""
+    """Epoched EEGLAB data is concatenated into continuous RawArray with annotations."""
     import mne
 
     n_epochs, n_channels, n_times = 3, 2, 100
@@ -1167,7 +1167,9 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     data = np.random.randn(n_epochs, n_channels, n_times) * 1e-6
 
     info = mne.create_info(ch_names=["Fz", "Cz"], sfreq=sfreq, ch_types="eeg")
-    epochs = mne.EpochsArray(data, info)
+    events = np.array([[25, 0, 1], [125, 0, 2], [225, 0, 1]])
+    event_id = {"target": 1, "standard": 2}
+    epochs = mne.EpochsArray(data, info, events=events, event_id=event_id)
 
     set_path = tmp_path / "epoched.set"
 
@@ -1179,6 +1181,13 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     assert raw.n_times == n_epochs * n_times
     assert "3 epochs" in raw.info["description"]
     assert raw.ch_names == ["Fz", "Cz"]
+
+    # Verify epoch annotations are preserved
+    assert len(raw.annotations) == n_epochs
+    descriptions = list(raw.annotations.description)
+    assert descriptions == ["target", "standard", "target"]
+    expected_onsets = epochs.events[:, 0] / sfreq
+    np.testing.assert_allclose(raw.annotations.onset, expected_onsets, atol=1e-6)
 
 
 # ── _repair_vhdr_missing_markerfile ───────────────────────────────────

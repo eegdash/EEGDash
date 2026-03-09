@@ -681,9 +681,7 @@ class EEGDashRaw(RawDataset):
                 if isinstance(first_error, UnicodeDecodeError) and self.filecache:
                     data_dir = self.filecache.parent
                     if _repair_tsv_encoding(data_dir):
-                        logger.info(
-                            "Repaired non-UTF-8 TSV encoding, retrying load..."
-                        )
+                        logger.info("Repaired non-UTF-8 TSV encoding, retrying load...")
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:

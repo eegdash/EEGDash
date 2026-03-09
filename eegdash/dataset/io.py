@@ -1348,9 +1348,7 @@ def _load_raw_eeglab_fallback(set_path: Path, bids_root: Path | None = None):
     return raw
 
 
-def _load_raw_from_eeglab_epochs(
-    set_path: Path, bids_root: Path | None = None
-):
+def _load_raw_from_eeglab_epochs(set_path: Path):
     """Load an EEGLAB .set file containing epoched data as continuous Raw.
 
     When MNE raises ``TypeError`` because the ``.set`` file contains multiple
@@ -1361,8 +1359,6 @@ def _load_raw_from_eeglab_epochs(
     ----------
     set_path : Path
         Path to the EEGLAB .set file.
-    bids_root : Path | None
-        Optional BIDS root for channel info lookup.
 
     Returns
     -------
@@ -1371,6 +1367,7 @@ def _load_raw_from_eeglab_epochs(
 
     """
     import mne
+    import numpy as np
 
     set_path = Path(set_path)
     logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
@@ -1379,8 +1376,8 @@ def _load_raw_from_eeglab_epochs(
     data = epochs.get_data()  # (n_epochs, n_channels, n_times)
     n_epochs, n_channels, n_times = data.shape
 
-    # Concatenate epochs into continuous data
-    data_concat = data.transpose(1, 0, 2).reshape(n_channels, -1)
+    # Concatenate epochs into continuous data (channel-major order)
+    data_concat = np.ascontiguousarray(data.transpose(1, 0, 2)).reshape(n_channels, -1)
 
     # read_epochs_eeglab already converts µV → V, so no extra scaling needed
     raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")

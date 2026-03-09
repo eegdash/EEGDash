@@ -11,11 +11,11 @@ DS004306
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (2022). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
+**Citation:** Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (—). *EEG Semantic Imagination and Perception Dataset*. `10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 514` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 15` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,18 +89,15 @@ Quickstart
 About This Dataset
 ------------------
 
-This dataset consists of electroencephalography (EEG) signals acquired with a 124 EEG ANT-Neuro device. 
-
+This dataset consists of electroencephalography (EEG) signals acquired with a 124 EEG ANT-Neuro device.
 
 **Participants and Sessions**
 
 There are 13 participants included, ten performed one session and three performed two sessions. All participants had normal or corrected vision and hearing, apart from sub-16.
 
-
 **Task**
 
-The task consisted of imagining and perceiving stimuli from three modalities; visual pictorial, visual orthographic (writing) or auditory. Each of the stimuli belonged to one of three categories: guitar, flower and penguin. These categories were selected based on being semantically dissimilar to one another, and because there were all of 2 syllables. 
-
+The task consisted of imagining and perceiving stimuli from three modalities; visual pictorial, visual orthographic (writing) or auditory. Each of the stimuli belonged to one of three categories: guitar, flower and penguin. These categories were selected based on being semantically dissimilar to one another, and because there were all of 2 syllables.
 
 **Dataset Versions**
 
@@ -118,7 +115,7 @@ Dataset Information
    * - Title
      - EEG Semantic Imagination and Perception Dataset
    * - Year
-     - 2022
+     - —
    * - Authors
      - Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill
    * - License
@@ -126,7 +123,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004306.v1.0.2 <https://doi.org/10.18112/openneuro.ds004306.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__ | `Source URL <https://openneuro.org/datasets/ds004306/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004306>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004306>`__ | `Source URL <https://openneuro.org/datasets/ds004306>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -163,13 +160,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 12
-      - Recordings: 514
+      - Recordings: 15
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 124 (15), 128 (15)
+      - Channels: 128
       - Sampling rate (Hz): 1024.0
       - Duration (hours): 0.0
 
@@ -183,8 +180,8 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 654.9 MB
-      - File count: 514
+      - Size on disk: 79.1 GB
+      - File count: 15
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -11,11 +11,11 @@ DS005274
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Yukako Ito (2024). *UV_EEG*. `10.18112/openneuro.ds005274.v1.0.0 <https://doi.org/10.18112/openneuro.ds005274.v1.0.0>`__
+**Citation:** Yukako Ito (—). *UV_EEG*. `10.18112/openneuro.ds005274.v1.0.0 <https://doi.org/10.18112/openneuro.ds005274.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 135` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 22` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -103,7 +103,7 @@ Dataset Information
    * - Title
      - UV_EEG
    * - Year
-     - 2024
+     - —
    * - Authors
      - Yukako Ito
    * - License
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005274.v1.0.0 <https://doi.org/10.18112/openneuro.ds005274.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005274>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005274>`__ | `Source URL <https://openneuro.org/datasets/ds005274/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005274>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005274>`__ | `Source URL <https://openneuro.org/datasets/ds005274>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,7 +148,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 22
-      - Recordings: 135
+      - Recordings: 22
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -168,8 +168,8 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 71.9 MB
-      - File count: 135
+      - Size on disk: 72.0 MB
+      - File count: 22
       - Format: BIDS
 
    .. grid-item-card:: License & citation

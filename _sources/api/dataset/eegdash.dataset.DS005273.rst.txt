@@ -11,11 +11,11 @@ DS005273
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Pablo Rodríguez-San Esteban, Ana B. Chica, José A. González-López (2024). *Neural representation of consciously seen and unseen information*. `10.18112/openneuro.ds005273.v1.0.0 <https://doi.org/10.18112/openneuro.ds005273.v1.0.0>`__
+**Citation:** Pablo Rodríguez-San Esteban, Ana B. Chica, José A. González-López (—). *Neural representation of consciously seen and unseen information*. `10.18112/openneuro.ds005273.v1.0.0 <https://doi.org/10.18112/openneuro.ds005273.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 33` :bdg-secondary-line:`Recordings: 324` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 33` :bdg-secondary-line:`Recordings: 33` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -103,7 +103,7 @@ Dataset Information
    * - Title
      - Neural representation of consciously seen and unseen information
    * - Year
-     - 2024
+     - —
    * - Authors
      - Pablo Rodríguez-San Esteban, Ana B. Chica, José A. González-López
    * - License
@@ -148,7 +148,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 33
-      - Recordings: 324
+      - Recordings: 33
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 44.4 GB
-      - File count: 324
+      - File count: 33
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**12:23.535** total execution time for 3 files **from generated/auto_examples/eeg2025**:
+**11:24.435** total execution time for 3 files **from generated/auto_examples/eeg2025**:
 
 .. container::
 
@@ -33,11 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py` (``tutorial_challenge_2.py``)
-     - 07:02.027
-     - 2145.8
+     - 06:40.721
+     - 2099.9
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py` (``tutorial_challenge_1.py``)
-     - 04:52.101
-     - 2171.9
+     - 04:18.563
+     - 2137.6
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py` (``tutorial_eegdash_offline.py``)
-     - 00:29.407
-     - 961.8
+     - 00:25.152
+     - 961.4

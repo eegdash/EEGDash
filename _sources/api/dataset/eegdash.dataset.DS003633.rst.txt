@@ -11,11 +11,11 @@ DS003633
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (2021). *ForrestGump-MEG*. `10.18112/openneuro.ds003633.v1.0.4 <https://doi.org/10.18112/openneuro.ds003633.v1.0.4>`__
+**Citation:** Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (20). *ForrestGump-MEG*. `10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 11` :bdg-secondary-line:`Recordings: 2298` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 96` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds003633,
            title = {ForrestGump-MEG},
            author = {Xingyu Liu and Yuxuan Dai and Hailun Xie and Zonglei Zhen},
-           doi = {10.18112/openneuro.ds003633.v1.0.4},
-           url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.4},
+           doi = {10.18112/openneuro.ds003633.v1.0.3},
+           url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.3},
          }
 
 
@@ -90,47 +90,31 @@ About This Dataset
 ------------------
 
 **ForrestGump-MEG: A audio-visual movie watching MEG dataset**
-
 For details please refer to our paper on https://www.biorxiv.org/content/10.1101/2021.06.04.446837v1.
-
-This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included. 
-
-Please noted that For sub-01, the MEG machine collapsed at the 500th second in run 7 (segment 7), a supplementary run (run 8, segment 7, 200 s) was recorded subsequently after the collapse. So there are 9 runs in total for sub-01 with run 7&8 for segment 7 and run 9 for segment 8. 
-
-
+This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included.
 **Pre-process procedure description**
+The T1w images stored as NIFTI files were minimally-preprocessed using the anatomical preprocessing pipeline from fMRIPrep with default settings.
+MEG data were pre-processed using MNE following a three-step procedure: 1. bad channels were detected and removed. 2. a high-pass filter of 1 Hz was applied to remove possible slow drifts from the continuous MEG data. 3. artifacts removal was performed with ICA.
+**Stimulus material**
+The audio-visual stimulus materials were from the Chinese-dubbed 'Forrest Gump' DVD released in 2013 (ISBN: 978-7-7991-3934-0), which cannot be publicly released due to copyright restrictions. The stimulus materials are available upon reasonable request and on condition of a research-only data use agreement (correspondence with Xingyu Liu, liuxingyu987@foxmail.com).
+**Dataset content overview**
+the data were organized following the MEG-BIDS using MNE-BIDS toolbox.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    **ForrestGump-MEG: A audio-visual movie watching MEG dataset**
-   
    For details please refer to our paper on https://www.biorxiv.org/content/10.1101/2021.06.04.446837v1.
-   
-   This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included. 
-   
-   Please noted that For sub-01, the MEG machine collapsed at the 500th second in run 7 (segment 7), a supplementary run (run 8, segment 7, 200 s) was recorded subsequently after the collapse. So there are 9 runs in total for sub-01 with run 7&8 for segment 7 and run 9 for segment 8. 
-   
-   
+   This dataset contains MEG data recorded from 11 subjects while watching the 2h long Chinese-dubbed audio-visual movie 'Forrest Gump'. The data were acquired with a 275-channel CTF MEG. Auxiliary data (T1w) as well as derivation data such as preprocessed data and MEG-MRI co-registration are also included.
    **Pre-process procedure description**
-   
-   The T1w images stored as NIFTI files were minimally-preprocessed using the anatomical preprocessing pipeline from fMRIPrep with default settings. 
-   
+   The T1w images stored as NIFTI files were minimally-preprocessed using the anatomical preprocessing pipeline from fMRIPrep with default settings.
    MEG data were pre-processed using MNE following a three-step procedure: 1. bad channels were detected and removed. 2. a high-pass filter of 1 Hz was applied to remove possible slow drifts from the continuous MEG data. 3. artifacts removal was performed with ICA.
-   
-   
    **Stimulus material**
-   
    The audio-visual stimulus materials were from the Chinese-dubbed 'Forrest Gump' DVD released in 2013 (ISBN: 978-7-7991-3934-0), which cannot be publicly released due to copyright restrictions. The stimulus materials are available upon reasonable request and on condition of a research-only data use agreement (correspondence with Xingyu Liu, liuxingyu987@foxmail.com).
-   
-   
    **Dataset content overview**
-   
    the data were organized following the MEG-BIDS using MNE-BIDS toolbox.
-   
    *the pre-processed MEG data*
-   
-   The preprocessed MEG recordings including the preprocessed MEG data, the event files, the ICA decomposition and label files and the MEG-MRI coordinate transformation file are hosted here. 
+   The preprocessed MEG recordings including the preprocessed MEG data, the event files, the ICA decomposition and label files and the MEG-MRI coordinate transformation file are hosted here.
    
    .. code-block:: text
    
@@ -145,10 +129,7 @@ Please noted that For sub-01, the MEG machine collapsed at the 500th second in r
       		|---...
       		|---sub-xx_ses-movie_task-movie_trans.fif
    
-   
-   
    *the pre-processed MRI data*
-   
    The preprocessed MRI volume, reconstructed surface, and other associations including transformation files are hosted here
    
    .. code-block:: text
@@ -167,30 +148,27 @@ Please noted that For sub-01, the MEG machine collapsed at the 500th second in r
       		|---sub-xx_ses-movie_space-MNI152NLin6Asym_desc-preproc_T1w.nii.gz
       		|---...
    
-   
    the FreeSurfer surface data, the high-resolution head surface and the MRI-fiducials are provided here
    
    .. code-block:: text
    
       	|---./derivatives/preproc_meg-mne_mri-fmriprep/sourcedata/
-      		|---freesurfer	
+      		|---freesurfer
       		    |---sub-xx
       		    |---...
-   
-   
    
    *the raw data*
    
    .. code-block:: text
    
-      	|---./sub-xx/ses-movie/	
+      	|---./sub-xx/ses-movie/
       		|---meg/
       		|	|---sub-xx_ses-movie_coordsystem.json
       		|	|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
       		|	|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
       		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.ds
       		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.json
-      		|	|---...		
+      		|	|---...
       		|---anat/
       			|---sub-xx_ses-movie_T1w.json
       			|---sub-xx_ses-movie_T1w.nii.gz
@@ -208,15 +186,15 @@ Dataset Information
    * - Title
      - ForrestGump-MEG
    * - Year
-     - 2021
+     - 20
    * - Authors
      - Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003633.v1.0.4 <https://doi.org/10.18112/openneuro.ds003633.v1.0.4>`__
+     - `doi:10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003633>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003633>`__ | `Source URL <https://openneuro.org/datasets/ds003633/versions/1.0.4>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003633>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003633>`__ | `Source URL <https://openneuro.org/datasets/ds003633>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -227,8 +205,8 @@ Dataset Information
       @dataset{ds003633,
         title = {ForrestGump-MEG},
         author = {Xingyu Liu and Yuxuan Dai and Hailun Xie and Zonglei Zhen},
-        doi = {10.18112/openneuro.ds003633.v1.0.4},
-        url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.4},
+        doi = {10.18112/openneuro.ds003633.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds003633.v1.0.3},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -252,15 +230,15 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 11
-      - Recordings: 2298
+      - Subjects: 12
+      - Recordings: 96
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 272 (96), 409 (89), 378 (7)
-      - Sampling rate (Hz): 600.0 (178), 1200.0 (14)
+      - Channels: 409 (89), 378 (7)
+      - Sampling rate (Hz): 600.0 (89), 1200.0 (7)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -273,15 +251,15 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 73.5 GB
-      - File count: 2298
+      - Size on disk: 154.6 GB
+      - File count: 96
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003633.v1.0.4
+      - DOI: doi:10.18112/openneuro.ds003633.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

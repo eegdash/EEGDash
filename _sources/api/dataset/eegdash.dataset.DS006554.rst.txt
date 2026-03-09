@@ -11,11 +11,11 @@ DS006554
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Yaner Su (2025). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
+**Citation:** Yaner Su (—). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 47` :bdg-secondary-line:`Recordings: 241` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 47` :bdg-secondary-line:`Recordings: 47` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -212,7 +212,7 @@ Dataset Information
    * - Title
      - Social Observation EEG raw data
    * - Year
-     - 2025
+     - —
    * - Authors
      - Yaner Su
    * - License
@@ -220,7 +220,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006554>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006554>`__ | `Source URL <https://openneuro.org/datasets/ds006554/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006554>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006554>`__ | `Source URL <https://openneuro.org/datasets/ds006554>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -257,13 +257,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 47
-      - Recordings: 241
+      - Recordings: 47
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 62 (47), 64 (47)
+      - Channels: 64
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -278,7 +278,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 12.1 GB
-      - File count: 241
+      - File count: 47
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -1165,11 +1165,13 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     n_epochs, n_channels, n_times = 3, 2, 100
     sfreq = 256.0
     data = np.random.randn(n_epochs, n_channels, n_times) * 1e-6
+    tmin = -0.2  # 0.2s before trigger
 
     info = mne.create_info(ch_names=["Fz", "Cz"], sfreq=sfreq, ch_types="eeg")
-    events = np.array([[25, 0, 1], [125, 0, 2], [225, 0, 1]])
+    # Simulate original-timeline latencies (far beyond concatenated data)
+    events = np.array([[10000, 0, 1], [50000, 0, 2], [90000, 0, 1]])
     event_id = {"target": 1, "standard": 2}
-    epochs = mne.EpochsArray(data, info, events=events, event_id=event_id)
+    epochs = mne.EpochsArray(data, info, events=events, tmin=tmin, event_id=event_id)
 
     set_path = tmp_path / "epoched.set"
 
@@ -1182,12 +1184,19 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     assert "3 epochs" in raw.info["description"]
     assert raw.ch_names == ["Fz", "Cz"]
 
-    # Verify epoch annotations are preserved
+    # Verify annotations are recalculated for concatenated timeline
     assert len(raw.annotations) == n_epochs
     descriptions = list(raw.annotations.description)
     assert descriptions == ["target", "standard", "target"]
-    expected_onsets = epochs.events[:, 0] / sfreq
+
+    # Annotations must be within the raw's time range
+    offset = int(round(-tmin * sfreq))  # 51 samples
+    expected_onsets = (np.arange(n_epochs) * n_times + offset) / sfreq
     np.testing.assert_allclose(raw.annotations.onset, expected_onsets, atol=1e-6)
+
+    # Verify all annotations fall within the raw duration
+    raw_duration = raw.n_times / sfreq
+    assert all(onset < raw_duration for onset in raw.annotations.onset)
 
 
 # ── _repair_vhdr_missing_markerfile ───────────────────────────────────

@@ -1380,11 +1380,18 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     # read_epochs_eeglab already converts µV → V, so no extra scaling needed
     raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
 
-    # Preserve epoch event labels as annotations on the continuous raw
+    # Recalculate event sample positions for the concatenated timeline.
+    # epochs.events[:, 0] references the ORIGINAL continuous recording,
+    # but our raw is the concatenated epoch data.  Each epoch i occupies
+    # samples [i*n_times, (i+1)*n_times) and the trigger sits at
+    # -tmin seconds from the epoch start.
     if epochs.event_id:
+        offset = int(round(-epochs.tmin * epochs.info["sfreq"]))
+        new_events = epochs.events.copy()
+        new_events[:, 0] = np.arange(n_epochs) * n_times + offset
         event_desc = {v: k for k, v in epochs.event_id.items()}
         annotations = mne.annotations_from_events(
-            events=epochs.events,
+            events=new_events,
             event_desc=event_desc,
             sfreq=epochs.info["sfreq"],
             orig_time=raw.info.get("meas_date"),

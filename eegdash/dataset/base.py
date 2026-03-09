@@ -469,8 +469,6 @@ class EEGDashRaw(RawDataset):
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
-                # Add missing MarkerFile entry if absent
-                _repair_vhdr_missing_markerfile(self.filecache)
 
         # Repair .set header when .fdt is truncated (pnts -> actual size)
         if self.filecache and self.filecache.suffix.lower() == ".set":
@@ -727,9 +725,7 @@ class EEGDashRaw(RawDataset):
                         "loading via read_epochs_eeglab."
                     )
                     try:
-                        return _load_raw_from_eeglab_epochs(
-                            self.filecache, bids_root=self.bids_root
-                        )
+                        return _load_raw_from_eeglab_epochs(self.filecache)
                     except Exception as fallback_error:
                         raise DataIntegrityError(
                             message=f"Cannot read epoched EEGLAB file: {fallback_error}",

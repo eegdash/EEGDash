@@ -1696,7 +1696,7 @@ def test_load_raw_eeglab_epochs_trial_error_uses_epoch_loader(tmp_path):
         ) as mock_epoch:
             result = ds._load_raw()
 
-    mock_epoch.assert_called_once_with(ds.filecache, bids_root=ds.bids_root)
+    mock_epoch.assert_called_once_with(ds.filecache)
     assert result is mock_raw
 
 

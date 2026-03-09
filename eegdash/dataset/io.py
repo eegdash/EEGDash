@@ -221,6 +221,64 @@ def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
     return False
 
 
+def _repair_vhdr_missing_markerfile(vhdr_path: Path) -> bool:
+    """Add a missing MarkerFile entry to a VHDR ``[Common Infos]`` section.
+
+    Some BrainVision files omit ``MarkerFile`` entirely, which causes
+    ``configparser.NoOptionError`` in MNE's reader.  This inserts the
+    entry and generates a VMRK stub if the marker file does not exist.
+
+    Parameters
+    ----------
+    vhdr_path : Path
+        Path to the VHDR file.
+
+    Returns
+    -------
+    bool
+        True if the VHDR was modified, False otherwise.
+
+    """
+    if not vhdr_path.exists() or vhdr_path.suffix != ".vhdr":
+        return False
+
+    try:
+        content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return False
+
+    # Check if MarkerFile is already present (case-insensitive)
+    if re.search(r"(?i)^\s*MarkerFile\s*=", content, re.MULTILINE):
+        return False
+
+    # Find [Common Infos] section and insert MarkerFile after it
+    match = re.search(r"(?i)(\[Common Infos\][^\[]*)", content)
+    if not match:
+        return False
+
+    vmrk_name = vhdr_path.with_suffix(".vmrk").name
+    section = match.group(1)
+    # Insert MarkerFile at end of section (before next section or EOF)
+    new_section = section.rstrip("\n") + f"\nMarkerFile={vmrk_name}\n"
+    new_content = content[: match.start()] + new_section + content[match.end() :]
+
+    try:
+        vhdr_path.write_text(new_content, encoding="utf-8")
+        logger.info(
+            "Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name
+        )
+    except Exception as e:
+        logger.warning("Failed to write MarkerFile to VHDR: %s", e)
+        return False
+
+    # Ensure the VMRK file exists
+    vmrk_path = vhdr_path.with_suffix(".vmrk")
+    if not vmrk_path.exists():
+        _generate_vmrk_stub(vmrk_path, vhdr_path.name)
+
+    return True
+
+
 def _ensure_coordsystem_symlink(data_dir: Path) -> None:
     """Ensure coordsystem.json exists in the data directory using symlinks if needed.
 
@@ -1286,6 +1344,60 @@ def _load_raw_eeglab_fallback(set_path: Path, bids_root: Path | None = None):
         n_channels,
         n_samples / sfreq,
         sfreq,
+    )
+    return raw
+
+
+def _load_raw_from_eeglab_epochs(
+    set_path: Path, bids_root: Path | None = None
+):
+    """Load an EEGLAB .set file containing epoched data as continuous Raw.
+
+    When MNE raises ``TypeError`` because the ``.set`` file contains multiple
+    trials (epochs), this function uses ``mne.io.read_epochs_eeglab`` and
+    concatenates the epoch data into a continuous ``RawArray``.
+
+    Parameters
+    ----------
+    set_path : Path
+        Path to the EEGLAB .set file.
+    bids_root : Path | None
+        Optional BIDS root for channel info lookup.
+
+    Returns
+    -------
+    mne.io.BaseRaw
+        Continuous Raw object created from concatenated epochs.
+
+    """
+    import mne
+
+    set_path = Path(set_path)
+    logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
+
+    epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
+    data = epochs.get_data()  # (n_epochs, n_channels, n_times)
+    n_epochs, n_channels, n_times = data.shape
+
+    # Concatenate epochs into continuous data
+    data_concat = data.transpose(1, 0, 2).reshape(n_channels, -1)
+
+    # read_epochs_eeglab already converts µV → V, so no extra scaling needed
+    raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
+
+    raw.info["description"] = (
+        f"Converted from {n_epochs} epochs "
+        f"({n_times / epochs.info['sfreq']:.3f}s each)"
+    )
+
+    logger.warning(
+        "Loaded EEGLAB epoch file as continuous raw: %s "
+        "(%d epochs × %d ch × %d samples → %d total samples).",
+        set_path.name,
+        n_epochs,
+        n_channels,
+        n_times,
+        n_epochs * n_times,
     )
     return raw
 

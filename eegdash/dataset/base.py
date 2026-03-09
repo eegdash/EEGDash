@@ -9,6 +9,7 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.
 """
 
+import configparser
 import re
 from functools import partial
 from pathlib import Path, PurePosixPath
@@ -36,6 +37,7 @@ from .io import (
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
+    _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
@@ -44,6 +46,7 @@ from .io import (
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
 
@@ -466,6 +469,8 @@ class EEGDashRaw(RawDataset):
             else:
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
+                # Add missing MarkerFile entry if absent
+                _repair_vhdr_missing_markerfile(self.filecache)
 
         # Repair .set header when .fdt is truncated (pnts -> actual size)
         if self.filecache and self.filecache.suffix.lower() == ".set":
@@ -620,6 +625,20 @@ class EEGDashRaw(RawDataset):
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
+                # CTF trial-size mismatch — fall back to direct reader
+                if "even multiple of the trial size" in msg and self.filecache:
+                    logger.warning(
+                        "CTF trial size mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"CTF trial size mismatch and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
                     raise DataIntegrityError(
@@ -660,6 +679,18 @@ class EEGDashRaw(RawDataset):
                         current_split_key, current_split_path = split_download
                         continue
 
+                # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
+                if isinstance(first_error, UnicodeDecodeError) and self.filecache:
+                    data_dir = self.filecache.parent
+                    if _repair_tsv_encoding(data_dir):
+                        logger.info(
+                            "Repaired non-UTF-8 TSV encoding, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
                 # the data is readable, just the montage lookup fails.
                 if (
@@ -683,6 +714,28 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # EEGLAB epoch files: trials > 1 → use read_epochs_eeglab
+                if (
+                    isinstance(first_error, TypeError)
+                    and "number of trials is" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".set"
+                ):
+                    logger.info(
+                        "EEGLAB file contains epochs (trials > 1), "
+                        "loading via read_epochs_eeglab."
+                    )
+                    try:
+                        return _load_raw_from_eeglab_epochs(
+                            self.filecache, bids_root=self.bids_root
+                        )
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"Cannot read epoched EEGLAB file: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
 
                 # EEGLAB .set files with non-UTF char fields: scipy.io.loadmat
                 # crashes with "buffer is too small" in read_char.  Retry with
@@ -740,6 +793,16 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # scans.tsv path mismatch (EEG file not listed in scans.tsv)
+                if "is not in list" in msg and "Did you mean" in msg and self.filecache:
+                    logger.warning(
+                        "scans.tsv path mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
 
                 # Subject/session ID mismatch between folders and participants.tsv
                 if "is not in list" in msg and self.bids_root:
@@ -812,6 +875,19 @@ class EEGDashRaw(RawDataset):
                     return self._retry_without_events_tsv(first_error)
                 raise
             except Exception as first_error:
+                # Missing MarkerFile entry in VHDR [Common Infos]
+                if (
+                    isinstance(first_error, configparser.NoOptionError)
+                    and "markerfile" in str(first_error).lower()
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".vhdr"
+                ):
+                    if _repair_vhdr_missing_markerfile(self.filecache):
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":
                     logger.warning(

@@ -1961,7 +1961,11 @@ def test_raw_property_on_error_warn_skips_integrity_error(tmp_path):
     record = {
         "dataset": "ds",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
-        "storage": {"backend": "local", "base": str(tmp_path / "ds"), "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        },
         "entities": {"subject": "01", "task": "rest"},
         "entities_mne": {"subject": "01", "task": "rest"},
     }
@@ -1988,7 +1992,11 @@ def test_raw_property_on_error_raise_still_raises(tmp_path):
     record = {
         "dataset": "ds",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
-        "storage": {"backend": "local", "base": str(tmp_path / "ds"), "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        },
         "entities": {"subject": "01", "task": "rest"},
         "entities_mne": {"subject": "01", "task": "rest"},
     }
@@ -2012,7 +2020,11 @@ def test_raw_property_on_error_skip_silent(tmp_path):
     record = {
         "dataset": "ds",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
-        "storage": {"backend": "local", "base": str(tmp_path / "ds"), "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        },
         "entities": {"subject": "01", "task": "rest"},
         "entities_mne": {"subject": "01", "task": "rest"},
     }
@@ -2052,7 +2064,11 @@ def test_raw_property_skipped_does_not_retry(tmp_path):
     record = {
         "dataset": "ds",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
-        "storage": {"backend": "local", "base": str(tmp_path / "ds"), "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        },
         "entities": {"subject": "01", "task": "rest"},
         "entities_mne": {"subject": "01", "task": "rest"},
     }
@@ -2075,9 +2091,7 @@ def test_raw_property_skipped_does_not_retry(tmp_path):
 
 def test_load_raw_missing_task_falls_back_to_direct_reader(tmp_path):
     """RuntimeError about missing 'task' entity falls back to direct reader."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds_task", "sub-01/eeg/sub-01_eeg.edf"
-    )
+    ds = _make_local_eegdashraw(tmp_path, "ds_task", "sub-01/eeg/sub-01_eeg.edf")
 
     mock_raw = MagicMock()
     with patch(
@@ -2097,9 +2111,7 @@ def test_load_raw_missing_task_direct_reader_also_fails(tmp_path):
     """RuntimeError about missing 'task' + direct reader failure → DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds_task", "sub-01/eeg/sub-01_eeg.edf"
-    )
+    ds = _make_local_eegdashraw(tmp_path, "ds_task", "sub-01/eeg/sub-01_eeg.edf")
 
     with patch(
         "mne_bids.read_raw_bids",
@@ -2109,7 +2121,9 @@ def test_load_raw_missing_task_direct_reader_also_fails(tmp_path):
             "eegdash.dataset.base._load_raw_direct",
             side_effect=Exception("reader failed"),
         ):
-            with pytest.raises(DataIntegrityError, match="Bad record metadata and direct reader failed"):
+            with pytest.raises(
+                DataIntegrityError, match="Bad record metadata and direct reader failed"
+            ):
                 ds._load_raw()
 
 

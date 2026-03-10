@@ -1577,8 +1577,16 @@ def test_dataset_drop_bad_removes_skipped(tmp_path):
             "entities_mne": {"subject": f"{i:02d}", "task": "rest"},
         }
         records.append(r)
-        (tmp_path / "ds_test" / f"sub-{i:02d}" / "eeg").mkdir(parents=True, exist_ok=True)
-        (tmp_path / "ds_test" / f"sub-{i:02d}" / "eeg" / f"sub-{i:02d}_task-rest_eeg.edf").touch()
+        (tmp_path / "ds_test" / f"sub-{i:02d}" / "eeg").mkdir(
+            parents=True, exist_ok=True
+        )
+        (
+            tmp_path
+            / "ds_test"
+            / f"sub-{i:02d}"
+            / "eeg"
+            / f"sub-{i:02d}_task-rest_eeg.edf"
+        ).touch()
 
     with patch("eegdash.dataset.base.validate_record", return_value=None):
         ds = EEGDashDataset(

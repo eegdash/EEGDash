@@ -11,6 +11,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import configparser
 import re
+from collections import Counter
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -73,6 +74,8 @@ _UNRECOVERABLE_PATTERNS = [
     # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
     # processed haemoglobin (99999); time-domain moments are unsupported.
     "only supports reading continuous",
+    # Channel metadata completely absent from data file header.
+    "Number of channels is not defined",
 ]
 
 _SPLIT_FIF_MISSING_RE = re.compile(
@@ -132,6 +135,59 @@ def _iter_split_fif_candidates(
             )
         )
     return candidates
+
+
+def _deduplicate_channel_names(raw: "BaseRaw") -> "BaseRaw":
+    """Rename duplicate channel names by appending a numeric suffix.
+
+    Some recordings contain duplicate channel names (e.g. two channels both
+    named ``"EXG1"``).  MNE and braindecode require unique names for
+    concatenation and preprocessing.  This helper appends ``"-1"``, ``"-2"``,
+    etc. to the second and subsequent occurrences of each duplicated name.
+
+    Parameters
+    ----------
+    raw : mne.io.BaseRaw
+        The raw object to modify **in place**.
+
+    Returns
+    -------
+    mne.io.BaseRaw
+        The same raw object, for convenience.
+
+    """
+    names = list(raw.ch_names)
+    counts = Counter(names)
+    duplicates = {n for n, c in counts.items() if c > 1}
+    if not duplicates:
+        return raw
+
+    seen: dict[str, int] = {}
+    new_names: list[str] = []
+    for name in names:
+        if name in duplicates:
+            idx = seen.get(name, 0)
+            seen[name] = idx + 1
+            new_names.append(f"{name}-{idx}" if idx > 0 else name)
+        else:
+            new_names.append(name)
+
+    # Cannot use rename_channels() because the old names are not unique
+    # and dict(zip(old, new)) would lose entries.  Patch info['chs']
+    # directly and refresh the redundant name cache.
+    for ch_info, new_name in zip(raw.info["chs"], new_names):
+        ch_info["ch_name"] = new_name
+    try:
+        raw.info._update_redundant()
+    except AttributeError:
+        # _update_redundant is a private MNE API; fall back to manual refresh.
+        raw.info["ch_names"] = [ch["ch_name"] for ch in raw.info["chs"]]
+
+    logger.info(
+        "Deduplicated channel names: %s",
+        duplicates,
+    )
+    return raw
 
 
 class EEGDashRaw(RawDataset):
@@ -486,6 +542,8 @@ class EEGDashRaw(RawDataset):
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
+                # Fix duplicate channel names before any downstream processing
+                _deduplicate_channel_names(self._raw)
             except Exception as e:
                 logger.error(
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
@@ -798,6 +856,30 @@ class EEGDashRaw(RawDataset):
                         )
                     except Exception as retry_error:
                         raise retry_error from first_error
+
+                # Duplicate channel names in channels.tsv — MNE-BIDS tries to
+                # rename channels from the TSV and fails when names collide.
+                # Fall back to the direct reader (which keeps the original
+                # names from the data file) and deduplicate afterwards.
+                msg_lower = msg.lower()
+                if (
+                    "not unique" in msg_lower
+                    and "channel" in msg_lower
+                    and self.filecache
+                ):
+                    logger.warning(
+                        "Duplicate channel names in BIDS metadata — "
+                        "falling back to direct reader with deduplication."
+                    )
+                    try:
+                        raw = _load_raw_direct(self.filecache)
+                        return _deduplicate_channel_names(raw)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"Duplicate channels and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[msg, str(fallback_error)],
+                        ) from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
                 # or any TypeError/AttributeError from array/parsing failures

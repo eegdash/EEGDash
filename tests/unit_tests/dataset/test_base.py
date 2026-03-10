@@ -1759,7 +1759,7 @@ def test_load_raw_falls_back_for_non_numeric_run_edf(mock_validate, tmp_path):
         with patch(
             "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
         ) as mock_direct:
-            result = ds._load_raw()
+            ds._load_raw()
 
     mock_direct.assert_called_once_with(edf_path)
 

@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from mne_bids import BIDSPath, write_raw_bids
 
-from eegdash.dataset.bids_dataset import EEGBIDSDataset
+from eegdash.dataset.bids_dataset import EEGBIDSDataset, _read_participants_tsv
 
 
 @pytest.fixture
@@ -451,9 +451,10 @@ def test_bids_dataset_subject_participant_tsv(tmp_path):
         p_file.write_text("participant_id\tsex\n")  # Header only
         assert ds.subject_participant_tsv(str(f)) == {}
 
-        # 3. Valid participants.tsv but subject not in it
+        # 3. Valid participants.tsv but subject not in it → skeleton row
         p_file.write_text("participant_id\tsex\nsub-02\tM\n")
-        assert ds.subject_participant_tsv(str(f)) == {}
+        result = ds.subject_participant_tsv(str(f))
+        assert result == {"sex": "n/a"}
 
         # 4. Valid match
         p_file.write_text("participant_id\tsex\nsub-01\tF\n")
@@ -669,11 +670,32 @@ def test_bids_dataset_task_run_absorption(tmp_path):
     # 235-237: non-digit run
     f2 = d / "sub-01" / "eeg" / "sub-01_task-rest_run-A_eeg.set"
     f2.touch()
-    # we need to re-init or clear cache to detect f2 if not found in first _init_bids_paths
-    ds2 = EEGBIDSDataset(data_dir=str(d), dataset="ds_task")
-    # it won't be in ds.files unless it was there at init.
     # get_bids_file_attribute calls _get_bids_path_from_file which uses regex on the filename
-    assert ds2.get_bids_file_attribute("run", str(f2)) == "A"
+    # Use existing ds instance to avoid re-init discovering the non-numeric run file
+    assert ds.get_bids_file_attribute("run", str(f2)) == "A"
+
+
+def test_bids_dataset_direct_run_attribute_skips_bidspath(tmp_path):
+    from unittest.mock import patch
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_task"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_run-A_eeg.set"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_task")
+
+    with patch.object(
+        EEGBIDSDataset,
+        "_get_bids_path_from_file",
+        side_effect=ValueError("run is not an index (Got A)"),
+    ):
+        assert ds.get_bids_file_attribute("run", str(f)) == "A"
+        assert ds.get_bids_file_attribute("task", str(f)) == "rest"
 
 
 def test_bids_dataset_inheritance_break(tmp_path):
@@ -719,6 +741,34 @@ def test_bids_dataset_inheritance_exceptions(tmp_path):
 
     with patch("pathlib.Path.is_file", side_effect=bomb):
         assert ds._get_bids_file_inheritance(d / "sub-01", "pref", "ext") == []
+
+
+@pytest.mark.parametrize(
+    "encoding,method,expected",
+    [
+        ("latin-1", "channel_labels", ["Fp1", "Fp2"]),
+        ("latin-1", "channel_types", ["EEG", "EOG"]),
+        ("utf-8", "channel_labels", ["Fp1", "Fp2"]),
+    ],
+    ids=["latin1_labels", "latin1_types", "utf8_labels"],
+)
+def test_channel_methods_encoding_fallback(tmp_path, encoding, method, expected):
+    """Test channel_labels/channel_types handle various TSV encodings."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    bids_dir = tmp_path / f"ds_{encoding}_{method}"
+    sub_dir = bids_dir / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    data_file = sub_dir / "sub-01_task-test_eeg.set"
+    data_file.touch()
+
+    channels_tsv = sub_dir / "sub-01_task-test_channels.tsv"
+    content = "name\ttype\tunits\nFp1\tEEG\tµV\nFp2\tEOG\tµV\n"
+    channels_tsv.write_bytes(content.encode(encoding))
+
+    ds = EEGBIDSDataset(str(bids_dir), dataset=bids_dir.name)
+    assert getattr(ds, method)(str(data_file)) == expected
 
 
 def test_bids_dataset_more_coverage(tmp_path):
@@ -772,3 +822,590 @@ def test_bids_dataset_more_coverage(tmp_path):
 
     # it uses EPHY_ALLOWED_DATATYPES
     assert _find_bids_files(d, ".none_ext") == []
+
+
+def test_bids_path_extracts_acquisition_entity(tmp_path):
+    """BIDSPath correctly resolves files with acq- entity (e.g. ds000248)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_acq"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    meg_dir = d / "sub-01" / "meg"
+    meg_dir.mkdir(parents=True)
+
+    # Two files for the same subject — only distinguishable by acq/task
+    f_task = meg_dir / "sub-01_task-audiovisual_run-01_meg.fif"
+    f_acq = meg_dir / "sub-01_acq-crosstalk_meg.fif"
+    f_task.touch()
+    f_acq.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_acq", allow_symlinks=True)
+
+    # Both files should resolve without ambiguity errors
+    bp_task = ds._get_bids_path_from_file(str(f_task))
+    bp_acq = ds._get_bids_path_from_file(str(f_acq))
+
+    assert bp_task.task == "audiovisual"
+    assert bp_task.acquisition is None
+    assert bp_task.run == "01"
+
+    assert bp_acq.task is None
+    assert bp_acq.acquisition == "crosstalk"
+    assert bp_acq.run is None
+
+    # Entity cache should contain acquisition
+    entities = ds._bids_entity_cache[str(f_acq)]
+    assert entities["acquisition"] == "crosstalk"
+    assert entities["modality"] == "meg"
+
+
+def test_bids_path_extracts_all_entities(tmp_path):
+    """All standard BIDS entities are extracted via get_entities_from_fname."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_ents"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    meg_dir = d / "sub-01" / "ses-02" / "meg"
+    meg_dir.mkdir(parents=True)
+
+    # Use a valid space for MEG (ElektaNeuromag) per MNE-BIDS validation
+    f = (
+        meg_dir
+        / "sub-01_ses-02_task-rest_acq-full_run-03_proc-sss_space-ElektaNeuromag_split-01_desc-preproc_meg.fif"
+    )
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_ents", allow_symlinks=True)
+    bp = ds._get_bids_path_from_file(str(f))
+
+    assert bp.subject == "01"
+    assert bp.session == "02"
+    assert bp.task == "rest"
+    assert bp.acquisition == "full"
+    assert bp.run == "03"
+    assert bp.processing == "sss"
+    assert bp.space == "ElektaNeuromag"
+    assert bp.split == "01"
+    assert bp.description == "preproc"
+    assert bp.datatype == "meg"
+
+
+@pytest.mark.parametrize(
+    "modality_dir,suffix,ext,expected",
+    [
+        ("eeg", "eeg", ".set", "eeg"),
+        ("meg", "meg", ".fif", "meg"),
+        ("ieeg", "ieeg", ".edf", "ieeg"),
+        ("nirs", "nirs", ".snirf", "nirs"),
+        ("fnirs", "nirs", ".snirf", "nirs"),  # fnirs normalizes to nirs
+    ],
+    ids=["eeg", "meg", "ieeg", "nirs", "fnirs_normalized"],
+)
+def test_bids_path_modality_from_directory(
+    tmp_path, modality_dir, suffix, ext, expected
+):
+    """Modality is detected from directory path, including fnirs normalization."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / f"ds_{modality_dir}"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+
+    sub_dir = d / "sub-01" / modality_dir
+    sub_dir.mkdir(parents=True)
+    f = sub_dir / f"sub-01_task-rest_{suffix}{ext}"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset=d.name, allow_symlinks=True)
+    ds._get_bids_path_from_file(str(f))
+    assert ds._bids_entity_cache[str(f)]["modality"] == expected
+
+
+def test_bids_path_nonstandard_entity_warns(tmp_path):
+    """Non-standard entities in filenames produce a warning, not an error."""
+    import warnings
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_warn"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    eeg_dir = d / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    # rec- is not standard in MNE-BIDS (should be recording-)
+    f = eeg_dir / "sub-01_task-rest_rec-mag_eeg.set"
+    f.touch()
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_warn")
+
+    # Should not raise, just warn
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        bp = ds._get_bids_path_from_file(str(f))
+
+    assert bp.subject == "01"
+    assert bp.task == "rest"
+
+
+def test_json_inheritance_case_insensitive_task(tmp_path):
+    """Test that JSON sidecar matching is case-insensitive for task entity.
+
+    Reproduces the ds003751 scenario where data files use task-Emotion
+    (capital E) but sidecar files use task-emotion (lowercase e).
+    """
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_case"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    # Data file with uppercase task entity (like ds003751)
+    data_file = sub_dir / "sub-01_task-Emotion_eeg.set"
+    data_file.touch()
+
+    # JSON sidecar with lowercase task entity (case mismatch)
+    json_file = sub_dir / "sub-01_task-emotion_eeg.json"
+    json_file.write_text(json.dumps({"SamplingFrequency": 250, "EEGChannelCount": 128}))
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_case")
+
+    # Should find the JSON despite the case mismatch
+    assert ds.get_bids_file_attribute("sfreq", str(data_file)) == 250
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 128
+
+
+def test_json_inheritance_generalized_suffix(tmp_path):
+    """Test that JSON inheritance uses the actual modality suffix, not hardcoded '_eeg'."""
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_meg"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "meg"
+    sub_dir.mkdir(parents=True)
+
+    # MEG data file
+    data_file = sub_dir / "sub-01_task-rest_meg.fif"
+    data_file.touch()
+
+    # MEG JSON sidecar
+    json_file = sub_dir / "sub-01_task-rest_meg.json"
+    json_file.write_text(
+        json.dumps({"SamplingFrequency": 1000, "MEGChannelCount": 306})
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_meg", modalities=["meg"])
+
+    assert ds.get_bids_file_attribute("sfreq", str(data_file)) == 1000
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 306
+
+
+def test_nchans_sums_all_channel_type_counts(tmp_path):
+    """Test that nchans sums all channel type counts from BIDS JSON metadata.
+
+    Reproduces the ds002908 (CTF MEG) scenario where the JSON sidecar reports
+    MEGChannelCount=270 and MEGREFChannelCount=29 separately.  The total
+    should be 299, not just 270.
+    """
+    import json
+
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_nchans"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "meg"
+    sub_dir.mkdir(parents=True)
+
+    # MEG data file
+    data_file = sub_dir / "sub-01_task-rest_meg.fif"
+    data_file.touch()
+
+    # JSON with multiple channel type counts (like CTF MEG datasets)
+    json_file = sub_dir / "sub-01_task-rest_meg.json"
+    json_file.write_text(
+        json.dumps(
+            {
+                "SamplingFrequency": 1200,
+                "MEGChannelCount": 270,
+                "MEGREFChannelCount": 29,
+                "EOGChannelCount": 1,
+                "ECGChannelCount": 1,
+                "MiscChannelCount": 5,
+            }
+        )
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_nchans", modalities=["meg"])
+
+    # nchans should be the SUM of all channel type counts, not just the primary one
+    assert ds.get_bids_file_attribute("nchans", str(data_file)) == 306
+
+
+def test_find_channels_tsv_case_insensitive(tmp_path):
+    """Test that _find_channels_tsv matches despite task entity case mismatch."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_ch_case"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    sub_dir = d / "sub-01" / "eeg"
+    sub_dir.mkdir(parents=True)
+
+    # Data file with uppercase task
+    data_file = sub_dir / "sub-01_task-Emotion_eeg.set"
+    data_file.touch()
+
+    # Channels TSV with lowercase task (case mismatch)
+    channels_tsv = sub_dir / "sub-01_task-emotion_channels.tsv"
+    channels_tsv.write_text("name\ttype\nFp1\tEEG\nFp2\tEEG\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_ch_case")
+
+    labels = ds.channel_labels(str(data_file))
+    assert labels == ["Fp1", "Fp2"]
+
+    types = ds.channel_types(str(data_file))
+    assert types == ["EEG", "EEG"]
+
+
+def test_subject_participant_tsv_numeric_fallback(tmp_path):
+    """Test fallback matching when folder subject (sub-FFE001) differs from participants.tsv (sub-001)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_fallback"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-FFE001" / "eeg").mkdir(parents=True)
+    f = d / "sub-FFE001" / "eeg" / "sub-FFE001_task-FF_eeg.set"
+    f.touch()
+
+    # participants.tsv uses sub-001 (numeric-only IDs)
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\nsub-001\t40\tM\nsub-002\t21\tF\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_fallback")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should match sub-FFE001 -> sub-001 via numeric fallback
+    assert result["age"] == "40"
+    assert result["sex"] == "M"
+
+
+def test_subject_participant_tsv_numeric_fallback_no_match(tmp_path):
+    """Test fallback returns empty when no numeric match exists."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_nomatch"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-FFE099" / "eeg").mkdir(parents=True)
+    f = d / "sub-FFE099" / "eeg" / "sub-FFE099_task-FF_eeg.set"
+    f.touch()
+
+    # participants.tsv doesn't have sub-099 or sub-99
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\nsub-001\t40\tM\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_nomatch")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Skeleton row with column names but "n/a" values (BIDS standard)
+    assert result == {"age": "n/a", "sex": "n/a"}
+
+
+def test_subject_participant_tsv_non_numeric_suffix(tmp_path):
+    """Test that non-numeric subject suffixes don't trigger numeric fallback."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_alpha"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-ABC" / "eeg").mkdir(parents=True)
+    f = d / "sub-ABC" / "eeg" / "sub-ABC_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-001\t25\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_alpha")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Skeleton row with column names but "n/a" values (BIDS standard)
+    assert result == {"age": "n/a"}
+
+
+def test_subject_participant_tsv_duplicate_participant_id(tmp_path):
+    """Test that duplicate participant_id rows (e.g., multi-session) return a flat dict."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_dup"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
+    f.touch()
+
+    # participants.tsv with duplicate entries for sub-01 (multi-session dataset)
+    p_file = d / "participants.tsv"
+    p_file.write_text(
+        "participant_id\tage\tsex\nsub-01\t25\tM\nsub-01\t25\tM\nsub-02\t30\tF\n"
+    )
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_dup")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should return a flat dict (not nested), taking the first row
+    assert isinstance(result, dict)
+    assert result["age"] == "25"
+    assert result["sex"] == "M"
+    # Values should be scalars, not arrays or dicts
+    for v in result.values():
+        assert not isinstance(v, (dict, list))
+
+
+def test_subject_participant_tsv_case_insensitive(tmp_path):
+    """Test case-insensitive matching (e.g., folder sub-S01 vs tsv sub-s01)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_case_sub"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-S01" / "eeg").mkdir(parents=True)
+    f = d / "sub-S01" / "eeg" / "sub-S01_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-s01\t33\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_case_sub")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result["age"] == "33"
+
+
+def test_subject_participant_tsv_prefix_preserved(tmp_path):
+    """Test prefix-preserved numeric fallback (e.g., sub-S01 -> sub-S1 in tsv)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_prefix"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-S01" / "eeg").mkdir(parents=True)
+    f = d / "sub-S01" / "eeg" / "sub-S01_task-rest_eeg.set"
+    f.touch()
+
+    # TSV uses sub-S1 (no zero-padding) — the ds004588 scenario
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\nsub-S1\t28\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_prefix")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result["age"] == "28"
+
+
+def test_subject_participant_tsv_default_skeleton(tmp_path):
+    """Test that unmatched subject returns skeleton dict with 'n/a' values (not {})."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_skel"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-999" / "eeg").mkdir(parents=True)
+    f = d / "sub-999" / "eeg" / "sub-999_task-rest_eeg.set"
+    f.touch()
+
+    p_file = d / "participants.tsv"
+    p_file.write_text("participant_id\tage\tsex\thand\nsub-001\t25\tF\tR\n")
+
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_skel")
+    result = ds.subject_participant_tsv(str(f))
+
+    # Should be a skeleton with column names but all "n/a" values (BIDS standard)
+    assert result == {"age": "n/a", "sex": "n/a", "hand": "n/a"}
+    # Skeleton is truthy (not empty dict)
+    assert result
+
+
+def test_subject_participant_tsv_no_tsv_still_empty(tmp_path):
+    """Test that missing participants.tsv returns {} (not skeleton)."""
+    from eegdash.dataset.bids_dataset import EEGBIDSDataset
+
+    d = tmp_path / "ds_notsv"
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    (d / "sub-01" / "eeg").mkdir(parents=True)
+    f = d / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
+    f.touch()
+
+    # No participants.tsv file at all
+    ds = EEGBIDSDataset(data_dir=str(d), dataset="ds_notsv")
+    result = ds.subject_participant_tsv(str(f))
+
+    assert result == {}
+
+
+def test_match_subject_fallback_unit():
+    """Unit tests for the _match_subject_fallback helper."""
+    import pandas as pd
+
+    from eegdash.dataset.bids_dataset import _match_subject_fallback
+
+    # Case-insensitive exact match
+    idx = pd.Index(["sub-s01", "sub-s02"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-s01"
+
+    # Prefix-preserved numeric fallback (sub-S01 -> sub-S1)
+    idx = pd.Index(["sub-S1", "sub-S2"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-S1"
+
+    # Prefix-stripped numeric fallback (sub-FFE001 -> sub-001)
+    idx = pd.Index(["sub-001", "sub-002"])
+    assert _match_subject_fallback("sub-FFE001", "FFE001", idx) == "sub-001"
+
+    # Zero-padding fallback (sub-001 -> sub-01)
+    idx = pd.Index(["sub-01", "sub-02"])
+    assert _match_subject_fallback("sub-001", "001", idx) == "sub-01"
+
+    # No match at all
+    idx = pd.Index(["sub-050", "sub-051"])
+    assert _match_subject_fallback("sub-999", "999", idx) is None
+
+    # Non-numeric suffix — no match possible
+    idx = pd.Index(["sub-001"])
+    assert _match_subject_fallback("sub-ABC", "ABC", idx) is None
+
+    # Prefix-preserved case-insensitive (sub-S01 -> sub-s1 in tsv)
+    idx = pd.Index(["sub-s1", "sub-s2"])
+    assert _match_subject_fallback("sub-S01", "S01", idx) == "sub-s1"
+
+    # 4-digit zero-padding fallback (sub-01 -> sub-0001)
+    idx = pd.Index(["sub-0001", "sub-0002"])
+    assert _match_subject_fallback("sub-01", "01", idx) == "sub-0001"
+
+    # Prefix-preserved 4-digit padding (sub-S1 -> sub-S0001)
+    idx = pd.Index(["sub-S0001", "sub-S0002"])
+    assert _match_subject_fallback("sub-S1", "S1", idx) == "sub-S0001"
+
+
+def _make_bids(tmp_path, name, subjects, tsv_content=None):
+    """Helper: create a minimal BIDS dataset with given subject folders."""
+    d = tmp_path / name
+    d.mkdir()
+    (d / "dataset_description.json").touch()
+    for subj in subjects:
+        (d / subj / "eeg").mkdir(parents=True)
+        (d / subj / "eeg" / f"{subj}_task-rest_eeg.set").touch()
+    if tsv_content is not None:
+        (d / "participants.tsv").write_text(tsv_content)
+    return d
+
+
+class TestGetAllParticipantsTsv:
+    def test_reads_all_rows(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_allp",
+            ["sub-01"],
+            "participant_id\tage\tsex\nsub-01\t25\tM\nsub-02\t30\tF\n",
+        )
+        result = EEGBIDSDataset(str(d), "ds_allp").get_all_participants_tsv()
+        assert result == {
+            "sub-01": {"age": "25", "sex": "M"},
+            "sub-02": {"age": "30", "sex": "F"},
+        }
+
+    @pytest.mark.parametrize(
+        "tsv,label",
+        [
+            ("participant_id\tage\n", "empty_rows"),
+            (None, "no_file"),
+        ],
+        ids=["empty_rows", "no_file"],
+    )
+    def test_returns_empty(self, tmp_path, tsv, label):
+        d = _make_bids(tmp_path, f"ds_{label}", ["sub-01"], tsv)
+        assert EEGBIDSDataset(str(d), f"ds_{label}").get_all_participants_tsv() == {}
+
+    def test_nan_to_none(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_nan",
+            ["sub-01"],
+            "participant_id\tage\tsex\nsub-01\t25\t\n",
+        )
+        result = EEGBIDSDataset(str(d), "ds_nan").get_all_participants_tsv()
+        assert result["sub-01"] == {"age": "25", "sex": None}
+
+
+class TestGetOrphanParticipants:
+    def test_fallback_orphan(self, tmp_path):
+        """sub-FFE001..003 match sub-001..003 via fallback; sub-004 is orphan."""
+        d = _make_bids(
+            tmp_path,
+            "ds_orph",
+            [f"sub-FFE{str(i).zfill(3)}" for i in range(1, 4)],
+            "participant_id\tage\tsex\n"
+            "sub-001\t25\tM\nsub-002\t30\tF\nsub-003\t22\tM\nsub-004\t28\tF\n",
+        )
+        orphans = EEGBIDSDataset(str(d), "ds_orph").get_orphan_participants()
+        assert orphans == {"sub-004": {"age": "28", "sex": "F"}}
+
+    def test_direct_match_orphan(self, tmp_path):
+        """sub-01/02 match directly; sub-03 has no file."""
+        d = _make_bids(
+            tmp_path,
+            "ds_dir",
+            ["sub-01", "sub-02"],
+            "participant_id\tage\nsub-01\t25\nsub-02\t30\nsub-03\t22\n",
+        )
+        orphans = EEGBIDSDataset(str(d), "ds_dir").get_orphan_participants()
+        assert orphans == {"sub-03": {"age": "22"}}
+
+    def test_no_orphans(self, tmp_path):
+        d = _make_bids(
+            tmp_path,
+            "ds_noo",
+            ["sub-01", "sub-02"],
+            "participant_id\tage\nsub-01\t25\nsub-02\t30\n",
+        )
+        assert EEGBIDSDataset(str(d), "ds_noo").get_orphan_participants() == {}
+
+    def test_no_tsv(self, tmp_path):
+        d = _make_bids(tmp_path, "ds_not", ["sub-01"])
+        assert EEGBIDSDataset(str(d), "ds_not").get_orphan_participants() == {}
+
+
+class TestReadParticipantsTsv:
+    """Tests for the _read_participants_tsv helper."""
+
+    def test_reads_valid_tsv(self, tmp_path):
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_text("participant_id\tage\tsex\nsub-01\t25\tM\nsub-02\t30\tF\n")
+        df = _read_participants_tsv(tsv)
+        assert df is not None
+        assert list(df.index) == ["sub-01", "sub-02"]
+        assert df.loc["sub-01", "age"] == "25"
+
+    def test_missing_file(self, tmp_path):
+        assert _read_participants_tsv(tmp_path / "nonexistent.tsv") is None
+
+    def test_empty_tsv(self, tmp_path):
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_text("participant_id\tage\n")
+        assert _read_participants_tsv(tsv) is None
+
+    def test_unreadable_tsv(self, tmp_path):
+        tsv = tmp_path / "participants.tsv"
+        tsv.write_bytes(b"\x00\x01\x02\x03")
+        assert _read_participants_tsv(tsv) is None

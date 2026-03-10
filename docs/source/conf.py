@@ -1371,6 +1371,8 @@ def _convert_readme_to_rst(text: str) -> str:
     """
     # Remove BOM if present
     text = text.lstrip("\ufeff")
+    # Normalize HTML line breaks to newlines
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
 
     # === Phase 1: Extract reference-style link definitions ===
     # Pattern: [1]: http://... or [name]: http://...
@@ -1380,6 +1382,23 @@ def _convert_readme_to_rst(text: str) -> str:
         ref_link_defs[match.group(1)] = match.group(2)
     # Remove reference definitions from text
     text = ref_def_pattern.sub("", text)
+
+    def _sanitize_header_text(title: str) -> str:
+        """Strip inline markdown that breaks bold headers in RST."""
+        title = re.sub(r"!\[([^\]]*)\]\([^)]+\)", r"\1", title)
+        title = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", title)
+        title = re.sub(r"\[([^\]]+)\]\[([^\]]+)\]", r"\1", title)
+        title = re.sub(r"`([^`]+)`", r"\1", title)
+        title = re.sub(r"\*\*([^*]+)\*\*", r"\1", title)
+        title = re.sub(r"\*([^*]+)\*", r"\1", title)
+        title = re.sub(r"__([^_]+)__", r"\1", title)
+        title = re.sub(r"_([^_]+)_", r"\1", title)
+        title = re.sub(r"<(https?://[^>]+)>", r"\1", title)
+        title = re.sub(r"\s+", " ", title).strip()
+        # Escape characters with special meaning in RST
+        title = re.sub(r"(\w)_(?=[\s.,;:!?\)\]\}]|$)", r"\1\\_", title)
+        title = title.replace("|", "\\|")
+        return title
 
     # === Phase 2: Convert markdown code fences to RST code blocks ===
     def convert_code_fence(match: re.Match) -> str:
@@ -1457,6 +1476,7 @@ def _convert_readme_to_rst(text: str) -> str:
     tree_block: list[str] = []
     in_table = False
     in_tree = False
+    in_blockquote = False
     prev_was_list_item = False
 
     while i < len(lines):
@@ -1473,8 +1493,19 @@ def _convert_readme_to_rst(text: str) -> str:
         ):
             in_code_block = False
 
+        is_blockquote_line = False
+        if not in_code_block:
+            blockquote_match = re.match(r"^\s*>\s?", line)
+            if blockquote_match:
+                is_blockquote_line = True
+                line = line[blockquote_match.end() :]
+            elif in_blockquote:
+                if result and result[-1].strip():
+                    result.append("")
+                in_blockquote = False
+
         # Handle table regions
-        if i in table_regions and not in_tree:
+        if i in table_regions and not in_tree and not is_blockquote_line:
             if not in_table:
                 # Start table block
                 in_table = True
@@ -1494,7 +1525,7 @@ def _convert_readme_to_rst(text: str) -> str:
             result.append("")
 
         # Handle tree regions
-        if i in tree_regions and not in_table:
+        if i in tree_regions and not in_table and not is_blockquote_line:
             if not in_tree:
                 # Start tree block
                 in_tree = True
@@ -1521,7 +1552,7 @@ def _convert_readme_to_rst(text: str) -> str:
                 if potential_title and _is_decorative_line(next_decorative):
                     # This is a box-style header
                     result.append("")
-                    result.append(f"**{potential_title}**")
+                    result.append(f"**{_sanitize_header_text(potential_title)}**")
                     result.append("")
                     i += 3  # Skip decorative, title, decorative
                     prev_was_list_item = False
@@ -1531,19 +1562,20 @@ def _convert_readme_to_rst(text: str) -> str:
             continue
 
         # Check for markdown headers (# Title)
-        header_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
-        if header_match:
-            title = header_match.group(2).strip()
-            result.append("")
-            result.append(f"**{title}**")
-            result.append("")
-            i += 1
-            prev_was_list_item = False
-            continue
+        if not is_blockquote_line:
+            header_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
+            if header_match:
+                title = _sanitize_header_text(header_match.group(2).strip())
+                result.append("")
+                result.append(f"**{title}**")
+                result.append("")
+                i += 1
+                prev_was_list_item = False
+                continue
 
         # Check for RST-style underline headers (Title followed by ==== or ----)
         # Only match if title is reasonably short (< 80 chars) to avoid matching paragraphs
-        if i + 1 < len(lines) and len(line.strip()) < 80:
+        if not is_blockquote_line and i + 1 < len(lines) and len(line.strip()) < 80:
             next_line = lines[i + 1]
             # Check if next line is an underline (all same char, at least 3 chars)
             underline_match = re.match(r"^([=\-~^\"\'`—]+)$", next_line.strip())
@@ -1553,7 +1585,7 @@ def _convert_readme_to_rst(text: str) -> str:
                 and line.strip()
                 and len(set(next_line.strip())) == 1
             ):
-                title = line.strip()
+                title = _sanitize_header_text(line.strip())
                 result.append("")
                 result.append(f"**{title}**")
                 result.append("")
@@ -1569,6 +1601,38 @@ def _convert_readme_to_rst(text: str) -> str:
 
             # Convert markdown checkboxes: - [ ] item -> - item
             line = re.sub(r"^(\s*)-\s*\[([ xX]?)\]\s*", r"\1- ", line)
+
+            inline_code_spans: list[str] = []
+
+            def stash_inline_code(m: re.Match) -> str:
+                inline_code_spans.append(m.group(1))
+                return f"\x00INLINE_CODE_{len(inline_code_spans) - 1}\x00"
+
+            line = re.sub(r"(?<![\\`])`([^`]+)`(?!`)", stash_inline_code, line)
+
+            # Convert markdown images: ![alt](url) -> `alt <url>`__
+            def replace_md_image(m: re.Match) -> str:
+                alt = m.group(1).strip()
+                url = m.group(2).strip()
+                text = alt or url
+                return f"`{text} <{url}>`__"
+
+            line = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_md_image, line)
+
+            # Convert reference-style images: ![alt][ref]
+            def replace_ref_image(m: re.Match) -> str:
+                alt = m.group(1).strip()
+                ref = m.group(2).strip()
+                url = ref_link_defs.get(ref, "")
+                if not url:
+                    return m.group(0)
+                text = alt or url
+                return f"`{text} <{url}>`__"
+
+            line = re.sub(r"!\[([^\]]*)\]\[([^\]]+)\]", replace_ref_image, line)
+
+            # Convert autolinks: <https://example.com>
+            line = re.sub(r"<(https?://[^>]+)>", r"`\1 <\1>`__", line)
 
             # Convert reference-style links: [text][ref] -> `text <url>`__
             def replace_ref_link(m: re.Match) -> str:
@@ -1675,6 +1739,14 @@ def _convert_readme_to_rst(text: str) -> str:
             # Convert to proper bold: **text**
             line = re.sub(r"(\*\*[^*]+)\*\s*\\\*$", r"\1**", line)
 
+            if inline_code_spans:
+
+                def restore_inline_code(m: re.Match) -> str:
+                    code = inline_code_spans[int(m.group(1))]
+                    return f"``{code}``"
+
+                line = re.sub(r"\x00INLINE_CODE_(\d+)\x00", restore_inline_code, line)
+
             # Remove orphan triple backticks that weren't caught by code fence conversion
             # These appear as ``\` or `\`` after partial processing
             line = re.sub(r"``\\?`", "``", line)
@@ -1711,6 +1783,11 @@ def _convert_readme_to_rst(text: str) -> str:
             re.match(r"^\s*[-*+]\s+", line) or re.match(r"^\s*\d+[.)]\s+", line)
         )
 
+        if is_blockquote_line and not in_blockquote:
+            if result and result[-1].strip():
+                result.append("")
+            in_blockquote = True
+
         # Ensure blank line before text that follows a list item
         if (
             prev_was_list_item
@@ -1721,6 +1798,12 @@ def _convert_readme_to_rst(text: str) -> str:
             # Insert blank line if missing
             if result and result[-1].strip():
                 result.append("")
+
+        if is_blockquote_line:
+            if line.strip():
+                line = "   " + line
+            else:
+                line = "   "
 
         result.append(line)
         prev_was_list_item = is_list_item

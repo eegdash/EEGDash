@@ -3,7 +3,7 @@ import numbers
 import numpy as np
 from scipy import signal, stats
 
-from ..decorators import FeaturePredecessor, univariate_feature, PreprocessorOutputType
+from ..decorators import FeaturePredecessor, PreprocessorOutputType, univariate_feature
 from ..extractors import BasePreprocessorOutputType
 
 __all__ = [
@@ -62,6 +62,7 @@ def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
     Returns
     -------
     ndarray
+
     """
     if num_taps is None:
         num_taps = int(fs * 1.5)  # rule of thumb for choosing the filter order

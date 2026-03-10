@@ -1,14 +1,14 @@
-from collections.abc import Callable
 import inspect
+from collections.abc import Callable
 from typing import List, Type
 
 from .extractors import (
+    BasePreprocessorOutputType,
     BivariateFeature,
     DirectedBivariateFeature,
     MultivariateFeature,
     UnivariateFeature,
     _get_underlying_func,
-    BasePreprocessorOutputType,
 )
 
 __all__ = [
@@ -159,4 +159,4 @@ class PreprocessorOutputType:
         self.output_type = output_type
 
     def __call__(self, preprocessor: Callable) -> Callable:
-        return type(preprocessor.__name__, (self.output_type, ), {})(preprocessor)
+        return type(preprocessor.__name__, (self.output_type,), {})(preprocessor)

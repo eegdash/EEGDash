@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial
-import inspect
 from typing import Dict
 
 import numpy as np
@@ -52,6 +52,7 @@ class BasePreprocessorOutputType(ABC):
     ----------
     preprocessor : callable
         The underlying preprocessor callable.
+
     """
 
     def __init__(self, preprocessor: Callable):

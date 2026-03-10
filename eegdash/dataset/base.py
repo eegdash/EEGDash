@@ -149,6 +149,12 @@ class EEGDashRaw(RawDataset):
         Must have schema_version=2 and include storage.base (no default bucket).
     cache_dir : str
         The local directory where the data will be cached.
+    on_error : str, default "raise"
+        How to handle :class:`DataIntegrityError` when accessing ``.raw``:
+
+        - ``"raise"`` (default): propagate the exception.
+        - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
+        - ``"skip"``: silently set ``.raw`` to ``None``.
     **kwargs
         Additional keyword arguments passed to the
         :class:`braindecode.datasets.BaseDataset` constructor.
@@ -166,6 +172,9 @@ class EEGDashRaw(RawDataset):
         cache_dir: str,
         **kwargs,
     ):
+        self._on_error = kwargs.pop("on_error", "raise")
+        self._skipped = False
+        self._integrity_error = None
         super().__init__(None, **kwargs)
         self.cache_dir = Path(cache_dir)
 
@@ -561,8 +570,9 @@ class EEGDashRaw(RawDataset):
           ``scipy.io.loadmat`` raises ``TypeError: buffer is too small``.
           Retries with ``uint16_codec='latin-1'`` via ``extra_params``.
         - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
-          MAT/EEGLAB files with array errors, etc.): raises
-          ``DataIntegrityError`` for clean error reporting.
+          MAT/EEGLAB files with array errors, etc.): attempts EEGLAB fallback
+          for ``.set`` files and direct MNE reader before raising
+          ``DataIntegrityError``.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
         - **participants.tsv subject mismatches**: repairs ``participant_id``
@@ -582,7 +592,8 @@ class EEGDashRaw(RawDataset):
         - **Split FIF** (record points to split-02+ file): direct MNE reader
           loads with ``on_split_missing="warn"`` so partial data is returned.
         - **Bad record metadata** (e.g. ``.json`` extension, missing ``task``
-          entity): raises ``DataIntegrityError`` for clean error reporting.
+          entity): attempts direct MNE reader before raising
+          ``DataIntegrityError``.
         """
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
@@ -639,6 +650,22 @@ class EEGDashRaw(RawDataset):
 
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                    # For .set files, try manual EEGLAB parser before giving up
+                    if self.filecache and self.filecache.suffix.lower() == ".set":
+                        try:
+                            return _load_raw_eeglab_fallback(
+                                self.filecache, bids_root=self.bids_root
+                            )
+                        except Exception:
+                            pass
+
+                    # For supported formats, try direct MNE reader (bypasses BIDS)
+                    if self.filecache:
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception:
+                            pass
+
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
                         record=self.record,
@@ -647,6 +674,19 @@ class EEGDashRaw(RawDataset):
 
                 # Bad record metadata (e.g. .json extension, missing task entity)
                 if "must contain" in msg and "task" in msg:
+                    if self.filecache:
+                        logger.warning(
+                            "Missing 'task' entity in BIDSPath — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=f"Bad record metadata and direct reader failed: {msg}",
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
                     raise DataIntegrityError(
                         message=f"Bad record metadata: {msg}",
                         record=self.record,
@@ -1019,6 +1059,8 @@ class EEGDashRaw(RawDataset):
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
+        if self._skipped:
+            return 0
         if self._raw is None:
             ntimes = self.record.get("ntimes")
             if ntimes is not None:
@@ -1036,20 +1078,32 @@ class EEGDashRaw(RawDataset):
         return len(self._raw)
 
     @property
-    def raw(self) -> BaseRaw:
+    def raw(self) -> BaseRaw | None:
         """The MNE Raw object for this recording.
 
         Accessing this property triggers the download and caching of the data
         if it has not been accessed before.
 
+        Returns ``None`` when ``on_error`` is ``"warn"`` or ``"skip"`` and
+        the record could not be loaded due to a
+        :class:`~eegdash.dataset.exceptions.DataIntegrityError`.
+
         Returns
         -------
-        mne.io.BaseRaw
-            The loaded MNE Raw object.
+        mne.io.BaseRaw | None
+            The loaded MNE Raw object, or ``None`` for skipped records.
 
         """
-        if self._raw is None:
-            self._ensure_raw()
+        if self._raw is None and not self._skipped:
+            try:
+                self._ensure_raw()
+            except DataIntegrityError as e:
+                if self._on_error == "raise":
+                    raise
+                self._skipped = True
+                self._integrity_error = e
+                if self._on_error == "warn":
+                    e.log_warning()
         return self._raw
 
     @raw.setter

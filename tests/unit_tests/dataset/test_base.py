@@ -2415,6 +2415,8 @@ def test_download_required_files_normal_uri_no_annex_fallback(tmp_path):
         pytest.raises(DataIntegrityError, match="not found on S3"),
     ):
         ds._download_required_files()
+
+
 # ── Split FIF annex path resolution ──
 
 

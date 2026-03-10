@@ -365,7 +365,59 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             except Exception:
                 pass
 
+        # Warn about heterogeneous channel configurations using record
+        # metadata (no raw loading needed).  Users should handle this at the
+        # preprocessing level (e.g. braindecode Preprocessor("pick_channels")).
+        self._check_channel_heterogeneity()
+
         super().__init__(datasets, lazy=True)
+
+    def _check_channel_heterogeneity(self) -> None:
+        """Warn when records have different channel configurations.
+
+        Uses ``ch_names`` from record metadata when available so that no
+        raw data needs to be loaded.  Emits a warning describing the
+        different channel counts and the number of recordings in each
+        group to help users decide on a preprocessing strategy.
+
+        Records without ``ch_names`` metadata (e.g. offline/local mode)
+        are silently skipped; the check is only effective when metadata
+        is available from the database.
+        """
+        groups: dict[frozenset[str], list[str]] = {}
+        for record in self.records:
+            ch_names = record.get("ch_names")
+            if ch_names is None:
+                continue
+            ch_key = frozenset(ch_names)
+            subject = record.get("subject", "?")
+            groups.setdefault(ch_key, []).append(subject)
+
+        if len(groups) <= 1:
+            return
+
+        # Build a summary of each channel group
+        lines = []
+        for ch_key, subjects in sorted(
+            groups.items(), key=lambda x: len(x[1]), reverse=True
+        ):
+            lines.append(
+                f"  - {len(subjects)} recordings with {len(ch_key)} channels "
+                f"(subjects: {', '.join(subjects[:5])}"
+                f"{'...' if len(subjects) > 5 else ''})"
+            )
+
+        logger.warning(
+            "Dataset '%s' contains %d different channel configurations:\n%s\n"
+            "Preprocessing with pick_channels is required before concatenation.\n"
+            "Example:\n"
+            "  from braindecode.preprocessing import preprocess, Preprocessor\n"
+            '  preprocess(dataset, [Preprocessor("pick_channels", '
+            "ch_names=common_channels, ordered=True)])",
+            self.query.get("dataset", "?"),
+            len(groups),
+            "\n".join(lines),
+        )
 
     def drop_bad(self) -> list[dict]:
         """Remove skipped datasets and return their records.

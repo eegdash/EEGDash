@@ -29,6 +29,7 @@ from ..schemas import validate_record
 from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
+    _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
@@ -268,6 +269,22 @@ class EEGDashRaw(RawDataset):
         run = entities.get("run")
         return run is not None and not str(run).isdigit()
 
+    def _resolve_annex_key_uri(self, uri: str) -> str | None:
+        """Return a BIDS-named URI when *uri* contains a git-annex key filename.
+
+        Git-annex stores files under hash-based names like
+        ``MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr``.  When the
+        ingestion pipeline records these as S3 keys the download will fail
+        because OpenNeuro stores objects under their BIDS names.  This
+        method detects such keys and derives the correct URI from
+        ``bids_relpath``.
+        """
+        filename = PurePosixPath(uri).name
+        if not _ANNEX_KEY_RE.match(filename):
+            return None
+        bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+        return uri.rsplit("/", 1)[0] + "/" + bids_filename
+
     def _download_required_files(self) -> None:
         if self._raw_uri is not None:
             filesystem = downloader.get_s3_filesystem()
@@ -286,11 +303,40 @@ class EEGDashRaw(RawDataset):
                     self._raw_uri, self.filecache, filesystem=filesystem
                 )
             except FileNotFoundError:
-                raise DataIntegrityError(
-                    message=(f"Primary data file not found on S3: {self._raw_uri}"),
-                    record=self.record,
-                    issues=[f"Missing S3 file: {self._raw_uri}"],
-                )
+                # If the URI contains a git-annex key, try the BIDS-named
+                # alternative before giving up.
+                resolved_uri = self._resolve_annex_key_uri(self._raw_uri)
+                if resolved_uri:
+                    logger.info(
+                        "Raw URI %s contains git-annex key; trying BIDS name: %s",
+                        self._raw_uri,
+                        resolved_uri,
+                    )
+                    try:
+                        downloader.download_s3_file(
+                            resolved_uri,
+                            self.filecache,
+                            filesystem=filesystem,
+                        )
+                    except FileNotFoundError:
+                        raise DataIntegrityError(
+                            message=(
+                                "Primary data file not found on S3 "
+                                "(tried annex key and BIDS name): "
+                                f"{self._raw_uri}"
+                            ),
+                            record=self.record,
+                            issues=[
+                                f"Missing S3 file: {self._raw_uri}",
+                                f"Also tried BIDS name: {resolved_uri}",
+                            ],
+                        )
+                else:
+                    raise DataIntegrityError(
+                        message=(f"Primary data file not found on S3: {self._raw_uri}"),
+                        record=self.record,
+                        issues=[f"Missing S3 file: {self._raw_uri}"],
+                    )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -318,13 +364,20 @@ class EEGDashRaw(RawDataset):
         if not companions:
             return
 
+        # Use BIDS-named base URI when the raw URI has a git-annex key,
+        # so companion URIs also resolve to real S3 objects.
+        base_uri = self._raw_uri
+        if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
+            bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+            base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
+
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
             if local_path.exists():
                 continue
 
             # Derive S3 URI by replacing the primary file's extension
-            companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
+            companion_uri = base_uri.rsplit(".", 1)[0] + ext
 
             try:
                 downloader.download_s3_file(
@@ -339,7 +392,7 @@ class EEGDashRaw(RawDataset):
                     logger.warning(
                         "Companion file %s not found on S3 for %s",
                         ext,
-                        self._raw_uri,
+                        base_uri,
                     )
                 continue
 

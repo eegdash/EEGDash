@@ -47,6 +47,7 @@ from .io import (
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_whitespace,
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
@@ -461,6 +462,7 @@ class EEGDashRaw(RawDataset):
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
+            _repair_tsv_na_whitespace(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
             _repair_events_tsv_nan_samples(self.filecache.parent)
@@ -892,6 +894,21 @@ class EEGDashRaw(RawDataset):
                     if _repair_participants_tsv_ids(self.bids_root):
                         logger.info(
                             "Repaired participants.tsv ID padding, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Whitespace-padded n/a in TSV fields (float('n/a      ') fails)
+                if (
+                    "could not convert string to float" in msg
+                    and "n/a" in msg
+                    and self.filecache
+                ):
+                    if _repair_tsv_na_whitespace(self.filecache.parent):
+                        logger.info(
+                            "Repaired n/a whitespace in TSV files, retrying load..."
                         )
                         try:
                             return self._read_raw_bids()

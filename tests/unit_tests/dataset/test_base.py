@@ -898,6 +898,51 @@ def test_load_raw_eeglab_fallback_failure_raises_data_integrity(tmp_path):
 # ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
 
 
+def test_load_raw_na_whitespace_repair_and_retry(tmp_path):
+    """Whitespace-padded n/a in TSV triggers repair then retry."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
+    )
+
+    mock_raw = MagicMock()
+    call_count = 0
+
+    def side_effect(**kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            raise ValueError("could not convert string to float: 'n/a      '")
+        return mock_raw
+
+    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
+        with patch(
+            "eegdash.dataset.base._repair_tsv_na_whitespace", return_value=True
+        ) as mock_repair:
+            result = ds._load_raw()
+
+    mock_repair.assert_called_once()
+    assert result is mock_raw
+    assert call_count == 2
+
+
+def test_load_raw_na_whitespace_repair_no_change_falls_through(tmp_path):
+    """n/a whitespace repair returns False → error propagates."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
+    )
+
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=ValueError("could not convert string to float: 'n/a      '"),
+    ):
+        with patch(
+            "eegdash.dataset.base._repair_tsv_na_whitespace",
+            return_value=False,
+        ):
+            with pytest.raises(ValueError, match="could not convert string to float"):
+                ds._load_raw()
+
+
 def test_load_raw_nan_events_repair_and_retry(tmp_path):
     """NaN in events.tsv sample column should trigger repair then retry."""
     ds = _make_local_eegdashraw(

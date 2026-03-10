@@ -1759,7 +1759,7 @@ def test_load_raw_falls_back_for_non_numeric_run_edf(mock_validate, tmp_path):
         with patch(
             "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
         ) as mock_direct:
-            result = ds._load_raw()
+            ds._load_raw()
 
     mock_direct.assert_called_once_with(edf_path)
 
@@ -2415,3 +2415,129 @@ def test_download_required_files_normal_uri_no_annex_fallback(tmp_path):
         pytest.raises(DataIntegrityError, match="not found on S3"),
     ):
         ds._download_required_files()
+# ── Split FIF annex path resolution ──
+
+
+def test_split_fif_continuation_copies_to_expected_annex_path(tmp_path):
+    """Downloaded continuation should also be placed at the expected (annex) path."""
+    ds = _make_remote_eegdashraw(
+        tmp_path, "ds_annex", "sub-01/meg/sub-01_task-rest_meg.fif"
+    )
+    annex_dir = tmp_path / "annex_objects" / "ab" / "cd"
+    annex_next = annex_dir / "MD5E-s123--abc-1.fif"
+    mock_raw = MagicMock()
+    mock_fs = object()
+
+    def download_side_effect(s3_path, local_path, filesystem=None):
+        # Simulate successful download by creating the file
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+        local_path.write_bytes(b"fake fif data")
+        return local_path
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=[
+            ValueError(
+                f"Split raw file detected but next file {annex_next} does not exist"
+            ),
+            mock_raw,
+        ],
+    ):
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                side_effect=download_side_effect,
+            ):
+                result = ds._load_raw()
+
+    assert result is mock_raw
+    # The file should also exist at the annex path
+    assert annex_next.exists()
+    assert annex_next.read_bytes() == b"fake fif data"
+
+
+def test_split_fif_download_fails_falls_back_to_direct_reader(tmp_path):
+    """When split FIF download fails, should fall back to _load_raw_direct."""
+    ds = _make_remote_eegdashraw(
+        tmp_path, "ds_split_fail", "sub-01/meg/sub-01_task-rest_meg.fif"
+    )
+    mock_raw = MagicMock()
+    mock_fs = object()
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=ValueError(
+            "Split raw file detected but next file /tmp/missing-1.fif does not exist"
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                side_effect=FileNotFoundError("not on S3"),
+            ):
+                with patch(
+                    "eegdash.dataset.base._load_raw_direct",
+                    return_value=mock_raw,
+                ) as mock_direct:
+                    result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_split_fif_download_and_direct_both_fail_raises(tmp_path):
+    """When both split download and direct reader fail → DataIntegrityError."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_remote_eegdashraw(
+        tmp_path, "ds_split_bad", "sub-01/meg/sub-01_task-rest_meg.fif"
+    )
+    mock_fs = object()
+
+    with patch.object(
+        ds,
+        "_read_raw_bids",
+        side_effect=ValueError(
+            "Split raw file detected but next file /tmp/missing-1.fif does not exist"
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base.downloader.get_s3_filesystem", return_value=mock_fs
+        ):
+            with patch(
+                "eegdash.dataset.base.downloader.download_s3_file",
+                side_effect=FileNotFoundError("not on S3"),
+            ):
+                with patch(
+                    "eegdash.dataset.base._load_raw_direct",
+                    side_effect=ValueError("cannot read"),
+                ):
+                    with pytest.raises(
+                        DataIntegrityError,
+                        match="Split FIF continuation missing",
+                    ):
+                        ds._load_raw()
+
+
+# ── CTF .ds direct reader support ──
+
+
+def test_load_raw_direct_ctf_calls_read_raw_ctf(tmp_path):
+    """_load_raw_direct should support .ds extension via read_raw_ctf."""
+    from eegdash.dataset.io import _load_raw_direct
+
+    ds_path = tmp_path / "sub-01_task-rest_meg.ds"
+    ds_path.mkdir()
+
+    mock_raw = MagicMock()
+    with patch("mne.io.read_raw_ctf", return_value=mock_raw) as mock_reader:
+        result = _load_raw_direct(ds_path)
+
+    mock_reader.assert_called_once_with(str(ds_path), preload=False, verbose="ERROR")
+    assert result is mock_raw

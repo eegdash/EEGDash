@@ -11,6 +11,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import configparser
 import re
+import shutil
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -596,6 +597,26 @@ class EEGDashRaw(RawDataset):
                     next_path,
                     filesystem=filesystem,
                 )
+                # When the primary file is resolved through git-annex, MNE
+                # expects the continuation at the annex path, not the BIDS
+                # path.  Place a copy there so MNE can find it on retry.
+                if (
+                    expected_path is not None
+                    and expected_path.resolve() != next_path.resolve()
+                ):
+                    try:
+                        expected_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(next_path, expected_path)
+                        logger.info(
+                            "Copied continuation to expected path %s",
+                            expected_path,
+                        )
+                    except Exception as copy_err:
+                        logger.warning(
+                            "Failed to copy continuation to expected path %s: %s",
+                            expected_path,
+                            copy_err,
+                        )
                 return next_key, next_path
             except Exception as error:
                 failures.append(f"{next_uri}: {error}")
@@ -773,6 +794,26 @@ class EEGDashRaw(RawDataset):
                     if split_download is not None:
                         current_split_key, current_split_path = split_download
                         continue
+
+                    # All download attempts failed — fall back to direct
+                    # reader which uses on_split_missing="warn" for .fif
+                    # files, loading only the available splits.
+                    if self.filecache:
+                        logger.warning(
+                            "Split FIF continuation download failed — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=(
+                                    f"Split FIF continuation missing and "
+                                    f"direct reader failed: {fallback_error}"
+                                ),
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
 
                 # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
                 if isinstance(first_error, UnicodeDecodeError) and self.filecache:

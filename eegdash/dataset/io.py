@@ -1122,6 +1122,7 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         ".set": mne.io.read_raw_eeglab,
         ".fif": mne.io.read_raw_fif,
         ".cnt": mne.io.read_raw_cnt,
+        ".ds": mne.io.read_raw_ctf,
     }
 
     ext = filepath.suffix.lower()

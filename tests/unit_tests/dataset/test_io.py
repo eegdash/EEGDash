@@ -559,6 +559,61 @@ def test_ensure_coordsystem_symlink_generates_ieeg_keys(tmp_path):
     assert "iEEGCoordinateUnits" in data
 
 
+def test_ensure_coordsystem_symlink_overwrites_wrong_keys_ieeg(tmp_path):
+    """coordsystem.json with EEG keys in ieeg dir is overwritten with iEEG keys."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
+    # Write wrong keys (EEG instead of iEEG)
+    coordsystem.write_text(
+        json.dumps({"EEGCoordinateSystem": "Other", "EEGCoordinateUnits": "m"})
+    )
+
+    _ensure_coordsystem_symlink(ieeg_dir)
+
+    data = json.loads(coordsystem.read_text())
+    assert "iEEGCoordinateSystem" in data
+    assert "EEGCoordinateSystem" not in data
+
+
+def test_ensure_coordsystem_symlink_keeps_correct_keys_ieeg(tmp_path):
+    """coordsystem.json with correct iEEG keys in ieeg dir is left unchanged."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
+    original_content = json.dumps(
+        {"iEEGCoordinateSystem": "MNI305", "iEEGCoordinateUnits": "mm"}
+    )
+    coordsystem.write_text(original_content)
+
+    _ensure_coordsystem_symlink(ieeg_dir)
+
+    assert coordsystem.read_text() == original_content
+
+
+def test_ensure_coordsystem_symlink_overwrites_wrong_keys_eeg(tmp_path):
+    """coordsystem.json with iEEG keys in eeg dir is overwritten with EEG keys."""
+    eeg_dir = tmp_path / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    (eeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = eeg_dir / "sub-01_coordsystem.json"
+    # Write wrong keys (iEEG instead of EEG)
+    coordsystem.write_text(
+        json.dumps({"iEEGCoordinateSystem": "Other", "iEEGCoordinateUnits": "m"})
+    )
+
+    _ensure_coordsystem_symlink(eeg_dir)
+
+    data = json.loads(coordsystem.read_text())
+    assert "EEGCoordinateSystem" in data
+    assert "iEEGCoordinateSystem" not in data
+
+
 # Tests for TSV decimal separator repair
 
 

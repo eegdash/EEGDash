@@ -1674,3 +1674,86 @@ def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
         pytest.raises(DataIntegrityError, match="Bad record metadata"),
     ):
         ds._load_raw()
+
+
+def test_load_raw_retries_on_coordsystem_should_exist(tmp_path):
+    """RuntimeError 'coordsystem.json should exist' triggers coordsystem retry."""
+    ds = _make_s3_raw(tmp_path, ".edf")
+    mock_raw = MagicMock()
+
+    with (
+        patch.object(
+            ds,
+            "_read_raw_bids",
+            side_effect=RuntimeError("coordsystem.json should exist for iEEG"),
+        ),
+        patch.object(
+            ds,
+            "_retry_with_generated_coordsystem",
+            return_value=mock_raw,
+        ) as mock_retry,
+    ):
+        result = ds._load_raw()
+
+    mock_retry.assert_called_once()
+    assert result is mock_raw
+
+
+def test_load_raw_retries_on_coordsystem_key_error(tmp_path):
+    """KeyError('iEEGCoordinateSystem') triggers coordsystem retry."""
+    ds = _make_s3_raw(tmp_path, ".edf")
+    mock_raw = MagicMock()
+
+    with (
+        patch.object(
+            ds,
+            "_read_raw_bids",
+            side_effect=KeyError("iEEGCoordinateSystem"),
+        ),
+        patch.object(
+            ds,
+            "_retry_with_generated_coordsystem",
+            return_value=mock_raw,
+        ) as mock_retry,
+    ):
+        result = ds._load_raw()
+
+    mock_retry.assert_called_once()
+    assert result is mock_raw
+
+
+@patch("eegdash.dataset.base.validate_record", return_value=None)
+def test_load_raw_falls_back_for_non_numeric_run_edf(mock_validate, tmp_path):
+    """EDF file with non-numeric run falls back to direct MNE reader."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    dataset_id = "ds_test"
+    bids_relpath = "sub-01/eeg/sub-01_task-rest_run-5H_eeg.edf"
+    eeg_dir = tmp_path / dataset_id / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    edf_path = eeg_dir / "sub-01_task-rest_run-5H_eeg.edf"
+    edf_path.touch()
+
+    record = {
+        "dataset": dataset_id,
+        "bids_relpath": bids_relpath,
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / dataset_id),
+            "raw_key": bids_relpath,
+        },
+        "entities": {"subject": "01", "task": "rest", "run": "5H"},
+        "entities_mne": {"subject": "01", "task": "rest", "run": None},
+    }
+
+    ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    mock_raw = MagicMock()
+
+    with patch("mne_bids.read_raw_bids", side_effect=ValueError("run is not an index")):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(edf_path)
+    assert result is mock_raw

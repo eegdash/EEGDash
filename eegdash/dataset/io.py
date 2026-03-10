@@ -247,9 +247,24 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
         if not electrodes_files:
             return
 
-        # Check if we lack coordsystem.json here
+        # Check if coordsystem.json exists and has correct keys for the datatype
         coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
         if coordsystem_files:
+            _COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
+            prefix = _COORD_PREFIX.get(datatype, "EEG")
+            expected_key = f"{prefix}CoordinateSystem"
+            try:
+                content = json.loads(coordsystem_files[0].read_text(encoding="utf-8"))
+                if expected_key in content:
+                    return  # Valid — nothing to do
+            except Exception:
+                pass
+            # Keys missing/wrong or file unreadable — overwrite with correct keys
+            logger.info(
+                "coordsystem.json has wrong keys for %s datatype, regenerating...",
+                datatype,
+            )
+            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
             return
 
         # Look for coordsystem in parent (subject root)

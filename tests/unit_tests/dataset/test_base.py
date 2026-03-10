@@ -2294,6 +2294,174 @@ def test_load_raw_runtime_unrecoverable_tries_direct_reader(tmp_path):
     assert result is mock_raw
 
 
+# ---------------------------------------------------------------------------
+# Git-annex key resolution in _download_required_files
+# ---------------------------------------------------------------------------
+
+
+def test_resolve_annex_key_uri_md5e(tmp_path):
+    """_resolve_annex_key_uri detects MD5E annex keys and returns BIDS URI."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds002158",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds002158/sub-01/eeg/MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    resolved = ds._resolve_annex_key_uri(ds._raw_uri)
+    assert resolved == (
+        "s3://openneuro.org/ds002158/sub-01/eeg/sub-01_task-rest_eeg.vhdr"
+    )
+
+
+def test_resolve_annex_key_uri_sha256e(tmp_path):
+    """_resolve_annex_key_uri detects SHA256E annex keys."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds003848",
+        "bids_relpath": "sub-02/eeg/sub-02_task-rest_eeg.eeg",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds003848/sub-02/eeg/SHA256E-s2313--abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789.eeg",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    resolved = ds._resolve_annex_key_uri(ds._raw_uri)
+    assert resolved == (
+        "s3://openneuro.org/ds003848/sub-02/eeg/sub-02_task-rest_eeg.eeg"
+    )
+
+
+def test_resolve_annex_key_uri_normal_path_returns_none(tmp_path):
+    """_resolve_annex_key_uri returns None for normal BIDS paths."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds001",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds001/sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    assert ds._resolve_annex_key_uri(ds._raw_uri) is None
+
+
+def test_download_required_files_annex_key_fallback(tmp_path):
+    """_download_required_files tries BIDS name when annex key URI fails."""
+    from eegdash.dataset.base import EEGDashRaw
+
+    record = {
+        "dataset": "ds002158",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds002158/sub-01/eeg/MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    bids_uri = "s3://openneuro.org/ds002158/sub-01/eeg/sub-01_task-rest_eeg.vhdr"
+
+    def download_side_effect(uri, path, filesystem=None):
+        if "MD5E-s11657--" in uri:
+            raise FileNotFoundError(uri)
+        # BIDS-named URI succeeds
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=download_side_effect,
+        ) as mock_dl,
+        patch("eegdash.dataset.base.downloader.download_files"),
+    ):
+        ds._download_required_files()
+
+    # First two calls: annex URI (fails), then BIDS URI (succeeds).
+    # Additional calls are companion file downloads (.eeg, .vmrk, .dat).
+    assert mock_dl.call_count >= 2
+    assert "MD5E-s11657--" in mock_dl.call_args_list[0][0][0]
+    assert mock_dl.call_args_list[1][0][0] == bids_uri
+
+
+def test_download_required_files_annex_key_both_fail(tmp_path):
+    """DataIntegrityError when both annex key and BIDS name fail."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    record = {
+        "dataset": "ds002158",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.vhdr",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds002158/sub-01/eeg/MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=FileNotFoundError("not found"),
+        ),
+        patch("eegdash.dataset.base.downloader.download_files"),
+        pytest.raises(DataIntegrityError, match="annex key and BIDS name"),
+    ):
+        ds._download_required_files()
+
+
+def test_download_required_files_normal_uri_no_annex_fallback(tmp_path):
+    """Normal (non-annex) URI that fails raises DataIntegrityError directly."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    record = {
+        "dataset": "ds005170",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org",
+            "raw_key": "ds005170/sub-01/eeg/sub-01_task-rest_eeg.set",
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=FileNotFoundError("not found"),
+        ),
+        patch("eegdash.dataset.base.downloader.download_files"),
+        pytest.raises(DataIntegrityError, match="not found on S3"),
+    ):
+        ds._download_required_files()
+
+
 # ── Split FIF annex path resolution ──
 
 

@@ -560,10 +560,11 @@ class EEGDashRaw(RawDataset):
 
         Applies on-the-fly fixes and retries for known failure modes:
 
-        - **iEEG** missing ``coordsystem.json``: mne-bids raises
-          ``RuntimeError`` because coordinates are mandatory for intracranial
-          data. We generate a minimal ``coordsystem.json`` with the correct
-          ``iEEGCoordinateSystem`` keys and retry.
+        - **Missing or wrong-key ``coordsystem.json``**: mne-bids raises
+          ``RuntimeError`` or ``KeyError`` when the file is absent or has keys
+          for the wrong datatype (e.g. ``EEGCoordinateSystem`` in iEEG data).
+          We (re-)generate a minimal ``coordsystem.json`` with the correct
+          datatype-specific keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
         - **EEGLAB char-encoding** (``.set`` files with non-UTF char fields):
@@ -583,6 +584,9 @@ class EEGDashRaw(RawDataset):
           key, downloads it from remote storage, and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
+        - **Non-numeric ``run`` entity** (e.g. ``run-5H``): MNE-BIDS rejects
+          non-integer run values. Falls back to direct MNE reader for any
+          file format.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
@@ -618,7 +622,7 @@ class EEGDashRaw(RawDataset):
                         raise fallback_error from first_error
                 raise
             except RuntimeError as first_error:
-                if "coordsystem.json is REQUIRED" in str(first_error):
+                if "coordsystem.json" in str(first_error):
                     return self._retry_with_generated_coordsystem(first_error)
                 if "Illegal date" in str(first_error):
                     return self._retry_with_ctf_date_patch(first_error)
@@ -741,6 +745,10 @@ class EEGDashRaw(RawDataset):
                         return _load_raw_direct(self.filecache)
                     except Exception as fallback_error:
                         raise fallback_error from first_error
+
+                # Wrong keys in coordsystem.json (e.g., EEGCoordinateSystem for iEEG data)
+                if isinstance(first_error, KeyError) and "CoordinateSystem" in msg:
+                    return self._retry_with_generated_coordsystem(first_error)
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
@@ -865,14 +873,10 @@ class EEGDashRaw(RawDataset):
                     except Exception as fallback_error:
                         raise fallback_error from first_error
 
-                # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
-                if (
-                    self.filecache
-                    and self.filecache.suffix.lower() == ".vhdr"
-                    and self._has_non_numeric_run()
-                ):
+                # Non-numeric run (ValueError from MNE-BIDS entity validation)
+                if self.filecache and self._has_non_numeric_run():
                     logger.warning(
-                        "MNE-BIDS failed for VHDR with non-numeric run, "
+                        "MNE-BIDS failed for file with non-numeric run, "
                         "falling back to direct MNE reader."
                     )
                     try:

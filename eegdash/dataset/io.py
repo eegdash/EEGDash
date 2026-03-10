@@ -558,9 +558,7 @@ def _repair_tsv_na_whitespace(data_dir: Path) -> bool:
                 )
                 repaired_any = True
             except Exception as e:
-                logger.warning(
-                    "Failed to write repaired TSV %s: %s", tsv_path.name, e
-                )
+                logger.warning("Failed to write repaired TSV %s: %s", tsv_path.name, e)
 
     return repaired_any
 

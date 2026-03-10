@@ -524,7 +524,7 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.base.</span></span><span class="sig-name descname"><span class="pre">EEGDashRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/base.py#L137-L1057"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.base.</span></span><span class="sig-name descname"><span class="pre">EEGDashRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/base.py#L137-L1115"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RawDataset</span></code></p>
 <p>A single EEG recording dataset.</p>
 <p>Represents a single EEG recording, typically hosted on a remote server (like AWS S3)
@@ -537,6 +537,13 @@ preprocessing and training pipelines.</p>
 <li><p><strong>record</strong> (<em>dict</em>) – A v2 record containing all metadata and storage information.
 Must have schema_version=2 and include storage.base (no default bucket).</p></li>
 <li><p><strong>cache_dir</strong> (<em>str</em>) – The local directory where the data will be cached.</p></li>
+<li><p><strong>on_error</strong> (<em>str</em><em>, </em><em>default &quot;raise&quot;</em>) – <p>How to handle <code class="xref py py-class docutils literal notranslate"><span class="pre">DataIntegrityError</span></code> when accessing <code class="docutils literal notranslate"><span class="pre">.raw</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;raise&quot;</span></code> (default): propagate the exception.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code>: log the error as a warning and set <code class="docutils literal notranslate"><span class="pre">.raw</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;skip&quot;</span></code>: silently set <code class="docutils literal notranslate"><span class="pre">.raw</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments passed to the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.datasets.BaseDataset</span></code> constructor.</p></li>
 </ul>
@@ -547,16 +554,19 @@ Must have schema_version=2 and include storage.base (no default bucket).</p></li
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">raw</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseRaw</span></span></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">raw</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseRaw</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
 <dd><p>The MNE Raw object for this recording.</p>
 <p>Accessing this property triggers the download and caching of the data
 if it has not been accessed before.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when <code class="docutils literal notranslate"><span class="pre">on_error</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;skip&quot;</span></code> and
+the record could not be loaded due to a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">DataIntegrityError</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The loaded MNE Raw object.</p>
+<dd class="field-odd"><p>The loaded MNE Raw object, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for skipped records.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>mne.io.BaseRaw</p>
+<dd class="field-even"><p>mne.io.BaseRaw | None</p>
 </dd>
 </dl>
 </dd></dl>

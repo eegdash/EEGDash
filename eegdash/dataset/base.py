@@ -9,6 +9,7 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.
 """
 
+import configparser
 import re
 from functools import partial
 from pathlib import Path, PurePosixPath
@@ -36,6 +37,7 @@ from .io import (
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
+    _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
@@ -44,6 +46,7 @@ from .io import (
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
 
@@ -146,6 +149,12 @@ class EEGDashRaw(RawDataset):
         Must have schema_version=2 and include storage.base (no default bucket).
     cache_dir : str
         The local directory where the data will be cached.
+    on_error : str, default "raise"
+        How to handle :class:`DataIntegrityError` when accessing ``.raw``:
+
+        - ``"raise"`` (default): propagate the exception.
+        - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
+        - ``"skip"``: silently set ``.raw`` to ``None``.
     **kwargs
         Additional keyword arguments passed to the
         :class:`braindecode.datasets.BaseDataset` constructor.
@@ -163,6 +172,9 @@ class EEGDashRaw(RawDataset):
         cache_dir: str,
         **kwargs,
     ):
+        self._on_error = kwargs.pop("on_error", "raise")
+        self._skipped = False
+        self._integrity_error = None
         super().__init__(None, **kwargs)
         self.cache_dir = Path(cache_dir)
 
@@ -559,8 +571,9 @@ class EEGDashRaw(RawDataset):
           ``scipy.io.loadmat`` raises ``TypeError: buffer is too small``.
           Retries with ``uint16_codec='latin-1'`` via ``extra_params``.
         - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
-          MAT/EEGLAB files with array errors, etc.): raises
-          ``DataIntegrityError`` for clean error reporting.
+          MAT/EEGLAB files with array errors, etc.): attempts EEGLAB fallback
+          for ``.set`` files and direct MNE reader before raising
+          ``DataIntegrityError``.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
         - **participants.tsv subject mismatches**: repairs ``participant_id``
@@ -583,7 +596,8 @@ class EEGDashRaw(RawDataset):
         - **Split FIF** (record points to split-02+ file): direct MNE reader
           loads with ``on_split_missing="warn"`` so partial data is returned.
         - **Bad record metadata** (e.g. ``.json`` extension, missing ``task``
-          entity): raises ``DataIntegrityError`` for clean error reporting.
+          entity): attempts direct MNE reader before raising
+          ``DataIntegrityError``.
         """
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
@@ -624,8 +638,38 @@ class EEGDashRaw(RawDataset):
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
+                # CTF trial-size mismatch — fall back to direct reader
+                if "even multiple of the trial size" in msg and self.filecache:
+                    logger.warning(
+                        "CTF trial size mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"CTF trial size mismatch and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                    # For .set files, try manual EEGLAB parser before giving up
+                    if self.filecache and self.filecache.suffix.lower() == ".set":
+                        try:
+                            return _load_raw_eeglab_fallback(
+                                self.filecache, bids_root=self.bids_root
+                            )
+                        except Exception:
+                            pass
+
+                    # For supported formats, try direct MNE reader (bypasses BIDS)
+                    if self.filecache:
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception:
+                            pass
+
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
                         record=self.record,
@@ -634,6 +678,19 @@ class EEGDashRaw(RawDataset):
 
                 # Bad record metadata (e.g. .json extension, missing task entity)
                 if "must contain" in msg and "task" in msg:
+                    if self.filecache:
+                        logger.warning(
+                            "Missing 'task' entity in BIDSPath — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=f"Bad record metadata and direct reader failed: {msg}",
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
                     raise DataIntegrityError(
                         message=f"Bad record metadata: {msg}",
                         record=self.record,
@@ -664,6 +721,16 @@ class EEGDashRaw(RawDataset):
                         current_split_key, current_split_path = split_download
                         continue
 
+                # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
+                if isinstance(first_error, UnicodeDecodeError) and self.filecache:
+                    data_dir = self.filecache.parent
+                    if _repair_tsv_encoding(data_dir):
+                        logger.info("Repaired non-UTF-8 TSV encoding, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
                 # the data is readable, just the montage lookup fails.
                 if (
@@ -691,6 +758,26 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # EEGLAB epoch files: trials > 1 → use read_epochs_eeglab
+                if (
+                    isinstance(first_error, TypeError)
+                    and "number of trials is" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".set"
+                ):
+                    logger.info(
+                        "EEGLAB file contains epochs (trials > 1), "
+                        "loading via read_epochs_eeglab."
+                    )
+                    try:
+                        return _load_raw_from_eeglab_epochs(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"Cannot read epoched EEGLAB file: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
 
                 # EEGLAB .set files with non-UTF char fields: scipy.io.loadmat
                 # crashes with "buffer is too small" in read_char.  Retry with
@@ -748,6 +835,16 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # scans.tsv path mismatch (EEG file not listed in scans.tsv)
+                if "is not in list" in msg and "Did you mean" in msg and self.filecache:
+                    logger.warning(
+                        "scans.tsv path mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
 
                 # Subject/session ID mismatch between folders and participants.tsv
                 if "is not in list" in msg and self.bids_root:
@@ -816,6 +913,19 @@ class EEGDashRaw(RawDataset):
                     return self._retry_without_events_tsv(first_error)
                 raise
             except Exception as first_error:
+                # Missing MarkerFile entry in VHDR [Common Infos]
+                if (
+                    isinstance(first_error, configparser.NoOptionError)
+                    and "markerfile" in str(first_error).lower()
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".vhdr"
+                ):
+                    if _repair_vhdr_missing_markerfile(self.filecache):
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":
                     logger.warning(
@@ -953,6 +1063,8 @@ class EEGDashRaw(RawDataset):
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
+        if self._skipped:
+            return 0
         if self._raw is None:
             ntimes = self.record.get("ntimes")
             if ntimes is not None:
@@ -970,20 +1082,32 @@ class EEGDashRaw(RawDataset):
         return len(self._raw)
 
     @property
-    def raw(self) -> BaseRaw:
+    def raw(self) -> BaseRaw | None:
         """The MNE Raw object for this recording.
 
         Accessing this property triggers the download and caching of the data
         if it has not been accessed before.
 
+        Returns ``None`` when ``on_error`` is ``"warn"`` or ``"skip"`` and
+        the record could not be loaded due to a
+        :class:`~eegdash.dataset.exceptions.DataIntegrityError`.
+
         Returns
         -------
-        mne.io.BaseRaw
-            The loaded MNE Raw object.
+        mne.io.BaseRaw | None
+            The loaded MNE Raw object, or ``None`` for skipped records.
 
         """
-        if self._raw is None:
-            self._ensure_raw()
+        if self._raw is None and not self._skipped:
+            try:
+                self._ensure_raw()
+            except DataIntegrityError as e:
+                if self._on_error == "raise":
+                    raise
+                self._skipped = True
+                self._integrity_error = e
+                if self._on_error == "warn":
+                    e.log_warning()
         return self._raw
 
     @raw.setter

@@ -19,5 +19,6 @@
       MultivariateFeature
       TrainableFeature
       UnivariateFeature
+      BasePreprocessorOutputType
    
 

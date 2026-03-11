@@ -1,9 +1,8 @@
-r"""
-Signal-Level Feature Extraction
+r"""Signal-Level Feature Extraction
 ===============================
 
-This module provides temporal and statistical features computed 
-directly from time-series data. 
+This module provides temporal and statistical features computed
+directly from time-series data.
 
 Data Shape Convention
 ---------------------
@@ -12,9 +11,10 @@ This module follows a **Time-Last** convention:
 * **Input:** ``(..., time)``
 * **Output:** ``(...,)``
 
-All functions collapse the last dimension (time), returning an ndarray of 
+All functions collapse the last dimension (time), returning an ndarray of
 features corresponding to the leading dimensions (e.g., subjects, channels).
 """
+
 import numbers
 
 import numpy as np
@@ -56,7 +56,6 @@ SIGNAL_PREDECESSORS = [None, SignalOutputType]
 @PreprocessorOutputType(SignalOutputType)
 def signal_hilbert_preprocessor(x, /):
     r"""Compute the amplitude envelope of the analytic signal."""
-    
     return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
 
@@ -105,7 +104,7 @@ def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
 @univariate_feature
 def signal_mean(x, /):
     r"""Compute the temporal mean of the signal.
-    
+
     Parameters
     ----------
     x : ndarray
@@ -114,8 +113,9 @@ def signal_mean(x, /):
     Returns
     -------
     ndarray
-        The mean of the signal along the temporal axis. 
+        The mean of the signal along the temporal axis.
         Shape is ``x.shape[:-1]``.
+
     """
     return x.mean(axis=-1)
 
@@ -135,8 +135,9 @@ def signal_variance(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The variance of the signal along the temporal axis. 
+        The variance of the signal along the temporal axis.
         Shape is ``x.shape[:-1]``.
+
     """
     return x.var(axis=-1, **kwargs)
 
@@ -156,8 +157,9 @@ def signal_std(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The standard deviation of the signal along the temporal axis. 
+        The standard deviation of the signal along the temporal axis.
         Shape is ``x.shape[:-1]``.
+
     """
     return x.std(axis=-1, **kwargs)
 
@@ -177,8 +179,9 @@ def signal_skewness(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The skewness of the signal along the temporal axis. 
+        The skewness of the signal along the temporal axis.
         Shape is ``x.shape[:-1]``.
+
     """
     return stats.skew(x, axis=x.ndim - 1, **kwargs)
 
@@ -198,8 +201,9 @@ def signal_kurtosis(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The kurtosis of the signal along the temporal axis. 
+        The kurtosis of the signal along the temporal axis.
         Shape is ``x.shape[:-1]``
+
     """
     return stats.kurtosis(x, axis=x.ndim - 1, **kwargs)
 
@@ -217,13 +221,14 @@ def signal_root_mean_square(x, /):
     Returns
     -------
     ndarray
-        The RMS amplitude of the signal. 
+        The RMS amplitude of the signal.
         Shape is ``x.shape[:-1]``
-    
+
     Notes
     -----
     For the RMS definition, see the
     `Wikipedia entry <https://en.wikipedia.org/wiki/Root_mean_square>`_.
+
     """
     return np.sqrt(np.power(x, 2).mean(axis=-1))
 
@@ -243,16 +248,17 @@ def signal_peak_to_peak(x, /, **kwargs):
     Returns
     -------
     ndarray
-        The peak-to-peak amplitude. 
+        The peak-to-peak amplitude.
         Shape is ``x.shape[:-1]``.
 
     Notes
-    -----   
-    This function wraps :obj:`numpy.ptp`; see the NumPy documentation for 
+    -----
+    This function wraps :obj:`numpy.ptp`; see the NumPy documentation for
     details on additional keyword arguments.
 
-    For a theoretical overview of Peak-To-Peak amplitude in signal analysis, 
+    For a theoretical overview of Peak-To-Peak amplitude in signal analysis,
     see the `Wikipedia entry <https://en.wikipedia.org/wiki/Peak-to-peak>`_.
+
     """
     return np.ptp(x, axis=-1, **kwargs)
 
@@ -274,13 +280,14 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     Returns
     -------
     ndarray
-        The quantile values. 
+        The quantile values.
         Shape is ``x.shape[:-1]``.
 
     Notes
     -----
-    This function wraps :obj:`numpy.quantile`; see the NumPy documentation for 
+    This function wraps :obj:`numpy.quantile`; see the NumPy documentation for
     details on additional keyword arguments.
+
     """
     return np.quantile(x, q=q, axis=-1, **kwargs)
 
@@ -300,6 +307,7 @@ def signal_line_length(x, /):
     ndarray
         The mean absolute vertical distance between consecutive samples.
         Shape is ``x.shape[:-1]``.
+
     """
     return np.abs(np.diff(x, axis=-1)).mean(axis=-1)
 
@@ -309,7 +317,7 @@ def signal_line_length(x, /):
 def signal_zero_crossings(x, /, threshold=1e-15):
     r"""Count the number of times the signal crosses the zero axis.
 
-    This function identifies points where the signal changes sign or 
+    This function identifies points where the signal changes sign or
     enters/leaves a defined noise floor (threshold).
 
     Parameters
@@ -317,7 +325,7 @@ def signal_zero_crossings(x, /, threshold=1e-15):
     x : ndarray
         The input signal.
     threshold : float, optional
-        A small epsilon value to treat values near zero as exactly zero, 
+        A small epsilon value to treat values near zero as exactly zero,
         preventing false counts due to floating-point noise.
 
     Returns
@@ -325,11 +333,12 @@ def signal_zero_crossings(x, /, threshold=1e-15):
     ndarray
         The count of zero crossings.
         Shape is ``x.shape[:-1]``.
-    
+
     See Also
     --------
     For a theoretical overview of zero-crossing rate in signal analysis,
     see the `Wikipedia entry <https://en.wikipedia.org/wiki/Zero_crossing>`_.
+
     """
     zero_ind = np.logical_and(x > -threshold, x < threshold)
     zero_cross = np.diff(zero_ind, axis=-1).astype(int).sum(axis=-1)
@@ -344,7 +353,7 @@ def signal_zero_crossings(x, /, threshold=1e-15):
 def signal_hjorth_mobility(x, /):
     r"""Calculate the Hjorth Mobility of the signal.
 
-    Mobility is defined as the standard deviation of the signal's first 
+    Mobility is defined as the standard deviation of the signal's first
     derivative normalized by the standard deviation of the signal itself.
 
     Parameters
@@ -367,11 +376,11 @@ def signal_hjorth_mobility(x, /):
     ----------
     - Hjorth, B. (1970). EEG analysis based on time domain properties.
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
-    
-    for more details, see the `Wikipedia entry 
+
+    for more details, see the `Wikipedia entry
     <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`_.
-    
-     
+
+
     """
     return np.diff(x, axis=-1).std(axis=-1) / x.std(axis=-1)
 
@@ -381,8 +390,8 @@ def signal_hjorth_mobility(x, /):
 def signal_hjorth_complexity(x, /):
     r"""Calculate the Hjorth Complexity of the signal.
 
-    Complexity represents the change in frequency. The parameter 
-    compares the signal's similarity to a pure sine wave, where value 
+    Complexity represents the change in frequency. The parameter
+    compares the signal's similarity to a pure sine wave, where value
     of 1 indicates a perfect sine wave.
 
     Parameters
@@ -394,10 +403,10 @@ def signal_hjorth_complexity(x, /):
     -------
     ndarray
         The complexity value. Shape is ``x.shape[:-1]``.
-    
+
     Notes
     -----
-    The complexity is calculated using the following formula:   
+    The complexity is calculated using the following formula:
     .. math::
         \text{Complexity} = \frac{\text{Mobility}(\frac{dx(t)}{dt})}{\text{Mobility}(x(t))}
 
@@ -405,9 +414,10 @@ def signal_hjorth_complexity(x, /):
     ----------
     - Hjorth, B. (1970). EEG analysis based on time domain properties.
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
-    
-    For more details, see the `Wikipedia entry 
+
+    For more details, see the `Wikipedia entry
     <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity>`_.
+
     """
     return (np.diff(x, 2, axis=-1).std(axis=-1) * x.std(axis=-1)) / np.diff(
         x, axis=-1
@@ -419,8 +429,8 @@ def signal_hjorth_complexity(x, /):
 def signal_decorrelation_time(x, /, fs=1):
     r"""Calculate the Decorrelation Time of the signal.
 
-    This function computes the time it takes for the signal to 
-    decorrelate, defined as the first time lag where the autocorrelation 
+    This function computes the time it takes for the signal to
+    decorrelate, defined as the first time lag where the autocorrelation
     function drops to zero.
 
     Parameters
@@ -428,20 +438,21 @@ def signal_decorrelation_time(x, /, fs=1):
     x : ndarray
         The input signal.
     fs : float, optional
-        The sampling frequency in Hz. If 1 (default), the result is 
+        The sampling frequency in Hz. If 1 (default), the result is
         returned in samples. If fs is provided, the result is in seconds.
 
     Returns
     -------
     ndarray
-        The time (in seconds or samples) until the signal decorrelates. 
+        The time (in seconds or samples) until the signal decorrelates.
         Shape is ``x.shape[:-1]``.
 
     Notes
     -----
-    This function uses the '<Wiener-Khinchin Theorem 
+    This function uses the '<Wiener-Khinchin Theorem
     <https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem>'_ to
     compute the autocorrelation via the inverse FFT of the power spectrum.
+
     """
     f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2]
@@ -472,12 +483,12 @@ r"""Calculate the Hjorth Activity of the signal.
     The activity is calculated using the following formula:
     .. math::
         \text{Activity} = \text{var}(x(t))
-    
+
     References
     ----------
     - Hjorth, B. (1970). EEG analysis based on time domain properties.
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
-    
-    for more details, see the `Wikipedia entry 
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`_.   
+
+    for more details, see the `Wikipedia entry
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`_.
     """

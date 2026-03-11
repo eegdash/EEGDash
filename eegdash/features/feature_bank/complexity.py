@@ -1,5 +1,4 @@
-r"""
-Complexity Feature Extraction
+r"""Complexity Feature Extraction
 ===============================
 
 This module provides functions to compute various complexity features from signals.
@@ -11,9 +10,10 @@ This module follows a **Time-Last** convention:
 * **Input:** ``(..., time)``
 * **Output:** ``(...,)``
 
-All functions collapse the last dimension (time), returning an ndarray of 
+All functions collapse the last dimension (time), returning an ndarray of
 features corresponding to the leading dimensions (e.g., subjects, channels).
 """
+
 import numba as nb
 import numpy as np
 from sklearn.neighbors import KDTree
@@ -51,7 +51,7 @@ def _create_embedding(x, dim, lag):
     Notes
     -----
     Optimized with Numba.
-    
+
     """
     n_epochs = (x.shape[-1] - dim + 1) // lag
     y = np.empty((n_epochs, dim))
@@ -67,19 +67,19 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     Parameters
     ----------
     x : ndarray
-        1D signal array.    
+        1D signal array.
     m : int
         Embedding dimension.
     r : float
         Tolerance threshold.
     l : int
         Time lag.
-    
+
     Returns
     -------
     ndarray
         Neighbor counts for the given embedding dimension.
-    
+
     """
     x_emb = _create_embedding(x, m, l)
     kdtree = KDTree(x_emb, metric="chebyshev")
@@ -90,8 +90,8 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
 def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
     r"""Precompute neighbor counts for Approximate and Sample Entropy.
 
-    This function creates a delay-embedding of the signal and uses a KDTree 
-    to count how many vectors are within a distance 'r' of each other. 
+    This function creates a delay-embedding of the signal and uses a KDTree
+    to count how many vectors are within a distance 'r' of each other.
     It computes counts for both dimension 'm' and 'm+1'.
 
     Parameters
@@ -101,7 +101,7 @@ def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
     m : int, optional
         Embedding dimension (length of compared sequences).
     r : float, optional
-        Tolerance threshold, expressed as a fraction of the signal 
+        Tolerance threshold, expressed as a fraction of the signal
         standard deviation.
     l : int, optional
         The lag or delay between successive embedding vectors.
@@ -112,7 +112,7 @@ def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
         Neighbor counts for embedding dimension m.
     counts_mp1 : ndarray
         Neighbor counts for embedding dimension m + 1.
-    
+
     """
     rr = r * x.std(axis=-1)
     counts_m = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // l))
@@ -132,7 +132,7 @@ def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
 def complexity_approx_entropy(counts_m, counts_mp1, /):
     r"""Calculate Approximate Entropy (ApEn).
 
-    Approximate Entropy quantifies the amount of regularity and the unpredictability 
+    Approximate Entropy quantifies the amount of regularity and the unpredictability
     of fluctuations over time-series data. Smaller values indicate more regular signals.
 
     Parameters
@@ -141,12 +141,12 @@ def complexity_approx_entropy(counts_m, counts_mp1, /):
         Neighbor counts for embedding dimension m.
     counts_mp1 : ndarray
         Neighbor counts for embedding dimension m + 1.
-    
+
     Returns
     -------
     ndarray
         Approximate Entropy values. Shape is ``x.shape[:-1]``.
-    
+
     """
     phi_m = np.log(counts_m / counts_m.shape[-1]).mean(axis=-1)
     phi_mp1 = np.log(counts_mp1 / counts_mp1.shape[-1]).mean(axis=-1)
@@ -158,8 +158,8 @@ def complexity_approx_entropy(counts_m, counts_mp1, /):
 def complexity_sample_entropy(counts_m, counts_mp1, /):
     r"""Calculate Sample Entropy (SampEn).
 
-    A refinement of Approximate Entropy that is more consistent and less 
-    dependent on signal length. It measures the likelihood that similar patterns 
+    A refinement of Approximate Entropy that is more consistent and less
+    dependent on signal length. It measures the likelihood that similar patterns
     of data will remain similar when the window size increases.
 
     Parameters
@@ -168,12 +168,12 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
         Neighbor counts for embedding dimension m.
     counts_mp1 : ndarray
         Neighbor counts for embedding dimension m + 1.
-    
+
     Returns
     -------
     ndarray
         SampEn values. Shape is ``x.shape[:-1]``.
-    
+
     """
     A = np.sum(counts_mp1 - 1, axis=-1)
     B = np.sum(counts_m - 1, axis=-1)
@@ -185,8 +185,8 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
 def complexity_svd_entropy(x, /, m=10, tau=1):
     r"""Calculate Singular Value Decomposition (SVD) Entropy.
 
-    SVD Entropy measures the complexity of the signal's embedding space. 
-    It indicates the number of independent components required to 
+    SVD Entropy measures the complexity of the signal's embedding space.
+    It indicates the number of independent components required to
     reconstruct the signal. Higher values suggest a more complex signal.
 
     Parameters
@@ -202,9 +202,8 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
     -------
     ndarray
         SVD Entropy values. Shape is ``x.shape[:-1]``.
-    
-    """
 
+    """
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
         x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
@@ -219,7 +218,7 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
 def complexity_lempel_ziv(x, /, threshold=None, normalize=True):
     r"""Calculate Lempel-Ziv Complexity (LZC).
 
-    LZC evaluates the randomness of a sequence by counting the number 
+    LZC evaluates the randomness of a sequence by counting the number
     of distinct patterns it contains.
 
     Parameters
@@ -238,14 +237,15 @@ def complexity_lempel_ziv(x, /, threshold=None, normalize=True):
 
     Notes
     -----
-    - The implementation follows the constructive algorithm for 
+    - The implementation follows the constructive algorithm for
       production complexity as described by Kaspar and Schuster [1]_.
     - Optimized with Numba.
 
     References
     ----------
-    .. [1] Kaspar, F., & Schuster, H. G. (1987). Easily calculable measure for the 
-           complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.    
+    .. [1] Kaspar, F., & Schuster, H. G. (1987). Easily calculable measure for the
+           complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.
+
     """
     lzc = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):

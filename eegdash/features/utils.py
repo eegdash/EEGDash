@@ -1,18 +1,18 @@
-r"""
-Feature Extraction Utilities.
+r"""Feature Extraction Utilities.
 
-This module provides the primary entry points for applying feature extraction 
-pipelines to windowed datasets. 
+This module provides the primary entry points for applying feature extraction
+pipelines to windowed datasets.
 
 The module provides the following functions:
-- :func:`extract_features` — The main interface for computing features 
+- :func:`extract_features` — The main interface for computing features
   across an entire concatenated dataset.
 - :func:`fit_feature_extractors` — Fits trainable features using a
   representative dataset.
-- :func:`_extract_features_from_windowsdataset` — Internal helper for 
+- :func:`_extract_features_from_windowsdataset` — Internal helper for
   processing individual recording datasets.
 
 """
+
 import copy
 from collections.abc import Callable
 from typing import Dict, List
@@ -45,9 +45,9 @@ def _extract_features_from_windowsdataset(
 ) -> FeaturesDataset:
     r"""Extract features from a single recording windowed dataset.
 
-    This helper function iterates through a :class:`WindowsDataset` in 
-    batches, applies a :class:`FeatureExtractor`, and packages the 
-    resulting feature vectors into a :class:`FeaturesDataset` instance. 
+    This helper function iterates through a :class:`WindowsDataset` in
+    batches, applies a :class:`FeatureExtractor`, and packages the
+    resulting feature vectors into a :class:`FeaturesDataset` instance.
 
     Parameters
     ----------
@@ -61,13 +61,13 @@ def _extract_features_from_windowsdataset(
     Returns
     -------
     ~eegdash.features.datasets.FeaturesDataset
-        A recording-level dataset containing the extracted feature table 
+        A recording-level dataset containing the extracted feature table
         and associated recording metadata.
 
     Notes
     -----
-    If the input dataset does not have targets pre-loaded in metadata, 
-    this function will automatically extract them during the iteration 
+    If the input dataset does not have targets pre-loaded in metadata,
+    this function will automatically extract them during the iteration
     and update the returned metadata accordingly.
 
     """
@@ -124,31 +124,31 @@ def extract_features(
 ) -> FeaturesConcatDataset:
     r"""Extract features from a collection of windowed recordings.
 
-    This function applies a feature extraction pipeline to every 
+    This function applies a feature extraction pipeline to every
     individual recording in a :class:`BaseConcatDataset`.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
-        A concatenated dataset of :class:`WindowsDataset` or 
+        A concatenated dataset of :class:`WindowsDataset` or
         :class:`EEGWindowsDataset` instances.
     features : ~eegdash.features.extractors.FeatureExtractor or dict or list
-        The feature extractor(s) to apply. Can be a 
-        :class:`~eegdash.features.extractors.FeatureExtractor` instance, 
-        a dictionary of named feature functions, or a list of feature 
+        The feature extractor(s) to apply. Can be a
+        :class:`~eegdash.features.extractors.FeatureExtractor` instance,
+        a dictionary of named feature functions, or a list of feature
         functions.
     batch_size : int, default 512
         The size of batches used for feature extraction within each recording.
     n_jobs : int, default 1
-        The number of parallel jobs to use for processing different 
+        The number of parallel jobs to use for processing different
         recordings simultaneously.
 
     Returns
     -------
     ~eegdash.features.datasets.FeaturesConcatDataset
-        A unified collection of feature datasets corresponding to the 
+        A unified collection of feature datasets corresponding to the
         input recordings.
-    
+
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
@@ -176,9 +176,9 @@ def fit_feature_extractors(
 ) -> extractors.FeatureExtractor:
     r"""Fit trainable feature extractors on a concatenated dataset.
 
-    Scans the provided feature pipeline for components that require training 
-    (subclasses of :class:`~eegdash.features.extractors.TrainableFeature`). 
-    If found, the function iterates through the dataset in batches to 
+    Scans the provided feature pipeline for components that require training
+    (subclasses of :class:`~eegdash.features.extractors.TrainableFeature`).
+    If found, the function iterates through the dataset in batches to
     perform partial fitting before finalization.
 
     Parameters
@@ -188,7 +188,7 @@ def fit_feature_extractors(
     features : ~eegdash.features.extractors.FeatureExtractor or dict or list
         The feature extractor pipeline(s) to fit.
     batch_size : int, default 8192
-        The batch size to use when streaming data through the 
+        The batch size to use when streaming data through the
         :meth:`partial_fit` phase.
 
     Returns
@@ -198,9 +198,9 @@ def fit_feature_extractors(
 
     Notes
     -----
-    If the provided extractors are not trainable, the function returns 
+    If the provided extractors are not trainable, the function returns
     the original input without modification.
-    
+
     """
     if isinstance(features, list):
         features = dict(enumerate(features))

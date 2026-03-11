@@ -1,6 +1,6 @@
 r"""Feature bank public API exports.
 
-This module consolidates and re-exports the feature extractors and 
+This module consolidates and re-exports the feature extractors and
 feature functions so users can import them directly from
 ``eegdash.features.feature_bank``.
 """

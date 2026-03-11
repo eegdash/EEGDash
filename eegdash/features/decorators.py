@@ -1,12 +1,11 @@
-r"""
-Feature Metadata Decorators.
+r"""Feature Metadata Decorators.
 
 This module provides  decorators used to annotate feature extraction
 functions with structural metadata. These annotations define the dependency
 graph (via predecessors) and the data format (via feature kinds).
 
 The module provides the following decorators:
-- :class:`FeaturePredecessor` — Specifies the required input transformation 
+- :class:`FeaturePredecessor` — Specifies the required input transformation
   for a feature.
 - :class:`FeatureKind` — Defines the dimensionality of the feature output.
 - :func:`univariate_feature` — Sugar for per-channel features.
@@ -41,16 +40,16 @@ __all__ = [
 class FeaturePredecessor:
     r"""Decorator to specify parent extractors for a feature function.
 
-    This decorator attaches a list of immediate parent preprocessing steps to 
-    a feature extraction function. This metadata is used by the 
-    :class:`~eegdash.features.extractors.FeatureExtractor` to validate the 
+    This decorator attaches a list of immediate parent preprocessing steps to
+    a feature extraction function. This metadata is used by the
+    :class:`~eegdash.features.extractors.FeatureExtractor` to validate the
     execution tree.
 
     Parameters
     ----------
     *parent_extractor_type : list of callable or None
-        A list of preprocessing functions that this feature immediately 
-        depends on. Use ``None`` to indicate that the feature can operate 
+        A list of preprocessing functions that this feature immediately
+        depends on. Use ``None`` to indicate that the feature can operate
         directly on raw signal arrays.
 
     Attributes
@@ -83,9 +82,9 @@ class FeaturePredecessor:
         Returns
         -------
         callable
-            The decorated function with the `parent_extractor_type` 
+            The decorated function with the `parent_extractor_type`
             attribute attached.
-        
+
         """
         f = _get_underlying_func(func)
         f.parent_extractor_type = self.parent_extractor_type
@@ -95,21 +94,22 @@ class FeaturePredecessor:
 class FeatureKind:
     r"""Decorator to specify the operational dimensionality of a feature.
 
-    This decorator attaches a "feature kind" instance to a function, 
-    determining how the :class:`~eegdash.features.extractors.FeatureExtractor` 
+    This decorator attaches a "feature kind" instance to a function,
+    determining how the :class:`~eegdash.features.extractors.FeatureExtractor`
     should map the resulting numerical arrays to channel names.
 
     Parameters
     ----------
     feature_kind : ~eegdash.features.extractors.MultivariateFeature
-        An instance of a feature kind class, such as 
-        :class:`~eegdash.features.extractors.UnivariateFeature` or 
+        An instance of a feature kind class, such as
+        :class:`~eegdash.features.extractors.UnivariateFeature` or
         :class:`~eegdash.features.extractors.BivariateFeature`.
 
     Attributes
     ----------
     feature_kind : ~eegdash.features.extractors.MultivariateFeature
         The stored kind instance used for output formatting.
+
     """
 
     def __init__(self, feature_kind: MultivariateFeature):
@@ -134,12 +134,12 @@ class FeatureKind:
         return func
 
 
-# Syntax sugar 
+# Syntax sugar
 univariate_feature = FeatureKind(UnivariateFeature())
 r"""Decorator to mark a feature as univariate.
 
-Indicates that the feature is computed for each channel independently. 
-The output will be formatted as a dictionary with keys matching the 
+Indicates that the feature is computed for each channel independently.
+The output will be formatted as a dictionary with keys matching the
 original channel names.
 """
 
@@ -154,15 +154,15 @@ def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
     func : callable
         The feature extraction function to decorate.
     directed : bool, default False
-        If True, the feature is treated as directed. 
+        If True, the feature is treated as directed.
         If False, only unique, unordered pairs are computed.
 
     Returns
     -------
     callable
-        The decorated function with either a 
-        :class:`~eegdash.features.extractors.BivariateFeature` or 
-        :class:`~eegdash.features.extractors.DirectedBivariateFeature` 
+        The decorated function with either a
+        :class:`~eegdash.features.extractors.BivariateFeature` or
+        :class:`~eegdash.features.extractors.DirectedBivariateFeature`
         kind attached.
 
     """
@@ -176,14 +176,15 @@ def bivariate_feature(func: Callable, directed: bool = False) -> Callable:
 multivariate_feature = FeatureKind(MultivariateFeature())
 r"""Decorator to mark a feature as multivariate.
 
-Indicates that the feature operates on all channels simultaneously. The 
-output naming convention is determined by the feature's internal logic 
+Indicates that the feature operates on all channels simultaneously. The
+output naming convention is determined by the feature's internal logic
 rather than channel labels.
 """
 
+
 class PreprocessorOutputType:
     r"""Decorator to specify the expected output type of a preprocessor.
-    
+
     Parameters
     ----------
     output_type : Type
@@ -192,9 +193,11 @@ class PreprocessorOutputType:
     Raises
     ------
     ValueError
-        If the provided `output_type` does not inherit from 
+        If the provided `output_type` does not inherit from
         :class:`~eegdash.features.preprocessors.BasePreprocessorOutputType`.
+
     """
+
     def __init__(self, output_type: Type):
         if (
             not inspect.isclass(output_type)
@@ -208,7 +211,7 @@ class PreprocessorOutputType:
 
     def __call__(self, preprocessor: Callable) -> Callable:
         r"""Apply the decorator to a preprocessor function.
-        
+
         Parameters
         ----------
         preprocessor : callable
@@ -219,5 +222,6 @@ class PreprocessorOutputType:
         callable
             An instance of the class named after the preprocessor, inheriting from the specified
             `output_type`, with the original preprocessor function as its implementation.
+
         """
         return type(preprocessor.__name__, (self.output_type,), {})(preprocessor)

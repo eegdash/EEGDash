@@ -1,5 +1,4 @@
-r"""
-Feature Extraction Utilities
+r"""Feature Extraction Utilities
 ============================
 
 This module provides the following helper functions:
@@ -7,6 +6,7 @@ This module provides the following helper functions:
 - `slice_freq_band`: Slices frequency vector and associated data arrays to a specific range.
 - `reduce_freq_bands`: Reduces spectral data into discrete frequency bands by aggregating bins
 """
+
 import numpy as np
 
 __all__ = [
@@ -50,7 +50,7 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
         If `f_min` is below the minimum resolvable frequency.
     AssertionError
         If `f_max` is above the Nyquist frequency.
-    
+
     Examples
     --------
     >>> get_valid_freq_band(fs=100, n=1000)
@@ -110,7 +110,8 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
     array([4, 6, 8])~
     >>> d_s
     array([[30, 40, 50],
-           [35, 45, 55]])   
+           [35, 45, 55]])
+
     """
     if f_min is None and f_max is None:
         return f, *x
@@ -128,8 +129,8 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
 def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
     r"""Reduce spectral data into discrete frequency bands by aggregating bins.
 
-    This function identifies the frequency indices belonging to specific 
-    bands and applies a reduction function (like sum or mean) to collapse 
+    This function identifies the frequency indices belonging to specific
+    bands and applies a reduction function (like sum or mean) to collapse
     the frequency axis.
 
     Parameters
@@ -137,7 +138,7 @@ def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
     f : ndarray
         Frequency vector.
     x : ndarray
-        Spectral data. Can be multi-dimensional. 
+        Spectral data. Can be multi-dimensional.
         The last dimension must match the length of `f`.
     bands : dict
         Mapping of band names to (min, max) frequency tuples.
@@ -147,17 +148,17 @@ def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
     Returns
     -------
     x_bands : dict
-        Dictionary where keys are the band names from `bands` and values 
-        are the reduced arrays. The last dimension of the input `x` 
+        Dictionary where keys are the band names from `bands` and values
+        are the reduced arrays. The last dimension of the input `x`
         is removed.
-    
+
     Raises
     ------
     AssertionError
         If a band name is not a string.
-        If a band limit tuple does not contain exactly two values or 
+        If a band limit tuple does not contain exactly two values or
         if min > max.
-        If the requested band limits fall outside the range of the 
+        If the requested band limits fall outside the range of the
         available frequency vector `f`.
 
     Examples
@@ -167,13 +168,13 @@ def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
     ...     [1, 2, 3, 4, 5, 6],
     ...     [60, 50, 40, 30, 20, 10],
     ... ])
-    >>> bands = {'low': (0, 5), 'high': (5, 11)} #check assersion
+    >>> bands = {'low': (0, 5), 'high': (5, 11)} # check assertion
     >>> results = reduce_freq_bands(f, x, bands, reduce_func=np.sum)
     >>> results['low']
     array([6, 150])
     >>> results['high']
     array([15, 60])
-    
+
     """
     x_bands = dict()
     for k, lims in bands.items():

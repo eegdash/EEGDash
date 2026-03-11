@@ -1,7 +1,6 @@
-r"""
-Datasets for Feature Management.
+r"""Datasets for Feature Management.
 
-This module defines the core data structures for storing, manipulating, and 
+This module defines the core data structures for storing, manipulating, and
 serializing extracted features.
 
 Provides the base classes:
@@ -41,13 +40,13 @@ class FeaturesDataset(EEGWindowsDataset):
     r"""A dataset of features extracted from a single recording.
 
     This class holds features in a :class:`pandas.DataFrame` and provides an interface
-    compatible with braindecode's dataset structure. A single object corresponds 
+    compatible with braindecode's dataset structure. A single object corresponds
     to one recording.
 
     Parameters
     ----------
     features : pandas.DataFrame
-        A DataFrame where each row is a sample (e.g, EEG window) 
+        A DataFrame where each row is a sample (e.g, EEG window)
         and each column is a feature.
     metadata : pandas.DataFrame, optional
         A DataFrame containing metadata for each sample, indexed consistently
@@ -94,7 +93,9 @@ class FeaturesDataset(EEGWindowsDataset):
         (i_window_in_trial, i_start_in_trial, i_stop_in_trial).
     y : list of int
         Target labels corresponding to each window.
+
     """
+
     def __init__(
         self,
         features: pd.DataFrame,
@@ -139,7 +140,7 @@ class FeaturesDataset(EEGWindowsDataset):
             Target label or class associated with the sample.
         crop_inds : list of int
             Trial-related indices for the window.
-            
+
         Notes
         -----
         - If a transformation function was provided at initialization, it is
@@ -149,7 +150,7 @@ class FeaturesDataset(EEGWindowsDataset):
         Examples
         --------
         >>> X, y, crop_inds = dataset[42]
-        
+
         """
         crop_inds = self.crop_inds[index].tolist()
         X = self.features.iloc[index].to_numpy()
@@ -167,6 +168,7 @@ class FeaturesDataset(EEGWindowsDataset):
         -------
         int
             The total number of samples.
+
         """
         return len(self.features.index)
 
@@ -179,7 +181,7 @@ def _compute_stats(
     ddof: int = 1,
     numeric_only: bool = False,
 ) -> tuple:
-    r"""Compute basic feature statistics for a single 
+    r"""Compute basic feature statistics for a single
     :class:`~eegdash.features.datasets.FeaturesDataset`.
 
     Depending on the specified flags, this function computes and returns
@@ -216,7 +218,7 @@ def _compute_stats(
     feature_1    0.12
     feature_2    0.34
     dtype: float64
-                  
+
     """
     res = []
     if return_count:
@@ -241,7 +243,7 @@ def _pooled_var(
     and variances) into a single set of pooled statistics.
 
     Parameters
-    ---------- 
+    ----------
     counts : ndarray of shape (n_datasets, n_features)
         Number of samples per feature in each dataset.
     means : ndarray of shape (n_datasets, n_features)
@@ -300,6 +302,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Optional transform applied to target labels.
 
     """
+
     def __init__(
         self,
         list_of_ds: list[FeaturesDataset] | None = None,
@@ -326,7 +329,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         by : str or list of int or list of list of int or dict of {str: list of int}
             Defines how the dataset is split:
-            
+
             * **str** — Name of a column in the dataset description.
               Each unique value in that column defines a separate split.
             * **list of int** — Indices of datasets to include in one split.
@@ -357,7 +360,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         <FeaturesConcatDataset>
 
         >>> # Split by groups of indices (list of list of int)
-        >>> splits = concat_ds.split(by=[[0, 1], [2, 3], [4, 5]])      
+        >>> splits = concat_ds.split(by=[[0, 1], [2, 3], [4, 5]])
         >>> list(splits.keys())
         ['0', '1', '2']
 
@@ -399,7 +402,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         Collects the metadata of each :class:`FeaturesDataset` contained in
         the :class:`FeaturesConcatDataset` and concatenates them into a single
-        pandas DataFrame, adding each dataset's description entries as 
+        pandas DataFrame, adding each dataset's description entries as
         additional columns in the resulting DataFrame.
 
         Returns
@@ -485,7 +488,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Notes
         -----
         Each subdirectory contains:
-        
+
         - ``*-feat.parquet`` — feature DataFrame for that dataset.
         - ``metadata_df.pkl`` — corresponding metadata.
         - ``description.json`` — dataset-level metadata.
@@ -545,6 +548,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             The index of the dataset within the collection.
         offset : int
             An integer offset used for file naming.
+
         """
         parquet_file_name = f"{i_ds + offset}-feat.parquet"
         parquet_file_path = os.path.join(sub_dir, parquet_file_name)
@@ -560,6 +564,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Path to the directory where the file will be saved.
         ds : FeaturesDataset
             The dataset instance containing the metadata.
+
         """
         metadata_file_name = "metadata_df.pkl"
         metadata_file_path = os.path.join(sub_dir, metadata_file_name)
@@ -575,6 +580,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Path to the directory where the file will be saved.
         description : pandas.Series
             Series containing dataset-level description/metadata.
+
         """
         desc_file_name = "description.json"
         desc_file_path = os.path.join(sub_dir, desc_file_name)
@@ -590,6 +596,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Path to the directory where the file will be saved.
         ds : FeaturesDataset
             The dataset instance containing the raw information.
+
         """
         if hasattr(ds, "raw_info") and ds.raw_info is not None:
             fif_file_name = "raw-info.fif"
@@ -600,7 +607,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def _save_kwargs(sub_dir: str, ds: FeaturesDataset):
         r"""Save various keyword argument dictionaries to JSON files.
 
-        Iterates through known preprocessing and feature extraction 
+        Iterates through known preprocessing and feature extraction
         keyword argument attributes and saves them if they are not None.
 
         Parameters
@@ -609,6 +616,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Path to the directory where the files will be saved.
         ds : FeaturesDataset
             The dataset instance containing the keyword arguments.
+
         """
         for kwargs_name in [
             "raw_preproc_kwargs",
@@ -632,47 +640,47 @@ class FeaturesConcatDataset(BaseConcatDataset):
     ) -> pd.DataFrame:
         r"""Convert the concatenated dataset into a single unified pandas DataFrame.
 
-        This method flattens the collection of individual recording datasets into 
-        one table, allowing for the selective inclusion of metadata, target 
+        This method flattens the collection of individual recording datasets into
+        one table, allowing for the selective inclusion of metadata, target
         labels, and window-cropping indices alongside features.
 
         Parameters
         ----------
         include_metadata : bool, str, or list of str, default=False
-            Controls the inclusion of window-level metadata: 
-            * If **True** — includes all metadata columns available in the 
+            Controls the inclusion of window-level metadata:
+            * If **True** — includes all metadata columns available in the
                 underlying datasets.
-            * If **str** or **list of str** — includes only the specified 
+            * If **str** or **list of str** — includes only the specified
                 metadata column(s).
-            * If **False** — excludes metadata (unless overridden by other 
+            * If **False** — excludes metadata (unless overridden by other
                 flags).
         include_target : bool, default=False
-            If True, ensures the 'target' column is included in the resulting 
+            If True, ensures the 'target' column is included in the resulting
             DataFrame.
         include_crop_inds : bool, default=False
-            If True, includes the internal windowing indices: 'i_dataset', 
+            If True, includes the internal windowing indices: 'i_dataset',
             'i_window_in_trial', 'i_start_in_trial', and 'i_stop_in_trial'.
 
         Returns
         -------
         pd.DataFrame
-            A concatenated DataFrame where each row represents a sample (window) 
+            A concatenated DataFrame where each row represents a sample (window)
             and columns contain features and requested metadata.
 
         Notes
         -----
-        When metadata columns and feature columns share the same name, the 
-        metadata columns are suffixed with ``_metadata`` to avoid name 
+        When metadata columns and feature columns share the same name, the
+        metadata columns are suffixed with ``_metadata`` to avoid name
         collisions.
 
         Examples
         --------
         >>> # Get only features
         >>> df = concat_ds.to_dataframe()
-        
+
         >>> # Get features with target labels and specific metadata
         >>> df = concat_ds.to_dataframe(
-        ...     include_metadata=['subject_id'], 
+        ...     include_metadata=['subject_id'],
         ...     include_target=True
         ... )
 
@@ -734,9 +742,9 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         Notes
         -----
-        This method assumes that all :class:`FeaturesDataset` objects in the 
+        This method assumes that all :class:`FeaturesDataset` objects in the
         concatenated collection share the same feature column schema.
-        
+
         """
         return self.datasets[0].features.select_dtypes(include=np.number).columns
 
@@ -746,17 +754,18 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Parameters
         ----------
         numeric_only : bool, default=False
-            If True, only includes columns with float, int, or boolean data 
+            If True, only includes columns with float, int, or boolean data
             types.
         n_jobs : int, default=1
-            The number of CPU cores to use for parallel processing of 
+            The number of CPU cores to use for parallel processing of
             individual datasets.
 
         Returns
         -------
         pd.Series
-            A Series containing the total count of non-missing values for 
+            A Series containing the total count of non-missing values for
             each feature column, indexed by feature names.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(ds, return_count=True, numeric_only=numeric_only)
@@ -769,24 +778,25 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def mean(self, numeric_only: bool = False, n_jobs: int = 1) -> pd.Series:
         r"""Compute the mean for each feature column across all datasets.
 
-        This method calculates the mean of each feature by aggregating the 
-        individual means of each dataset, weighted by their respective 
+        This method calculates the mean of each feature by aggregating the
+        individual means of each dataset, weighted by their respective
         sample counts.
 
         Parameters
         ----------
         numeric_only : bool, default=False
-            If True, only includes columns with float, int, or boolean data 
+            If True, only includes columns with float, int, or boolean data
             types.
         n_jobs : int, default=1
-            The number of CPU cores to use for parallel processing of 
+            The number of CPU cores to use for parallel processing of
             individual datasets.
 
         Returns
         -------
         pd.Series
-            A Series containing the weighted mean of each feature column, 
+            A Series containing the weighted mean of each feature column,
             indexed by feature names.
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -804,7 +814,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
     ) -> pd.Series:
         r"""Compute the variance for each feature column across all datasets.
 
-        This method calculates the total variance by combining within-dataset 
+        This method calculates the total variance by combining within-dataset
         variability and between-dataset mean differences.
 
         Parameters
@@ -812,18 +822,18 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ddof : int, default=1
             Delta Degrees of Freedom.
         numeric_only : bool, default=False
-            If True, only includes columns with float, int, or boolean data 
+            If True, only includes columns with float, int, or boolean data
             types.
         n_jobs : int, default=1
-            The number of CPU cores to use for parallel processing of 
+            The number of CPU cores to use for parallel processing of
             individual datasets.
 
         Returns
         -------
         pd.Series
-            A Series containing the pooled variance of each feature column, 
+            A Series containing the pooled variance of each feature column,
             indexed by feature names.
-           
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -875,7 +885,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
     ) -> None:
         r"""Apply z-score normalization to numeric columns in-place.
 
-        This method scales features to a mean of 0 and a standard deviation 
+        This method scales features to a mean of 0 and a standard deviation
         of 1 based on statistics pooled across all contained datasets.
 
         Parameters
@@ -888,7 +898,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
             Small constant added to variance for numerical stability.
         n_jobs : int, default=1
             Number of CPU cores for parallel statistics computation.
-        
+
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(
@@ -931,7 +941,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ------
         ValueError
             If 'inplace' is present in `kwargs` and set to False.
-        
+
         """
         if "inplace" in kwargs and kwargs["inplace"] is False:
             raise ValueError(
@@ -947,7 +957,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.fillna`.
-        
+
         Notes
         -----
         ``inplace`` is enforced as True.
@@ -955,6 +965,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         See Also
         --------
         :meth:pandas.DataFrame.fillna : The underlying pandas method.
+
         """
         FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)
         for ds in self.datasets:
@@ -967,7 +978,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.replace`.
-        
+
         Notes
         -----
         ``inplace`` is enforced as True.
@@ -975,6 +986,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         See Also
         --------
         :meth:pandas.DataFrame.replace : The underlying pandas method.
+
         """
         FeaturesConcatDataset._enforce_inplace_operations("replace", kwargs)
         for ds in self.datasets:
@@ -987,7 +999,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.interpolate`.
-        
+
         Notes
         -----
         ``inplace`` is enforced as True.
@@ -995,6 +1007,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         See Also
         --------
         :meth:pandas.DataFrame.interpolate : The underlying pandas method.
+
         """
         FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
         for ds in self.datasets:
@@ -1007,7 +1020,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.dropna`.
-        
+
         Notes
         -----
         ``inplace`` is enforced as True.
@@ -1015,6 +1028,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         See Also
         --------
         :meth:pandas.DataFrame.dropna : The underlying pandas method.
+
         """
         FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
         for ds in self.datasets:
@@ -1023,14 +1037,14 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def drop(self, *args, **kwargs) -> None:
         r"""Drop specified labels from rows or columns in-place across all datasets.
 
-        This method removes features (columns) or samples (rows) from every 
+        This method removes features (columns) or samples (rows) from every
         underlying dataset in the collection.
 
         Parameters
         ----------
         *args, **kwargs
             Arguments passed to :meth:`pandas.DataFrame.drop`.
-        
+
         Notes
         -----
         ``inplace`` is enforced as True.
@@ -1055,9 +1069,9 @@ class FeaturesConcatDataset(BaseConcatDataset):
     def join(self, concat_dataset: FeaturesConcatDataset, **kwargs) -> None:
         r"""Join columns with another FeaturesConcatDataset in-place.
 
-        This method merges the feature columns of another dataset into the 
-        current one. Both collections must contain the same number of 
-        individual datasets, and corresponding datasets must have matching 
+        This method merges the feature columns of another dataset into the
+        current one. Both collections must contain the same number of
+        individual datasets, and corresponding datasets must have matching
         lengths.
 
         Parameters
@@ -1070,12 +1084,12 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Raises
         ------
         AssertionError
-            If the number of datasets or the lengths of corresponding 
+            If the number of datasets or the lengths of corresponding
             datasets do not match.
 
         Notes
         -----
-        This operation is performed in-place. The ``ds.features`` attribute 
+        This operation is performed in-place. The ``ds.features`` attribute
         of each underlying dataset is updated with the new columns.
 
         """

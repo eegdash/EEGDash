@@ -1,8 +1,7 @@
-"""
-Connectivity Feature Extraction
+"""Connectivity Feature Extraction
 ===============================
 
-This module computes bivariate connectivity features based on the complex 
+This module computes bivariate connectivity features based on the complex
 coherency between pairs of channels.
 
 Data Shape Convention
@@ -12,9 +11,10 @@ This module follows a **Time-Last** convention:
 * **Input:** ``(..., time)``
 * **Output:** ``(...,)``
 
-All functions collapse the last dimension (time), returning an ndarray of 
+All functions collapse the last dimension (time), returning an ndarray of
 features corresponding to the leading dimensions (e.g., subjects, channels).
 """
+
 from itertools import chain
 
 import numpy as np
@@ -37,8 +37,8 @@ __all__ = [
 def connectivity_coherency_preprocessor(x, /, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.
 
-    The Complex Coherency is calculated by estimating the Cross-Spectral Densities 
-    (CSD) between pairs of channels and normalizing it by the auto-spectral densities. 
+    The Complex Coherency is calculated by estimating the Cross-Spectral Densities
+    (CSD) between pairs of channels and normalizing it by the auto-spectral densities.
 
     Parameters
     ----------
@@ -62,7 +62,7 @@ def connectivity_coherency_preprocessor(x, /, **kwargs):
     Assertions
     ----------
     - 'fs' and 'nperseg' must be provided in kwargs.
-    
+
     """
     f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
     f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
@@ -85,8 +85,8 @@ def connectivity_coherency_preprocessor(x, /, **kwargs):
 def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Magnitude Squared Coherence (MSC).
 
-    MSC measures the linear correlation between two signals in the frequency 
-    domain. It is defined as the squared magnitude of the complex coherency: 
+    MSC measures the linear correlation between two signals in the frequency
+    domain. It is defined as the squared magnitude of the complex coherency:
     .. math::|c|^2, where :math:`c` is the complex coherency.
 
     Parameters
@@ -102,11 +102,11 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
     -------
     dict
         Mean MSC for each frequency band.
-    
-    See also
+
+    See Also
     --------
     `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
-    
+
     """
     coher = c.real**2 + c.imag**2
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
@@ -132,11 +132,11 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     -------
     dict
         Mean Imaginary Coherence for each frequency band.
-    
-    See also
+
+    See Also
     --------
     `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
-    
+
     """
     coher = c.imag
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
@@ -147,8 +147,8 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
 def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Lagged Coherence.
 
-    Lagged coherence further refines the synchronization measure by 
-    normalizing the imaginary part of the coherency, effectively removing 
+    Lagged coherence further refines the synchronization measure by
+    normalizing the imaginary part of the coherency, effectively removing
     all instantaneous (zero-lag) contributions.
 
     Parameters
@@ -164,11 +164,11 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     -------
     dict
         Mean Lagged Coherence for each frequency band.
-    
-    See also
+
+    See Also
     --------
     `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
-    
+
     """
     coher = c.imag / np.sqrt(1 - c.real**2)
     return utils.reduce_freq_bands(f, coher, bands, np.mean)

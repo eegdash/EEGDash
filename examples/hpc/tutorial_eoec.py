@@ -175,6 +175,7 @@ print("Total subjects requested:", num_subjects, " | collected:", len(valid_subj
 
 # Concatenate
 from braindecode.datasets import BaseConcatDataset
+
 concat_ds = BaseConcatDataset(all_windows)
 print("Total windows across valid subjects:", len(concat_ds))
 
@@ -183,6 +184,7 @@ print("Total windows across valid subjects:", len(concat_ds))
 # Save a sanity plot (no GUI)
 # -----------------------------
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -228,6 +230,7 @@ y_train = torch.LongTensor(np.array([concat_ds[i][1] for i in train_indices]))
 y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
+
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -264,11 +267,13 @@ model = model.to(device=device)
 
 print("Using epochs =", epochs, "| device =", device, "| batch_size =", batch_size)
 
+
 def normalize_data(x):
     mean = x.mean(dim=2, keepdim=True)
     std = x.std(dim=2, keepdim=True) + 1e-7
     x = (x - mean) / std
     return x.to(device=device, dtype=torch.float32)
+
 
 for e in range(epochs):
     model.train()
@@ -298,6 +303,7 @@ for e in range(epochs):
     train_acc = correct_train / len(dataset_train)
     test_acc = correct_test / len(dataset_test)
     print(f"Epoch {e}, Train accuracy: {train_acc:.2f}, Test accuracy: {test_acc:.2f}")
+
 # -----------------------------
 torch.manual_seed(random_state)
 np.random.seed(random_state)
@@ -308,6 +314,7 @@ y_train = torch.LongTensor(np.array([concat_ds[i][1] for i in train_indices]))
 y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
+
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -344,11 +351,13 @@ model = model.to(device=device)
 
 print("Using epochs =", epochs, "| device =", device, "| batch_size =", batch_size)
 
+
 def normalize_data(x):
     mean = x.mean(dim=2, keepdim=True)
     std = x.std(dim=2, keepdim=True) + 1e-7
     x = (x - mean) / std
     return x.to(device=device, dtype=torch.float32)
+
 
 for e in range(epochs):
     model.train()

@@ -322,6 +322,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         **base_dataset_kwargs,
                     )
                 )
+
         elif self.query:
             if self.eeg_dash_instance is None:
                 # to avoid circular import

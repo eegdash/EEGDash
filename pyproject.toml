@@ -170,5 +170,6 @@ python_functions = ["test_*"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "benchmark: marks tests as benchmarks (run with '--benchmark-enable')",
+    "network: marks tests that require network/S3 access (deselect with '-m \"not network\"')",
 ]
-addopts = "-m 'not slow and not benchmark' -ra --durations=10"
+addopts = "-m 'not slow and not benchmark and not network' -ra --durations=10"

@@ -11,6 +11,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import configparser
 import re
+import shutil
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -29,6 +30,7 @@ from ..schemas import validate_record
 from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
+    _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
@@ -46,6 +48,7 @@ from .io import (
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_whitespace,
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
@@ -268,6 +271,22 @@ class EEGDashRaw(RawDataset):
         run = entities.get("run")
         return run is not None and not str(run).isdigit()
 
+    def _resolve_annex_key_uri(self, uri: str) -> str | None:
+        """Return a BIDS-named URI when *uri* contains a git-annex key filename.
+
+        Git-annex stores files under hash-based names like
+        ``MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr``.  When the
+        ingestion pipeline records these as S3 keys the download will fail
+        because OpenNeuro stores objects under their BIDS names.  This
+        method detects such keys and derives the correct URI from
+        ``bids_relpath``.
+        """
+        filename = PurePosixPath(uri).name
+        if not _ANNEX_KEY_RE.match(filename):
+            return None
+        bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+        return uri.rsplit("/", 1)[0] + "/" + bids_filename
+
     def _download_required_files(self) -> None:
         if self._raw_uri is not None:
             filesystem = downloader.get_s3_filesystem()
@@ -286,11 +305,40 @@ class EEGDashRaw(RawDataset):
                     self._raw_uri, self.filecache, filesystem=filesystem
                 )
             except FileNotFoundError:
-                raise DataIntegrityError(
-                    message=(f"Primary data file not found on S3: {self._raw_uri}"),
-                    record=self.record,
-                    issues=[f"Missing S3 file: {self._raw_uri}"],
-                )
+                # If the URI contains a git-annex key, try the BIDS-named
+                # alternative before giving up.
+                resolved_uri = self._resolve_annex_key_uri(self._raw_uri)
+                if resolved_uri:
+                    logger.info(
+                        "Raw URI %s contains git-annex key; trying BIDS name: %s",
+                        self._raw_uri,
+                        resolved_uri,
+                    )
+                    try:
+                        downloader.download_s3_file(
+                            resolved_uri,
+                            self.filecache,
+                            filesystem=filesystem,
+                        )
+                    except FileNotFoundError:
+                        raise DataIntegrityError(
+                            message=(
+                                "Primary data file not found on S3 "
+                                "(tried annex key and BIDS name): "
+                                f"{self._raw_uri}"
+                            ),
+                            record=self.record,
+                            issues=[
+                                f"Missing S3 file: {self._raw_uri}",
+                                f"Also tried BIDS name: {resolved_uri}",
+                            ],
+                        )
+                else:
+                    raise DataIntegrityError(
+                        message=(f"Primary data file not found on S3: {self._raw_uri}"),
+                        record=self.record,
+                        issues=[f"Missing S3 file: {self._raw_uri}"],
+                    )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -318,13 +366,20 @@ class EEGDashRaw(RawDataset):
         if not companions:
             return
 
+        # Use BIDS-named base URI when the raw URI has a git-annex key,
+        # so companion URIs also resolve to real S3 objects.
+        base_uri = self._raw_uri
+        if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
+            bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+            base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
+
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
             if local_path.exists():
                 continue
 
             # Derive S3 URI by replacing the primary file's extension
-            companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
+            companion_uri = base_uri.rsplit(".", 1)[0] + ext
 
             try:
                 downloader.download_s3_file(
@@ -339,7 +394,7 @@ class EEGDashRaw(RawDataset):
                     logger.warning(
                         "Companion file %s not found on S3 for %s",
                         ext,
-                        self._raw_uri,
+                        base_uri,
                     )
                 continue
 
@@ -460,6 +515,7 @@ class EEGDashRaw(RawDataset):
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
+            _repair_tsv_na_whitespace(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
             _repair_events_tsv_nan_samples(self.filecache.parent)
@@ -543,6 +599,26 @@ class EEGDashRaw(RawDataset):
                     next_path,
                     filesystem=filesystem,
                 )
+                # When the primary file is resolved through git-annex, MNE
+                # expects the continuation at the annex path, not the BIDS
+                # path.  Place a copy there so MNE can find it on retry.
+                if (
+                    expected_path is not None
+                    and expected_path.resolve() != next_path.resolve()
+                ):
+                    try:
+                        expected_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(next_path, expected_path)
+                        logger.info(
+                            "Copied continuation to expected path %s",
+                            expected_path,
+                        )
+                    except Exception as copy_err:
+                        logger.warning(
+                            "Failed to copy continuation to expected path %s: %s",
+                            expected_path,
+                            copy_err,
+                        )
                 return next_key, next_path
             except Exception as error:
                 failures.append(f"{next_uri}: {error}")
@@ -721,6 +797,26 @@ class EEGDashRaw(RawDataset):
                         current_split_key, current_split_path = split_download
                         continue
 
+                    # All download attempts failed — fall back to direct
+                    # reader which uses on_split_missing="warn" for .fif
+                    # files, loading only the available splits.
+                    if self.filecache:
+                        logger.warning(
+                            "Split FIF continuation download failed — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=(
+                                    f"Split FIF continuation missing and "
+                                    f"direct reader failed: {fallback_error}"
+                                ),
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
+
                 # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
                 if isinstance(first_error, UnicodeDecodeError) and self.filecache:
                     data_dir = self.filecache.parent
@@ -851,6 +947,21 @@ class EEGDashRaw(RawDataset):
                     if _repair_participants_tsv_ids(self.bids_root):
                         logger.info(
                             "Repaired participants.tsv ID padding, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Whitespace-padded n/a in TSV fields (float('n/a      ') fails)
+                if (
+                    "could not convert string to float" in msg
+                    and "n/a" in msg
+                    and self.filecache
+                ):
+                    if _repair_tsv_na_whitespace(self.filecache.parent):
+                        logger.info(
+                            "Repaired n/a whitespace in TSV files, retrying load..."
                         )
                         try:
                             return self._read_raw_bids()

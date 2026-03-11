@@ -514,6 +514,55 @@ def _repair_tsv_decimal_separators(data_dir: Path) -> bool:
     return repaired_any
 
 
+_TRAILING_FIELD_WS_RE = re.compile(r" +(?=[\t\r\n]|\Z)")
+
+
+def _repair_tsv_na_whitespace(data_dir: Path) -> bool:
+    """Strip trailing spaces from fields in TSV files.
+
+    Some datasets have ``n/a`` values padded with spaces (e.g.,
+    ``'n/a      '``).  MNE-BIDS only recognizes exact ``n/a`` as the BIDS
+    missing-value marker, so padded variants cause ``float()`` conversion
+    errors.  This strips trailing spaces before every tab delimiter,
+    carriage-return, or line-feed in all TSV files under *data_dir*,
+    preserving original line endings.
+
+    Parameters
+    ----------
+    data_dir : Path
+        Directory containing TSV files to check.
+
+    Returns
+    -------
+    bool
+        True if any files were repaired, False otherwise.
+
+    """
+    if not data_dir.exists():
+        return False
+
+    repaired_any = False
+    for tsv_path in data_dir.glob("*.tsv"):
+        try:
+            content = tsv_path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        new_content = _TRAILING_FIELD_WS_RE.sub("", content)
+        if new_content != content:
+            try:
+                tsv_path.write_text(new_content, encoding="utf-8")
+                logger.info(
+                    "Stripped trailing whitespace from TSV fields: %s",
+                    tsv_path.name,
+                )
+                repaired_any = True
+            except Exception as e:
+                logger.warning("Failed to write repaired TSV %s: %s", tsv_path.name, e)
+
+    return repaired_any
+
+
 def _repair_tsv_encoding(data_dir: Path) -> bool:
     """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
 
@@ -1122,6 +1171,7 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         ".set": mne.io.read_raw_eeglab,
         ".fif": mne.io.read_raw_fif,
         ".cnt": mne.io.read_raw_cnt,
+        ".ds": mne.io.read_raw_ctf,
     }
 
     ext = filepath.suffix.lower()

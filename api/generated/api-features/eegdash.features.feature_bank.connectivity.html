@@ -540,43 +540,69 @@
                   
   <section id="eegdash-features-feature-bank-connectivity">
 <h1>eegdash.features.feature_bank.connectivity<a class="headerlink" href="#eegdash-features-feature-bank-connectivity" title="Link to this heading">#</a></h1>
+<section id="connectivity-feature-extraction">
+<h2>Connectivity Feature Extraction<a class="headerlink" href="#connectivity-feature-extraction" title="Link to this heading">#</a></h2>
+<p>This module computes bivariate connectivity features based on the complex
+coherency between pairs of channels.</p>
+<section id="data-shape-convention">
+<h3>Data Shape Convention<a class="headerlink" href="#data-shape-convention" title="Link to this heading">#</a></h3>
+<p>This module follows a <strong>Time-Last</strong> convention:</p>
+<ul class="simple">
+<li><p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">time)</span></code></p></li>
+<li><p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">(...,)</span></code></p></li>
+</ul>
+<p>All functions collapse the last dimension (time), returning an ndarray of
+features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_coherency_preprocessor</span></code>(x, /, ...)</p></td>
+<td><p>Compute Complex Coherency for all unique channel pairs.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_magnitude_square_coherence</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_magnitude_square_coherence</span></code>(f, c, /)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_imaginary_coherence</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_imaginary_coherence</span></code>(f, c, /[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_lagged_coherence</span></code>(f, c, /[, bands])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_lagged_coherence</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L19-L34"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_magnitude_square_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L37-L42"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_imaginary_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L45-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_lagged_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L53-L58"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L36-L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute Complex Coherency for all unique channel pairs.</p>
+<p>The Complex Coherency is calculated by estimating the Cross-Spectral Densities
+(CSD) between pairs of channels and normalizing it by the auto-spectral densities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal of shape (n_trials, n_channels, n_times).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments to pass to <cite>scipy.signal.csd</cite>. Must include
+‘fs’ (sampling frequency) and ‘nperseg’ (length of each segment for CSD estimation).
+Optional keys include ‘f_min’ and ‘f_max’ to specify frequency band limits.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector of shape (n_frequencies,).</p></li>
+<li><p><strong>c</strong> (<em>ndarray</em>) – Complex coherency array of shape (n_trials, n_pairs, n_frequencies).
+Values are complex numbers where:
+- Absolute value <a href="#id1"><span class="problematic" id="id2">|c|</span></a> is the coherence (0 to 1).
+- Angle arg(c) is the phase lag.</p></li>
+<li><p><em>Assertions</em></p></li>
+<li><p><em>———-</em></p></li>
+<li><p><em>- ‘fs’ and ‘nperseg’ must be provided in kwargs.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -618,6 +644,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connectivity-feature-extraction">Connectivity Feature Extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-shape-convention">Data Shape Convention</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

@@ -540,36 +540,47 @@
                   
   <section id="eegdash-features-datasets">
 <h1>eegdash.features.datasets<a class="headerlink" href="#eegdash-features-datasets" title="Link to this heading">#</a></h1>
+<p>Datasets for Feature Management.</p>
+<p>This module defines the core data structures for storing, manipulating, and
+serializing extracted features.</p>
+<p>Provides the base classes:
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> — Represents features from a single recording.
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> — Manages multiple <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code></p>
+<blockquote>
+<div><p>objects as a unified dataset.</p>
+</div></blockquote>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesDataset</span></code>(features[, metadata, ...])</p></td>
-<td><p>A dataset of features extracted from EEG windows.</p></td>
+<td><p>A dataset of features extracted from a single recording.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code>([list_of_ds, ...])</p></td>
-<td><p>A concatenated dataset of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects.</p></td>
+<td><p>A concatenated dataset composed of multiple <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.datasets.</span></span><span class="sig-name descname"><span class="pre">FeaturesDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L27-L120"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.datasets.</span></span><span class="sig-name descname"><span class="pre">FeaturesDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_preproc_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L39-L173"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGWindowsDataset</span></code></p>
-<p>A dataset of features extracted from EEG windows.</p>
-<p>This class holds features in a pandas DataFrame and provides an interface
-compatible with braindecode’s dataset structure. Each row in the feature
-DataFrame corresponds to a single sample (e.g., an EEG window).</p>
+<p>A dataset of features extracted from a single recording.</p>
+<p>This class holds features in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> and provides an interface
+compatible with braindecode’s dataset structure. A single object corresponds
+to one recording.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>features</strong> (<em>pandas.DataFrame</em>) – A DataFrame where each row is a sample and each column is a feature.</p></li>
+<li><p><strong>features</strong> (<em>pandas.DataFrame</em>) – A DataFrame where each row is a sample (e.g, EEG window)
+and each column is a feature.</p></li>
 <li><p><strong>metadata</strong> (<em>pandas.DataFrame</em><em>, </em><em>optional</em>) – A DataFrame containing metadata for each sample, indexed consistently
 with <cite>features</cite>. Must include columns ‘i_window_in_trial’,
 ‘i_start_in_trial’, ‘i_stop_in_trial’, and ‘target’.</p></li>
-<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>pandas.Series</em><em>, </em><em>optional</em>) – Additional high-level information about the dataset (e.g., subject ID).</p></li>
-<li><p><strong>transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function or transform to apply to the feature data on-the-fly.</p></li>
-<li><p><strong>raw_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – Information about the original raw recording, for provenance.</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>pandas.Series</em><em>, </em><em>optional</em>) – Additional high-level information about the dataset.</p></li>
+<li><p><strong>transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function or transform to apply to the feature data.</p></li>
+<li><p><strong>raw_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – Information about the original raw recording (e.g., sampling rate,
+montage, channel names).</p></li>
 <li><p><strong>raw_preproc_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for preprocessing the raw data.</p></li>
 <li><p><strong>window_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for windowing the data.</p></li>
 <li><p><strong>window_preproc_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments used for preprocessing the windowed data.</p></li>
@@ -577,229 +588,442 @@ with <cite>features</cite>. Must include columns ‘i_window_in_trial’,
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
+<dl class="py attribute">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.datasets.</span></span><span class="sig-name descname"><span class="pre">FeaturesConcatDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">TypeAliasForwardRef</span><span class="p"><span class="pre">(</span></span><span class="s"><span class="pre">'eegdash.features.datasets.FeaturesDataset'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L161-L682"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></p>
-<p>A concatenated dataset of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects.</p>
-<p>This class holds a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances and allows
-them to be treated as a single, larger dataset. It provides methods for</p>
-<p>splitting, saving, and performing DataFrame-like operations (e.g., <cite>mean</cite>,
-<cite>var</cite>, <cite>fillna</cite>) across all contained datasets.</p>
+<span class="sig-name descname"><span class="pre">features</span></span></dt>
+<dd><p>Table of extracted features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>list_of_ds</strong> (<em>list</em><em> of </em><em>FeaturesDataset</em>) – A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects to concatenate.</p></li>
-<li><p><strong>target_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function to apply to the target values before they are returned.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">TypeAliasForwardRef</span><span class="p"><span class="pre">(</span></span><span class="s"><span class="pre">'eegdash.features.datasets.FeaturesConcatDataset'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L191-L238"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Split the dataset into subsets.</p>
-<p>The splitting can be done based on a column in the description
-DataFrame or by providing explicit indices for each split.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>by</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>dict</em>) – <ul class="simple">
-<li><p>If a string, splits are created for each unique value in the
-description column <cite>by</cite>.</p></li>
-<li><p>If a list of integers, a single split is created containing the
-datasets at the specified indices.</p></li>
-<li><p>If a list of lists of integers, multiple splits are created, one
-for each sublist of indices.</p></li>
-<li><p>If a dictionary, keys are used as split names and values are
-lists of dataset indices.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A dictionary where keys are split names and values are the new
-<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> subsets.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, <em>FeaturesConcatDataset</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L240-L272"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the metadata of all datasets as a single DataFrame.</p>
-<p>Concatenates the metadata from all contained datasets and adds columns
-from their <cite>description</cite> attributes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A DataFrame containing the metadata for every sample in the
-concatenated dataset.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>pandas.DataFrame</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>TypeError</strong> – If any of the contained datasets is not a
-<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L274-L347"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Save the concatenated dataset to a directory.</p>
-<p>Creates a directory structure where each contained dataset is saved in
-its own numbered subdirectory.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">path</span><span class="o">/</span>
-    <span class="mi">0</span><span class="o">/</span>
-        <span class="mi">0</span><span class="o">-</span><span class="n">feat</span><span class="o">.</span><span class="n">parquet</span>
-        <span class="n">metadata_df</span><span class="o">.</span><span class="n">pkl</span>
-        <span class="n">description</span><span class="o">.</span><span class="n">json</span>
-        <span class="o">...</span>
-    <span class="mi">1</span><span class="o">/</span>
-        <span class="mi">1</span><span class="o">-</span><span class="n">feat</span><span class="o">.</span><span class="n">parquet</span>
-        <span class="o">...</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – The directory where the dataset will be saved.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, any existing subdirectories that conflict with the new
-ones will be removed.</p></li>
-<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>default 0</em>) – An integer to add to the subdirectory names. Useful for saving
-datasets in chunks.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the dataset is empty.</p></li>
-<li><p><strong>FileExistsError</strong> – If a subdirectory already exists and <cite>overwrite</cite> is False.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_crop_inds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L395-L464"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert the dataset to a single pandas DataFrame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>include_metadata</strong> (<em>bool</em><em> or </em><em>str</em><em> or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>default False</em>) – If True, include all metadata columns. If a string or list of
-strings, include only the specified metadata columns.</p></li>
-<li><p><strong>include_target</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, include the ‘target’ column.</p></li>
-<li><p><strong>include_crop_inds</strong> (<em>bool</em><em>, </em><em>default False</em>) – If True, include window cropping index columns.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A DataFrame containing the features and requested metadata.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py method">
+<dl class="py attribute">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L470-L492"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Count non-NA cells for each feature column.</p>
+<span class="sig-name descname"><span class="pre">n_features</span></span></dt>
+<dd><p>Number of feature columns in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">metadata</span></span></dt>
+<dd><p>Metadata describing each window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">transform</span></span></dt>
+<dd><p>The transform applied to each sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">raw_info</span></span></dt>
+<dd><p>Information about the raw recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">raw_preproc_kwargs</span></span></dt>
+<dd><p>Parameters used during raw data preprocessing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">window_kwargs</span></span></dt>
+<dd><p>Parameters used during window segmentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">window_preproc_kwargs</span></span></dt>
+<dd><p>Parameters used during window-level preprocessing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">features_kwargs</span></span></dt>
+<dd><p>Parameters used during feature extraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">crop_inds</span></span></dt>
+<dd><p>Indices specifying window position within each trial:
+(i_window_in_trial, i_start_in_trial, i_stop_in_trial).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray of shape (n_samples, 3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">y</span></span></dt>
+<dd><p>Target labels corresponding to each window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.datasets.</span></span><span class="sig-name descname"><span class="pre">FeaturesConcatDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">TypeAliasForwardRef</span><span class="p"><span class="pre">(</span></span><span class="s"><span class="pre">'eegdash.features.datasets.FeaturesDataset'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L280-L1099"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></p>
+<p>A concatenated dataset composed of multiple <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects.</p>
+<p>This class manages a collection of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances and
+provides an interface for treating them as a single, unified dataset.
+Supports concatenation, splitting, saving, and performing DataFrame-like
+operations across all contained datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+<li><p><strong>list_of_ds</strong> (<em>list</em><em> of </em><em>FeaturesDataset</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects to concatenate.
+If a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> objects is provided,
+all contained datasets are automatically flattened into a single list.</p></li>
+<li><p><strong>target_transform</strong> (<em>callable</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – A function to apply to target values before they are returned.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The count of non-NA cells for each column.</p>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">datasets</span></span></dt>
+<dd><p>The list of individual datasets contained in this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of FeaturesDataset</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.Series</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">target_transform</span></span></dt>
+<dd><p>Optional transform applied to target labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable or None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L494-L519"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Compute the mean for each feature column.</p>
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">TypeAliasForwardRef</span><span class="p"><span class="pre">(</span></span><span class="s"><span class="pre">'eegdash.features.datasets.FeaturesConcatDataset'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L318-L398"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Split the concatenated dataset into multiple subsets.</p>
+<p>This method allows flexible splitting of the concatenated dataset into
+several <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> objects based on a metadata field,
+explicit indices, or custom grouping definitions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+<dd class="field-odd"><p><strong>by</strong> (<em>str</em><em> or </em><em>list</em><em> of </em><em>int</em><em> or </em><em>list</em><em> of </em><em>list</em><em> of </em><em>int</em><em> or </em><em>dict</em><em> of </em><em>{str: list</em><em> of </em><em>int}</em>) – <p>Defines how the dataset is split:</p>
+<ul class="simple">
+<li><p><strong>str</strong> — Name of a column in the dataset description.
+Each unique value in that column defines a separate split.</p></li>
+<li><p><strong>list of int</strong> — Indices of datasets to include in one split.</p></li>
+<li><p><strong>list of list of int</strong> — A list of groups of indices, where each sub-list
+defines one split.</p></li>
+<li><p><strong>dict of {str: list of int}</strong> — Explicit mapping of split names to
+lists of dataset indices.</p></li>
 </ul>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean of each column.</p>
+<dd class="field-even"><p>A dictionary where each key is the split name (or index)
+and each value is a <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> containing
+the corresponding subset of datasets.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.Series</p>
+<dd class="field-odd"><p>dict[str, FeaturesConcatDataset]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Split by a metadata column (str)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">splits</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;subj_01&#39;, &#39;subj_02&#39;, &#39;subj_03&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span><span class="p">[</span><span class="s1">&#39;subj_01&#39;</span><span class="p">]</span>
+<span class="go">&lt;FeaturesConcatDataset&gt;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Split by explicit indices (list of int)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span><span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">]</span>
+<span class="go">&lt;FeaturesConcatDataset&gt;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Split by groups of indices (list of list of int)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">splits</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;0&#39;, &#39;1&#39;, &#39;2&#39;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Split by custom mapping (dict)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">splits</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">splits</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span>
+<span class="go">(&lt;FeaturesConcatDataset&gt;, &lt;FeaturesConcatDataset&gt;)</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<p>The resulting splits inherit the same <code class="docutils literal notranslate"><span class="pre">target_transform</span></code> as the original
+dataset. Splitting by a string requires that <code class="docutils literal notranslate"><span class="pre">self.description</span></code> contains
+the specified column.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L400-L439"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return a concatenated metadata DataFrame from all contained datasets.</p>
+<p>Collects the metadata of each <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> contained in
+the <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> and concatenates them into a single
+pandas DataFrame, adding each dataset’s description entries as
+additional columns in the resulting DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Combined metadata from all contained datasets.
+Each row corresponds to a single sample from one of the underlying
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> objects.
+Columns include both window-level metadata (e.g., <code class="docutils literal notranslate"><span class="pre">target</span></code>,
+<code class="docutils literal notranslate"><span class="pre">i_window_in_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">i_start_in_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">i_stop_in_trial</span></code>)
+and dataset-level description fields (e.g., <code class="docutils literal notranslate"><span class="pre">subject_id</span></code>,
+<code class="docutils literal notranslate"><span class="pre">session</span></code>, etc.).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If one or more contained datasets are not instances
+of <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L521-L558"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Compute the variance for each feature column.</p>
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L441-L535"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Save the concatenated dataset to a directory.</p>
+<p>Each contained <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> is saved in its own
+numbered subdirectory within the specified <code class="docutils literal notranslate"><span class="pre">path</span></code>. The resulting
+structure is compatible with later reloading using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">serialization.load_features_concat_dataset()</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_crop_inds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L635-L733"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert the concatenated dataset into a single unified pandas DataFrame.</p>
+<p>This method flattens the collection of individual recording datasets into
+one table, allowing for the selective inclusion of metadata, target
+labels, and window-cropping indices alongside features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom. The divisor used in calculations is N - ddof.</p></li>
-<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+<li><p><strong>include_metadata</strong> (<em>bool</em><em>, </em><em>str</em><em>, or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>default=False</em>) – <p>Controls the inclusion of window-level metadata:
+* If <strong>True</strong> — includes all metadata columns available in the</p>
+<blockquote>
+<div><p>underlying datasets.</p>
+</div></blockquote>
+<ul>
+<li><dl class="simple">
+<dt>If <strong>str</strong> or <strong>list of str</strong> — includes only the specified</dt><dd><p>metadata column(s).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If <strong>False</strong> — excludes metadata (unless overridden by other</dt><dd><p>flags).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p></li>
+<li><p><strong>include_target</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, ensures the ‘target’ column is included in the resulting
+DataFrame.</p></li>
+<li><p><strong>include_crop_inds</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, includes the internal windowing indices: ‘i_dataset’,
+‘i_window_in_trial’, ‘i_start_in_trial’, and ‘i_stop_in_trial’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The variance of each column.</p>
+<dd class="field-even"><p>A concatenated DataFrame where each row represents a sample (window)
+and columns contain features and requested metadata.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.Series</p>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>When metadata columns and feature columns share the same name, the
+metadata columns are suffixed with <code class="docutils literal notranslate"><span class="pre">_metadata</span></code> to avoid name
+collisions.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get only features</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get features with target labels and specific metadata</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">concat_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">include_metadata</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">include_target</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L751-L776"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Count non-NA cells for each feature column across all datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, only includes columns with float, int, or boolean data
+types.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – The number of CPU cores to use for parallel processing of
+individual datasets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Series containing the total count of non-missing values for
+each feature column, indexed by feature names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L560-L585"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Compute the standard deviation for each feature column.</p>
+<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L778-L810"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute the mean for each feature column across all datasets.</p>
+<p>This method calculates the mean of each feature by aggregating the
+individual means of each dataset, weighted by their respective
+sample counts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom.</p></li>
-<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
-<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default 0</em>) – A small epsilon value to add to the variance before taking the
-square root to avoid numerical instability.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, only includes columns with float, int, or boolean data
+types.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – The number of CPU cores to use for parallel processing of
+individual datasets.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The standard deviation of each column.</p>
+<dd class="field-even"><p>A Series containing the weighted mean of each feature column,
+indexed by feature names.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.Series</p>
+<dd class="field-odd"><p>pd.Series</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L587-L625"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L812-L855"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute the variance for each feature column across all datasets.</p>
+<p>This method calculates the total variance by combining within-dataset
+variability and between-dataset mean differences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default=1</em>) – Delta Degrees of Freedom.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, only includes columns with float, int, or boolean data
+types.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – The number of CPU cores to use for parallel processing of
+individual datasets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Series containing the pooled variance of each feature column,
+indexed by feature names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L857-L881"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute the standard deviation for each feature column across all datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default=1</em>) – Delta Degrees of Freedom for the variance calculation.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, only includes numeric data types.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default=0</em>) – Small constant added to variance for numerical stability.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of CPU cores for parallel processing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Standard deviation of each feature column. Indexed by feature names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L883-L924"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Apply z-score normalization to numeric columns in-place.</p>
+<p>This method scales features to a mean of 0 and a standard deviation
+of 1 based on statistics pooled across all contained datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default 1</em>) – Delta Degrees of Freedom for variance calculation.</p></li>
-<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default False</em>) – Include only float, int, boolean columns.</p></li>
-<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default 0</em>) – Epsilon for numerical stability.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default 1</em>) – Number of jobs to run in parallel for statistics computation.</p></li>
+<li><p><strong>ddof</strong> (<em>int</em><em>, </em><em>default=1</em>) – Delta Degrees of Freedom for the pooled variance.</p></li>
+<li><p><strong>numeric_only</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, only includes numeric data types.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>default=0</em>) – Small constant added to variance for numerical stability.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of CPU cores for parallel statistics computation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -807,47 +1031,27 @@ square root to avoid numerical instability.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L637-L641"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Fill NA/NaN values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.fillna()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L643-L647"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Replace values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.replace()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L649-L653"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Interpolate values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.interpolate()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">dropna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L655-L659"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Remove missing values in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.dropna()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L661-L665"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Drop specified labels from rows or columns in-place. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.drop()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L667-L682"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Join columns with other FeaturesConcatDataset in-place.</p>
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concat_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/datasets.py#L1069-L1099"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Join columns with another FeaturesConcatDataset in-place.</p>
+<p>This method merges the feature columns of another dataset into the
+current one. Both collections must contain the same number of
+individual datasets, and corresponding datasets must have matching
+lengths.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>concat_dataset</strong> (<em>FeaturesConcatDataset</em>) – The dataset to join with. Must have the same number of datasets,
-and each corresponding dataset must have the same length.</p></li>
-<li><p><strong>**kwargs</strong> – Keyword arguments to pass to <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.join()</span></code>.</p></li>
+<li><p><strong>concat_dataset</strong> (<em>FeaturesConcatDataset</em>) – The dataset containing the new columns to be joined.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.join()</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the number of datasets or the lengths of corresponding
+datasets do not match.</p>
+</dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This operation is performed in-place. The <code class="docutils literal notranslate"><span class="pre">ds.features</span></code> attribute
+of each underlying dataset is updated with the new columns.</p>
 </dd></dl>
 
 </dd></dl>

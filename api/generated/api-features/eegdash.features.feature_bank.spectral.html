@@ -58,6 +58,7 @@
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/api-features/eegdash.features.feature_bank.spectral';</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
@@ -540,107 +541,359 @@
                   
   <section id="eegdash-features-feature-bank-spectral">
 <h1>eegdash.features.feature_bank.spectral<a class="headerlink" href="#eegdash-features-feature-bank-spectral" title="Link to this heading">#</a></h1>
+<section id="spectral-feature-extraction">
+<h2>Spectral Feature Extraction<a class="headerlink" href="#spectral-feature-extraction" title="Link to this heading">#</a></h2>
+<p>This module provides functions to compute various spectral features from signals.</p>
+<section id="data-shape-convention">
+<h3>Data Shape Convention<a class="headerlink" href="#data-shape-convention" title="Link to this heading">#</a></h3>
+<p>This module follows a <strong>Time-Last</strong> convention:</p>
+<ul class="simple">
+<li><p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">time)</span></code></p></li>
+<li><p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">(...,)</span></code></p></li>
+</ul>
+<p>All functions collapse the last dimension (time), returning an ndarray of
+features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>(x, /, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>Compute the Power Spectral Density (PSD) using Welch's method.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_normalized_preprocessor</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Normalize the PSD so that the total power equals 1.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_db_preprocessor</span></code>(f, p, /[, eps])</p></td>
-<td><p></p></td>
+<td><p>Convert the PSD to decibels.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_root_total_power</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate the square root of the total spectral power.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_moment</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate the first spectral moment ('Weighted' Mean Frequency).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_entropy</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate Spectral Entropy of thepower spectrum.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_edge</span></code>(f, p, /[, edge])</p></td>
-<td><p></p></td>
+<td><p>Calculate the Spectral Edge Frequency (SEF).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_slope</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Estimate the $1/f$ spectral slope using least-squares regression.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_bands_power</span></code>(f, p, /[, bands])</p></td>
-<td><p></p></td>
+<td><p>Calculate total power within specified frequency bands.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_activity</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate Hjorth Activity in the frequency domain.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_mobility</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate Hjorth Mobility in the frequency domain.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_hjorth_complexity</span></code>(f, p, /)</p></td>
-<td><p></p></td>
+<td><p>Calculate Hjorth Complexity in the frequency domain.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L25-L34"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L41-L73"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute the Power Spectral Density (PSD) using Welch’s method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal (shape: …, n_times).</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Must include ‘fs’ (sampling frequency). Supports standard
+<cite>scipy.signal.welch</cite> arguments like ‘nperseg’ and ‘noverlap’.
+Can also include ‘f_min’ and ‘f_max’ for frequency slicing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density.</p></li>
+<li><p><em>Assertsions</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>- ‘fs’ must be provided in kwargs.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_normalized_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L37-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_normalized_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L76-L98"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Normalize the PSD so that the total power equals 1.</p>
+<p>This is equivalent to treating the PSD as a Probability Density
+Function (PDF), which is required for Spectral Entropy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector (unchanged).</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_db_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L42-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_db_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L101-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert the PSD to decibels.</p>
+<p>Calculated as:</p>
+<p>$10 cdot log_{10}(P + epsilon)$.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – A small constant to prevent log of zero (default: 1e-15).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector (unchanged).</p></li>
+<li><p><em>ndarray</em> – Power Spectral Density in decibels. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_root_total_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L47-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_root_total_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L129-L147"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the square root of the total spectral power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density (PSD).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The root total power. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L53-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L150-L171"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the first spectral moment (‘Weighted’ Mean Frequency).</p>
+<p>When applied to a normalized PSD, this represents the “center of mass”
+of the power spectrum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean frequency of the signal. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L80-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L273-L302"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Spectral Entropy of thepower spectrum.</p>
+<p>Spectral Entropy (SE) measures the complexity or “disorder” of a signal.
+A high SE indicates a flat, broad spectrum (e.g., white noise), while a
+low SE indicates a spectrum concentrated in a few frequency components.</p>
+<p>It is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[SE = -\sum_{i=1}^{N} p_i \ln(p_i)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density (treated as a PDF).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The entropy values. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L89-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L305-L336"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the Spectral Edge Frequency (SEF).</p>
+<p>The frequency below which a certain percentage (e.g., 90%) of
+the total power is contained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density (treated as a PDF).</p></li>
+<li><p><strong>edge</strong> (<em>float</em><em>, </em><em>optional</em>) – The fraction of total power (default is 0.9 for SEF90).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spectral edge frequency. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Optimized with Numba <code class="docutils literal notranslate"><span class="pre">fastmath</span></code> for rapid scanning of cumulative power.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L99-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L339-L364"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Estimate the $1/f$ spectral slope using least-squares regression.</p>
+<p>This measures the slope and intercept of the PSD in log-log space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density in decibels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing:
+- ‘exp’: The slope/exponent (scaling).
+- ‘int’: The y-intercept (offset).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_bands_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L108-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_bands_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">(8,</span> <span class="pre">12),</span> <span class="pre">'beta':</span> <span class="pre">(12,</span> <span class="pre">30),</span> <span class="pre">'delta':</span> <span class="pre">(1,</span> <span class="pre">4.5),</span> <span class="pre">'theta':</span> <span class="pre">(4.5,</span> <span class="pre">8)}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L367-L391"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate total power within specified frequency bands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density (PSD).</p></li>
+<li><p><strong>bands</strong> (<em>dict</em><em>, </em><em>optional</em>) – Mapping of band names to (min, max) frequency tuples.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The summed power for each band.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L59-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_activity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L174-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Hjorth Activity in the frequency domain.</p>
+<p>Activity represents the total power of the signal, calculated here
+as the integral (sum) of the Power Spectral Density.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total spectral power. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p>Hjorth, B. (1970). EEG analysis based on time domain properties.
+Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.</p></li>
+</ul>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L65-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_mobility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L203-L235"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Hjorth Mobility in the frequency domain.</p>
+<p>Mobility is an estimate of the mean frequency.
+For a normalized PSD, it is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[\sqrt{\frac{\sum f^2 P(f)}{\sum P(f)}}\]</div>
+<p>Where:</p>
+<div class="math notranslate nohighlight">
+\[\sum P(f) = 1$$ (since the PSD is normalized)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Spectral mobility. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p>Hjorth, B. (1970). EEG analysis based on time domain properties.
+Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.</p></li>
+</ul>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L71-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_hjorth_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L238-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Hjorth Complexity in the frequency domain.</p>
+<p>Complexity measures the bandwidth or the “irregularity” of the spectrum.</p>
+<p>For a normalized PSD, it is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\sqrt{\sum f^4 P(f)}}{\sum f^2 P(f)}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Spectral complexity. Shape is <code class="docutils literal notranslate"><span class="pre">p.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p>Hjorth, B. (1970). EEG analysis based on time domain properties.
+Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.</p></li>
+</ul>
+</dd></dl>
 
 </section>
 
@@ -682,6 +935,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-feature-extraction">Spectral Feature Extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-shape-convention">Data Shape Convention</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

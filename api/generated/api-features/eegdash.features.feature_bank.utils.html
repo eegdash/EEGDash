@@ -540,35 +540,156 @@
                   
   <section id="eegdash-features-feature-bank-utils">
 <h1>eegdash.features.feature_bank.utils<a class="headerlink" href="#eegdash-features-feature-bank-utils" title="Link to this heading">#</a></h1>
+<section id="feature-extraction-utilities">
+<h2>Feature Extraction Utilities<a class="headerlink" href="#feature-extraction-utilities" title="Link to this heading">#</a></h2>
+<p>This module provides the following helper functions:
+- <cite>get_valid_freq_band</cite>: Validates and returns frequency boundaries based on Nyquist and resolution.
+- <cite>slice_freq_band</cite>: Slices frequency vector and associated data arrays to a specific range.
+- <cite>reduce_freq_bands</cite>: Reduces spectral data into discrete frequency bands by aggregating bins</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_freq_band</span></code>(fs, n[, f_min, f_max])</p></td>
-<td><p></p></td>
+<td><p>Validate and return frequency boundaries based on Nyquist and resolution.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_freq_bands</span></code>(f, x, bands[, reduce_func])</p></td>
-<td><p></p></td>
+<td><p>Reduce spectral data into discrete frequency bands by aggregating bins.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code>(f, *x[, f_min, f_max])</p></td>
-<td><p></p></td>
+<td><p>Slice frequency vector and associated data arrays to a specific range.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L19-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L28-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validate and return frequency boundaries based on Nyquist and resolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fs</strong> (<em>float</em>) – The sampling frequency in Hz.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – The number of points in the signal/window.</p></li>
+<li><p><strong>f_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Requested minimum frequency. Defaults to 2 * resolution (f0).</p></li>
+<li><p><strong>f_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Requested maximum frequency. Defaults to Nyquist frequency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>f_min, f_max</strong> – The validated frequency boundaries.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>f_min</cite> is below the minimum resolvable frequency.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>f_max</cite> is above the Nyquist frequency.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_valid_freq_band</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="go">(0.2, 50.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_valid_freq_band</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">f_min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">f_max</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="go">(1, 80)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L47-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L129-L187"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reduce spectral data into discrete frequency bands by aggregating bins.</p>
+<p>This function identifies the frequency indices belonging to specific
+bands and applies a reduction function (like sum or mean) to collapse
+the frequency axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
+<li><p><strong>x</strong> (<em>ndarray</em>) – Spectral data. Can be multi-dimensional.
+The last dimension must match the length of <cite>f</cite>.</p></li>
+<li><p><strong>bands</strong> (<em>dict</em>) – Mapping of band names to (min, max) frequency tuples.</p></li>
+<li><p><strong>reduce_func</strong> (<em>callable</em><em>, </em><em>optional</em>) – Function to aggregate the values. Default is np.sum.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>x_bands</strong> – Dictionary where keys are the band names from <cite>bands</cite> and values
+are the reduced arrays. The last dimension of the input <cite>x</cite>
+is removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If a band name is not a string.
+If a band limit tuple does not contain exactly two values or
+if min &gt; max.
+If the requested band limits fall outside the range of the
+available frequency vector <cite>f</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">)}</span> <span class="c1"># check assertion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">reduce_freq_bands</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">bands</span><span class="p">,</span> <span class="n">reduce_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">]</span>
+<span class="go">array([6, 150])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;high&#39;</span><span class="p">]</span>
+<span class="go">array([15, 60])</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L33-L44"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L75-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Slice frequency vector and associated data arrays to a specific range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – The frequency vector.</p></li>
+<li><p><strong>*x</strong> (<em>ndarray</em>) – One or more data arrays to be sliced along the frequency axis.
+The last dimension of each array must match the length of <cite>f</cite>.</p></li>
+<li><p><strong>f_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Lower frequency bound.</p></li>
+<li><p><strong>f_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Upper frequency bound.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<em>ndarray</em>) – The cropped frequency vector.</p></li>
+<li><p><strong>*xl</strong> (<em>ndarray</em>) – The cropped data arrays.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create 0-10 Hz frequencies</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create data: (2 channels, 6 frequency bins)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span>
+<span class="gp">... </span>                 <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">65</span><span class="p">]])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Keep only the range 4Hz to 8Hz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_s</span><span class="p">,</span> <span class="n">d_s</span> <span class="o">=</span> <span class="n">slice_freq_band</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">f_min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">f_max</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f_s</span>
+<span class="go">array([4, 6, 8])~</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d_s</span>
+<span class="go">array([[30, 40, 50],</span>
+<span class="go">       [35, 45, 55]])</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </section>
 
@@ -610,6 +731,18 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-extraction-utilities">Feature Extraction Utilities</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

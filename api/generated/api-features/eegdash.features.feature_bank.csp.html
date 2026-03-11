@@ -540,50 +540,149 @@
                   
   <section id="eegdash-features-feature-bank-csp">
 <h1>eegdash.features.feature_bank.csp<a class="headerlink" href="#eegdash-features-feature-bank-csp" title="Link to this heading">#</a></h1>
+<section id="common-spatial-pattern-features-extraction">
+<h2>Common Spatial Pattern Features Extraction<a class="headerlink" href="#common-spatial-pattern-features-extraction" title="Link to this heading">#</a></h2>
+<p>This module provides the Common Spatial Pattern (CSP) feature extractor
+for signal classification.</p>
+<section id="data-shape-convention">
+<h3>Data Shape Convention<a class="headerlink" href="#data-shape-convention" title="Link to this heading">#</a></h3>
+<p>This module follows a <strong>Time-Last</strong> convention:</p>
+<ul class="simple">
+<li><p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">time)</span></code></p></li>
+<li><p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">(...,)</span></code></p></li>
+</ul>
+<p>All functions collapse the last dimension (time), returning an ndarray of
+features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CommonSpatialPattern</span></code>()</p></td>
-<td><p></p></td>
+<td><p>Common Spatial Pattern (CSP) for binary signal classification.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.csp.</span></span><span class="sig-name descname"><span class="pre">CommonSpatialPattern</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L25-L103"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.csp.</span></span><span class="sig-name descname"><span class="pre">CommonSpatialPattern</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L68-L296"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableFeature</span></code></p>
+<p>Common Spatial Pattern (CSP) for binary signal classification.</p>
+<p>CSP finds spatial filters that maximize the variance for one class while
+minimizing it for the other. It transforms multi-channel signals into a
+subspace where the differences between two conditions are most prominent.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_weights</span></span></dt>
+<dd><p>The spatial filter matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_eigvals</span></span></dt>
+<dd><p>The eigenvalues representing the variance ratio for class 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_means</span></span></dt>
+<dd><p>The class-wise means used for centering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_covs</span></span></dt>
+<dd><p>The class-wise covariance matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>This implementation supports online learning through <code class="docutils literal notranslate"><span class="pre">partial_fit</span></code>,
+allowing the model to be updated with new batches.</p>
+<p>For a theoretical overview of Common Spatial Patterns, see the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Common_spatial_pattern">Wikipedia entry</a>.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L31-L38"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L101-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reset the internal state of the feature extractor.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.features.extractors.TrainableFeature.clear()</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L62-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Update the feature extractor’s state with a batch of data.</p>
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L170-L192"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Incrementally update class-wise mean and covariance statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*x</strong> (<em>tuple</em>) – The input data for fitting.</p></li>
-<li><p><strong>y</strong> (<em>any</em><em>, </em><em>optional</em>) – The target data, if required for supervised training.</p></li>
+<li><p><strong>x</strong> (<em>ndarray</em>) – Input array of shape (n_epochs, n_channels, n_times).</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – Class labels for each epoch (must contain exactly two classes).</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If more than two unique labels are detected across all
+partial fits.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L70-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L194-L213"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reshape and transpose epoch data for matrix operations.</p>
+<p>Converts 3D epoch data into a 2D format suitable for covariance
+estimation and spatial filtering. The temporal dimension is
+collapsed into the samples dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – Input array of shape (n_epochs, n_channels, n_times).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reshaped array of shape (n_epochs * n_times, n_channels).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L74-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Finalize the training of the feature extractor.</p>
-<p>This method should be called after all data has been seen via
-<cite>partial_fit</cite>. It marks the feature as fitted.</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/csp.py#L215-L243"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Solve the generalized eigenvalue problem to find spatial filters.</p>
+<p>Calculates the filters $W$ such that the ratio of variances between
+the two classes is maximized. Filters are sorted by their
+discriminative power (distance from 0.5 eigenvalue).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">fit()</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>For more details on the CSP algorithm, visit the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Common_spatial_pattern">Wikipedia entry</a>.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -638,6 +737,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-spatial-pattern-features-extraction">Common Spatial Pattern Features Extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-shape-convention">Data Shape Convention</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

@@ -540,51 +540,173 @@
                   
   <section id="eegdash-features-feature-bank-complexity">
 <h1>eegdash.features.feature_bank.complexity<a class="headerlink" href="#eegdash-features-feature-bank-complexity" title="Link to this heading">#</a></h1>
+<section id="complexity-feature-extraction">
+<h2>Complexity Feature Extraction<a class="headerlink" href="#complexity-feature-extraction" title="Link to this heading">#</a></h2>
+<p>This module provides functions to compute various complexity features from signals.</p>
+<section id="data-shape-convention">
+<h3>Data Shape Convention<a class="headerlink" href="#data-shape-convention" title="Link to this heading">#</a></h3>
+<p>This module follows a <strong>Time-Last</strong> convention:</p>
+<ul class="simple">
+<li><p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">time)</span></code></p></li>
+<li><p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">(...,)</span></code></p></li>
+</ul>
+<p>All functions collapse the last dimension (time), returning an ndarray of
+features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_entropy_preprocessor</span></code>(x, /[, m, r, l])</p></td>
-<td><p></p></td>
+<td><p>Precompute neighbor counts for Approximate and Sample Entropy.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_approx_entropy</span></code>(counts_m, ...)</p></td>
-<td><p></p></td>
+<td><p>Calculate Approximate Entropy (ApEn).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_sample_entropy</span></code>(counts_m, ...)</p></td>
-<td><p></p></td>
+<td><p>Calculate Sample Entropy (SampEn).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_svd_entropy</span></code>(x, /[, m, tau])</p></td>
-<td><p></p></td>
+<td><p>Calculate Singular Value Decomposition (SVD) Entropy.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_lempel_ziv</span></code>(x, /[, threshold, ...])</p></td>
-<td><p></p></td>
+<td><p>Calculate Lempel-Ziv Complexity (LZC).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L33-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L89-L127"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Precompute neighbor counts for Approximate and Sample Entropy.</p>
+<p>This function creates a delay-embedding of the signal and uses a KDTree
+to count how many vectors are within a distance ‘r’ of each other.
+It computes counts for both dimension ‘m’ and ‘m+1’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal of shape (…, n_times).</p></li>
+<li><p><strong>m</strong> (<em>int</em><em>, </em><em>optional</em>) – Embedding dimension (length of compared sequences).</p></li>
+<li><p><strong>r</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance threshold, expressed as a fraction of the signal
+standard deviation.</p></li>
+<li><p><strong>l</strong> (<em>int</em><em>, </em><em>optional</em>) – The lag or delay between successive embedding vectors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
+<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L48-L53"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L130-L153"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Approximate Entropy (ApEn).</p>
+<p>Approximate Entropy quantifies the amount of regularity and the unpredictability
+of fluctuations over time-series data. Smaller values indicate more regular signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
+<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Approximate Entropy values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L56-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L156-L180"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Sample Entropy (SampEn).</p>
+<p>A refinement of Approximate Entropy that is more consistent and less
+dependent on signal length. It measures the likelihood that similar patterns
+of data will remain similar when the window size increases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
+<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>SampEn values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L64-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L183-L212"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Singular Value Decomposition (SVD) Entropy.</p>
+<p>SVD Entropy measures the complexity of the signal’s embedding space.
+It indicates the number of independent components required to
+reconstruct the signal. Higher values suggest a more complex signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
+<li><p><strong>m</strong> (<em>int</em><em>, </em><em>optional</em>) – The embedding dimension.</p></li>
+<li><p><strong>tau</strong> (<em>int</em><em>, </em><em>optional</em>) – The time delay for embedding.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>SVD Entropy values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L75-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L215-L277"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Lempel-Ziv Complexity (LZC).</p>
+<p>LZC evaluates the randomness of a sequence by counting the number
+of distinct patterns it contains.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Value used to binarize the signal. If None, the median is used.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, normalizes the result by:</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LZC values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The implementation follows the constructive algorithm for
+production complexity as described by Kaspar and Schuster <a class="reference internal" href="#r60a22090cb8c-1" id="id1">[1]</a>.</p></li>
+<li><p>Optimized with Numba.</p></li>
+</ul>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r60a22090cb8c-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Kaspar, F., &amp; Schuster, H. G. (1987). Easily calculable measure for the
+complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
+</div>
+</div>
+</dd></dl>
 
 </section>
 
@@ -626,6 +748,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complexity-feature-extraction">Complexity Feature Extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-shape-convention">Data Shape Convention</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

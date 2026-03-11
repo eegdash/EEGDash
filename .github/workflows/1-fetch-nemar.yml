@@ -1,0 +1,18 @@
+# Fetch NEMAR datasets from GitHub organization
+name: "1. Fetch: NEMAR"
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'  # Weekly on Monday, 1 hour after OpenNeuro
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    uses: ./.github/workflows/fetch-source.yml
+    with:
+      source_name: "NEMAR"
+      script_path: "scripts/ingestions/1_fetch_sources/nemar.py"
+      output_file: "nemar_datasets.json"
+      script_args: "--organization nemardatasets"
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

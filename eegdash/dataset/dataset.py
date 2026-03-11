@@ -1,8 +1,10 @@
+import os
 from pathlib import Path
 from typing import Any
 
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
-from mne_bids import find_matching_paths
+from joblib import Parallel, delayed
+from mne_bids.config import reader
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -10,8 +12,9 @@ from rich.text import Text
 from braindecode.datasets import BaseConcatDataset
 
 from .. import downloader
-from ..bids_eeg_metadata import (
+from ..bids_metadata import (
     build_query_from_kwargs,
+    get_entities_from_record,
     merge_participants_fields,
     normalize_key,
 )
@@ -20,11 +23,16 @@ from ..const import (
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
+from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
-from .base import EEGDashBaseDataset
+from ..schemas import validate_record
+from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
+
+# Valid extensions for EEG data files (from MNE-BIDS reader configuration)
+_VALID_DATA_EXTENSIONS = frozenset(reader.keys())
 
 
 class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
@@ -121,13 +129,28 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     eeg_dash_instance : EEGDash | None
         Optional existing EEGDash client to reuse for DB queries. If None,
         a new client is created on demand, not used in the case of no download.
+    database : str | None
+        Database name to use (e.g., "eegdash", "eegdash_staging"). If None,
+        uses the default database.
+    auth_token : str | None
+        Authentication token for accessing protected databases. Required for
+        staging or admin operations.
+    on_error : str, default "raise"
+        How to handle :class:`DataIntegrityError` when accessing ``.raw``
+        on individual recordings:
+
+        - ``"raise"`` (default): propagate the exception.
+        - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
+        - ``"skip"``: silently set ``.raw`` to ``None``.
+
+        Use :meth:`drop_bad` after iteration to remove skipped recordings.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
         - Filtering: any keys present in ``ALLOWED_QUERY_FIELDS`` are treated as
           query filters (e.g., ``dataset``, ``subject``, ``task``, ...).
         - Dataset options: remaining keys are forwarded to
-          ``EEGDashBaseDataset``.
+          ``EEGDashRaw``.
 
     """
 
@@ -141,11 +164,18 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         download: bool = True,
         n_jobs: int = -1,
         eeg_dash_instance: Any = None,
+        database: str | None = None,
+        auth_token: str | None = None,
+        on_error: str = "raise",
         **kwargs,
     ):
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
+        self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
+        self._on_error = on_error
         self.s3_bucket = s3_bucket
+        self.database = database
+        self.auth_token = auth_token
         self.records = records
         self.download = download
         self.n_jobs = n_jobs
@@ -177,12 +207,20 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
             self.cache_dir.mkdir(exist_ok=True, parents=True)
 
-        # Separate query kwargs from other kwargs passed to the BaseDataset constructor
+        # Extract query filters from kwargs (validates field names)
+        query_kwargs = {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
+        if query_kwargs:
+            # Validate early: this raises ValueError for unknown fields or empty values
+            build_query_from_kwargs(**query_kwargs)
+
+        # Separate query kwargs from BaseDataset constructor kwargs
         self.query = query or {}
-        self.query.update(
-            {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
-        )
-        base_dataset_kwargs = {k: v for k, v in kwargs.items() if k not in self.query}
+        self.query.update(query_kwargs)
+        base_dataset_kwargs = {
+            k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
+        }
+        base_dataset_kwargs["on_error"] = self._on_error
+
         if "dataset" not in self.query:
             # If explicit records are provided, infer dataset from records
             if isinstance(records, list) and records and isinstance(records[0], dict):
@@ -198,15 +236,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
         # informative suffixes to avoid overlapping with the original dataset.
         dataset_folder = self.query["dataset"]
-        if self.s3_bucket:
-            suffixes: list[str] = []
-            bucket_lower = str(self.s3_bucket).lower()
-            if "bdf" in bucket_lower:
-                suffixes.append("bdf")
-            if "mini" in bucket_lower:
-                suffixes.append("mini")
-            if suffixes:
-                dataset_folder = f"{dataset_folder}-{'-'.join(suffixes)}"
 
         self.data_dir = self.cache_dir / dataset_folder
 
@@ -238,12 +267,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 logger.warning(str(message_text))
 
         if records is not None:
-            self.records = records
+            self.records = self._normalize_records(records)
+
             datasets = [
-                EEGDashBaseDataset(
+                EEGDashRaw(
                     record,
                     self.cache_dir,
-                    self.s3_bucket,
                     **base_dataset_kwargs,
                 )
                 for record in self.records
@@ -254,6 +283,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"Offline mode is enabled, but local data_dir {self.data_dir} does not exist."
                 )
             records = self._find_local_bids_records(self.data_dir, self.query)
+            self.records = records
             # Try to enrich from local participants.tsv to restore requested fields
             try:
                 bids_ds = EEGBIDSDataset(
@@ -264,12 +294,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
             datasets = []
             for record in records:
-                # Start with entity values from filename
-                desc: dict[str, Any] = {
-                    k: record.get(k)
-                    for k in ("subject", "session", "run", "task")
-                    if record.get(k) is not None
-                }
+                # Start with entity values from filename (supports v1 and v2 formats)
+                desc: dict[str, Any] = get_entities_from_record(record)
 
                 if bids_ds is not None:
                     try:
@@ -289,10 +315,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         pass
 
                 datasets.append(
-                    EEGDashBaseDataset(
+                    EEGDashRaw(
                         record=record,
                         cache_dir=self.cache_dir,
-                        s3_bucket=self.s3_bucket,
                         description=desc,
                         **base_dataset_kwargs,
                     )
@@ -302,7 +327,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 # to avoid circular import
                 from ..api import EEGDash
 
-                self.eeg_dash_instance = EEGDash()
+                # Pass database and auth_token if specified
+                eegdash_kwargs = {}
+                if self.database:
+                    eegdash_kwargs["database"] = self.database
+                if self.auth_token:
+                    eegdash_kwargs["auth_token"] = self.auth_token
+                self.eeg_dash_instance = EEGDash(**eegdash_kwargs)
             datasets = self._find_datasets(
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,
@@ -320,24 +351,218 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"  1. The dataset '{self.query.get('dataset', 'unknown')}' does not exist in the database\n"
                     f"  2. The specified filters (task, subject, etc.) are too restrictive\n"
                     f"  3. There is a connection issue with the MongoDB database\n"
-                    f"If you're working offline or with local data, set download=False and ensure "
-                    f"the data exists at: {self.data_dir}"
+                    f"The data exists at: {self.data_dir}"
                 )
+
+        # Attempt to fetch dataset-level metadata (for global files like participants.tsv)
+        self.dataset_doc = None
+        if self.download and self.eeg_dash_instance:
+            try:
+                self.dataset_doc = self.eeg_dash_instance.get_dataset(
+                    self.query.get("dataset")
+                )
+            except Exception:
+                pass
+
+        super().__init__(datasets, lazy=True)
+
+    def drop_bad(self) -> list[dict]:
+        """Remove skipped datasets and return their records.
+
+        Call after accessing ``.raw`` on all datasets (e.g. after iteration
+        or preprocessing) to clean up the dataset list.
+
+        Returns
+        -------
+        list of dict
+            Records that were removed because loading failed.
+
+        """
+        bad = []
+        valid_datasets = []
+        valid_records = []
+        for ds, record in zip(self.datasets, self.records):
+            if getattr(ds, "_skipped", False):
+                bad.append(record)
+            else:
+                valid_datasets.append(ds)
+                valid_records.append(record)
+        self.datasets = valid_datasets
+        self.records = valid_records
+        return bad
+
+    @property
+    def cumulative_sizes(self) -> list[int]:
+        """Recompute cumulative sizes from current dataset lengths.
+
+        Overrides the cached version from BaseConcatDataset because individual
+        dataset lengths can change after lazy raw loading (estimated ntimes
+        from JSON metadata may differ from actual n_times in the raw file).
+        """
+        from torch.utils.data import ConcatDataset
+
+        return ConcatDataset.cumsum(self.datasets)
+
+    @cumulative_sizes.setter
+    def cumulative_sizes(self, value):
+        # Accept writes from ConcatDataset.__init__ but discard; we always recompute.
+        pass
+
+    def _ensure_cumulative_sizes(self) -> list[int]:
+        """Always recompute cumulative sizes.
+
+        Overrides BaseConcatDataset's cached version (used by __len__) to
+        stay consistent with the dynamic cumulative_sizes property.
+        """
+        return self.cumulative_sizes
+
+    def _normalize_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Apply dataset-level record normalization before building datasets.
+
+        This method performs several normalizations:
+        1. Filters out records with invalid extensions (e.g., .json, .tsv sidecar files)
+        2. Updates storage backend/base if s3_bucket is specified
+        3. Deduplicates records if _dedupe_records is enabled
+        """
+        # Filter out records that are not valid EEG data files
+        # (e.g., filter out .json, .tsv sidecar files that may be in the database)
+        filtered_records = []
+        for record in records:
+            ext = record.get("extension", "")
+            # Check if extension is valid for EEG data (case-insensitive)
+            if ext and ext.lower() not in {e.lower() for e in _VALID_DATA_EXTENSIONS}:
+                continue
+            filtered_records.append(record)
+
+        records = filtered_records
+
+        if self.s3_bucket:
+            for record in records:
+                storage = record.setdefault("storage", {})
+                storage["base"] = self.s3_bucket
+                storage["backend"] = "s3"
+
+        if self._dedupe_records:
+            seen: set[str] = set()
+            deduped: list[dict[str, Any]] = []
+            # Reverse to keep the newest records (those inserted last)
+            for record in reversed(records):
+                key = (
+                    record.get("bids_relpath")
+                    or record.get("bidspath")
+                    or record.get("data_name")
+                )
+                if key is None:
+                    deduped.append(record)
+                    continue
+                if key in seen:
+                    continue
+                seen.add(key)
+                deduped.append(record)
+            # Reverse back to maintain original relative order of successful records
+            return list(reversed(deduped))
+
+        return records
+
+    def download_all(self, n_jobs: int | None = None) -> None:
+        """Download missing remote files in parallel.
+
+        Parameters
+        ----------
+        n_jobs : int | None
+            Number of parallel workers to use. If None, defaults to ``self.n_jobs``.
+
+        """
+        if self.download is False:
+            return
+
+        if n_jobs is None:
+            n_jobs = self.n_jobs
+
+        targets: list[EEGDashRaw] = []
+        for ds in self.datasets:
+            if getattr(ds, "_raw_uri", None) is None:
+                continue
+            if not ds.filecache.exists() or any(
+                not path.exists() for path in getattr(ds, "_dep_paths", [])
+            ):
+                targets.append(ds)
+
+        if not targets:
+            self._download_dataset_files()
+            return
+
+        if n_jobs == 1:
+            for ds in targets:
+                ds._download_required_files()
         else:
-            raise ValueError(
-                "You must provide either 'records', a 'data_dir', or a query/keyword arguments for filtering."
+            Parallel(n_jobs=n_jobs, prefer="threads")(
+                delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
             )
 
-        super().__init__(datasets)
+        # Download global dataset files (participants.tsv, etc.)
+        self._download_dataset_files()
+
+    def _download_dataset_files(self) -> None:
+        """Download global dataset files defined in dataset metadata."""
+        if not self.dataset_doc or not self.download:
+            return
+
+        storage = self.dataset_doc.get("storage") or {}
+        base = storage.get("base")
+        backend = storage.get("backend")
+
+        if not base or backend not in ("s3", "https"):
+            return
+
+        # Prepare list of files to download
+        keys_to_download = set()
+        if raw_key := storage.get("raw_key"):
+            keys_to_download.add(raw_key)
+
+        # Extract task filter if present
+        task_filter = self.query.get("task")
+        allowed_tasks = set()
+        if isinstance(task_filter, str):
+            allowed_tasks.add(task_filter)
+        elif isinstance(task_filter, (list, tuple)):
+            allowed_tasks.update(str(t) for t in task_filter)
+
+        for key in storage.get("dep_keys", []):
+            if allowed_tasks and key.startswith("task-") and "_" in key:
+                # e.g. task-RestingState_events.json -> task_name="RestingState"
+                task_name = key.split("_", 1)[0][5:]
+                if task_name not in allowed_tasks:
+                    continue
+            keys_to_download.add(key)
+
+        if not keys_to_download:
+            return
+
+        filesystem = downloader.get_s3_filesystem()
+
+        # Download files that don't exist locally
+        files_to_download = []
+        for key in keys_to_download:
+            dest = self.data_dir / key
+            if not dest.exists():
+                files_to_download.append((f"{base}/{key}", dest))
+
+        if files_to_download:
+            downloader.download_files(
+                files_to_download,
+                filesystem=filesystem,
+                skip_existing=True,
+            )
 
     def _find_local_bids_records(
         self, dataset_root: Path, filters: dict[str, Any]
     ) -> list[dict]:
-        """Discover local BIDS EEG files and build minimal records.
+        """Discover local BIDS EEG files and build v2 records.
 
         Enumerates EEG recordings under ``dataset_root`` using
         ``mne_bids.find_matching_paths`` and applies entity filters to produce
-        records suitable for :class:`EEGDashBaseDataset`. No network access is
+        v2 records suitable for :class:`EEGDashBaseDataset`. No network access is
         performed, and files are not read.
 
         Parameters
@@ -351,73 +576,17 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         Returns
         -------
         list of dict
-            A list of records, one for each matched EEG file. Each record
-            contains BIDS entities, paths, and minimal metadata for offline use.
+            A list of v2 records, one for each matched EEG file.
 
         Notes
         -----
-        Matching is performed for ``datatypes=['eeg']`` and ``suffixes=['eeg']``.
-        The ``bidspath`` is normalized to ensure it starts with the dataset ID,
-        even for suffixed cache directories.
+        Matching is performed via :func:`mne_bids.find_matching_paths` using
+        datatypes/suffixes derived from the ``'modality'`` filter (default:
+        ``'eeg'``). For offline/local mode, storage backend is set to ``'local'``
+        and the storage base points to the local dataset root.
 
         """
-        dataset_id = filters["dataset"]
-        arg_map = {
-            "subjects": "subject",
-            "sessions": "session",
-            "tasks": "task",
-            "runs": "run",
-        }
-        matching_args: dict[str, list[str]] = {}
-        for finder_key, entity_key in arg_map.items():
-            entity_val = filters.get(entity_key)
-            if entity_val is None:
-                continue
-            if isinstance(entity_val, (list, tuple, set)):
-                entity_vals = list(entity_val)
-                if not entity_vals:
-                    continue
-                matching_args[finder_key] = entity_vals
-            else:
-                matching_args[finder_key] = [entity_val]
-
-        matched_paths = find_matching_paths(
-            root=str(dataset_root),
-            datatypes=["eeg"],
-            suffixes=["eeg"],
-            ignore_json=True,
-            **matching_args,
-        )
-        records_out: list[dict] = []
-
-        for bids_path in matched_paths:
-            # Build bidspath as dataset_id / relative_path_from_dataset_root (POSIX)
-            rel_from_root = (
-                Path(bids_path.fpath)
-                .resolve()
-                .relative_to(Path(bids_path.root).resolve())
-            )
-            bidspath = f"{dataset_id}/{rel_from_root.as_posix()}"
-
-            rec = {
-                "data_name": f"{dataset_id}_{Path(bids_path.fpath).name}",
-                "dataset": dataset_id,
-                "bidspath": bidspath,
-                "subject": (bids_path.subject or None),
-                "session": (bids_path.session or None),
-                "task": (bids_path.task or None),
-                "run": (bids_path.run or None),
-                # minimal fields to satisfy BaseDataset from eegdash
-                "bidsdependencies": [],  # not needed to just run.
-                "modality": "eeg",
-                # minimal numeric defaults for offline length calculation
-                "sampling_frequency": None,
-                "nchans": None,
-                "ntimes": None,
-            }
-            records_out.append(rec)
-
-        return records_out
+        return discover_local_bids_records(dataset_root, filters)
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
         """Recursively search for a key in nested dicts/lists.
@@ -457,11 +626,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         query: dict[str, Any] | None,
         description_fields: list[str],
         base_dataset_kwargs: dict,
-    ) -> list[EEGDashBaseDataset]:
+    ) -> list[EEGDashRaw]:
         """Find and construct datasets from a MongoDB query.
 
         Queries the database, then creates a list of
-        :class:`EEGDashBaseDataset` objects from the results.
+        :class:`EEGDashRaw` objects from the results. Records from the
+        database must be v2 format with storage.base explicitly set.
 
         Parameters
         ----------
@@ -471,18 +641,31 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             Fields to extract from each record for the dataset description.
         base_dataset_kwargs : dict
             Additional keyword arguments to pass to the
-            :class:`EEGDashBaseDataset` constructor.
+            :class:`EEGDashRaw` constructor.
 
         Returns
         -------
-        list of EEGDashBaseDataset
+        list of EEGDashRaw
             A list of dataset objects matching the query.
 
+        Raises
+        ------
+        ValueError
+            If records from the database are not v2 format.
+
         """
-        datasets: list[EEGDashBaseDataset] = []
-        self.records = self.eeg_dash_instance.find(query)
+        datasets: list[EEGDashRaw] = []
+        self.records = self._normalize_records(self.eeg_dash_instance.find(query))
 
         for record in self.records:
+            # Validate v2 format
+            errors = validate_record(record)
+            if errors:
+                raise ValueError(
+                    f"Record from database must be v2 format: {errors}. "
+                    f"Record data_name: {record.get('data_name', 'unknown')}"
+                )
+
             description: dict[str, Any] = {}
             # Requested fields first (normalized matching)
             for field in description_fields:
@@ -498,10 +681,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     description_fields=description_fields,
                 )
             datasets.append(
-                EEGDashBaseDataset(
+                EEGDashRaw(
                     record,
                     cache_dir=self.cache_dir,
-                    s3_bucket=self.s3_bucket,
                     description=description,
                     **base_dataset_kwargs,
                 )
@@ -579,7 +761,7 @@ class EEGChallengeDataset(EEGDashDataset):
         cache_dir: str,
         mini: bool = True,
         query: dict | None = None,
-        s3_bucket: str | None = "s3://nmdatasets/NeurIPS25",
+        s3_bucket: str | None = None,
         **kwargs,
     ):
         self.release = release
@@ -590,19 +772,13 @@ class EEGChallengeDataset(EEGDashDataset):
                 f"Unknown release: {release}, expected one of {list(RELEASE_TO_OPENNEURO_DATASET_MAP.keys())}"
             )
 
-        dataset_parameters = []
-        if isinstance(release, str):
-            dataset_parameters.append(RELEASE_TO_OPENNEURO_DATASET_MAP[release])
-        else:
-            raise ValueError(
-                f"Unknown release type: {type(release)}, the expected type is str."
-            )
-
         if query and "dataset" in query:
             raise ValueError(
                 "Query using the parameters `dataset` with the class EEGChallengeDataset is not possible."
                 "Please use the release argument instead, or the object EEGDashDataset instead."
             )
+
+        dataset_id = f"EEG2025r{release[1:]}"
 
         if self.mini:
             # When using the mini release, restrict subjects to the predefined subset.
@@ -655,9 +831,14 @@ class EEGChallengeDataset(EEGDashDataset):
                 # No subject specified by the user: default to the full mini subset
                 kwargs["subject"] = sorted(allowed_subjects)
 
-            s3_bucket = f"{s3_bucket}/{release}_mini_L100_bdf"
-        else:
-            s3_bucket = f"{s3_bucket}/{release}_L100_bdf"
+            # Construct dataset ID for mini
+            dataset_id = f"{dataset_id}mini"
+
+        if s3_bucket is None:
+            if self.mini:
+                s3_bucket = f"s3://nmdatasets/NeurIPS25/{release}_mini_L100_bdf"
+            else:
+                s3_bucket = f"s3://nmdatasets/NeurIPS25/{release}_L100_bdf"
 
         message_text = Text.from_markup(
             "This object loads the HBN dataset that has been preprocessed for the EEG Challenge:\n"
@@ -685,20 +866,30 @@ class EEGChallengeDataset(EEGDashDataset):
             warning_message = str(message_text)
             logger.warning(warning_message)
 
+        if not kwargs.get("download", True) and "modality" not in kwargs:
+            kwargs["modality"] = "eeg"
+
         super().__init__(
-            dataset=RELEASE_TO_OPENNEURO_DATASET_MAP[release],
+            dataset=dataset_id,
             query=query,
             cache_dir=cache_dir,
             s3_bucket=s3_bucket,
             _suppress_comp_warning=True,
+            _dedupe_records=True,
             **kwargs,
         )
 
 
+_from_api = os.getenv("EEGDASH_DATASET_REGISTRY_FROM_API", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,
     namespace=globals(),
+    from_api=_from_api,
 )
 
 

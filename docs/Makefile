@@ -1,15 +1,18 @@
 # Minimal makefile for Sphinx documentation
+#
+
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
-BUILDDIR      = build
+BUILDDIR      = _build
 PKG ?= eegdash
 APIDIR := $(SOURCEDIR)/api
+
+.PHONY: help clean apidoc html html-noplot html-fast
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: apidoc
 apidoc:
 	# Generate full API docs, then prune duplicates covered by autosummary
 	@rm -f "$(APIDIR)"/dataset/eegdash.features*
@@ -18,17 +21,23 @@ apidoc:
 
 
 # Standard build runs examples
-html: apidoc 
+html: apidoc
+	python prepare_summary_tables.py --target $(BUILDDIR)
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-.PHONY: html-noplot
-html-noplot: apidoc 
-	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
+html-noplot: apidoc
+	@python prepare_summary_tables.py --target $(BUILDDIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
+# Very fast build: limit datasets to 5
+html-fast: apidoc
+	@EEGDASH_DOC_LIMIT=5 python prepare_summary_tables.py --target $(BUILDDIR)
+	@EEGDASH_DOC_LIMIT=5 $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
+		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+
 # Custom clean target to remove generated API docs and build files
-.PHONY: clean
 clean:
 	@echo "Removing generated API documentation..."
 	@rm -rf "$(APIDIR)/dataset"
@@ -39,13 +48,14 @@ clean:
 	@echo "Removing other generated directories..."
 	@rm -rf "$(SOURCEDIR)/generated"
 	@rm -rf "$(SOURCEDIR)/gen_modules"
-	@echo "Removing build directory..."
-	@rm -rf "$(BUILDDIR)"
+	@echo "Removing build directory (including CSV cache)..."
+	@rm -rf "$(BUILDDIR)" build
 	@echo "Clean completed."
 
-.PHONY: help apidoc
-Makefile: ;          
+# Catch-all target for other sphinx-build formats
+# Prevent Makefile from matching the catch-all rule
+Makefile: ;
 
 %: Makefile
-	@python prepare_summary_tables.py ../eegdash/ $(BUILDDIR)
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	python prepare_summary_tables.py --target $(BUILDDIR)
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

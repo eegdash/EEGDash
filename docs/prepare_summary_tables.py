@@ -1,36 +1,52 @@
-import glob
+"""Generate summary tables and charts for EEGDash documentation.
+
+This script fetches data from the EEGDash API and generates:
+- Interactive charts (bubble, sankey, treemap, growth, clinical, ridgeline)
+- Summary statistics JSON
+- HTML summary table with DataTables integration
+"""
+
+import concurrent.futures
+import json
+import os
 import textwrap
 from argparse import ArgumentParser
-from datetime import datetime
+from collections import Counter
+from functools import partial
 from pathlib import Path
-from shutil import copyfile
+from shutil import copyfile as _copyfile
+from typing import Callable
 
-import numpy as np
 import pandas as pd
 from plot_dataset import (
+    generate_clinical_stacked_bar,
     generate_dataset_bubble,
+    generate_dataset_growth,
     generate_dataset_sankey,
     generate_dataset_treemap,
+    generate_moabb_bubble,
     generate_modality_ridgeline,
 )
-from plot_dataset.utils import get_dataset_url, human_readable_size
-from table_tag_utils import wrap_tags
+from plot_dataset.utils import get_dataset_url as _get_dataset_url
+from plot_dataset.utils import human_readable_size
+from table_tag_utils import _normalize_values, wrap_tags
 
+# Directories
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
+BUILD_STATIC_DIR = DOCS_DIR / "_build" / "html" / "_static" / "dataset_generated"
 
+# API Configuration
+API_BASE_URL = "https://data.eegdash.org/api"
+DEFAULT_DATABASE = "eegdash"
 
-def wrap_dataset_name(name: str):
-    # Remove any surrounding whitespace
-    name = name.strip()
-    # Link to the individual dataset API page
-    # Updated structure: api/dataset/eegdash.dataset.<CLASS>.html
-    url = get_dataset_url(name)
-    if not url:
-        return name.upper()
-    return f'<a href="{url}">{name.upper()}</a>'
+# Number of workers for parallel chart generation
+MAX_CHART_WORKERS = 6
 
+# Tokens to treat as unknown/empty
+_UNKNOWN_TOKENS = {"unknown", "nothing", "nan", "none", "null", ""}
 
+# Canonical mappings for normalizing tag values
 DATASET_CANONICAL_MAP = {
     "pathology": {
         "healthy controls": "Healthy",
@@ -45,6 +61,10 @@ DATASET_CANONICAL_MAP = {
         "somatosensory": "Somatosensory",
         "multisensory": "Multisensory",
     },
+    "record_modality": {
+        "eeg": "EEG",
+        "emg": "EMG",
+    },
     "type": {
         "perception": "Perception",
         "decision making": "Decision-making",
@@ -55,14 +75,478 @@ DATASET_CANONICAL_MAP = {
     },
 }
 
-DATA_TABLE_TEMPLATE = textwrap.dedent(
-    r"""
+
+# =============================================================================
+# File utilities
+# =============================================================================
+
+
+def copyfile(src, dst):
+    """Robust copyfile that ignores SameFileError."""
+    try:
+        _copyfile(src, dst)
+    except Exception as exc:
+        if "are the same file" not in str(exc):
+            raise exc
+
+
+def copy_to_static(src: Path, filename: str = None):
+    """Copy file to both source and build static directories."""
+    if filename is None:
+        filename = Path(src).name
+    copyfile(src, STATIC_DATASET_DIR / filename)
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
+    copyfile(src, BUILD_STATIC_DIR / filename)
+
+
+# =============================================================================
+# Chart generation
+# =============================================================================
+
+
+def _generate_chart_task(
+    name: str,
+    generator: Callable,
+    df: pd.DataFrame,
+    output_path: Path,
+    **kwargs,
+) -> tuple[str, Path | None, str | None]:
+    """Generate a single chart - worker function for parallel execution."""
+    try:
+        output = generator(df.copy(), output_path, **kwargs)
+        return (name, output, None)
+    except Exception as exc:
+        return (name, None, str(exc))
+
+
+def generate_charts_parallel(
+    df_raw: pd.DataFrame,
+    target_dir: Path,
+    x_var: str = "subjects",
+) -> list[tuple[str, Path | None, str | None]]:
+    """Generate all charts in parallel using ThreadPoolExecutor."""
+    # Prepare bubble chart DataFrame
+    df_bubble = df_raw.copy()
+    if "subjects" not in df_bubble.columns and "n_subjects" in df_bubble.columns:
+        df_bubble["subjects"] = df_bubble["n_subjects"]
+    if "records" not in df_bubble.columns and "n_records" in df_bubble.columns:
+        df_bubble["records"] = df_bubble["n_records"]
+
+    tasks = [
+        (
+            "Bubble",
+            generate_dataset_bubble,
+            df_bubble,
+            target_dir / "dataset_bubble.html",
+            {"x_var": x_var},
+        ),
+        (
+            "MOABB Bubble",
+            generate_moabb_bubble,
+            df_raw,
+            target_dir / "dataset_moabb_bubble.html",
+            {"color_by": "modality"},
+        ),
+        (
+            "Sankey",
+            generate_dataset_sankey,
+            df_raw,
+            target_dir / "dataset_sankey.html",
+            {},
+        ),
+        (
+            "Treemap",
+            generate_dataset_treemap,
+            df_raw,
+            target_dir / "dataset_treemap.html",
+            {},
+        ),
+        (
+            "Growth",
+            generate_dataset_growth,
+            df_raw,
+            target_dir / "dataset_growth.html",
+            {},
+        ),
+        (
+            "Clinical",
+            generate_clinical_stacked_bar,
+            df_raw,
+            target_dir / "dataset_clinical.html",
+            {},
+        ),
+        (
+            "Ridgeline",
+            generate_modality_ridgeline,
+            df_raw,
+            target_dir / "dataset_ridgeline.html",
+            {},
+        ),
+    ]
+
+    results = []
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=MAX_CHART_WORKERS
+    ) as executor:
+        futures = {
+            executor.submit(_generate_chart_task, name, gen, df, path, **kwargs): name
+            for name, gen, df, path, kwargs in tasks
+        }
+        for future in concurrent.futures.as_completed(futures):
+            chart_name = futures[future]
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as exc:
+                results.append((chart_name, None, str(exc)))
+
+    return results
+
+
+def process_chart_results(results: list[tuple[str, Path | None, str | None]]) -> None:
+    """Process and report chart generation results, copy successful outputs to static."""
+    for name, output_path, error in results:
+        if error:
+            print(f"[{name}] Skipped: {error}")
+        elif output_path:
+            copy_to_static(output_path)
+            print(f"Generated: {output_path.name}")
+
+
+# =============================================================================
+# Summary statistics
+# =============================================================================
+
+
+def save_summary_stats(df_raw: pd.DataFrame) -> None:
+    """Calculate and save summary stats for the documentation cards."""
+    unique_modalities = set()
+    col = (
+        "record_modality" if "record_modality" in df_raw.columns else "record modality"
+    )
+    if col in df_raw.columns:
+        for m in df_raw[col].dropna():
+            unique_modalities.update(_normalize_values(m))
+    unique_modalities = {m.strip().lower() for m in unique_modalities if m.strip()}
+
+    n_subj_col = "n_subjects" if "n_subjects" in df_raw.columns else "subjects"
+    subjects_total = int(
+        pd.to_numeric(df_raw.get(n_subj_col, 0), errors="coerce").sum()
+    )
+
+    n_rec_col = "n_records" if "n_records" in df_raw.columns else "records"
+    recording_total = int(
+        pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
+    )
+
+    summary_stats = {
+        "datasets_total": len(df_raw),
+        "subjects_total": subjects_total,
+        "recording_total": recording_total,
+        "modalities_total": len(unique_modalities),
+        "sources_total": df_raw["source"].nunique()
+        if "source" in df_raw.columns
+        else 0,
+    }
+
+    stats_path = STATIC_DATASET_DIR / "summary_stats.json"
+    with open(stats_path, "w") as f:
+        json.dump(summary_stats, f)
+    print(f"Generated summary stats: {stats_path}")
+
+    if BUILD_STATIC_DIR.exists():
+        with open(BUILD_STATIC_DIR / "summary_stats.json", "w") as f:
+            json.dump(summary_stats, f)
+
+
+def generate_search_index(df_raw: pd.DataFrame) -> None:
+    """Generate search index JSON for client-side fuzzy search with Fuse.js."""
+    search_index = []
+    excluded = {"test", "ds003380"}
+
+    for _, row in df_raw.iterrows():
+        dataset_id = str(row.get("dataset", "")).strip()
+        if not dataset_id or dataset_id.lower() in excluded:
+            continue
+
+        # Extract and normalize tag arrays
+        pathology_col = "Type Subject" if "Type Subject" in row else "pathology"
+        modality_col = "modality of exp" if "modality of exp" in row else "modality"
+        type_col = "type of exp" if "type of exp" in row else "type"
+        record_mod_col = (
+            "record_modality" if "record_modality" in row else "record modality"
+        )
+
+        pathology_tags = list(_normalize_values(row.get(pathology_col, "")))
+        modality_tags = list(_normalize_values(row.get(modality_col, "")))
+        type_tags = list(_normalize_values(row.get(type_col, "")))
+        record_modality = list(_normalize_values(row.get(record_mod_col, "")))
+
+        # Get numeric values safely
+        n_subjects = pd.to_numeric(row.get("n_subjects", 0), errors="coerce")
+        n_records = pd.to_numeric(row.get("n_records", 0), errors="coerce")
+        n_tasks = pd.to_numeric(row.get("n_tasks", 0), errors="coerce")
+
+        entry = {
+            "id": dataset_id,
+            "title": str(row.get("dataset_title", "")).strip()[:200],
+            "source": str(row.get("source", "")).strip(),
+            "subjects": int(n_subjects) if pd.notna(n_subjects) else 0,
+            "records": int(n_records) if pd.notna(n_records) else 0,
+            "tasks": int(n_tasks) if pd.notna(n_tasks) else 0,
+            "size": str(row.get("size", "")).strip(),
+            "pathology": pathology_tags,
+            "modality": modality_tags,
+            "type": type_tags,
+            "recordModality": record_modality,
+            # URL for dataset detail page
+            "url": f"api/dataset/eegdash.dataset.{dataset_id.upper()}.html",
+        }
+        search_index.append(entry)
+
+    # Save to static directory
+    index_path = STATIC_DATASET_DIR / "search_index.json"
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(search_index, f, separators=(",", ":"))
+    print(f"Generated search index: {index_path} ({len(search_index)} datasets)")
+
+    # Copy to build directory
+    if BUILD_STATIC_DIR.exists():
+        with open(BUILD_STATIC_DIR / "search_index.json", "w", encoding="utf-8") as f:
+            json.dump(search_index, f, separators=(",", ":"))
+
+
+# =============================================================================
+# Table preparation
+# =============================================================================
+
+
+def _normalise_tag(token: str, canonical: dict) -> str:
+    """Normalize a tag token using a canonical mapping.
+
+    Args:
+        token: The tag token to normalize.
+        canonical: A dict mapping lowercase strings to canonical forms.
+
+    Returns:
+        The normalized tag string, or None if the token is unknown.
+
+    """
+    text = " ".join(token.replace("_", " ").split())
+    lowered = text.lower()
+    if lowered in _UNKNOWN_TOKENS:
+        return None
+    if lowered in canonical:
+        return canonical[lowered]
+    return text
+
+
+def _tag_normalizer(kind: str):
+    """Create a normalizer function for a specific tag kind."""
+    canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
+    return partial(_normalise_tag, canonical=canonical)
+
+
+def parse_freqs(value) -> str:
+    """Parse frequencies/channels list and return mode with * if variable."""
+    if not value:
+        return ""
+
+    if isinstance(value, str):
+        value = value.strip()
+        try:
+            value = json.loads(value)
+        except (json.JSONDecodeError, TypeError):
+            pass
+
+    counts = Counter()
+
+    # Handle API aggregation format (list of dicts)
+    if (
+        isinstance(value, list)
+        and value
+        and isinstance(value[0], dict)
+        and "val" in value[0]
+    ):
+        for item in value:
+            val = item.get("val")
+            count = item.get("count", 1)
+            if val is not None:
+                try:
+                    counts[int(float(val))] += count
+                except (ValueError, TypeError):
+                    pass
+    else:
+        # Handle simple list or string
+        freqs = []
+        if isinstance(value, str):
+            value = value.strip("[]")
+            if not value:
+                return ""
+            parts = [p.strip() for p in value.split(",") if p.strip()]
+            try:
+                freqs = [float(f) for f in parts]
+            except ValueError:
+                pass
+        elif isinstance(value, (int, float)) and not pd.isna(value):
+            freqs = [value]
+        elif isinstance(value, list):
+            try:
+                freqs = [float(f) for f in value if f is not None]
+            except (ValueError, TypeError):
+                pass
+
+        for f in freqs:
+            try:
+                counts[int(f)] += 1
+            except ValueError:
+                pass
+
+    if not counts:
+        return ""
+
+    most_common_val, _ = counts.most_common(1)[0]
+    return f"{most_common_val}" if len(counts) == 1 else f"{most_common_val}*"
+
+
+def get_dataset_url(name: str) -> str | None:
+    """Get URL for dataset documentation page."""
+    return _get_dataset_url(name)
+
+
+def wrap_dataset_name(name: str) -> str:
+    """Wrap dataset name with link to documentation."""
+    name = name.strip()
+    url = get_dataset_url(name)
+    if not url:
+        return name.upper()
+    return f'<a href="{url}">{name.upper()}</a>'
+
+
+def _strip_unknown(value: object) -> object:
+    """Strip unknown/empty values, returning empty string."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return ""
+    if isinstance(value, str) and value.strip().lower() in _UNKNOWN_TOKENS:
+        return ""
+    return value
+
+
+def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Prepare DataFrame for HTML table rendering."""
+    # Filter excluded datasets
+    excluded = {"test", "ds003380"}
+    df = df[~df["dataset"].str.lower().isin(excluded)].copy()
+
+    df["dataset"] = df["dataset"].apply(wrap_dataset_name)
+
+    # Ensure required columns exist
+    for col, default in [
+        ("dataset_title", ""),
+        ("source", ""),
+        ("record_modality", df.get("record modality", "")),
+        ("Type Subject", df.get("pathology", "")),
+        ("modality of exp", df.get("modality", "")),
+        ("type of exp", df.get("type", "")),
+        ("license", ""),
+        ("size", ""),
+        ("size_bytes", 0),
+        ("n_records", 0),
+        ("n_subjects", 0),
+        ("n_tasks", 0),
+        ("n_sessions", 0),
+        ("nchans_set", ""),
+        ("sampling_freqs", ""),
+    ]:
+        if col not in df.columns:
+            df[col] = default
+
+    df = df[
+        [
+            "dataset",
+            "dataset_title",
+            "source",
+            "record_modality",
+            "n_records",
+            "n_subjects",
+            "n_tasks",
+            "n_sessions",
+            "nchans_set",
+            "sampling_freqs",
+            "size",
+            "size_bytes",
+            "Type Subject",
+            "modality of exp",
+            "type of exp",
+            "license",
+        ]
+    ]
+
+    for col in df.select_dtypes(include="object").columns:
+        df[col] = df[col].apply(_strip_unknown)
+
+    df = df.rename(
+        columns={
+            "modality of exp": "modality",
+            "type of exp": "type",
+            "Type Subject": "pathology",
+            "record_modality": "record modality",
+        }
+    )
+
+    # Convert numeric columns
+    df["n_subjects"] = df["n_subjects"].astype(int)
+    df["n_tasks"] = df["n_tasks"].astype(int)
+    df["n_sessions"] = df["n_sessions"].astype(int)
+    df["n_records"] = df["n_records"].astype(int)
+    df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
+    df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
+
+    # Apply tag wrapping
+    for col, kind in [
+        ("pathology", "pathology"),
+        ("modality", "modality"),
+        ("type", "type"),
+        ("record modality", "record_modality"),
+    ]:
+        normalizer = _tag_normalizer(kind)
+        df[col] = df[col].apply(
+            lambda v: wrap_tags(
+                v, kind=f"dataset-{kind.replace('_', '-')}", normalizer=normalizer
+            )
+        )
+
+    # Add total row
+    df.loc["Total"] = df.sum(numeric_only=True)
+    df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
+    for col in [
+        "nchans_set",
+        "sampling_freqs",
+        "source",
+        "pathology",
+        "modality",
+        "type",
+        "record modality",
+    ]:
+        df.loc["Total", col] = ""
+    df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
+    df = df.drop(columns=["size_bytes"])
+    df.index = df.index.astype(str)
+
+    return df
+
+
+# =============================================================================
+# HTML Table template
+# =============================================================================
+
+DATA_TABLE_TEMPLATE = textwrap.dedent(r"""
 <!-- jQuery + DataTables core -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css"/>
 <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
 
-<!-- Buttons + SearchPanes (+ Select required by SearchPanes) -->
+<!-- Buttons + SearchPanes -->
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
@@ -71,51 +555,38 @@ DATA_TABLE_TEMPLATE = textwrap.dedent(
 <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
 
 <style>
-    /* Styling for the Total row (placed in tfoot) */
     table.sd-table tfoot td {
         font-weight: 600;
         border-top: 2px solid rgba(0,0,0,0.2);
         background: #f9fafb;
-        /* Match body cell padding to keep perfect alignment */
         padding: 8px 10px !important;
         vertical-align: middle;
     }
-
-    /* Right-align numeric-like columns (2..8) consistently for body & footer */
-    table.sd-table tbody td:nth-child(n+2),
-    table.sd-table tfoot td:nth-child(n+2) {
-        text-align: right;
-    }
-    /* Keep first column (Dataset/Total) left-aligned */
-    table.sd-table tbody td:first-child,
-    table.sd-table tfoot td:first-child {
-        text-align: left;
-    }
+    table.sd-table tbody td:nth-child(-n+6),
+    table.sd-table tfoot td:nth-child(-n+6),
+    table.sd-table thead th:nth-child(-n+6) { text-align: left; }
+    table.sd-table tbody td:nth-child(n+7),
+    table.sd-table tfoot td:nth-child(n+7),
+    table.sd-table thead th:nth-child(n+7) { text-align: right; }
 </style>
 
 <TABLE_HTML>
 
 <script>
-// Helper: robustly extract values for SearchPanes when needed
 function tagsArrayFromHtml(html) {
     if (html == null) return [];
-    // If it's numeric or plain text, just return as a single value
     if (typeof html === 'number') return [String(html)];
     if (typeof html === 'string' && html.indexOf('<') === -1) return [html.trim()];
-    // Else parse any .tag elements inside HTML
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
-    const tags = Array.from(tmp.querySelectorAll('.tag')).map(function(el){
-        return (el.textContent || '').trim();
-    });
-    return tags.length ? tags : [tmp.textContent.trim()];
+    const tags = Array.from(tmp.querySelectorAll('.tag')).map(el => (el.textContent || '').trim());
+    const text = tmp.textContent.trim();
+    return tags.length ? tags : (text ? [text] : []);
 }
 
-// Helper: parse human-readable sizes like "4.31 GB" into bytes (number)
 function parseSizeToBytes(text) {
     if (!text) return 0;
-    const s = String(text).trim();
-    const m = s.match(/([\d,.]+)\s*(TB|GB|MB|KB|B)/i);
+    const m = String(text).trim().match(/([\d,.]+)\s*(TB|GB|MB|KB|B)/i);
     if (!m) return 0;
     const value = parseFloat(m[1].replace(/,/g, ''));
     const unit = m[2].toUpperCase();
@@ -125,16 +596,11 @@ function parseSizeToBytes(text) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('datasets-table');
-    if (!table || !window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) {
-        return;
-    }
+    if (!table || !window.jQuery || !window.jQuery.fn.DataTable) return;
 
     const $table = window.jQuery(table);
-    if (window.jQuery.fn.DataTable.isDataTable(table)) {
-        return;
-    }
+    if (window.jQuery.fn.DataTable.isDataTable(table)) return;
 
-    // 1) Move the "Total" row into <tfoot> so sorting/filtering never moves it
     const $tbody = $table.find('tbody');
     const $total = $tbody.find('tr').filter(function(){
         return window.jQuery(this).find('td').eq(0).text().trim() === 'Total';
@@ -145,9 +611,15 @@ document.addEventListener('DOMContentLoaded', function () {
         $total.appendTo($tfoot);
     }
 
-    // 2) Initialize DataTable with SearchPanes button
-    const FILTER_COLS = [1,2,3,4,5,6,7];
-    // Detect the index of the size column by header text
+    const FILTER_COLS = [1, 2, 3, 4, 5, 6, 7, 8];
+    const TAG_COLS = (function(){
+        const tagHeaders = new Set(['record modality', 'pathology', 'modality', 'type']);
+        const cols = [];
+        $table.find('thead th').each(function(i){
+            if (tagHeaders.has(window.jQuery(this).text().trim().toLowerCase())) cols.push(i);
+        });
+        return cols;
+    })();
     const sizeIdx = (function(){
         let idx = -1;
         $table.find('thead th').each(function(i){
@@ -172,17 +644,19 @@ document.addEventListener('DOMContentLoaded', function () {
             config: { cascadePanes: true, viewTotal: true, layout: 'columns-4', initCollapsed: false }
         }],
         columnDefs: (function(){
-            const defs = [
-                { searchPanes: { show: true }, targets: FILTER_COLS }
-            ];
+            const defs = [{ searchPanes: { show: true }, targets: FILTER_COLS }];
+            if (TAG_COLS.length) {
+                defs.push({
+                    targets: TAG_COLS,
+                    searchPanes: { show: true, orthogonal: 'sp' },
+                    render: function(data, type) { return type === 'sp' ? tagsArrayFromHtml(data) : data; }
+                });
+            }
             if (sizeIdx !== -1) {
                 defs.push({
                     targets: sizeIdx,
                     render: function(data, type) {
-                        if (type === 'sort' || type === 'type') {
-                            return parseSizeToBytes(data);
-                        }
-                        return data;
+                        return (type === 'sort' || type === 'type') ? parseSizeToBytes(data) : data;
                     }
                 });
             }
@@ -190,12 +664,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })()
     });
 
-    // 3) UX: click a header to open the relevant filter pane
     $table.find('thead th').each(function (i) {
-        if ([1,2,3,4,5].indexOf(i) === -1) return;
-        window.jQuery(this)
-            .css('cursor','pointer')
-            .attr('title','Click to filter this column')
+        if ([1, 2, 3, 4, 5].indexOf(i) === -1) return;
+        window.jQuery(this).css('cursor','pointer').attr('title','Click to filter this column')
             .on('click', function () {
                 dataTable.button('.buttons-searchPanes').trigger();
                 window.setTimeout(function () {
@@ -209,235 +680,188 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-"""
-)
+""")
 
 
-def _tag_normalizer(kind: str):
-    canonical = {k.lower(): v for k, v in DATASET_CANONICAL_MAP.get(kind, {}).items()}
-
-    def _normalise(token: str) -> str:
-        text = " ".join(token.replace("_", " ").split())
-        lowered = text.lower()
-        if lowered in canonical:
-            return canonical[lowered]
-        return text
-
-    return _normalise
+# =============================================================================
+# Main functions
+# =============================================================================
 
 
-def prepare_table(df: pd.DataFrame):
-    # drop test dataset and create a copy to avoid SettingWithCopyWarning
-    df = df[df["dataset"] != "test"].copy()
-
-    df["dataset"] = df["dataset"].apply(wrap_dataset_name)
-    # changing the column order
-    df = df[
-        [
-            "dataset",
-            "record_modality",
-            "n_records",
-            "n_subjects",
-            "n_tasks",
-            "nchans_set",
-            "sampling_freqs",
-            "size",
-            "size_bytes",
-            "Type Subject",
-            "modality of exp",
-            "type of exp",
-        ]
-    ]
-
-    # renaming time for something small
-    df = df.rename(
-        columns={
-            "modality of exp": "modality",
-            "type of exp": "type",
-            "Type Subject": "pathology",
-            "record_modality": "record modality",
-        }
+def _load_local_dataset_summary() -> pd.DataFrame:
+    """Load local dataset_summary.csv as fallback."""
+    csv_path = (
+        Path(__file__).resolve().parents[1]
+        / "eegdash"
+        / "dataset"
+        / "dataset_summary.csv"
     )
-    # number of subject are always int
-    df["n_subjects"] = df["n_subjects"].astype(int)
-    # number of tasks are always int
-    df["n_tasks"] = df["n_tasks"].astype(int)
-    # number of records are always int
-    df["n_records"] = df["n_records"].astype(int)
-
-    # from the sample frequency list, I will apply str
-    df["sampling_freqs"] = df["sampling_freqs"].apply(parse_freqs)
-    # from the channels set, I will follow the same logic of freq
-    df["nchans_set"] = df["nchans_set"].apply(parse_freqs)
-    # Wrap categorical columns with styled tags for downstream rendering
-    pathology_normalizer = _tag_normalizer("pathology")
-    modality_normalizer = _tag_normalizer("modality")
-    type_normalizer = _tag_normalizer("type")
-    record_modality_normalizer = _tag_normalizer("record_modality")
-
-    df["pathology"] = df["pathology"].apply(
-        lambda value: wrap_tags(
-            value,
-            kind="dataset-pathology",
-            normalizer=pathology_normalizer,
-        )
-    )
-    df["modality"] = df["modality"].apply(
-        lambda value: wrap_tags(
-            value,
-            kind="dataset-modality",
-            normalizer=modality_normalizer,
-        )
-    )
-    df["type"] = df["type"].apply(
-        lambda value: wrap_tags(
-            value,
-            kind="dataset-type",
-            normalizer=type_normalizer,
-        )
-    )
-    df["record modality"] = df["record modality"].apply(
-        lambda value: wrap_tags(
-            value,
-            kind="dataset-record-modality",
-            normalizer=record_modality_normalizer,
-        )
-    )
-
-    # Creating the total line
-    df.loc["Total"] = df.sum(numeric_only=True)
-    df.loc["Total", "dataset"] = f"Total {len(df) - 1} datasets"
-    df.loc["Total", "nchans_set"] = ""
-    df.loc["Total", "sampling_freqs"] = ""
-    df.loc["Total", "pathology"] = ""
-    df.loc["Total", "modality"] = ""
-    df.loc["Total", "type"] = ""
-    df.loc["Total", "record modality"] = ""
-    df.loc["Total", "size"] = human_readable_size(df.loc["Total", "size_bytes"])
-    df = df.drop(columns=["size_bytes"])
-    # arrounding the hours
-
-    df.index = df.index.astype(str)
-
-    return df
+    if not csv_path.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(csv_path, index_col=False, header=0, skipinitialspace=True)
+    except Exception:
+        return pd.DataFrame()
 
 
-def main(source_dir: str, target_dir: str):
+def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
+    """Generate summary tables and charts from API data."""
+    try:
+        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
+    except ImportError:
+        import sys  # noqa: PLC0415
+
+        sys.path.insert(0, str(Path(__file__).parents[1]))
+        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
+
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
-    files = glob.glob(str(Path(source_dir) / "dataset" / "*.csv"))
-    for f in files:
-        target_file = target_dir / Path(f).name
-        print(f"Processing {f} -> {target_file}")
-        df_raw = pd.read_csv(
-            f, index_col=False, header=0, skipinitialspace=True
-        )  # , sep=";")
-        # Generate bubble chart from the raw data to have access to size_bytes
-        bubble_path = target_dir / "dataset_bubble.html"
-        bubble_output = generate_dataset_bubble(
-            df_raw,
-            bubble_path,
-            x_var="subjects",
+    BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
+
+    print(f"Fetching chart data from API (database: {database})...")
+    df_raw, aggregations = fetch_chart_data_from_api(
+        API_BASE_URL, database, limit=limit
+    )
+
+    if aggregations:
+        print(
+            f"  Pre-computed aggregations: {len(aggregations.get('modality_counts', {}))} modalities, "
+            f"{len(aggregations.get('source_counts', {}))} sources"
         )
-        copyfile(bubble_output, STATIC_DATASET_DIR / bubble_output.name)
 
-        # Generate Sankey diagram showing dataset flow across categories
-        try:
-            sankey_path = target_dir / "dataset_sankey.html"
-            sankey_output = generate_dataset_sankey(df_raw, sankey_path)
-            copyfile(sankey_output, STATIC_DATASET_DIR / sankey_output.name)
-        except Exception as exc:
-            print(f"[dataset Sankey] Skipped due to error: {exc}")
+    # Try to enrich with local CSV for better modality info
+    fallback_df = _load_local_dataset_summary()
+    if not fallback_df.empty and not df_raw.empty:
+        print("Enriching API data with local dataset_summary.csv modality info...")
+        if "dataset" not in df_raw.columns and "dataset_id" in df_raw.columns:
+            df_raw["dataset"] = df_raw["dataset_id"]
 
-        try:
-            treemap_path = target_dir / "dataset_treemap.html"
-            treemap_output = generate_dataset_treemap(df_raw, treemap_path)
-            copyfile(treemap_output, STATIC_DATASET_DIR / treemap_output.name)
-        except Exception as exc:
-            print(f"[dataset Treemap] Skipped due to error: {exc}")
+        enrich_cols = ["dataset", "record_modality", "modality of exp"]
+        enrich_df = fallback_df[
+            [c for c in enrich_cols if c in fallback_df.columns]
+        ].copy()
 
-        df = prepare_table(df_raw)
-        # preserve int values
-        df["n_subjects"] = df["n_subjects"].astype(int)
-        df["n_tasks"] = df["n_tasks"].astype(int)
-        df["n_records"] = df["n_records"].astype(int)
-        int_cols = ["n_subjects", "n_tasks", "n_records"]
+        if not enrich_df.empty and "dataset" in enrich_df.columns:
+            df_raw = df_raw.merge(
+                enrich_df, on="dataset", how="left", suffixes=("", "_csv")
+            )
+            if "record_modality_csv" in df_raw.columns:
+                if "recording_modality" not in df_raw.columns:
+                    df_raw["recording_modality"] = pd.Series(
+                        index=df_raw.index, dtype="object"
+                    )
+                df_raw["recording_modality"] = df_raw[
+                    "record_modality_csv"
+                ].combine_first(df_raw["recording_modality"])
+                df_raw["record_modality"] = df_raw["record_modality_csv"]
 
-        # Coerce to numeric, allow NAs, and keep integer display
-        df[int_cols] = (
-            df[int_cols].apply(pd.to_numeric, errors="coerce").astype("Int64")
-        )
-        df = df.rename(
-            columns={
-                "dataset": "Dataset",
-                "nchans_set": "# of channels",
-                "sampling_freqs": "sampling (Hz)",
-                "size": "size",
-                "n_records": "# of records",
-                "n_subjects": "# of subjects",
-                "n_tasks": "# of tasks",
-                "pathology": "Pathology",
-                "modality": "Modality",
-                "type": "Type",
-                "record modality": "Record modality",
-            }
-        )
-        df = df[
-            [
-                "Dataset",
-                "Record modality",
-                "Pathology",
-                "Modality",
-                "Type",
-                "# of records",
-                "# of subjects",
-                "# of tasks",
-                "# of channels",
-                "sampling (Hz)",
-                "size",
-            ]
+    if df_raw.empty:
+        print("No datasets fetched from API!")
+        return
+
+    # Generate charts
+    print("Generating charts in parallel...")
+    chart_results = generate_charts_parallel(df_raw, target_dir, x_var="subjects")
+    process_chart_results(chart_results)
+
+    # Save summary stats
+    save_summary_stats(df_raw)
+
+    # Generate search index for fuzzy autocomplete
+    generate_search_index(df_raw)
+
+    # Generate HTML table
+    df = prepare_table(df_raw)
+    df["n_subjects"] = df["n_subjects"].astype(int)
+    df["n_tasks"] = df["n_tasks"].astype(int)
+    df["n_sessions"] = df["n_sessions"].astype(int)
+    df["n_records"] = df["n_records"].astype(int)
+    int_cols = ["n_subjects", "n_tasks", "n_sessions", "n_records"]
+    df[int_cols] = df[int_cols].apply(pd.to_numeric, errors="coerce").astype("Int64")
+
+    df = df.rename(
+        columns={
+            "dataset": "Dataset",
+            "source": "Source",
+            "nchans_set": "# of channels",
+            "sampling_freqs": "sampling (Hz)",
+            "size": "size",
+            "n_records": "# of records",
+            "n_subjects": "# of subjects",
+            "n_tasks": "# of tasks",
+            "n_sessions": "# of sessions",
+            "pathology": "Pathology",
+            "modality": "Modality",
+            "type": "Type",
+            "record modality": "Record modality",
+        }
+    )
+    df = df[
+        [
+            "Dataset",
+            "Source",
+            "Record modality",
+            "Pathology",
+            "Modality",
+            "Type",
+            "# of records",
+            "# of subjects",
+            "# of tasks",
+            "# of sessions",
+            "# of channels",
+            "sampling (Hz)",
+            "size",
         ]
-        # (If you add a 'Total' row after this, cast again or build it as Int64.)
-        html_table = df.to_html(
-            classes=["sd-table", "sortable"],
-            index=False,
-            escape=False,
-            table_id="datasets-table",
-        )
-        html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
-        table_path = target_dir / "dataset_summary_table.html"
-        with open(table_path, "w", encoding="utf-8") as f:
-            f.write(html_table)
-        copyfile(table_path, STATIC_DATASET_DIR / table_path.name)
+    ]
 
-        # Generate KDE ridgeline plot for modality participant distributions
-        try:
-            kde_path = target_dir / "dataset_kde_modalities.html"
-            kde_output = generate_modality_ridgeline(df_raw, kde_path)
-            if kde_output:
-                copyfile(kde_output, STATIC_DATASET_DIR / kde_output.name)
-        except Exception as exc:
-            print(f"[dataset KDE] Skipped due to error: {exc}")
+    html_table = df.to_html(
+        classes=["sd-table", "sortable"],
+        index=False,
+        escape=False,
+        table_id="datasets-table",
+    )
+    html_table = DATA_TABLE_TEMPLATE.replace("<TABLE_HTML>", html_table)
+    table_path = target_dir / "dataset_summary_table.html"
+    with open(table_path, "w", encoding="utf-8") as f:
+        f.write(html_table)
+    copy_to_static(table_path)
+    print(f"Generated: {table_path.name}")
 
+    # Generate KDE ridgeline
+    try:
+        kde_path = target_dir / "dataset_kde_modalities.html"
+        kde_output = generate_modality_ridgeline(df_raw, kde_path)
+        if kde_output:
+            copy_to_static(kde_output)
+            print(f"Generated: {kde_output.name}")
+    except Exception as exc:
+        print(f"[KDE] Skipped: {exc}")
 
-def parse_freqs(value) -> str:
-    if isinstance(value, str):
-        freq = [int(float(f)) for f in value.strip("[]").split(",")]
-        if len(freq) == 1:
-            return f"{int(freq[0])}"
-        else:
-            return f"{int(np.median(freq))}*"
-
-    elif isinstance(value, (int, float)) and not pd.isna(value):
-        return f"{int(value)}"
-    return ""  # for other types like nan
+    print(f"\nAll outputs saved to: {target_dir}")
+    print(f"Static files copied to: {STATIC_DATASET_DIR}")
+    print(f"Build files copied to: {BUILD_STATIC_DIR}")
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("source_dir", type=str)
-    parser.add_argument("target_dir", type=str)
+    parser = ArgumentParser(
+        description="Generate EEGDash documentation charts and tables"
+    )
+    parser.add_argument(
+        "--target",
+        dest="target_dir",
+        type=str,
+        default="build",
+        help="Output directory",
+    )
+    parser.add_argument(
+        "--database",
+        type=str,
+        default=DEFAULT_DATABASE,
+        help=f"Database (default: {DEFAULT_DATABASE})",
+    )
     args = parser.parse_args()
-    main(args.source_dir, args.target_dir)
-    print(args.target_dir)
+
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+    main_from_api(args.target_dir, args.database, limit=limit)
+    print(f"Output directory: {args.target_dir}")

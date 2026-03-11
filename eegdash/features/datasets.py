@@ -179,7 +179,8 @@ def _compute_stats(
     ddof: int = 1,
     numeric_only: bool = False,
 ) -> tuple:
-    r"""Compute basic feature statistics for a single FeaturesDataset.
+    r"""Compute basic feature statistics for a single 
+    :class:`~eegdash.features.datasets.FeaturesDataset`.
 
     Depending on the specified flags, this function computes and returns
     the count, mean, and/or variance of all numeric features in the dataset.
@@ -522,8 +523,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                 f"does not match the number of existing "
                 f"subdirectories ({n_sub_dirs}). You may now "
                 f"encounter a mix of differently preprocessed "
-                f"datasets!",
-                UserWarning,
+                f"datasets!"
             )
         if path_contents:
             logger.warning(
@@ -757,7 +757,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
         pd.Series
             A Series containing the total count of non-missing values for 
             each feature column, indexed by feature names.
-
         """
         stats = Parallel(n_jobs)(
             delayed(_compute_stats)(ds, return_count=True, numeric_only=numeric_only)

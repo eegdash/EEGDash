@@ -170,5 +170,5 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
     
     """
-    coher = c.imag / np.sqrt(1 - c.real) # chnage to: c.imag / np.sqrt(1 - c.real**2)
+    coher = c.imag / np.sqrt(1 - c.real**2)
     return utils.reduce_freq_bands(f, coher, bands, np.mean)

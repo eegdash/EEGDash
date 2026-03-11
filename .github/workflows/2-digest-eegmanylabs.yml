@@ -1,0 +1,19 @@
+# Clone and digest EEGManyLabs datasets
+name: "2. Digest: EEGManyLabs"
+
+on:
+  workflow_run:
+    workflows: ["1. Fetch: EEGManyLabs"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  digest:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    uses: ./.github/workflows/2-clone-digest.yml
+    with:
+      source_name: "EEGManyLabs"
+      consolidated_file: "eegmanylabs_datasets.json"
+      workers: 4
+    secrets:
+      DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

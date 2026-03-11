@@ -1,24 +1,82 @@
 from __future__ import annotations
 
+import json
+import os
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
-from tabulate import tabulate
+
+from ..paths import get_default_cache_dir
+
+
+def _human_readable_size(num_bytes: int | float | None) -> str:
+    """Convert bytes to human-readable string."""
+    if num_bytes is None or num_bytes == 0:
+        return "Unknown"
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if abs(num_bytes) < 1024.0:
+            return f"{num_bytes:.1f} {unit}"
+        num_bytes /= 1024.0
+    return f"{num_bytes:.1f} PB"
+
+
+def _make_dataset_init(_dataset: str, base_class: type):
+    """Create an __init__ method for a dynamically generated dataset class.
+
+    Parameters
+    ----------
+    _dataset : str
+        The dataset identifier to bind to the class.
+    base_class : type
+        The base class whose __init__ will be called.
+
+    Returns
+    -------
+    callable
+        An __init__ method that sets up the dataset query.
+
+    """
+
+    def __init__(
+        self,
+        cache_dir: str,
+        query: dict | None = None,
+        s3_bucket: str | None = None,
+        **kwargs,
+    ):
+        q = {"dataset": _dataset}
+        if query:
+            q.update(query)
+        # call base_class.__init__ directly
+        base_class.__init__(
+            self,
+            query=q,
+            cache_dir=cache_dir,
+            s3_bucket=s3_bucket,
+            **kwargs,
+        )
+
+    return __init__
 
 
 def register_openneuro_datasets(
-    summary_file: str | Path,
+    summary_file: str | Path | None = None,
     *,
     base_class=None,
     namespace: Dict[str, Any] | None = None,
     add_to_all: bool = True,
+    from_api: bool = False,
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
 ) -> Dict[str, type]:
-    """Dynamically create and register dataset classes from a summary file.
+    """Dynamically create and register dataset classes from a summary file or API.
 
-    This function reads a CSV file containing summaries of OpenNeuro datasets
-    and dynamically creates a Python class for each dataset. These classes
-    inherit from a specified base class and are pre-configured with the
+    This function reads a CSV file or queries the API containing summaries of
+    datasets and dynamically creates a Python class for each dataset. These
+    classes inherit from a specified base class and are pre-configured with the
     dataset's ID.
 
     Parameters
@@ -44,14 +102,25 @@ def register_openneuro_datasets(
 
     """
     if base_class is None:
-        from ..api import EEGDashDataset as base_class  # lazy import
+        from ..api import EEGDashDataset as base_class  # noqa: PLC0415 (lazy import)
 
-    summary_path = Path(summary_file)
     namespace = namespace if namespace is not None else globals()
     module_name = namespace.get("__name__", __name__)
     registered: Dict[str, type] = {}
 
-    df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+    df = pd.DataFrame()
+    if from_api:
+        try:
+            df = _fetch_datasets_from_api(api_url, database)
+        except Exception:
+            # Fallback to CSV if API fails, or empty if no CSV provided
+            pass
+
+    if df.empty and summary_file:
+        summary_path = Path(summary_file)
+        if summary_path.exists():
+            df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
+
     for _, row_series in df.iterrows():
         # Use the explicit 'dataset' column, not the CSV index.
         dataset_id = str(row_series.get("dataset", "")).strip()
@@ -59,31 +128,7 @@ def register_openneuro_datasets(
             continue
 
         class_name = dataset_id.upper()
-
-        # avoid zero-arg super() here
-        def make_init(_dataset: str):
-            def __init__(
-                self,
-                cache_dir: str,
-                query: dict | None = None,
-                s3_bucket: str | None = None,
-                **kwargs,
-            ):
-                q = {"dataset": _dataset}
-                if query:
-                    q.update(query)
-                # call base_class.__init__ directly
-                base_class.__init__(
-                    self,
-                    query=q,
-                    cache_dir=cache_dir,
-                    s3_bucket=s3_bucket,
-                    **kwargs,
-                )
-
-            return __init__
-
-        init = make_init(dataset_id)
+        init = _make_dataset_init(dataset_id, base_class)
 
         # Generate rich docstring with dataset metadata
         doc = _generate_rich_docstring(dataset_id, row_series, base_class)
@@ -112,6 +157,20 @@ def register_openneuro_datasets(
     return registered
 
 
+def _clean_optional(value: object) -> str:
+    """Clean optional value, returning empty string for null-like values."""
+    text = str(value).strip() if value is not None else ""
+    if not text or text.lower() in {"nan", "none", "null"}:
+        return ""
+    return text
+
+
+def _clean_or_unknown(value: object) -> str:
+    """Clean value, returning 'Unknown' for null-like values."""
+    cleaned = _clean_optional(value)
+    return cleaned if cleaned else "Unknown"
+
+
 def _generate_rich_docstring(
     dataset_id: str, row_series: pd.Series, base_class: type
 ) -> str:
@@ -134,154 +193,490 @@ def _generate_rich_docstring(
         A formatted docstring.
 
     """
-    # Extract metadata with safe defaults
-    n_subjects = row_series.get("n_subjects", "Unknown")
-    n_records = row_series.get("n_records", "Unknown")
-    n_tasks = row_series.get("n_tasks", "Unknown")
-    modality = row_series.get("modality of exp", "")
-    exp_type = row_series.get("type of exp", "")
-    subject_type = row_series.get("Type Subject", "")
-    duration = row_series.get("duration_hours_total", "Unknown")
-    size = row_series.get("size", "Unknown")
+    n_subjects = _clean_or_unknown(row_series.get("n_subjects"))
+    n_records = _clean_or_unknown(row_series.get("n_records"))
+    n_tasks = _clean_or_unknown(row_series.get("n_tasks"))
 
-    # Create description based on available metadata
-    description_parts = []
-    if modality and str(modality).strip():
-        description_parts.append(f"**Modality**: {modality}")
-    if exp_type and str(exp_type).strip():
-        description_parts.append(f"**Type**: {exp_type}")
-    if subject_type and str(subject_type).strip():
-        description_parts.append(f"**Subjects**: {subject_type}")
+    modality = _clean_optional(row_series.get("record_modality"))
+    if not modality:
+        modality = _clean_optional(row_series.get("modality of exp"))
+    exp_type = _clean_optional(row_series.get("type of exp"))
+    subject_type = _clean_optional(row_series.get("Type Subject"))
 
-    description = (
-        " | ".join(description_parts)
-        if description_parts
-        else "EEG dataset from OpenNeuro"
+    # Citation count from NEMAR
+    citation_count = row_series.get("nemar_citation_count")
+    if citation_count is not None and not pd.isna(citation_count):
+        citation_count = int(citation_count)
+    else:
+        citation_count = None
+
+    summary_bits: list[str] = []
+    if modality:
+        summary_bits.append(f"Modality: ``{modality}``")
+    if exp_type:
+        summary_bits.append(f"Experiment type: ``{exp_type}``")
+    if subject_type:
+        summary_bits.append(f"Subject type: ``{subject_type}``")
+
+    summary_line = f"OpenNeuro dataset ``{dataset_id}``."
+    if summary_bits:
+        summary_line = f"{summary_line} {'; '.join(summary_bits)}."
+    summary_lines = [summary_line]
+
+    # Build the subjects/recordings/tasks line with optional citation badge
+    stats_parts = []
+    if n_subjects != "Unknown":
+        stats_parts.append(f"Subjects: {n_subjects}")
+    if n_records != "Unknown":
+        stats_parts.append(f"recordings: {n_records}")
+    if n_tasks != "Unknown":
+        stats_parts.append(f"tasks: {n_tasks}")
+
+    if stats_parts:
+        stats_line = "; ".join(stats_parts) + "."
+        summary_lines.append(stats_line)
+
+    doi_raw = (
+        row_series.get("dataset_doi")
+        or row_series.get("DatasetDOI")
+        or row_series.get("doi")
     )
+    doi = _clean_optional(doi_raw)
+    doi_clean = doi.replace("doi:", "").strip() if doi else ""
 
-    # Generate the docstring
-    docstring = f"""OpenNeuro dataset ``{dataset_id}``.
+    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+    nemar_url = f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}"
+    class_name = dataset_id.upper()
 
-{description}
+    references_lines = [
+        f"OpenNeuro dataset: {openneuro_url}",
+        f"NeMAR dataset: {nemar_url}",
+    ]
+    if doi_clean:
+        references_lines.append(f"DOI: https://doi.org/{doi_clean}")
+    if citation_count is not None:
+        references_lines.append(f"NEMAR citation count: {citation_count}")
 
-This dataset contains {n_subjects} subjects with {n_records} recordings across {n_tasks} tasks.
-Total duration: {duration} hours. Dataset size: {size}.
-
-{_markdown_table(row_series)}
-
-This dataset class provides convenient access to the ``{dataset_id}`` dataset through the EEGDash interface.
-It inherits all functionality from :class:`~{base_class.__module__}.{base_class.__name__}` with the dataset filter pre-configured.
+    docstring = f"""{chr(10).join(summary_lines)}
 
 Parameters
 ----------
-cache_dir : str
-    Directory to cache downloaded data.
-query : dict, optional
+cache_dir : str | Path
+    Directory where data are cached locally.
+query : dict | None
     Additional MongoDB-style filters to AND with the dataset selection.
     Must not contain the key ``dataset``.
-s3_bucket : str, optional
+s3_bucket : str | None
     Base S3 bucket used to locate the data.
-**kwargs
-    Additional arguments passed to the base dataset class.
+**kwargs : dict
+    Additional keyword arguments forwarded to :class:`~{base_class.__module__}.{base_class.__name__}`.
 
-Examples
---------
-Basic usage:
-
->>> from eegdash.dataset import {dataset_id.upper()}
->>> dataset = {dataset_id.upper()}(cache_dir="./data")
->>> print(f"Number of recordings: {{len(dataset)}}")
-
-Load a specific recording:
-
->>> if len(dataset) > 0:
-...     recording = dataset[0]
-...     raw = recording.load()
-...     print(f"Sampling rate: {{raw.info['sfreq']}} Hz")
-...     print(f"Number of channels: {{len(raw.ch_names)}}")
-
-Filter by additional criteria:
-
->>> # Get subset with specific task or subject
->>> filtered_dataset = {dataset_id.upper()}(
-...     cache_dir="./data",
-...     query={{"task": "RestingState"}}  # if applicable
-... )
+Attributes
+----------
+data_dir : Path
+    Local dataset cache directory (``cache_dir / dataset_id``).
+query : dict
+    Merged query with the dataset filter applied.
+records : list[dict] | None
+    Metadata records used to build the dataset, if pre-fetched.
 
 Notes
 -----
-More details available in the `NEMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__.
+Each item is a recording; recording-level metadata are available via ``dataset.description``.
+``query`` supports MongoDB-style filters on fields in ``ALLOWED_QUERY_FIELDS`` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
 
-See Also
+References
+----------
+{chr(10).join(references_lines)}
+
+Examples
 --------
-{base_class.__name__} : Base dataset class with full API documentation
+>>> from eegdash.dataset import {class_name}
+>>> dataset = {class_name}(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
 """
 
     return docstring
 
 
-def _markdown_table(row_series: pd.Series) -> str:
-    """Create a reStructuredText grid table from a pandas Series.
+# Datasets to explicitly ignore (synced with rules in 3_digest.py)
+EXCLUDED_DATASETS = {
+    "ABUDUKADI",
+    "ABUDUKADI_2",
+    "ABUDUKADI_3",
+    "ABUDUKADI_4",
+    "AILIJIANG",
+    "AILIJIANG_3",
+    "AILIJIANG_4",
+    "AILIJIANG_5",
+    "AILIJIANG_7",
+    "AILIJIANG_8",
+    "BAIHETI",
+    "BAIHETI_2",
+    "BAIHETI_3",
+    "BIAN_3",
+    "BIN_27",
+    "BLIX",
+    "BOJIN",
+    "BOUSSAGOL",
+    "AISHENG",
+    "ACHOLA",
+    "ANASHKIN",
+    "ANJUM",
+    "BARBIERI",
+    "BIN_8",
+    "BIN_9",
+    "BING_4",
+    "BING_8",
+    "BOWEN_4",
+    "AZIZAH",
+    "BAO",
+    "BAO-YOU",
+    "BAO_2",
+    "BENABBOU",
+    "BING",
+    "BOXIN",
+    "test",
+    "ds003380",
+}
 
-    This helper function takes a pandas Series containing dataset metadata
-    and formats it into a reStructuredText grid table for inclusion in
-    docstrings.
+
+def fetch_datasets_from_api(
+    api_url: str = "https://data.eegdash.org/api", database: str = "eegdash"
+) -> pd.DataFrame:
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure.
+
+    Note: This function makes a single API call to /datasets/summary.
+    Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
+    via the compute-stats endpoint, so no separate stats call is needed.
+    """
+    cache_dir = get_default_cache_dir()
+    cache_file = cache_dir / "dataset_summary.csv"
+
+    # Try loading from cache first
+    try:
+        if cache_file.exists():
+            return pd.read_csv(cache_file, comment="#", skip_blank_lines=True)
+    except Exception:
+        pass
+
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+
+    # Single API call - stats are already embedded in dataset documents
+    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    data: dict[str, Any] = {}
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        pass
+
+    if not data or not data.get("success"):
+        return pd.DataFrame()
+
+    datasets = data.get("data", [])
+
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        # Filter test datasets and excluded ones
+        if (
+            ds_id.lower() in ("test", "test_dataset")
+            or ds_id.upper() in EXCLUDED_DATASETS
+        ):
+            continue
+
+        # Stats are embedded in dataset documents (populated by compute-stats endpoint)
+        nchans_list = ds.get("nchans_counts") or []
+        sfreq_list = ds.get("sfreq_counts") or []
+
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
+        tags = ds.get("tags", {}) or {}
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Use tags.pathology if available, otherwise fallback to clinical info
+        pathology_list = tags.get("pathology", [])
+        if pathology_list and isinstance(pathology_list, list):
+            type_subject = ", ".join(pathology_list)
+        elif clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Unspecified Clinical"
+        elif clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        else:
+            type_subject = ""
+
+        # Use tags.modality if available, otherwise fallback to paradigm.modality
+        modality_list = tags.get("modality", [])
+        if modality_list and isinstance(modality_list, list):
+            paradigm_modality = ", ".join(modality_list)
+        else:
+            paradigm_modality = paradigm.get("modality") or ""
+
+        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
+        type_list = tags.get("type", [])
+        if type_list and isinstance(type_list, list):
+            cognitive_domain = ", ".join(type_list)
+        else:
+            cognitive_domain = paradigm.get("cognitive_domain") or ""
+
+        # Map API fields to expected CSV columns
+        row = {
+            "dataset": ds_id,
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            # IMPORTANT: Keep these columns separate!
+            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
+            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
+            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
+            "type of exp": cognitive_domain,  # cognitive domain only
+            "Type Subject": type_subject,
+            "duration_hours_total": 0.0,  # Not available in summary endpoint
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
+            # Extended fields for docs/summary tables
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "record_modality": ", ".join(recording_modality),
+            # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
+            "nchans_set": json.dumps(nchans_list),
+            "sampling_freqs": json.dumps(sfreq_list),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
+        }
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+
+    # Save to cache if we got data
+    if not df.empty:
+        try:
+            df.to_csv(cache_file, index=False)
+        except Exception:
+            pass
+
+    return df
+
+
+def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
+    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
+    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
+    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
+    try:
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    if not data.get("success"):
+        return pd.DataFrame()
+
+    datasets = data.get("data", [])
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        # Filter test datasets and excluded ones
+        if (
+            ds_id.lower() in ("test", "test_dataset")
+            or ds_id.upper() in EXCLUDED_DATASETS
+        ):
+            continue
+
+        # Extract demographics
+        demographics = ds.get("demographics", {}) or {}
+        recording_modality = ds.get("recording_modality", []) or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
+        tags = ds.get("tags", {}) or {}
+        clinical = ds.get("clinical", {}) or {}
+        paradigm = ds.get("paradigm", {}) or {}
+
+        # Use tags.pathology if available, otherwise fallback to clinical info
+        pathology_list = tags.get("pathology", [])
+        if pathology_list and isinstance(pathology_list, list):
+            type_subject = ", ".join(pathology_list)
+        elif clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Unspecified Clinical"
+        elif clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        else:
+            type_subject = ""
+
+        # Use tags.modality if available, otherwise fallback to paradigm.modality
+        modality_list = tags.get("modality", [])
+        if modality_list and isinstance(modality_list, list):
+            paradigm_modality = ", ".join(modality_list)
+        else:
+            paradigm_modality = paradigm.get("modality") or ""
+
+        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
+        type_list = tags.get("type", [])
+        if type_list and isinstance(type_list, list):
+            cognitive_domain = ", ".join(type_list)
+        else:
+            cognitive_domain = paradigm.get("cognitive_domain") or ""
+
+        # Map API fields to expected CSV columns
+        row = {
+            "dataset": ds_id,
+            "n_subjects": demographics.get("subjects_count", 0) or 0,
+            "n_records": ds.get("total_files", 0) or 0,
+            "n_tasks": len(ds.get("tasks", []) or []),
+            # IMPORTANT: Keep these columns separate!
+            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
+            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
+            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
+            "type of exp": cognitive_domain,  # cognitive domain only
+            "Type Subject": type_subject,
+            "duration_hours_total": 0.0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "record_modality": ", ".join(recording_modality),
+            # Use computed_title if available (populated by compute-stats endpoint)
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
+            # internal/extra fields
+            "source": ds.get("source") or "unknown",
+            # Citation metrics from NEMAR
+            "nemar_citation_count": ds.get("nemar_citation_count"),
+        }
+        rows.append(row)
+
+    return pd.DataFrame(rows)
+
+
+def _normalize_tag_value(val):
+    """Normalize tag value, handling both string and list formats from API."""
+    if isinstance(val, list):
+        return ", ".join(val) if val else ""
+    return val or ""
+
+
+def fetch_chart_data_from_api(
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
+    limit: int = 1000,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Fetch pre-aggregated chart data from API.
+
+    This uses the optimized /datasets/chart-data endpoint which returns
+    only chart-relevant fields and pre-computed aggregations.
+
+    Falls back to /datasets/summary if chart-data endpoint is unavailable.
 
     Parameters
     ----------
-    row_series : pandas.Series
-        A Series where each index is a metadata field and each value is the
-        corresponding metadata value.
+    api_url : str
+        Base API URL
+    database : str
+        Database name
+    limit : int
+        Maximum datasets to fetch
 
     Returns
     -------
-    str
-        A string containing the formatted reStructuredText table.
+    tuple[pd.DataFrame, dict]
+        DataFrame with dataset records and dict with pre-computed aggregations
 
     """
-    if row_series.empty:
-        return ""
-    dataset_id = row_series["dataset"]
+    url = f"{api_url}/{database}/datasets/chart-data?limit={limit}"
 
-    # Prepare the dataframe with user's suggested logic
-    df = (
-        row_series.to_frame()
-        .T.rename(
-            columns={
-                "n_subjects": "#Subj",
-                "nchans_set": "#Chan",
-                "n_tasks": "#Classes",
-                "sampling_freqs": "Freq(Hz)",
-                "duration_hours_total": "Duration(H)",
-                "size": "Size",
-            }
-        )
-        .reindex(
-            columns=[
-                "dataset",
-                "#Subj",
-                "#Chan",
-                "#Classes",
-                "Freq(Hz)",
-                "Duration(H)",
-                "Size",
-            ]
-        )
-        .infer_objects(copy=False)
-        .fillna("")
-    )
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            # Endpoint not deployed yet, fallback to summary endpoint
+            print("  chart-data endpoint not available, falling back to summary...")
+            df = fetch_datasets_from_api(api_url, database)
+            return df, {}
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
+    except Exception as e:
+        print(f"Failed to fetch chart data: {e}")
+        return pd.DataFrame(), {}
 
-    # Use tabulate for the final rst formatting
-    table = tabulate(df, headers="keys", tablefmt="rst", showindex=False)
+    if not data.get("success"):
+        return pd.DataFrame(), {}
 
-    # Add a caption for the table
-    # Use an anonymous external link (double underscore) to avoid duplicate
-    # target warnings when this docstring is repeated across many classes.
-    caption = (
-        f"Short overview of dataset {dataset_id} more details in the "
-        f"`NeMAR documentation <https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}>`__."
-    )
-    # adding caption below the table
-    # Indent the table to fit within the admonition block
-    indented_table = "\n".join("    " + line for line in table.split("\n"))
-    return f"\n\n{indented_table}\n\n{caption}"
+    datasets = data.get("datasets", [])
+    aggregations = data.get("aggregations", {})
+
+    rows = []
+    for ds in datasets:
+        ds_id = ds.get("dataset_id", "").strip()
+        if ds_id.upper() in EXCLUDED_DATASETS:
+            continue
+        # Skip EEG2025* datasets (HBN competition datasets - special handling)
+        if ds_id.startswith("EEG2025"):
+            continue
+
+        # Extract nested fields
+        demographics = ds.get("demographics") or {}
+        tags = ds.get("tags") or {}
+        clinical = ds.get("clinical") or {}
+        paradigm = ds.get("paradigm") or {}
+        timestamps = ds.get("timestamps") or {}
+
+        recording_modality = ds.get("recording_modality") or []
+        if isinstance(recording_modality, str):
+            recording_modality = [recording_modality]
+
+        # Map tags to chart columns
+        type_subject = _normalize_tag_value(tags.get("pathology"))
+        if not type_subject and clinical.get("is_clinical"):
+            type_subject = clinical.get("purpose") or "Clinical"
+        elif not type_subject and clinical.get("is_clinical") is False:
+            type_subject = "Healthy"
+        elif not type_subject:
+            type_subject = "Unknown"
+
+        modality_of_exp = _normalize_tag_value(tags.get("modality"))
+        if not modality_of_exp:
+            modality_of_exp = paradigm.get("modality", "")
+
+        type_of_exp = _normalize_tag_value(tags.get("type"))
+        if not type_of_exp:
+            type_of_exp = paradigm.get("cognitive_domain", "")
+
+        row = {
+            "dataset": ds_id,
+            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
+            "n_subjects": demographics.get("subjects_count") or 0,
+            "n_records": ds.get("total_files") or 0,
+            "n_tasks": len(ds.get("tasks") or []),
+            "n_sessions": len(ds.get("sessions") or []),
+            "record_modality": ", ".join(recording_modality),
+            "recording_modality": ", ".join(recording_modality),
+            "modality of exp": modality_of_exp,
+            "type of exp": type_of_exp,
+            "Type Subject": type_subject,
+            "size_bytes": ds.get("size_bytes") or 0,
+            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
+            "source": ds.get("source") or "unknown",
+            "license": ds.get("license", ""),
+            "doi": ds.get("dataset_doi", ""),
+            "nchans_set": json.dumps(ds.get("nchans_counts") or []),
+            "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
+            "dataset_created_at": timestamps.get("dataset_created_at", ""),
+            "nemar_citation_count": ds.get("nemar_citation_count"),
+            # Treemap requires this field; None triggers fallback to records
+            "duration_hours_total": None,
+        }
+        rows.append(row)
+
+    return pd.DataFrame(rows), aggregations

@@ -20,10 +20,13 @@ import numbers
 import numpy as np
 from scipy import signal, stats
 
-from ..decorators import FeaturePredecessor, univariate_feature
+from ..decorators import FeaturePredecessor, PreprocessorOutputType, univariate_feature
+from ..extractors import BasePreprocessorOutputType
 
 __all__ = [
+    "SignalOutputType",
     "signal_hilbert_preprocessor",
+    "signal_filter_preprocessor",
     "SIGNAL_PREDECESSORS",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
@@ -42,25 +45,60 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor()
+class SignalOutputType(BasePreprocessorOutputType):
+    pass
+
+
+SIGNAL_PREDECESSORS = [None, SignalOutputType]
+
+
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@PreprocessorOutputType(SignalOutputType)
 def signal_hilbert_preprocessor(x, /):
-    r"""Compute the amplitude envelope of the analytic signal.
+    r"""Compute the amplitude envelope of the analytic signal."""
+    
+    return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
+
+
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@PreprocessorOutputType(SignalOutputType)
+def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
+    """Linear-phase FIR band-pass filter.
 
     Parameters
     ----------
     x : ndarray
-        The input signal.
+        Input signal
+    fs : float
+        Sampling frequency (Hz)
+    f_min : float
+        Low cutoff frequency (Hz)
+    f_max : float
+        High cutoff frequency (Hz)
+    num_taps : int
+        Number of filter taps (must be odd for exact linear phase)
 
     Returns
     -------
     ndarray
-        The magnitude of the Hilbert transform after mean subtraction.
-    """
-    return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
+        The band-pass filtered signal, with the same shape as the input.
 
-# SIGNAL_PREDECESSORS allows features to accept raw data (None) 
-# or the Hilbert-transformed envelope.
-SIGNAL_PREDECESSORS = [None, signal_hilbert_preprocessor]
+    """
+    if num_taps is None:
+        num_taps = int(fs * 1.5)  # rule of thumb for choosing the filter order
+    if num_taps % 2 == 0:  # ensure odd
+        num_taps += 1
+    taps = signal.firwin(
+        numtaps=num_taps,
+        cutoff=[f_min, f_max],
+        fs=fs,
+        pass_zero=False,
+        window="hamming",
+    )
+
+    return signal.filtfilt(
+        taps, [1.0], x
+    )  # Zero-phase application (preserves waveform shape)
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)

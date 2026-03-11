@@ -15,7 +15,7 @@ authors = [
 description     = "EEG data for machine learning"
 readme          = "README.md"
 license         = "BSD-3-Clause"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 classifiers = [
     "Operating System :: OS Independent",
@@ -33,10 +33,13 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
+
 dependencies = [
-  "braindecode>=1.0",
-  "mne_bids>=0.17.0",
+  "braindecode[hub]>=1.3.2",
+  "mne",  # Source overridden in [tool.uv.sources]
+  "mne_bids>=0.18.0",
   "numba",
   "requests>=2.25.0",
   "s3fs",
@@ -46,8 +49,21 @@ dependencies = [
   "tabulate",
   "rich",
   "pyarrow",
-  "pandas>=2.0",
+  "pandas>=2.0,<2.2",  # Pin <2.2 due to wfdb ArrowStringArray compatibility
+  "pydantic",
 ]
+
+[tool.uv]
+override-dependencies = [
+  "mne>=0.0.0",  # Override braindecode's mne>=1.11.0 constraint
+  "mne-bids>=0.0.0",  # Override version constraint for git source
+]
+
+[tool.uv.sources]
+# Solve this when we release a new version of braindecode and mne-python
+braindecode = { git = "https://github.com/braindecode/braindecode.git", branch = "master" }
+mne = { git = "https://github.com/mne-tools/mne-python.git", branch = "main" }
+mne_bids = { git = "https://github.com/AmanJaiswal1503/mne-bids.git", branch = "fix/read-raw-bids-optional-task" }
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"
@@ -62,6 +78,7 @@ tests = [
     'codecov',
     'pytest_cases',
     'pytest-benchmark',
+    'pytest-xdist',
 ]
 dev = [
   "pre-commit",
@@ -97,6 +114,13 @@ digestion = [
   "gql[requests]",
   "requests_toolbelt",
   "beautifulsoup4",
+  "python-dotenv",
+  "selenium",
+  "httpx",
+  "tenacity",
+  "hishel",
+  "pydantic>=2",
+  "PyGithub>=2",
 ]
 
 all = [
@@ -120,7 +144,8 @@ exclude    = []
 namespaces = false
 
 [tool.setuptools.package-data]
-eegdash = ["dataset_summary.csv"]
+"eegdash" = ["dataset_summary.csv"]
+"eegdash.dataset" = ["dataset_summary.csv"]
 
 [tool.ruff]
 line-length = 88
@@ -138,7 +163,13 @@ ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107"
 known-first-party = ["eegdash", "braindecode"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
-[pytest]
+[tool.pytest.ini_options]
 testpaths        = ["tests"]
 python_files     = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "benchmark: marks tests as benchmarks (run with '--benchmark-enable')",
+    "network: marks tests that require network/S3 access (deselect with '-m \"not network\"')",
+]
+addopts = "-m 'not slow and not benchmark and not network' -ra --durations=10"

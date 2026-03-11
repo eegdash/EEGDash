@@ -14,10 +14,13 @@ The module provides the following decorators:
 - :func:`multivariate_feature` — Sugar for global/all-channel features.
 
 """
+
+import inspect
 from collections.abc import Callable
-from typing import List
+from typing import List, Type
 
 from .extractors import (
+    BasePreprocessorOutputType,
     BivariateFeature,
     DirectedBivariateFeature,
     MultivariateFeature,
@@ -31,6 +34,7 @@ __all__ = [
     "FeaturePredecessor",
     "multivariate_feature",
     "univariate_feature",
+    "PreprocessorOutputType",
 ]
 
 
@@ -176,3 +180,44 @@ Indicates that the feature operates on all channels simultaneously. The
 output naming convention is determined by the feature's internal logic 
 rather than channel labels.
 """
+
+class PreprocessorOutputType:
+    r"""Decorator to specify the expected output type of a preprocessor.
+    
+    Parameters
+    ----------
+    output_type : Type
+        The expected output type for the preprocessor.
+
+    Raises
+    ------
+    ValueError
+        If the provided `output_type` does not inherit from 
+        :class:`~eegdash.features.preprocessors.BasePreprocessorOutputType`.
+    """
+    def __init__(self, output_type: Type):
+        if (
+            not inspect.isclass(output_type)
+            or not issubclass(output_type, BasePreprocessorOutputType)
+            or output_type is BasePreprocessorOutputType
+        ):
+            raise ValueError(
+                f"`output_type` must inherit from `PreprocessorOutputType`, got `{output_type}`."
+            )
+        self.output_type = output_type
+
+    def __call__(self, preprocessor: Callable) -> Callable:
+        r"""Apply the decorator to a preprocessor function.
+        
+        Parameters
+        ----------
+        preprocessor : callable
+            The preprocessor function to decorate.
+
+        Returns
+        -------
+        callable
+            An instance of the class named after the preprocessor, inheriting from the specified
+            `output_type`, with the original preprocessor function as its implementation.
+        """
+        return type(preprocessor.__name__, (self.output_type,), {})(preprocessor)

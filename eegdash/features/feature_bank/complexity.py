@@ -53,18 +53,11 @@ def _create_embedding(x, dim, lag):
     Optimized with Numba.
     
     """
-    y = np.empty(((x.shape[-1] - dim + 1) // lag, dim))
-    for i in range(0, x.shape[-1] - dim + 1, lag):
-        y[i] = x[i : i + dim]
-    return y
-
-    # fix suggestion (dim > 1)
-    num_samples = (x.shape[-1] - dim) // lag + 1
-    y = np.empty((num_samples, dim))
-    
-    for row_idx, i in enumerate(range(0, x.shape[-1] - dim + 1, lag)):
-        y[row_idx] = x[i : i + dim] 
-        
+    n_epochs = (x.shape[-1] - dim + 1) // lag
+    y = np.empty((n_epochs, dim))
+    for i in range(n_epochs):
+        curr = i * lag
+        y[i] = x[curr : curr + dim]
     return y
 
 
@@ -211,10 +204,11 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
         SVD Entropy values. Shape is ``x.shape[:-1]``.
     
     """
+
     x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
     for i in np.ndindex(x.shape[:-1]):
         x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
-    s = np.linalg.svdvals(x_emb)
+    s = np.linalg.svd(x_emb, compute_uv=False)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)
 

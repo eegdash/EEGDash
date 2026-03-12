@@ -35,15 +35,18 @@ from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
+    _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vhdr_from_sibling,
     _generate_vmrk_stub,
+    _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
     _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
+    _repair_channels_tsv_duplicates,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
@@ -88,6 +91,29 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 )
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+
+
+def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
+    """Clamp any negative annotation durations to zero on a loaded Raw.
+
+    Some datasets (especially EEGLAB ``.set`` files) produce annotations
+    whose computed duration is negative.  MNE asserts
+    ``(self.duration >= 0).all()`` inside ``Annotations.crop``, which
+    crashes downstream operations.  This helper fixes them in-place
+    after loading so subsequent processing is safe.
+    """
+    import numpy as np
+
+    annots = raw.annotations
+    if annots is None or len(annots) == 0:
+        return
+    mask = annots.duration < 0
+    if np.any(mask):
+        n_neg = int(np.sum(mask))
+        logger.warning(
+            "Clamping %d annotation(s) with negative duration to 0.", n_neg
+        )
+        annots.duration[mask] = 0.0
 
 
 @contextmanager
@@ -542,6 +568,27 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
+            # Early exit: when the data file (.eeg) is a git-annex
+            # placeholder (content never fetched), no header repair can
+            # help — the binary data is simply not available.
+            eeg_path = self.filecache.with_suffix(".eeg")
+            if _is_annex_placeholder(eeg_path) or (
+                eeg_path.exists() and eeg_path.stat().st_size == 0
+            ):
+                raise DataIntegrityError(
+                    message=(
+                        f"BrainVision data file is a git-annex placeholder "
+                        f"(content unavailable): {eeg_path.name}"
+                    ),
+                    record=self.record,
+                    issues=[
+                        f"Data file {eeg_path.name} contains placeholder "
+                        f"content instead of actual EEG data",
+                        "The git-annex content was likely never fetched or "
+                        "has been dropped from this clone",
+                    ],
+                )
+
             # Generate VMRK stub first so pointer repair can find the target
             vmrk_path = self.filecache.with_suffix(".vmrk")
             if not vmrk_path.exists():
@@ -573,7 +620,7 @@ class EEGDashRaw(RawDataset):
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
 
-        # Repair .set header when .fdt is truncated (pnts -> actual size)
+        # Repair .set header: fix .fdt filename mismatches and truncated data
         if self.filecache and self.filecache.suffix.lower() == ".set":
             _repair_eeglab_fdt(self.filecache)
 
@@ -588,6 +635,11 @@ class EEGDashRaw(RawDataset):
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
                 )
                 raise
+
+            # Clamp any negative annotation durations to 0.  Some files
+            # (especially EEGLAB .set) produce annotations with negative
+            # durations that crash downstream MNE operations.
+            _clamp_negative_annotation_durations(self._raw)
 
             # Validate that data is actually readable (catches corrupt/truncated
             # data files that MNE only discovers during lazy segment reads).
@@ -731,6 +783,8 @@ class EEGDashRaw(RawDataset):
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
           files or renames the first column to 'name' and retries.
+        - **Duplicate channel names in channels.tsv**: deduplicates by appending
+          ``-0``, ``-1``, … suffixes and retries.
         - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
           falls back to direct MNE reader.
         - **Split FIF** (record points to split-02+ file): direct MNE reader
@@ -919,6 +973,23 @@ class EEGDashRaw(RawDataset):
                         except Exception as retry_error:
                             raise retry_error from first_error
 
+                # Duplicate channel names in channels.tsv
+                if (
+                    isinstance(first_error, ValueError)
+                    and "not unique" in msg
+                    and "renaming" in msg
+                    and self.filecache
+                ):
+                    if _repair_channels_tsv_duplicates(self.filecache.parent):
+                        logger.info(
+                            "Deduplicated channel names in channels.tsv, "
+                            "retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # EEGLAB epoch files: trials > 1 → use read_epochs_eeglab
                 if (
                     isinstance(first_error, TypeError)
@@ -1082,8 +1153,15 @@ class EEGDashRaw(RawDataset):
 
                 raise
             except AssertionError as first_error:
-                # Annotation assertion errors (duration/crop mismatch) triggered
-                # by malformed *_events.tsv.  Hide the events file and retry.
+                # Annotation assertion errors (negative duration) — try
+                # loading with the duration-clamping monkey-patch first;
+                # only hide events.tsv as a last resort.
+                try:
+                    with _fix_negative_annotation_durations():
+                        return self._read_raw_bids()
+                except Exception:
+                    pass
+                # Still failing — hide the events file and retry.
                 if self.filecache and self.filecache.parent.exists():
                     return self._retry_without_events_tsv(first_error)
                 raise

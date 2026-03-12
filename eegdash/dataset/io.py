@@ -631,6 +631,71 @@ def _generate_vhdr_from_metadata(
         return False
 
 
+def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
+    """Generate a VHDR by borrowing metadata from a valid sibling VHDR.
+
+    When the database record lacks ``ch_names``/``nchans`` (e.g. because the
+    file was already corrupted at ingestion time), this function searches the
+    dataset for another valid ``.vhdr`` file with parseable channel info and
+    uses it to regenerate the corrupted header.
+
+    Parameters
+    ----------
+    vhdr_path : Path
+        Path where the VHDR file should be (re)created.
+
+    Returns
+    -------
+    bool
+        True if file was generated, False if no valid sibling was found.
+    """
+    # Walk up to the dataset root (two levels: eeg/ -> sub-XX/ -> dataset/)
+    # but search broadly — any .vhdr in the dataset tree will do.
+    dataset_root = vhdr_path.parent.parent.parent
+    if not dataset_root.exists():
+        return False
+
+    for sibling in dataset_root.rglob("*.vhdr"):
+        if sibling == vhdr_path:
+            continue
+        try:
+            content = sibling.read_text(encoding="utf-8")
+            if "[Common Infos]" not in content and "[Common infos]" not in content:
+                continue
+
+            # Replace DataFile and MarkerFile pointers to match target name
+            data_file = vhdr_path.with_suffix(".eeg").name
+            marker_file = vhdr_path.with_suffix(".vmrk").name
+            sibling_data = sibling.with_suffix(".eeg").name
+            sibling_marker = sibling.with_suffix(".vmrk").name
+
+            content = content.replace(
+                f"DataFile={sibling_data}", f"DataFile={data_file}"
+            )
+            content = content.replace(
+                f"MarkerFile={sibling_marker}", f"MarkerFile={marker_file}"
+            )
+
+            vhdr_path.write_text(content, encoding="utf-8")
+            logger.info(
+                "Generated VHDR %s from sibling %s",
+                vhdr_path.name,
+                sibling.name,
+            )
+
+            # Also generate VMRK stub if missing
+            vmrk_path = vhdr_path.with_suffix(".vmrk")
+            if not vmrk_path.exists():
+                _generate_vmrk_stub(vmrk_path, vhdr_path.name)
+
+            return True
+        except Exception:
+            continue
+
+    logger.warning("No valid sibling VHDR found for %s", vhdr_path.name)
+    return False
+
+
 def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> bool:
     """Fix BIDS metadata files for SNIRF (fNIRS) datasets.
 

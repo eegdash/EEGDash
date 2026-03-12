@@ -35,6 +35,7 @@ from .io import (
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
+    _generate_vhdr_from_sibling,
     _generate_vmrk_stub,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
@@ -481,8 +482,27 @@ class EEGDashRaw(RawDataset):
 
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
-                _generate_vhdr_from_metadata(self.filecache, self.record)
+                if not _generate_vhdr_from_metadata(
+                    self.filecache, self.record
+                ):
+                    _generate_vhdr_from_sibling(self.filecache)
             else:
+                # Check if the VHDR contains required sections; if completely
+                # corrupted, regenerate before trying pointer repairs.
+                try:
+                    vhdr_text = self.filecache.read_text(encoding="utf-8")
+                except Exception:
+                    vhdr_text = ""
+                if "[Common Infos]" not in vhdr_text and "[Common infos]" not in vhdr_text:
+                    logger.warning(
+                        "VHDR file %s is corrupted, regenerating from metadata.",
+                        self.filecache.name,
+                    )
+                    if not _generate_vhdr_from_metadata(
+                        self.filecache, self.record
+                    ):
+                        _generate_vhdr_from_sibling(self.filecache)
+
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
 
@@ -493,6 +513,9 @@ class EEGDashRaw(RawDataset):
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
+            except DataIntegrityError as e:
+                e.log_warning()
+                raise
             except Exception as e:
                 logger.error(
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
@@ -903,6 +926,14 @@ class EEGDashRaw(RawDataset):
                             return self._read_raw_bids()
                         except Exception as retry_error:
                             raise retry_error from first_error
+
+                # Corrupted VHDR file (missing required sections)
+                if isinstance(first_error, configparser.NoSectionError):
+                    raise DataIntegrityError(
+                        message=f"Corrupted header file: {first_error}",
+                        record=self.record,
+                        issues=[str(first_error)],
+                    ) from first_error
 
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":

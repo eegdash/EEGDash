@@ -117,12 +117,52 @@ def discover_local_bids_records(
         # mne-bids rejects non-numeric BIDS entities (e.g. run-5H).
         # Fall back to globbing for raw files directly.
         import logging
+        import re
 
         logging.getLogger(__name__).warning(
             "find_matching_paths failed (%s) — falling back to glob discovery.",
             exc,
         )
         matched_paths = []
+        _valid_exts = {
+            ext
+            for m in modalities
+            for ext in ALLOWED_DATATYPE_EXTENSIONS.get(
+                MODALITY_ALIASES.get(m, m), []
+            )
+        }
+        _entity_re = re.compile(r"(sub|ses|task|run|acq)-([^_]+)")
+        _glob_records: list[dict[str, Any]] = []
+        dataset_root_path = Path(dataset_root)
+        for ext in _valid_exts:
+            for fpath in dataset_root_path.rglob(f"*{ext}"):
+                entities = dict(_entity_re.findall(fpath.name))
+                if not entities.get("task"):
+                    continue
+                try:
+                    bids_relpath = fpath.relative_to(dataset_root_path.resolve())
+                except ValueError:
+                    bids_relpath = Path(fpath.name)
+                datatype = fpath.parent.name if fpath.parent.name in (
+                    "eeg", "ieeg", "meg"
+                ) else modalities[0]
+                rec = create_record(
+                    dataset=dataset_id,
+                    storage_base=str(dataset_root_path),
+                    bids_relpath=bids_relpath.as_posix(),
+                    subject=entities.get("sub"),
+                    session=entities.get("ses"),
+                    task=entities.get("task"),
+                    run=entities.get("run"),
+                    acquisition=entities.get("acq"),
+                    dep_keys=[],
+                    datatype=datatype,
+                    suffix=datatype,
+                    storage_backend="local",
+                )
+                _glob_records.append(rec)
+        if _glob_records:
+            return _glob_records
 
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []

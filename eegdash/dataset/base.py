@@ -589,6 +589,18 @@ class EEGDashRaw(RawDataset):
                 )
                 raise
 
+            # Validate that data is actually readable (catches corrupt/truncated
+            # data files that MNE only discovers during lazy segment reads).
+            try:
+                self._raw.get_data(start=0, stop=min(1, self._raw.n_times))
+            except Exception as e:
+                self._raw = None
+                raise DataIntegrityError(
+                    message=f"Data file unreadable: {e}",
+                    record=self.record,
+                    issues=[str(e)],
+                ) from e
+
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.
 

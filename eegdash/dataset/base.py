@@ -11,9 +11,11 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import configparser
 import re
+from contextlib import contextmanager
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
+from unittest.mock import patch
 
 import mne.io.ctf.info as ctf_info
 import mne_bids
@@ -80,6 +82,20 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 )
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+
+
+@contextmanager
+def _noop_filelock():
+    """Replace ``filelock.FileLock`` with a no-op so mne-bids can read
+    sidecar JSON files in read-only directories without creating ``.lock``
+    files."""
+
+    @contextmanager
+    def _dummy_lock(*args, **kwargs):
+        yield
+
+    with patch("filelock.FileLock", _dummy_lock):
+        yield
 
 
 def _parse_split_fif_missing_path(message: str) -> Path | None:
@@ -484,13 +500,19 @@ class EEGDashRaw(RawDataset):
                 raise
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
-        """Call ``mne_bids.read_raw_bids`` with the standard arguments."""
-        return mne_bids.read_raw_bids(
-            bids_path=self.bidspath,
-            extra_params=extra_params,
-            verbose="ERROR",
-            on_ch_mismatch="rename",
-        )
+        """Call ``mne_bids.read_raw_bids`` with the standard arguments.
+
+        Uses a no-op file lock to avoid ``PermissionError`` when the dataset
+        directory is read-only (e.g. shared cluster storage where mne-bids
+        cannot create ``.json.lock`` files).
+        """
+        with _noop_filelock():
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath,
+                extra_params=extra_params,
+                verbose="ERROR",
+                on_ch_mismatch="rename",
+            )
 
     def _download_split_fif_continuation(
         self,

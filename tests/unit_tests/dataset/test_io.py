@@ -24,6 +24,7 @@ from eegdash.dataset.io import (
     _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_whitespace,
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
@@ -561,6 +562,61 @@ def test_ensure_coordsystem_symlink_generates_ieeg_keys(tmp_path):
     assert "iEEGCoordinateUnits" in data
 
 
+def test_ensure_coordsystem_symlink_overwrites_wrong_keys_ieeg(tmp_path):
+    """coordsystem.json with EEG keys in ieeg dir is overwritten with iEEG keys."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
+    # Write wrong keys (EEG instead of iEEG)
+    coordsystem.write_text(
+        json.dumps({"EEGCoordinateSystem": "Other", "EEGCoordinateUnits": "m"})
+    )
+
+    _ensure_coordsystem_symlink(ieeg_dir)
+
+    data = json.loads(coordsystem.read_text())
+    assert "iEEGCoordinateSystem" in data
+    assert "EEGCoordinateSystem" not in data
+
+
+def test_ensure_coordsystem_symlink_keeps_correct_keys_ieeg(tmp_path):
+    """coordsystem.json with correct iEEG keys in ieeg dir is left unchanged."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
+    original_content = json.dumps(
+        {"iEEGCoordinateSystem": "MNI305", "iEEGCoordinateUnits": "mm"}
+    )
+    coordsystem.write_text(original_content)
+
+    _ensure_coordsystem_symlink(ieeg_dir)
+
+    assert coordsystem.read_text() == original_content
+
+
+def test_ensure_coordsystem_symlink_overwrites_wrong_keys_eeg(tmp_path):
+    """coordsystem.json with iEEG keys in eeg dir is overwritten with EEG keys."""
+    eeg_dir = tmp_path / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+
+    (eeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    coordsystem = eeg_dir / "sub-01_coordsystem.json"
+    # Write wrong keys (iEEG instead of EEG)
+    coordsystem.write_text(
+        json.dumps({"iEEGCoordinateSystem": "Other", "iEEGCoordinateUnits": "m"})
+    )
+
+    _ensure_coordsystem_symlink(eeg_dir)
+
+    data = json.loads(coordsystem.read_text())
+    assert "EEGCoordinateSystem" in data
+    assert "iEEGCoordinateSystem" not in data
+
+
 # Tests for TSV decimal separator repair
 
 
@@ -625,6 +681,52 @@ def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
     tsv_path.write_text("name\ttype\tunits\nFp1\tEEG\tµV\n")
 
     assert _repair_tsv_decimal_separators(tmp_path) is False
+
+
+# ── _repair_tsv_na_whitespace ──
+
+
+def test_repair_tsv_na_whitespace_strips_padding(tmp_path):
+    """n/a values with trailing whitespace should be stripped to exact 'n/a'."""
+    tsv_path = tmp_path / "sub-01_task-x_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\ttype\tsample\n"
+        "2043\tn/a      \t25\t1046\n"
+        "13232\tn/a      \t5\t6775\n"
+    )
+
+    assert _repair_tsv_na_whitespace(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "n/a      " not in content
+    assert "n/a\t" in content  # exact n/a followed by tab
+    # Data values preserved
+    assert "2043" in content
+    assert "1046" in content
+
+
+def test_repair_tsv_na_whitespace_no_change(tmp_path):
+    """No repair when there is no trailing whitespace."""
+    tsv_path = tmp_path / "sub-01_task-x_events.tsv"
+    tsv_path.write_text("onset\tduration\n1.0\tn/a\n")
+
+    assert _repair_tsv_na_whitespace(tmp_path) is False
+
+
+def test_repair_tsv_na_whitespace_nonexistent_dir(tmp_path):
+    """Returns False for nonexistent directory."""
+    assert _repair_tsv_na_whitespace(tmp_path / "missing") is False
+
+
+def test_repair_tsv_na_whitespace_multiple_files(tmp_path):
+    """Repairs multiple TSV files in the directory."""
+    (tmp_path / "sub-01_events.tsv").write_text("onset\tduration\n1\tn/a   \n")
+    (tmp_path / "sub-01_channels.tsv").write_text("name\ttype\nFp1\tEEG   \n")
+
+    assert _repair_tsv_na_whitespace(tmp_path) is True
+
+    assert "n/a   " not in (tmp_path / "sub-01_events.tsv").read_text()
+    assert "EEG   " not in (tmp_path / "sub-01_channels.tsv").read_text()
 
 
 # ── _repair_events_tsv_nan_samples ──
@@ -1197,6 +1299,7 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     # Verify all annotations fall within the raw duration
     raw_duration = raw.n_times / sfreq
     assert all(onset < raw_duration for onset in raw.annotations.onset)
+
 
 
 # ── _repair_vhdr_missing_markerfile ───────────────────────────────────

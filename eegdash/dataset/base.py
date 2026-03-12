@@ -11,6 +11,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 import configparser
 import re
+import shutil
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path, PurePosixPath
@@ -31,6 +32,7 @@ from ..schemas import validate_record
 from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
+    _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _generate_coordsystem_json,
@@ -49,6 +51,7 @@ from .io import (
     _repair_snirf_bids_metadata,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
+    _repair_tsv_na_whitespace,
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
@@ -166,6 +169,12 @@ class EEGDashRaw(RawDataset):
         Must have schema_version=2 and include storage.base (no default bucket).
     cache_dir : str
         The local directory where the data will be cached.
+    on_error : str, default "raise"
+        How to handle :class:`DataIntegrityError` when accessing ``.raw``:
+
+        - ``"raise"`` (default): propagate the exception.
+        - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
+        - ``"skip"``: silently set ``.raw`` to ``None``.
     **kwargs
         Additional keyword arguments passed to the
         :class:`braindecode.datasets.BaseDataset` constructor.
@@ -183,6 +192,9 @@ class EEGDashRaw(RawDataset):
         cache_dir: str,
         **kwargs,
     ):
+        self._on_error = kwargs.pop("on_error", "raise")
+        self._skipped = False
+        self._integrity_error = None
         super().__init__(None, **kwargs)
         self.cache_dir = Path(cache_dir)
 
@@ -276,6 +288,22 @@ class EEGDashRaw(RawDataset):
         run = entities.get("run")
         return run is not None and not str(run).isdigit()
 
+    def _resolve_annex_key_uri(self, uri: str) -> str | None:
+        """Return a BIDS-named URI when *uri* contains a git-annex key filename.
+
+        Git-annex stores files under hash-based names like
+        ``MD5E-s11657--7a519e74754041a678931b7b7d72f0ab.vhdr``.  When the
+        ingestion pipeline records these as S3 keys the download will fail
+        because OpenNeuro stores objects under their BIDS names.  This
+        method detects such keys and derives the correct URI from
+        ``bids_relpath``.
+        """
+        filename = PurePosixPath(uri).name
+        if not _ANNEX_KEY_RE.match(filename):
+            return None
+        bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+        return uri.rsplit("/", 1)[0] + "/" + bids_filename
+
     def _download_required_files(self) -> None:
         if self._raw_uri is not None:
             filesystem = downloader.get_s3_filesystem()
@@ -294,11 +322,40 @@ class EEGDashRaw(RawDataset):
                     self._raw_uri, self.filecache, filesystem=filesystem
                 )
             except FileNotFoundError:
-                raise DataIntegrityError(
-                    message=(f"Primary data file not found on S3: {self._raw_uri}"),
-                    record=self.record,
-                    issues=[f"Missing S3 file: {self._raw_uri}"],
-                )
+                # If the URI contains a git-annex key, try the BIDS-named
+                # alternative before giving up.
+                resolved_uri = self._resolve_annex_key_uri(self._raw_uri)
+                if resolved_uri:
+                    logger.info(
+                        "Raw URI %s contains git-annex key; trying BIDS name: %s",
+                        self._raw_uri,
+                        resolved_uri,
+                    )
+                    try:
+                        downloader.download_s3_file(
+                            resolved_uri,
+                            self.filecache,
+                            filesystem=filesystem,
+                        )
+                    except FileNotFoundError:
+                        raise DataIntegrityError(
+                            message=(
+                                "Primary data file not found on S3 "
+                                "(tried annex key and BIDS name): "
+                                f"{self._raw_uri}"
+                            ),
+                            record=self.record,
+                            issues=[
+                                f"Missing S3 file: {self._raw_uri}",
+                                f"Also tried BIDS name: {resolved_uri}",
+                            ],
+                        )
+                else:
+                    raise DataIntegrityError(
+                        message=(f"Primary data file not found on S3: {self._raw_uri}"),
+                        record=self.record,
+                        issues=[f"Missing S3 file: {self._raw_uri}"],
+                    )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -326,13 +383,20 @@ class EEGDashRaw(RawDataset):
         if not companions:
             return
 
+        # Use BIDS-named base URI when the raw URI has a git-annex key,
+        # so companion URIs also resolve to real S3 objects.
+        base_uri = self._raw_uri
+        if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
+            bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+            base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
+
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
             if local_path.exists():
                 continue
 
             # Derive S3 URI by replacing the primary file's extension
-            companion_uri = self._raw_uri.rsplit(".", 1)[0] + ext
+            companion_uri = base_uri.rsplit(".", 1)[0] + ext
 
             try:
                 downloader.download_s3_file(
@@ -347,7 +411,7 @@ class EEGDashRaw(RawDataset):
                     logger.warning(
                         "Companion file %s not found on S3 for %s",
                         ext,
-                        self._raw_uri,
+                        base_uri,
                     )
                 continue
 
@@ -468,6 +532,7 @@ class EEGDashRaw(RawDataset):
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
             _repair_tsv_encoding(self.filecache.parent)
+            _repair_tsv_na_whitespace(self.filecache.parent)
             _repair_tsv_decimal_separators(self.filecache.parent)
             _repair_scans_tsv_timestamps(self.filecache.parent)
             _repair_events_tsv_nan_samples(self.filecache.parent)
@@ -579,6 +644,26 @@ class EEGDashRaw(RawDataset):
                     next_path,
                     filesystem=filesystem,
                 )
+                # When the primary file is resolved through git-annex, MNE
+                # expects the continuation at the annex path, not the BIDS
+                # path.  Place a copy there so MNE can find it on retry.
+                if (
+                    expected_path is not None
+                    and expected_path.resolve() != next_path.resolve()
+                ):
+                    try:
+                        expected_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(next_path, expected_path)
+                        logger.info(
+                            "Copied continuation to expected path %s",
+                            expected_path,
+                        )
+                    except Exception as copy_err:
+                        logger.warning(
+                            "Failed to copy continuation to expected path %s: %s",
+                            expected_path,
+                            copy_err,
+                        )
                 return next_key, next_path
             except Exception as error:
                 failures.append(f"{next_uri}: {error}")
@@ -596,18 +681,20 @@ class EEGDashRaw(RawDataset):
 
         Applies on-the-fly fixes and retries for known failure modes:
 
-        - **iEEG** missing ``coordsystem.json``: mne-bids raises
-          ``RuntimeError`` because coordinates are mandatory for intracranial
-          data. We generate a minimal ``coordsystem.json`` with the correct
-          ``iEEGCoordinateSystem`` keys and retry.
+        - **Missing or wrong-key ``coordsystem.json``**: mne-bids raises
+          ``RuntimeError`` or ``KeyError`` when the file is absent or has keys
+          for the wrong datatype (e.g. ``EEGCoordinateSystem`` in iEEG data).
+          We (re-)generate a minimal ``coordsystem.json`` with the correct
+          datatype-specific keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
         - **EEGLAB char-encoding** (``.set`` files with non-UTF char fields):
           ``scipy.io.loadmat`` raises ``TypeError: buffer is too small``.
           Retries with ``uint16_codec='latin-1'`` via ``extra_params``.
         - **Unrecoverable corruption** (Bad EDF, empty MEG data, corrupt
-          MAT/EEGLAB files with array errors, etc.): raises
-          ``DataIntegrityError`` for clean error reporting.
+          MAT/EEGLAB files with array errors, etc.): attempts EEGLAB fallback
+          for ``.set`` files and direct MNE reader before raising
+          ``DataIntegrityError``.
         - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
           the scans.tsv and retries.
         - **participants.tsv subject mismatches**: repairs ``participant_id``
@@ -618,6 +705,9 @@ class EEGDashRaw(RawDataset):
           key, downloads it from remote storage, and retries.
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
+        - **Non-numeric ``run`` entity** (e.g. ``run-5H``): MNE-BIDS rejects
+          non-integer run values. Falls back to direct MNE reader for any
+          file format.
         - **CTF "Illegal date"** (numeric dash dates like 14-10-1925): patches
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
@@ -627,7 +717,8 @@ class EEGDashRaw(RawDataset):
         - **Split FIF** (record points to split-02+ file): direct MNE reader
           loads with ``on_split_missing="warn"`` so partial data is returned.
         - **Bad record metadata** (e.g. ``.json`` extension, missing ``task``
-          entity): raises ``DataIntegrityError`` for clean error reporting.
+          entity): attempts direct MNE reader before raising
+          ``DataIntegrityError``.
         """
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
@@ -652,7 +743,7 @@ class EEGDashRaw(RawDataset):
                         raise fallback_error from first_error
                 raise
             except RuntimeError as first_error:
-                if "coordsystem.json is REQUIRED" in str(first_error):
+                if "coordsystem.json" in str(first_error):
                     return self._retry_with_generated_coordsystem(first_error)
                 if "Illegal date" in str(first_error):
                     return self._retry_with_ctf_date_patch(first_error)
@@ -684,6 +775,22 @@ class EEGDashRaw(RawDataset):
 
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
+                    # For .set files, try manual EEGLAB parser before giving up
+                    if self.filecache and self.filecache.suffix.lower() == ".set":
+                        try:
+                            return _load_raw_eeglab_fallback(
+                                self.filecache, bids_root=self.bids_root
+                            )
+                        except Exception:
+                            pass
+
+                    # For supported formats, try direct MNE reader (bypasses BIDS)
+                    if self.filecache:
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception:
+                            pass
+
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
                         record=self.record,
@@ -692,6 +799,19 @@ class EEGDashRaw(RawDataset):
 
                 # Bad record metadata (e.g. .json extension, missing task entity)
                 if "must contain" in msg and "task" in msg:
+                    if self.filecache:
+                        logger.warning(
+                            "Missing 'task' entity in BIDSPath — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=f"Bad record metadata and direct reader failed: {msg}",
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
                     raise DataIntegrityError(
                         message=f"Bad record metadata: {msg}",
                         record=self.record,
@@ -722,6 +842,26 @@ class EEGDashRaw(RawDataset):
                         current_split_key, current_split_path = split_download
                         continue
 
+                    # All download attempts failed — fall back to direct
+                    # reader which uses on_split_missing="warn" for .fif
+                    # files, loading only the available splits.
+                    if self.filecache:
+                        logger.warning(
+                            "Split FIF continuation download failed — "
+                            "falling back to direct reader."
+                        )
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as fallback_error:
+                            raise DataIntegrityError(
+                                message=(
+                                    f"Split FIF continuation missing and "
+                                    f"direct reader failed: {fallback_error}"
+                                ),
+                                record=self.record,
+                                issues=[msg, str(fallback_error)],
+                            ) from first_error
+
                 # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
                 if isinstance(first_error, UnicodeDecodeError) and self.filecache:
                     data_dir = self.filecache.parent
@@ -746,6 +886,10 @@ class EEGDashRaw(RawDataset):
                         return _load_raw_direct(self.filecache)
                     except Exception as fallback_error:
                         raise fallback_error from first_error
+
+                # Wrong keys in coordsystem.json (e.g., EEGCoordinateSystem for iEEG data)
+                if isinstance(first_error, KeyError) and "CoordinateSystem" in msg:
+                    return self._retry_with_generated_coordsystem(first_error)
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
@@ -854,6 +998,21 @@ class EEGDashRaw(RawDataset):
                         except Exception as retry_error:
                             raise retry_error from first_error
 
+                # Whitespace-padded n/a in TSV fields (float('n/a      ') fails)
+                if (
+                    "could not convert string to float" in msg
+                    and "n/a" in msg
+                    and self.filecache
+                ):
+                    if _repair_tsv_na_whitespace(self.filecache.parent):
+                        logger.info(
+                            "Repaired n/a whitespace in TSV files, retrying load..."
+                        )
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
                 # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
                 if "cannot convert float NaN to integer" in msg and self.filecache:
                     if _repair_events_tsv_nan_samples(self.filecache.parent):
@@ -870,14 +1029,10 @@ class EEGDashRaw(RawDataset):
                     except Exception as fallback_error:
                         raise fallback_error from first_error
 
-                # VHDR with non-numeric run (ValueError from MNE-BIDS entity validation)
-                if (
-                    self.filecache
-                    and self.filecache.suffix.lower() == ".vhdr"
-                    and self._has_non_numeric_run()
-                ):
+                # Non-numeric run (ValueError from MNE-BIDS entity validation)
+                if self.filecache and self._has_non_numeric_run():
                     logger.warning(
-                        "MNE-BIDS failed for VHDR with non-numeric run, "
+                        "MNE-BIDS failed for file with non-numeric run, "
                         "falling back to direct MNE reader."
                     )
                     try:
@@ -1072,6 +1227,8 @@ class EEGDashRaw(RawDataset):
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
+        if self._skipped:
+            return 0
         if self._raw is None:
             ntimes = self.record.get("ntimes")
             if ntimes is not None:
@@ -1089,20 +1246,32 @@ class EEGDashRaw(RawDataset):
         return len(self._raw)
 
     @property
-    def raw(self) -> BaseRaw:
+    def raw(self) -> BaseRaw | None:
         """The MNE Raw object for this recording.
 
         Accessing this property triggers the download and caching of the data
         if it has not been accessed before.
 
+        Returns ``None`` when ``on_error`` is ``"warn"`` or ``"skip"`` and
+        the record could not be loaded due to a
+        :class:`~eegdash.dataset.exceptions.DataIntegrityError`.
+
         Returns
         -------
-        mne.io.BaseRaw
-            The loaded MNE Raw object.
+        mne.io.BaseRaw | None
+            The loaded MNE Raw object, or ``None`` for skipped records.
 
         """
-        if self._raw is None:
-            self._ensure_raw()
+        if self._raw is None and not self._skipped:
+            try:
+                self._ensure_raw()
+            except DataIntegrityError as e:
+                if self._on_error == "raise":
+                    raise
+                self._skipped = True
+                self._integrity_error = e
+                if self._on_error == "warn":
+                    e.log_warning()
         return self._raw
 
     @raw.setter

@@ -1524,3 +1524,85 @@ def test_cumulative_sizes_recomputes_after_length_change(tmp_path):
     # cumulative_sizes must reflect the NEW lengths without any manual refresh
     assert ds.cumulative_sizes == [99_500, 182_817, 852_417]
     assert len(ds) == 852_417
+
+
+# ── on_error and drop_bad tests ──
+
+
+def test_dataset_on_error_passed_to_raw(tmp_path):
+    """on_error parameter flows from EEGDashDataset to each EEGDashRaw."""
+    record = {
+        "dataset": "ds_test",
+        "data_name": "sub-01_task-rest_eeg.edf",
+        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        "storage": {
+            "backend": "local",
+            "base": str(tmp_path / "ds_test"),
+            "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        },
+        "entities": {"subject": "01", "task": "rest"},
+        "entities_mne": {"subject": "01", "task": "rest"},
+    }
+
+    (tmp_path / "ds_test" / "sub-01" / "eeg").mkdir(parents=True)
+    (tmp_path / "ds_test" / "sub-01" / "eeg" / "sub-01_task-rest_eeg.edf").touch()
+
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            records=[record],
+            dataset="ds_test",
+            on_error="warn",
+            _suppress_comp_warning=True,
+        )
+
+    assert ds._on_error == "warn"
+    assert ds.datasets[0]._on_error == "warn"
+
+
+def test_dataset_drop_bad_removes_skipped(tmp_path):
+    """drop_bad() removes skipped datasets and returns their records."""
+    records = []
+    for i in range(3):
+        r = {
+            "dataset": "ds_test",
+            "data_name": f"sub-{i:02d}_task-rest_eeg.edf",
+            "bids_relpath": f"sub-{i:02d}/eeg/sub-{i:02d}_task-rest_eeg.edf",
+            "storage": {
+                "backend": "local",
+                "base": str(tmp_path / "ds_test"),
+                "raw_key": f"sub-{i:02d}/eeg/sub-{i:02d}_task-rest_eeg.edf",
+            },
+            "entities": {"subject": f"{i:02d}", "task": "rest"},
+            "entities_mne": {"subject": f"{i:02d}", "task": "rest"},
+        }
+        records.append(r)
+        (tmp_path / "ds_test" / f"sub-{i:02d}" / "eeg").mkdir(
+            parents=True, exist_ok=True
+        )
+        (
+            tmp_path
+            / "ds_test"
+            / f"sub-{i:02d}"
+            / "eeg"
+            / f"sub-{i:02d}_task-rest_eeg.edf"
+        ).touch()
+
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            records=records,
+            dataset="ds_test",
+            on_error="warn",
+            _suppress_comp_warning=True,
+        )
+
+    # Mark the second dataset as skipped
+    ds.datasets[1]._skipped = True
+
+    bad = ds.drop_bad()
+
+    assert len(bad) == 1
+    assert bad[0] is records[1]
+    assert len(ds.datasets) == 2
+    assert len(ds.records) == 2

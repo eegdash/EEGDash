@@ -105,13 +105,24 @@ def discover_local_bids_records(
         else:
             matching_args[finder_key] = [str(entity_val)]
 
-    matched_paths = find_matching_paths(
-        root=str(dataset_root),
-        datatypes=modalities,
-        suffixes=modalities,
-        ignore_json=True,
-        **matching_args,
-    )
+    try:
+        matched_paths = find_matching_paths(
+            root=str(dataset_root),
+            datatypes=modalities,
+            suffixes=modalities,
+            ignore_json=True,
+            **matching_args,
+        )
+    except ValueError as exc:
+        # mne-bids rejects non-numeric BIDS entities (e.g. run-5H).
+        # Fall back to globbing for raw files directly.
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "find_matching_paths failed (%s) — falling back to glob discovery.",
+            exc,
+        )
+        matched_paths = []
 
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []

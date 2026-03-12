@@ -74,6 +74,8 @@ _UNRECOVERABLE_PATTERNS = [
     # EEGLAB reader errors from non-standard .set structures
     "Allowed values",
     "has no attribute",
+    # MNE data read: sample count mismatch (corrupt/truncated data file)
+    "Incorrect number of samples",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
     # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
@@ -978,7 +980,7 @@ class EEGDashRaw(RawDataset):
                             raise retry_error from first_error
 
                 # scans.tsv path mismatch (EEG file not listed in scans.tsv)
-                if "is not in list" in msg and "Did you mean" in msg and self.filecache:
+                if "is not in list" in msg and ("Did you mean" in msg or "PosixPath" in msg) and self.filecache:
                     logger.warning(
                         "scans.tsv path mismatch — falling back to direct reader."
                     )
@@ -1090,6 +1092,33 @@ class EEGDashRaw(RawDataset):
                         issues=[str(first_error)],
                     ) from first_error
 
+                # EDF annotation encoding error — retry with latin1
+                if "encoding='latin1'" in str(first_error) and self.filecache:
+                    logger.info(
+                        "EDF annotation encoding error, retrying with encoding='latin1'..."
+                    )
+                    try:
+                        return self._read_raw_bids(
+                            extra_params={"encoding": "latin1"}
+                        )
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+                # IndexError from scans.tsv handling (empty file list) —
+                # fall back to direct reader
+                if (
+                    isinstance(first_error, IndexError)
+                    and self.filecache
+                ):
+                    logger.warning(
+                        "IndexError during BIDS loading (likely malformed scans.tsv) "
+                        "— falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":
                     logger.warning(
@@ -1133,6 +1162,16 @@ class EEGDashRaw(RawDataset):
                     f"Retry after coordsystem generation also failed: {retry_error}"
                 )
                 raise retry_error from first_error
+
+        # Generation failed (e.g. read-only directory) — fall back to direct reader
+        if self.filecache:
+            logger.warning(
+                "coordsystem.json generation failed — falling back to direct reader."
+            )
+            try:
+                return _load_raw_direct(self.filecache)
+            except Exception as fallback_error:
+                raise fallback_error from first_error
         raise first_error
 
     def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:

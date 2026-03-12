@@ -591,8 +591,13 @@ class EEGDashRaw(RawDataset):
 
             # Validate that data is actually readable (catches corrupt/truncated
             # data files that MNE only discovers during lazy segment reads).
+            # Read from start and end to catch truncated files.
             try:
-                self._raw.get_data(start=0, stop=min(1, self._raw.n_times))
+                n = self._raw.n_times
+                if n > 0:
+                    self._raw.get_data(start=0, stop=min(1, n))
+                    if n > 1:
+                        self._raw.get_data(start=n - 1, stop=n)
             except Exception as e:
                 self._raw = None
                 raise DataIntegrityError(

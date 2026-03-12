@@ -1682,7 +1682,16 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
 
     actual_pnts = fdt_size // _EEGLAB_BYTES_PER_SAMPLE // nbchan
     if actual_pnts <= 0:
-        return False
+        logger.warning(
+            "EEGLAB .fdt file %s has 0 readable samples "
+            "(expected %d). Data file is empty/corrupt.",
+            fdt_path.name,
+            pnts,
+        )
+        raise RuntimeError(
+            f"Incorrect number of samples in {fdt_path.name}: "
+            f"file has 0 readable samples, expected {pnts}"
+        )
 
     srate = float(eeg.get("srate", 1.0)) or 1.0
     repaired = dict(eeg)

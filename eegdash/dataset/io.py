@@ -1645,12 +1645,14 @@ def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
 def _repair_eeglab_fdt(set_path: Path) -> bool:
     """Update .set header so pnts matches the actual .fdt size (no data change).
 
-    When the companion .fdt is truncated, rewrites the .set file so the
-    declared number of samples (pnts) matches the bytes in the .fdt. The
-    standard MNE reader can then load the file; no padding, no custom loader.
+    When the companion .fdt has fewer samples than the header declares,
+    rewrites the .set file so ``pnts`` (and ``xmax``, ``times``, ``datfile``)
+    match the bytes in the .fdt.  The standard MNE reader can then load
+    the file without error.
 
-    Reads with scipy first (v5/v7), then MNE _readmat (v7.3). Always writes
-    a flat v5/v7 .set via scipy so all formats are supported.
+    Tries ``_eeglab_load_first_eeg`` (scipy / MNE ``_readmat``) first;
+    falls back to ``pymatreader`` with ``uint16_codec='latin-1'`` for
+    .set files whose char arrays trip the "buffer too small" error in scipy.
 
     Parameters
     ----------
@@ -1666,15 +1668,45 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
     if not set_path.exists() or set_path.suffix.lower() != ".set":
         return False
 
+    # --- load header ---
     eeg = _eeglab_load_first_eeg(set_path)
+    used_pymatreader = False
+
     if eeg is None:
-        return False
+        # scipy/MNE _readmat failed (e.g. "buffer too small" for non-ASCII
+        # char arrays).  Try pymatreader which handles uint16 codec.
+        try:
+            import pymatreader
+
+            mat = pymatreader.read_mat(
+                str(set_path), uint16_codec="latin-1"
+            )
+            eeg = mat.get("EEG", mat)
+            if not isinstance(eeg, dict) or "pnts" not in eeg:
+                return False
+            used_pymatreader = True
+        except Exception:
+            return False
 
     nbchan = int(eeg.get("nbchan", 1))
     pnts = int(eeg.get("pnts", 1))
-    fdt_path = _eeglab_fdt_path(set_path, eeg)
+
+    # --- locate companion .fdt ---
+    if used_pymatreader:
+        # pymatreader returns plain strings; check datfile / data field
+        data_ref = eeg.get("datfile") or eeg.get("data")
+        if isinstance(data_ref, str) and data_ref:
+            fdt_path = set_path.parent / data_ref
+            if not fdt_path.exists():
+                fdt_path = set_path.with_suffix(".fdt")
+        else:
+            fdt_path = set_path.with_suffix(".fdt")
+    else:
+        fdt_path = _eeglab_fdt_path(set_path, eeg)
+
     if fdt_path is None or not fdt_path.exists():
         return False
+
     expected_bytes = nbchan * pnts * _EEGLAB_BYTES_PER_SAMPLE
     fdt_size = fdt_path.stat().st_size
     if fdt_size >= expected_bytes:
@@ -1693,15 +1725,33 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
             f"file has 0 readable samples, expected {pnts}"
         )
 
+    # --- patch header fields ---
     srate = float(eeg.get("srate", 1.0)) or 1.0
     repaired = dict(eeg)
     repaired["pnts"] = actual_pnts
-    repaired["xmax"] = (
-        actual_pnts - 1
-    ) / srate  # EEGLAB xmax is last time point in sec
+    repaired["xmax"] = (actual_pnts - 1) / srate
+    # Point datfile/data at the BIDS-named .fdt (not the original non-BIDS name)
+    bids_fdt_name = set_path.stem + ".fdt"
+    repaired["datfile"] = bids_fdt_name
+    repaired["data"] = bids_fdt_name
+    # Rebuild times array to match actual sample count
+    if "times" in repaired:
+        repaired["times"] = np.arange(actual_pnts, dtype=np.float64) / srate
 
+    # When loaded via pymatreader, list fields must be converted to arrays
+    # for scipy.savemat to serialize them correctly.
+    if used_pymatreader:
+        for k in list(repaired.keys()):
+            v = repaired[k]
+            if isinstance(v, list):
+                try:
+                    repaired[k] = np.array(v)
+                except ValueError:
+                    repaired[k] = np.array(v, dtype="O")
+
+    # --- write repaired .set ---
     try:
-        savemat(str(set_path), repaired, do_compression=False)
+        savemat(str(set_path), {"EEG": repaired}, do_compression=False)
         logger.info(
             "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
             set_path.name,

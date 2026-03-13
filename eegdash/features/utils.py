@@ -39,6 +39,22 @@ __all__ = [
 
 
 def _get_record_metadata(win_ds):
+    """Get record metadata.
+
+    Parameters
+    ----------
+    win_ds : EEGWindowsDataset
+        A braindecode wimdowed EEG dataset.
+
+    Returns
+    -------
+    dict
+        Record metadata, including:
+
+        - info : MNE's record info.
+        - description : braindesode's dataset description.
+
+    """
     return {
         "info": win_ds.raw.info,
         "description": win_ds.description,
@@ -46,6 +62,28 @@ def _get_record_metadata(win_ds):
 
 
 def _get_batch_metadata(win_ds, X, crop_inds):
+    """Get batch metadata.
+
+    Parameters
+    ----------
+    win_ds : EEGWindowsDataset
+        A braindecode wimdowed EEG dataset.
+    X : ndarray
+        A batch of EEG windows.
+    crop_inds : list of tuples
+        a tuple of `(i_window_in_trial, i_start_in_trial, i_stop_in_trial)` for each
+        sample in the batch.
+
+    Returns
+    -------
+    dict
+        Batch metadata, including:
+
+        - batch_size : the number of samples in the batch.
+        - crop_inds : a tuple of `(i_window_in_trial, i_start_in_trial, i_stop_in_trial)`
+           for each sample in the batch.
+
+    """
     return {
         "batch_size": X.shape[0],
         "crop_inds": crop_inds,

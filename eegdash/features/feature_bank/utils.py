@@ -14,6 +14,7 @@ __all__ = [
     "get_valid_freq_band",
     "reduce_freq_bands",
     "slice_freq_band",
+    "spectral_default_kwargs",
 ]
 
 
@@ -26,6 +27,31 @@ DEFAULT_FREQ_BANDS = {
 
 
 def spectral_default_kwargs(kwargs, metadata):
+    r"""Sets default parameters for spectral preprocecssors.
+
+    - Set the default frequency limits to the bandpass frequencies (if available).
+    - Set the default sampling frequency to `freq` in MNE's info.
+    - Use `window_size_in_sec` if `nperseg` is not provided. Defaults to 4 seconds.
+    - Use `overlap_in_sec` if `noverlap` is not provided. Defaults to 2 seconds.
+    - Set the axis to -1
+
+    Parameters
+    ----------
+    kwargs : dict
+        A dictionary of keyword arguments.
+    metadata : _type_
+        _description_
+
+    Returns
+    -------
+    f_min : float
+        Minimum frequency.
+    f_max : float
+        Maximum frequency.
+    kwargs : dict
+        A dictionary of keyword arguments.
+
+    """
     f_min = kwargs.pop("f_min") if "f_min" in kwargs else metadata["info"]["highpass"]
     f_max = kwargs.pop("f_max") if "f_max" in kwargs else metadata["info"]["lowpass"]
     window_size_in_sec = (

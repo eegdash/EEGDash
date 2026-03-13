@@ -44,10 +44,26 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     ----------
     x : ndarray
         The input signal of shape (n_trials, n_channels, n_times).
+    fs : int
+        Sampling frequency.
+        Defaults to `sfreq` in MNE's info.
+        Do not use unless you know what you are doing.
+    f_min : float | None
+        The minimum frequency. Use `None` for half the window length.
+        Defaults to the highpass frequency used to MNE's `filter`.
+    f_max : float | None
+        The maximum frequency. Use `None` for Nyquist.
+        Defaults to the lowpass frequency used to MNE's `filter`.
+    window_size_in_sec : float
+        Window size in seconds, replacing `nperseg`.
+        Overridden by `nperseg` if both are provided.
+        Defaults to 4 seconds.
+    overlap_in_sec : float
+        Window overlap in seconds, replacing `noverlap`.
+        Overridden by `noverlap` if both are provided.
+        Defaults to 2 seconds.
     **kwargs : dict
-        Additional keyword arguments to pass to `scipy.signal.csd`. Must include
-        'fs' (sampling frequency) and 'nperseg' (length of each segment for CSD estimation).
-        Optional keys include 'f_min' and 'f_max' to specify frequency band limits.
+        Supports any `scipy.signal.csd` arguments like 'nperseg' and 'noverlap'.
 
     Returns
     -------
@@ -58,10 +74,6 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
         Values are complex numbers where:
         - Absolute value |c| is the coherence (0 to 1).
         - Angle arg(c) is the phase lag.
-
-    Assertions
-    ----------
-    - 'fs' and 'nperseg' must be provided in kwargs.
 
     """
     f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)

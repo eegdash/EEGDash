@@ -46,10 +46,26 @@ def spectral_preprocessor(x, /, *, _metadata, **kwargs):
     ----------
     x : ndarray
         The input signal (shape: ..., n_times).
+    fs : int
+        Sampling frequency.
+        Defaults to `sfreq` in MNE's info.
+        Do not use unless you know what you are doing.
+    f_min : float | None
+        The minimum frequency. Use `None` for half the window length.
+        Defaults to the highpass frequency used to MNE's `filter`.
+    f_max : float | None
+        The maximum frequency. Use `None` for Nyquist.
+        Defaults to the lowpass frequency used to MNE's `filter`.
+    window_size_in_sec : float
+        Window size in seconds, replacing `nperseg`.
+        Overridden by `nperseg` if both are provided.
+        Defaults to 4 seconds.
+    overlap_in_sec : float
+        Window overlap in seconds, replacing `noverlap`.
+        Overridden by `noverlap` if both are provided.
+        Defaults to 2 seconds.
     **kwargs : dict
-        Must include 'fs' (sampling frequency). Supports standard
-        `scipy.signal.welch` arguments like 'nperseg' and 'noverlap'.
-        Can also include 'f_min' and 'f_max' for frequency slicing.
+        Supports any `scipy.signal.welch` arguments like 'nperseg' and 'noverlap'.
 
     Returns
     -------
@@ -57,10 +73,6 @@ def spectral_preprocessor(x, /, *, _metadata, **kwargs):
         Frequency vector.
     p : ndarray
         Power Spectral Density.
-
-    Assertsions
-    -----------
-    - 'fs' must be provided in kwargs.
 
     """
     f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)

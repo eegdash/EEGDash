@@ -101,7 +101,6 @@ class TrainableFeature(ABC):
     """
 
     def __init__(self):
-        # TODO: fix naming of _is_trained vs _is_fitted
         self._is_trained = False
         self.clear()
 
@@ -137,7 +136,7 @@ class TrainableFeature(ABC):
 
         This method should be called after the entire training set has been
         processed via :meth:`partial_fit`. It transitions the object to a
-        "fitted" state, enabling the :meth:`__call__` method.
+        "trained" state, enabling the :meth:`__call__` method.
         """
         self._is_trained = True
 
@@ -299,6 +298,8 @@ class FeatureExtractor(TrainableFeature):
         ----------
         *x : tuple of ndarray
             The input data batch.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -324,10 +325,8 @@ class FeatureExtractor(TrainableFeature):
         ----------
         *x : tuple of ndarray
             The input data batch.
-        _batch_size : int
-            The number of windows in the current batch.
-        _ch_names : list of str
-            The names of the (EEG) channels.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -413,6 +412,8 @@ class FeatureExtractor(TrainableFeature):
             The input data batch.
         y : ndarray, optional
             Target labels for supervised training.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         """
         if not self._is_trainable:

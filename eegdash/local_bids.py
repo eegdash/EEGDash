@@ -127,9 +127,7 @@ def discover_local_bids_records(
         _valid_exts = {
             ext
             for m in modalities
-            for ext in ALLOWED_DATATYPE_EXTENSIONS.get(
-                MODALITY_ALIASES.get(m, m), []
-            )
+            for ext in ALLOWED_DATATYPE_EXTENSIONS.get(MODALITY_ALIASES.get(m, m), [])
         }
         _entity_re = re.compile(r"(sub|ses|task|run|acq)-([^_]+)")
         _glob_records: list[dict[str, Any]] = []
@@ -143,9 +141,11 @@ def discover_local_bids_records(
                     bids_relpath = fpath.relative_to(dataset_root_path.resolve())
                 except ValueError:
                     bids_relpath = Path(fpath.name)
-                datatype = fpath.parent.name if fpath.parent.name in (
-                    "eeg", "ieeg", "meg"
-                ) else modalities[0]
+                datatype = (
+                    fpath.parent.name
+                    if fpath.parent.name in ("eeg", "ieeg", "meg")
+                    else modalities[0]
+                )
                 rec = create_record(
                     dataset=dataset_id,
                     storage_base=str(dataset_root_path),

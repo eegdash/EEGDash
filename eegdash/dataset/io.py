@@ -10,6 +10,7 @@ import os
 import re
 from contextlib import contextmanager
 from difflib import SequenceMatcher
+from functools import partial
 from pathlib import Path
 from time import strptime
 from typing import Any
@@ -135,7 +136,7 @@ def _is_annex_placeholder(path: Path) -> bool:
     content was never fetched (or has been dropped), the blob may contain a
     short placeholder string like ``--corrupted--``.  This function checks
     for that pattern so callers can raise an informative error instead of
-    letting MNE crash on unparseable content.
+    letting MNE crash on unparsable content.
     """
     if not path.exists():
         return False
@@ -796,6 +797,7 @@ def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
     -------
     bool
         True if file was generated, False if no valid sibling was found.
+
     """
     # Walk up to the dataset root (two levels: eeg/ -> sub-XX/ -> dataset/)
     # but search broadly — any .vhdr in the dataset tree will do.
@@ -1163,6 +1165,7 @@ def _deduplicate_channel_names(ch_names: list[str]) -> list[str]:
     -------
     list of str
         Channel names with duplicates disambiguated.
+
     """
     from collections import Counter
 
@@ -1412,6 +1415,20 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
         return False
 
 
+def _clamping_crop(orig_crop, self, *args, **kwargs):
+    """Patched ``Annotations.crop`` that clamps negative durations first."""
+    if hasattr(self, "duration") and self.duration is not None:
+        mask = self.duration < 0
+        if np.any(mask):
+            n_neg = int(np.sum(mask))
+            logger.warning(
+                "Clamping %d annotation(s) with negative duration to 0.",
+                n_neg,
+            )
+            self.duration[mask] = 0.0
+    return orig_crop(self, *args, **kwargs)
+
+
 @contextmanager
 def _fix_negative_annotation_durations():
     """Context manager that patches ``mne.Annotations.crop`` to clamp
@@ -1425,20 +1442,7 @@ def _fix_negative_annotation_durations():
     succeed.
     """
     _orig_crop = mne.Annotations.crop
-
-    def _patched_crop(self, *args, **kwargs):
-        if hasattr(self, "duration") and self.duration is not None:
-            mask = self.duration < 0
-            if np.any(mask):
-                n_neg = int(np.sum(mask))
-                logger.warning(
-                    "Clamping %d annotation(s) with negative duration to 0.",
-                    n_neg,
-                )
-                self.duration[mask] = 0.0
-        return _orig_crop(self, *args, **kwargs)
-
-    mne.Annotations.crop = _patched_crop
+    mne.Annotations.crop = partial(_clamping_crop, _orig_crop)
     try:
         yield
     finally:
@@ -1962,9 +1966,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
         try:
             import pymatreader
 
-            mat = pymatreader.read_mat(
-                str(set_path), uint16_codec="latin-1"
-            )
+            mat = pymatreader.read_mat(str(set_path), uint16_codec="latin-1")
             eeg = mat.get("EEG", mat)
             if not isinstance(eeg, dict) or "pnts" not in eeg:
                 return False
@@ -2040,9 +2042,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
         repaired["xmax"] = (actual_pnts - 1) / srate
         # Rebuild times array to match actual sample count
         if "times" in repaired:
-            repaired["times"] = (
-                np.arange(actual_pnts, dtype=np.float64) / srate
-            )
+            repaired["times"] = np.arange(actual_pnts, dtype=np.float64) / srate
 
     # When loaded via pymatreader, list fields must be converted to arrays
     # for scipy.savemat to serialize them correctly.
@@ -2060,8 +2060,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
         savemat(str(set_path), {"EEG": repaired}, do_compression=False)
         if needs_rename and needs_pnts_fix:
             logger.info(
-                "Repaired EEGLAB .set header: %s "
-                "(datfile %r -> %r, pnts %s -> %s).",
+                "Repaired EEGLAB .set header: %s (datfile %r -> %r, pnts %s -> %s).",
                 set_path.name,
                 data_ref,
                 bids_fdt_name,
@@ -2070,8 +2069,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
             )
         elif needs_rename:
             logger.info(
-                "Repaired EEGLAB .set header: %s "
-                "(datfile %r -> %r).",
+                "Repaired EEGLAB .set header: %s (datfile %r -> %r).",
                 set_path.name,
                 data_ref,
                 bids_fdt_name,

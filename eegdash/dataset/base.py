@@ -110,23 +110,23 @@ def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
     mask = annots.duration < 0
     if np.any(mask):
         n_neg = int(np.sum(mask))
-        logger.warning(
-            "Clamping %d annotation(s) with negative duration to 0.", n_neg
-        )
+        logger.warning("Clamping %d annotation(s) with negative duration to 0.", n_neg)
         annots.duration[mask] = 0.0
+
+
+@contextmanager
+def _dummy_filelock(*args, **kwargs):
+    """No-op context manager used as a stand-in for ``filelock.FileLock``."""
+    yield
 
 
 @contextmanager
 def _noop_filelock():
     """Replace ``filelock.FileLock`` with a no-op so mne-bids can read
     sidecar JSON files in read-only directories without creating ``.lock``
-    files."""
-
-    @contextmanager
-    def _dummy_lock(*args, **kwargs):
-        yield
-
-    with patch("filelock.FileLock", _dummy_lock):
+    files.
+    """
+    with patch("filelock.FileLock", _dummy_filelock):
         yield
 
 
@@ -596,9 +596,7 @@ class EEGDashRaw(RawDataset):
 
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
-                if not _generate_vhdr_from_metadata(
-                    self.filecache, self.record
-                ):
+                if not _generate_vhdr_from_metadata(self.filecache, self.record):
                     _generate_vhdr_from_sibling(self.filecache)
             else:
                 # Check if the VHDR contains required sections; if completely
@@ -607,14 +605,15 @@ class EEGDashRaw(RawDataset):
                     vhdr_text = self.filecache.read_text(encoding="utf-8")
                 except Exception:
                     vhdr_text = ""
-                if "[Common Infos]" not in vhdr_text and "[Common infos]" not in vhdr_text:
+                if (
+                    "[Common Infos]" not in vhdr_text
+                    and "[Common infos]" not in vhdr_text
+                ):
                     logger.warning(
                         "VHDR file %s is corrupted, regenerating from metadata.",
                         self.filecache.name,
                     )
-                    if not _generate_vhdr_from_metadata(
-                        self.filecache, self.record
-                    ):
+                    if not _generate_vhdr_from_metadata(self.filecache, self.record):
                         _generate_vhdr_from_sibling(self.filecache)
 
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
@@ -1068,7 +1067,11 @@ class EEGDashRaw(RawDataset):
                             raise retry_error from first_error
 
                 # scans.tsv path mismatch (EEG file not listed in scans.tsv)
-                if "is not in list" in msg and ("Did you mean" in msg or "PosixPath" in msg) and self.filecache:
+                if (
+                    "is not in list" in msg
+                    and ("Did you mean" in msg or "PosixPath" in msg)
+                    and self.filecache
+                ):
                     logger.warning(
                         "scans.tsv path mismatch — falling back to direct reader."
                     )
@@ -1193,18 +1196,13 @@ class EEGDashRaw(RawDataset):
                         "EDF annotation encoding error, retrying with encoding='latin1'..."
                     )
                     try:
-                        return self._read_raw_bids(
-                            extra_params={"encoding": "latin1"}
-                        )
+                        return self._read_raw_bids(extra_params={"encoding": "latin1"})
                     except Exception as retry_error:
                         raise retry_error from first_error
 
                 # IndexError from scans.tsv handling (empty file list) —
                 # fall back to direct reader
-                if (
-                    isinstance(first_error, IndexError)
-                    and self.filecache
-                ):
+                if isinstance(first_error, IndexError) and self.filecache:
                     logger.warning(
                         "IndexError during BIDS loading (likely malformed scans.tsv) "
                         "— falling back to direct reader."

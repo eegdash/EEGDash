@@ -1303,7 +1303,6 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     assert all(onset < raw_duration for onset in raw.annotations.onset)
 
 
-
 # ── _repair_vhdr_missing_markerfile ───────────────────────────────────
 
 
@@ -1463,12 +1462,7 @@ def test_repair_channels_tsv_duplicates_not_a_dir(tmp_path):
 def test_repair_channels_tsv_duplicates_preserves_other_columns(tmp_path):
     """Other columns in channels.tsv are preserved when deduplicating."""
     tsv = tmp_path / "sub-01_channels.tsv"
-    tsv.write_text(
-        "name\ttype\tunits\n"
-        "EEG\tEEG\tuV\n"
-        "EEG\tEOG\tmV\n"
-        "Oz\tEEG\tuV\n"
-    )
+    tsv.write_text("name\ttype\tunits\nEEG\tEEG\tuV\nEEG\tEOG\tmV\nOz\tEEG\tuV\n")
 
     assert _repair_channels_tsv_duplicates(tmp_path) is True
 

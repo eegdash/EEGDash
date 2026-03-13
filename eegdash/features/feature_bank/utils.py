@@ -16,6 +16,23 @@ DEFAULT_FREQ_BANDS = {
 }
 
 
+def spectral_default_kwargs(kwargs, metadata):
+    f_min = kwargs.pop("f_min") if "f_min" in kwargs else metadata["info"]["highpass"]
+    f_max = kwargs.pop("f_max") if "f_max" in kwargs else metadata["info"]["lowpass"]
+    window_size_in_sec = (
+        kwargs.pop("window_size_in_sec") if "window_size_in_sec" in kwargs else 4
+    )
+    overlap_in_sec = kwargs.pop("overlap_in_sec") if "overlap_in_sec" in kwargs else 2
+    if "fs" not in kwargs:
+        kwargs["fs"] = metadata["info"]["sfreq"]
+    if "nperseg" not in kwargs:
+        kwargs["nperseg"] = int(window_size_in_sec * kwargs["fs"])
+    if "noverlap" not in kwargs:
+        kwargs["noverlap"] = int(overlap_in_sec * kwargs["fs"])
+    kwargs["axis"] = -1
+    return f_min, f_max, kwargs
+
+
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):
     f0 = 2 * fs / n
     f1 = fs / 2

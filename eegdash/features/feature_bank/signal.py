@@ -162,13 +162,13 @@ def signal_hjorth_complexity(x, /):
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
-def signal_decorrelation_time(x, /, fs=1):
+def signal_decorrelation_time(x, /, *, _metadata):
     f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2]
     dct = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):
         dct[i] = np.searchsorted(ac[i] <= 0, True)
-    return dct / fs
+    return dct / _metadata["info"]["sfreq"]
 
 
 # =================================  Aliases  =================================

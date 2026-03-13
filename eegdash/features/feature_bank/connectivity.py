@@ -17,11 +17,8 @@ __all__ = [
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
-def connectivity_coherency_preprocessor(x, /, **kwargs):
-    f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
-    f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
-    assert "fs" in kwargs and "nperseg" in kwargs
-    kwargs["axis"] = -1
+def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
+    f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
     n = x.shape[1]
     idx_x, idx_y = BivariateFeature.get_pair_iterators(n)
     ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))

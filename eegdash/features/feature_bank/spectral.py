@@ -23,11 +23,8 @@ __all__ = [
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
-def spectral_preprocessor(x, /, **kwargs):
-    f_min = kwargs.pop("f_min") if "f_min" in kwargs else None
-    f_max = kwargs.pop("f_max") if "f_max" in kwargs else None
-    assert "fs" in kwargs
-    kwargs["axis"] = -1
+def spectral_preprocessor(x, /, *, _metadata, **kwargs):
+    f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
     f, p = welch(x, **kwargs)
     f_min, f_max = utils.get_valid_freq_band(kwargs["fs"], x.shape[-1], f_min, f_max)
     f, p = utils.slice_freq_band(f, p, f_min=f_min, f_max=f_max)

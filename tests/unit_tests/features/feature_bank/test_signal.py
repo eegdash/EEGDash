@@ -9,7 +9,8 @@ def test_signal_decorrelation_time():
     x = np.random.randn(2, 100)
 
     # Lines 118-123: decorrelation time computation
-    result = signal_decorrelation_time(x, fs=100)
+    metadata = {"info": {"sfreq": 100}}
+    result = signal_decorrelation_time(x, _metadata=metadata)
     assert result.shape == (2,)
 
 
@@ -64,7 +65,8 @@ def test_signal_decorrelation_time_2():
 
     np.random.seed(42)
     x = np.random.randn(2, 3, 256)
-    result = signal_decorrelation_time(x, fs=256)
+    metadata = {"info": {"sfreq": 256}}
+    result = signal_decorrelation_time(x, _metadata=metadata)
     assert result.shape == (2, 3)
 
 

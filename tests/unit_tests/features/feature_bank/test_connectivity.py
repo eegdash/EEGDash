@@ -35,8 +35,9 @@ def test_connectivity_coherence():
     x = np.stack([x1, x2], axis=0)[None, :, :]
 
     # Run preprocessor
+    metadata = {"info": {"sfreq": fs, "highpass": 0.5, "lowpass": 50}}
     kwargs = {"fs": fs, "nperseg": 100, "f_min": 0.5, "f_max": 50}
-    f, c = connectivity_coherency_preprocessor(x, **kwargs)
+    f, c = connectivity_coherency_preprocessor(x, _metadata=metadata, **kwargs)
 
     # Check output shapes
     # c shape: (n_epochs, n_pairs, n_freqs)
@@ -65,8 +66,9 @@ def test_perfect_coherence():
     x1 = np.sin(2 * np.pi * 10 * t)
     x = np.stack([x1, x1], axis=0)[None, :, :]
 
+    metadata = {"info": {"sfreq": fs, "highpass": 8, "lowpass": 12}}
     kwargs = {"fs": fs, "nperseg": 100, "f_min": 8, "f_max": 12}
-    f, c = connectivity_coherency_preprocessor(x, **kwargs)
+    f, c = connectivity_coherency_preprocessor(x, _metadata=metadata, **kwargs)
 
     # MSC
     msc = connectivity_magnitude_square_coherence(f, c, bands={"target": (9, 11)})
@@ -86,8 +88,9 @@ def test_lagged_coherence():
     x2 = np.sin(2 * np.pi * 10 * t + np.pi / 2)
     x = np.stack([x1, x2], axis=0)[None, :, :]
 
+    metadata = {"info": {"sfreq": fs, "highpass": 8, "lowpass": 12}}
     kwargs = {"fs": fs, "nperseg": 100, "f_min": 8, "f_max": 12}
-    f, c = connectivity_coherency_preprocessor(x, **kwargs)
+    f, c = connectivity_coherency_preprocessor(x, _metadata=metadata, **kwargs)
 
     # Lagged coherence
     # c.imag should be high, c.real should be low (cos(pi/2)=0)

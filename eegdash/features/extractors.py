@@ -101,9 +101,7 @@ class TrainableFeature(ABC):
     """
 
     def __init__(self):
-        # TODO: fix naming of _is_trained vs _is_fitted
         self._is_trained = False
-        self._is_fitted = False
         self.clear()
 
     @abstractmethod
@@ -138,9 +136,9 @@ class TrainableFeature(ABC):
 
         This method should be called after the entire training set has been
         processed via :meth:`partial_fit`. It transitions the object to a
-        "fitted" state, enabling the :meth:`__call__` method.
+        "trained" state, enabling the :meth:`__call__` method.
         """
-        self._is_fitted = True
+        self._is_trained = True
 
     def __call__(self, *args, **kwargs):
         r"""Validate the fitted state before execution.
@@ -151,9 +149,9 @@ class TrainableFeature(ABC):
             If the feature is called before :meth:`fit` has been executed.
 
         """
-        if not self._is_fitted:
+        if not self._is_trained:
             raise RuntimeError(
-                f"{self.__class__} cannot be called, it has to be fitted first."
+                f"{self.__class__} cannot be called, it has to be trained first."
             )
 
 
@@ -293,13 +291,15 @@ class FeatureExtractor(TrainableFeature):
                 return True
         return False
 
-    def preprocess(self, *x):
+    def preprocess(self, *x, _metadata):
         r"""Apply the shared preprocessor to the input data.
 
         Parameters
         ----------
         *x : tuple of ndarray
             The input data batch.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -310,10 +310,12 @@ class FeatureExtractor(TrainableFeature):
         """
         if self.preprocessor is None:
             return (*x,)
+        elif "_metadata" in inspect.signature(self.preprocessor).parameters:
+            return self.preprocessor(*x, _metadata=_metadata)
         else:
             return self.preprocessor(*x)
 
-    def __call__(self, *x, _batch_size=None, _ch_names=None) -> dict:
+    def __call__(self, *x, _metadata) -> dict:
         r"""Execute the full extraction pipeline on a batch of data.
 
         This method applies preprocessing, executes all child extractors,
@@ -323,10 +325,8 @@ class FeatureExtractor(TrainableFeature):
         ----------
         *x : tuple of ndarray
             The input data batch.
-        _batch_size : int
-            The number of windows in the current batch.
-        _ch_names : list of str
-            The names of the (EEG) channels.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -341,30 +341,36 @@ class FeatureExtractor(TrainableFeature):
             been fitted.
 
         """
-        assert _batch_size is not None
-        assert _ch_names is not None
+        assert _metadata is not None
         if self._is_trainable:
             super().__call__()
         results_dict = dict()
-        z = self.preprocess(*x)
+        z = self.preprocess(*x, _metadata=_metadata)
         if not isinstance(z, tuple):
             z = (z,)
         for fname, f in self.feature_extractors_dict.items():
-            if isinstance(f, FeatureExtractor):
-                r = f(*z, _batch_size=_batch_size, _ch_names=_ch_names)
+            if (
+                isinstance(f, FeatureExtractor)
+                or "_metadata" in inspect.signature(f).parameters
+            ):
+                r = f(*z, _metadata=_metadata)
             else:
                 r = f(*z)
             f_und = _get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
-                r = f_und.feature_kind(r, _ch_names=_ch_names)
+                r = f_und.feature_kind(r, _ch_names=_metadata["info"]["ch_names"])
             if not isinstance(fname, str) or not fname:
                 fname = getattr(f_und, "__name__", "")
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""
                 for k, v in r.items():
-                    self._add_feature_to_dict(results_dict, prefix + k, v, _batch_size)
+                    self._add_feature_to_dict(
+                        results_dict, prefix + k, v, _metadata["batch_size"]
+                    )
             else:
-                self._add_feature_to_dict(results_dict, fname, r, _batch_size)
+                self._add_feature_to_dict(
+                    results_dict, fname, r, _metadata["batch_size"]
+                )
         return results_dict
 
     def _add_feature_to_dict(
@@ -397,7 +403,7 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, TrainableFeature):
                 f.clear()
 
-    def partial_fit(self, *x, y=None):
+    def partial_fit(self, *x, y=None, _metadata):
         r"""Propagate partial fitting to all trainable children.
 
         Parameters
@@ -406,17 +412,25 @@ class FeatureExtractor(TrainableFeature):
             The input data batch.
         y : ndarray, optional
             Target labels for supervised training.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         """
         if not self._is_trainable:
             return
-        z = self.preprocess(*x)
+        z = self.preprocess(*x, _metadata=_metadata)
         if not isinstance(z, tuple):
             z = (z,)
         for f in self.feature_extractors_dict.values():
             f = _get_underlying_func(f)
             if isinstance(f, TrainableFeature):
-                f.partial_fit(*z, y=y)
+                if (
+                    isinstance(f, FeatureExtractor)
+                    or "_metadata" in inspect.signature(f).parameters
+                ):
+                    f.partial_fit(*z, y=y, _metadata=_metadata)
+                else:
+                    f.partial_fit(*z, y=y)
 
     def fit(self):
         r"""Fit all trainable sub-features."""

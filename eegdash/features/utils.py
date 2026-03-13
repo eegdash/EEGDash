@@ -23,6 +23,20 @@ __all__ = [
 ]
 
 
+def _get_record_metadata(win_ds):
+    return {
+        "info": win_ds.raw.info,
+        "description": win_ds.description,
+    }
+
+
+def _get_batch_metadata(win_ds, X, crop_inds):
+    return {
+        "batch_size": X.shape[0],
+        "crop_inds": crop_inds,
+    }
+
+
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
     feature_extractor: extractors.FeatureExtractor,
@@ -60,15 +74,14 @@ def _extract_features_from_windowsdataset(
         )
     win_dl = DataLoader(win_ds, batch_size=batch_size, shuffle=False, drop_last=False)
     features_dict = dict()
-    ch_names = win_ds.raw.ch_names
+    batch_metadata = _get_record_metadata(win_ds)
     for X, y, crop_inds in win_dl:
         X = X.numpy()
         if hasattr(y, "tolist"):
             y = y.tolist()
+        batch_metadata.update(_get_batch_metadata(win_ds, X, crop_inds))
         win_dict = dict()
-        win_dict.update(
-            feature_extractor(X, _batch_size=X.shape[0], _ch_names=ch_names)
-        )
+        win_dict.update(feature_extractor(X, _metadata=batch_metadata))
         if not win_ds.targets_from == "metadata":
             # Convert transposed crop_inds from DataLoader to list of tuples for MultiIndex
             crop_inds_tuples = list(zip(*[idx.tolist() for idx in crop_inds]))
@@ -181,12 +194,17 @@ def fit_feature_extractors(
     if not features._is_trainable:
         return features
     features.clear()
-    concat_dl = DataLoader(
-        concat_dataset, batch_size=batch_size, shuffle=False, drop_last=False
-    )
-    for X, y, _ in tqdm(
-        concat_dl, total=len(concat_dl), desc="Fitting feature extractors"
+    for win_ds in tqdm(
+        concat_dataset.datasets,
+        total=len(concat_dataset.datasets),
+        desc="Fitting feature extractors",
     ):
-        features.partial_fit(X.numpy(), y=np.array(y))
+        win_dl = DataLoader(
+            win_ds, batch_size=batch_size, shuffle=False, drop_last=False
+        )
+        batch_metadata = _get_record_metadata(win_ds)
+        for X, y, crop_inds in win_dl:
+            batch_metadata.update(_get_batch_metadata(win_ds, X, crop_inds))
+            features.partial_fit(X.numpy(), y=np.array(y), _metadata=batch_metadata)
     features.fit()
     return features

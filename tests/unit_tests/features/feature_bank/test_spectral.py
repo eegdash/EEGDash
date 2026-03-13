@@ -76,7 +76,8 @@ def test_spectral_more():
     # Use longer signal for better frequency resolution to satisfy frequency bands
     # f0 = 2 * fs / n. For fs=100, n=200 -> f0=1.0. Delta starts at 1.0
     data = np.random.randn(2, 4, 300)
-    f, p = spectral_preprocessor(data, fs=100.0)
+    metadata = {"info": {"sfreq": 100.0}}
+    f, p = spectral_preprocessor(data, _metadata=metadata, fs=100.0)
 
     # 39: normalized
     spectral_normalized_preprocessor(f, p)
@@ -208,7 +209,8 @@ def test_spectral_bands_power():
 
     # Use longer signal for better frequency resolution
     x = np.random.randn(2, 3, 1024)
-    f, p = spectral_preprocessor(x, fs=256)
+    metadata = {"info": {"sfreq": 256}}
+    f, p = spectral_preprocessor(x, _metadata=metadata, fs=256)
 
     # Filter to valid frequency range
 

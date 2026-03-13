@@ -1175,8 +1175,8 @@ def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
     assert _repair_eeglab_fdt(set_path) is False
 
 
-def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
-    """.fdt too small for nbchan (actual_pnts <= 0) returns False."""
+def test_repair_eeglab_fdt_fdt_too_small_raises(tmp_path):
+    """.fdt too small for nbchan (actual_pnts <= 0) raises RuntimeError."""
     pytest.importorskip("scipy")
 
     set_path = tmp_path / "tiny.set"
@@ -1184,7 +1184,8 @@ def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
     fdt_path.write_bytes(b"\x00" * 4)  # 4 bytes, 2 channels -> 0 samples
     eeg = {"nbchan": 2, "pnts": 100, "srate": 250.0, "data": "tiny.fdt"}
     savemat(str(set_path), eeg, do_compression=False)
-    assert _repair_eeglab_fdt(set_path) is False
+    with pytest.raises(RuntimeError, match="0 readable samples"):
+        _repair_eeglab_fdt(set_path)
 
 
 def test_load_raw_eeglab_alleeg_no_eeg_raises(tmp_path):
@@ -1266,7 +1267,7 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     """Epoched EEGLAB data is concatenated into continuous RawArray with annotations."""
     import mne
 
-    n_epochs, n_channels, n_times = 3, 2, 100
+    n_epochs, n_channels, n_times = 3, 2, 200
     sfreq = 256.0
     data = np.random.randn(n_epochs, n_channels, n_times) * 1e-6
     tmin = -0.2  # 0.2s before trigger

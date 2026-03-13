@@ -246,7 +246,9 @@ def test_ensure_raw_vhdr_handling(
         (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
 
     dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
-    dataset._load_raw = MagicMock()
+    mock_raw = MagicMock()
+    mock_raw.n_times = 100
+    dataset._load_raw = MagicMock(return_value=mock_raw)
     dataset._ensure_raw()
 
     assert mock_repair.called == expect_repair

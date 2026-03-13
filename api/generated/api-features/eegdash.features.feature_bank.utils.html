@@ -558,13 +558,16 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code>(f, *x[, f_min, f_max])</p></td>
 <td><p>Slice frequency vector and associated data arrays to a specific range.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_default_kwargs</span></code>(kwargs, metadata)</p></td>
+<td><p>Sets default parameters for spectral preprocecssors.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L28-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L71-L115"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Validate and return frequency boundaries based on Nyquist and resolution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -599,7 +602,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L129-L187"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L172-L230"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reduce spectral data into discrete frequency bands by aggregating bins.</p>
 <p>This function identifies the frequency indices belonging to specific
 bands and applies a reduction function (like sum or mean) to collapse
@@ -648,7 +651,7 @@ available frequency vector <cite>f</cite>.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L75-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L118-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Slice frequency vector and associated data arrays to a specific range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -689,6 +692,35 @@ The last dimension of each array must match the length of <cite>f</cite>.</p></l
 <span class="go">       [35, 45, 55]])</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">spectral_default_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L29-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets default parameters for spectral preprocecssors.</p>
+<ul class="simple">
+<li><p>Set the default frequency limits to the bandpass frequencies (if available).</p></li>
+<li><p>Set the default sampling frequency to <cite>freq</cite> in MNE’s info.</p></li>
+<li><p>Use <cite>window_size_in_sec</cite> if <cite>nperseg</cite> is not provided. Defaults to 4 seconds.</p></li>
+<li><p>Use <cite>overlap_in_sec</cite> if <cite>noverlap</cite> is not provided. Defaults to 2 seconds.</p></li>
+<li><p>Set the axis to -1</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kwargs</strong> (<em>dict</em>) – A dictionary of keyword arguments.</p></li>
+<li><p><strong>metadata</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f_min</strong> (<em>float</em>) – Minimum frequency.</p></li>
+<li><p><strong>f_max</strong> (<em>float</em>) – Maximum frequency.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – A dictionary of keyword arguments.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

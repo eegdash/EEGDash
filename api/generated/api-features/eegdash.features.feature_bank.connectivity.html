@@ -556,7 +556,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_coherency_preprocessor</span></code>(x, /, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_coherency_preprocessor</span></code>(x, /, *, ...)</p></td>
 <td><p>Compute Complex Coherency for all unique channel pairs.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_magnitude_square_coherence</span></code></p></td>
@@ -575,7 +575,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L36-L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L36-L89"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compute Complex Coherency for all unique channel pairs.</p>
 <p>The Complex Coherency is calculated by estimating the Cross-Spectral Densities
 (CSD) between pairs of channels and normalizing it by the auto-spectral densities.</p>
@@ -583,9 +583,20 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal of shape (n_trials, n_channels, n_times).</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments to pass to <cite>scipy.signal.csd</cite>. Must include
-‘fs’ (sampling frequency) and ‘nperseg’ (length of each segment for CSD estimation).
-Optional keys include ‘f_min’ and ‘f_max’ to specify frequency band limits.</p></li>
+<li><p><strong>fs</strong> (<em>int</em>) – Sampling frequency.
+Defaults to <cite>sfreq</cite> in MNE’s info.
+Do not use unless you know what you are doing.</p></li>
+<li><p><strong>f_min</strong> (<em>float</em><em> | </em><em>None</em>) – The minimum frequency. Use <cite>None</cite> for half the window length.
+Defaults to the highpass frequency used to MNE’s <cite>filter</cite>.</p></li>
+<li><p><strong>f_max</strong> (<em>float</em><em> | </em><em>None</em>) – The maximum frequency. Use <cite>None</cite> for Nyquist.
+Defaults to the lowpass frequency used to MNE’s <cite>filter</cite>.</p></li>
+<li><p><strong>window_size_in_sec</strong> (<em>float</em>) – Window size in seconds, replacing <cite>nperseg</cite>.
+Overridden by <cite>nperseg</cite> if both are provided.
+Defaults to 4 seconds.</p></li>
+<li><p><strong>overlap_in_sec</strong> (<em>float</em>) – Window overlap in seconds, replacing <cite>noverlap</cite>.
+Overridden by <cite>noverlap</cite> if both are provided.
+Defaults to 2 seconds.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Supports any <cite>scipy.signal.csd</cite> arguments like ‘nperseg’ and ‘noverlap’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -595,9 +606,6 @@ Optional keys include ‘f_min’ and ‘f_max’ to specify frequency band limi
 Values are complex numbers where:
 - Absolute value <a href="#id1"><span class="problematic" id="id2">|c|</span></a> is the coherence (0 to 1).
 - Angle arg(c) is the phase lag.</p></li>
-<li><p><em>Assertions</em></p></li>
-<li><p><em>———-</em></p></li>
-<li><p><em>- ‘fs’ and ‘nperseg’ must be provided in kwargs.</em></p></li>
 </ul>
 </p>
 </dd>

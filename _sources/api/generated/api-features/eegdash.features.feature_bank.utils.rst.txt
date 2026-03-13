@@ -16,5 +16,6 @@
       get_valid_freq_band
       reduce_freq_bands
       slice_freq_band
+      spectral_default_kwargs
    
 

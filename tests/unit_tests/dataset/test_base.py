@@ -241,7 +241,7 @@ def test_ensure_raw_vhdr_handling(
     }
 
     if create_vhdr:
-        (eeg_dir / "sub-01_task-rest_eeg.vhdr").touch()
+        (eeg_dir / "sub-01_task-rest_eeg.vhdr").write_text("[Common Infos]\nDataFile=sub-01_task-rest_eeg.eeg\n")
     if create_vmrk:
         (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
 

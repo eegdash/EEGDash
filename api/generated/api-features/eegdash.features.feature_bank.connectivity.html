@@ -591,11 +591,11 @@ Defaults to the highpass frequency used to MNE’s <cite>filter</cite>.</p></li>
 <li><p><strong>f_max</strong> (<em>float</em><em> | </em><em>None</em>) – The maximum frequency. Use <cite>None</cite> for Nyquist.
 Defaults to the lowpass frequency used to MNE’s <cite>filter</cite>.</p></li>
 <li><p><strong>window_size_in_sec</strong> (<em>float</em>) – Window size in seconds, replacing <cite>nperseg</cite>.
-Overridden by <cite>nperseg</cite> if both are provided.
+Only used if <cite>nperseg</cite> is not provided.
 Defaults to 4 seconds.</p></li>
 <li><p><strong>overlap_in_sec</strong> (<em>float</em>) – Window overlap in seconds, replacing <cite>noverlap</cite>.
-Overridden by <cite>noverlap</cite> if both are provided.
-Defaults to 2 seconds.</p></li>
+Only used if <cite>nperseg</cite> and <cite>noverlap</cite> are not provided.
+defaults to half of <cite>window_size_in_sec</cite>.</p></li>
 <li><p><strong>**kwargs</strong> (<em>dict</em>) – Supports any <cite>scipy.signal.csd</cite> arguments like ‘nperseg’ and ‘noverlap’.</p></li>
 </ul>
 </dd>

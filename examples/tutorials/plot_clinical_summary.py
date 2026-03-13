@@ -187,7 +187,7 @@ if not plot_df.empty:
     plt.title("Number of Studies by Modality and Subject Type")
     plt.ylabel("Number of Studies")
     plt.xlabel("Electrophysiology Modality")
-    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+    ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     plt.tight_layout()
     plt.savefig("clinical_breakdown.png")  # Save for verification

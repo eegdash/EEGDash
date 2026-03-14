@@ -426,7 +426,7 @@ def signal_hjorth_complexity(x, /):
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
-def signal_decorrelation_time(x, /, fs=1):
+def signal_decorrelation_time(x, /, *, _metadata):
     r"""Calculate the Decorrelation Time of the signal.
 
     This function computes the time it takes for the signal to
@@ -437,9 +437,6 @@ def signal_decorrelation_time(x, /, fs=1):
     ----------
     x : ndarray
         The input signal.
-    fs : float, optional
-        The sampling frequency in Hz. If 1 (default), the result is
-        returned in samples. If fs is provided, the result is in seconds.
 
     Returns
     -------
@@ -459,7 +456,7 @@ def signal_decorrelation_time(x, /, fs=1):
     dct = np.empty(x.shape[:-1])
     for i in np.ndindex(x.shape[:-1]):
         dct[i] = np.searchsorted(ac[i] <= 0, True)
-    return dct / fs
+    return dct / _metadata["info"]["sfreq"]
 
 
 # =================================  Aliases  =================================

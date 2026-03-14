@@ -187,6 +187,13 @@ def discover_local_bids_records(
     for bids_path in matched_paths:
         file_path = Path(bids_path.fpath)
 
+        # Skip derivative files and phantom paths from find_matching_paths.
+        # mne-bids can discover files in derivatives/ subdirectories and
+        # reconstruct canonical paths in the raw data hierarchy that don't
+        # actually exist on disk.
+        if not file_path.exists() or "derivatives" in file_path.parts:
+            continue
+
         # Filter out sidecars based on extension
         # find_matching_paths with suffix='eeg' returns .json too.
         # We only want strictly the raw data file.

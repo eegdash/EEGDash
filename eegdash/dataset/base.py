@@ -67,6 +67,7 @@ _UNRECOVERABLE_PATTERNS = [
     "Could not find any data",
     "no valid samples",
     # NumPy / SciPy array errors from corrupt MAT / EEGLAB files
+    "could not read bytes",
     "buffer is too small for requested array",
     "buffer size must be",
     "iteration over a 0-d array",
@@ -841,6 +842,33 @@ class EEGDashRaw(RawDataset):
                     except Exception as fallback_error:
                         raise DataIntegrityError(
                             message=f"CTF trial size mismatch and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
+                # CTF "no valid samples" — MNE misinterprets a zeroed
+                # system clock (SCLK01) channel as empty data.  Retry with
+                # system_clock="ignore" to bypass the SCLK check.
+                if (
+                    ("no valid samples" in msg or "Could not find any data" in msg)
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".ds"
+                ):
+                    import mne
+
+                    logger.warning(
+                        "CTF no valid samples — retrying with system_clock='ignore'."
+                    )
+                    try:
+                        return mne.io.read_raw_ctf(
+                            str(self.filecache),
+                            system_clock="ignore",
+                            preload=False,
+                            verbose="ERROR",
+                        )
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"CTF no valid samples (system_clock=ignore also failed): {fallback_error}",
                             record=self.record,
                             issues=[str(fallback_error)],
                         ) from first_error

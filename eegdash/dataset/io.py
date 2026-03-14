@@ -1767,8 +1767,7 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
 
     epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
-    data = epochs.get_data()  # (n_epochs, n_channels, n_times)
-    n_epochs, n_channels, n_times = data.shape
+    n_epochs, n_channels, n_times = len(epochs), len(epochs.ch_names), len(epochs.times)
     total_samples = n_epochs * n_times
 
     # Guard: reject degenerate epoch data that is too short for any
@@ -1786,32 +1785,49 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
             f"Recording is too short for processing."
         )
 
-    # Concatenate epochs into continuous data (channel-major order)
-    data_concat = np.ascontiguousarray(data.transpose(1, 0, 2)).reshape(n_channels, -1)
+    # Extract metadata before freeing epochs to minimize peak memory.
+    info = epochs.info.copy()
+    event_id = epochs.event_id
+    events = epochs.events.copy() if epochs.event_id else None
+    tmin = epochs.tmin
 
-    # read_epochs_eeglab already converts µV → V, so no extra scaling needed
-    raw = mne.io.RawArray(data_concat, epochs.info, verbose="ERROR")
+    # Concatenate epochs into continuous data (channel-major order).
+    # epochs._data is (n_epochs, n_channels, n_times) — already in memory
+    # since read_epochs_eeglab always preloads. We access it directly to
+    # avoid the copy that get_data() would create.
+    # We need (n_channels, n_epochs * n_times) for RawArray.
+    epoch_data = epochs._data  # no copy — direct reference
+    data_concat = np.empty((n_channels, total_samples), dtype=epoch_data.dtype)
+    for i in range(n_epochs):
+        data_concat[:, i * n_times : (i + 1) * n_times] = epoch_data[i]
+
+    # Free the epochs object and its data before creating RawArray
+    del epoch_data, epochs
+
+    # read_epochs_eeglab already converts µV → V, so no extra scaling needed.
+    # RawArray with copy="auto" reuses data_concat without copying.
+    raw = mne.io.RawArray(data_concat, info, verbose="ERROR")
 
     # Recalculate event sample positions for the concatenated timeline.
-    # epochs.events[:, 0] references the ORIGINAL continuous recording,
+    # The original events[:, 0] references the ORIGINAL continuous recording,
     # but our raw is the concatenated epoch data.  Each epoch i occupies
     # samples [i*n_times, (i+1)*n_times) and the trigger sits at
     # -tmin seconds from the epoch start.
-    if epochs.event_id:
-        offset = int(round(-epochs.tmin * epochs.info["sfreq"]))
-        new_events = epochs.events.copy()
+    if event_id:
+        offset = int(round(-tmin * sfreq))
+        new_events = events
         new_events[:, 0] = np.arange(n_epochs) * n_times + offset
-        event_desc = {v: k for k, v in epochs.event_id.items()}
+        event_desc = {v: k for k, v in event_id.items()}
         annotations = mne.annotations_from_events(
             events=new_events,
             event_desc=event_desc,
-            sfreq=epochs.info["sfreq"],
+            sfreq=sfreq,
             orig_time=raw.info.get("meas_date"),
         )
         raw.set_annotations(annotations)
 
     raw.info["description"] = (
-        f"Converted from {n_epochs} epochs ({n_times / epochs.info['sfreq']:.3f}s each)"
+        f"Converted from {n_epochs} epochs ({n_times / sfreq:.3f}s each)"
     )
 
     logger.warning(

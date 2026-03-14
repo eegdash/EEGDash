@@ -14,6 +14,7 @@ __all__ = [
     "get_valid_freq_band",
     "reduce_freq_bands",
     "slice_freq_band",
+    "spectral_default_kwargs",
 ]
 
 
@@ -23,6 +24,65 @@ DEFAULT_FREQ_BANDS = {
     "alpha": (8, 12),
     "beta": (12, 30),
 }
+
+
+def spectral_default_kwargs(kwargs, metadata):
+    r"""Sets default parameters for spectral preprocecssors.
+
+    - Set the default frequency limits to the bandpass frequencies (if available).
+    - Set the default sampling frequency to `freq` in MNE's info.
+    - Use `window_size_in_sec` if `nperseg` is not provided. Defaults to 4 seconds.
+    - Use `overlap_in_sec` if `nperseg` and `noverlap` are not provided.
+       Defaults to half the window size.
+    - Set the axis to -1
+
+    Parameters
+    ----------
+    kwargs : dict
+        A dictionary of keyword arguments.
+    metadata : _type_
+        _description_
+
+    Returns
+    -------
+    f_min : float
+        Minimum frequency.
+    f_max : float
+        Maximum frequency.
+    kwargs : dict
+        A dictionary of keyword arguments.
+
+    """
+    f_min = (
+        kwargs.pop("f_min")
+        if "f_min" in kwargs
+        else metadata["info"]["highpass"]
+        if "highpass" in metadata["info"]
+        else None
+    )
+    f_max = (
+        kwargs.pop("f_max")
+        if "f_max" in kwargs
+        else metadata["info"]["lowpass"]
+        if "lowpass" in metadata["info"]
+        else None
+    )
+    if "fs" not in kwargs:
+        kwargs["fs"] = metadata["info"]["sfreq"]
+    if "nperseg" not in kwargs:
+        window_size_in_sec = (
+            kwargs.pop("window_size_in_sec") if "window_size_in_sec" in kwargs else 4
+        )
+        kwargs["nperseg"] = int(window_size_in_sec * kwargs["fs"])
+        if "noverlap" not in kwargs:
+            overlap_in_sec = (
+                kwargs.pop("overlap_in_sec")
+                if "overlap_in_sec" in kwargs
+                else window_size_in_sec / 2
+            )
+            kwargs["noverlap"] = int(overlap_in_sec * kwargs["fs"])
+    kwargs["axis"] = -1
+    return f_min, f_max, kwargs
 
 
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):

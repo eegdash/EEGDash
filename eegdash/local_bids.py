@@ -135,8 +135,6 @@ def discover_local_bids_records(
         for ext in _valid_exts:
             for fpath in dataset_root_path.rglob(f"*{ext}"):
                 entities = dict(_entity_re.findall(fpath.name))
-                if not entities.get("task"):
-                    continue
                 try:
                     bids_relpath = fpath.relative_to(dataset_root_path.resolve())
                 except ValueError:
@@ -206,11 +204,10 @@ def discover_local_bids_records(
         if final_ext not in valid_raw_extensions:
             continue
 
-        # Skip files without a task entity — these are typically auxiliary
-        # BIDS files (calibration, crosstalk, empty-room) that are not
-        # actual recordings and will fail in read_raw_bids.
-        if not bids_path.task:
-            continue
+        # Files without a task entity may be auxiliary (calibration,
+        # crosstalk, empty-room) or legitimate recordings in datasets
+        # that omit the optional task entity.  We allow them through
+        # so the loader can attempt to read them.
 
         try:
             # IMPORTANT: keep the BIDS symlink path, do NOT resolve to annex
@@ -245,5 +242,46 @@ def discover_local_bids_records(
         rec.update(_get_file_metadata(ds_helper, str(bids_path.fpath)))
 
         records_out.append(rec)
+
+    # --- Fallback: discover directory-based formats (.ds, .mefd) that
+    # find_matching_paths cannot find (it only matches files, not dirs).
+    if not records_out:
+        _DIR_EXTS = (".ds", ".mefd")
+        _found_relpaths = set()
+        for dext in _DIR_EXTS:
+            for dpath in dataset_root_path.rglob(f"*{dext}"):
+                if not dpath.is_dir():
+                    continue
+                try:
+                    rel = dpath.relative_to(dataset_root_path.resolve())
+                except ValueError:
+                    rel = Path(dpath.name)
+                if rel.as_posix() in _found_relpaths:
+                    continue
+                _found_relpaths.add(rel.as_posix())
+                # Parse entities from the directory name
+                import re as _re
+
+                _ents = dict(_re.findall(r"(sub|ses|task|run|acq)-([^_/]+)", str(rel)))
+                datatype = (
+                    dpath.parent.name
+                    if dpath.parent.name in ("eeg", "ieeg", "meg")
+                    else modalities[0]
+                )
+                rec = create_record(
+                    dataset=dataset_id,
+                    storage_base=str(dataset_root_path),
+                    bids_relpath=rel.as_posix(),
+                    subject=_ents.get("sub"),
+                    session=_ents.get("ses"),
+                    task=_ents.get("task"),
+                    run=_ents.get("run"),
+                    acquisition=_ents.get("acq"),
+                    dep_keys=[],
+                    datatype=datatype,
+                    suffix=datatype,
+                    extension=dext,
+                )
+                records_out.append(rec)
 
     return records_out

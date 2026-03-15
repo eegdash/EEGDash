@@ -851,16 +851,22 @@ class EEGDashRaw(RawDataset):
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
-                # CTF trial-size mismatch — fall back to direct reader
+                # CTF trial-size mismatch — the meg4 file is truncated
+                # (fewer samples than res4 header declares).  Patch
+                # MNE's _get_sample_info to treat available data as a
+                # single continuous block.
                 if "even multiple of the trial size" in msg and self.filecache:
                     logger.warning(
-                        "CTF trial size mismatch — falling back to direct reader."
+                        "CTF trial size mismatch — retrying with "
+                        "truncation-tolerant sample info."
                     )
                     try:
-                        return _load_raw_direct(self.filecache)
+                        return self._retry_with_ctf_truncated_fix(first_error)
+                    except DataIntegrityError:
+                        raise
                     except Exception as fallback_error:
                         raise DataIntegrityError(
-                            message=f"CTF trial size mismatch and direct reader failed: {fallback_error}",
+                            message=f"CTF trial size mismatch and all fallbacks failed: {fallback_error}",
                             record=self.record,
                             issues=[str(fallback_error)],
                         ) from first_error
@@ -1373,27 +1379,77 @@ class EEGDashRaw(RawDataset):
             logger.warning(
                 "CTF HPI coil-kind mismatch — retrying with extended kind dict."
             )
-            return self._read_raw_bids()
-        except Exception:
-            pass  # Fall through to direct reader below
+            try:
+                return self._read_raw_bids()
+            except Exception:
+                pass  # MNE-BIDS failed; try direct reader with patch still active
+
+            # Direct reader while HPI patch is still active
+            if self.filecache:
+                logger.warning(
+                    "CTF HPI fix via MNE-BIDS failed — "
+                    "falling back to direct reader (with HPI patch)."
+                )
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise DataIntegrityError(
+                        message=f"CTF HPI/coil error and direct reader failed: {fallback_error}",
+                        record=self.record,
+                        issues=[str(first_error), str(fallback_error)],
+                    ) from first_error
+            raise first_error
         finally:
             ctf_hc._kind_dict = orig_dict
 
-        # HPI fix didn't help — fall back to direct CTF reader
-        # (bypasses mne-bids montage setup entirely)
-        if self.filecache:
-            logger.warning(
-                "CTF HPI fix failed — falling back to direct reader."
+    def _retry_with_ctf_truncated_fix(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read with a tolerant sample-info parser.
+
+        When a ``.meg4`` file is truncated (fewer complete sample rows than
+        the ``.res4`` header declares), MNE raises ``RuntimeError("The
+        number of samples is not an even multiple of the trial size")``.
+        This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
+        the available data as a single continuous block.
+        """
+        import os
+        from unittest.mock import patch as _patch
+
+        import mne.io.ctf.ctf as _ctf_mod
+
+        _CTF_HEADER = 8  # "MEG41CP\x00"
+        _orig_fn = _ctf_mod._get_sample_info
+
+        def _tolerant_get_sample_info(fname, res4, system_clock):
+            st_size = os.path.getsize(fname)
+            nchan = res4["nchan"]
+            data_bytes = st_size - _CTF_HEADER
+            trial_bytes = 4 * res4["nsamp"] * nchan
+            if trial_bytes > 0 and data_bytes % trial_bytes != 0:
+                n_samp_tot = data_bytes // (4 * nchan)
+                logger.warning(
+                    "CTF meg4 truncated: expected %d samples/trial, "
+                    "using %d total samples as 1 block.",
+                    res4["nsamp"],
+                    n_samp_tot,
+                )
+                return dict(
+                    n_samp=n_samp_tot,
+                    n_samp_tot=n_samp_tot,
+                    block_size=n_samp_tot,
+                    res4_nsamp=n_samp_tot,
+                    n_chan=nchan,
+                )
+            return _orig_fn(fname, res4, system_clock)
+
+        with _patch.object(_ctf_mod, "_get_sample_info", _tolerant_get_sample_info):
+            import mne
+
+            return mne.io.read_raw_ctf(
+                str(self.filecache),
+                system_clock="ignore",
+                preload=False,
+                verbose="ERROR",
             )
-            try:
-                return _load_raw_direct(self.filecache)
-            except Exception as fallback_error:
-                raise DataIntegrityError(
-                    message=f"CTF HPI/coil error and direct reader failed: {fallback_error}",
-                    record=self.record,
-                    issues=[str(first_error), str(fallback_error)],
-                ) from first_error
-        raise first_error
 
     def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
         """Fall back to a direct reader and strip projectors.

@@ -879,11 +879,14 @@ def _find_bids_files(
                     bidsdir, datatypes=modality, extensions=extension
                 )
                 if paths:
-                    all_files.extend([
-                        str(p.fpath) for p in paths
-                        if Path(str(p.fpath)).exists()
-                        and "derivatives" not in Path(str(p.fpath)).parts
-                    ])
+                    all_files.extend(
+                        [
+                            str(p.fpath)
+                            for p in paths
+                            if Path(str(p.fpath)).exists()
+                            and "derivatives" not in Path(str(p.fpath)).parts
+                        ]
+                    )
             except Exception:
                 pass  # Continue to fallback search
 

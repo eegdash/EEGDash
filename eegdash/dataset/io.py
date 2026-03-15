@@ -1543,9 +1543,9 @@ def _load_raw_snirf_fallback(snirf_path: Path):
     rejected.  This fallback reads the raw time-series directly from the
     HDF5 file and wraps it in a ``RawArray``.
     """
+    import h5py
     import mne
     import numpy as np
-    import h5py
 
     snirf_path = Path(snirf_path)
     logger.info("Loading SNIRF via h5py fallback: %s", snirf_path.name)
@@ -1910,7 +1910,7 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
             )
 
         n_channels = int(_get("nbchan"))
-        n_times = int(_get("pnts"))       # samples per epoch
+        n_times = int(_get("pnts"))  # samples per epoch
         n_epochs = int(_get("trials"))
         sfreq = float(_get("srate"))
 
@@ -2035,8 +2035,7 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
 
     fallback_tag = "" if used_mne else " [manual fallback]"
     raw.info["description"] = (
-        f"Converted from {n_epochs} epochs ({n_times / sfreq:.3f}s each)"
-        f"{fallback_tag}"
+        f"Converted from {n_epochs} epochs ({n_times / sfreq:.3f}s each){fallback_tag}"
     )
 
     logger.warning(

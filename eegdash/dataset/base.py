@@ -81,8 +81,12 @@ _UNRECOVERABLE_PATTERNS = [
     "Incorrect number of samples",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
-    # Note: "only supports reading continuous" (SNIRF TD-NIRS) was removed
-    # from unrecoverable — we handle it via _load_raw_snirf_fallback.
+    # SNIRF TD-NIRS: handled by _load_raw_snirf_fallback for .snirf files,
+    # but still unrecoverable for other formats.
+    "only supports reading continuous",
+    # EDF / generic reader: corrupt or empty data file
+    "Could not find any data",
+    "no valid samples found",
 ]
 
 _SPLIT_FIF_MISSING_RE = re.compile(
@@ -179,6 +183,42 @@ def _iter_split_fif_candidates(
             )
         )
     return candidates
+
+
+def _make_tolerant_get_sample_info(orig_fn):
+    """Build a tolerant ``_get_sample_info`` wrapper for truncated CTF meg4.
+
+    Returns a function with the same signature as
+    ``mne.io.ctf.ctf._get_sample_info`` that falls back to treating all
+    available data as a single continuous block when the file is truncated.
+    """
+    import os
+
+    _CTF_HEADER = 8  # "MEG41CP\x00"
+
+    def _tolerant_get_sample_info(fname, res4, system_clock):
+        st_size = os.path.getsize(fname)
+        nchan = res4["nchan"]
+        data_bytes = st_size - _CTF_HEADER
+        trial_bytes = 4 * res4["nsamp"] * nchan
+        if trial_bytes > 0 and data_bytes % trial_bytes != 0:
+            n_samp_tot = data_bytes // (4 * nchan)
+            logger.warning(
+                "CTF meg4 truncated: expected %d samples/trial, "
+                "using %d total samples as 1 block.",
+                res4["nsamp"],
+                n_samp_tot,
+            )
+            return dict(
+                n_samp=n_samp_tot,
+                n_samp_tot=n_samp_tot,
+                block_size=n_samp_tot,
+                res4_nsamp=n_samp_tot,
+                n_chan=nchan,
+            )
+        return orig_fn(fname, res4, system_clock)
+
+    return _tolerant_get_sample_info
 
 
 class EEGDashRaw(RawDataset):
@@ -1411,37 +1451,15 @@ class EEGDashRaw(RawDataset):
         This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
         the available data as a single continuous block.
         """
-        import os
         from unittest.mock import patch as _patch
 
         import mne.io.ctf.ctf as _ctf_mod
 
-        _CTF_HEADER = 8  # "MEG41CP\x00"
         _orig_fn = _ctf_mod._get_sample_info
 
-        def _tolerant_get_sample_info(fname, res4, system_clock):
-            st_size = os.path.getsize(fname)
-            nchan = res4["nchan"]
-            data_bytes = st_size - _CTF_HEADER
-            trial_bytes = 4 * res4["nsamp"] * nchan
-            if trial_bytes > 0 and data_bytes % trial_bytes != 0:
-                n_samp_tot = data_bytes // (4 * nchan)
-                logger.warning(
-                    "CTF meg4 truncated: expected %d samples/trial, "
-                    "using %d total samples as 1 block.",
-                    res4["nsamp"],
-                    n_samp_tot,
-                )
-                return dict(
-                    n_samp=n_samp_tot,
-                    n_samp_tot=n_samp_tot,
-                    block_size=n_samp_tot,
-                    res4_nsamp=n_samp_tot,
-                    n_chan=nchan,
-                )
-            return _orig_fn(fname, res4, system_clock)
+        tolerant = _make_tolerant_get_sample_info(_orig_fn)
 
-        with _patch.object(_ctf_mod, "_get_sample_info", _tolerant_get_sample_info):
+        with _patch.object(_ctf_mod, "_get_sample_info", tolerant):
             import mne
 
             return mne.io.read_raw_ctf(

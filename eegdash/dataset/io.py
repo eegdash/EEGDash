@@ -5,9 +5,11 @@ specifically for fixing common issues in BIDS datasets and handling
 file system operations.
 """
 
+import configparser
 import json
 import os
 import re
+from collections import Counter
 from contextlib import contextmanager
 from difflib import SequenceMatcher
 from functools import partial
@@ -128,6 +130,10 @@ _ANNEX_PLACEHOLDER_RE = re.compile(
 # Real BrainVision data files are always larger than this.
 _PLACEHOLDER_MAX_SIZE = 256
 
+# BIDS datatype → coordinate-system JSON key prefix (used by coordsystem
+# generation/validation helpers).
+_COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
+
 
 def _is_annex_placeholder(path: Path) -> bool:
     """Return True if *path* is a git-annex placeholder (not real data).
@@ -163,11 +169,13 @@ def _prepare_writable_path(path: Path) -> bool:
     """
     try:
         parent = path.parent
+        # Check parent directory is writable *before* removing anything
+        if not os.access(parent, os.W_OK):
+            return False
         # Remove symlink so we can create a fresh regular file
         if path.is_symlink():
             os.unlink(path)
-        # Check parent directory is writable
-        return os.access(parent, os.W_OK)
+        return True
     except OSError:
         return False
 
@@ -252,7 +260,7 @@ def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
     try:
         content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
     except Exception as e:
-        logger.warning(f"Failed to read VHDR {vhdr_path}: {e}")
+        logger.warning("Failed to read VHDR %s: %s", vhdr_path, e)
         return False
 
     fixer = _VHDRPointerFixer(vhdr_path)
@@ -278,7 +286,7 @@ def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
             vhdr_path.write_text(new_content, encoding="utf-8")
             return True
         except Exception as e:
-            logger.error(f"Failed to write repaired VHDR {vhdr_path}: {e}")
+            logger.error("Failed to write repaired VHDR %s: %s", vhdr_path, e)
             return False
 
     return False
@@ -376,7 +384,6 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
         # Check if coordsystem.json exists and has correct keys for the datatype
         coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
         if coordsystem_files:
-            _COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
             prefix = _COORD_PREFIX.get(datatype, "EEG")
             expected_key = f"{prefix}CoordinateSystem"
             try:
@@ -410,9 +417,11 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
                     # Clean up potential broken symlink (FileExistsError otherwise)
                     dst.unlink(missing_ok=True)
                     dst.symlink_to(rel_target)
-                    logger.debug(f"Created coordsystem symlink: {dst} -> {rel_target}")
+                    logger.debug(
+                        "Created coordsystem symlink: %s -> %s", dst, rel_target
+                    )
                 except Exception as e:
-                    logger.warning(f"Failed to link coordsystem: {e}")
+                    logger.warning("Failed to link coordsystem: %s", e)
         else:
             # No coordsystem.json found anywhere — generate a minimal one
             # Infer the coordinate system from the electrodes filename
@@ -420,7 +429,7 @@ def _ensure_coordsystem_symlink(data_dir: Path) -> None:
             _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
 
     except Exception as e:
-        logger.warning(f"Error checking coordsystem symlinks: {e}")
+        logger.warning("Error checking coordsystem symlinks: %s", e)
 
 
 def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> bool:
@@ -462,7 +471,6 @@ def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> b
         coordsystem_path = electrodes_tsv.parent / coordsystem_name
 
         # BIDS uses datatype-specific keys for coordinate system metadata
-        _COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
         prefix = _COORD_PREFIX.get(datatype)
         if prefix is None:
             logger.warning(
@@ -483,7 +491,7 @@ def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> b
         )
         return True
     except Exception as e:
-        logger.warning(f"Failed to generate coordsystem.json: {e}")
+        logger.warning("Failed to generate coordsystem.json: %s", e)
         return False
 
 
@@ -525,10 +533,10 @@ DataFile={vhdr_name.replace(".vhdr", ".eeg")}
             )
             return False
         vmrk_path.write_text(content, encoding="utf-8")
-        logger.info(f"Generated VMRK stub: {vmrk_path.name}")
+        logger.info("Generated VMRK stub: %s", vmrk_path.name)
         return True
     except Exception as e:
-        logger.error(f"Failed to write VMRK stub {vmrk_path}: {e}")
+        logger.error("Failed to write VMRK stub %s: %s", vmrk_path, e)
         return False
 
 
@@ -586,7 +594,7 @@ def _repair_tsv_decimal_separators(data_dir: Path) -> bool:
                 )
                 repaired_any = True
             except Exception as e:
-                logger.warning(f"Failed to write repaired TSV {tsv_path.name}: {e}")
+                logger.warning("Failed to write repaired TSV %s: %s", tsv_path.name, e)
 
     return repaired_any
 
@@ -711,7 +719,7 @@ def _generate_vhdr_from_metadata(
     nchans = record.get("nchans")
 
     if not ch_names or not sfreq or not nchans:
-        logger.warning(f"Cannot generate VHDR: missing metadata for {vhdr_path.name}")
+        logger.warning("Cannot generate VHDR: missing metadata for %s", vhdr_path.name)
         return False
 
     # Validate that ch_names length matches nchans
@@ -767,7 +775,7 @@ def _generate_vhdr_from_metadata(
             )
             return False
         vhdr_path.write_text("\n".join(lines), encoding="utf-8")
-        logger.info(f"Generated VHDR from metadata: {vhdr_path.name}")
+        logger.info("Generated VHDR from metadata: %s", vhdr_path.name)
 
         # Also generate VMRK stub if missing
         vmrk_path = vhdr_path.with_suffix(".vmrk")
@@ -776,7 +784,7 @@ def _generate_vhdr_from_metadata(
 
         return True
     except Exception as e:
-        logger.error(f"Failed to write generated VHDR {vhdr_path}: {e}")
+        logger.error("Failed to write generated VHDR %s: %s", vhdr_path, e)
         return False
 
 
@@ -813,13 +821,45 @@ def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
         )
         return False
 
+    # Limit search depth to avoid unbounded traversal on large/network
+    # filesystems.  BIDS datasets have data at sub-XX/<datatype>/*.vhdr
+    # (depth 2 from dataset root), so depth 3 covers all reasonable layouts.
+    _MAX_VHDR_CANDIDATES = 50
+    candidates_checked = 0
     for sibling in dataset_root.rglob("*.vhdr"):
         if sibling == vhdr_path:
             continue
+        candidates_checked += 1
+        if candidates_checked > _MAX_VHDR_CANDIDATES:
+            break
         try:
             content = sibling.read_text(encoding="utf-8")
             if "[Common Infos]" not in content and "[Common infos]" not in content:
                 continue
+
+            # Validate that the sibling has the same number of channels
+            # as the target .eeg file to avoid silent channel misattribution.
+            sibling_cfg = configparser.ConfigParser()
+            sibling_cfg.read_string(content)
+            try:
+                sibling_nchans = int(
+                    sibling_cfg.get("Common Infos", "NumberOfChannels")
+                )
+            except (configparser.Error, ValueError):
+                continue  # Can't determine channel count — skip this sibling
+
+            target_eeg = vhdr_path.with_suffix(".eeg")
+            if target_eeg.exists() and target_eeg.stat().st_size > 0:
+                # BrainVision uses 4 bytes per sample (float32) by default
+                eeg_size = target_eeg.stat().st_size
+                if eeg_size % sibling_nchans != 0:
+                    logger.debug(
+                        "Skipping sibling %s: channel count %d doesn't "
+                        "divide .eeg file size evenly",
+                        sibling.name,
+                        sibling_nchans,
+                    )
+                    continue
 
             # Replace DataFile and MarkerFile pointers to match target name
             data_file = vhdr_path.with_suffix(".eeg").name
@@ -927,12 +967,12 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
                         )
 
                 except Exception as e:
-                    logger.warning(f"Could not repair channels.tsv: {e}")
+                    logger.warning("Could not repair channels.tsv: %s", e)
 
     except ImportError:
         logger.warning("Cannot repair SNIRF metadata: mne not available")
     except Exception as e:
-        logger.warning(f"Error reading SNIRF for channel repair: {e}")
+        logger.warning("Error reading SNIRF for channel repair: %s", e)
 
     # ==== Fix 2: Remove malformed scans.tsv entries ====
     if _repair_scans_tsv_timestamps(data_dir):
@@ -1017,7 +1057,7 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
             if changed:
                 try:
                     scans_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-                    logger.info(f"Repaired invalid timestamps in {scans_tsv.name}")
+                    logger.info("Repaired invalid timestamps in %s", scans_tsv.name)
                     repaired_any = True
                 except Exception as e:
                     logger.warning(
@@ -1175,8 +1215,6 @@ def _deduplicate_channel_names(ch_names: list[str]) -> list[str]:
         Channel names with duplicates disambiguated.
 
     """
-    from collections import Counter
-
     counts = Counter(ch_names)
     duplicates = {name for name, cnt in counts.items() if cnt > 1}
     if not duplicates:
@@ -1419,7 +1457,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
         )
         return True
     except Exception as e:
-        logger.warning(f"Failed to write repaired participants.tsv: {e}")
+        logger.warning("Failed to write repaired participants.tsv: %s", e)
         return False
 
 
@@ -1448,6 +1486,11 @@ def _fix_negative_annotation_durations():
     crashes during ``read_raw_eeglab`` before we ever get the Raw object
     back.  This patch silently clamps those durations so loading can
     succeed.
+
+    .. warning::
+       This patches a **class method** on ``mne.Annotations``, so it is
+       **not thread-safe**.  It is safe with ``multiprocessing`` (separate
+       interpreters) but must never be used from concurrent threads.
     """
     _orig_crop = mne.Annotations.crop
     mne.Annotations.crop = partial(_clamping_crop, _orig_crop)
@@ -1544,8 +1587,6 @@ def _load_raw_snirf_fallback(snirf_path: Path):
     HDF5 file and wraps it in a ``RawArray``.
     """
     import h5py
-    import mne
-    import numpy as np
 
     snirf_path = Path(snirf_path)
     logger.info("Loading SNIRF via h5py fallback: %s", snirf_path.name)
@@ -1556,7 +1597,14 @@ def _load_raw_snirf_fallback(snirf_path: Path):
         # Read time-series from data1
         ts = nirs["data1/dataTimeSeries"][()]  # (n_times, n_channels)
         time = nirs["data1/time"][:]
-        srate = 1.0 / float(np.diff(time[:2])[0])
+        if len(time) < 2:
+            raise ValueError(f"SNIRF time array has {len(time)} element(s), need >= 2")
+        dt = float(np.diff(time[:2])[0])
+        if dt <= 0:
+            raise ValueError(
+                f"SNIRF time step is non-positive ({dt}), cannot compute srate"
+            )
+        srate = 1.0 / dt
 
         n_times, n_channels = ts.shape
 
@@ -1596,8 +1644,6 @@ def _parse_set_metadata(set_path: Path) -> dict:
     Returns dict with keys: srate, nbchan, pnts, ch_names, data (if embedded).
     Raises ValueError if the file cannot be parsed.
     """
-    import numpy as np
-
     set_path = Path(set_path)
 
     # Try scipy.io first (MATLAB v5 format)
@@ -1724,9 +1770,6 @@ def _load_raw_eeglab_fallback(set_path: Path, bids_root: Path | None = None):
     Fallback for when MNE's reader fails on non-standard .set structures.
     Extracts metadata from .set, reads raw data from .fdt, returns RawArray.
     """
-    import mne
-    import numpy as np
-
     set_path = Path(set_path)
     meta = _parse_set_metadata(set_path)
 
@@ -1837,9 +1880,6 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
         If the file cannot be parsed or the data is too short.
 
     """
-    import mne
-    import numpy as np
-
     set_path = Path(set_path)
     logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
 
@@ -2249,10 +2289,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
                 fdt_path.name,
                 pnts,
             )
-            raise RuntimeError(
-                f"Incorrect number of samples in {fdt_path.name}: "
-                f"file has 0 readable samples, expected {pnts}"
-            )
+            return False
 
     # --- patch header fields ---
     srate = float(eeg.get("srate", 1.0)) or 1.0

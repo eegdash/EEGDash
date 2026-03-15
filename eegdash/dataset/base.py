@@ -16,8 +16,8 @@ from contextlib import contextmanager
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
-from unittest.mock import patch
 
+import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
 from mne.io import BaseRaw
@@ -129,8 +129,12 @@ def _noop_filelock():
     sidecar JSON files in read-only directories without creating ``.lock``
     files.
     """
-    with patch("filelock.FileLock", _dummy_filelock):
+    _orig = filelock.FileLock
+    filelock.FileLock = _dummy_filelock
+    try:
         yield
+    finally:
+        filelock.FileLock = _orig
 
 
 def _parse_split_fif_missing_path(message: str) -> Path | None:
@@ -938,15 +942,18 @@ class EEGDashRaw(RawDataset):
                             return _load_raw_eeglab_fallback(
                                 self.filecache, bids_root=self.bids_root
                             )
-                        except Exception:
-                            pass
+                        except Exception as eeglab_err:
+                            logger.debug("EEGLAB fallback also failed: %s", eeglab_err)
 
                     # For supported formats, try direct MNE reader (bypasses BIDS)
                     if self.filecache:
                         try:
                             return _load_raw_direct(self.filecache)
-                        except Exception:
-                            pass
+                        except Exception as direct_err:
+                            logger.debug(
+                                "Direct reader fallback also failed: %s",
+                                direct_err,
+                            )
 
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
@@ -1339,7 +1346,7 @@ class EEGDashRaw(RawDataset):
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
-                            logger.error(f"Retry also failed: {retry_error}")
+                            logger.error("Retry also failed: %s", retry_error)
                             raise retry_error from first_error
 
                 # Not a fixable case - re-raise original error
@@ -1451,15 +1458,12 @@ class EEGDashRaw(RawDataset):
         This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
         the available data as a single continuous block.
         """
-        from unittest.mock import patch as _patch
-
         import mne.io.ctf.ctf as _ctf_mod
 
         _orig_fn = _ctf_mod._get_sample_info
-
         tolerant = _make_tolerant_get_sample_info(_orig_fn)
-
-        with _patch.object(_ctf_mod, "_get_sample_info", tolerant):
+        _ctf_mod._get_sample_info = tolerant
+        try:
             import mne
 
             return mne.io.read_raw_ctf(
@@ -1468,6 +1472,8 @@ class EEGDashRaw(RawDataset):
                 preload=False,
                 verbose="ERROR",
             )
+        finally:
+            _ctf_mod._get_sample_info = _orig_fn
 
     def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
         """Fall back to a direct reader and strip projectors.
@@ -1496,28 +1502,40 @@ class EEGDashRaw(RawDataset):
         Some datasets have malformed events files that cause
         ``AssertionError`` inside MNE-BIDS annotation handling.  The
         underlying data is fine — only the event markers are broken.
+
+        Uses a lock file to prevent concurrent workers from interfering
+        when processing recordings from the same subject directory.
         """
         data_dir = self.filecache.parent
         events_files = list(data_dir.glob("*_events.tsv"))
         if not events_files:
             raise first_error
 
+        lock_path = data_dir / ".events_tsv_hide.lock"
+        lock = filelock.FileLock(str(lock_path), timeout=60)
         hidden = []
         try:
-            for ef in events_files:
-                dest = ef.with_suffix(".tsv._hidden")
-                ef.rename(dest)
-                hidden.append((dest, ef))
-            logger.warning(
-                "Hiding %d events.tsv file(s) and retrying load.", len(hidden)
-            )
-            return self._read_raw_bids()
+            with lock:
+                for ef in events_files:
+                    dest = ef.with_suffix(".tsv._hidden")
+                    ef.rename(dest)
+                    hidden.append((dest, ef))
+                logger.warning(
+                    "Hiding %d events.tsv file(s) and retrying load.",
+                    len(hidden),
+                )
+                return self._read_raw_bids()
+        except filelock.Timeout:
+            logger.warning("Could not acquire events.tsv hide lock, skipping.")
+            raise first_error
         except Exception as retry_error:
             raise retry_error from first_error
         finally:
             for src, dst in hidden:
                 if src.exists():
                     src.rename(dst)
+            # Clean up lock file
+            lock_path.unlink(missing_ok=True)
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

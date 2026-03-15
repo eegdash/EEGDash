@@ -821,6 +821,27 @@ class EEGDashRaw(RawDataset):
 
                 msg = str(first_error)
 
+                # SNIRF channel mismatch — fall back to direct reader.
+                # mne-bids sometimes fails even with on_ch_mismatch="rename"
+                # when the channels.tsv naming convention diverges significantly
+                # from the SNIRF internal channel names.
+                if (
+                    "Channel mismatch" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".snirf"
+                ):
+                    logger.warning(
+                        "SNIRF channel mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"SNIRF channel mismatch and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # CTF mandatory HPI coil-kind mismatch
                 if "mandatory HPI" in msg and self.filecache:
                     return self._retry_with_ctf_hpi_fix(first_error)

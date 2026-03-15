@@ -1334,10 +1334,26 @@ class EEGDashRaw(RawDataset):
                 "CTF HPI coil-kind mismatch — retrying with extended kind dict."
             )
             return self._read_raw_bids()
-        except Exception as retry_error:
-            raise retry_error from first_error
+        except Exception:
+            pass  # Fall through to direct reader below
         finally:
             ctf_hc._kind_dict = orig_dict
+
+        # HPI fix didn't help — fall back to direct CTF reader
+        # (bypasses mne-bids montage setup entirely)
+        if self.filecache:
+            logger.warning(
+                "CTF HPI fix failed — falling back to direct reader."
+            )
+            try:
+                return _load_raw_direct(self.filecache)
+            except Exception as fallback_error:
+                raise DataIntegrityError(
+                    message=f"CTF HPI/coil error and direct reader failed: {fallback_error}",
+                    record=self.record,
+                    issues=[str(first_error), str(fallback_error)],
+                ) from first_error
+        raise first_error
 
     def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
         """Fall back to a direct reader and strip projectors.

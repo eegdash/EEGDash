@@ -865,6 +865,25 @@ class EEGDashRaw(RawDataset):
                             issues=[str(fallback_error)],
                         ) from first_error
 
+                # SNIRF TD-NIRS: MNE rejects dataType 301 but the raw
+                # time-series is usable via h5py direct read.
+                if (
+                    "only supports reading continuous" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".snirf"
+                ):
+                    logger.warning(
+                        "Unsupported SNIRF data type — loading via h5py fallback."
+                    )
+                    try:
+                        return _load_raw_snirf_fallback(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"SNIRF h5py fallback failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
                     # For .set files, try manual EEGLAB parser before giving up
@@ -1081,25 +1100,6 @@ class EEGDashRaw(RawDataset):
                         )
                     except Exception as retry_error:
                         raise retry_error from first_error
-
-                # SNIRF TD-NIRS: MNE rejects dataType 301 (time-domain moments)
-                # but the raw data is still usable. Load via h5py fallback.
-                if (
-                    "only supports reading continuous" in msg
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".snirf"
-                ):
-                    logger.warning(
-                        "Unsupported SNIRF data type — loading via h5py fallback."
-                    )
-                    try:
-                        return _load_raw_snirf_fallback(self.filecache)
-                    except Exception as fallback_error:
-                        raise DataIntegrityError(
-                            message=f"SNIRF fallback failed: {fallback_error}",
-                            record=self.record,
-                            issues=[str(fallback_error)],
-                        ) from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
                 # or any TypeError/AttributeError from array/parsing failures

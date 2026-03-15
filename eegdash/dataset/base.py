@@ -45,6 +45,7 @@ from .io import (
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
     _load_raw_from_eeglab_epochs,
+    _load_raw_snirf_fallback,
     _repair_channels_tsv,
     _repair_channels_tsv_duplicates,
     _repair_eeglab_fdt,
@@ -80,9 +81,8 @@ _UNRECOVERABLE_PATTERNS = [
     "Incorrect number of samples",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
-    # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
-    # processed haemoglobin (99999); time-domain moments are unsupported.
-    "only supports reading continuous",
+    # Note: "only supports reading continuous" (SNIRF TD-NIRS) was removed
+    # from unrecoverable — we handle it via _load_raw_snirf_fallback.
 ]
 
 _SPLIT_FIF_MISSING_RE = re.compile(
@@ -1081,6 +1081,25 @@ class EEGDashRaw(RawDataset):
                         )
                     except Exception as retry_error:
                         raise retry_error from first_error
+
+                # SNIRF TD-NIRS: MNE rejects dataType 301 (time-domain moments)
+                # but the raw data is still usable. Load via h5py fallback.
+                if (
+                    "only supports reading continuous" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".snirf"
+                ):
+                    logger.warning(
+                        "Unsupported SNIRF data type — loading via h5py fallback."
+                    )
+                    try:
+                        return _load_raw_snirf_fallback(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"SNIRF fallback failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
 
                 # Unrecoverable data corruption (bad EDF, empty MEG, corrupt MAT,
                 # or any TypeError/AttributeError from array/parsing failures

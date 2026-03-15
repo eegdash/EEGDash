@@ -1535,6 +1535,61 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         raise
 
 
+def _load_raw_snirf_fallback(snirf_path: Path):
+    """Load SNIRF data via h5py when MNE's reader rejects the data type.
+
+    MNE only supports CW amplitude (dataType=1) and processed haemoglobin
+    (dataType=99999).  Time-domain NIRS (dataType=301) and other types are
+    rejected.  This fallback reads the raw time-series directly from the
+    HDF5 file and wraps it in a ``RawArray``.
+    """
+    import mne
+    import numpy as np
+    import h5py
+
+    snirf_path = Path(snirf_path)
+    logger.info("Loading SNIRF via h5py fallback: %s", snirf_path.name)
+
+    with h5py.File(str(snirf_path), "r") as f:
+        nirs = f["/nirs"]
+
+        # Read time-series from data1
+        ts = nirs["data1/dataTimeSeries"][()]  # (n_times, n_channels)
+        time = nirs["data1/time"][:]
+        srate = 1.0 / float(np.diff(time[:2])[0])
+
+        n_times, n_channels = ts.shape
+
+        # Try to get channel names from BIDS channels.tsv
+        ch_names = None
+        bids_info = _read_bids_channels_tsv(snirf_path.parent)
+        if bids_info and len(bids_info[0]) == n_channels:
+            ch_names = bids_info[0]
+
+        if ch_names is None:
+            ch_names = [f"S{i + 1}" for i in range(n_channels)]
+
+        ch_names = _deduplicate_channel_names(ch_names)
+
+    info = mne.create_info(
+        ch_names=ch_names, sfreq=srate, ch_types="fnirs_cw_amplitude"
+    )
+    raw = mne.io.RawArray(ts.T, info, verbose="ERROR")
+
+    raw.info["description"] = (
+        f"Loaded via h5py fallback ({n_channels} ch, {srate:.1f} Hz)"
+    )
+
+    logger.warning(
+        "Loaded SNIRF via h5py fallback: %s (%d ch, %d samples, %.1f Hz).",
+        snirf_path.name,
+        n_channels,
+        n_times,
+        srate,
+    )
+    return raw
+
+
 def _parse_set_metadata(set_path: Path) -> dict:
     """Extract metadata from an EEGLAB .set file.
 

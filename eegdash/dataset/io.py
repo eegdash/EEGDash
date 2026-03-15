@@ -1763,6 +1763,9 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     a manual fallback reads the raw data directly from the ``.set``/``.fdt``
     files using scipy, bypassing MNE's epoch parser entirely.
 
+    Both paths share the same degenerate-data guard, channel-name resolution,
+    and ``RawArray`` creation logic.
+
     Parameters
     ----------
     set_path : Path
@@ -1773,6 +1776,11 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     mne.io.BaseRaw
         Continuous Raw object created from concatenated epochs.
 
+    Raises
+    ------
+    ValueError
+        If the file cannot be parsed or the data is too short.
+
     """
     import mne
     import numpy as np
@@ -1780,8 +1788,11 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     set_path = Path(set_path)
     logger.info("Loading EEGLAB epoch file via read_epochs_eeglab: %s", set_path.name)
 
+    # ---- Try MNE's read_epochs_eeglab first ----
+    used_mne = False
     try:
         epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
+        used_mne = True
     except (AttributeError, IndexError, KeyError) as epoch_error:
         # Common failures:
         # - AttributeError: 'Bunch' object has no attribute 'eventtype'
@@ -1796,17 +1807,147 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
             type(epoch_error).__name__,
             epoch_error,
         )
-        return _load_raw_from_eeglab_epochs_manual(set_path)
 
-    n_epochs, n_channels, n_times = len(epochs), len(epochs.ch_names), len(epochs.times)
-    total_samples = n_epochs * n_times
+    if used_mne:
+        # --- MNE path: extract data + metadata from Epochs object ---
+        n_epochs = len(epochs)
+        n_channels = len(epochs.ch_names)
+        n_times = len(epochs.times)
+        total_samples = n_epochs * n_times
+        sfreq = epochs.info["sfreq"]
 
-    # Guard: reject degenerate epoch data that is too short for any
-    # meaningful downstream processing (windowing, feature extraction).
-    # A recording whose *total* concatenated length is below a small
-    # threshold is effectively empty.  We use 2 seconds at the
-    # recording's sampling rate (minimum 100 samples) as the floor.
-    sfreq = epochs.info["sfreq"]
+        # Concatenate epochs into continuous data (channel-major order).
+        # epochs._data is (n_epochs, n_channels, n_times) — already in memory
+        # since read_epochs_eeglab always preloads. We access it directly to
+        # avoid the copy that get_data() would create.
+        epoch_data = epochs._data  # no copy — direct reference
+        data_concat = np.empty((n_channels, total_samples), dtype=epoch_data.dtype)
+        for i in range(n_epochs):
+            data_concat[:, i * n_times : (i + 1) * n_times] = epoch_data[i]
+
+        # read_epochs_eeglab already converts µV → V, so no extra scaling.
+        info = epochs.info.copy()
+        event_id = epochs.event_id
+        events = epochs.events.copy() if epochs.event_id else None
+        tmin = epochs.tmin
+
+        # Free the epochs object and its data before creating RawArray
+        del epoch_data, epochs
+
+    else:
+        # --- Manual path: read raw data via scipy from .set/.fdt ---
+        from scipy.io import loadmat as _loadmat
+
+        # Use struct_as_record=False for attribute-style access,
+        # and squeeze_me=True to collapse singleton dimensions.
+        mat = _loadmat(str(set_path), squeeze_me=True, struct_as_record=False)
+
+        # Handle both nested (mat["EEG"].field) and flat (mat["field"]) layouts.
+        if "EEG" in mat:
+            eeg = mat["EEG"]
+            _get = lambda key: getattr(eeg, key, None)  # noqa: E731
+        elif "nbchan" in mat and "pnts" in mat:
+            _get = lambda key: mat.get(key)  # noqa: E731
+        else:
+            raise ValueError(
+                f"Cannot parse epoched .set file '{set_path.name}': "
+                "neither 'EEG' struct nor flat fields found"
+            )
+
+        n_channels = int(_get("nbchan"))
+        n_times = int(_get("pnts"))       # samples per epoch
+        n_epochs = int(_get("trials"))
+        sfreq = float(_get("srate"))
+
+        if n_epochs <= 0 or n_times <= 0 or n_channels <= 0:
+            raise ValueError(
+                f"Invalid dimensions in '{set_path.name}': "
+                f"nbchan={n_channels}, pnts={n_times}, trials={n_epochs}"
+            )
+
+        total_samples = n_times * n_epochs
+
+        # --- Resolve data array ---
+        data_ref = _get("data")
+
+        if isinstance(data_ref, str):
+            # External .fdt file
+            fdt_path = set_path.parent / data_ref
+            if not fdt_path.exists():
+                fdt_path = set_path.with_suffix(".fdt")
+            if not fdt_path.exists():
+                raise ValueError(
+                    f"No .fdt file found for '{set_path.name}' "
+                    f"(expected '{fdt_path.name}')"
+                )
+            expected_size = n_channels * n_times * n_epochs * _EEGLAB_BYTES_PER_SAMPLE
+            actual_size = fdt_path.stat().st_size
+            if actual_size != expected_size:
+                raise ValueError(
+                    f"FDT size mismatch for epoched data: expected {expected_size} "
+                    f"bytes ({n_channels} ch x {n_times} pts x {n_epochs} trials x 4), "
+                    f"got {actual_size}"
+                )
+            raw_data = np.fromfile(str(fdt_path), dtype=np.float32)
+        elif isinstance(data_ref, np.ndarray):
+            # Embedded data — may be 2-D (nbchan, pnts*trials) or 3-D
+            raw_data = data_ref.astype(np.float32).ravel(order="F")
+        else:
+            raise ValueError(
+                f"No data source in '{set_path.name}': "
+                f"data field is {type(data_ref).__name__}"
+            )
+
+        expected_elements = n_channels * n_times * n_epochs
+        if raw_data.size != expected_elements:
+            raise ValueError(
+                f"Data element count mismatch: expected {expected_elements} "
+                f"({n_channels} x {n_times} x {n_epochs}), got {raw_data.size}"
+            )
+
+        # Reshape: EEGLAB stores as (nbchan, pnts, trials) in Fortran order.
+        # We want (nbchan, pnts * trials) — continuous concatenation of epochs.
+        data_2d = raw_data.reshape((n_channels, total_samples), order="F")
+
+        # Scale µV → V (manual path only; MNE path already converts)
+        data_concat = data_2d.astype(np.float64) * _EEGLAB_UV_TO_V
+
+        # --- Resolve channel names ---
+        ch_names = None
+        bids_info = _read_bids_channels_tsv(set_path.parent)
+        if bids_info and len(bids_info[0]) == n_channels:
+            ch_names, ch_types = bids_info
+        else:
+            ch_types = None
+
+        if ch_names is None:
+            # Try chanlocs from .set
+            chanlocs = _get("chanlocs")
+            if chanlocs is not None and hasattr(chanlocs, "__len__"):
+                names = []
+                for cl in np.atleast_1d(chanlocs):
+                    label = getattr(cl, "labels", None)
+                    if label is not None:
+                        if hasattr(label, "item"):
+                            label = label.item()
+                        names.append(str(label).strip())
+                if len(names) == n_channels:
+                    ch_names = names
+
+        if ch_names is None:
+            ch_names = [f"EEG{i + 1:03d}" for i in range(n_channels)]
+
+        if ch_types is None:
+            ch_types = ["eeg"] * n_channels
+
+        ch_names = _deduplicate_channel_names(ch_names)
+
+        info = mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+        event_id = None
+        events = None
+        tmin = 0.0
+
+    # ==== Shared: degenerate-data guard ====
     min_total_samples = max(int(2 * sfreq), 100)
     if total_samples < min_total_samples:
         raise ValueError(
@@ -1816,27 +1957,7 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
             f"Recording is too short for processing."
         )
 
-    # Extract metadata before freeing epochs to minimize peak memory.
-    info = epochs.info.copy()
-    event_id = epochs.event_id
-    events = epochs.events.copy() if epochs.event_id else None
-    tmin = epochs.tmin
-
-    # Concatenate epochs into continuous data (channel-major order).
-    # epochs._data is (n_epochs, n_channels, n_times) — already in memory
-    # since read_epochs_eeglab always preloads. We access it directly to
-    # avoid the copy that get_data() would create.
-    # We need (n_channels, n_epochs * n_times) for RawArray.
-    epoch_data = epochs._data  # no copy — direct reference
-    data_concat = np.empty((n_channels, total_samples), dtype=epoch_data.dtype)
-    for i in range(n_epochs):
-        data_concat[:, i * n_times : (i + 1) * n_times] = epoch_data[i]
-
-    # Free the epochs object and its data before creating RawArray
-    del epoch_data, epochs
-
-    # read_epochs_eeglab already converts µV → V, so no extra scaling needed.
-    # RawArray with copy="auto" reuses data_concat without copying.
+    # ==== Shared: create RawArray ====
     raw = mne.io.RawArray(data_concat, info, verbose="ERROR")
 
     # Recalculate event sample positions for the concatenated timeline.
@@ -1857,187 +1978,20 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
         )
         raw.set_annotations(annotations)
 
+    fallback_tag = "" if used_mne else " [manual fallback]"
     raw.info["description"] = (
         f"Converted from {n_epochs} epochs ({n_times / sfreq:.3f}s each)"
+        f"{fallback_tag}"
     )
 
     logger.warning(
-        "Loaded EEGLAB epoch file as continuous raw: %s "
-        "(%d epochs × %d ch × %d samples → %d total samples).",
+        "Loaded EEGLAB epoch file as continuous raw%s: %s "
+        "(%d epochs x %d ch x %d samples = %d total samples).",
+        fallback_tag,
         set_path.name,
         n_epochs,
         n_channels,
         n_times,
-        n_epochs * n_times,
-    )
-    return raw
-
-
-def _load_raw_from_eeglab_epochs_manual(set_path: Path):
-    """Load epoched EEGLAB .set/.fdt data manually, bypassing MNE's epoch parser.
-
-    This is a fallback for when ``mne.io.read_epochs_eeglab`` fails due to
-    non-standard epoch/event structures (missing ``eventtype`` field, empty
-    event arrays, etc.).  It reads the raw float data directly from the
-    companion ``.fdt`` file (or embedded in the ``.set``) and reshapes it
-    into a continuous ``RawArray``.
-
-    EEGLAB stores epoched data as ``(n_channels, n_points_per_epoch, n_trials)``
-    in Fortran (column-major) order, so the total sample count in the ``.fdt``
-    is ``n_channels * pnts * trials``.
-
-    Parameters
-    ----------
-    set_path : Path
-        Path to the EEGLAB .set file.
-
-    Returns
-    -------
-    mne.io.BaseRaw
-        Continuous Raw object created from the epoch data.
-
-    Raises
-    ------
-    ValueError
-        If the file cannot be parsed or the data is too short.
-
-    """
-    import mne
-    import numpy as np
-    from scipy.io import loadmat as _loadmat
-
-    set_path = Path(set_path)
-
-    # --- Parse metadata from .set ---
-    # Use struct_as_record=False so we get attribute-style access,
-    # and squeeze_me=True to collapse singleton dimensions.
-    mat = _loadmat(str(set_path), squeeze_me=True, struct_as_record=False)
-
-    # Handle both nested (mat["EEG"].field) and flat (mat["field"]) layouts.
-    if "EEG" in mat:
-        eeg = mat["EEG"]
-        _get = lambda key: getattr(eeg, key, None)  # noqa: E731
-    elif "nbchan" in mat and "pnts" in mat:
-        _get = lambda key: mat.get(key)  # noqa: E731
-    else:
-        raise ValueError(
-            f"Cannot parse epoched .set file '{set_path.name}': "
-            "neither 'EEG' struct nor flat fields found"
-        )
-
-    nbchan = int(_get("nbchan"))
-    pnts = int(_get("pnts"))       # samples per epoch
-    trials = int(_get("trials"))
-    srate = float(_get("srate"))
-
-    if trials <= 0 or pnts <= 0 or nbchan <= 0:
-        raise ValueError(
-            f"Invalid dimensions in '{set_path.name}': "
-            f"nbchan={nbchan}, pnts={pnts}, trials={trials}"
-        )
-
-    total_samples = pnts * trials
-
-    # Guard: reject degenerate data
-    min_total_samples = max(int(2 * srate), 100)
-    if total_samples < min_total_samples:
-        raise ValueError(
-            f"Epoched EEGLAB file '{set_path.name}' has only "
-            f"{trials} trial(s) x {pnts} samples = {total_samples} "
-            f"total samples (< {min_total_samples} minimum at {srate} Hz). "
-            f"Recording is too short for processing."
-        )
-
-    # --- Resolve data array ---
-    data_ref = _get("data")
-
-    if isinstance(data_ref, str):
-        # External .fdt file
-        fdt_path = set_path.parent / data_ref
-        if not fdt_path.exists():
-            fdt_path = set_path.with_suffix(".fdt")
-        if not fdt_path.exists():
-            raise ValueError(
-                f"No .fdt file found for '{set_path.name}' "
-                f"(expected '{fdt_path.name}')"
-            )
-        expected_size = nbchan * pnts * trials * _EEGLAB_BYTES_PER_SAMPLE
-        actual_size = fdt_path.stat().st_size
-        if actual_size != expected_size:
-            raise ValueError(
-                f"FDT size mismatch for epoched data: expected {expected_size} "
-                f"bytes ({nbchan} ch x {pnts} pts x {trials} trials x 4), "
-                f"got {actual_size}"
-            )
-        raw_data = np.fromfile(str(fdt_path), dtype=np.float32)
-    elif isinstance(data_ref, np.ndarray):
-        # Embedded data — may be 2-D (nbchan, pnts*trials) or 3-D
-        raw_data = data_ref.astype(np.float32).ravel(order="F")
-    else:
-        raise ValueError(
-            f"No data source in '{set_path.name}': "
-            f"data field is {type(data_ref).__name__}"
-        )
-
-    expected_elements = nbchan * pnts * trials
-    if raw_data.size != expected_elements:
-        raise ValueError(
-            f"Data element count mismatch: expected {expected_elements} "
-            f"({nbchan} x {pnts} x {trials}), got {raw_data.size}"
-        )
-
-    # Reshape: EEGLAB stores as (nbchan, pnts, trials) in Fortran order.
-    # We want (nbchan, pnts * trials) — continuous concatenation of epochs.
-    data_2d = raw_data.reshape((nbchan, total_samples), order="F")
-
-    # --- Resolve channel names ---
-    ch_names = None
-    bids_info = _read_bids_channels_tsv(set_path.parent)
-    if bids_info and len(bids_info[0]) == nbchan:
-        ch_names, ch_types = bids_info
-    else:
-        ch_types = None
-
-    if ch_names is None:
-        # Try chanlocs from .set
-        chanlocs = _get("chanlocs")
-        if chanlocs is not None and hasattr(chanlocs, "__len__"):
-            names = []
-            for cl in np.atleast_1d(chanlocs):
-                label = getattr(cl, "labels", None)
-                if label is not None:
-                    if hasattr(label, "item"):
-                        label = label.item()
-                    names.append(str(label).strip())
-            if len(names) == nbchan:
-                ch_names = names
-
-    if ch_names is None:
-        ch_names = [f"EEG{i + 1:03d}" for i in range(nbchan)]
-
-    if ch_types is None:
-        ch_types = ["eeg"] * nbchan
-
-    ch_names = _deduplicate_channel_names(ch_names)
-
-    # Scale µV → V
-    data_v = data_2d.astype(np.float64) * _EEGLAB_UV_TO_V
-
-    info = mne.create_info(ch_names=ch_names, sfreq=srate, ch_types=ch_types)
-    raw = mne.io.RawArray(data_v, info, verbose="ERROR")
-
-    raw.info["description"] = (
-        f"Converted from {trials} epochs ({pnts / srate:.3f}s each) "
-        f"[manual fallback]"
-    )
-
-    logger.warning(
-        "Loaded EEGLAB epoch file via manual fallback: %s "
-        "(%d trials x %d ch x %d pts = %d total samples).",
-        set_path.name,
-        trials,
-        nbchan,
-        pnts,
         total_samples,
     )
     return raw

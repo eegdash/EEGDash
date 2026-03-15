@@ -1160,14 +1160,31 @@ class EEGDashRaw(RawDataset):
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
                     first_error, (TypeError, AttributeError)
                 ):
-                    # Try EEGLAB fallback for .set files before giving up
                     if self.filecache and self.filecache.suffix.lower() == ".set":
+                        # Try EEGLAB fallback (manual parser)
                         try:
                             return _load_raw_eeglab_fallback(
                                 self.filecache, bids_root=self.bids_root
                             )
-                        except Exception:
-                            pass  # Fall through to DataIntegrityError
+                        except Exception as eeglab_err:
+                            logger.debug("EEGLAB fallback failed: %s", eeglab_err)
+                        # Try epoch loader (file may be epoched but MNE-BIDS
+                        # failed before detecting trials, e.g. missing chanlocs)
+                        try:
+                            return _load_raw_from_eeglab_epochs(self.filecache)
+                        except Exception as epoch_err:
+                            logger.debug("EEGLAB epoch fallback failed: %s", epoch_err)
+
+                    # Try direct reader — bypasses BIDS metadata entirely,
+                    # handles missing chanlocs and other sidecar issues.
+                    if self.filecache:
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as direct_err:
+                            logger.debug(
+                                "Direct reader fallback also failed: %s",
+                                direct_err,
+                            )
 
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",

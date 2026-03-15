@@ -1000,7 +1000,15 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
                     ts = cols[acq_idx].strip()
                     if ts and ts.lower() != "n/a":
                         try:
-                            datetime.fromisoformat(ts)
+                            dt = datetime.fromisoformat(ts)
+                            # Normalize to ISO 8601 with 'T' separator
+                            # and 6-digit microseconds — mne-bids uses
+                            # strptime('%Y-%m-%dT%H:%M:%S.%f') which
+                            # requires 'T' and fractional seconds.
+                            normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
+                            if normalized != ts:
+                                cols[acq_idx] = normalized
+                                changed = True
                         except (ValueError, TypeError):
                             cols[acq_idx] = "n/a"
                             changed = True

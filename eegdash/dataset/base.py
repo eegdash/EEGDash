@@ -64,8 +64,6 @@ from .io import (
 _UNRECOVERABLE_PATTERNS = [
     "Bad EDF",
     "invalid literal for int",
-    "Could not find any data",
-    "no valid samples",
     # NumPy / SciPy array errors from corrupt MAT / EEGLAB files
     "could not read bytes",
     "buffer is too small for requested array",
@@ -846,33 +844,6 @@ class EEGDashRaw(RawDataset):
                             issues=[str(fallback_error)],
                         ) from first_error
 
-                # CTF "no valid samples" — MNE misinterprets a zeroed
-                # system clock (SCLK01) channel as empty data.  Retry with
-                # system_clock="ignore" to bypass the SCLK check.
-                if (
-                    ("no valid samples" in msg or "Could not find any data" in msg)
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".ds"
-                ):
-                    import mne
-
-                    logger.warning(
-                        "CTF no valid samples — retrying with system_clock='ignore'."
-                    )
-                    try:
-                        return mne.io.read_raw_ctf(
-                            str(self.filecache),
-                            system_clock="ignore",
-                            preload=False,
-                            verbose="ERROR",
-                        )
-                    except Exception as fallback_error:
-                        raise DataIntegrityError(
-                            message=f"CTF no valid samples (system_clock=ignore also failed): {fallback_error}",
-                            record=self.record,
-                            issues=[str(fallback_error)],
-                        ) from first_error
-
                 # Unrecoverable patterns in RuntimeError
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS):
                     # For .set files, try manual EEGLAB parser before giving up
@@ -972,11 +943,40 @@ class EEGDashRaw(RawDataset):
                         except Exception as retry_error:
                             raise retry_error from first_error
 
+                # CTF "no valid samples" — MNE misinterprets a zeroed
+                # system clock (SCLK01) channel as empty data (OSError).
+                # Retry with system_clock="ignore" to bypass the SCLK check.
+                if (
+                    isinstance(first_error, OSError)
+                    and ("no valid samples" in msg or "Could not find any data" in msg)
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".ds"
+                ):
+                    import mne
+
+                    logger.warning(
+                        "CTF no valid samples — retrying with system_clock='ignore'."
+                    )
+                    try:
+                        return mne.io.read_raw_ctf(
+                            str(self.filecache),
+                            system_clock="ignore",
+                            preload=False,
+                            verbose="ERROR",
+                        )
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"CTF no valid samples (system_clock=ignore also failed): {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
                 # the data is readable, just the montage lookup fails.
+                # Also catches re-raised errors from _retry_with_ctf_hpi_fix.
                 if (
                     isinstance(first_error, KeyError)
-                    and "FIFFV_COIL_NONE" in msg
+                    and ("FIFFV_COIL_NONE" in msg or first_error.args == (0,))
                     and self.filecache
                 ):
                     logger.warning(
@@ -985,7 +985,11 @@ class EEGDashRaw(RawDataset):
                     try:
                         return _load_raw_direct(self.filecache)
                     except Exception as fallback_error:
-                        raise fallback_error from first_error
+                        raise DataIntegrityError(
+                            message=f"FIFFV_COIL_NONE and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
 
                 # Wrong keys in coordsystem.json (e.g., EEGCoordinateSystem for iEEG data)
                 if isinstance(first_error, KeyError) and "CoordinateSystem" in msg:

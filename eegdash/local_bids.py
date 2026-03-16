@@ -6,6 +6,7 @@ recordings on the filesystem and returning EEGDash v2 records.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -117,7 +118,6 @@ def discover_local_bids_records(
         # mne-bids rejects non-numeric BIDS entities (e.g. run-5H).
         # Fall back to globbing for raw files directly.
         import logging
-        import re
 
         logging.getLogger(__name__).warning(
             "find_matching_paths failed (%s) — falling back to glob discovery.",
@@ -260,9 +260,7 @@ def discover_local_bids_records(
                     continue
                 _found_relpaths.add(rel.as_posix())
                 # Parse entities from the directory name
-                import re as _re
-
-                _ents = dict(_re.findall(r"(sub|ses|task|run|acq)-([^_/]+)", str(rel)))
+                _ents = dict(re.findall(r"(sub|ses|task|run|acq)-([^_/]+)", str(rel)))
                 datatype = (
                     dpath.parent.name
                     if dpath.parent.name in ("eeg", "ieeg", "meg")
@@ -280,7 +278,6 @@ def discover_local_bids_records(
                     dep_keys=[],
                     datatype=datatype,
                     suffix=datatype,
-                    extension=dext,
                 )
                 records_out.append(rec)
 

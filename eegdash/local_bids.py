@@ -6,6 +6,7 @@ recordings on the filesystem and returning EEGDash v2 records.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -105,13 +106,61 @@ def discover_local_bids_records(
         else:
             matching_args[finder_key] = [str(entity_val)]
 
-    matched_paths = find_matching_paths(
-        root=str(dataset_root),
-        datatypes=modalities,
-        suffixes=modalities,
-        ignore_json=True,
-        **matching_args,
-    )
+    try:
+        matched_paths = find_matching_paths(
+            root=str(dataset_root),
+            datatypes=modalities,
+            suffixes=modalities,
+            ignore_json=True,
+            **matching_args,
+        )
+    except ValueError as exc:
+        # mne-bids rejects non-numeric BIDS entities (e.g. run-5H).
+        # Fall back to globbing for raw files directly.
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "find_matching_paths failed (%s) — falling back to glob discovery.",
+            exc,
+        )
+        matched_paths = []
+        _valid_exts = {
+            ext
+            for m in modalities
+            for ext in ALLOWED_DATATYPE_EXTENSIONS.get(MODALITY_ALIASES.get(m, m), [])
+        }
+        _entity_re = re.compile(r"(sub|ses|task|run|acq)-([^_]+)")
+        _glob_records: list[dict[str, Any]] = []
+        dataset_root_path = Path(dataset_root)
+        for ext in _valid_exts:
+            for fpath in dataset_root_path.rglob(f"*{ext}"):
+                entities = dict(_entity_re.findall(fpath.name))
+                try:
+                    bids_relpath = fpath.relative_to(dataset_root_path.resolve())
+                except ValueError:
+                    bids_relpath = Path(fpath.name)
+                datatype = (
+                    fpath.parent.name
+                    if fpath.parent.name in ("eeg", "ieeg", "meg")
+                    else modalities[0]
+                )
+                rec = create_record(
+                    dataset=dataset_id,
+                    storage_base=str(dataset_root_path),
+                    bids_relpath=bids_relpath.as_posix(),
+                    subject=entities.get("sub"),
+                    session=entities.get("ses"),
+                    task=entities.get("task"),
+                    run=entities.get("run"),
+                    acquisition=entities.get("acq"),
+                    dep_keys=[],
+                    datatype=datatype,
+                    suffix=datatype,
+                    storage_backend="local",
+                )
+                _glob_records.append(rec)
+        if _glob_records:
+            return _glob_records
 
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []
@@ -136,6 +185,13 @@ def discover_local_bids_records(
     for bids_path in matched_paths:
         file_path = Path(bids_path.fpath)
 
+        # Skip derivative files and phantom paths from find_matching_paths.
+        # mne-bids can discover files in derivatives/ subdirectories and
+        # reconstruct canonical paths in the raw data hierarchy that don't
+        # actually exist on disk.
+        if not file_path.exists() or "derivatives" in file_path.parts:
+            continue
+
         # Filter out sidecars based on extension
         # find_matching_paths with suffix='eeg' returns .json too.
         # We only want strictly the raw data file.
@@ -148,11 +204,10 @@ def discover_local_bids_records(
         if final_ext not in valid_raw_extensions:
             continue
 
-        # Skip files without a task entity — these are typically auxiliary
-        # BIDS files (calibration, crosstalk, empty-room) that are not
-        # actual recordings and will fail in read_raw_bids.
-        if not bids_path.task:
-            continue
+        # Files without a task entity may be auxiliary (calibration,
+        # crosstalk, empty-room) or legitimate recordings in datasets
+        # that omit the optional task entity.  We allow them through
+        # so the loader can attempt to read them.
 
         try:
             # IMPORTANT: keep the BIDS symlink path, do NOT resolve to annex
@@ -187,5 +242,43 @@ def discover_local_bids_records(
         rec.update(_get_file_metadata(ds_helper, str(bids_path.fpath)))
 
         records_out.append(rec)
+
+    # --- Fallback: discover directory-based formats (.ds, .mefd) that
+    # find_matching_paths cannot find (it only matches files, not dirs).
+    if not records_out:
+        _DIR_EXTS = (".ds", ".mefd")
+        _found_relpaths = set()
+        for dext in _DIR_EXTS:
+            for dpath in dataset_root_path.rglob(f"*{dext}"):
+                if not dpath.is_dir():
+                    continue
+                try:
+                    rel = dpath.relative_to(dataset_root_path.resolve())
+                except ValueError:
+                    rel = Path(dpath.name)
+                if rel.as_posix() in _found_relpaths:
+                    continue
+                _found_relpaths.add(rel.as_posix())
+                # Parse entities from the directory name
+                _ents = dict(re.findall(r"(sub|ses|task|run|acq)-([^_/]+)", str(rel)))
+                datatype = (
+                    dpath.parent.name
+                    if dpath.parent.name in ("eeg", "ieeg", "meg")
+                    else modalities[0]
+                )
+                rec = create_record(
+                    dataset=dataset_id,
+                    storage_base=str(dataset_root_path),
+                    bids_relpath=rel.as_posix(),
+                    subject=_ents.get("sub"),
+                    session=_ents.get("ses"),
+                    task=_ents.get("task"),
+                    run=_ents.get("run"),
+                    acquisition=_ents.get("acq"),
+                    dep_keys=[],
+                    datatype=datatype,
+                    suffix=datatype,
+                )
+                records_out.append(rec)
 
     return records_out

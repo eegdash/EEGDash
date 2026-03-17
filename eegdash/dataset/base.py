@@ -12,10 +12,12 @@ braindecode for machine learning workflows and handles data loading from both lo
 import configparser
 import re
 import shutil
+from contextlib import contextmanager
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
 from mne.io import BaseRaw
@@ -33,14 +35,19 @@ from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
+    _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
+    _generate_vhdr_from_sibling,
     _generate_vmrk_stub,
+    _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
     _load_raw_from_eeglab_epochs,
+    _load_raw_snirf_fallback,
     _repair_channels_tsv,
+    _repair_channels_tsv_duplicates,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
@@ -58,9 +65,8 @@ from .io import (
 _UNRECOVERABLE_PATTERNS = [
     "Bad EDF",
     "invalid literal for int",
-    "Could not find any data",
-    "no valid samples",
     # NumPy / SciPy array errors from corrupt MAT / EEGLAB files
+    "could not read bytes",
     "buffer is too small for requested array",
     "buffer size must be",
     "iteration over a 0-d array",
@@ -71,11 +77,16 @@ _UNRECOVERABLE_PATTERNS = [
     # EEGLAB reader errors from non-standard .set structures
     "Allowed values",
     "has no attribute",
+    # MNE data read: sample count mismatch (corrupt/truncated data file)
+    "Incorrect number of samples",
     # Hardware / format-level issues that no metadata repair can fix
     "incorrect number of samples",
-    # SNIRF TD-NIRS (type code 301) — MNE only reads CW amplitude (1) and
-    # processed haemoglobin (99999); time-domain moments are unsupported.
+    # SNIRF TD-NIRS: handled by _load_raw_snirf_fallback for .snirf files,
+    # but still unrecoverable for other formats.
     "only supports reading continuous",
+    # EDF / generic reader: corrupt or empty data file
+    "Could not find any data",
+    "no valid samples found",
 ]
 
 _SPLIT_FIF_MISSING_RE = re.compile(
@@ -83,6 +94,47 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 )
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+
+
+def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
+    """Clamp any negative annotation durations to zero on a loaded Raw.
+
+    Some datasets (especially EEGLAB ``.set`` files) produce annotations
+    whose computed duration is negative.  MNE asserts
+    ``(self.duration >= 0).all()`` inside ``Annotations.crop``, which
+    crashes downstream operations.  This helper fixes them in-place
+    after loading so subsequent processing is safe.
+    """
+    import numpy as np
+
+    annots = raw.annotations
+    if annots is None or len(annots) == 0:
+        return
+    mask = annots.duration < 0
+    if np.any(mask):
+        n_neg = int(np.sum(mask))
+        logger.warning("Clamping %d annotation(s) with negative duration to 0.", n_neg)
+        annots.duration[mask] = 0.0
+
+
+@contextmanager
+def _dummy_filelock(*args, **kwargs):
+    """No-op context manager used as a stand-in for ``filelock.FileLock``."""
+    yield
+
+
+@contextmanager
+def _noop_filelock():
+    """Replace ``filelock.FileLock`` with a no-op so mne-bids can read
+    sidecar JSON files in read-only directories without creating ``.lock``
+    files.
+    """
+    _orig = filelock.FileLock
+    filelock.FileLock = _dummy_filelock
+    try:
+        yield
+    finally:
+        filelock.FileLock = _orig
 
 
 def _parse_split_fif_missing_path(message: str) -> Path | None:
@@ -135,6 +187,42 @@ def _iter_split_fif_candidates(
             )
         )
     return candidates
+
+
+def _make_tolerant_get_sample_info(orig_fn):
+    """Build a tolerant ``_get_sample_info`` wrapper for truncated CTF meg4.
+
+    Returns a function with the same signature as
+    ``mne.io.ctf.ctf._get_sample_info`` that falls back to treating all
+    available data as a single continuous block when the file is truncated.
+    """
+    import os
+
+    _CTF_HEADER = 8  # "MEG41CP\x00"
+
+    def _tolerant_get_sample_info(fname, res4, system_clock):
+        st_size = os.path.getsize(fname)
+        nchan = res4["nchan"]
+        data_bytes = st_size - _CTF_HEADER
+        trial_bytes = 4 * res4["nsamp"] * nchan
+        if trial_bytes > 0 and data_bytes % trial_bytes != 0:
+            n_samp_tot = data_bytes // (4 * nchan)
+            logger.warning(
+                "CTF meg4 truncated: expected %d samples/trial, "
+                "using %d total samples as 1 block.",
+                res4["nsamp"],
+                n_samp_tot,
+            )
+            return dict(
+                n_samp=n_samp_tot,
+                n_samp_tot=n_samp_tot,
+                block_size=n_samp_tot,
+                res4_nsamp=n_samp_tot,
+                n_chan=nchan,
+            )
+        return orig_fn(fname, res4, system_clock)
+
+    return _tolerant_get_sample_info
 
 
 class EEGDashRaw(RawDataset):
@@ -523,6 +611,27 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if self.filecache and self.filecache.suffix == ".vhdr":
+            # Early exit: when the data file (.eeg) is a git-annex
+            # placeholder (content never fetched), no header repair can
+            # help — the binary data is simply not available.
+            eeg_path = self.filecache.with_suffix(".eeg")
+            if _is_annex_placeholder(eeg_path) or (
+                eeg_path.exists() and eeg_path.stat().st_size == 0
+            ):
+                raise DataIntegrityError(
+                    message=(
+                        f"BrainVision data file is a git-annex placeholder "
+                        f"(content unavailable): {eeg_path.name}"
+                    ),
+                    record=self.record,
+                    issues=[
+                        f"Data file {eeg_path.name} contains placeholder "
+                        f"content instead of actual EEG data",
+                        "The git-annex content was likely never fetched or "
+                        "has been dropped from this clone",
+                    ],
+                )
+
             # Generate VMRK stub first so pointer repair can find the target
             vmrk_path = self.filecache.with_suffix(".vmrk")
             if not vmrk_path.exists():
@@ -530,32 +639,81 @@ class EEGDashRaw(RawDataset):
 
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
-                _generate_vhdr_from_metadata(self.filecache, self.record)
+                if not _generate_vhdr_from_metadata(self.filecache, self.record):
+                    _generate_vhdr_from_sibling(self.filecache)
             else:
+                # Check if the VHDR contains required sections; if completely
+                # corrupted, regenerate before trying pointer repairs.
+                try:
+                    vhdr_text = self.filecache.read_text(encoding="utf-8")
+                except Exception:
+                    vhdr_text = ""
+                if (
+                    "[Common Infos]" not in vhdr_text
+                    and "[Common infos]" not in vhdr_text
+                ):
+                    logger.warning(
+                        "VHDR file %s is corrupted, regenerating from metadata.",
+                        self.filecache.name,
+                    )
+                    if not _generate_vhdr_from_metadata(self.filecache, self.record):
+                        _generate_vhdr_from_sibling(self.filecache)
+
                 # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
                 _repair_vhdr_pointers(self.filecache)
 
-        # Repair .set header when .fdt is truncated (pnts -> actual size)
+        # Repair .set header: fix .fdt filename mismatches and truncated data
         if self.filecache and self.filecache.suffix.lower() == ".set":
             _repair_eeglab_fdt(self.filecache)
 
         if self._raw is None:
             try:
                 self._raw = self._load_raw()
+            except DataIntegrityError as e:
+                e.log_warning()
+                raise
             except Exception as e:
                 logger.error(
                     f"Error reading {self.bidspath}: {e}. Try `rm -rf {self.bids_root}`"
                 )
                 raise
 
+            # Clamp any negative annotation durations to 0.  Some files
+            # (especially EEGLAB .set) produce annotations with negative
+            # durations that crash downstream MNE operations.
+            _clamp_negative_annotation_durations(self._raw)
+
+            # Validate that data is actually readable (catches corrupt/truncated
+            # data files that MNE only discovers during lazy segment reads).
+            # Read from start and end to catch truncated files.
+            try:
+                n = self._raw.n_times
+                if n > 0:
+                    self._raw.get_data(start=0, stop=min(1, n))
+                    if n > 1:
+                        self._raw.get_data(start=n - 1, stop=n)
+            except Exception as e:
+                self._raw = None
+                raise DataIntegrityError(
+                    message=f"Data file unreadable: {e}",
+                    record=self.record,
+                    issues=[str(e)],
+                ) from e
+
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
-        """Call ``mne_bids.read_raw_bids`` with the standard arguments."""
-        return mne_bids.read_raw_bids(
-            bids_path=self.bidspath,
-            extra_params=extra_params,
-            verbose="ERROR",
-            on_ch_mismatch="rename",
-        )
+        """Call ``mne_bids.read_raw_bids`` with the standard arguments.
+
+        Uses a no-op file lock to avoid ``PermissionError`` when the dataset
+        directory is read-only (e.g. shared cluster storage where mne-bids
+        cannot create ``.json.lock`` files).
+        """
+        with _noop_filelock():
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath,
+                extra_params=extra_params,
+                verbose="ERROR",
+                on_ch_mismatch="rename",
+            )
 
     def _download_split_fif_continuation(
         self,
@@ -667,6 +825,8 @@ class EEGDashRaw(RawDataset):
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
           files or renames the first column to 'name' and retries.
+        - **Duplicate channel names in channels.tsv**: deduplicates by appending
+          ``-0``, ``-1``, … suffixes and retries.
         - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
           falls back to direct MNE reader.
         - **Split FIF** (record points to split-02+ file): direct MNE reader
@@ -705,6 +865,27 @@ class EEGDashRaw(RawDataset):
 
                 msg = str(first_error)
 
+                # SNIRF channel mismatch — fall back to direct reader.
+                # mne-bids sometimes fails even with on_ch_mismatch="rename"
+                # when the channels.tsv naming convention diverges significantly
+                # from the SNIRF internal channel names.
+                if (
+                    "Channel mismatch" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".snirf"
+                ):
+                    logger.warning(
+                        "SNIRF channel mismatch — falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"SNIRF channel mismatch and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # CTF mandatory HPI coil-kind mismatch
                 if "mandatory HPI" in msg and self.filecache:
                     return self._retry_with_ctf_hpi_fix(first_error)
@@ -714,16 +895,41 @@ class EEGDashRaw(RawDataset):
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
-                # CTF trial-size mismatch — fall back to direct reader
+                # CTF trial-size mismatch — the meg4 file is truncated
+                # (fewer samples than res4 header declares).  Patch
+                # MNE's _get_sample_info to treat available data as a
+                # single continuous block.
                 if "even multiple of the trial size" in msg and self.filecache:
                     logger.warning(
-                        "CTF trial size mismatch — falling back to direct reader."
+                        "CTF trial size mismatch — retrying with "
+                        "truncation-tolerant sample info."
                     )
                     try:
-                        return _load_raw_direct(self.filecache)
+                        return self._retry_with_ctf_truncated_fix(first_error)
+                    except DataIntegrityError:
+                        raise
                     except Exception as fallback_error:
                         raise DataIntegrityError(
-                            message=f"CTF trial size mismatch and direct reader failed: {fallback_error}",
+                            message=f"CTF trial size mismatch and all fallbacks failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
+                # SNIRF TD-NIRS: MNE rejects dataType 301 but the raw
+                # time-series is usable via h5py direct read.
+                if (
+                    "only supports reading continuous" in msg
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".snirf"
+                ):
+                    logger.warning(
+                        "Unsupported SNIRF data type — loading via h5py fallback."
+                    )
+                    try:
+                        return _load_raw_snirf_fallback(self.filecache)
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"SNIRF h5py fallback failed: {fallback_error}",
                             record=self.record,
                             issues=[str(fallback_error)],
                         ) from first_error
@@ -736,15 +942,18 @@ class EEGDashRaw(RawDataset):
                             return _load_raw_eeglab_fallback(
                                 self.filecache, bids_root=self.bids_root
                             )
-                        except Exception:
-                            pass
+                        except Exception as eeglab_err:
+                            logger.debug("EEGLAB fallback also failed: %s", eeglab_err)
 
                     # For supported formats, try direct MNE reader (bypasses BIDS)
                     if self.filecache:
                         try:
                             return _load_raw_direct(self.filecache)
-                        except Exception:
-                            pass
+                        except Exception as direct_err:
+                            logger.debug(
+                                "Direct reader fallback also failed: %s",
+                                direct_err,
+                            )
 
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
@@ -827,11 +1036,40 @@ class EEGDashRaw(RawDataset):
                         except Exception as retry_error:
                             raise retry_error from first_error
 
+                # CTF "no valid samples" — MNE misinterprets a zeroed
+                # system clock (SCLK01) channel as empty data (OSError).
+                # Retry with system_clock="ignore" to bypass the SCLK check.
+                if (
+                    isinstance(first_error, OSError)
+                    and ("no valid samples" in msg or "Could not find any data" in msg)
+                    and self.filecache
+                    and self.filecache.suffix.lower() == ".ds"
+                ):
+                    import mne
+
+                    logger.warning(
+                        "CTF no valid samples — retrying with system_clock='ignore'."
+                    )
+                    try:
+                        return mne.io.read_raw_ctf(
+                            str(self.filecache),
+                            system_clock="ignore",
+                            preload=False,
+                            verbose="ERROR",
+                        )
+                    except Exception as fallback_error:
+                        raise DataIntegrityError(
+                            message=f"CTF no valid samples (system_clock=ignore also failed): {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
+
                 # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
                 # the data is readable, just the montage lookup fails.
+                # Also catches re-raised errors from _retry_with_ctf_hpi_fix.
                 if (
                     isinstance(first_error, KeyError)
-                    and "FIFFV_COIL_NONE" in msg
+                    and ("FIFFV_COIL_NONE" in msg or first_error.args == (0,))
                     and self.filecache
                 ):
                     logger.warning(
@@ -840,7 +1078,11 @@ class EEGDashRaw(RawDataset):
                     try:
                         return _load_raw_direct(self.filecache)
                     except Exception as fallback_error:
-                        raise fallback_error from first_error
+                        raise DataIntegrityError(
+                            message=f"FIFFV_COIL_NONE and direct reader failed: {fallback_error}",
+                            record=self.record,
+                            issues=[str(fallback_error)],
+                        ) from first_error
 
                 # Wrong keys in coordsystem.json (e.g., EEGCoordinateSystem for iEEG data)
                 if isinstance(first_error, KeyError) and "CoordinateSystem" in msg:
@@ -850,6 +1092,23 @@ class EEGDashRaw(RawDataset):
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
                     if self.filecache and _repair_channels_tsv(self.filecache.parent):
                         logger.info("Repaired malformed channels.tsv, retrying load...")
+                        try:
+                            return self._read_raw_bids()
+                        except Exception as retry_error:
+                            raise retry_error from first_error
+
+                # Duplicate channel names in channels.tsv
+                if (
+                    isinstance(first_error, ValueError)
+                    and "not unique" in msg
+                    and "renaming" in msg
+                    and self.filecache
+                ):
+                    if _repair_channels_tsv_duplicates(self.filecache.parent):
+                        logger.info(
+                            "Deduplicated channel names in channels.tsv, "
+                            "retrying load..."
+                        )
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
@@ -901,14 +1160,31 @@ class EEGDashRaw(RawDataset):
                 if any(p in msg for p in _UNRECOVERABLE_PATTERNS) or isinstance(
                     first_error, (TypeError, AttributeError)
                 ):
-                    # Try EEGLAB fallback for .set files before giving up
                     if self.filecache and self.filecache.suffix.lower() == ".set":
+                        # Try EEGLAB fallback (manual parser)
                         try:
                             return _load_raw_eeglab_fallback(
                                 self.filecache, bids_root=self.bids_root
                             )
-                        except Exception:
-                            pass  # Fall through to DataIntegrityError
+                        except Exception as eeglab_err:
+                            logger.debug("EEGLAB fallback failed: %s", eeglab_err)
+                        # Try epoch loader (file may be epoched but MNE-BIDS
+                        # failed before detecting trials, e.g. missing chanlocs)
+                        try:
+                            return _load_raw_from_eeglab_epochs(self.filecache)
+                        except Exception as epoch_err:
+                            logger.debug("EEGLAB epoch fallback failed: %s", epoch_err)
+
+                    # Try direct reader — bypasses BIDS metadata entirely,
+                    # handles missing chanlocs and other sidecar issues.
+                    if self.filecache:
+                        try:
+                            return _load_raw_direct(self.filecache)
+                        except Exception as direct_err:
+                            logger.debug(
+                                "Direct reader fallback also failed: %s",
+                                direct_err,
+                            )
 
                     raise DataIntegrityError(
                         message=f"Cannot read data file: {msg}",
@@ -933,7 +1209,11 @@ class EEGDashRaw(RawDataset):
                             raise retry_error from first_error
 
                 # scans.tsv path mismatch (EEG file not listed in scans.tsv)
-                if "is not in list" in msg and "Did you mean" in msg and self.filecache:
+                if (
+                    "is not in list" in msg
+                    and ("Did you mean" in msg or "PosixPath" in msg)
+                    and self.filecache
+                ):
                     logger.warning(
                         "scans.tsv path mismatch — falling back to direct reader."
                     )
@@ -1018,8 +1298,15 @@ class EEGDashRaw(RawDataset):
 
                 raise
             except AssertionError as first_error:
-                # Annotation assertion errors (duration/crop mismatch) triggered
-                # by malformed *_events.tsv.  Hide the events file and retry.
+                # Annotation assertion errors (negative duration) — try
+                # loading with the duration-clamping monkey-patch first;
+                # only hide events.tsv as a last resort.
+                try:
+                    with _fix_negative_annotation_durations():
+                        return self._read_raw_bids()
+                except Exception:
+                    pass
+                # Still failing — hide the events file and retry.
                 if self.filecache and self.filecache.parent.exists():
                     return self._retry_without_events_tsv(first_error)
                 raise
@@ -1037,6 +1324,36 @@ class EEGDashRaw(RawDataset):
                         except Exception as retry_error:
                             raise retry_error from first_error
 
+                # Corrupted VHDR file (missing required sections)
+                if isinstance(first_error, configparser.NoSectionError):
+                    raise DataIntegrityError(
+                        message=f"Corrupted header file: {first_error}",
+                        record=self.record,
+                        issues=[str(first_error)],
+                    ) from first_error
+
+                # EDF annotation encoding error — retry with latin1
+                if "encoding='latin1'" in str(first_error) and self.filecache:
+                    logger.info(
+                        "EDF annotation encoding error, retrying with encoding='latin1'..."
+                    )
+                    try:
+                        return self._read_raw_bids(extra_params={"encoding": "latin1"})
+                    except Exception as retry_error:
+                        raise retry_error from first_error
+
+                # IndexError from scans.tsv handling (empty file list) —
+                # fall back to direct reader
+                if isinstance(first_error, IndexError) and self.filecache:
+                    logger.warning(
+                        "IndexError during BIDS loading (likely malformed scans.tsv) "
+                        "— falling back to direct reader."
+                    )
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except Exception as fallback_error:
+                        raise fallback_error from first_error
+
                 # For SNIRF files, try to fix and retry
                 if self.filecache and self.filecache.suffix.lower() == ".snirf":
                     logger.warning(
@@ -1046,7 +1363,7 @@ class EEGDashRaw(RawDataset):
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
-                            logger.error(f"Retry also failed: {retry_error}")
+                            logger.error("Retry also failed: %s", retry_error)
                             raise retry_error from first_error
 
                 # Not a fixable case - re-raise original error
@@ -1080,6 +1397,16 @@ class EEGDashRaw(RawDataset):
                     f"Retry after coordsystem generation also failed: {retry_error}"
                 )
                 raise retry_error from first_error
+
+        # Generation failed (e.g. read-only directory) — fall back to direct reader
+        if self.filecache:
+            logger.warning(
+                "coordsystem.json generation failed — falling back to direct reader."
+            )
+            try:
+                return _load_raw_direct(self.filecache)
+            except Exception as fallback_error:
+                raise fallback_error from first_error
         raise first_error
 
     def _retry_with_ctf_date_patch(self, first_error: Exception) -> BaseRaw:
@@ -1116,11 +1443,54 @@ class EEGDashRaw(RawDataset):
             logger.warning(
                 "CTF HPI coil-kind mismatch — retrying with extended kind dict."
             )
-            return self._read_raw_bids()
-        except Exception as retry_error:
-            raise retry_error from first_error
+            try:
+                return self._read_raw_bids()
+            except Exception:
+                pass  # MNE-BIDS failed; try direct reader with patch still active
+
+            # Direct reader while HPI patch is still active
+            if self.filecache:
+                logger.warning(
+                    "CTF HPI fix via MNE-BIDS failed — "
+                    "falling back to direct reader (with HPI patch)."
+                )
+                try:
+                    return _load_raw_direct(self.filecache)
+                except Exception as fallback_error:
+                    raise DataIntegrityError(
+                        message=f"CTF HPI/coil error and direct reader failed: {fallback_error}",
+                        record=self.record,
+                        issues=[str(first_error), str(fallback_error)],
+                    ) from first_error
+            raise first_error
         finally:
             ctf_hc._kind_dict = orig_dict
+
+    def _retry_with_ctf_truncated_fix(self, first_error: Exception) -> BaseRaw:
+        """Retry CTF read with a tolerant sample-info parser.
+
+        When a ``.meg4`` file is truncated (fewer complete sample rows than
+        the ``.res4`` header declares), MNE raises ``RuntimeError("The
+        number of samples is not an even multiple of the trial size")``.
+        This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
+        the available data as a single continuous block.
+        """
+        import mne.io.ctf.ctf as _ctf_mod
+
+        _orig_fn = _ctf_mod._get_sample_info
+        tolerant = _make_tolerant_get_sample_info(_orig_fn)
+        _ctf_mod._get_sample_info = tolerant
+        try:
+            import mne
+
+            return mne.io.read_raw_ctf(
+                str(self.filecache),
+                system_clock="ignore",
+                preload=False,
+                verbose="ERROR",
+            )
+        finally:
+            _ctf_mod._get_sample_info = _orig_fn
 
     def _retry_without_projectors(self, first_error: Exception) -> BaseRaw:
         """Fall back to a direct reader and strip projectors.
@@ -1149,28 +1519,40 @@ class EEGDashRaw(RawDataset):
         Some datasets have malformed events files that cause
         ``AssertionError`` inside MNE-BIDS annotation handling.  The
         underlying data is fine — only the event markers are broken.
+
+        Uses a lock file to prevent concurrent workers from interfering
+        when processing recordings from the same subject directory.
         """
         data_dir = self.filecache.parent
         events_files = list(data_dir.glob("*_events.tsv"))
         if not events_files:
             raise first_error
 
+        lock_path = data_dir / ".events_tsv_hide.lock"
+        lock = filelock.FileLock(str(lock_path), timeout=60)
         hidden = []
         try:
-            for ef in events_files:
-                dest = ef.with_suffix(".tsv._hidden")
-                ef.rename(dest)
-                hidden.append((dest, ef))
-            logger.warning(
-                "Hiding %d events.tsv file(s) and retrying load.", len(hidden)
-            )
-            return self._read_raw_bids()
+            with lock:
+                for ef in events_files:
+                    dest = ef.with_suffix(".tsv._hidden")
+                    ef.rename(dest)
+                    hidden.append((dest, ef))
+                logger.warning(
+                    "Hiding %d events.tsv file(s) and retrying load.",
+                    len(hidden),
+                )
+                return self._read_raw_bids()
+        except filelock.Timeout:
+            logger.warning("Could not acquire events.tsv hide lock, skipping.")
+            raise first_error
         except Exception as retry_error:
             raise retry_error from first_error
         finally:
             for src, dst in hidden:
                 if src.exists():
                     src.rename(dst)
+            # Clean up lock file
+            lock_path.unlink(missing_ok=True)
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

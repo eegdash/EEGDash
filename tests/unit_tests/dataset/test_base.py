@@ -241,12 +241,16 @@ def test_ensure_raw_vhdr_handling(
     }
 
     if create_vhdr:
-        (eeg_dir / "sub-01_task-rest_eeg.vhdr").touch()
+        (eeg_dir / "sub-01_task-rest_eeg.vhdr").write_text(
+            "[Common Infos]\nDataFile=sub-01_task-rest_eeg.eeg\n"
+        )
     if create_vmrk:
         (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
 
     dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
-    dataset._load_raw = MagicMock()
+    mock_raw = MagicMock()
+    mock_raw.n_times = 100
+    dataset._load_raw = MagicMock(return_value=mock_raw)
     dataset._ensure_raw()
 
     assert mock_repair.called == expect_repair
@@ -1246,7 +1250,7 @@ def test_repair_scans_tsv_timestamps_fixes_bad_seconds(tmp_path):
 
     lines = scans.read_text().strip().split("\n")
     assert lines[1].split("\t")[1] == "n/a"
-    assert lines[2].split("\t")[1] == "2020-01-01T12:30:45"
+    assert lines[2].split("\t")[1] == "2020-01-01T12:30:45.000000"
 
 
 def test_repair_scans_tsv_timestamps_noop_when_valid(tmp_path):
@@ -1254,7 +1258,7 @@ def test_repair_scans_tsv_timestamps_noop_when_valid(tmp_path):
     from eegdash.dataset.io import _repair_scans_tsv_timestamps
 
     scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text("filename\tacq_time\neeg/file1.edf\t2020-01-01T12:30:45\n")
+    scans.write_text("filename\tacq_time\neeg/file1.edf\t2020-01-01T12:30:45.000000\n")
 
     assert _repair_scans_tsv_timestamps(tmp_path) is False
 
@@ -1857,7 +1861,7 @@ def test_load_raw_eeglab_epochs_fallback_failure_raises_data_integrity(tmp_path)
 
 
 def test_load_raw_ctf_trial_size_mismatch_falls_back(tmp_path):
-    """RuntimeError about trial size mismatch falls back to direct reader."""
+    """RuntimeError about trial size mismatch retries with tolerant sample info."""
     ds = _make_local_eegdashraw(
         tmp_path, "ds_ctf", "sub-01/meg/sub-01_task-rest_meg.ds", ext=".ds"
     )
@@ -1867,17 +1871,15 @@ def test_load_raw_ctf_trial_size_mismatch_falls_back(tmp_path):
         "mne_bids.read_raw_bids",
         side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
     ):
-        with patch(
-            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
-        ) as mock_direct:
+        with patch("mne.io.read_raw_ctf", return_value=mock_raw) as mock_ctf:
             result = ds._load_raw()
 
-    mock_direct.assert_called_once_with(ds.filecache)
+    mock_ctf.assert_called_once()
     assert result is mock_raw
 
 
 def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
-    """CTF trial size mismatch + direct reader failure → DataIntegrityError."""
+    """CTF trial size mismatch + truncated fix failure → DataIntegrityError."""
     from eegdash.dataset.exceptions import DataIntegrityError
 
     ds = _make_local_eegdashraw(
@@ -1889,7 +1891,7 @@ def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
         side_effect=RuntimeError("Data size is not an even multiple of the trial size"),
     ):
         with patch(
-            "eegdash.dataset.base._load_raw_direct",
+            "mne.io.read_raw_ctf",
             side_effect=ValueError("cannot read CTF"),
         ):
             with pytest.raises(DataIntegrityError, match="CTF trial size mismatch"):

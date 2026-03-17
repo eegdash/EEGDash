@@ -66,3 +66,10 @@ CLAUDE.md
 .verify_cache/
 .verify_cache_python/
 .verify_cache_test/
+eegdash-dataset-verification/
+local_path_test/
+logs/
+logs-*.zip
+scripts/cluster-*.sh
+DEBUGGING.md
+verification_report.md

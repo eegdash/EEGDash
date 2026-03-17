@@ -8,6 +8,7 @@ from scipy.io import loadmat, savemat
 
 from eegdash.dataset.io import (
     _convert_time_with_numeric_dash,
+    _deduplicate_channel_names,
     _eeglab_ch_names_from_eeg,
     _eeglab_fdt_path,
     _eeglab_get_first_eeg,
@@ -20,6 +21,7 @@ from eegdash.dataset.io import (
     _load_raw_eeglab_alleeg,
     _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
+    _repair_channels_tsv_duplicates,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
     _repair_tsv_decimal_separators,
@@ -1264,14 +1266,16 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     """Epoched EEGLAB data is concatenated into continuous RawArray with annotations."""
     import mne
 
-    n_epochs, n_channels, n_times = 3, 2, 100
+    n_epochs, n_channels, n_times = 3, 2, 200
     sfreq = 256.0
     data = np.random.randn(n_epochs, n_channels, n_times) * 1e-6
+    tmin = -0.2  # 0.2s before trigger
 
     info = mne.create_info(ch_names=["Fz", "Cz"], sfreq=sfreq, ch_types="eeg")
-    events = np.array([[25, 0, 1], [125, 0, 2], [225, 0, 1]])
+    # Simulate original-timeline latencies (far beyond concatenated data)
+    events = np.array([[10000, 0, 1], [50000, 0, 2], [90000, 0, 1]])
     event_id = {"target": 1, "standard": 2}
-    epochs = mne.EpochsArray(data, info, events=events, event_id=event_id)
+    epochs = mne.EpochsArray(data, info, events=events, tmin=tmin, event_id=event_id)
 
     set_path = tmp_path / "epoched.set"
 
@@ -1284,12 +1288,19 @@ def test_load_raw_from_eeglab_epochs_concatenates(tmp_path):
     assert "3 epochs" in raw.info["description"]
     assert raw.ch_names == ["Fz", "Cz"]
 
-    # Verify epoch annotations are preserved
+    # Verify annotations are recalculated for concatenated timeline
     assert len(raw.annotations) == n_epochs
     descriptions = list(raw.annotations.description)
     assert descriptions == ["target", "standard", "target"]
-    expected_onsets = epochs.events[:, 0] / sfreq
+
+    # Annotations must be within the raw's time range
+    offset = int(round(-tmin * sfreq))  # 51 samples
+    expected_onsets = (np.arange(n_epochs) * n_times + offset) / sfreq
     np.testing.assert_allclose(raw.annotations.onset, expected_onsets, atol=1e-6)
+
+    # Verify all annotations fall within the raw duration
+    raw_duration = raw.n_times / sfreq
+    assert all(onset < raw_duration for onset in raw.annotations.onset)
 
 
 # ── _repair_vhdr_missing_markerfile ───────────────────────────────────
@@ -1381,3 +1392,85 @@ def test_repair_vhdr_missing_markerfile_write_error(tmp_path):
 
     with patch("pathlib.Path.write_text", side_effect=OSError("disk full")):
         assert _repair_vhdr_missing_markerfile(vhdr_path) is False
+
+
+# ── _deduplicate_channel_names ────────────────────────────────────────
+
+
+def test_deduplicate_channel_names_no_duplicates():
+    """No-op when all names are already unique."""
+    names = ["Fp1", "Fp2", "Cz"]
+    assert _deduplicate_channel_names(names) == names
+
+
+def test_deduplicate_channel_names_all_same():
+    """All-same names get sequential suffixes."""
+    names = ["EEG", "EEG", "EEG"]
+    result = _deduplicate_channel_names(names)
+    assert result == ["EEG-0", "EEG-1", "EEG-2"]
+    assert len(set(result)) == 3
+
+
+def test_deduplicate_channel_names_mixed():
+    """Only duplicated names get suffixes; unique names are unchanged."""
+    names = ["Fp1", "Cz", "Fp1", "Oz", "Cz"]
+    result = _deduplicate_channel_names(names)
+    assert result == ["Fp1-0", "Cz-0", "Fp1-1", "Oz", "Cz-1"]
+    assert len(set(result)) == 5
+
+
+def test_deduplicate_channel_names_empty():
+    """Empty list returns empty list."""
+    assert _deduplicate_channel_names([]) == []
+
+
+# ── _repair_channels_tsv_duplicates ──────────────────────────────────
+
+
+def test_repair_channels_tsv_duplicates_fixes_file(tmp_path):
+    """Duplicate channel names in channels.tsv are made unique."""
+    tsv = tmp_path / "sub-01_channels.tsv"
+    tsv.write_text("name\ttype\nEEG\tEEG\nEEG\tEEG\nCz\tEEG\n")
+
+    assert _repair_channels_tsv_duplicates(tmp_path) is True
+
+    lines = tsv.read_text().strip().split("\n")
+    names = [line.split("\t")[0] for line in lines[1:]]
+    assert names == ["EEG-0", "EEG-1", "Cz"]
+    assert len(set(names)) == 3
+
+
+def test_repair_channels_tsv_duplicates_no_duplicates(tmp_path):
+    """Returns False when no duplicates exist."""
+    tsv = tmp_path / "sub-01_channels.tsv"
+    tsv.write_text("name\ttype\nFp1\tEEG\nFp2\tEEG\nCz\tEEG\n")
+
+    assert _repair_channels_tsv_duplicates(tmp_path) is False
+
+
+def test_repair_channels_tsv_duplicates_no_files(tmp_path):
+    """Returns False when no channels.tsv files exist."""
+    assert _repair_channels_tsv_duplicates(tmp_path) is False
+
+
+def test_repair_channels_tsv_duplicates_not_a_dir(tmp_path):
+    """Returns False for a non-directory path."""
+    fake_path = tmp_path / "nonexistent"
+    assert _repair_channels_tsv_duplicates(fake_path) is False
+
+
+def test_repair_channels_tsv_duplicates_preserves_other_columns(tmp_path):
+    """Other columns in channels.tsv are preserved when deduplicating."""
+    tsv = tmp_path / "sub-01_channels.tsv"
+    tsv.write_text("name\ttype\tunits\nEEG\tEEG\tuV\nEEG\tEOG\tmV\nOz\tEEG\tuV\n")
+
+    assert _repair_channels_tsv_duplicates(tmp_path) is True
+
+    lines = tsv.read_text().strip().split("\n")
+    assert len(lines) == 4  # header + 3 data rows
+    # Check first data row
+    fields = lines[1].split("\t")
+    assert fields == ["EEG-0", "EEG", "uV"]
+    # Check second data row
+    fields = lines[2].split("\t")
+    assert fields == ["EEG-1", "EOG", "mV"]

@@ -196,6 +196,13 @@ def feature_extractor_from_dict(fe_dict: dict):
     --------
     ~eegdash.features.extractors.FeatureExtractor.to_dict
 
+    Notes
+    -----
+    - Only :module:`~eegdash.features.feature_bank` features and
+       preprocessors are supported.
+    - Feature extractors including non-function callables are not
+       supported.
+
     """
     assert "feature_extractors" in fe_dict
     kwargs = {}
@@ -231,6 +238,13 @@ def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
     --------
     ~eegdash.features.extractors.FeatureExtractor.to_json
 
+    Notes
+    -----
+    - Only :module:`~eegdash.features.feature_bank` features and
+       preprocessors are supported.
+    - Feature extractors including non-function callables are not
+       supported.
+
     """
     import json
 
@@ -253,7 +267,11 @@ def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
 
     Notes
     -----
-    Requires the `yaml` package.
+    - Only :module:`~eegdash.features.feature_bank` features and
+       preprocessors are supported.
+    - Feature extractors including non-function callables are not
+       supported.
+    - Requires the `yaml` package.
 
     See Also
     --------
@@ -285,7 +303,11 @@ def load_feature_extractor_from_hocon(path: str | Path) -> FeatureExtractor:
 
     Notes
     -----
-    Requires the `pyhocon` package.
+    - Only :module:`~eegdash.features.feature_bank` features and
+       preprocessors are supported.
+    - Feature extractors including non-function callables are not
+       supported.
+    - Requires the `pyhocon` package.
 
     """
     from pyhocon import ConfigFactory

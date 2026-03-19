@@ -68,7 +68,7 @@ def _func_to_dict(func: Callable | partial) -> dict:
 
     Parameters
     ----------
-    func : function | functools.partial
+    func : Callable | functools.partial
         A function
 
     Returns

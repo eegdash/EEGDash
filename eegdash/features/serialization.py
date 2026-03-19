@@ -149,7 +149,7 @@ def _func_from_dict(func_dict):
 
     Returns
     -------
-    function | functools.Partial
+    Callable | functools.Partial
         A function
 
     See Also

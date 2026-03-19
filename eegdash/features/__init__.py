@@ -70,7 +70,13 @@ from .inspect import (
     get_feature_kind,
     get_feature_predecessors,
 )
-from .serialization import load_features_concat_dataset
+from .serialization import (
+    feature_extractor_from_dict,
+    load_feature_extractor_from_hocon,
+    load_feature_extractor_from_json,
+    load_feature_extractor_from_yaml,
+    load_features_concat_dataset,
+)
 from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
@@ -95,7 +101,11 @@ __all__ = [
     "get_all_feature_extractors",
     "get_feature_kind",
     "get_feature_predecessors",
+    "feature_extractor_from_dict",
     "load_features_concat_dataset",
+    "load_feature_extractor_from_hocon",
+    "load_feature_extractor_from_json",
+    "load_feature_extractor_from_yaml",
     "extract_features",
     "fit_feature_extractors",
     # Feature part

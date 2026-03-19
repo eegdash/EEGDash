@@ -185,7 +185,7 @@ def feature_extractor_from_dict(fe_dict: dict):
     ----------
     fe_dict : dict
         A dictionary representing the feature extractor, with
-        "feature_extractors" and "preprocessor" fields (if applicable).
+        `"feature_extractors"` and `"preprocessor"` fields (if applicable).
 
     Returns
     -------

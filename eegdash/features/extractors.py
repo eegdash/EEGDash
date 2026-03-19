@@ -480,8 +480,8 @@ class FeatureExtractor(TrainableFeature):
         Returns
         -------
         dict
-            A dictionary representing the feature extractor, with "feature_extractors"
-            and "preprocessor" fields (if applicable).
+            A dictionary representing the feature extractor, with
+            `"feature_extractors"` and `"preprocessor"` fields (if applicable).
 
         See Also
         --------

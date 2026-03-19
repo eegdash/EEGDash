@@ -13,9 +13,9 @@ https://github.com/braindecode/braindecode/blob/master/braindecode/datautil/seri
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from functools import partial
 from pathlib import Path
+from types import FunctionType
 
 import pandas as pd
 from joblib import Parallel, delayed
@@ -143,7 +143,7 @@ def _load_parallel(path: Path, i: str) -> FeaturesDataset:
     return dataset
 
 
-def _func_from_dict(func_dict: dict) -> Callable:
+def _func_from_dict(func_dict: dict) -> FunctionType | partial:
     """Get a feature_bank function from a dictionary.
 
     Parameters
@@ -154,7 +154,7 @@ def _func_from_dict(func_dict: dict) -> Callable:
 
     Returns
     -------
-    Callable
+    FunctionType | functools.partial
         A function
 
     See Also

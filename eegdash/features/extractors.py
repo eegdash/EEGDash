@@ -18,6 +18,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
+from types import FunctionType
 from typing import Dict
 
 import numpy as np
@@ -63,12 +64,12 @@ def _get_underlying_func(func: Callable) -> Callable:
     return f
 
 
-def _func_to_dict(func: Callable | partial) -> dict:
+def _func_to_dict(func: FunctionType | partial) -> dict:
     """Dumps a function to a dictionary.
 
     Parameters
     ----------
-    func : Callable | functools.partial
+    func : FunctionType | functools.partial
         A function
 
     Returns

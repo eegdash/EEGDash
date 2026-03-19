@@ -28,10 +28,10 @@ from .extractors import FeatureExtractor
 
 __all__ = [
     "feature_extractor_from_dict",
-    "load_features_concat_dataset",
     "load_feature_extractor_from_hocon",
     "load_feature_extractor_from_json",
     "load_feature_extractor_from_yaml",
+    "load_features_concat_dataset",
 ]
 
 

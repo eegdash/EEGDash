@@ -489,10 +489,7 @@ class FeatureExtractor(TrainableFeature):
 
         Notes
         -----
-        - Only :module:`~eegdash.features.feature_bank` features and
-           preprocessors are supported.
-        - Feature extractors including non-function callables are not
-           supported.
+        Feature extractors including non-function callables are not supported.
 
         """
         fe_dict = {}
@@ -521,10 +518,7 @@ class FeatureExtractor(TrainableFeature):
 
         Notes
         -----
-        - Only :module:`~eegdash.features.feature_bank` features and
-           preprocessors are supported.
-        - Feature extractors including non-function callables are not
-           supported.
+        Feature extractors including non-function callables are not supported.
 
         """
         import json
@@ -549,8 +543,6 @@ class FeatureExtractor(TrainableFeature):
 
         Notes
         -----
-        - Only :module:`~eegdash.features.feature_bank` features and
-           preprocessors are supported.
         - Feature extractors including non-function callables are not
            supported.
         - Requires the `pyyaml` package.
@@ -578,8 +570,6 @@ class FeatureExtractor(TrainableFeature):
 
         Notes
         -----
-        - Only :module:`~eegdash.features.feature_bank` features and
-           preprocessors are supported.
         - Feature extractors including non-function callables are not
            supported.
         - Requires the `pyhocon` package.

@@ -13,6 +13,7 @@ https://github.com/braindecode/braindecode/blob/master/braindecode/datautil/seri
 
 from __future__ import annotations
 
+from functools import partial
 from pathlib import Path
 
 import pandas as pd
@@ -22,6 +23,7 @@ from mne.io import read_info
 from braindecode.datautil.serialization import _load_kwargs_json
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
+from .extractors import FeatureExtractor
 
 __all__ = [
     "load_features_concat_dataset",
@@ -134,3 +136,158 @@ def _load_parallel(path: Path, i: str) -> FeaturesDataset:
         features_kwargs=features_kwargs,
     )
     return dataset
+
+
+def _func_from_dict(func_dict):
+    """Get a feature_bank function from a dictionary.
+
+    Parameters
+    ----------
+    func_dict : dict
+        A dictionary representing the function, containing its name, as well
+        as its arguments and keyword arguments (for partial functions).
+
+    Returns
+    -------
+    function | functools.Partial
+        A function
+
+    See Also
+    --------
+    ~eegdash.features.extractors._func_to_dict
+
+    """
+    from . import feature_bank
+
+    if func_dict["name"] in feature_bank.__all__:
+        func = getattr(feature_bank, func_dict["name"])
+    else:
+        raise ValueError(
+            f"feature or preprocessor named `{func_dict['name']}` "
+            + "not found in feature bank."
+        )
+    if "args" in func_dict or "kwargs" in func_dict:
+        func_args = func_dict["args"] if "args" in func_dict else []
+        func_kwargs = func_dict["kwargs"] if "kwargs" in func_dict else {}
+        func = partial(func, *func_args, **func_kwargs)
+    return func
+
+
+def feature_extractor_from_dict(fe_dict):
+    """Get a feature extractor from a dictionary.
+
+    Parameters
+    ----------
+    fe_dict : dict
+        A dictionary representing the feature extractor, with
+        "feature_extractors" and "preprocessor" fields (if applicable).
+
+    Returns
+    -------
+    FeatureExtractor
+        A feature extractor
+
+    See Also
+    --------
+    ~eegdash.features.extractors.FeatureExtractor.to_dict
+
+    """
+    assert "feature_extractors" in fe_dict
+    kwargs = {}
+    if "preprocessor" in fe_dict:
+        kwargs["preprocessor"] = _func_from_dict(fe_dict["preprocessor"])
+    fes = {}
+    for k, v in fe_dict["feature_extractors"].items():
+        assert isinstance(v, dict)
+        if "feature_extractors" in v:
+            fes[k] = feature_extractor_from_dict(v)
+        elif "name" in v:
+            fes[k] = _func_from_dict(v)
+        else:
+            raise ValueError(
+                f"Feature {k}: A feature dict must "
+                + "contain either a 'feature_extractors' "
+                + "field (for `FeatureExtractor`)or a 'name' "
+                + f"field (for a function), got {v.keys()}."
+            )
+    kwargs["feature_extractors"] = fes
+    return FeatureExtractor(**kwargs)
+
+
+def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
+    """Reads a feature extractor from a json file.
+
+    Parameters
+    ----------
+    path : str | pathlib.Path
+        The path to the json file.
+
+    See Also
+    --------
+    ~eegdash.features.extractors.FeatureExtractor.to_json
+
+    """
+    import json
+
+    # Verify work with a pathlib.Path
+    path = Path(path)
+
+    with open(path, "r") as file:
+        fe_dict = json.load(file)
+
+    return feature_extractor_from_dict(fe_dict)
+
+
+def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
+    """Reads a feature extractor from a yaml file.
+
+    Parameters
+    ----------
+    path : str | pathlib.Path
+        The path to the yaml file.
+
+    Notes
+    -----
+    Requires the `yaml` package.
+
+    See Also
+    --------
+    ~eegdash.features.extractors.FeatureExtractor.to_yaml
+
+    """
+    import yaml
+
+    # Verify work with a pathlib.Path
+    path = Path(path)
+
+    with open(path, "r") as file:
+        fe_dict = yaml.safe_load(file)
+
+    return feature_extractor_from_dict(fe_dict)
+
+
+def load_feature_extractor_from_hocon(path: str | Path) -> FeatureExtractor:
+    """Reads a feature extractor from a HOCON's conf file.
+
+    Parameters
+    ----------
+    path : str | pathlib.Path
+        The path to the conf file.
+
+    See Also
+    --------
+    ~eegdash.features.extractors.FeatureExtractor.to_hocon
+
+    Notes
+    -----
+    Requires the `pyhocon` package.
+
+    """
+    from pyhocon import ConfigFactory
+
+    # Verify work with a pathlib.Path
+    path = Path(path)
+
+    fe_dict = ConfigFactory.parse_file(path)
+
+    return feature_extractor_from_dict(fe_dict)

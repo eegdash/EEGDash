@@ -109,6 +109,8 @@ class BasePreprocessorOutputType(ABC):
             self.parent_extractor_type = preprocessor.parent_extractor_type
         if hasattr(uf_preprocessor, "feature_kind"):
             self.feature_kind = preprocessor.feature_kind
+        if hasattr(uf_preprocessor, "__name__"):
+            self.__name__ = preprocessor.__name__
 
     def __call__(self, *args, **kwargs):
         r"""Call the underlying preprocessor with the provided arguments."""

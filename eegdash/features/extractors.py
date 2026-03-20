@@ -17,6 +17,8 @@ import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial
+from pathlib import Path
+from types import FunctionType
 from typing import Dict
 
 import numpy as np
@@ -62,6 +64,34 @@ def _get_underlying_func(func: Callable) -> Callable:
     return f
 
 
+def _func_to_dict(func: FunctionType | partial) -> dict:
+    r"""Dumps a function to a dictionary.
+
+    Parameters
+    ----------
+    func : FunctionType | functools.partial
+        A function
+
+    Returns
+    -------
+    dict
+        A dictionary representing the function, containing its name, as well
+        as its arguments and keyword arguments (for partial functions).
+
+    See Also
+    --------
+    ~eegdash.features.serialization._func_from_dict
+
+    """
+    func_dict = {"name": _get_underlying_func(func).__name__}
+    if isinstance(func, partial):
+        if func.args:
+            func_dict["args"] = list(func.args)
+        if func.keywords:
+            func_dict["kwargs"] = func.keywords
+    return func_dict
+
+
 class BasePreprocessorOutputType(ABC):
     """An abstract class representing a type of preprocessor output.
 
@@ -80,6 +110,8 @@ class BasePreprocessorOutputType(ABC):
             self.parent_extractor_type = preprocessor.parent_extractor_type
         if hasattr(uf_preprocessor, "feature_kind"):
             self.feature_kind = preprocessor.feature_kind
+        if hasattr(uf_preprocessor, "__name__"):
+            self.__name__ = preprocessor.__name__
 
     def __call__(self, *args, **kwargs):
         r"""Call the underlying preprocessor with the provided arguments."""
@@ -441,6 +473,117 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, TrainableFeature):
                 f.fit()
         super().fit()
+
+    def to_dict(self) -> dict:
+        r"""Dumps the feature extractor to a dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary representing the feature extractor, with
+            `"feature_extractors"` and `"preprocessor"` fields (if applicable).
+
+        See Also
+        --------
+        ~eegdash.features.serialization.feature_extractor_from_dict
+
+        Notes
+        -----
+        Feature extractors including non-function callables are not supported.
+
+        """
+        fe_dict = {}
+        if self.preprocessor is not None:
+            fe_dict["preprocessor"] = _func_to_dict(self.preprocessor)
+        fes = {}
+        for k, v in self.feature_extractors_dict.items():
+            if isinstance(v, FeatureExtractor):
+                fes[k] = v.to_dict()
+            else:
+                fes[k] = _func_to_dict(v)
+        fe_dict["feature_extractors"] = fes
+        return fe_dict
+
+    def to_json(self, path: str | Path):
+        r"""Dumps the feature extractor to a json file.
+
+        Parameters
+        ----------
+        path : str | pathlib.Path
+            The path to the json file.
+
+        See Also
+        --------
+        ~eegdash.features.serialization.load_feature_extractor_from_json
+
+        Notes
+        -----
+        Feature extractors including non-function callables are not supported.
+
+        """
+        import json
+
+        # Verify work with a pathlib.Path
+        path = Path(path)
+
+        with open(path, "w") as file:
+            json.dump(self.to_dict(), file, sort_keys=False, indent=4)
+
+    def to_yaml(self, path: str | Path):
+        r"""Dumps the feature extractor to a yaml file.
+
+        Parameters
+        ----------
+        path : str | pathlib.Path
+            The path to the yaml file.
+
+        See Also
+        --------
+        ~eegdash.features.serialization.load_feature_extractor_from_yaml
+
+        Notes
+        -----
+        - Feature extractors including non-function callables are not
+           supported.
+        - Requires the `pyyaml` package.
+
+        """
+        import yaml
+
+        # Verify work with a pathlib.Path
+        path = Path(path)
+
+        with open(path, "w") as file:
+            yaml.dump(self.to_dict(), file, sort_keys=False)
+
+    def to_hocon(self, path: str | Path):
+        r"""Dumps the feature extractor to a HOCON's conf file.
+
+        Parameters
+        ----------
+        path : str | pathlib.Path
+            The path to the conf file.
+
+        See Also
+        --------
+        ~eegdash.features.serialization.load_feature_extractor_from_hocon
+
+        Notes
+        -----
+        - Feature extractors including non-function callables are not
+           supported.
+        - Requires the `pyhocon` package.
+
+        """
+        from pyhocon import ConfigFactory, HOCONConverter
+
+        # Verify work with a pathlib.Path
+        path = Path(path)
+
+        with open(path, "w") as outfile:
+            outfile.write(
+                HOCONConverter.to_hocon(ConfigFactory.from_dict(self.to_dict()))
+            )
 
 
 class MultivariateFeature:

@@ -40,8 +40,8 @@ def spectral_default_kwargs(kwargs, metadata):
     ----------
     kwargs : dict
         A dictionary of keyword arguments.
-    metadata : _type_
-        _description_
+    metadata : dict
+        A dictionary of record and batch metadata.
 
     Returns
     -------

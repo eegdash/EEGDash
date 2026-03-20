@@ -65,7 +65,7 @@ def _get_underlying_func(func: Callable) -> Callable:
 
 
 def _func_to_dict(func: FunctionType | partial) -> dict:
-    """Dumps a function to a dictionary.
+    r"""Dumps a function to a dictionary.
 
     Parameters
     ----------
@@ -475,7 +475,7 @@ class FeatureExtractor(TrainableFeature):
         super().fit()
 
     def to_dict(self) -> dict:
-        """Dumps the feature extractor to a dictionary.
+        r"""Dumps the feature extractor to a dictionary.
 
         Returns
         -------
@@ -505,7 +505,7 @@ class FeatureExtractor(TrainableFeature):
         return fe_dict
 
     def to_json(self, path: str | Path):
-        """Dumps the feature extractor to a json file.
+        r"""Dumps the feature extractor to a json file.
 
         Parameters
         ----------
@@ -530,7 +530,7 @@ class FeatureExtractor(TrainableFeature):
             json.dump(self.to_dict(), file, sort_keys=False, indent=4)
 
     def to_yaml(self, path: str | Path):
-        """Dumps the feature extractor to a yaml file.
+        r"""Dumps the feature extractor to a yaml file.
 
         Parameters
         ----------
@@ -557,7 +557,7 @@ class FeatureExtractor(TrainableFeature):
             yaml.dump(self.to_dict(), file, sort_keys=False)
 
     def to_hocon(self, path: str | Path):
-        """Dumps the feature extractor to a HOCON's conf file.
+        r"""Dumps the feature extractor to a HOCON's conf file.
 
         Parameters
         ----------

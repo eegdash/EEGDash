@@ -144,7 +144,7 @@ def _load_parallel(path: Path, i: str) -> FeaturesDataset:
 
 
 def _func_from_dict(func_dict: dict) -> FunctionType | partial:
-    """Get a feature_bank function from a dictionary.
+    r"""Get a feature_bank function from a dictionary.
 
     Parameters
     ----------
@@ -179,7 +179,7 @@ def _func_from_dict(func_dict: dict) -> FunctionType | partial:
 
 
 def feature_extractor_from_dict(fe_dict: dict):
-    """Get a feature extractor from a dictionary.
+    r"""Get a feature extractor from a dictionary.
 
     Parameters
     ----------
@@ -198,7 +198,7 @@ def feature_extractor_from_dict(fe_dict: dict):
 
     Notes
     -----
-    - Only :module:`~eegdash.features.feature_bank` features and
+    - Only :mod:`~eegdash.features.feature_bank` features and
        preprocessors are supported.
     - Feature extractors including non-function callables are not
        supported.
@@ -227,7 +227,7 @@ def feature_extractor_from_dict(fe_dict: dict):
 
 
 def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
-    """Reads a feature extractor from a json file.
+    r"""Reads a feature extractor from a json file.
 
     Parameters
     ----------
@@ -240,7 +240,7 @@ def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
 
     Notes
     -----
-    - Only :module:`~eegdash.features.feature_bank` features and
+    - Only :mod:`~eegdash.features.feature_bank` features and
        preprocessors are supported.
     - Feature extractors including non-function callables are not
        supported.
@@ -258,7 +258,7 @@ def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
 
 
 def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
-    """Reads a feature extractor from a yaml file.
+    r"""Reads a feature extractor from a yaml file.
 
     Parameters
     ----------
@@ -290,7 +290,7 @@ def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
 
 
 def load_feature_extractor_from_hocon(path: str | Path) -> FeatureExtractor:
-    """Reads a feature extractor from a HOCON's conf file.
+    r"""Reads a feature extractor from a HOCON's conf file.
 
     Parameters
     ----------
@@ -303,7 +303,7 @@ def load_feature_extractor_from_hocon(path: str | Path) -> FeatureExtractor:
 
     Notes
     -----
-    - Only :module:`~eegdash.features.feature_bank` features and
+    - Only :mod:`~eegdash.features.feature_bank` features and
        preprocessors are supported.
     - Feature extractors including non-function callables are not
        supported.

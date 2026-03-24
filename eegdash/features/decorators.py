@@ -5,6 +5,7 @@ functions with structural metadata. These annotations define the dependency
 graph (via predecessors) and the data format (via feature kinds).
 
 The module provides the following decorators:
+
 - :class:`FeaturePredecessor` — Specifies the required input transformation
   for a feature.
 - :class:`FeatureKind` — Defines the dimensionality of the feature output.

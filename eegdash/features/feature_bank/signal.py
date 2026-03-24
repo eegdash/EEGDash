@@ -130,7 +130,7 @@ def signal_variance(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `np.var`.
+        Additional keyword arguments passed to :func:`np.var`.
 
     Returns
     -------
@@ -152,7 +152,7 @@ def signal_std(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `np.std`.
+        Additional keyword arguments passed to :func:`np.std`.
 
     Returns
     -------
@@ -174,7 +174,7 @@ def signal_skewness(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `scipy.stats.skew`.
+        Additional keyword arguments passed to :func:`scipy.stats.skew`.
 
     Returns
     -------
@@ -196,7 +196,7 @@ def signal_kurtosis(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `scipy.stats.kurtosis`.
+        Additional keyword arguments passed to :func:`scipy.stats.kurtosis`.
 
     Returns
     -------
@@ -243,7 +243,7 @@ def signal_peak_to_peak(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `np.ptp`.
+        Additional keyword arguments passed to :func:`numpy.ptp`.
 
     Returns
     -------
@@ -253,7 +253,7 @@ def signal_peak_to_peak(x, /, **kwargs):
 
     Notes
     -----
-    This function wraps :obj:`numpy.ptp`; see the NumPy documentation for
+    This function wraps :func:`numpy.ptp`; see the NumPy documentation for
     details on additional keyword arguments.
 
     For a theoretical overview of Peak-To-Peak amplitude in signal analysis,
@@ -275,7 +275,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     q : float or array_like, optional
         The quantile to compute. 0.5 (default) is the median.
     **kwargs : dict
-        Additional keyword arguments passed to `numpy.quantile`.
+        Additional keyword arguments passed to :func:`numpy.quantile`.
 
     Returns
     -------
@@ -285,7 +285,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
 
     Notes
     -----
-    This function wraps :obj:`numpy.quantile`; see the NumPy documentation for
+    This function wraps :func:`numpy.quantile`; see the NumPy documentation for
     details on additional keyword arguments.
 
     """
@@ -334,8 +334,8 @@ def signal_zero_crossings(x, /, threshold=1e-15):
         The count of zero crossings.
         Shape is ``x.shape[:-1]``.
 
-    See Also
-    --------
+    Notes
+    -----
     For a theoretical overview of zero-crossing rate in signal analysis,
     see the `Wikipedia entry <https://en.wikipedia.org/wiki/Zero_crossing>`_.
 
@@ -366,11 +366,15 @@ def signal_hjorth_mobility(x, /):
     ndarray
         The Hjorth Mobility value. Shape is ``x.shape[:-1]``.
 
+    See Also
+    --------
+    signal_hjorth_activity
+
     Notes
     -----
     The mobility is calculated using the following formula:
-    .. math::
-        \text{Mobility} = \sqrt{\frac{\text{var}(\frac{dx(t)}{dt})}{\text{var}(x(t))}}
+
+    .. math:: \text{Mobility}\left(x\left(t\right)\right) = \sqrt{\frac{\text{Var}\left(\frac{\mathrm{d}x\left(t\right)}{\mathrm{dt}}\right)}{\text{Var}\left(x\left(t\right)\right)}}
 
     References
     ----------
@@ -404,11 +408,15 @@ def signal_hjorth_complexity(x, /):
     ndarray
         The complexity value. Shape is ``x.shape[:-1]``.
 
+    See Also
+    --------
+    signal_hjorth_mobility
+
     Notes
     -----
     The complexity is calculated using the following formula:
-    .. math::
-        \text{Complexity} = \frac{\text{Mobility}(\frac{dx(t)}{dt})}{\text{Mobility}(x(t))}
+
+    .. math:: \text{Complexity}\left(x\left(t\right)\right) = \frac{\text{Mobility}\left(\frac{\mathrm{d}x\left(t\right)}{\mathrm{dt}}\right)}{\text{Mobility}\left(x\left(t\right)\right)}
 
     References
     ----------
@@ -446,8 +454,8 @@ def signal_decorrelation_time(x, /, *, _metadata):
 
     Notes
     -----
-    This function uses the '<Wiener-Khinchin Theorem
-    <https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem>'_ to
+    This function uses the `Wiener-Khinchin Theorem
+    <https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem>`_ to
     compute the autocorrelation via the inverse FFT of the power spectrum.
 
     """
@@ -478,8 +486,8 @@ r"""Calculate the Hjorth Activity of the signal.
     Notes
     -----
     The activity is calculated using the following formula:
-    .. math::
-        \text{Activity} = \text{var}(x(t))
+
+    .. math:: \text{Activity}\left(x\left(t\right)\right) = \operatorname{Var}\left(x\left(t\right)\right)
 
     References
     ----------

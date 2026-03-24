@@ -4,11 +4,12 @@ This module defines the fundamental building blocks for creating feature
 extraction pipelines.
 
 The module provides the base classes:
-    * :class:`FeatureExtractor` - The central pipeline for execution trees.
-    * :class:`TrainableFeature` - The interface for features requiring a
-      fitting phase.
-    * :class:`MultivariateFeature` and its subclasses - Logic for mapping
-      raw arrays to named features.
+
+- :class:`FeatureExtractor` - The central pipeline for execution trees.
+- :class:`TrainableFeature` - The interface for features requiring a
+  fitting phase.
+- :class:`MultivariateFeature` and its subclasses - Logic for mapping
+  raw arrays to named features.
 """
 
 from __future__ import annotations
@@ -80,7 +81,7 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
 
     See Also
     --------
-    ~eegdash.features.serialization._func_from_dict
+    _func_from_dict
 
     """
     func_dict = {"name": _get_underlying_func(func).__name__}
@@ -481,11 +482,11 @@ class FeatureExtractor(TrainableFeature):
         -------
         dict
             A dictionary representing the feature extractor, with
-            `"feature_extractors"` and `"preprocessor"` fields (if applicable).
+            ``"feature_extractors"`` and ``"preprocessor"`` fields (if applicable).
 
         See Also
         --------
-        ~eegdash.features.serialization.feature_extractor_from_dict
+        feature_extractor_from_dict
 
         Notes
         -----
@@ -514,7 +515,7 @@ class FeatureExtractor(TrainableFeature):
 
         See Also
         --------
-        ~eegdash.features.serialization.load_feature_extractor_from_json
+        load_feature_extractor_from_json, FeatureExtractor.to_dict
 
         Notes
         -----
@@ -539,7 +540,7 @@ class FeatureExtractor(TrainableFeature):
 
         See Also
         --------
-        ~eegdash.features.serialization.load_feature_extractor_from_yaml
+        load_feature_extractor_from_yaml, FeatureExtractor.to_dict
 
         Notes
         -----
@@ -566,7 +567,7 @@ class FeatureExtractor(TrainableFeature):
 
         See Also
         --------
-        ~eegdash.features.serialization.load_feature_extractor_from_hocon
+        load_feature_extractor_from_hocon, FeatureExtractor.to_dict
 
         Notes
         -----

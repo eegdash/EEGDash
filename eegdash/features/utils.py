@@ -4,6 +4,7 @@ This module provides the primary entry points for applying feature extraction
 pipelines to windowed datasets.
 
 The module provides the following functions:
+
 - :func:`extract_features` — The main interface for computing features
   across an entire concatenated dataset.
 - :func:`fit_feature_extractors` — Fits trainable features using a

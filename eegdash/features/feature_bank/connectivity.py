@@ -50,10 +50,10 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
         Do not use unless you know what you are doing.
     f_min : float | None
         The minimum frequency. Use `None` for half the window length.
-        Defaults to the highpass frequency used to MNE's `filter`.
+        Defaults to the highpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
     f_max : float | None
         The maximum frequency. Use `None` for Nyquist.
-        Defaults to the lowpass frequency used to MNE's `filter`.
+        Defaults to the lowpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
     window_size_in_sec : float
         Window size in seconds, replacing `nperseg`.
         Only used if `nperseg` is not provided.
@@ -63,7 +63,8 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
         Only used if `nperseg` and `noverlap` are not provided.
         defaults to half of `window_size_in_sec`.
     **kwargs : dict
-        Supports any `scipy.signal.csd` arguments like 'nperseg' and 'noverlap'.
+        Supports any :func:`scipy.signal.csd` arguments like 'nperseg'
+        and 'noverlap'.
 
     Returns
     -------
@@ -72,8 +73,9 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     c : ndarray
         Complex coherency array of shape (n_trials, n_pairs, n_frequencies).
         Values are complex numbers where:
-        - Absolute value |c| is the coherence (0 to 1).
-        - Angle arg(c) is the phase lag.
+
+        - Absolute value :math:`|c|` is the coherence magnitude (0 to 1).
+        - Angle :math:`\arg(c)` is the phase lag.
 
     """
     f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
@@ -95,8 +97,8 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
     r"""Calculate Magnitude Squared Coherence (MSC).
 
     MSC measures the linear correlation between two signals in the frequency
-    domain. It is defined as the squared magnitude of the complex coherency:
-    .. math::|c|^2, where :math:`c` is the complex coherency.
+    domain. It is defined as the squared magnitude of the complex coherency,
+    :math:`|c|^2`, where :math:`c` is the complex coherency.
 
     Parameters
     ----------
@@ -112,9 +114,9 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
     dict
         Mean MSC for each frequency band.
 
-    See Also
-    --------
-    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    References
+    ----------
+    `Brainstorm - Connectivity <https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity>`_
 
     """
     coher = c.real**2 + c.imag**2
@@ -126,7 +128,9 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
 def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Imaginary Coherence (iCOH).
 
-    iCOH captures only the non-zero phase-lagged synchronization.
+    Imaginary coherence captures only the non-zero phase-lagged
+    synchronization. It is defined as :math:`\operatorname{Im}(c)`,
+    where :math:`c` is the complex coherency.
 
     Parameters
     ----------
@@ -142,9 +146,9 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     dict
         Mean Imaginary Coherence for each frequency band.
 
-    See Also
-    --------
-    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    References
+    ----------
+    `Brainstorm - Connectivity <https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity>`_
 
     """
     coher = c.imag
@@ -158,7 +162,9 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
 
     Lagged coherence further refines the synchronization measure by
     normalizing the imaginary part of the coherency, effectively removing
-    all instantaneous (zero-lag) contributions.
+    all instantaneous (zero-lag) contributions. It is defined as
+    :math:`\operatorname{Im}(c)/\sqrt{1 - \left(\operatorname{Re}(c)\right)^2}`,
+    where :math:`c` is the complex coherency.
 
     Parameters
     ----------
@@ -174,9 +180,9 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     dict
         Mean Lagged Coherence for each frequency band.
 
-    See Also
-    --------
-    `https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity`
+    References
+    ----------
+    `Brainstorm - Connectivity <https://neuroimage.usc.edu/brainstorm/Tutorials/Connectivity>`_
 
     """
     coher = c.imag / np.sqrt(1 - c.real**2)

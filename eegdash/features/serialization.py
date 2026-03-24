@@ -2,12 +2,9 @@ r"""Serialization Utilities for Feature Datasets.
 
 This module provides functions for reconstructing feature datasets
 from disk. It serves as the inverse of the saving logic implemented in
-:class:`FeaturesConcatDataset`, allowing for efficient, parallelized
-reloading of processed features and their associated metadata.
-
-See Also
---------
-https://github.com/braindecode/braindecode/blob/master/braindecode/datautil/serialization.py#L165-L229
+:class:`FeaturesConcatDataset` and :class:`FeatureExtractor`, allowing
+for efficient, parallelized reloading of processed features and their
+associated metadata.
 
 """
 
@@ -60,6 +57,10 @@ def load_features_concat_dataset(
     -------
     FeaturesConcatDataset
         A unified concatenated dataset containing the loaded recordings.
+
+    See Also
+    --------
+    braindecode.datautil.load_concat_dataset
 
     Notes
     -----
@@ -159,7 +160,7 @@ def _func_from_dict(func_dict: dict) -> FunctionType | partial:
 
     See Also
     --------
-    ~eegdash.features.extractors._func_to_dict
+    _func_to_dict
 
     """
     from . import feature_bank
@@ -178,14 +179,17 @@ def _func_from_dict(func_dict: dict) -> FunctionType | partial:
     return func
 
 
-def feature_extractor_from_dict(fe_dict: dict):
+def feature_extractor_from_dict(fe_dict: dict) -> FeatureExtractor:
     r"""Get a feature extractor from a dictionary.
+
+    Get a feature extractor object from a dictionary saved by
+    :meth:`FeatureExtractor.to_dict`.
 
     Parameters
     ----------
     fe_dict : dict
         A dictionary representing the feature extractor, with
-        `"feature_extractors"` and `"preprocessor"` fields (if applicable).
+        ``"feature_extractors"`` and ``"preprocessor"`` fields (if applicable).
 
     Returns
     -------
@@ -194,14 +198,13 @@ def feature_extractor_from_dict(fe_dict: dict):
 
     See Also
     --------
-    ~eegdash.features.extractors.FeatureExtractor.to_dict
+    FeatureExtractor.to_dict
 
     Notes
     -----
-    - Only :mod:`~eegdash.features.feature_bank` features and
-       preprocessors are supported.
-    - Feature extractors including non-function callables are not
-       supported.
+    - Only :mod:`~eegdash.features.feature_bank` features and preprocessors
+       are supported.
+    - Feature extractors including non-function callables are not supported.
 
     """
     assert "feature_extractors" in fe_dict
@@ -236,7 +239,7 @@ def load_feature_extractor_from_json(path: str | Path) -> FeatureExtractor:
 
     See Also
     --------
-    ~eegdash.features.extractors.FeatureExtractor.to_json
+    FeatureExtractor.to_json, feature_extractor_from_dict
 
     Notes
     -----
@@ -267,7 +270,7 @@ def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
 
     Notes
     -----
-    - Only :module:`~eegdash.features.feature_bank` features and
+    - Only :mod:`~eegdash.features.feature_bank` features and
        preprocessors are supported.
     - Feature extractors including non-function callables are not
        supported.
@@ -275,7 +278,7 @@ def load_feature_extractor_from_yaml(path: str | Path) -> FeatureExtractor:
 
     See Also
     --------
-    ~eegdash.features.extractors.FeatureExtractor.to_yaml
+    FeatureExtractor.to_yaml, feature_extractor_from_dict
 
     """
     import yaml
@@ -299,7 +302,7 @@ def load_feature_extractor_from_hocon(path: str | Path) -> FeatureExtractor:
 
     See Also
     --------
-    ~eegdash.features.extractors.FeatureExtractor.to_hocon
+    FeatureExtractor.to_hocon, feature_extractor_from_dict
 
     Notes
     -----

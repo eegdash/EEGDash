@@ -543,29 +543,23 @@
 <p>Serialization Utilities for Feature Datasets.</p>
 <p>This module provides functions for reconstructing feature datasets
 from disk. It serves as the inverse of the saving logic implemented in
-<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code>, allowing for efficient, parallelized
-reloading of processed features and their associated metadata.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">https</span></code></dt><dd><p>//github.com/braindecode/braindecode/blob/master/braindecode/datautil/serialization.py#L165-L229</p>
-</dd>
-</dl>
-</div>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>, allowing
+for efficient, parallelized reloading of processed features and their
+associated metadata.</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extractor_from_dict</span></code></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extractor_from_dict</span></code>(fe_dict)</p></td>
+<td><p>Get a feature extractor from a dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_hocon</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_hocon</span></code>(path)</p></td>
+<td><p>Reads a feature extractor from a HOCON's conf file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_json</span></code></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_json</span></code>(path)</p></td>
+<td><p>Reads a feature extractor from a json file.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_yaml</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_feature_extractor_from_yaml</span></code>(path)</p></td>
+<td><p>Reads a feature extractor from a yaml file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_features_concat_dataset</span></code>(path[, ...])</p></td>
 <td><p>Load a stored <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> from a directory.</p></td>
@@ -575,7 +569,126 @@ reloading of processed features and their associated metadata.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L38-L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">feature_extractor_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L182-L229"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a feature extractor from a dictionary.</p>
+<p>Get a feature extractor object from a dictionary saved by
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">FeatureExtractor.to_dict()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fe_dict</strong> (<em>dict</em>) – A dictionary representing the feature extractor, with
+<code class="docutils literal notranslate"><span class="pre">&quot;feature_extractors&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;preprocessor&quot;</span></code> fields (if applicable).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A feature extractor</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FeatureExtractor</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor.to_dict</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Only <code class="xref py py-mod docutils literal notranslate"><span class="pre">feature_bank</span></code> features and preprocessors</dt><dd><p>are supported.</p>
+</dd>
+</dl>
+</li>
+<li><p>Feature extractors including non-function callables are not supported.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_hocon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L295-L323"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads a feature extractor from a HOCON’s conf file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the conf file.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor.to_hocon</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extractor_from_dict</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Only <code class="xref py py-mod docutils literal notranslate"><span class="pre">feature_bank</span></code> features and</dt><dd><p>preprocessors are supported.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Feature extractors including non-function callables are not</dt><dd><p>supported.</p>
+</dd>
+</dl>
+</li>
+<li><p>Requires the <cite>pyhocon</cite> package.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L232-L260"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads a feature extractor from a json file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the json file.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor.to_json</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extractor_from_dict</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Only <code class="xref py py-mod docutils literal notranslate"><span class="pre">feature_bank</span></code> features and</dt><dd><p>preprocessors are supported.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Feature extractors including non-function callables are not</dt><dd><p>supported.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L263-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads a feature extractor from a yaml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the yaml file.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Only <code class="xref py py-mod docutils literal notranslate"><span class="pre">feature_bank</span></code> features and</dt><dd><p>preprocessors are supported.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Feature extractors including non-function callables are not</dt><dd><p>supported.</p>
+</dd>
+</dl>
+</li>
+<li><p>Requires the <cite>yaml</cite> package.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureExtractor.to_yaml</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_extractor_from_dict</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L35-L83"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Load a stored <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> from a directory.</p>
 <p>This function reconstructs a concatenated dataset by loading individual
 <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances from numbered subdirectories.</p>
@@ -598,6 +711,10 @@ use all available processors.</p></li>
 <dd class="field-odd"><p>FeaturesConcatDataset</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">braindecode.datautil.load_concat_dataset</span></code></p>
+</div>
 <p class="rubric">Notes</p>
 <p>The function expects the directory structure generated by
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">FeaturesConcatDataset.save()</span></code>. It automatically reconstructs

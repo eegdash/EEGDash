@@ -447,8 +447,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         structure is compatible with later reloading using
         :func:`serialization.load_features_concat_dataset`.
 
-        Directory structure example
-        ----------------------------
+        **Directory structure example**::
         .. code-block::
 
             path/

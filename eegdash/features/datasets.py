@@ -448,7 +448,6 @@ class FeaturesConcatDataset(BaseConcatDataset):
         :func:`serialization.load_features_concat_dataset`.
 
         **Directory structure example**::
-        .. code-block::
 
             path/
                 0/

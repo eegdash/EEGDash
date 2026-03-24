@@ -130,7 +130,7 @@ def signal_variance(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `np.var`.
+        Additional keyword arguments passed to :func:`np.var`.
 
     Returns
     -------
@@ -152,7 +152,7 @@ def signal_std(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `np.std`.
+        Additional keyword arguments passed to :func:`np.std`.
 
     Returns
     -------
@@ -174,7 +174,7 @@ def signal_skewness(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `scipy.stats.skew`.
+        Additional keyword arguments passed to :func:`scipy.stats.skew`.
 
     Returns
     -------
@@ -196,7 +196,7 @@ def signal_kurtosis(x, /, **kwargs):
     x : ndarray
         The input signal.
     **kwargs : dict
-        Additional keyword arguments passed to `scipy.stats.kurtosis`.
+        Additional keyword arguments passed to :func:`scipy.stats.kurtosis`.
 
     Returns
     -------
@@ -275,7 +275,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     q : float or array_like, optional
         The quantile to compute. 0.5 (default) is the median.
     **kwargs : dict
-        Additional keyword arguments passed to `numpy.quantile`.
+        Additional keyword arguments passed to :func:`numpy.quantile`.
 
     Returns
     -------
@@ -285,7 +285,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
 
     Notes
     -----
-    This function wraps :obj:`numpy.quantile`; see the NumPy documentation for
+    This function wraps :func:`numpy.quantile`; see the NumPy documentation for
     details on additional keyword arguments.
 
     """

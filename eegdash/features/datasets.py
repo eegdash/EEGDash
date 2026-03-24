@@ -672,7 +672,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         Notes
         -----
         When metadata columns and feature columns share the same name, the
-        metadata columns are suffixed with `_metadata` to avoid name
+        metadata columns are suffixed with ``_metadata`` to avoid name
         collisions.
 
         Examples
@@ -983,7 +983,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         Notes
         -----
-        `inplace` is enforced as True.
+        ``inplace`` is enforced as True.
 
         See Also
         --------

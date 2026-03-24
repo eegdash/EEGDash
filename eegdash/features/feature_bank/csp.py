@@ -103,7 +103,7 @@ class CommonSpatialPattern(TrainableFeature):
 
         See Also
         --------
-        :func:`eegdash.features.extractors.TrainableFeature.clear`
+        :meth:`~eegdash.features.extractors.TrainableFeature.clear`
 
         """
         self._labels = None
@@ -221,7 +221,7 @@ class CommonSpatialPattern(TrainableFeature):
 
         See Also
         --------
-        :func:`~eegdash.features.extractors.TrainableFeature.fit`.
+        :meth:`~eegdash.features.extractors.TrainableFeature.fit`.
 
         Notes
         -----

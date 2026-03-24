@@ -6,6 +6,7 @@ features, identify their kinds, and traverse the preprocessing dependency
 graph.
 
 The module provides the following utilities:
+
 - :func:`get_all_features` — Lists all final feature functions.
 - :func:`get_all_feature_preprocessors` — Lists all available preprocessing
   steps.

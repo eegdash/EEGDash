@@ -4,6 +4,7 @@ This module defines the core data structures for storing, manipulating, and
 serializing extracted features.
 
 Provides the base classes:
+
 - :class:`FeaturesDataset` — Represents features from a single recording.
 - :class:`FeaturesConcatDataset` — Manages multiple :class:`FeaturesDataset`
   objects as a unified dataset.
@@ -446,9 +447,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         structure is compatible with later reloading using
         :func:`serialization.load_features_concat_dataset`.
 
-        Directory structure example
-        ----------------------------
-        .. code-block::
+        **Directory structure example**::
 
             path/
                 0/
@@ -648,12 +647,13 @@ class FeaturesConcatDataset(BaseConcatDataset):
         ----------
         include_metadata : bool, str, or list of str, default=False
             Controls the inclusion of window-level metadata:
-            * If **True** — includes all metadata columns available in the
-                underlying datasets.
-            * If **str** or **list of str** — includes only the specified
-                metadata column(s).
-            * If **False** — excludes metadata (unless overridden by other
-                flags).
+
+            - If **True** — includes all metadata columns available in the
+               underlying datasets.
+            - If **str** or **list of str** — includes only the specified
+               metadata column(s).
+            - If **False** — excludes metadata (unless overridden by other
+               flags).
         include_target : bool, default=False
             If True, ensures the 'target' column is included in the resulting
             DataFrame.
@@ -964,7 +964,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         See Also
         --------
-        :meth:pandas.DataFrame.fillna : The underlying pandas method.
+        pandas.DataFrame.fillna : The underlying pandas method.
 
         """
         FeaturesConcatDataset._enforce_inplace_operations("fillna", kwargs)
@@ -985,7 +985,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         See Also
         --------
-        :meth:pandas.DataFrame.replace : The underlying pandas method.
+        pandas.DataFrame.replace : The underlying pandas method.
 
         """
         FeaturesConcatDataset._enforce_inplace_operations("replace", kwargs)
@@ -1006,7 +1006,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         See Also
         --------
-        :meth:pandas.DataFrame.interpolate : The underlying pandas method.
+        pandas.DataFrame.interpolate : The underlying pandas method.
 
         """
         FeaturesConcatDataset._enforce_inplace_operations("interpolate", kwargs)
@@ -1027,7 +1027,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         See Also
         --------
-        :meth:pandas.DataFrame.dropna : The underlying pandas method.
+        pandas.DataFrame.dropna : The underlying pandas method.
 
         """
         FeaturesConcatDataset._enforce_inplace_operations("dropna", kwargs)
@@ -1051,7 +1051,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         See Also
         --------
-        :meth:pandas.DataFrame.drop : The underlying pandas method.
+        pandas.DataFrame.drop : The underlying pandas method.
 
         Examples
         --------

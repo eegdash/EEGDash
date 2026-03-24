@@ -143,8 +143,9 @@ def dimensionality_petrosian_fractal_dim(x, /):
 def dimensionality_katz_fractal_dim(x, /):
     r"""Calculate Katz Fractal Dimension (KFD).
 
-    KFD[1]_ [2]_ is calculated as the ratio between the total path length and the
-    maximum planar distance from the first point to any other point.
+    Katz Fractal Dimension [1]_ [2]_ is calculated as the ratio between the total
+    path length and the maximum planar distance from the first point to any other
+    point.
 
     Parameters
     ----------

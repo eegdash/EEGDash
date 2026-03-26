@@ -61,15 +61,13 @@ def signal_hilbert_preprocessor(x, /):
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @PreprocessorOutputType(SignalOutputType)
-def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
+def signal_filter_preprocessor(x, /, *, _metadata, f_min, f_max, num_taps=None):
     """Linear-phase FIR band-pass filter.
 
     Parameters
     ----------
     x : ndarray
         Input signal
-    fs : float
-        Sampling frequency (Hz)
     f_min : float
         Low cutoff frequency (Hz)
     f_max : float
@@ -83,6 +81,7 @@ def signal_filter_preprocessor(x, /, fs, f_min, f_max, num_taps=None):
         The band-pass filtered signal, with the same shape as the input.
 
     """
+    fs = _metadata["info"]["sfreq"]
     if num_taps is None:
         num_taps = int(fs * 1.5)  # rule of thumb for choosing the filter order
     if num_taps % 2 == 0:  # ensure odd

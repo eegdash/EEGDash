@@ -113,10 +113,18 @@ class BasePreprocessorOutputType(ABC):
             self.feature_kind = preprocessor.feature_kind
         if hasattr(uf_preprocessor, "__name__"):
             self.__name__ = preprocessor.__name__
+        if "_metadata" in inspect.signature(self.preprocessor).parameters:
+            self.__call__ = self.call_metadata
+        else:
+            self.__call__ = self.call
 
-    def __call__(self, *args, **kwargs):
+    def call(self, *args, **kwargs):
         r"""Call the underlying preprocessor with the provided arguments."""
         return self.preprocessor(*args, **kwargs)
+
+    def call_metadata(self, *args, _metadata, **kwargs):
+        r"""Call the underlying preprocessor with the provided arguments and metadata."""
+        return self.preprocessor(*args, _metadata=_metadata, **kwargs)
 
 
 class TrainableFeature(ABC):

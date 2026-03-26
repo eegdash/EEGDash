@@ -95,7 +95,7 @@ def signal_filter_preprocessor(x, /, *, _metadata, f_min, f_max, num_taps=None):
     )
 
     return signal.filtfilt(
-        taps, [1.0], x
+        taps, [1.0], x, padlen=min(3 * num_taps, x.shape[-1] - 1), axis=-1
     )  # Zero-phase application (preserves waveform shape)
 
 

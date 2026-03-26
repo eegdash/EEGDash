@@ -225,4 +225,12 @@ class PreprocessorOutputType:
             `output_type`, with the original preprocessor function as its implementation.
 
         """
-        return type(preprocessor.__name__, (self.output_type,), {})(preprocessor)
+        return type(
+            preprocessor.__name__,
+            (self.output_type,),
+            {
+                "__call__": self.output_type.call_metadata
+                if "_metadata" in inspect.signature(preprocessor).parameters
+                else self.output_type.call
+            },
+        )(preprocessor)

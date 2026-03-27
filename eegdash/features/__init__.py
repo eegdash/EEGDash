@@ -63,10 +63,10 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     spectral_slope,
 )
 from .inspect import (
-    get_all_feature_extractors,
     get_all_feature_kinds,
     get_all_feature_preprocessors,
     get_all_features,
+    get_all_preprocessor_output_types,
     get_feature_kind,
     get_feature_predecessors,
 )
@@ -98,7 +98,7 @@ __all__ = [
     "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
-    "get_all_feature_extractors",
+    "get_all_preprocessor_output_types",
     "get_feature_kind",
     "get_feature_predecessors",
     "feature_extractor_from_dict",

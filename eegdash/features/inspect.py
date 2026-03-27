@@ -26,10 +26,10 @@ from . import extractors, feature_bank
 from .extractors import _get_underlying_func
 
 __all__ = [
-    "get_all_feature_extractors",
     "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
+    "get_all_preprocessor_output_types",
     "get_feature_kind",
     "get_feature_predecessors",
 ]
@@ -40,12 +40,6 @@ def _is_feature(x) -> bool:
     return hasattr(_get_underlying_func(x), "feature_kind")
 
 
-def _is_feature_extractor(x) -> bool:
-    r"""Check if x is a feature extractor (has parent_extractor_type)."""
-    y = _get_underlying_func(x)
-    return callable(y) and hasattr(y, "parent_extractor_type")
-
-
 def _is_feature_preprocessor(x) -> bool:
     """Check if x is a preprocessor (has parent_extractor_type but no feature_kind)."""
     y = _get_underlying_func(x)
@@ -54,6 +48,11 @@ def _is_feature_preprocessor(x) -> bool:
         and not hasattr(y, "feature_kind")
         and hasattr(y, "parent_extractor_type")
     )
+
+
+def _is_preprocessor_output_type(x) -> bool:
+    """Check if x is a preprocessor output type (subclass of BasePreprocessorOutputType)."""
+    return inspect.isclass(x) and issubclass(x, extractors.BasePreprocessorOutputType)
 
 
 def _is_feature_kind(x) -> bool:
@@ -149,23 +148,6 @@ def get_all_features() -> list[tuple[str, Callable]]:
     return inspect.getmembers(feature_bank, _is_feature)
 
 
-def get_all_feature_extractors() -> list[tuple[str, Callable]]:
-    r"""Get a list of all available feature extractor callables.
-
-    A feature extractor is any callable in the feature bank that declares
-    a ``parent_extractor_type``. This includes both intermediate
-    preprocessors and final feature functions.
-
-    Returns
-    -------
-    list of tuple
-        A list of (name, callable) tuples for all discovered feature
-        extractors.
-
-    """
-    return inspect.getmembers(feature_bank, _is_feature_extractor)
-
-
 def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
     r"""Get a list of all available preprocessor functions.
 
@@ -181,6 +163,23 @@ def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
 
     """
     return inspect.getmembers(feature_bank, _is_feature_preprocessor)
+
+
+def get_all_preprocessor_output_types() -> list[
+    tuple[str, type[extractors.BasePreprocessorOutputType]]
+]:
+    r"""Get a list of all available preprocessor output type classes.
+
+    Scans the :mod:`~eegdash.features.feature_bank` module for all classes
+    that subclass :class:`~eegdash.features.extractors.BasePreprocessorOutputType`.
+
+    Returns
+    -------
+    list of tuple
+        A list of (name, class) tuples for all discovered preprocessor output types.
+
+    """
+    return inspect.getmembers(feature_bank, _is_preprocessor_output_type)
 
 
 def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:

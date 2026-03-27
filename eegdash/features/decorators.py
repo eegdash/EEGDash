@@ -231,6 +231,7 @@ class PreprocessorOutputType:
             {
                 "__call__": self.output_type.call_metadata
                 if "_metadata" in inspect.signature(preprocessor).parameters
-                else self.output_type.call
+                else self.output_type.call,
+                "__doc__": preprocessor.__doc__,
             },
         )(preprocessor)

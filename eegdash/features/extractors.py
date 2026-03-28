@@ -113,12 +113,14 @@ class BasePreprocessorOutputType(ABC):
             self.feature_kind = preprocessor.feature_kind
         if hasattr(uf_preprocessor, "__name__"):
             self.__name__ = preprocessor.__name__
+        if hasattr(uf_preprocessor, "__module__"):
+            self.__module__ = preprocessor.__module__
+        if hasattr(uf_preprocessor, "__doc__"):
+            self.__doc__ = preprocessor.__doc__
         if "_metadata" in inspect.signature(preprocessor).parameters:
             self.__call__ = self.call_metadata
         else:
             self.__call__ = self.call
-        self.__module__ = preprocessor.__module__
-        self.__doc__ = preprocessor.__doc__
 
     def call(self, *args, **kwargs):
         r"""Call the underlying preprocessor with the provided arguments."""

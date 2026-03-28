@@ -392,6 +392,41 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.records = valid_records
         return bad
 
+    def drop_short(self, min_samples: int) -> list[dict]:
+        """Remove recordings shorter than *min_samples* and return their records.
+
+        This is useful when downstream processing (e.g., fixed-length
+        windowing) requires a minimum number of samples per recording.
+        Recordings whose ``.raw`` is ``None`` (failed to load) are also
+        dropped.
+
+        Parameters
+        ----------
+        min_samples : int
+            Minimum number of time-domain samples a recording must have
+            to be kept.
+
+        Returns
+        -------
+        list of dict
+            Records that were removed.
+
+        """
+        dropped = []
+        valid_datasets = []
+        valid_records = []
+        for ds, record in zip(self.datasets, self.records):
+            raw = ds.raw
+            if raw is None or raw.n_times < min_samples:
+                dropped.append(record)
+                ds._raw = None
+            else:
+                valid_datasets.append(ds)
+                valid_records.append(record)
+        self.datasets = valid_datasets
+        self.records = valid_records
+        return dropped
+
     @property
     def cumulative_sizes(self) -> list[int]:
         """Recompute cumulative sizes from current dataset lengths.

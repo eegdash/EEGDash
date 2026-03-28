@@ -113,7 +113,7 @@ def spectral_db_preprocessor(f, p, /, eps=1e-15):
 
     Calculated as:
 
-    $10 \cdot \log_{10}(P + \epsilon)$.
+    .. math:: 10 \cdot \log_{10}\left(P\left(f\right) + \epsilon\right).
 
     Parameters
     ----------
@@ -217,11 +217,9 @@ def spectral_hjorth_mobility(f, p, /):
     Mobility is an estimate of the mean frequency.
     For a normalized PSD, it is calculated as:
 
-    .. math:: \sqrt{\frac{\sum f^2 P(f)}{\sum P(f)}}
+    .. math:: \sqrt{\sum_f f^2 P(f)},
 
-    Where:
-
-    .. math:: \sum P(f) = 1$$ (since the PSD is normalized)
+    where :math:`\sum P(f) = 1` (since the PSD is normalized).
 
     Parameters
     ----------
@@ -253,7 +251,7 @@ def spectral_hjorth_complexity(f, p, /):
 
     For a normalized PSD, it is calculated as:
 
-    .. math:: \frac{\sqrt{\sum f^4 P(f)}}{\sum f^2 P(f)}
+    .. math:: \frac{\sqrt{\sum_f f^4 P(f)}}{\sum_f f^2 P(f)}.
 
     Parameters
     ----------
@@ -290,7 +288,7 @@ def spectral_entropy(f, p, /):
 
     It is calculated as:
 
-    .. math:: SE = -\sum_{i=1}^{N} p_i \ln(p_i)
+    .. math:: SE = -\sum_f P\left(f\right) \ln\left(P\left(f\right)\right)
 
     Parameters
     ----------
@@ -348,7 +346,7 @@ def spectral_edge(f, p, /, edge=0.9):
 @FeaturePredecessor(spectral_db_preprocessor)
 @univariate_feature
 def spectral_slope(f, p, /):
-    r"""Estimate the $1/f$ spectral slope using least-squares regression.
+    r"""Estimate the :math:`1/f` spectral slope using least-squares regression.
 
     This measures the slope and intercept of the PSD in log-log space.
 
@@ -363,8 +361,9 @@ def spectral_slope(f, p, /):
     -------
     dict
         A dictionary containing:
-        - 'exp': The slope/exponent (scaling).
-        - 'int': The y-intercept (offset).
+
+        - ``'exp'``: The slope/exponent (scaling).
+        - ``'int'``: The y-intercept (offset).
 
     """
     log_f = np.vstack((np.log(f), np.ones(f.shape[0]))).T

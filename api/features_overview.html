@@ -635,6 +635,22 @@ that subclass <code class="xref py py-class docutils literal notranslate"><span 
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="eegdash.features.get_all_preprocessor_output_types">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.</span></span><span class="sig-name descname"><span class="pre">get_all_preprocessor_output_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BasePreprocessorOutputType</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/inspect.py#L168-L182"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.features.get_all_preprocessor_output_types" title="Link to this definition">#</a></dt>
+<dd><p>Get a list of all available preprocessor output type classes.</p>
+<p>Scans the <code class="xref py py-mod docutils literal notranslate"><span class="pre">feature_bank</span></code> module for all classes
+that subclass <code class="xref py py-class docutils literal notranslate"><span class="pre">BasePreprocessorOutputType</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of (name, class) tuples for all discovered preprocessor output types.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="dataset-and-extraction-utilities">
 <h2>Dataset and extraction utilities<a class="headerlink" href="#dataset-and-extraction-utilities" title="Link to this heading">#</a></h2>
@@ -799,6 +815,7 @@ such as <code class="xref py py-class docutils literal notranslate"><span class=
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.get_feature_kind"><code class="docutils literal notranslate"><span class="pre">get_feature_kind()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.get_feature_predecessors"><code class="docutils literal notranslate"><span class="pre">get_feature_predecessors()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.get_all_feature_kinds"><code class="docutils literal notranslate"><span class="pre">get_all_feature_kinds()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash.features.get_all_preprocessor_output_types"><code class="docutils literal notranslate"><span class="pre">get_all_preprocessor_output_types()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-and-extraction-utilities">Dataset and extraction utilities</a><ul class="nav section-nav flex-column">

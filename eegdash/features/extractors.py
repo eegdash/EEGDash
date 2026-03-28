@@ -117,6 +117,7 @@ class BasePreprocessorOutputType(ABC):
             self.__call__ = self.call_metadata
         else:
             self.__call__ = self.call
+        self.__module__ = preprocessor.__module__
         self.__doc__ = preprocessor.__doc__
 
     def call(self, *args, **kwargs):

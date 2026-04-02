@@ -58,6 +58,13 @@ if not CACHE_DIR.exists():
     filtered_datasets = []
 
     for ds in ds_data.datasets:
+        # Skip datasets whose raw data could not be loaded
+        try:
+            if ds.raw is None or len(ds.raw.times) == 0:
+                continue
+        except Exception:
+            continue
+
         subj = ds.description.get("subject", "")
         if not subj:
             continue
@@ -92,7 +99,8 @@ if not CACHE_DIR.exists():
     all_datasets = BaseConcatDataset(filtered_datasets)
 
     # Preprocessing
-    ch_names = ["Fz", "Cz", "Pz", "Oz", "C3", "C4", "P3", "P4"]  # reduced set for speed
+    # HydroCel GSN 128 equivalents: Fz=E11, Cz=Cz, Pz=E62, Oz=E75, C3=E36, C4=E104, P3=E52, P4=E92
+    ch_names = ["E11", "Cz", "E62", "E75", "E36", "E104", "E52", "E92"]
     preprocessors = [
         Preprocessor("pick_channels", ch_names=ch_names, ordered=True),
         Preprocessor("resample", sfreq=SFREQ),

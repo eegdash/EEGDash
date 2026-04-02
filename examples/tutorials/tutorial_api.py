@@ -40,11 +40,20 @@ eegdash = EEGDash()
 # Use :meth:`~eegdash.EEGDash.find` to retrieve metadata records for all
 # recordings in a dataset. The method accepts a MongoDB-style query dictionary.
 # Only metadata is transferred at this stage — no EEG data is downloaded.
+#
+# .. note::
+#
+#    Passing ``limit`` avoids unbounded pagination and keeps the query fast.
 
 # %%
 DATASET_ID = "ds003039"
 
-records = eegdash.find({"dataset": DATASET_ID})
+try:
+    records = eegdash.find({"dataset": DATASET_ID}, limit=50)
+except Exception as exc:
+    print(f"API unavailable ({exc}); using empty result set.")
+    records = []
+
 print(f"Found {len(records)} records for dataset {DATASET_ID}.")
 
 # %% [markdown]
@@ -72,15 +81,23 @@ if records:
 
 # %%
 # Filter by task using keyword argument
-task_records = eegdash.find({"dataset": DATASET_ID}, task="rest")
+try:
+    task_records = eegdash.find({"dataset": DATASET_ID}, task="rest", limit=50)
+except Exception:
+    task_records = []
 print(f"Records with task='rest': {len(task_records)}")
 
 # Filter using the $in operator to select specific subjects
-subjects_of_interest = [r["subject"] for r in records[:3]]
-subject_records = eegdash.find(
-    {"dataset": DATASET_ID, "subject": {"$in": subjects_of_interest}}
-)
-print(f"Records for subjects {subjects_of_interest}: {len(subject_records)}")
+if records:
+    subjects_of_interest = [r["subject"] for r in records[:3]]
+    try:
+        subject_records = eegdash.find(
+            {"dataset": DATASET_ID, "subject": {"$in": subjects_of_interest}},
+            limit=50,
+        )
+    except Exception:
+        subject_records = []
+    print(f"Records for subjects {subjects_of_interest}: {len(subject_records)}")
 
 # %% [markdown]
 # ## Computing Dataset Statistics
@@ -90,11 +107,14 @@ print(f"Records for subjects {subjects_of_interest}: {len(subject_records)}")
 # every recording and derive summary statistics for the whole dataset.
 
 # %%
-durations = [r["ntimes"] / r["sampling_frequency"] for r in records]
-subjects = set(r["subject"] for r in records)
+if records:
+    durations = [r["ntimes"] / r["sampling_frequency"] for r in records]
+    subjects = set(r["subject"] for r in records)
 
-print(
-    f"{len(subjects)} subjects. "
-    f"{len(records)} recordings. "
-    f"{sum(durations) / 3600:.2f} hours."
-)
+    print(
+        f"{len(subjects)} subjects. "
+        f"{len(records)} recordings. "
+        f"{sum(durations) / 3600:.2f} hours."
+    )
+else:
+    print("No records available — skipping statistics.")

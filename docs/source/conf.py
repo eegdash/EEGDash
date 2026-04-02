@@ -253,6 +253,10 @@ sphinx_gallery_conf = {
     "gallery_dirs": ["generated/auto_examples"],
     # Execute examples by default for CI builds; use html-noplot target for local fast builds
     "plot_gallery": True,
+    # Don't fail the build when examples error (e.g. missing cache, API down).
+    # Failed examples show a traceback in the gallery instead of crashing CI.
+    "abort_on_example_error": False,
+    "only_warn_on_example_error": True,
     "binder": {
         "org": "eegdash",
         "repo": "EEGDash",
@@ -266,12 +270,13 @@ sphinx_gallery_conf = {
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
     "inspect_global_variables": True,
-    "show_memory": True,
+    "show_memory": False,
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
     "filename_pattern": r"/(?:plot|tutorial)_(?!_).*\.py",
     "matplotlib_animations": True,
+    "reset_modules": ("matplotlib", "seaborn"),
     "first_notebook_cell": (
         "# For tips on running notebooks in Google Colab:\n"
         "# `pip install eegdash`\n"

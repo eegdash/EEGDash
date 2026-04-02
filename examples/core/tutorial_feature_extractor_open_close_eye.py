@@ -425,7 +425,7 @@ X_val, y_val = (
     data_df.loc[test_indices, "target"],
 )
 
-clf = LGBMClassifier()
+clf = LGBMClassifier(n_jobs=1)
 clf.fit(X_train, y_train)
 
 y_hat_train = clf.predict(X_train)

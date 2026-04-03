@@ -73,7 +73,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="API Reference" href="../../../api/api.html" />
+    <link rel="next" title="Eyes Open vs. Closed Classification" href="../hpc/tutorial_eoec.html" />
     <link rel="prev" title="Challenge 2: Predicting the p-factor from EEG" href="tutorial_challenge_2.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -466,10 +466,29 @@
 <li class="toctree-l1"><a class="reference internal" href="../core/tutorial_feature_extractor_open_close_eye.html">EEGDash Feature Extractor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core/tutorial_minimal.html">Minimal Tutorial</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dev_scripts/debug_pybids_braindecode.html">Exploring Braindecode’s BIDSDataset</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_age_prediction.html">Age Prediction from EEG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_audi_oddball.html">Oddball Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_feature_extraction.html">EEG Features for Sex Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_features_eoec.html">Eyes Open vs. Closed Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_p3_oddball.html">P3 Visual Oddball Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_pfactor_features.html">Predicting p-factor from EEG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_pfactor_regression.html">P-Factor Regression Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/noplot_tutorial_sex_classification_cnn.html">Sex Classification Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/plot_clinical_summary.html">Clinical Dataset Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial_api.html">EEGDash API Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial_transfer_learning.html">Transfer Learning with EEGDash</a></li>
+</ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="tutorial_challenge_1.html">Challenge 1: Cross-Task Transfer Learning!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_challenge_2.html">Challenge 2: Predicting the p-factor from EEG</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Working Offline with EEGDash</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hpc/tutorial_eoec.html">Eyes Open vs. Closed Classification</a></li>
 </ul>
 </div>
 </nav></div>
@@ -600,97 +619,102 @@ this section.</p>
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
 
-Downloading sub-NDARBM839WR5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
 Downloading sub-NDARBU730PN8_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-
 Downloading sub-NDARAM675UR8_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBM839WR5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.3B/s]
+
 
 Downloading sub-NDARCT974NAJ_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBU730PN8_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.86B/s]
 
-Downloading sub-NDARAM675UR8_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
 
-Downloading sub-NDARCT974NAJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.1B/s]
+
+Downloading sub-NDARBM839WR5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARBU730PN8_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
+
+Downloading sub-NDARCT974NAJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
+
+Downloading sub-NDARAM675UR8_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.96B/s]
+
+Downloading sub-NDARBM839WR5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.32B/s]
 
 Downloading sub-NDARBU730PN8_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
-Downloading sub-NDARBM839WR5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
 
 Downloading sub-NDARCT974NAJ_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
-
 Downloading sub-NDARAM675UR8_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBU730PN8_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.50B/s]
 
-Downloading sub-NDARBM839WR5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
 
-Downloading sub-NDARCT974NAJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.34B/s]
 
-Downloading sub-NDARAM675UR8_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.06B/s]
+Downloading sub-NDARBM839WR5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARBU730PN8_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
 
-Downloading sub-NDARBM839WR5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARCT974NAJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.0B/s]
+
+Downloading sub-NDARAM675UR8_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
+
+Downloading sub-NDARBM839WR5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.4B/s]
 
 Downloading sub-NDARBU730PN8_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-
 Downloading sub-NDARCT974NAJ_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBU730PN8_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.47B/s]
 
 
 Downloading sub-NDARAM675UR8_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBM839WR5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.06B/s]
 
-Downloading sub-NDARCT974NAJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
 
-Downloading sub-NDARAM675UR8_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.53B/s]
+
+Downloading sub-NDARBM839WR5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARBU730PN8_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
+
+Downloading sub-NDARCT974NAJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
+
+Downloading sub-NDARAM675UR8_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
+
+Downloading sub-NDARBM839WR5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.0B/s]
 
 Downloading sub-NDARBU730PN8_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
-Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
 
 Downloading sub-NDARCT974NAJ_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
-
 Downloading sub-NDARAM675UR8_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARBU730PN8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.07B/s]
-Downloading sub-NDARBU730PN8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.07B/s]
 
 
 
-
-Downloading sub-NDARAM675UR8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.06B/s]
-Downloading sub-NDARAM675UR8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.06B/s]
-
-
-Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.06s/B]
-Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.06s/B]
+Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARBU730PN8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.17B/s]
+Downloading sub-NDARBU730PN8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.17B/s]
 
 
 
-Downloading sub-NDARCT974NAJ_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.03s/B]
-Downloading sub-NDARCT974NAJ_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.03s/B]
+Downloading sub-NDARAM675UR8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.13B/s]
+Downloading sub-NDARAM675UR8_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.13B/s]
+
+
+Downloading sub-NDARCT974NAJ_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.09B/s]
+Downloading sub-NDARCT974NAJ_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.09B/s]
 
 Downloading sub-NDARCW933FD5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+
+
+
+Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.01B/s]
+Downloading sub-NDARBM839WR5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.01B/s]
+
 
 Downloading sub-NDARCZ770BRG_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
 Downloading sub-NDARDW741HCF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARCW933FD5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.31B/s]
+Downloading sub-NDARCW933FD5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.52B/s]
+
+Downloading sub-NDARCZ770BRG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.1B/s]
+
+Downloading sub-NDARDW741HCF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
 
 Downloading sub-NDARDZ058NZN_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARCZ770BRG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.5B/s]
-
-Downloading sub-NDARDW741HCF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
-
-Downloading sub-NDARDZ058NZN_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
+Downloading sub-NDARDZ058NZN_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARCW933FD5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
@@ -698,31 +722,31 @@ Downloading sub-NDARCZ770BRG_task-RestingState_events.tsv:   0%|          | 0.00
 
 
 Downloading sub-NDARDW741HCF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARCW933FD5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
+Downloading sub-NDARCW933FD5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
-Downloading sub-NDARCZ770BRG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
+Downloading sub-NDARCZ770BRG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.9B/s]
 
-Downloading sub-NDARDW741HCF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
+Downloading sub-NDARDW741HCF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
 
 Downloading sub-NDARDZ058NZN_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARCW933FD5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDZ058NZN_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.70B/s]
+Downloading sub-NDARDZ058NZN_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.4B/s]
 
 Downloading sub-NDARCZ770BRG_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
 Downloading sub-NDARDW741HCF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARCW933FD5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
+Downloading sub-NDARCW933FD5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.5B/s]
 
-Downloading sub-NDARCZ770BRG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.3B/s]
+Downloading sub-NDARCZ770BRG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.9B/s]
 
-Downloading sub-NDARDW741HCF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
+Downloading sub-NDARDW741HCF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.9B/s]
 
 Downloading sub-NDARDZ058NZN_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARCW933FD5_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARDZ058NZN_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.0B/s]
+Downloading sub-NDARDZ058NZN_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
 
 Downloading sub-NDARCZ770BRG_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
@@ -733,72 +757,68 @@ Downloading sub-NDARDW741HCF_task-RestingState_eeg.bdf:   0%|          | 0.00/1.
 
 Downloading sub-NDARDZ058NZN_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-Downloading sub-NDARCW933FD5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.05B/s]
-Downloading sub-NDARCW933FD5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.05B/s]
+Downloading sub-NDARCW933FD5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.46B/s]
+Downloading sub-NDARCW933FD5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.45B/s]
+
+Downloading sub-NDARCZ770BRG_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.29B/s]
+Downloading sub-NDARCZ770BRG_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.28B/s]
 
 
 
-Downloading sub-NDARDW741HCF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.25B/s]
-Downloading sub-NDARDW741HCF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.24B/s]
-
-Downloading sub-NDARCZ770BRG_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.79B/s]
-Downloading sub-NDARCZ770BRG_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.79B/s]
+Downloading sub-NDARDW741HCF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.14B/s]
+Downloading sub-NDARDW741HCF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.14B/s]
 
 Downloading sub-NDAREC377AU2_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
 
-Downloading sub-NDARDZ058NZN_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.99B/s]
-Downloading sub-NDARDZ058NZN_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.99B/s]
+Downloading sub-NDARDZ058NZN_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.28B/s]
+Downloading sub-NDARDZ058NZN_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.28B/s]
 
 
 Downloading sub-NDAREM500WWH_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
+Downloading sub-NDAREC377AU2_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
 
 Downloading sub-NDAREV527ZRF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREC377AU2_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
+Downloading sub-NDAREM500WWH_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.88B/s]
 
-Downloading sub-NDAREM500WWH_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
-
-Downloading sub-NDAREV527ZRF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
+Downloading sub-NDAREV527ZRF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
 
 Downloading sub-NDAREV601CE7_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDAREC377AU2_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREV601CE7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.0B/s]
+Downloading sub-NDAREV601CE7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
 
 Downloading sub-NDAREM500WWH_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDAREC377AU2_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.9B/s]
 
 
 Downloading sub-NDAREV527ZRF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREC377AU2_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
+Downloading sub-NDAREM500WWH_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
 
-Downloading sub-NDAREM500WWH_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
-
-Downloading sub-NDAREV527ZRF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
+Downloading sub-NDAREV527ZRF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
 
 Downloading sub-NDAREV601CE7_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDAREC377AU2_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDAREV601CE7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.0B/s]
 
+Downloading sub-NDAREC377AU2_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.3B/s]
 
 Downloading sub-NDAREM500WWH_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREV601CE7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.76B/s]
-
-Downloading sub-NDAREC377AU2_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.56B/s]
 
 Downloading sub-NDAREV527ZRF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREM500WWH_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
+Downloading sub-NDAREM500WWH_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.4B/s]
 
-Downloading sub-NDAREV527ZRF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.84B/s]
+Downloading sub-NDAREV527ZRF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
 
 Downloading sub-NDAREV601CE7_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDAREC377AU2_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
+Downloading sub-NDAREV601CE7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
 Downloading sub-NDAREM500WWH_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDAREV601CE7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
+
 
 Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
@@ -806,150 +826,138 @@ Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf:   0%|          | 0.00/1.
 
 Downloading sub-NDAREV601CE7_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
+Downloading sub-NDAREC377AU2_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.11B/s]
+Downloading sub-NDAREC377AU2_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.10B/s]
 
-Downloading sub-NDAREM500WWH_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.90B/s]
-Downloading sub-NDAREM500WWH_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.90B/s]
+Downloading sub-NDAREM500WWH_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.86B/s]
+Downloading sub-NDAREM500WWH_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.86B/s]
 
 
-Downloading sub-NDAREC377AU2_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.72B/s]
-Downloading sub-NDAREC377AU2_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.72B/s]
 
-Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.80B/s]
-Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.79B/s]
-
-Downloading sub-NDARFR108JNB_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.83B/s]
+Downloading sub-NDAREV527ZRF_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.82B/s]
 
 Downloading sub-NDARFF070XHV_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
+
+Downloading sub-NDAREV601CE7_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.12B/s]
+Downloading sub-NDAREV601CE7_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.12B/s]
+
+Downloading sub-NDARFF070XHV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
+
+Downloading sub-NDARFR108JNB_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+
 Downloading sub-NDARFT305CG1_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARFF070XHV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
+Downloading sub-NDARFR108JNB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
 
-Downloading sub-NDARFR108JNB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.48B/s]
-
-
-
-
-Downloading sub-NDAREV601CE7_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.61B/s]
-Downloading sub-NDAREV601CE7_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.60B/s]
-
-Downloading sub-NDARFT305CG1_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
-
-Downloading sub-NDARFF070XHV_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
-Downloading sub-NDARFR108JNB_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
+Downloading sub-NDARFT305CG1_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.5B/s]
 
 Downloading sub-NDARGA056TMW_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
+Downloading sub-NDARFF070XHV_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARFF070XHV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.5B/s]
 
+Downloading sub-NDARGA056TMW_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.80B/s]
+
+Downloading sub-NDARFR108JNB_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARFT305CG1_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARFF070XHV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.1B/s]
+Downloading sub-NDARFR108JNB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.3B/s]
 
-Downloading sub-NDARFR108JNB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.4B/s]
-
-Downloading sub-NDARGA056TMW_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
-
-Downloading sub-NDARFT305CG1_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.73B/s]
+Downloading sub-NDARFT305CG1_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
 
 Downloading sub-NDARFF070XHV_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
+Downloading sub-NDARGA056TMW_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARFF070XHV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
+
+Downloading sub-NDARGA056TMW_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.25B/s]
+
 Downloading sub-NDARFR108JNB_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-
-Downloading sub-NDARGA056TMW_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
-
-
 Downloading sub-NDARFT305CG1_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARFF070XHV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.1B/s]
+Downloading sub-NDARFR108JNB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
 
-Downloading sub-NDARFR108JNB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.84B/s]
-
-Downloading sub-NDARGA056TMW_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.1B/s]
-
-Downloading sub-NDARFT305CG1_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.11B/s]
+Downloading sub-NDARFT305CG1_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
 
 Downloading sub-NDARFF070XHV_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
-Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-
 
 Downloading sub-NDARGA056TMW_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
+Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARGA056TMW_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.9B/s]
+
 
 Downloading sub-NDARFT305CG1_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGA056TMW_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
-
-Downloading sub-NDARFF070XHV_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.21B/s]
-Downloading sub-NDARFF070XHV_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.20B/s]
+Downloading sub-NDARFF070XHV_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.55B/s]
+Downloading sub-NDARFF070XHV_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.54B/s]
 
 Downloading sub-NDARGA056TMW_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.53B/s]
-Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.52B/s]
-
-
-
-
-Downloading sub-NDARFT305CG1_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.19B/s]
-Downloading sub-NDARFT305CG1_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.18B/s]
+Downloading sub-NDARFT305CG1_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.49B/s]
+Downloading sub-NDARFT305CG1_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.49B/s]
 
 
 Downloading sub-NDARGH775KF5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGH775KF5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.5B/s]
 
 
-Downloading sub-NDARHA387FPM_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.86B/s]
+Downloading sub-NDARFR108JNB_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.85B/s]
+
+Downloading sub-NDARGH775KF5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.2B/s]
 
 
 Downloading sub-NDARGJ878ZP4_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGJ878ZP4_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
+Downloading sub-NDARGA056TMW_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.07B/s]
+Downloading sub-NDARGA056TMW_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.06B/s]
 
-Downloading sub-NDARGA056TMW_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.02B/s]
-Downloading sub-NDARGA056TMW_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.00B/s]
+Downloading sub-NDARHA387FPM_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARGJ878ZP4_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
 
-Downloading sub-NDARHA387FPM_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
 
 Downloading sub-NDARGH775KF5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGH775KF5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
+Downloading sub-NDARHA387FPM_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.7B/s]
+
+Downloading sub-NDARGH775KF5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
+
+Downloading sub-NDARGJ878ZP4_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARHA387FPM_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-Downloading sub-NDARGJ878ZP4_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARHA387FPM_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
-
-Downloading sub-NDARGJ878ZP4_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 5.90B/s]
 
 Downloading sub-NDARGH775KF5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGH775KF5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.6B/s]
+Downloading sub-NDARGJ878ZP4_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.0B/s]
+
+Downloading sub-NDARHA387FPM_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.06B/s]
+
+Downloading sub-NDARGH775KF5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
+
+Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARHA387FPM_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
-Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARHA387FPM_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.06B/s]
-
-Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
 
 Downloading sub-NDARGH775KF5_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
+Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.1B/s]
+
+Downloading sub-NDARHA387FPM_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.1B/s]
+
+Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 Downloading sub-NDARHA387FPM_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
 
 
-Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARGH775KF5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.44B/s]
-Downloading sub-NDARGH775KF5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.44B/s]
+Downloading sub-NDARGH775KF5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.22B/s]
+Downloading sub-NDARGH775KF5_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.22B/s]
+
+Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.25B/s]
+Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.25B/s]
 
 
-Downloading sub-NDARHA387FPM_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.14B/s]
-Downloading sub-NDARHA387FPM_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.14B/s]
-
-
-
-Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.08B/s]
-Downloading sub-NDARGJ878ZP4_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.07B/s]
+Downloading sub-NDARHA387FPM_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.45B/s]
+Downloading sub-NDARHA387FPM_task-RestingState_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 3.45B/s]
 </pre></div>
 </div>
 </section>
@@ -1150,11 +1158,10 @@ structure. Some DB-only fields are unavailable; entity filters (subject,
 session, task, run) usually suffice.</p></li>
 <li><p>If you encounter issues, please open a GitHub issue so we can discuss.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.691 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  937 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.299 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_eegdash_offline.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo1.svg" style="width: 150px;" />
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_eegdash_offline.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo2.svg" style="width: 150px;" />
 </a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
@@ -1191,11 +1198,11 @@ session, task, run) usually suffice.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="../../../api/api.html"
+       href="../hpc/tutorial_eoec.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API Reference</p>
+        <p class="prev-next-title">Eyes Open vs. Closed Classification</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

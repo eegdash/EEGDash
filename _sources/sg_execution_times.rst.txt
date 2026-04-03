@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**15:06.078** total execution time for 7 files **from all galleries**:
+**14:55.731** total execution time for 20 files **from all galleries**:
 
 .. container::
 
@@ -33,23 +33,62 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py` (``../../examples/eeg2025/tutorial_challenge_2.py``)
-     - 06:47.019
-     - 1816.2
+     - 06:31.710
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py` (``../../examples/eeg2025/tutorial_challenge_1.py``)
-     - 04:40.167
-     - 1760.0
+     - 04:21.909
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_minimal.py` (``../../examples/core/tutorial_minimal.py``)
-     - 02:55.493
-     - 5492.4
+     - 02:41.739
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_hpc_tutorial_eoec.py` (``../../examples/hpc/tutorial_eoec.py``)
+     - 00:50.751
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py` (``../../examples/eeg2025/tutorial_eegdash_offline.py``)
-     - 00:27.691
-     - 937.2
+     - 00:13.299
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``../../examples/core/tutorial_eoec.py``)
-     - 00:08.655
-     - 1367.9
+     - 00:11.595
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``../../examples/core/tutorial_feature_extractor_open_close_eye.py``)
-     - 00:07.053
-     - 1262.9
+     - 00:03.346
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_plot_clinical_summary.py` (``../../examples/tutorials/plot_clinical_summary.py``)
+     - 00:00.834
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_transfer_learning.py` (``../../examples/tutorials/tutorial_transfer_learning.py``)
+     - 00:00.341
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_api.py` (``../../examples/tutorials/tutorial_api.py``)
+     - 00:00.208
+     - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_p300_transfer_learning.py` (``../../examples/core/p300_transfer_learning.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_dev_scripts_debug_pybids_braindecode.py` (``../../examples/dev_scripts/debug_pybids_braindecode.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_age_prediction.py` (``../../examples/tutorials/noplot_tutorial_age_prediction.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_audi_oddball.py` (``../../examples/tutorials/noplot_tutorial_audi_oddball.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_feature_extraction.py` (``../../examples/tutorials/noplot_tutorial_feature_extraction.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_features_eoec.py` (``../../examples/tutorials/noplot_tutorial_features_eoec.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_p3_oddball.py` (``../../examples/tutorials/noplot_tutorial_p3_oddball.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_pfactor_features.py` (``../../examples/tutorials/noplot_tutorial_pfactor_features.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_pfactor_regression.py` (``../../examples/tutorials/noplot_tutorial_pfactor_regression.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_sex_classification_cnn.py` (``../../examples/tutorials/noplot_tutorial_sex_classification_cnn.py``)
      - 00:00.000
      - 0.0

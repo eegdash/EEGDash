@@ -804,8 +804,6 @@ Next Steps
 - Experiment with other backbones (ResNet, LSTM) instead of EEGConformer
 - Implement subject-independent vs. subject-specific models
 
-**Estimated memory usage:**  0 MB
-
 
 .. _sphx_glr_download_generated_auto_examples_core_p300_transfer_learning.py:
 

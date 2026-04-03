@@ -114,6 +114,265 @@ Playing with eegdash!
    /generated/auto_examples/core/tutorial_feature_extractor_open_close_eye
    /generated/auto_examples/core/tutorial_minimal
 
+Dev scripts for EEGDash
+========================
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/dev_scripts/images/thumb/sphx_glr_debug_pybids_braindecode_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/dev_scripts/debug_pybids_braindecode`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Exploring Braindecode's BIDSDataset</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /generated/auto_examples/dev_scripts/debug_pybids_braindecode
+
+General tutorials
+=================
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Objective: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_age_prediction_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_age_prediction`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Age Prediction from EEG</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates using the EEGDash library with PyTorch to classify EEG responses in an oddball paradigm.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_audi_oddball_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_audi_oddball`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Oddball Classification</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The code below provides an example of using the EEGDash library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_feature_extraction_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_feature_extraction`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">EEG Features for Sex Classification</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_features_eoec_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_features_eoec`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Features</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates using the EEGDash library with PyTorch to classify EEG responses from a visual P3 oddball paradigm.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_p3_oddball_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_p3_oddball`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">P3 Visual Oddball Classification</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The code below provides an example of using the braindecode and EEGDash libraries in combination with LightGBM to predict a subject&#x27;s p-factor.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_pfactor_features_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_pfactor_features`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Predicting p-factor from EEG</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="P-Factor Regression Tutorial">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_pfactor_regression_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_pfactor_regression`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">P-Factor Regression Tutorial</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The code below provides an example of using the EEGDash library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_noplot_tutorial_sex_classification_cnn_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/noplot_tutorial_sex_classification_cnn`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Sex Classification Tutorial</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to summarize and visualize the distribution of clinical vs. healthy datasets across different recording modalities.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_plot_clinical_summary_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/plot_clinical_summary`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Clinical Dataset Summary</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to use the EEGDash API to query and explore EEG recording metadata without downloading any data files.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_tutorial_api_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/tutorial_api`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">EEGDash API Tutorial</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Objective: Learn how to fine-tune a pre-trained EEG model on a new small dataset.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/tutorials/images/thumb/sphx_glr_tutorial_transfer_learning_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/tutorials/tutorial_transfer_learning`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Transfer Learning with EEGDash</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /generated/auto_examples/tutorials/noplot_tutorial_age_prediction
+   /generated/auto_examples/tutorials/noplot_tutorial_audi_oddball
+   /generated/auto_examples/tutorials/noplot_tutorial_feature_extraction
+   /generated/auto_examples/tutorials/noplot_tutorial_features_eoec
+   /generated/auto_examples/tutorials/noplot_tutorial_p3_oddball
+   /generated/auto_examples/tutorials/noplot_tutorial_pfactor_features
+   /generated/auto_examples/tutorials/noplot_tutorial_pfactor_regression
+   /generated/auto_examples/tutorials/noplot_tutorial_sex_classification_cnn
+   /generated/auto_examples/tutorials/plot_clinical_summary
+   /generated/auto_examples/tutorials/tutorial_api
+   /generated/auto_examples/tutorials/tutorial_transfer_learning
+
 EEG 2025 Foundation Challenge 
 =============================
 
@@ -192,6 +451,45 @@ EEG 2025 Foundation Challenge
    /generated/auto_examples/eeg2025/tutorial_challenge_1
    /generated/auto_examples/eeg2025/tutorial_challenge_2
    /generated/auto_examples/eeg2025/tutorial_eegdash_offline
+
+HPC tutorials
+=============
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">
+
+.. only:: html
+
+  .. image:: /generated/auto_examples/hpc/images/thumb/sphx_glr_tutorial_eoec_thumb.png
+    :alt:
+
+  :doc:`/generated/auto_examples/hpc/tutorial_eoec`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /generated/auto_examples/hpc/tutorial_eoec
 
 
 .. only:: html

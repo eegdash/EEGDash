@@ -1502,9 +1502,9 @@ def _fix_negative_annotation_durations():
         mne.Annotations.crop = _orig_crop
 
 
-# Cached state for _backport_optional_task().  Computed once on first use;
+# Cached state for _get_optional_task_fn().  Computed once on first use;
 # the result cannot change within a process lifetime.
-_OPTIONAL_TASK_PATCHED_FN = None  # compiled patched function, or False if not needed
+_OPTIONAL_TASK_PATCHED_FN = None  # compiled patched function, or None
 _OPTIONAL_TASK_DETECTION_DONE = False
 
 
@@ -1524,10 +1524,16 @@ def _build_optional_task_patch():
     if '"root", "subject", "task"' not in src:
         return None  # Already supports task=None
 
-    # Apply the two patches from PR #1527 via source replacement
+    # Apply the three patches from PR #1527 via source replacement:
+    # 1. Remove "task" from the required attributes list
+    # 2. Update the error message template to match
+    # 3. Guard bids_path.task.startswith("rest") against None
     patched_src = src.replace(
         'for required in ["root", "subject", "task"]:',
         'for required in ["root", "subject"]:',
+    ).replace(
+        '"bids_path" must contain `root`, `subject`, and `task` ',
+        '"bids_path" must contain `root` and `subject` ',
     ).replace(
         'bids_path.task.startswith("rest")',
         '(bids_path.task is not None and bids_path.task.startswith("rest"))',
@@ -1558,25 +1564,14 @@ def _build_optional_task_patch():
     return local_ns.get("read_raw_bids")
 
 
-@contextmanager
-def _backport_optional_task():
-    """Backport mne-bids PR #1527: allow ``task=None`` in ``read_raw_bids``.
+def _get_optional_task_fn():
+    """Return a patched ``read_raw_bids`` that accepts ``task=None``.
 
-    Detects whether the installed mne-bids already supports ``task=None``.
-    If not, replaces ``read_raw_bids`` with a patched copy that:
-
-    1. Removes ``"task"`` from the required ``BIDSPath`` attributes.
-    2. Guards ``bids_path.task.startswith("rest")`` against ``None``.
-
-    No-op if mne-bids already supports optional task natively.
+    Returns ``None`` if the installed mne-bids already supports
+    ``task=None`` natively (mne-bids >= 0.19 / PR #1527).
 
     The detection and compilation are cached at module level so that only
     the first call pays the ``inspect.getsource`` + ``compile`` cost.
-
-    .. warning::
-       This patches a **module-level function**, so it is **not
-       thread-safe**.  It is safe with ``multiprocessing`` (separate
-       interpreters) but must never be used from concurrent threads.
     """
     global _OPTIONAL_TASK_PATCHED_FN, _OPTIONAL_TASK_DETECTION_DONE  # noqa: PLW0603
 
@@ -1586,28 +1581,9 @@ def _backport_optional_task():
         if _OPTIONAL_TASK_PATCHED_FN is not None:
             logger.info(
                 "mne-bids does not support task=None natively; "
-                "applying backport of PR #1527."
+                "backport of PR #1527 available."
             )
-
-    if _OPTIONAL_TASK_PATCHED_FN is None:
-        yield  # No patch needed
-        return
-
-    import mne_bids
-    import mne_bids.read as _read_mod
-
-    # Patch both the submodule and the top-level package reference,
-    # since callers may use either ``mne_bids.read.read_raw_bids``
-    # or ``mne_bids.read_raw_bids``.
-    orig_sub = _read_mod.read_raw_bids
-    orig_top = mne_bids.read_raw_bids
-    _read_mod.read_raw_bids = _OPTIONAL_TASK_PATCHED_FN
-    mne_bids.read_raw_bids = _OPTIONAL_TASK_PATCHED_FN
-    try:
-        yield
-    finally:
-        _read_mod.read_raw_bids = orig_sub
-        mne_bids.read_raw_bids = orig_top
+    return _OPTIONAL_TASK_PATCHED_FN
 
 
 def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw

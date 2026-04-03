@@ -1723,7 +1723,8 @@ def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
             ds,
             "_read_raw_bids",
             side_effect=RuntimeError(
-                '"bids_path" must contain `root`, `subject`, and `task`'
+                '"bids_path" must contain `root`, `subject`, and `task` '
+                "attributes but it's missing `task`."
             ),
         ),
         pytest.raises(DataIntegrityError, match="Bad record metadata"),

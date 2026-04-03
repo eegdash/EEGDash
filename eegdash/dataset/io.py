@@ -1528,15 +1528,19 @@ def _build_optional_task_patch():
     # 1. Remove "task" from the required attributes list
     # 2. Update the error message template to match
     # 3. Guard bids_path.task.startswith("rest") against None
-    patched_src = src.replace(
-        'for required in ["root", "subject", "task"]:',
-        'for required in ["root", "subject"]:',
-    ).replace(
-        '"bids_path" must contain `root`, `subject`, and `task` ',
-        '"bids_path" must contain `root` and `subject` ',
-    ).replace(
-        'bids_path.task.startswith("rest")',
-        '(bids_path.task is not None and bids_path.task.startswith("rest"))',
+    patched_src = (
+        src.replace(
+            'for required in ["root", "subject", "task"]:',
+            'for required in ["root", "subject"]:',
+        )
+        .replace(
+            '"bids_path" must contain `root`, `subject`, and `task` ',
+            '"bids_path" must contain `root` and `subject` ',
+        )
+        .replace(
+            'bids_path.task.startswith("rest")',
+            '(bids_path.task is not None and bids_path.task.startswith("rest"))',
+        )
     )
 
     if patched_src == src:

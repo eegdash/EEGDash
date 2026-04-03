@@ -33,7 +33,6 @@ from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
     _ANNEX_KEY_RE,
-    _get_optional_task_fn,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _fix_negative_annotation_durations,
@@ -41,6 +40,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vhdr_from_sibling,
     _generate_vmrk_stub,
+    _get_optional_task_fn,
     _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
@@ -725,10 +725,7 @@ class EEGDashRaw(RawDataset):
                 # mne-bids < 0.19 rejects task=None with a RuntimeError
                 # whose message contains "missing `task`".  Retry with
                 # the backported function that removes this requirement.
-                if (
-                    self.bidspath.task is None
-                    and "missing `task`" in str(exc)
-                ):
+                if self.bidspath.task is None and "missing `task`" in str(exc):
                     patched_fn = _get_optional_task_fn()
                     if patched_fn is not None:
                         return patched_fn(

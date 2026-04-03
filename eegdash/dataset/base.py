@@ -12,7 +12,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 import configparser
 import re
 import shutil
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -33,6 +33,7 @@ from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError
 from .io import (
     _ANNEX_KEY_RE,
+    _backport_optional_task,
     _convert_time_with_numeric_dash,
     _ensure_coordsystem_symlink,
     _fix_negative_annotation_durations,
@@ -706,8 +707,16 @@ class EEGDashRaw(RawDataset):
         Uses a no-op file lock to avoid ``PermissionError`` when the dataset
         directory is read-only (e.g. shared cluster storage where mne-bids
         cannot create ``.json.lock`` files).
+
+        When ``self.bidspath.task`` is ``None``, applies a runtime backport
+        of mne-bids PR #1527 so that ``read_raw_bids`` accepts the path
+        without raising.  If the installed mne-bids already supports
+        ``task=None`` natively, the backport is a no-op.
         """
-        with _noop_filelock():
+        with ExitStack() as stack:
+            if self.bidspath.task is None:
+                stack.enter_context(_backport_optional_task())
+            stack.enter_context(_noop_filelock())
             return mne_bids.read_raw_bids(
                 bids_path=self.bidspath,
                 extra_params=extra_params,

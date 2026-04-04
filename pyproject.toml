@@ -37,7 +37,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "braindecode[hub]>=1.3.2",
+  "braindecode[hub]>=1.4.0",
   "eeglabio",
   "mne>=1.11.0",
   "mne_bids>=0.18.0",

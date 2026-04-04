@@ -221,7 +221,7 @@ def fetch_repositories(
             name=name,
             source="nemar",
             readme=readme,
-            recording_modality="eeg",
+            recording_modality=["eeg"],
             bids_version=bids_version,
             license=license_str,
             authors=authors

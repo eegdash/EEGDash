@@ -227,6 +227,10 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
                 result["ch_names"] = list(ch_names)
                 result["nchans"] = len(ch_names)
 
+            # Extract n_times (available from header without loading data)
+            if raw.n_times and raw.n_times > 0:
+                result["n_times"] = int(raw.n_times)
+
             return result if result else None
         finally:
             try:
@@ -290,6 +294,9 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
             if ch_names:
                 result["ch_names"] = list(ch_names)
                 result["nchans"] = len(ch_names)
+
+            if raw.n_times and raw.n_times > 0:
+                result["n_times"] = int(raw.n_times)
 
             return (result if result else None), is_split
         finally:
@@ -1008,73 +1015,57 @@ def extract_record(
     # ===========================================================
     ext = bids_file_path.suffix.lower()
 
-    # VHDR (BrainVision) fallback
-    if (not sampling_frequency or not nchans or not ch_names) and ext == ".vhdr":
-        vhdr_metadata = parse_vhdr_metadata(bids_file_path)
-        if vhdr_metadata:
-            if not sampling_frequency:
-                sampling_frequency = vhdr_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = vhdr_metadata.get("nchans")
-            if not ch_names:
-                ch_names = vhdr_metadata.get("ch_names")
+    # Helper to apply parsed metadata fields
+    def _apply_parsed(metadata):
+        nonlocal sampling_frequency, nchans, ntimes, ch_names
+        if not metadata:
+            return
+        if not sampling_frequency:
+            sampling_frequency = metadata.get("sampling_frequency")
+        if not nchans:
+            nchans = metadata.get("nchans")
+        if not ntimes:
+            ntimes = metadata.get("n_times") or metadata.get("n_samples")
+        if not ch_names:
+            ch_names = metadata.get("ch_names")
+
+    # VHDR (BrainVision) fallback — text parser for sfreq/nchans/ch_names,
+    # then MNE for n_times (requires reading binary companion)
+    if (not sampling_frequency or not nchans or not ntimes or not ch_names) and ext == ".vhdr":
+        _apply_parsed(parse_vhdr_metadata(bids_file_path))
+        if not ntimes:
+            try:
+                raw = mne.io.read_raw_brainvision(
+                    str(bids_file_path), preload=False, verbose=False
+                )
+                if raw.n_times and raw.n_times > 0:
+                    ntimes = int(raw.n_times)
+                raw.close()
+            except Exception:
+                pass
 
     # SNIRF (fNIRS) fallback
-    if (not sampling_frequency or not nchans) and ext == ".snirf":
-        snirf_metadata = parse_snirf_metadata(bids_file_path)
-        if snirf_metadata:
-            if not sampling_frequency:
-                sampling_frequency = snirf_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = snirf_metadata.get("nchans")
-            if not ch_names:
-                ch_names = snirf_metadata.get("ch_names")
+    if (not sampling_frequency or not nchans or not ntimes) and ext == ".snirf":
+        _apply_parsed(parse_snirf_metadata(bids_file_path))
 
     # MEF3 (.mefd directory) fallback
-    if (not sampling_frequency or not nchans) and ext == ".mefd":
-        mef3_metadata = parse_mef3_metadata(bids_file_path)
-        if mef3_metadata:
-            if not sampling_frequency:
-                sampling_frequency = mef3_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = mef3_metadata.get("nchans")
-            if not ch_names:
-                ch_names = mef3_metadata.get("ch_names")
+    if (not sampling_frequency or not nchans or not ntimes) and ext == ".mefd":
+        _apply_parsed(parse_mef3_metadata(bids_file_path))
 
     # EDF/BDF fallback using MNE
-    if (not sampling_frequency or not nchans) and ext in (".edf", ".bdf"):
-        edf_metadata = _parse_edf_with_mne(bids_file_path)
-        if edf_metadata:
-            if not sampling_frequency:
-                sampling_frequency = edf_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = edf_metadata.get("nchans")
-            if not ch_names:
-                ch_names = edf_metadata.get("ch_names")
+    if (not sampling_frequency or not nchans or not ntimes) and ext in (".edf", ".bdf"):
+        _apply_parsed(_parse_edf_with_mne(bids_file_path))
 
-    # FIF fallback using MNE (handles missing split continuations in git-annex datasets)
+    # FIF fallback using MNE
     fif_is_split = False
     fif_continuations_ok = True
-    if (not sampling_frequency or not nchans) and ext == ".fif":
+    if (not sampling_frequency or not nchans or not ntimes) and ext == ".fif":
         fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
-        if fif_metadata:
-            if not sampling_frequency:
-                sampling_frequency = fif_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = fif_metadata.get("nchans")
-            if not ch_names:
-                ch_names = fif_metadata.get("ch_names")
+        _apply_parsed(fif_metadata)
 
-    # EEGLAB .set fallback - extracts metadata from .set header even if .fdt is missing
-    if (not sampling_frequency or not nchans) and ext == ".set":
-        set_metadata = parse_set_metadata(bids_file_path)
-        if set_metadata:
-            if not sampling_frequency:
-                sampling_frequency = set_metadata.get("sampling_frequency")
-            if not nchans:
-                nchans = set_metadata.get("nchans")
-            if not ch_names:
-                ch_names = set_metadata.get("ch_names")
+    # EEGLAB .set fallback
+    if (not sampling_frequency or not nchans or not ntimes) and ext == ".set":
+        _apply_parsed(parse_set_metadata(bids_file_path))
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []

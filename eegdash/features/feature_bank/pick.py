@@ -6,7 +6,7 @@ processing.
 
 Data Shape Convention
 ---------------------
-By default, this module follows a **panultimate-Channel** convention:
+By default, this module follows a **Channel-panultimate** convention:
 
 * **Input:** ``(..., channel, :)``
 * **Output:** same as input

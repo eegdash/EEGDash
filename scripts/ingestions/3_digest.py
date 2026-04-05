@@ -1025,7 +1025,9 @@ def extract_record(
         ".set": lambda p: parse_set_metadata(p),
     }
 
-    if ext in _parsers and (not sampling_frequency or not nchans or not ntimes or not ch_names):
+    if ext in _parsers and (
+        not sampling_frequency or not nchans or not ntimes or not ch_names
+    ):
         md = _parsers[ext](bids_file_path)
         if md:
             sampling_frequency = sampling_frequency or md.get("sampling_frequency")
@@ -1051,7 +1053,9 @@ def extract_record(
     if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
         fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
         if fif_metadata:
-            sampling_frequency = sampling_frequency or fif_metadata.get("sampling_frequency")
+            sampling_frequency = sampling_frequency or fif_metadata.get(
+                "sampling_frequency"
+            )
             nchans = nchans or fif_metadata.get("nchans")
             ntimes = ntimes or fif_metadata.get("n_times")
             ch_names = ch_names or fif_metadata.get("ch_names")

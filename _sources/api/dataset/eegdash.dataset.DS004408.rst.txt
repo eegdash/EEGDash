@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 1946` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 380` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,9 +89,10 @@ Quickstart
 About This Dataset
 ------------------
 
-The data in one study [^1] and then added to by another [^2] and contains EEG responses of healthy, neurotypical adults who listened to naturalistic speech. The subjects listened to segments from an audio book version of "The Old Man and the Sea" and their brain activity was recorded using a 128-channel ActiveTwo EEG system (BioSemi). 
-
+The data in one study [^1] and then added to by another [^2] and contains EEG responses of healthy, neurotypical adults who listened to naturalistic speech. The subjects listened to segments from an audio book version of "The Old Man and the Sea" and their brain activity was recorded using a 128-channel ActiveTwo EEG system (BioSemi).
 The stimuli folder contains .wav files of the presented audiobook segments as well as a .TextGrid file for each segment, containng the timing of  words and phonemes in that segment. The text grids were generated using the forced-alignment software Prosodylab-Aligner [^3] and inspected by eye. Each subject's folder contains one EEG-recording per audio segment and their starts are aligned (the EEG recordings are longer than the audio to a varying extent).  The recordings are unfiltered, unreferenced and sampled at 512 Hz.
+
+
 
 
 Dataset Information
@@ -114,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004408.v1.0.8 <https://doi.org/10.18112/openneuro.ds004408.v1.0.8>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__ | `Source URL <https://openneuro.org/datasets/ds004408/versions/1.0.8>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004408>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004408>`__ | `Source URL <https://openneuro.org/datasets/ds004408>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -151,7 +152,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 19
-      - Recordings: 1946
+      - Recordings: 380
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -172,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 18.7 GB
-      - File count: 1946
+      - File count: 380
       - Format: BIDS
 
    .. grid-item-card:: License & citation

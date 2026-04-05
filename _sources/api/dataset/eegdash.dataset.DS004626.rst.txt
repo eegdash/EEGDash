@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 52` :bdg-secondary-line:`Recordings: 266` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 52` :bdg-secondary-line:`Recordings: 52` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -148,7 +148,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 52
-      - Recordings: 266
+      - Recordings: 52
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 19.9 GB
-      - File count: 266
+      - File count: 52
       - Format: BIDS
 
    .. grid-item-card:: License & citation

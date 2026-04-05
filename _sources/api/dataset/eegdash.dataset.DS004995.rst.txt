@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 83` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 20` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,14 +90,10 @@ About This Dataset
 ------------------
 
 The main folder contains the raw EEG data in standard bids format. See references.
-
 Code and figures: https://doi.org/10.17605/OSF.IO/PWC4K
 Manuscript: https://doi.org/10.1101/2023.06.06.543985
-
 References:
-
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110. https://doi.org/10.1038/sdata.2018.110
 
 Dataset Information
@@ -120,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004995.v1.0.2 <https://doi.org/10.18112/openneuro.ds004995.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004995>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__ | `Source URL <https://openneuro.org/datasets/ds004995/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004995>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004995>`__ | `Source URL <https://openneuro.org/datasets/ds004995>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -157,8 +153,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 83
-      - Tasks: —
+      - Recordings: 20
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -178,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 27.6 GB
-      - File count: 83
+      - File count: 20
       - Format: BIDS
 
    .. grid-item-card:: License & citation

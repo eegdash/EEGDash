@@ -11,11 +11,11 @@ DS003739
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Steven Peterson, Daniel Ferris (2021). *Perturbed beam-walking task*. `10.18112/openneuro.ds003739.v1.0.3 <https://doi.org/10.18112/openneuro.ds003739.v1.0.3>`__
+**Citation:** Steven Peterson, Daniel Ferris (2021). *Perturbed beam-walking task*. `10.18112/openneuro.ds003739.v1.0.2 <https://doi.org/10.18112/openneuro.ds003739.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 965` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 5.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 120` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 5.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,20 +81,17 @@ Quickstart
          @dataset{ds003739,
            title = {Perturbed beam-walking task},
            author = {Steven Peterson and Daniel Ferris},
-           doi = {10.18112/openneuro.ds003739.v1.0.3},
-           url = {https://doi.org/10.18112/openneuro.ds003739.v1.0.3},
+           doi = {10.18112/openneuro.ds003739.v1.0.2},
+           url = {https://doi.org/10.18112/openneuro.ds003739.v1.0.2},
          }
 
 
 About This Dataset
 ------------------
 
-Data was collected at the University of Michigan by Steven Peterson in the lab of Daniel Ferris. This study's protocol was approved by the University of Michigan Institutional Review Board and all participants provided written consent. Please see our data publication for a more comprehensive description of this dataset: https://doi.org/10.1016/j.dib.2021.107635.
-
+Data was collected at the University of Michigan by Steven Peterson in the lab of Daniel Ferris. This study's protocol was approved by the University of Michigan Institutional Review Board and all participants provided written consent.
 Each data file includes synchronized 128-channel EEG, lower leg EMG, neck EMG, EOG, and motion capture data. Participants performed four 10-minute, same-day sessions where they either stood or walked at 0.22 m/s on a treadmill-mounted balance beam that was 2.5 cm tall and 12.7 cm wide.
-
 During each session, participants were exposed to sensorimotor perturbations (either virtual-reality-induced visual field rotations or side-to-side waist pulls, lasting 0.5 seconds and 1 second in duration, respectively). Each session involved 150 perturbation events, balanced between rotation/pull directions.
-
 We have included the indices of all good channels for each participant in EEG.etc.good_chans of each .set file (includes non-EEG channel indices). Criteria for determining good/bad EEG channels can be found in our eNeuro publication. EEG.etc also includes the resulting ICA sphere and weight matrices when run on only the EEG channels, along with the selected good IC's that were retained for our analyses.
 
 Dataset Information
@@ -115,9 +112,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003739.v1.0.3 <https://doi.org/10.18112/openneuro.ds003739.v1.0.3>`__
+     - `10.18112/openneuro.ds003739.v1.0.2 <https://doi.org/10.18112/openneuro.ds003739.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003739>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003739>`__ | `Source URL <https://openneuro.org/datasets/ds003739/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003739>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003739>`__ | `Source URL <https://openneuro.org/datasets/ds003739>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -128,8 +125,8 @@ Dataset Information
       @dataset{ds003739,
         title = {Perturbed beam-walking task},
         author = {Steven Peterson and Daniel Ferris},
-        doi = {10.18112/openneuro.ds003739.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds003739.v1.0.3},
+        doi = {10.18112/openneuro.ds003739.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds003739.v1.0.2},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -154,13 +151,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 30
-      - Recordings: 965
-      - Tasks: 1
+      - Recordings: 120
+      - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (120), 149 (120)
+      - Channels: 149
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
@@ -175,14 +172,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 10.9 GB
-      - File count: 965
+      - File count: 120
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003739.v1.0.3
+      - DOI: 10.18112/openneuro.ds003739.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 24` :bdg-secondary-line:`Recordings: 215` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 24` :bdg-secondary-line:`Recordings: 35` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,7 +93,6 @@ About This Dataset
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-
 Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 Dataset Information
@@ -116,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005624.v1.0.0 <https://doi.org/10.18112/openneuro.ds005624.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005624>`__ | `Source URL <https://openneuro.org/datasets/ds005624/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005624>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005624>`__ | `Source URL <https://openneuro.org/datasets/ds005624>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -153,14 +152,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 24
-      - Recordings: 215
+      - Recordings: 35
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 74 (8), 172 (6), 223 (6), 162 (4), 95 (4), 100 (4), 151 (4), 115 (4), 152 (4), 111 (4), 101 (2), 173 (2), 228 (2), 191 (2), 189 (2), 205 (2), 166 (2), 123 (2), 128 (2), 127 (2), 118 (2)
-      - Sampling rate (Hz): 512.0 (52), 1024.0 (18)
+      - Channels: 74 (4), 223 (3), 172 (3), 95 (2), 162 (2), 111 (2), 152 (2), 115 (2), 151 (2), 100 (2), 205, 189, 191, 228, 173, 101, 118, 127, 128, 123, 166
+      - Sampling rate (Hz): 512.0 (26), 1024.0 (9)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -174,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 13.8 GB
-      - File count: 215
+      - File count: 35
       - Format: BIDS
 
    .. grid-item-card:: License & citation

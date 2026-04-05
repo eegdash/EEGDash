@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 23` :bdg-secondary-line:`Recordings: 396` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 23` :bdg-secondary-line:`Recordings: 69` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,59 +92,32 @@ About This Dataset
 
 **General information**
 
-
 This dataset contains resting(eyes closed, eyes open) and EEG recordings during playing real MOBA game with 23 participants.
-
 
 **Dataset**
 
 
+**Presentation**
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+     The data collection was initiated in April 2023 and was terminated in July 2023. The detailed description of the dataset is currently under working by Hong-Zhi Li and Dong-Dong Zhou, and will submit to Scientific Data for publication.
 
-   
-   **General information**
-   
-   
-   This dataset contains resting(eyes closed, eyes open) and EEG recordings during playing real MOBA game with 23 participants.
-   
-   
-   **Dataset**
-   
-   
-   
-   **Presentation**
-   
-   
-        The data collection was initiated in April 2023 and was terminated in July 2023. The detailed description of the dataset is currently under working by Hong-Zhi Li and Dong-Dong Zhou, and will submit to Scientific Data for publication.
-        
-       
-   
-   
-   **EEG acquisition**
-   
-   
-        * EEG system (Neuroscan, 64 electrodes) 
-        * Sampling frequency: 1000Hz
-   
-   
-   **event type**
-   
-   
-         * 13 indicates a kill during playing game
-         * 14 indicates a death during playing game
-         * 66 indicates game start
-         * 444 indicates game failure
-         * 666 indicates game victory
-   
-   
-   
-   **Contact**
-   
-        * If you have any questions or comments, please contact: 
-        * Dong-Dong Zhou: zhoudongdong@cqmu.edu.cn
+**EEG acquisition**
 
+     * EEG system (Neuroscan, 64 electrodes)
+     * Sampling frequency: 1000Hz
+
+**event type**
+
+      * 13 indicates a kill during playing game
+      * 14 indicates a death during playing game
+      * 66 indicates game start
+      * 444 indicates game failure
+      * 666 indicates game victory
+
+**Contact**
+
+     * If you have any questions or comments, please contact:
+     * Dong-Dong Zhou: zhoudongdong@cqmu.edu.cn
 
 Dataset Information
 -------------------
@@ -166,7 +139,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005520.v1.0.1 <https://doi.org/10.18112/openneuro.ds005520.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005520>`__ | `Source URL <https://openneuro.org/datasets/ds005520/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005520>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005520>`__ | `Source URL <https://openneuro.org/datasets/ds005520>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -203,7 +176,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 23
-      - Recordings: 396
+      - Recordings: 69
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
@@ -224,7 +197,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 43.9 GB
-      - File count: 396
+      - File count: 69
       - Format: BIDS
 
    .. grid-item-card:: License & citation

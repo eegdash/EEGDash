@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS006502';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1037,7 +1048,7 @@
 <p><em>Skill learning and consolidation in healthy humans</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Bönstrup, M, Buch, ER, Cohen, LG (2025). <em>Skill learning and consolidation in healthy humans</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds006502.v1.0.0">10.18112/openneuro.ds006502.v1.0.0</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 31</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 1648</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: meg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 31</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 380</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1101,6 +1112,7 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p><strong>Contact</strong></p>
 <p>For additional information, please contact:
 Ethan R. Buch (<a class="reference external" href="mailto:ethan&#46;buch&#37;&#52;&#48;nih&#46;gov">ethan<span>&#46;</span>buch<span>&#64;</span>nih<span>&#46;</span>gov</a>; ORCID: 0000-0002-5443-8222)</p>
+<p><strong>Overview</strong></p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
@@ -1109,20 +1121,20 @@ Ethan R. Buch (<a class="reference external" href="mailto:ethan&#46;buch&#37;&#5
 <p class="sd-card-text">For additional information, please contact:
 Ethan R. Buch (<a class="reference external" href="mailto:ethan&#46;buch&#37;&#52;&#48;nih&#46;gov">ethan<span>&#46;</span>buch<span>&#64;</span>nih<span>&#46;</span>gov</a>; ORCID: 0000-0002-5443-8222)</p>
 <p class="sd-card-text"><strong>Overview</strong></p>
-<p class="sd-card-text">This study was carried out by the Human Cortical Physiology &amp; Neurorehabilitation Section (HCPS) in the NINDS Intramural Research Program.</p>
-<p class="sd-card-text">The primary aim of the study was to investigate changes in brain activity associated with early skill learning during an initial training session, overnight skill consolidation and longer-term skill retention. A longitudinal design was used. Skill learning was assessed using the sequential finger tapping task (SFTT). Participants completed an initial session in which anatomical MRI data was acquired, followed by up to three separate MEG session. During the first MEG training session, participants repeatedly typed a 5-item skill sequence (i.e. – 4-1-3-2-4) with their non-dominant left hand over 36 practice trials (lasting 10s each) inter-leaved with short 10s rest breaks. Their instructed goal was to type the sequence as fast and as accurately as possible. This first training session was typically followed by up to two separate MEG retest sessions occurring approximately 24 (mean+/-SD: 23.44+/- 1.32) hours and 30 (29.45 +/- 6.77) days later. During these later MEG sessions, participants were retested on the trained skill (over 9 trials) and 9 different untrained control skill sequences (one trial each). Resting state MEG data was acquired before and after practice blocks during all three MEG sessions. Skill performance, eye gaze and pupillometry, and left wrist flexor/extensor EMG data were also acquired and synchronized with MEG recordings.</p>
+<p class="sd-card-text">This study was carried out by the Human Cortical Physiology &amp; Neurorehabilitation Section (HCPS) in the NINDS Intramural Research Program.
+The primary aim of the study was to investigate changes in brain activity associated with early skill learning during an initial training session, overnight skill consolidation and longer-term skill retention. A longitudinal design was used. Skill learning was assessed using the sequential finger tapping task (SFTT). Participants completed an initial session in which anatomical MRI data was acquired, followed by up to three separate MEG session. During the first MEG training session, participants repeatedly typed a 5-item skill sequence (i.e. – 4-1-3-2-4) with their non-dominant left hand over 36 practice trials (lasting 10s each) inter-leaved with short 10s rest breaks. Their instructed goal was to type the sequence as fast and as accurately as possible. This first training session was typically followed by up to two separate MEG retest sessions occurring approximately 24 (mean+/-SD: 23.44+/- 1.32) hours and 30 (29.45 +/- 6.77) days later. During these later MEG sessions, participants were retested on the trained skill (over 9 trials) and 9 different untrained control skill sequences (one trial each). Resting state MEG data was acquired before and after practice blocks during all three MEG sessions. Skill performance, eye gaze and pupillometry, and left wrist flexor/extensor EMG data were also acquired and synchronized with MEG recordings.</p>
 <p class="sd-card-text"><strong>Methods</strong></p>
 <p class="sd-card-text"><strong>Ethics Review</strong></p>
 <p class="sd-card-text">All study procedures were approved by the Combined Neuroscience Institutional Review Board of the National Institutes of Health (NIH).</p>
 <p class="sd-card-text"><strong>Subjects</strong></p>
-<p class="sd-card-text">Study data was acquired from a total of 31 right-handed, healthy adults (21 females; mean+/-SD age = 26.14 +/- 4.17). All participants provided written informed consent. Verification of clinical status was based upon a comprehensive health history assessment, physical and neurological examination, and unremarkable clinical Brain MRI scan prior to study data collection.</p>
-<p class="sd-card-text">Inclusion criteria: Healthy right-handed adults.
+<p class="sd-card-text">Study data was acquired from a total of 31 right-handed, healthy adults (21 females; mean+/-SD age = 26.14 +/- 4.17). All participants provided written informed consent. Verification of clinical status was based upon a comprehensive health history assessment, physical and neurological examination, and unremarkable clinical Brain MRI scan prior to study data collection.
+Inclusion criteria: Healthy right-handed adults.
 Exclusion criteria: Active musicians were excluded from the study.</p>
 <p class="sd-card-text"><strong>Apparatus</strong></p>
-<p class="sd-card-text">T1-weighted high-resolution (1mm3 isotropic MPRAGE sequence) anatomical brain MRI volumes were acquired for each participant on 3T MRI scanners (GE Excite HDxt and Siemens Skyra) with a standard 32-channel head coil.</p>
-<p class="sd-card-text">Continuous MEG and EMG data were acquired on a CTF-275 system (CTF Systems, Inc.) at a sampling frequency of 600Hz (60Hz power line frequency). All recordings were performed in a seated position inside a magnetically shielded room. Head position was determined before and after each scan run using three head localization coils attached to the right and left preauricular and nasion landmarks with adhesive tape. The locations for the coils was digitized and mapped the individual participant’s anatomical MRI volume using BrainSight (Rogue Research Inc.).</p>
-<p class="sd-card-text">Behavioral stimuli were presented and response data acquired using E-Prime 2 (Psychology Software Tools, Inc.) and the Cedrus LS-Line (Cedrus Corp) four-key response pad, respectively.</p>
-<p class="sd-card-text">Eye gaze and pupillometry data was acquired using the EyeLink 1000 Plus (SR Research Ltd.) eye-tracker device and recorded using ADC channel inputs to the CTF-275 system.</p>
+<p class="sd-card-text">T1-weighted high-resolution (1mm3 isotropic MPRAGE sequence) anatomical brain MRI volumes were acquired for each participant on 3T MRI scanners (GE Excite HDxt and Siemens Skyra) with a standard 32-channel head coil.
+Continuous MEG and EMG data were acquired on a CTF-275 system (CTF Systems, Inc.) at a sampling frequency of 600Hz (60Hz power line frequency). All recordings were performed in a seated position inside a magnetically shielded room. Head position was determined before and after each scan run using three head localization coils attached to the right and left preauricular and nasion landmarks with adhesive tape. The locations for the coils was digitized and mapped the individual participant’s anatomical MRI volume using BrainSight (Rogue Research Inc.).
+Behavioral stimuli were presented and response data acquired using E-Prime 2 (Psychology Software Tools, Inc.) and the Cedrus LS-Line (Cedrus Corp) four-key response pad, respectively.
+Eye gaze and pupillometry data was acquired using the EyeLink 1000 Plus (SR Research Ltd.) eye-tracker device and recorded using ADC channel inputs to the CTF-275 system.</p>
 <p class="sd-card-text"><strong>Task details</strong></p>
 <p class="sd-card-text">Participants typed a 5-item numerical sequence displayed on a computer screen (41324) as quickly and as accurately as possible, with their non-dominant left hand.  No explicit feedback related to performance accuracy or speed was provided. Small asterisks appeared above each sequence item as keypresses were recorded to provide location information to participants during practice. Individual practice trials lasted 10s each. All practice trials were interleaved with short 10s rest breaks. The displayed numerical target sequence was replaced with “XXXXX” during the rest breaks.</p>
 <p class="sd-card-text"><strong>MEG session design</strong></p>
@@ -1145,11 +1157,11 @@ Exclusion criteria: Active musicians were excluded from the study.</p>
 <p class="sd-card-text"><strong>Experimental location</strong></p>
 <p class="sd-card-text">All study data was acquired in the Nuclear Magnetic Resonance Facility (NMRF) at the NIH Clinical Center in Bethesda, MD.</p>
 <p class="sd-card-text"><strong>Missing data</strong></p>
-<p class="sd-card-text">Three of the gradiometers were malfunctioning and were not used, resulting in 272 total channels of MEG data.</p>
-<p class="sd-card-text">Some participants did not complete the 2nd and 3rd MEG sessions.</p>
-<p class="sd-card-text">No keypress responses were recorded for participant “sub-01” on trial 1 of MEG1 training.</p>
-<p class="sd-card-text">The MEG recording for participant “sub-10” MEG1 training terminated during the rest break after practice trial 34. No MEG data was recorded for practice trials 35 and 36.</p>
-<p class="sd-card-text">No keypress responses were recorded for participant “sub-23” on trial 1 of MEG1 training and trials 1 and 2 of MEG2 retest.</p>
+<p class="sd-card-text">Three of the gradiometers were malfunctioning and were not used, resulting in 272 total channels of MEG data.
+Some participants did not complete the 2nd and 3rd MEG sessions.
+No keypress responses were recorded for participant “sub-01” on trial 1 of MEG1 training.
+The MEG recording for participant “sub-10” MEG1 training terminated during the rest break after practice trial 34. No MEG data was recorded for practice trials 35 and 36.
+No keypress responses were recorded for participant “sub-23” on trial 1 of MEG1 training and trials 1 and 2 of MEG2 retest.</p>
 </div>
 </details></section>
 <section id="dataset-information">
@@ -1179,7 +1191,7 @@ Exclusion criteria: Active musicians were excluded from the study.</p>
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds006502.v1.0.0">doi:10.18112/openneuro.ds006502.v1.0.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds006502">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds006502">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds006502/versions/1.0.0">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds006502">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds006502">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds006502">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1214,7 +1226,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 31</p></li>
-<li><p class="sd-card-text">Recordings: 1648</p></li>
+<li><p class="sd-card-text">Recordings: 380</p></li>
 <li><p class="sd-card-text">Tasks: 4</p></li>
 </ul>
 </div>
@@ -1253,7 +1265,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 95.8 GB</p></li>
-<li><p class="sd-card-text">File count: 1648</p></li>
+<li><p class="sd-card-text">File count: 380</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1436,8 +1448,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1463,7 +1475,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

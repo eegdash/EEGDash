@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 7` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 1` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,15 +89,11 @@ Quickstart
 About This Dataset
 ------------------
 
-Note: only the data for participant 1 has been uploaded. The rest of the dataset will be released upon publication. 
-
+Note: only the data for participant 1 has been uploaded. The rest of the dataset will be released upon publication.
 The pre-print can be found here: https://doi.org/10.31234/osf.io/wp73u
-The analysis codes, results, and figures can be found on OSF: https://osf.io/r93es. 
-
-The main folder contains the raw EEG data in standard bids format.  
-
+The analysis codes, results, and figures can be found on OSF: https://osf.io/r93es.
+The main folder contains the raw EEG data in standard bids format.
 The ‘derivatives’ folder contains the pre-processed & epoched EEG data, formatted in line with cosmomvpa.
-
 For codes, results, & figures, see OSF: Engeler, P., Grootswagers, T., Robinson, A. K., Holcombe, A. O., Carlson, T. A., & Moerel, D. (2022, August 17). Rotation-tolerant representations elucidate the time course of high-level object processing. Retrieved from osf.io/r93es
 
 Dataset Information
@@ -120,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004252.v1.0.2 <https://doi.org/10.18112/openneuro.ds004252.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__ | `Source URL <https://openneuro.org/datasets/ds004252/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004252>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004252>`__ | `Source URL <https://openneuro.org/datasets/ds004252>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -157,8 +153,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 1
-      - Recordings: 7
-      - Tasks: —
+      - Recordings: 1
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -178,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 7
+      - File count: 1
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -11,7 +11,7 @@ DS005356
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** [Unspecified] (2025). *MEG: Major Depression & Probabilistic Learning Task*. `10.18112/openneuro.ds005356.v1.5.0 <https://doi.org/10.18112/openneuro.ds005356.v1.5.0>`__
+**Citation:** [Unspecified] (2024). *MEG: Major Depression & Probabilistic Learning Task*. `10.18112/openneuro.ds005356.v1.5.0 <https://doi.org/10.18112/openneuro.ds005356.v1.5.0>`__
 
 .. rst-class:: sd-badges
 
@@ -105,7 +105,7 @@ Dataset Information
    * - Title
      - MEG: Major Depression & Probabilistic Learning Task
    * - Year
-     - 2025
+     - 2024
    * - Authors
      - [Unspecified]
    * - License
@@ -170,7 +170,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 162.4 GB
+      - Size on disk: 161.6 GB
       - File count: 116
       - Format: BIDS
 

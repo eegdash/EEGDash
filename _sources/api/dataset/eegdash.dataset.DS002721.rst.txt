@@ -11,11 +11,11 @@ DS002721
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *An EEG dataset recorded during affective music listening*. `10.18112/openneuro.ds002721.v1.0.3 <https://doi.org/10.18112/openneuro.ds002721.v1.0.3>`__
+**Citation:** Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke, Eduardo Miranda, Slawomir J. Nasuto (2020). *An EEG dataset recorded during affective music listening*. `10.18112/openneuro.ds002721.v1.0.2 <https://doi.org/10.18112/openneuro.ds002721.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 31` :bdg-secondary-line:`Recordings: 929` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 10.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 31` :bdg-secondary-line:`Recordings: 185` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 10.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds002721,
            title = {An EEG dataset recorded during affective music listening},
            author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
-           doi = {10.18112/openneuro.ds002721.v1.0.3},
-           url = {https://doi.org/10.18112/openneuro.ds002721.v1.0.3},
+           doi = {10.18112/openneuro.ds002721.v1.0.2},
+           url = {https://doi.org/10.18112/openneuro.ds002721.v1.0.2},
          }
 
 
@@ -114,75 +114,47 @@ About This Dataset
    
    **1. PROJECT**
    
-   
    Title: Brain-Computer Music Interface for Monitoring and Inducing Affective States (BCMI-MIdAS)
-   
    Dates: 2012-2017
-   
    Funding organisation: Engineering and Physical Sciences Research Council (EPSRC)
-   
    Grant no.: EP/J003077/1 and EP/J002135/1.
-   
    
    **2. DATASET**
    
    Title: EEG data investigating neural correlates of music-induced emotion.
-   
-   Description: This dataset accompanies the publication by Daly et al. (2018) and has been analysed in Daly et al. (2014; 2015a; 2015b) (please see Section 5 for full references). The purpose of the research activity in which the data were collected was to investigate the EEG neural correlates of music-induced emotion. For this purpose 31 healthy adult participants listened to 40 music clips of 12 s duration each, targeting a range of emotional states. The music clips comprised excerpts from film scores spanning a range of styles and rated on induced emotion. 
+   Description: This dataset accompanies the publication by Daly et al. (2018) and has been analysed in Daly et al. (2014; 2015a; 2015b) (please see Section 5 for full references). The purpose of the research activity in which the data were collected was to investigate the EEG neural correlates of music-induced emotion. For this purpose 31 healthy adult participants listened to 40 music clips of 12 s duration each, targeting a range of emotional states. The music clips comprised excerpts from film scores spanning a range of styles and rated on induced emotion.
    The dataset contains unprocessed EEG data from all 31 participants (age range 18-66, 18 female) while listening to the music clips, together with the reported induced emotional responses . The paradigm involved 6 runs of EEG recordings. The first and last runs were resting state runs, during which participants were instructed to sit still and rest for 300 s. The other 4 runs each contained 10 music listening trials.
-   
    Publication Year: 2018
-   
    Creator: Nicoletta Nicolaou, Ian Daly.
-   
-   Contributors: Isil Poyraz Bilgin, James Weaver, Asad Malik. 
-   
+   Contributors: Isil Poyraz Bilgin, James Weaver, Asad Malik.
    Principal Investigator: Slawomir Nasuto (EP/J003077/1).
-   
    Co-Investigator: Eduardo Miranda (EP/J002135/1).
-   
    Organisation: University of Reading
-   
    Rights-holders: University of Reading
-   
-   Source: The musical stimuli were taken from Eerola & Vuoskoski, “A comparison of the discrete and dimensional models of emotion in music”, Psychol. Music, 39:18-49, 2010 (doi: 10.1177/0305735610362821). Stimuli set 1 was used (https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/projects2/past-projects/coe/materials/emotion/soundtracks/set1/view).
-   
-   Update: This music stimuli can now be found here https://osf.io/p6vkg/
-   
+   Source: The musical stimuli were taken from Eerola & Vuoskoski, “A comparison of the discrete and dimensional models of emotion in music”, Psychol. Music, 39:18-49, 2010 (doi: 10.1177/0305735610362821). Stimuli set 1 was used (https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/projects2/past-projects/coe/materials/emotion/soundtracks/set1/view)
    System: The data is prepared for use on Windows systems and no garanantee is made that the datasets can be opened correctly on other systems.
-   
    
    **3. TERMS OF USE**
    
-   
    Copyright University of Reading, 2018. This dataset is licensed by the rights-holder(s) under a Creative Commons Attribution 4.0 International Licence: https://creativecommons.org/licenses/by/4.0/.
    
-   
    **4. CONTENTS**
-   
    
    BIDS File listing:
    The dataset comprises data from 31 participants, named using the convention:
    sub_s_number
-   where: s_number is a random participant number from 1 to 31. For example: ‘sub-08’ contains data obtained from participant 8. 
-   
+   where: s_number is a random participant number from 1 to 31. For example: ‘sub-08’ contains data obtained from participant 8.
    The data is BIDS format and contains EEG and associated meta data. The sampling rate is 1 kHz and the EEG corresponding to a music clip is 20 s long (the duration of the clips).
-   
    Each data folder contains the following data (please note that the number of runs varies between participants):
-   
    
    **5. METHOD and PROCESSING**
    
-   
    This information is available in the following publications:
-   
    [1] Daly, I., Nicolaou, N., Williams, D., Hwang, F., Kirke, A., Miranda, E., Nasuto, S.J., Ԏeural and physiological data from participants listening to affective musicԬ Scientific Data, 2018.
    [2] Daly, I., Malik, A., Hwang, F., Roesch, E., Weaver, J., Kirke, A., Williams, D., Miranda, E. R., Nasuto, S. J., Ԏeural correlates of emotional responses to music: an EEG studyԬ Neuroscience Letters, 573: 52-7, 2014; doi: 10.1016/j.neulet.2014.05.003.
    [3] Daly, I., Hallowell, J., Hwang, F., Kirke, A., Malik, A., Roesch, E., Weaver, J., Williams, D., Miranda, E., Nasuto, S.J., ԃhanges in music tempo entrain movement related brain activityԬ Proc. IEEE EMBC 2014, pp.4595-8; doi: 10.1109/EMBC.2014.6944647
    [4] Daly, I., Williams, D., Hallowell, J., Hwang, F., Kirke, A., Malik, A., Weaver, J., Miranda, E., Nasuto, S.J., ԍusic-induced emotions can be predicted from a combination of brain activity and acoustic featuresԬ Brain and Cognition, 101:1-11, 2015b; doi: 10.1016/j.bandc.2015.08.003
-   
    Please cite these references if you use this dataset in your study.
-   
    Thank you for your interest in our work.
 
 
@@ -204,9 +176,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds002721.v1.0.3 <https://doi.org/10.18112/openneuro.ds002721.v1.0.3>`__
+     - `10.18112/openneuro.ds002721.v1.0.2 <https://doi.org/10.18112/openneuro.ds002721.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002721>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002721>`__ | `Source URL <https://openneuro.org/datasets/ds002721/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002721>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002721>`__ | `Source URL <https://openneuro.org/datasets/ds002721>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -217,8 +189,8 @@ Dataset Information
       @dataset{ds002721,
         title = {An EEG dataset recorded during affective music listening},
         author = {Ian Daly and Nicoletta Nicolaou and Duncan Williams and Faustina Hwang and Alexis Kirke and Eduardo Miranda and Slawomir J. Nasuto},
-        doi = {10.18112/openneuro.ds002721.v1.0.3},
-        url = {https://doi.org/10.18112/openneuro.ds002721.v1.0.3},
+        doi = {10.18112/openneuro.ds002721.v1.0.2},
+        url = {https://doi.org/10.18112/openneuro.ds002721.v1.0.2},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -243,8 +215,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 31
-      - Recordings: 929
-      - Tasks: 1
+      - Recordings: 185
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -264,14 +236,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 3.4 GB
-      - File count: 929
+      - File count: 185
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds002721.v1.0.3
+      - DOI: 10.18112/openneuro.ds002721.v1.0.2
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

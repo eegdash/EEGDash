@@ -11,7 +11,7 @@ DS004012
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2019). *BRAR_NQ*. `10.18112/openneuro.ds004012.v1.0.0 <https://doi.org/10.18112/openneuro.ds004012.v1.0.0>`__
+**Citation:** Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2022). *BRAR_NQ*. `10.18112/openneuro.ds004012.v1.0.0 <https://doi.org/10.18112/openneuro.ds004012.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -107,7 +107,7 @@ Dataset Information
    * - Title
      - BRAR_NQ
    * - Year
-     - 2019
+     - 2022
    * - Authors
      - Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha
    * - License

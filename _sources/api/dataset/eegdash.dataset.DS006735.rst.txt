@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 27` :bdg-secondary-line:`Recordings: 220` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 27` :bdg-secondary-line:`Recordings: 27` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,12 +93,12 @@ About This Dataset
 **Details related to access to the data**
 
 Please contact the following authors for further information:
-
 Tong Shan (email: tongshan@stanford.edu)
-
 Ross K. Maddox (email: rkmaddox@med.umich.edu)
 
+**Overview**
 
+This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -107,52 +107,35 @@ Ross K. Maddox (email: rkmaddox@med.umich.edu)
    **Details related to access to the data**
    
    Please contact the following authors for further information:
-   
    Tong Shan (email: tongshan@stanford.edu)
-   
    Ross K. Maddox (email: rkmaddox@med.umich.edu)
-   
    
    **Overview**
    
-   This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences. 
-   
+   This study examines pitch-time interactions in music processing by introducing “chimeric music,” which pairs two distinct melodies, and exchanges their pitch contours and note onset-times to create two new melodies, thereby distorting musical pattern while maintaining the marginal statistics of the original pieces’ pitch and temporal sequences.
    Data collected from Sep to Nov, 2023.
-   
    The details of the experiment can be found at Shan et al. (2024). There were two phases in this experiment. For the first phase, ten trials of one-minute clicks were presented to the subjects. For the second phase, the 2 types of monophonic music (original and chimeric) clips were presented. There were 33 trials for each type with shuffled order. Between trials, there was a 0.5 s pause.
-   
    The code for analysis for this study can be found in GitHub repo (https://github.com/maddoxlab/Chimeric_music).
-   
-   
    
    **Format**
    
    This dataset is formatted according to the EEG Brain Imaging Data Structure. It includes EEG recording from subject 001 to subject 027 in raw brainvision format (including .eeg, .vhdr, and .vmrk triplet).
    
-   
-   
    **Subjects**
    
-   27 subjects participated in this study. 
-   
+   27 subjects participated in this study.
    
    **Subject inclusion criteria**
    
-   
    Age between 18-40.
-   
    Normal hearing: audiometric thresholds of 20 dB HL or better from 500 to 8000 Hz.
    Speak English as their primary language.
-   
    Self-reported normal or correctable to normal vision.
-   
-   Twenty-seven participants participated in this experiment with an age of 22.9 ± 3.9 (mean ± STD) years. 
-   
+   Twenty-seven participants participated in this experiment with an age of 22.9 ± 3.9 (mean ± STD) years.
    
    **Apparatus**
    
    Subjects were seated in a sound-isolating booth on a chair in front of a 24-inch BenQ monitor with a viewing distance of approximately 60 cm. Stimuli were presented at an average level of 60 dB SPL and a sampling rate of 48000 Hz through ER-2 insert earphones plugged into an RME Babyface Pro digital sound card. The stimulus presentation for the experiment was controlled by a python script using a custom package, expyfun.
-   
    Following the experimental session, participants completed a self-reported musicianship questionnaire (adapted from Whiteford et al, 2025). The questionnaire is included in this repository.
 
 
@@ -176,7 +159,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006735.v2.0.0 <https://doi.org/10.18112/openneuro.ds006735.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006735>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006735>`__ | `Source URL <https://openneuro.org/datasets/ds006735/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006735>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006735>`__ | `Source URL <https://openneuro.org/datasets/ds006735>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -213,13 +196,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 27
-      - Recordings: 220
+      - Recordings: 27
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 36 (48), 63 (4), 34 (2)
+      - Channels: 36 (24), 63 (2), 34
       - Sampling rate (Hz): 10000.0
       - Duration (hours): 0.0
 
@@ -234,7 +217,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 175.9 GB
-      - File count: 220
+      - File count: 27
       - Format: BIDS
 
    .. grid-item-card:: License & citation

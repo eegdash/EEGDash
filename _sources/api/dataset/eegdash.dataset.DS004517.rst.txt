@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 47` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 7` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -94,51 +94,26 @@ About This Dataset
 
 This dataset contains electroencephalography (EEG) signals recorded from 7 participants while performing an auditory imagery task. Participants were asked to imagine the sounds made by an object for 5 seconds.
 
-
-
 **EEG**
 
 EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
+Electrooculography (EOG) was also recorded to monitor eye movements. Two electrodes were placed above ('EXG7' channel) and below ('EXG8') the right eye to capture the vertical oculogram, while two more electrodes were placed near the canthus of each eye ('EXG5' by the left eye and 'EXG6' by the right eye) to record the horizontal oculogram.
+Additionally, two electrodes were placed on the left ('EXG3') and right ('EXG4') wrists for additional physiological measurements (e.g., heart rate variability), and respiration was recorded using a belt placed around the waist ('Resp' channel).
+The sampling rate was 2048 Hz.
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+**Stimulus**
 
-   
-   **Description**
-   
-   This dataset contains electroencephalography (EEG) signals recorded from 7 participants while performing an auditory imagery task. Participants were asked to imagine the sounds made by an object for 5 seconds.
-   
-   
-   
-   **EEG**
-   
-   EEG data were acquired with a BioSemi ActiveTwo system with 64 electrodes positioned according to the international 10-20 system, plus one electrode on each earlobe as references ('EXG1' channel is the left ear electrode and 'EXG2' channel is the right ear electrode).
-   Electrooculography (EOG) was also recorded to monitor eye movements. Two electrodes were placed above ('EXG7' channel) and below ('EXG8') the right eye to capture the vertical oculogram, while two more electrodes were placed near the canthus of each eye ('EXG5' by the left eye and 'EXG6' by the right eye) to record the horizontal oculogram.
-   Additionally, two electrodes were placed on the left ('EXG3') and right ('EXG4') wrists for additional physiological measurements (e.g., heart rate variability), and respiration was recorded using a belt placed around the waist ('Resp' channel).
-   The sampling rate was 2048 Hz.
-   
-   
-   
-   **Stimulus**
-   
-   Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
-   
-   
-   
-   **Example code**
-   
-   We have prepared an example script to demonstrate how to load the EEG data into Python using MNE and MNE-BIDS packages. This script is located in the 'code' directory.
-   
-   
-   
-   **References**
-   
-   This dataset was analyzed in the following publications:
-   
-   [1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
-   
-   [2] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
+Folder 'stimuli' contains all images of the semantic categories of animals and tools presented to participants.
 
+**Example code**
+
+We have prepared an example script to demonstrate how to load the EEG data into Python using MNE and MNE-BIDS packages. This script is located in the 'code' directory.
+
+**References**
+
+This dataset was analyzed in the following publications:
+[1] Rybář, M., Poli, R. and Daly, I., 2024. Using data from cue presentations results in grossly overestimating semantic BCI performance. Scientific Reports, 14(1), p.28003.
+[2] Rybář, M., 2023. Towards EEG/fNIRS-based semantic brain-computer interfacing (Doctoral dissertation, University of Essex).
 
 Dataset Information
 -------------------
@@ -160,7 +135,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004517.v1.0.2 <https://doi.org/10.18112/openneuro.ds004517.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004517>`__ | `Source URL <https://openneuro.org/datasets/ds004517/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004517>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004517>`__ | `Source URL <https://openneuro.org/datasets/ds004517>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -197,13 +172,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 7
-      - Recordings: 47
+      - Recordings: 7
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 80 (7), 64 (7)
+      - Channels: 80
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
@@ -218,7 +193,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 12.7 GB
-      - File count: 47
+      - File count: 7
       - Format: BIDS
 
    .. grid-item-card:: License & citation

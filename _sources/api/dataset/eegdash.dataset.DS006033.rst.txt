@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 3` :bdg-secondary-line:`Recordings: 63` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 3` :bdg-secondary-line:`Recordings: 5` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,52 +93,32 @@ About This Dataset
 **Inner Speech EEG-fMRI Dataset**
 
 
-
 **Description**
 
 This dataset contains simultaneous EEG-fMRI recordings for inner speech experiments. Data were collected using a 3T MRI scanner and 64-channel BrainProducts EEG system. The EEG data have undergone preprocessing, including pulse artifact removal, using the BrainVision Analyzer software. No further data transformations have been applied to ensure the dataset remains BIDS-compliant as "raw".
 
+**Subjects**
 
+- Number of subjects: 3
+- Sessions per subject: 2
+- Tasks: Inner speech
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+**Experimental Protocol**
 
-   
-   **Inner Speech EEG-fMRI Dataset**
-   
-   
-   
-   **Description**
-   
-   This dataset contains simultaneous EEG-fMRI recordings for inner speech experiments. Data were collected using a 3T MRI scanner and 64-channel BrainProducts EEG system. The EEG data have undergone preprocessing, including pulse artifact removal, using the BrainVision Analyzer software. No further data transformations have been applied to ensure the dataset remains BIDS-compliant as "raw".
-   
-   
-   **Subjects**
-   
-   - Number of subjects: 3
-   - Sessions per subject: 2
-   - Tasks: Inner speech
-   
-   
-   **Experimental Protocol**
-   
-   - Each trial includes a fixation period (2s), stimulus display (2s), and rest (12s).
-   - 8 words were presented in random order, each repeated 40 times.
-   - EEG sampled at 5000 Hz, fMRI acquired with TR=2s.
-   
-   
-   **Data Organization**
-   
-   - Functional MRI data: ``sub-xx/ses-xx/func/``
-   - EEG data: ``sub-xx/ses-xx/eeg/``
-   - Event markers: ``events.tsv``
-   - BIDS-compatible metadata included in JSON sidecars.
-   
-   
-   **Contact**
-   
-   For inquiries, contact: Foteini Simistira Liwicki (Foteini.liwicki@ltu.se)
+- Each trial includes a fixation period (2s), stimulus display (2s), and rest (12s).
+- 8 words were presented in random order, each repeated 40 times.
+- EEG sampled at 5000 Hz, fMRI acquired with TR=2s.
 
+**Data Organization**
+
+- Functional MRI data: ``sub-xx/ses-xx/func/``
+- EEG data: ``sub-xx/ses-xx/eeg/``
+- Event markers: ``events.tsv``
+- BIDS-compatible metadata included in JSON sidecars.
+
+**Contact**
+
+For inquiries, contact: Foteini Simistira Liwicki (Foteini.liwicki@ltu.se)
 
 Dataset Information
 -------------------
@@ -160,7 +140,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006033.v1.0.1 <https://doi.org/10.18112/openneuro.ds006033.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006033>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006033>`__ | `Source URL <https://openneuro.org/datasets/ds006033/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006033>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006033>`__ | `Source URL <https://openneuro.org/datasets/ds006033>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -197,13 +177,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 3
-      - Recordings: 63
+      - Recordings: 5
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64
+      - Channels: 66
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
@@ -218,7 +198,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 15.3 GB
-      - File count: 63
+      - File count: 5
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 18` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 1` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,11 +90,8 @@ About This Dataset
 ------------------
 
 The MEG files contain a channel with triggers necessary for event marking and timing. Separate event files with onsets are provided in the participant directories for completeness only; the MEG triggers should be used for actual onsets in analysis. The delay between the trigger and the visual onset of an on-screen event sent by the projector is approximately 20 ms, as estimated using a photodiode.
-
 Localizer phase triggers: [Info to be added]
-
 Struct and Rew phase triggers: [Info to be added]
-
 Post triggers:  [Info to be added]
 
 Dataset Information
@@ -117,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004398.v1.0.0 <https://doi.org/10.18112/openneuro.ds004398.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004398>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004398>`__ | `Source URL <https://openneuro.org/datasets/ds004398>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,13 +151,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 1
-      - Recordings: 18
+      - Recordings: 1
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 272
+      - Channels: 305
       - Sampling rate (Hz): 600.0
       - Duration (hours): 0.0
 
@@ -175,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.3 GB
-      - File count: 18
+      - File count: 1
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 57` :bdg-secondary-line:`Recordings: 1341` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 21.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 57` :bdg-secondary-line:`Recordings: 319` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 21.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,22 +90,15 @@ About This Dataset
 ------------------
 
 <h1>HUP iEEG dataset</h1>
-
-This dataset was prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in Kini & Bernabei et al., Brain (2019) [1], and Bernabei & Sinha et al., Brain (2022) [2]. 
-
+This dataset was prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in Kini & Bernabei et al., Brain (2019) [1], and Bernabei & Sinha et al., Brain (2022) [2].
 <h3>Dataset description</h3>
-These files contain de-identified patient data collected as part of surgical treatment for drug resistant epilepsy at the Hospital of the University of Pennsylvania. Each of the 58 subjects underwent intracranial EEG with subdural grid, strip, and depth electrodes (ECoG) or purely stereotactically-placed depth electrodes (SEEG). Each patient also underwent subsequent treatment with surgical resection or laser ablation. Electrophysiologic data for both interictal and ictal periods is available, as are electrode localizations in ICBM152 MNI space. Furthermore, clinically-determined seizure onset channels are provided, as are channels which overlap with the resection/ablation zone, which was rigorously determined by segmenting the resection cavity. 
-
+These files contain de-identified patient data collected as part of surgical treatment for drug resistant epilepsy at the Hospital of the University of Pennsylvania. Each of the 58 subjects underwent intracranial EEG with subdural grid, strip, and depth electrodes (ECoG) or purely stereotactically-placed depth electrodes (SEEG). Each patient also underwent subsequent treatment with surgical resection or laser ablation. Electrophysiologic data for both interictal and ictal periods is available, as are electrode localizations in ICBM152 MNI space. Furthermore, clinically-determined seizure onset channels are provided, as are channels which overlap with the resection/ablation zone, which was rigorously determined by segmenting the resection cavity.
 <h3>BIDS Conversion</h3>
-MNE-BIDS was used to convert the dataset into BIDS format. 
-
+MNE-BIDS was used to convert the dataset into BIDS format.
 <h3>References</h3>
 [1] Kini L.*, Bernabei J.M.*, Mikhail F., Hadar P., Shah P., Khambhati A., Oechsel K., Archer R., Boccanfuso J.A., Conrad E., Stein J., Das S., Kheder A., Lucas T.H., Davis K.A., Bassett D.S., Litt B., Virtual resection predicts surgical outcome for drug resistant epilepsy. Brain, 2019.
-
 [2] Bernabei J.M.*, Sinha N.*, Arnold T.C., Conrad E., Ong I., Pattnaik A.R., Stein J.M., Shinohara R.T., Lucas T.H., Bassett D.S., Davis K.A., Litt B., Normative intracranial EEG maps epileptogenic tissues in focal epilepsy. Brain, 2022
-
 [3] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-
 [4] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 Dataset Information
@@ -128,7 +121,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004100.v1.1.3 <https://doi.org/10.18112/openneuro.ds004100.v1.1.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004100>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004100>`__ | `Source URL <https://openneuro.org/datasets/ds004100/versions/1.1.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004100>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004100>`__ | `Source URL <https://openneuro.org/datasets/ds004100>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -165,14 +158,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 57
-      - Recordings: 1341
+      - Recordings: 319
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 122 (42), 128 (36), 118 (34), 172 (30), 126 (28), 104 (26), 180 (24), 127 (24), 82 (24), 96 (24), 109 (14), 136 (14), 121 (14), 74 (14), 108 (14), 190 (14), 80 (14), 92 (14), 120 (14), 174 (14), 149 (14), 102 (14), 117 (14), 163 (12), 98 (12), 162 (10), 186 (10), 63 (10), 71 (10), 52 (10), 116 (10), 59 (10), 88 (10), 164 (10), 100 (10), 90 (8), 105 (8), 61 (8), 85 (6), 192 (4), 94 (4), 232 (2)
-      - Sampling rate (Hz): 512.0 (330), 1024.0 (156), 500.0 (138), 256.0 (14)
+      - Channels: 122 (21), 128 (18), 118 (17), 172 (15), 126 (14), 104 (13), 82 (12), 127 (12), 180 (12), 96 (12), 92 (7), 80 (7), 190 (7), 108 (7), 74 (7), 121 (7), 136 (7), 109 (7), 117 (7), 102 (7), 174 (7), 149 (7), 120 (7), 163 (6), 98 (6), 63 (5), 186 (5), 162 (5), 100 (5), 164 (5), 88 (5), 59 (5), 116 (5), 52 (5), 71 (5), 105 (4), 90 (4), 61 (4), 85 (3), 94 (2), 192 (2), 232
+      - Sampling rate (Hz): 512.0 (165), 1024.0 (78), 500.0 (69), 256.0 (7)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -186,7 +179,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 13.2 GB
-      - File count: 1341
+      - File count: 319
       - Format: BIDS
 
    .. grid-item-card:: License & citation

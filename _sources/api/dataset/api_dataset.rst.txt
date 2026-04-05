@@ -36,7 +36,7 @@ Base Dataset API
    * - Unspecified
      - 198
    * - Unknown
-     - 70
+     - 69
    * - Clinical/Intervention
      - 65
    * - Perception

@@ -11,7 +11,7 @@ DS005274
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Yukako Ito (—). *UV_EEG*. `10.18112/openneuro.ds005274.v1.0.0 <https://doi.org/10.18112/openneuro.ds005274.v1.0.0>`__
+**Citation:** Yukako Ito (2024). *UV_EEG*. `10.18112/openneuro.ds005274.v1.0.0 <https://doi.org/10.18112/openneuro.ds005274.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -103,7 +103,7 @@ Dataset Information
    * - Title
      - UV_EEG
    * - Year
-     - —
+     - 2024
    * - Authors
      - Yukako Ito
    * - License
@@ -168,7 +168,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 72.0 MB
+      - Size on disk: 71.9 MB
       - File count: 22
       - Format: BIDS
 

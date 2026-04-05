@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 185` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 30` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,14 +90,9 @@ About This Dataset
 ------------------
 
 In this experiment, participants searched for objects in some scenes and intentionally memorized others. We then tested their memory of these objects, finding stronger (quantitative difference) and different (qualitative difference: recollection benefit) memory representations for search targets.
-
 We recorded both EEG and eye movements. Behavioral data is split into encoding (Encode_beh) and memory testing (Test_beh).
-
 Analysis scripts and preprocessed data as well as additional materials are available on the OSF at https://osf.io/esr5q/.
-
-
 Project Abstract:
-
 Most memory is not formed deliberately but as a by-product of natural behavior. These incidental representations, when generated during visual search, can be stronger than intentionally memorized content (search superiority effect). In this study, we investigate whether this effect is purely quantitative (stronger memory) or also due to qualitative memory differences; more precisely, differences in recollection and familiarity, two processes supporting recognition memory. In an EEG study with eye tracking, 30 participants searched for objects in scenes and intentionally memorized others before completing a surprise recognition memory test. We find that compared to new objects, both search targets and intentionally memorized objects elicit a more positive-going mid-frontal negativity peaking at around 400 ms post stimulus onset (FN400), which is associated with familiarity, as well as a more positive-going parietal late component (LPC), indicative of recollection. Both components show no differences between tasks, indicating equal contributions of recollection and familiarity to remembering searched and memorized objects. Behavioral data from remember–know judgments and receiver operating characteristics (ROCs), however, contrasts with the EEG findings: Search targets are more often reported as recollected and their ROCs show higher intercepts, indicating more recollection, whereas there are essentially no behavioral differences in familiarity between tasks. These results indicate that search superiority relies on increased recollection rather than familiarity. The absent LPC effect despite the behavioral task difference challenges existing assumptions about the neural correlates of recognition memory, raising the question whether they hold when investigated using real-world scenes and incidental encoding during naturalistic tasks.
 
 Dataset Information
@@ -120,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005189.v1.0.1 <https://doi.org/10.18112/openneuro.ds005189.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005189>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005189>`__ | `Source URL <https://openneuro.org/datasets/ds005189/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005189>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005189>`__ | `Source URL <https://openneuro.org/datasets/ds005189>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -157,13 +152,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 30
-      - Recordings: 185
+      - Recordings: 30
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 61
+      - Channels: 62
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -178,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 16.1 GB
-      - File count: 185
+      - File count: 30
       - Format: BIDS
 
    .. grid-item-card:: License & citation

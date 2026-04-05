@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 42` :bdg-secondary-line:`Recordings: 133` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 42` :bdg-secondary-line:`Recordings: 42` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,12 +91,9 @@ About This Dataset
 
 Data and code for the paper:
 Tijl Grootswagers, Genevieve Quek, Zhen Zeng, & Manuel Varlet. 2025. “Human Infant EEG Recordings for 200 Object Images Presented in Rapid Visual Streams.” Scientific Data. https://doi.org/10.1038/s41597-025-04744-z
-
 See the linked paper for details.
-
 The "code" directory contains all the code to reproduce the figures in the paper.
 It requires fieldtrip and cosmomvpa, change the paths to these toolboxes at the top of each script (or remove the lines and add them to the path manually).
-
 Then run the scripts to reproduce each step reported in the paper:
 1. run_preprocessing.m (preprocess and epoch data)
 2. run_rsa.m (makes the individual RDMs)
@@ -127,7 +124,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005106.v1.5.0 <https://doi.org/10.18112/openneuro.ds005106.v1.5.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005106>`__ | `Source URL <https://openneuro.org/datasets/ds005106/versions/1.5.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005106>`__ | `Source URL <https://openneuro.org/datasets/ds005106>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -164,7 +161,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 42
-      - Recordings: 133
+      - Recordings: 42
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -185,7 +182,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.2 GB
-      - File count: 133
+      - File count: 42
       - Format: BIDS
 
    .. grid-item-card:: License & citation

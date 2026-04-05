@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 10745` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 377` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,31 +89,28 @@ Quickstart
 About This Dataset
 ------------------
 
-OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations. 
-
+OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations.
 
 **Data folder corresponding to this manuscript**
 
 
 **Differential brain mechanisms of selection and maintenance of information during working memory**
 
-
 Note: One participant didn't sign a sharing data agreement so data of 22 participants are available here (vs. 23 in the manuscript). Results and conclusion are not different with only 22 participants.
+Participant folder are organized as:
+- ##### 'ses-mri/anat':
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
-   OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations. 
-   
+   OpenNeuro curator note: This dataset was previously accessible at ds001750. The dataset was reuploaded due to privacy considerations.
    
    **Data folder corresponding to this manuscript**
    
    
    **Differential brain mechanisms of selection and maintenance of information during working memory**
    
-   
    Note: One participant didn't sign a sharing data agreement so data of 22 participants are available here (vs. 23 in the manuscript). Results and conclusion are not different with only 22 participants.
-   
    Participant folder are organized as:
    - ##### 'ses-mri/anat':
    
@@ -124,7 +121,6 @@ Note: One participant didn't sign a sharing data agreement so data of 22 partici
    - ##### ses-02:
    
    contains MEG data in BIDS format, behavioral data and HPI position in surface RAS MRI coordinates for session 2
-   
    
    **Description of non-MEG files:**
    
@@ -205,7 +201,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002550.v1.0.1 <https://doi.org/10.18112/openneuro.ds002550.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__ | `Source URL <https://openneuro.org/datasets/ds002550/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002550>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002550>`__ | `Source URL <https://openneuro.org/datasets/ds002550>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -242,7 +238,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 22
-      - Recordings: 10745
+      - Recordings: 377
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -263,7 +259,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 167.5 GB
-      - File count: 10745
+      - File count: 377
       - Format: BIDS
 
    .. grid-item-card:: License & citation

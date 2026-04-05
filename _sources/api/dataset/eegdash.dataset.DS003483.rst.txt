@@ -11,7 +11,7 @@ DS003483
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany (—). *Logical reasoning study*. `10.18112/openneuro.ds003483.v1.0.2 <https://doi.org/10.18112/openneuro.ds003483.v1.0.2>`__
+**Citation:** Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany (2021). *Logical reasoning study*. `10.18112/openneuro.ds003483.v1.0.2 <https://doi.org/10.18112/openneuro.ds003483.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -103,7 +103,7 @@ Dataset Information
    * - Title
      - Logical reasoning study
    * - Year
-     - —
+     - 2021
    * - Authors
      - Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany
    * - License
@@ -168,7 +168,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 68.3 GB
+      - Size on disk: 24.5 GB
       - File count: 41
       - Format: BIDS
 

@@ -7,11 +7,11 @@
 NM000103
 ========
 
-*This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from participants involved in the HBN project.*
+*Healthy Brain Network EEG - Not for Commercial Use*
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (2025). *This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from participants involved in the HBN project.*. `10.5281/zenodo.17306881 <https://doi.org/10.5281/zenodo.17306881>`__
+**Citation:** Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig (20). *Healthy Brain Network EEG - Not for Commercial Use*. `10.82901/nemar.nm000103 <https://doi.org/10.82901/nemar.nm000103>`__
 
 .. rst-class:: sd-badges
 
@@ -79,10 +79,10 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{nm000103,
-           title = {This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from participants involved in the HBN project.},
+           title = {Healthy Brain Network EEG - Not for Commercial Use},
            author = {Seyed Yahya Shirazi and Alexandre Franco and Maurício Scopel Hoffmann and Nathalia B. Esper and Dung Truong and Arnaud Delorme and Michael Milham and Scott Makeig},
-           doi = {10.5281/zenodo.17306881},
-           url = {https://doi.org/10.5281/zenodo.17306881},
+           doi = {10.82901/nemar.nm000103},
+           url = {https://doi.org/10.82901/nemar.nm000103},
          }
 
 
@@ -127,15 +127,15 @@ Dataset Information
    * - Dataset ID
      - ``NM000103``
    * - Title
-     - This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from participants involved in the HBN project.
+     - Healthy Brain Network EEG - Not for Commercial Use
    * - Year
-     - 2025
+     - 20
    * - Authors
      - Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig
    * - License
      - CC-BY-NC-SA 4.0
    * - Citation / DOI
-     - `10.5281/zenodo.17306881 <https://doi.org/10.5281/zenodo.17306881>`__
+     - `10.82901/nemar.nm000103 <https://doi.org/10.82901/nemar.nm000103>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/nm000103>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000103>`__ | `Source URL <https://nemar.org/dataexplorer/detail/nm000103>`__
 
@@ -146,10 +146,10 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{nm000103,
-        title = {This dataset comprises electroencephalogram (EEG) data and behavioral responses collected during EEG experiments from participants involved in the HBN project.},
+        title = {Healthy Brain Network EEG - Not for Commercial Use},
         author = {Seyed Yahya Shirazi and Alexandre Franco and Maurício Scopel Hoffmann and Nathalia B. Esper and Dung Truong and Arnaud Delorme and Michael Milham and Scott Makeig},
-        doi = {10.5281/zenodo.17306881},
-        url = {https://doi.org/10.5281/zenodo.17306881},
+        doi = {10.82901/nemar.nm000103},
+        url = {https://doi.org/10.82901/nemar.nm000103},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -158,7 +158,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000103&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000103%0A-%20%2A%2ATitle%3A%2A%2A%20This%20dataset%20comprises%20electroencephalogram%20%28EEG%29%20data%20and%20behavioral%20responses%20collected%20during%20EEG%20experiments%20from%20participants%20involved%20in%20the%20HBN%20project.%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000103&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000103%0A-%20%2A%2ATitle%3A%2A%2A%20Healthy%20Brain%20Network%20EEG%20-%20Not%20for%20Commercial%20Use%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -194,7 +194,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 36.4 MB
+      - Size on disk: 250.3 GB
       - File count: 3522
       - Format: BIDS
 
@@ -202,7 +202,7 @@ Technical Details
       :class-card: sd-border-1
 
       - License: CC-BY-NC-SA 4.0
-      - DOI: 10.5281/zenodo.17306881
+      - DOI: 10.82901/nemar.nm000103
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

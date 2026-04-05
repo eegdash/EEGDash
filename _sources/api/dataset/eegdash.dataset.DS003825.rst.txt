@@ -11,11 +11,11 @@ DS003825
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (2021). *Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts*. `10.18112/openneuro.ds003825.v1.2.0 <https://doi.org/10.18112/openneuro.ds003825.v1.2.0>`__
+**Citation:** Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (2021). *Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts*. `10.18112/openneuro.ds003825.v1.1.0 <https://doi.org/10.18112/openneuro.ds003825.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 50` :bdg-secondary-line:`Recordings: 257` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 50` :bdg-secondary-line:`Recordings: 50` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds003825,
            title = {Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts},
            author = {Grootswagers, Tijl and Zhou, Ivy and Robinson, Amanda and Hebart, Martin and Carlson, Thomas},
-           doi = {10.18112/openneuro.ds003825.v1.2.0},
-           url = {https://doi.org/10.18112/openneuro.ds003825.v1.2.0},
+           doi = {10.18112/openneuro.ds003825.v1.1.0},
+           url = {https://doi.org/10.18112/openneuro.ds003825.v1.1.0},
          }
 
 
@@ -92,14 +92,7 @@ About This Dataset
 Experiment Details
 Human electroencephalography recordings from 50 subjects for 1,854 concepts and 22,248 images in the THINGS stimulus database.
 Images were presented in rapid serial visual presentation streams at 10Hz rates. Participants performed an orthogonal fixation colour change detection task.
-
 Experiment length: 1 hour
-
-More information: 
-
-https://osf.io/hd6zk/ (osf repository with more information and example analysis code)
-
-Grootswagers, T., Zhou, I., Robinson, A.K. et al. Human EEG recordings for 1,854 concepts presented in rapid serial visual presentation streams. Sci Data 9, 3 (2022). https://doi.org/10.1038/s41597-021-01102-7
 
 Dataset Information
 -------------------
@@ -119,9 +112,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds003825.v1.2.0 <https://doi.org/10.18112/openneuro.ds003825.v1.2.0>`__
+     - `10.18112/openneuro.ds003825.v1.1.0 <https://doi.org/10.18112/openneuro.ds003825.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003825>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003825>`__ | `Source URL <https://openneuro.org/datasets/ds003825/versions/1.2.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003825>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003825>`__ | `Source URL <https://openneuro.org/datasets/ds003825>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -132,8 +125,8 @@ Dataset Information
       @dataset{ds003825,
         title = {Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts},
         author = {Grootswagers, Tijl and Zhou, Ivy and Robinson, Amanda and Hebart, Martin and Carlson, Thomas},
-        doi = {10.18112/openneuro.ds003825.v1.2.0},
-        url = {https://doi.org/10.18112/openneuro.ds003825.v1.2.0},
+        doi = {10.18112/openneuro.ds003825.v1.1.0},
+        url = {https://doi.org/10.18112/openneuro.ds003825.v1.1.0},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -158,13 +151,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 50
-      - Recordings: 257
+      - Recordings: 50
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 63 (96), 128 (4)
+      - Channels: 63 (48), 128 (2)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -179,14 +172,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 41.2 GB
-      - File count: 257
+      - File count: 50
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds003825.v1.2.0
+      - DOI: 10.18112/openneuro.ds003825.v1.1.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

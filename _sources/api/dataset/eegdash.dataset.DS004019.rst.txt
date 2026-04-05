@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 62` :bdg-secondary-line:`Recordings: 441` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 62` :bdg-secondary-line:`Recordings: 62` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,54 +90,28 @@ About This Dataset
 ------------------
 
 Introduction
-
-This EEG dataset contains the electrophysiological signal from sixty-two obese and non-obese preteens 
-during a delayed-verification math task. The stimuli were designed and administered using E-Prime 
+This EEG dataset contains the electrophysiological signal from sixty-two obese and non-obese preteens
+during a delayed-verification math task. The stimuli were designed and administered using E-Prime
 software (Version 2) at Arkansas Children Nutrition Center (ACNC), Little Rock, Arkansas.
 The University of Arkansas for Medical Sciences (UAMS) approved the study protocol. This research
 was supported by USDA/Agricultural Research Service Project 6026-51000-012-06S.
-
  Raw data files
-
-
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
-
-   Introduction
-   
-   This EEG dataset contains the electrophysiological signal from sixty-two obese and non-obese preteens 
-   during a delayed-verification math task. The stimuli were designed and administered using E-Prime 
-   software (Version 2) at Arkansas Children Nutrition Center (ACNC), Little Rock, Arkansas.
-   The University of Arkansas for Medical Sciences (UAMS) approved the study protocol. This research
-   was supported by USDA/Agricultural Research Service Project 6026-51000-012-06S.
-   
-    Raw data files
-   
-   The data was acquired with a Geodesic Net Amps 300 system running Netstation 4.5.2 software using 
-   the 128-channel Geodesic Hydrocell Sensor Net™ (Magstim EGI., Eugene OR, USA).
-   No operations have been performed on the data.
-   
-   Participant data
-   
-   The *Participants.tsv* file contains age, gender, body mass index (BMI), and performance. 
-   
-   
-   How to cite
-   
-   All use of this dataset in a publication context requires the following paper
-   to be cited:
-   Alatorre-Cruz, G.C., Downs, H., Hagood, D., Sorensen, S.T.,  Williams, D.K., Larson-Prior, L. (2022).
-   Effect of obesity on arithmetic processing in preteens with high and low math skills. An event-related
-   potentials study. Frontiers in Human Neurosciences, In press.
-   
-   
-   Contact
-   Questions regarding the EEG data may be addressed to
-   Catalina Alatorre-Cruz (gcalatorrecruz@uams.edu).
-   
-   Question regarding the project, in general, may be addressed to
-   Linda Larson-Prior (ljlarsonprior@uams.edu).
-
+The data was acquired with a Geodesic Net Amps 300 system running Netstation 4.5.2 software using
+the 128-channel Geodesic Hydrocell Sensor Net™ (Magstim EGI., Eugene OR, USA).
+No operations have been performed on the data.
+Participant data
+The *Participants.tsv* file contains age, gender, body mass index (BMI), and performance.
+How to cite
+All use of this dataset in a publication context requires the following paper
+to be cited:
+Alatorre-Cruz, G.C., Downs, H., Hagood, D., Sorensen, S.T.,  Williams, D.K., Larson-Prior, L. (2022).
+Effect of obesity on arithmetic processing in preteens with high and low math skills. An event-related
+potentials study. Frontiers in Human Neurosciences, In press.
+Contact
+Questions regarding the EEG data may be addressed to
+Catalina Alatorre-Cruz (gcalatorrecruz@uams.edu).
+Question regarding the project, in general, may be addressed to
+Linda Larson-Prior (ljlarsonprior@uams.edu).
 
 Dataset Information
 -------------------
@@ -159,7 +133,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004019.v1.0.0 <https://doi.org/10.18112/openneuro.ds004019.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004019>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004019>`__ | `Source URL <https://openneuro.org/datasets/ds004019/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004019>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004019>`__ | `Source URL <https://openneuro.org/datasets/ds004019>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -196,13 +170,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 62
-      - Recordings: 441
+      - Recordings: 62
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 129 (62), 128 (62)
+      - Channels: 128
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -217,7 +191,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 17.3 GB
-      - File count: 441
+      - File count: 62
       - Format: BIDS
 
    .. grid-item-card:: License & citation

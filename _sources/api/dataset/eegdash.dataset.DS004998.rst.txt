@@ -162,7 +162,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 323 (122), 324 (6), 326 (6), 333 (6), 347 (4), 319
+      - Channels: 323 (122), 326 (6), 333 (6), 324 (6), 347 (4), 319
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 

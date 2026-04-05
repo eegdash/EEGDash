@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 82` :bdg-secondary-line:`Recordings: 351` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 7.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 82` :bdg-secondary-line:`Recordings: 82` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 7.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,10 +91,9 @@ About This Dataset
 
 Resting EEG and MEG data was gathered for two independently collected samples of healthy and First Episode Psychosis (FEP) individuals.
 To obtain resting data, EEG channels were recorded for 5 minutes using an Elekta Neuromag Vectorview system.
-EEG was recorded using a low-impedance 10-10 system 60-channel cap. 
+EEG was recorded using a low-impedance 10-10 system 60-channel cap.
 The first collected sample of EEG data is provided here. This sample includes a portion of subjects from the second acquisition (EEG: First Episode Psychosis vs. Control Resting Task 2), since they were collected using the same montage.
 The subjects from Task 2 that have been included here are: sub-2140A, sub-2170A, sub-2174A, sub-2176A, sub-2177A, sub-2184A, sub-2193A, sub-2214A, sub-2217A, sub-2221A.
-
 The phenotype directory contains clinical assessment results and data divided by type for all subjects. The assessment results were categorized as follows:
 BPRS - Brief Psychiatric Rating Scale,
 SANS - Scale for Assessment of Negative Symptoms,
@@ -102,7 +101,7 @@ SAPS - Scale for Assessment of Positive Symptoms,
 GAFGAS - Global Assessment of Functioning,
 SFS - Social Functioning Scale,
 MATRICS - MATRICS Consensus Cognitive Battery,
-WASI - Wechsler Abbreviated Scale of Intelligence, 
+WASI - Wechsler Abbreviated Scale of Intelligence,
 Hollingshead - Hollingshead Four-Factor Index of Socioeconomic Status,
 Medications - Chlorpromazine equivalency of prescribed medication at time of EEG scan.
 Values/scores that were not collected and questions without given responses are denoted by n/a.
@@ -127,7 +126,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003944.v1.0.1 <https://doi.org/10.18112/openneuro.ds003944.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003944>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003944>`__ | `Source URL <https://openneuro.org/datasets/ds003944/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003944>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003944>`__ | `Source URL <https://openneuro.org/datasets/ds003944>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -164,14 +163,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 82
-      - Recordings: 351
+      - Recordings: 82
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 61 (82), 64 (82)
-      - Sampling rate (Hz): 1000.0 (162), 3000.00030000003 (2)
+      - Channels: 64
+      - Sampling rate (Hz): 1000.0 (81), 3000.00030000003
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -185,7 +184,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 6.2 GB
-      - File count: 351
+      - File count: 82
       - Format: BIDS
 
    .. grid-item-card:: License & citation

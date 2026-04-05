@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS003029';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1036,8 +1047,8 @@
 <h1>DS003029<a class="headerlink" href="#ds003029" title="Link to this heading">#</a></h1>
 <p><em>Epilepsy-iEEG-Multicenter-Dataset</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson, Emily Johnson, Iahn Cajigas, Damian Brusko, Jonathan Jagid, Angel Claudio, Andres Kanner, Jennifer Hopp, Stephanie Chen, Jennifer Haagensen, Sridevi Sarma (2020). <em>Epilepsy-iEEG-Multicenter-Dataset</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003029.v1.0.7">10.18112/openneuro.ds003029.v1.0.7</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 35</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 679</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 19.0</span></p>
+<p><strong>Citation:</strong> Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson, Emily Johnson, Iahn Cajigas, Damian Brusko, Jonathan Jagid, Angel Claudio, Andres Kanner, Jennifer Hopp, Stephanie Chen, Jennifer Haagensen, Sridevi Sarma (2020). <em>Epilepsy-iEEG-Multicenter-Dataset</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003029.v1.0.5">10.18112/openneuro.ds003029.v1.0.5</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 35</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 106</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 19.0</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1087,8 +1098,8 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@dataset</span><span class="p">{</span><span class="nl">ds003029</span><span class="p">,</span>
 <span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Epilepsy-iEEG-Multicenter-Dataset}</span><span class="p">,</span>
 <span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Adam Li and Sara Inati and Kareem Zaghloul and Nathan Crone and William Anderson and Emily Johnson and Iahn Cajigas and Damian Brusko and Jonathan Jagid and Angel Claudio and Andres Kanner and Jennifer Hopp and Stephanie Chen and Jennifer Haagensen and Sridevi Sarma}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003029.v1.0.7}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003029.v1.0.7}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003029.v1.0.5}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003029.v1.0.5}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1100,27 +1111,30 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p><strong>Fragility Multi-Center Retrospective Study</strong></p>
 <p>This dataset was updated and prepared for release as part of a manuscript by Bernabei &amp; Li et al. (in preparation). A subset of the data has been featured in [1].</p>
 <p><strong>Summary</strong></p>
+<p>iEEG and EEG data from 5 centers is organized in our study with a total of 100 subjects. We publish 4 centers’ dataset here due to data sharing issues.
+Acquisitions include ECoG and SEEG. Each run specifies a different snapshot of EEG data from that specific subject’s session. For seizure sessions, this means that each run is a EEG snapshot around a different seizure event.
+For additional clinical metadata about each subject, refer to the clinical Excel table in the publication.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Fragility Multi-Center Retrospective Study</strong></p>
 <p class="sd-card-text">This dataset was updated and prepared for release as part of a manuscript by Bernabei &amp; Li et al. (in preparation). A subset of the data has been featured in [1].</p>
 <p class="sd-card-text"><strong>Summary</strong></p>
-<p class="sd-card-text">iEEG and EEG data from 5 centers is organized in our study with a total of 100 subjects. We publish 4 centers’ dataset here due to data sharing issues.</p>
-<p class="sd-card-text">Acquisitions include ECoG and SEEG. Each run specifies a different snapshot of EEG data from that specific subject’s session. For seizure sessions, this means that each run is a EEG snapshot around a different seizure event.</p>
-<p class="sd-card-text">For additional clinical metadata about each subject, refer to the clinical Excel table in the publication.</p>
+<p class="sd-card-text">iEEG and EEG data from 5 centers is organized in our study with a total of 100 subjects. We publish 4 centers’ dataset here due to data sharing issues.
+Acquisitions include ECoG and SEEG. Each run specifies a different snapshot of EEG data from that specific subject’s session. For seizure sessions, this means that each run is a EEG snapshot around a different seizure event.
+For additional clinical metadata about each subject, refer to the clinical Excel table in the publication.</p>
 <p class="sd-card-text"><strong>Data Availability</strong></p>
-<p class="sd-card-text">NIH, JHH, UMMC, and UMF agreed to share. Cleveland Clinic did not, so requires an additional DUA.</p>
-<p class="sd-card-text">All data, except for Cleveland Clinic was approved by their centers to be de-identified and shared. All data in this dataset have no PHI, or other identifiers associated with patient. In order to access Cleveland Clinic data, please forward all requests to Amber Sours, <a class="reference external" href="mailto:SOURSA&#37;&#52;&#48;ccf&#46;org">SOURSA<span>&#64;</span>ccf<span>&#46;</span>org</a>:</p>
-<p class="sd-card-text">Amber Sours, MPH
+<p class="sd-card-text">NIH, JHH, UMMC, and UMF agreed to share. Cleveland Clinic did not, so requires an additional DUA.
+All data, except for Cleveland Clinic was approved by their centers to be de-identified and shared. All data in this dataset have no PHI, or other identifiers associated with patient. In order to access Cleveland Clinic data, please forward all requests to Amber Sours, <a class="reference external" href="mailto:SOURSA&#37;&#52;&#48;ccf&#46;org">SOURSA<span>&#64;</span>ccf<span>&#46;</span>org</a>:
+Amber Sours, MPH
 Research Supervisor | Epilepsy Center
 Cleveland Clinic  |  9500 Euclid Ave. S3-399 |  Cleveland, OH 44195
-(216) 444-8638</p>
-<p class="sd-card-text">You will need to sign a data use agreement (DUA).</p>
+(216) 444-8638
+You will need to sign a data use agreement (DUA).</p>
 <p class="sd-card-text"><strong>Sourcedata</strong></p>
-<p class="sd-card-text">For each subject, there was a raw EDF file, which was converted into the BrainVision format with <code class="docutils literal notranslate"><span class="pre">mne_bids</span></code>.</p>
-<p class="sd-card-text">Each subject with SEEG implantation from Cleveland Clinic, also has an Excel table, called <code class="docutils literal notranslate"><span class="pre">electrode_layout.xlsx</span></code>, which outlines where the clinicians marked each electrode anatomically. Note that there is no rigorous atlas applied, so the main points of interest are: <code class="docutils literal notranslate"><span class="pre">WM</span></code>, <code class="docutils literal notranslate"><span class="pre">GM</span></code>, <code class="docutils literal notranslate"><span class="pre">VENTRICLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CSF</span></code>, and <code class="docutils literal notranslate"><span class="pre">OUT</span></code>, which represent white-matter, gray-matter, ventricle, cerebrospinal fluid and outside the brain. WM, Ventricle, CSF and OUT were removed channels from further analysis. These were labeled in the corresponding BIDS <code class="docutils literal notranslate"><span class="pre">channels.tsv</span></code> sidecar file as <code class="docutils literal notranslate"><span class="pre">status=bad</span></code>.</p>
-<p class="sd-card-text">The dataset uploaded to <code class="docutils literal notranslate"><span class="pre">openneuro.org</span></code> does not contain the <code class="docutils literal notranslate"><span class="pre">sourcedata</span></code> since there was an extra
+<p class="sd-card-text">For each subject, there was a raw EDF file, which was converted into the BrainVision format with <code class="docutils literal notranslate"><span class="pre">mne_bids</span></code>.
+Each subject with SEEG implantation, also has an Excel table, called <code class="docutils literal notranslate"><span class="pre">electrode_layout.xlsx</span></code>, which outlines where the clinicians marked each electrode anatomically. Note that there is no rigorous atlas applied, so the main points of interest are: <code class="docutils literal notranslate"><span class="pre">WM</span></code>, <code class="docutils literal notranslate"><span class="pre">GM</span></code>, <code class="docutils literal notranslate"><span class="pre">VENTRICLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CSF</span></code>, and <code class="docutils literal notranslate"><span class="pre">OUT</span></code>, which represent white-matter, gray-matter, ventricle, cerebrospinal fluid and outside the brain. WM, Ventricle, CSF and OUT were removed channels from further analysis. These were labeled in the corresponding BIDS <code class="docutils literal notranslate"><span class="pre">channels.tsv</span></code> sidecar file as <code class="docutils literal notranslate"><span class="pre">status=bad</span></code>.
+The dataset uploaded to <code class="docutils literal notranslate"><span class="pre">openneuro.org</span></code> does not contain the <code class="docutils literal notranslate"><span class="pre">sourcedata</span></code> since there was an extra
 anonymization step that occurred when fully converting to BIDS.</p>
 <p class="sd-card-text"><strong>Derivatives</strong></p>
 <p class="sd-card-text">Derivatives include:
@@ -1130,11 +1144,9 @@ anonymization step that occurred when fully converting to BIDS.</p>
 * figures</p>
 <p class="sd-card-text">These can be computed by following the following paper:
 <a class="reference external" href="https://www.biorxiv.org/content/10.1101/862797v3">Neural Fragility as an EEG Marker for the Seizure Onset Zone</a>_</p>
-<p class="sd-card-text"><strong>Channel locations in (x,y,z) coordinates</strong></p>
-<p class="sd-card-text">Unfortunately, the necessary T1 MRI, and CT scans to estimate these were not collected/processed, and exact channel locations are not available for any subject in this dataset as of 09/05/2023. The approximate brain regions of the hypothesized epileptic regions are stated in the metadata and paper.</p>
 <p class="sd-card-text"><strong>Events and Descriptions</strong></p>
-<p class="sd-card-text">Within each EDF file, there contain event markers that are annotated by clinicians, which may inform you of specific clinical events that are occuring in time, or of when they saw seizures onset and offset (clinical and electrographic).</p>
-<p class="sd-card-text">During a seizure event, specifically event markers may follow this time course:</p>
+<p class="sd-card-text">Within each EDF file, there contain event markers that are annotated by clinicians, which may inform you of specific clinical events that are occuring in time, or of when they saw seizures onset and offset (clinical and electrographic).
+During a seizure event, specifically event markers may follow this time course:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p class="sd-card-text">eeg onset, or clinical onset - the onset of a seizure that is either marked electrographically, or by clinical behavior. Note that the clinical onset may not always be present, since some seizures manifest without clinical behavioral changes.</p></li>
@@ -1145,11 +1157,11 @@ anonymization step that occurred when fully converting to BIDS.</p>
 </div></blockquote>
 <p class="sd-card-text">Other events included may be beneficial for you to understand the time-course of each seizure. Note that ICTAL SPECT occurs in all Cleveland Clinic data. Note that seizure markers are not consistent in their description naming, so one might encode some specific regular-expression rules to consistently capture seizure onset/offset markers across all dataset. In the case of UMMC data, all onset and offset markers were provided by the clinicians on an Excel sheet instead of via the EDF file. So we went in and added the annotations manually to each EDF file.</p>
 <p class="sd-card-text"><strong>Seizure Electrographic and Clinical Onset Annotations</strong></p>
-<p class="sd-card-text">For various datasets, there are seizures present within the dataset. Generally there is only one seizure per EDF file. When seizures are present, they are marked electrographically (and clinically if present) via standard approaches in the epilepsy clinical workflow.</p>
-<p class="sd-card-text">Clinical onset are just manifestation of the seizures with clinical syndromes. Sometimes the maker may not be present.</p>
+<p class="sd-card-text">For various datasets, there are seizures present within the dataset. Generally there is only one seizure per EDF file. When seizures are present, they are marked electrographically (and clinically if present) via standard approaches in the epilepsy clinical workflow.
+Clinical onset are just manifestation of the seizures with clinical syndromes. Sometimes the maker may not be present.</p>
 <p class="sd-card-text"><strong>Seizure Onset Zone Annotations</strong></p>
-<p class="sd-card-text">What is actually important in the evaluation of datasets is the clinical annotations of their localization hypotheses of the seizure onset zone.</p>
-<p class="sd-card-text">These generally include:</p>
+<p class="sd-card-text">What is actually important in the evaluation of datasets is the clinical annotations of their localization hypotheses of the seizure onset zone.
+These generally include:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p class="sd-card-text">early onset: the earliest onset electrodes participating in the seizure that clinicians saw</p></li>
@@ -1157,14 +1169,14 @@ anonymization step that occurred when fully converting to BIDS.</p>
 </ul>
 </div></blockquote>
 <p class="sd-card-text"><strong>Surgical Zone (Resection or Ablation) Annotations</strong></p>
-<p class="sd-card-text">For patients with the post-surgical MRI available, then the segmentation process outlined above tells us which electrodes were within the surgical removed brain region.</p>
-<p class="sd-card-text">Otherwise, clinicians give us their best estimate, of which electrodes were resected/ablated based on their surgical notes.</p>
-<p class="sd-card-text">For surgical patients whose postoperative medical records did not explicitly indicate specific resected or ablated contacts, manual visual inspection was performed to determine the approximate contacts that were located in later resected/ablated tissue. Postoperative T1 MRI scans were compared against post-SEEG implantation CT scans or CURRY coregistrations of preoperative MRI/post SEEG CT scans. Contacts of interest in and around the area of the reported resection were selected individually and the corresponding slice was navigated to on the CT scan or CURRY coregistration. After identifying landmarks of that slice (e.g. skull shape, skull features, shape of prominent brain structures like the ventricles, central sulcus, superior temporal gyrus, etc.), the location of a given contact in relation to these landmarks, and the location of the slice along the axial plane, the corresponding slice in the postoperative MRI scan was navigated to. The resected tissue within the slice was then visually inspected and compared against the distinct landmarks identified in the CT scans, if brain tissue was not present in the corresponding location of the contact, then the contact was marked as resected/ablated. This process was repeated for each contact of interest.</p>
+<p class="sd-card-text">For patients with the post-surgical MRI available, then the segmentation process outlined above tells us which electrodes were within the surgical removed brain region.
+Otherwise, clinicians give us their best estimate, of which electrodes were resected/ablated based on their surgical notes.
+For surgical patients whose postoperative medical records did not explicitly indicate specific resected or ablated contacts, manual visual inspection was performed to determine the approximate contacts that were located in later resected/ablated tissue. Postoperative T1 MRI scans were compared against post-SEEG implantation CT scans or CURRY coregistrations of preoperative MRI/post SEEG CT scans. Contacts of interest in and around the area of the reported resection were selected individually and the corresponding slice was navigated to on the CT scan or CURRY coregistration. After identifying landmarks of that slice (e.g. skull shape, skull features, shape of prominent brain structures like the ventricles, central sulcus, superior temporal gyrus, etc.), the location of a given contact in relation to these landmarks, and the location of the slice along the axial plane, the corresponding slice in the postoperative MRI scan was navigated to. The resected tissue within the slice was then visually inspected and compared against the distinct landmarks identified in the CT scans, if brain tissue was not present in the corresponding location of the contact, then the contact was marked as resected/ablated. This process was repeated for each contact of interest.</p>
 <p class="sd-card-text"><strong>References</strong></p>
-<p class="sd-card-text">[1] Adam Li, Chester Huynh, Zachary Fitzgerald, Iahn Cajigas, Damian Brusko, Jonathan Jagid, Angel Claudio, Andres Kanner, Jennifer Hopp, Stephanie Chen, Jennifer Haagensen, Emily Johnson, William Anderson, Nathan Crone, Sara Inati, Kareem Zaghloul, Juan Bulacio, Jorge Gonzalez-Martinez, Sridevi V. Sarma. Neural Fragility as an EEG Marker of the Seizure Onset Zone. bioRxiv 862797; doi: <a class="reference external" href="https://doi.org/10.1101/862797">https://doi.org/10.1101/862797</a></p>
-<p class="sd-card-text">[2] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a></p>
-<p class="sd-card-text">[3] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0105-7">https://doi.org/10.1038/s41597-019-0105-7</a></p>
-<p class="sd-card-text">[4] Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p>
+<p class="sd-card-text">[1] Adam Li, Chester Huynh, Zachary Fitzgerald, Iahn Cajigas, Damian Brusko, Jonathan Jagid, Angel Claudio, Andres Kanner, Jennifer Hopp, Stephanie Chen, Jennifer Haagensen, Emily Johnson, William Anderson, Nathan Crone, Sara Inati, Kareem Zaghloul, Juan Bulacio, Jorge Gonzalez-Martinez, Sridevi V. Sarma. Neural Fragility as an EEG Marker of the Seizure Onset Zone. bioRxiv 862797; doi: <a class="reference external" href="https://doi.org/10.1101/862797">https://doi.org/10.1101/862797</a>
+[2] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). <a class="reference external" href="https://doi.org/10.21105/joss.01896">https://doi.org/10.21105/joss.01896</a>
+[3] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, O., … Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0105-7">https://doi.org/10.1038/s41597-019-0105-7</a>
+[4] Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p>
 </div>
 </details></section>
 <section id="dataset-information">
@@ -1191,10 +1203,10 @@ anonymization step that occurred when fully converting to BIDS.</p>
 <td><p>CC0</p></td>
 </tr>
 <tr class="row-even"><td><p>Citation / DOI</p></td>
-<td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003029.v1.0.7">doi:10.18112/openneuro.ds003029.v1.0.7</a></p></td>
+<td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003029.v1.0.5">doi:10.18112/openneuro.ds003029.v1.0.5</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003029">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003029">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003029/versions/1.0.7">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003029">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003029">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003029">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1205,8 +1217,8 @@ anonymization step that occurred when fully converting to BIDS.</p>
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@dataset</span><span class="p">{</span><span class="nl">ds003029</span><span class="p">,</span>
 <span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Epilepsy-iEEG-Multicenter-Dataset}</span><span class="p">,</span>
 <span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Adam Li and Sara Inati and Kareem Zaghloul and Nathan Crone and William Anderson and Emily Johnson and Iahn Cajigas and Damian Brusko and Jonathan Jagid and Angel Claudio and Andres Kanner and Jennifer Hopp and Stephanie Chen and Jennifer Haagensen and Sridevi Sarma}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003029.v1.0.7}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003029.v1.0.7}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003029.v1.0.5}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003029.v1.0.5}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1229,7 +1241,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 35</p></li>
-<li><p class="sd-card-text">Recordings: 679</p></li>
+<li><p class="sd-card-text">Recordings: 106</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1241,8 +1253,8 @@ Subjects &amp; recordings</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Channels &amp; sampling rate</div>
 <ul class="simple">
-<li><p class="sd-card-text">Channels: 129 (60), 132 (16), 147 (12), 88 (12), 135 (12), 123 (12), 101 (10), 91 (8), 98 (8), 99 (6), 81 (6), 53 (6), 110 (6), 86 (6), 89 (6), 80 (6), 111 (6), 60 (6), 65 (4), 47 (2), 216 (2)</p></li>
-<li><p class="sd-card-text">Sampling rate (Hz): 1000.0 (112), 999.4121105232217 (26), 249.85355222464145 (20), 999.9999999999999 (18), 499.7071044492829 (14), 1000.0000000000001 (14), 2000.0000000000002 (6), 1024.5997950800408 (2)</p></li>
+<li><p class="sd-card-text">Channels: 129 (30), 132 (8), 135 (6), 88 (6), 147 (6), 123 (6), 101 (5), 91 (4), 98 (4), 110 (3), 53 (3), 81 (3), 99 (3), 60 (3), 111 (3), 80 (3), 89 (3), 86 (3), 65 (2), 216, 47</p></li>
+<li><p class="sd-card-text">Sampling rate (Hz): 1000.0 (56), 999.4121105232217 (13), 249.85355222464145 (10), 999.9999999999999 (9), 499.7071044492829 (7), 1000.0000000000001 (7), 2000.0000000000002 (3), 1024.5997950800408</p></li>
 <li><p class="sd-card-text">Duration (hours): 0.0</p></li>
 </ul>
 </div>
@@ -1268,7 +1280,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 10.3 GB</p></li>
-<li><p class="sd-card-text">File count: 679</p></li>
+<li><p class="sd-card-text">File count: 106</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1281,7 +1293,7 @@ Files &amp; format</div>
 License &amp; citation</div>
 <ul class="simple">
 <li><p class="sd-card-text">License: CC0</p></li>
-<li><p class="sd-card-text">DOI: doi:10.18112/openneuro.ds003029.v1.0.7</p></li>
+<li><p class="sd-card-text">DOI: doi:10.18112/openneuro.ds003029.v1.0.5</p></li>
 </ul>
 </div>
 </div>
@@ -1451,8 +1463,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1478,7 +1490,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

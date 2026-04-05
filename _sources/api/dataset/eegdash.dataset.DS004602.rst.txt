@@ -156,8 +156,8 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 129 (546), 128 (546)
-      - Sampling rate (Hz): 500.0 (1002), 250.0 (90)
+      - Channels: 129
+      - Sampling rate (Hz): 500.0 (501), 250.0 (45)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags

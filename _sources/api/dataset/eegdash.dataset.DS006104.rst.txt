@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 24` :bdg-secondary-line:`Recordings: 309` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 24` :bdg-secondary-line:`Recordings: 56` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,12 +93,12 @@ About This Dataset
 **EEG dataset for speech decoding**
 
 
-
 **Dataset Overview**
-
 
 This dataset contains EEG recordings from a phoneme discrimination task with TMS.
 The data were collected during two related studies in 2019 and 2021.
+Study 1 (2019, Session 01):
+- 8 participants (P01-P08)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -107,13 +107,10 @@ The data were collected during two related studies in 2019 and 2021.
    **EEG dataset for speech decoding**
    
    
-   
    **Dataset Overview**
-   
    
    This dataset contains EEG recordings from a phoneme discrimination task with TMS.
    The data were collected during two related studies in 2019 and 2021.
-   
    Study 1 (2019, Session 01):
    - 8 participants (P01-P08)
    - Focus on CV and VC phoneme pairs
@@ -126,9 +123,7 @@ The data were collected during two related studies in 2019 and 2021.
    - 4 blocks: single phonemes, CV pairs, real words, and pseudowords
    - Additional TMS targets included Broca's area (BA 44: -51, 7, 23) and verbal memory region (BA 6: -46, 1, 41)
    
-   
    **Task Description**
-   
    
    Participants listened to speech sounds and identified stimuli with a button-press response.
    The stimuli included:
@@ -136,31 +131,22 @@ The data were collected during two related studies in 2019 and 2021.
    2. Phoneme pairs - CV and VC combinations of the phonemes
    3. Phoneme triplets - Real and pseudowords constructed of CVC sequences
    
-   
    **TMS Methodology**
-   
    
    Detailed information about TMS parameters can be found in the sourcedata/tms_metadata/tms_parameters.json file.
    TMS was applied using a Magstim Super Rapid Plus1 stimulator with a figure-of-eight 40 mm coil.
    Stimulation was delivered at 110% of resting motor threshold as paired pulses with 50ms interpulse interval.
-   
    Detailed information about the methodology and results can be found in the associated publication:
    Moreira et al. "An open-access EEG dataset for speech decoding: Exploring the role of articulation and coarticulation"
    
-   
-   
-   
    **Directory Structure**
-   
    
    The dataset follows BIDS convention with the following structure:
    /sub-[subject]/ses-[session]/eeg/
    Where subject is P01-P08 for Study 1 and S01-S16 for Study 2.
    Session is 01 for Study 1 and 02 for Study 2.
    
-   
    **Contact Information**
-   
    
    For questions about this dataset, please contact Lindy Comstock at lbcomstock@ucla.edu
 
@@ -185,7 +171,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006104.v1.0.1 <https://doi.org/10.18112/openneuro.ds006104.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006104>`__ | `Source URL <https://openneuro.org/datasets/ds006104/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006104>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006104>`__ | `Source URL <https://openneuro.org/datasets/ds006104>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -222,13 +208,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 24
-      - Recordings: 309
+      - Recordings: 56
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 61 (106), 83 (6)
+      - Channels: 61 (53), 83 (3)
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -243,7 +229,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 43.0 GB
-      - File count: 309
+      - File count: 56
       - Format: BIDS
 
    .. grid-item-card:: License & citation

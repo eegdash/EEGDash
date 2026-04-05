@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 34` :bdg-secondary-line:`Recordings: 590` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 34` :bdg-secondary-line:`Recordings: 69` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,26 +92,22 @@ About This Dataset
 
 **Dataset Description**
 
-
-This dataset contains the EEG data accompanying the study 
+This dataset contains the EEG data accompanying the study
 **"Adaptive recruitment of cortex-wide recurrence for visual object recognition"** (Link to preprint: https://www.biorxiv.org/content/10.1101/2025.10.17.682937v2).
-Please cite the above paper if you use this data.
 
+**Please cite the above paper if you use this data.**
 
 
 **Dataset Overview**
 
-- 34 participants, each with 1 session  
 
+**- 34 participants, each with 1 session**
 
 
 **Experimental Design**
 
-The EEG experiment used a stimulus set of 242 images (121 “challenge” and 121 “control” images) derived from comparisons between human behavioural performance and AlexNet.  
-
+The EEG experiment used a stimulus set of 242 images (121 “challenge” and 121 “control” images) derived from comparisons between human behavioural performance and AlexNet.
 - *Main task:* Each trial consisted of a single image presented for 200 ms followed by a 100 ms blank. Trials were grouped into sequences of 14 images. At the end of each sequence, participants reported whether a paper clip appeared anywhere in that sequence.
-
-
 
 **Derivatives**
 
@@ -137,7 +133,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007162.v1.0.0 <https://doi.org/10.18112/openneuro.ds007162.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007162>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007162>`__ | `Source URL <https://openneuro.org/datasets/ds007162/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007162>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007162>`__ | `Source URL <https://openneuro.org/datasets/ds007162>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -174,7 +170,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 34
-      - Recordings: 590
+      - Recordings: 69
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -195,7 +191,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 60.9 GB
-      - File count: 590
+      - File count: 69
       - Format: BIDS
 
    .. grid-item-card:: License & citation

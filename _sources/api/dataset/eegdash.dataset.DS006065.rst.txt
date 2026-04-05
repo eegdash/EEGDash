@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 250` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 45` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,12 +93,12 @@ About This Dataset
 **iEEG Dataset: Theta-synchronized Stimulation of Human Hippocampal Networks**
 
 
-
 **Information**
 
-This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:  
-
-*Kragel et al., 2025, Nature Communications:*  
+This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:
+*Kragel et al., 2025, Nature Communications:*
+*“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*
+For questions or further information, contact:
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -107,31 +107,25 @@ This folder contains intracranial EEG (iEEG) data from **7 participants** underg
    **iEEG Dataset: Theta-synchronized Stimulation of Human Hippocampal Networks**
    
    
-   
    **Information**
    
-   This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:  
+   This folder contains intracranial EEG (iEEG) data from **7 participants** undergoing closed-loop stimulation as part of a study on hippocampal network connectivity, as used in the following publication:
+   *Kragel et al., 2025, Nature Communications:*
+   *“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*
+   For questions or further information, contact:
+   - *James Kragel:* `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`_\_
    
-   *Kragel et al., 2025, Nature Communications:*  
-   *“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*  
-   
-   For questions or further information, contact:  
-   - *James Kragel:* `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`_\_  
-   - *Joel Voss:* `joelvoss@uchicago.edu <mailto:joelvoss@uchicago.edu>`_\_  
-   
+   **- Joel Voss: joelvoss@uchicago.edu**
    
    
    **License**
    
-   This dataset is made available under the \**Public Domain Dedication and License v1.0*\*.  
+   This dataset is made available under the \**Public Domain Dedication and License v1.0*\*.
    Full text: `http://www.opendatacommons.org/licenses/pddl/1.0 <http://www.opendatacommons.org/licenses/pddl/1.0>`_\_
-   
-   
    
    **Dataset and Protocol**
    
-   The data are organized according to the **Brain Imaging Data Structure (BIDS)** iEEG specification, a community-driven standard for organizing neurophysiology data along with its metadata.  
-   
+   The data are organized according to the **Brain Imaging Data Structure (BIDS)** iEEG specification, a community-driven standard for organizing neurophysiology data along with its metadata.
    
    **Structure**
    
@@ -141,17 +135,15 @@ This folder contains intracranial EEG (iEEG) data from **7 participants** underg
    - **Pre-stimulation rest**
    - **Post-stimulation rest**
    - **Closed-loop stimulation**
-   - **Control stimulation**
    
+   **- Control stimulation**
    
    
    **Raw Data**
    
    The raw data are stored in **BrainVision format** (``vhdr``, ``vmrk``, and ``eeg`` files). You can read these files into memory using the following tools:
-   
-   - *MATLAB:* `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`_\_  
-   - *Python:* ``pybv`` package <https://github.com/bids-standard/pybv>\`_\_  
-   
+   - *MATLAB:* `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`_\_
+   - *Python:* ``pybv`` package <https://github.com/bids-standard/pybv>\`_\_
    
    **Electrode Coordinates**
    
@@ -178,7 +170,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006065.v1.0.0 <https://doi.org/10.18112/openneuro.ds006065.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006065>`__ | `Source URL <https://openneuro.org/datasets/ds006065/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006065>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006065>`__ | `Source URL <https://openneuro.org/datasets/ds006065>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -215,13 +207,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 7
-      - Recordings: 250
+      - Recordings: 45
       - Tasks: 10
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 168 (30), 175 (20), 43 (10), 181 (10), 82 (10), 68 (10)
+      - Channels: 168 (15), 175 (10), 82 (5), 68 (5), 181 (5), 43 (5)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -236,7 +228,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 9.6 GB
-      - File count: 250
+      - File count: 45
       - Format: BIDS
 
    .. grid-item-card:: License & citation

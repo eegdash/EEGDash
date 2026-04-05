@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 113` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 12` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,11 +92,8 @@ About This Dataset
 
 **Average Task Value**
 
-
 Twelve participants completed three learning tasks. In each task the goal was to learn cue-response mappings for six cues. The cues were various coloured shapes. The possible responses were left ('d' key) or right ('k' key). There were two types of cues. Low-value cues had a feedback validity of 0.5 (i.e., a coin toss). High-value cues had a feedback validity of 0.8 (80% chance of a win if the correct action was chosen). The low-value task contained only low-value cues. The high-value task contained only high-value cues. The mid-value task contained three low-value cues and three high-value cues. Participants completed 144 trials of each task.
-
 Preprint: https://doi.org/10.1101/2021.09.16.460600
-
 Analysis code: https://github.com/chassall/averagetaskvalue
 
 Dataset Information
@@ -119,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004147.v1.0.2 <https://doi.org/10.18112/openneuro.ds004147.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004147>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004147>`__ | `Source URL <https://openneuro.org/datasets/ds004147/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004147>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004147>`__ | `Source URL <https://openneuro.org/datasets/ds004147>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,7 +153,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 12
-      - Recordings: 113
+      - Recordings: 12
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -177,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 4.0 GB
-      - File count: 113
+      - File count: 12
       - Format: BIDS
 
    .. grid-item-card:: License & citation

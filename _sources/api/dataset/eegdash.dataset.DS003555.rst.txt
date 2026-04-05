@@ -11,7 +11,7 @@ DS003555
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani, Johannes Sarnthein (—). *Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system*. `10.18112/openneuro.ds003555.v1.0.1 <https://doi.org/10.18112/openneuro.ds003555.v1.0.1>`__
+**Citation:** Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani, Johannes Sarnthein (2021). *Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system*. `10.18112/openneuro.ds003555.v1.0.1 <https://doi.org/10.18112/openneuro.ds003555.v1.0.1>`__
 
 .. rst-class:: sd-badges
 
@@ -153,7 +153,7 @@ Dataset Information
    * - Title
      - Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system
    * - Year
-     - —
+     - 2021
    * - Authors
      - Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani, Johannes Sarnthein
    * - License
@@ -218,7 +218,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 28.3 GB
+      - Size on disk: 15.1 GB
       - File count: 30
       - Format: BIDS
 

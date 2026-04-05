@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 34` :bdg-secondary-line:`Recordings: 311` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 34` :bdg-secondary-line:`Recordings: 34` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,13 +89,12 @@ Quickstart
 About This Dataset
 ------------------
 
-Introduction: The EEG data was recorded using the 128-channel Amps 300 amplifier (Electrical Geodesics Inc., OR, USA) at a sampling frequency of 1000 Hz. 
+Introduction: The EEG data was recorded using the 128-channel Amps 300 amplifier (Electrical Geodesics Inc., OR, USA) at a sampling frequency of 1000 Hz.
 The EEG data acquisition was conducted  during the resting.
 Structural MRI data for the same participants were acquired at the University of Oklahoma Health Science Center (OUHSC) MRI facility using a GE MR750 scanner. The scans were obtained with GE’s BRAVO sequence, with a field of view (FOV) of 240 mm and 180 axial slices per slab
-
-Preprocessing in EEGLAB: After the data acquisition, a band-pass filter (0.5–100 Hz) and a notch filter (58–62 Hz) were applied to remove noise. 
-Noisy channels and artifacts (e.g., from eye blinks, muscle movements, or heartbeats) were identified and removed. 
-Bad channels were replaced using interpolation, and the data was re-referenced to the average of all electrodes. 
+Preprocessing in EEGLAB: After the data acquisition, a band-pass filter (0.5–100 Hz) and a notch filter (58–62 Hz) were applied to remove noise.
+Noisy channels and artifacts (e.g., from eye blinks, muscle movements, or heartbeats) were identified and removed.
+Bad channels were replaced using interpolation, and the data was re-referenced to the average of all electrodes.
 The data was then sampled down to 250 Hz to reduce file size while keeping enough detail. No data segments were removed to ensure the continuity needed for later analysis.
 
 Dataset Information
@@ -118,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006525.v1.0.0 <https://doi.org/10.18112/openneuro.ds006525.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006525>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006525>`__ | `Source URL <https://openneuro.org/datasets/ds006525/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006525>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006525>`__ | `Source URL <https://openneuro.org/datasets/ds006525>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -155,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 34
-      - Recordings: 311
-      - Tasks: 2
+      - Recordings: 34
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (60), 129 (8)
+      - Channels: 128 (26), 129 (8)
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
@@ -176,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 3.0 GB
-      - File count: 311
+      - File count: 34
       - Format: BIDS
 
    .. grid-item-card:: License & citation

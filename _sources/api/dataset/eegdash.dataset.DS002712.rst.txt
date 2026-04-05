@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 482` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 82` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,22 +89,18 @@ Quickstart
 About This Dataset
 ------------------
 
-OpenNeuro curator note: This dataset was previously accessible at ds001985. The dataset was reuploaded due to privacy considerations. 
-
+OpenNeuro curator note: This dataset was previously accessible at ds001985. The dataset was reuploaded due to privacy considerations.
 The experiment is composed by two runs
 We here report the code triggers for each run:
-
 Run 1: single item
 10 = single numbers
 15 = single letters
 20 & 25 = single false fonts
-
 Run 2: strings
 35 = strings numbers
 40 = strings letters
 45 & 50 = strings false fonts
-
-raw files could be split into two files 
+raw files could be split into two files
 (e.g., run-1 + run-11)
 
 Dataset Information
@@ -127,7 +123,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds002712.v1.0.1 <https://doi.org/10.18112/openneuro.ds002712.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002712>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002712>`__ | `Source URL <https://openneuro.org/datasets/ds002712/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002712>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002712>`__ | `Source URL <https://openneuro.org/datasets/ds002712>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -164,13 +160,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 25
-      - Recordings: 482
+      - Recordings: 82
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 306 (79), 312 (79), 361 (2), 52 (2), 5, 314
+      - Channels: 312 (79), 361 (2), 314
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -185,7 +181,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 101.8 GB
-      - File count: 482
+      - File count: 82
       - Format: BIDS
 
    .. grid-item-card:: License & citation

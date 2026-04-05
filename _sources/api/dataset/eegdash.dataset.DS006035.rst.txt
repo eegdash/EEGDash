@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 98` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 15` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,54 +90,27 @@ About This Dataset
 ------------------
 
 Accession: #: ds006035
-Description: Multi-subject, multi-modal (sMRI+MEG+EEG) neuroimaging dataset for median nerve stimulation and motor responses. 
-This dataset contains MRI (T1w), MEG, and EEG data for median nerve electrical stimuli delivered at the right wrist. 
-The task was to respond by lifting the left hand idex finger as quickly as possible after each right median nerve stimulus.  
+Description: Multi-subject, multi-modal (sMRI+MEG+EEG) neuroimaging dataset for median nerve stimulation and motor responses.
+This dataset contains MRI (T1w), MEG, and EEG data for median nerve electrical stimuli delivered at the right wrist.
+The task was to respond by lifting the left hand idex finger as quickly as possible after each right median nerve stimulus.
 
-meg/
+**meg/**
 
-
-Three anatomical fiducials were digitized for aligning the MEG with the MRI: 
+Three anatomical fiducials were digitized for aligning the MEG with the MRI:
 1. nasion (lowest depression between the eyes);
+2. left pre-auricular point;
+3. right pre-auricular point.
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+The following triggers are included in the .fif files and are also used in the “value” column of the meg events .tsv files:
+Trigger     Label                                        Simplified Label
+32             somatosensory stimulus      somatosensory
+16             finger lift response                finger
+If you wish to publish any of these data, please acknowledge the authors.
 
-   Accession: #: ds006035
-   Description: Multi-subject, multi-modal (sMRI+MEG+EEG) neuroimaging dataset for median nerve stimulation and motor responses. 
-   This dataset contains MRI (T1w), MEG, and EEG data for median nerve electrical stimuli delivered at the right wrist. 
-   The task was to respond by lifting the left hand idex finger as quickly as possible after each right median nerve stimulus.  
-   
-   meg/
-   
-   
-   Three anatomical fiducials were digitized for aligning the MEG with the MRI: 
-   1. nasion (lowest depression between the eyes);
-   2. left pre-auricular point;
-   3. right pre-auricular point.  
-   
-   
-   
-   The following triggers are included in the .fif files and are also used in the “value” column of the meg events .tsv files:
-   
-   Trigger     Label                                        Simplified Label
-   
-   32             somatosensory stimulus      somatosensory
-   
-   16             finger lift response                finger
-   
-   
-   If you wish to publish any of these data, please acknowledge the authors. 
-   
-   
-   
-   
-   **BIDS ﻿References**
-   
-   Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-   
-   Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
+**BIDS ﻿References**
 
+Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
 
 Dataset Information
 -------------------
@@ -159,7 +132,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006035.v1.0.0 <https://doi.org/10.18112/openneuro.ds006035.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006035>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006035>`__ | `Source URL <https://openneuro.org/datasets/ds006035/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006035>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006035>`__ | `Source URL <https://openneuro.org/datasets/ds006035>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -196,13 +169,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 5
-      - Recordings: 98
+      - Recordings: 15
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 70 (15), 388 (12), 387 (3)
+      - Channels: 388 (12), 387 (3)
       - Sampling rate (Hz): 1004.01611328125
       - Duration (hours): 0.0
 
@@ -217,7 +190,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 3.1 GB
-      - File count: 98
+      - File count: 15
       - Format: BIDS
 
    .. grid-item-card:: License & citation

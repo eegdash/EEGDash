@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 133` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 18` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `mockDOI <https://doi.org/mockDOI>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds002218>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002218>`__ | `Source URL <https://openneuro.org/datasets/ds002218/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds002218>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds002218>`__ | `Source URL <https://openneuro.org/datasets/ds002218>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,7 +148,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 18
-      - Recordings: 133
+      - Recordings: 18
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.9 GB
-      - File count: 133
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 2491` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 350` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,19 +90,12 @@ About This Dataset
 ------------------
 
 Main entrance: face_0_main
-
 Preprocessing: face_1_prep
-
 Decoding: face_2_dec
-
 RSA: face_3_rsa
-
 Statistical: face_4_stat
-
 BMS: face_6_bayes.m
-
 During original OPM-MEG data acquisition, individual facial point clouds and structural MRIs were not collected due to the unavailability of optical scanning equipment. Hence, all analyses were conducted at the whole-brain & sensor level. The raw data were originally stored using in-house LabVIEW format and were converted into the FIF format later. It should be noted that the sensor coordinates used were approximated by selecting corresponding locations from the Elekta layout and do not reflect the actual sensor positions (only for visualizing topographic maps). We are currently checking all the data to ensure that everything has been uploaded correctly. :)
-
 Correspondence: weixu@mail.bnu.edu.cn
 
 Dataset Information
@@ -125,7 +118,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005107.v2.0.0 <https://doi.org/10.18112/openneuro.ds005107.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005107>`__ | `Source URL <https://openneuro.org/datasets/ds005107/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005107>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005107>`__ | `Source URL <https://openneuro.org/datasets/ds005107>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -162,13 +155,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 21
-      - Recordings: 2491
+      - Recordings: 350
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 65 (350), 64 (350)
+      - Channels: 65
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -183,7 +176,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 27.6 GB
-      - File count: 2491
+      - File count: 350
       - Format: BIDS
 
    .. grid-item-card:: License & citation

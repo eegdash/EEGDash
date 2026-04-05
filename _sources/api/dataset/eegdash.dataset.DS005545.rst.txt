@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 106` :bdg-secondary-line:`Recordings: 1349` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 106` :bdg-secondary-line:`Recordings: 336` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,13 +90,11 @@ About This Dataset
 ------------------
 
 This dataset, used in the analysis reported by Kanno et al., (2025), contains intracranial EEG recordings from 106 individuals who performed an auditory‑naming task. The corresponding MATLAB analysis code is available at https://github.com/a8k8nn0/TractographyAtlas, and electrode coordinates are provided in MNI‑305 space.
-
-Each EDF file is tagged for the auditory naming task with the following event codes:  
-401 – stimulus onset  
-402 – stimulus offset  
-501 – response onset  
-
-Reference: 
+Each EDF file is tagged for the auditory naming task with the following event codes:
+401 – stimulus onset
+402 – stimulus offset
+501 – response onset
+Reference:
 Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Robert Rothermel, Aimee F. Luat, Eishi Asano. Dynamic Causal Tractography Analysis of Auditory Descriptive Naming: An Intracranial Study of 106 Patients. bioRxiv 2025.03.07.641428; doi: https://doi.org/10.1101/2025.03.07.641428
 
 Dataset Information
@@ -119,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005545.v1.0.3 <https://doi.org/10.18112/openneuro.ds005545.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__ | `Source URL <https://openneuro.org/datasets/ds005545/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005545>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005545>`__ | `Source URL <https://openneuro.org/datasets/ds005545>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 106
-      - Recordings: 1349
+      - Recordings: 336
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (474), 138 (28), 134 (22), 136 (22), 140 (16), 112 (12), 110 (12), 156 (10), 150 (10), 142 (10), 132 (8), 164 (8), 148 (8), 144 (8), 118 (6), 96 (6), 84 (6), 116 (6)
+      - Channels: 128 (237), 138 (14), 136 (11), 134 (11), 140 (8), 112 (6), 110 (6), 156 (5), 142 (5), 150 (5), 164 (4), 132 (4), 144 (4), 148 (4), 118 (3), 116 (3), 84 (3), 96 (3)
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -177,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 40.0 GB
-      - File count: 1349
+      - File count: 336
       - Format: BIDS
 
    .. grid-item-card:: License & citation

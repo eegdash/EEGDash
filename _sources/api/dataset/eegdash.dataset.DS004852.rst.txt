@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 10` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 1` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 InsurgentCivilian dataset
-
 This is a placeholder dataset.
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004852.v1.0.0 <https://doi.org/10.18112/openneuro.ds004852.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004852>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004852>`__ | `Source URL <https://openneuro.org/datasets/ds004852/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004852>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004852>`__ | `Source URL <https://openneuro.org/datasets/ds004852>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,7 +149,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 1
-      - Recordings: 10
+      - Recordings: 1
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 79.2 MB
-      - File count: 10
+      - File count: 1
       - Format: BIDS
 
    .. grid-item-card:: License & citation

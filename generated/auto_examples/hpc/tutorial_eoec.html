@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/hpc/tutorial_eoec';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -450,7 +455,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -592,23 +604,30 @@ Discovered subjects (first 20): [&#39;NDARAC589YMB&#39;, &#39;NDARAC853CR6&#39;,
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.1B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.1B/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 18.2B/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.9B/s]
+[04/05/26 01:18:13] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAC589YMB/eeg/sub-NDARAC589YMB_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.76s/B]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.76s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:28] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.45s/B]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.45s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:15] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -649,24 +668,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.20B/s]
+Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.30B/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.05B/s]
+Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.6B/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.78B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.77B/s]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 21.9B/s]
+[04/05/26 01:18:17] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAC853CR6/eeg/sub-NDARAC853CR6_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.70s/B]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.70s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:33] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.32s/B]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.32s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:19] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -707,23 +732,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 21.6B/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 5.50B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.7B/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 20.8B/s]
+[04/05/26 01:18:20] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAE710YWG/eeg/sub-NDARAE710YWG_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.74s/B]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.74s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:37] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.34s/B]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.34s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:22] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -764,23 +796,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.4B/s]
+Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.5B/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.2B/s]
+Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.5B/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.6B/s]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 23.0B/s]
+[04/05/26 01:18:24] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAH239PGG/eeg/sub-NDARAH239PGG_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.92s/B]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.92s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:41] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.09s/B]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.09s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:25] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -821,23 +860,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.8B/s]
+Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 16.0B/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
+Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 20.3B/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.37B/s]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 19.2B/s]
+[04/05/26 01:18:27] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAL897CYV/eeg/sub-NDARAL897CYV_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.75s/B]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.75s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:46] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.11s/B]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.11s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:29] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -878,23 +924,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 6.51B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 14.7B/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.18B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 17.2B/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.93B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.35B/s]
+[04/05/26 01:18:30] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAN160GUF/eeg/sub-NDARAN160GUF_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.98s/B]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.98s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:51] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.26s/B]
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.26s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:32] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -935,23 +988,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.0B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.1B/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 13.5B/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.92B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.8B/s]
+[04/05/26 01:18:34] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAP049KXJ/eeg/sub-NDARAP049KXJ_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.26s/B]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.26s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:55] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.13s/B]
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.13s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:35] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -992,23 +1052,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.05B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 25.5B/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.05B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 25.1B/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.82B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 22.5B/s]
+[04/05/26 01:18:37] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAP457WB5/eeg/sub-NDARAP457WB5_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.83s/B]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.83s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:37:59] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.05s/B]
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.05s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:39] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -1049,23 +1116,30 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.89B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 23.0B/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.59B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 25.0B/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 12.0B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 25.7B/s]
+[04/05/26 01:18:40] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAU939WUK/eeg/sub-NDARAU939WUK_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.88s/B]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.88s/B]
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:38:04] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.34s/B]
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.34s/B]
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+[04/05/26 01:18:42] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -1106,39 +1180,48 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.97B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 24.2B/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 5.79B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 21.9B/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.34B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 2.34B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 23.4B/s]
+[04/05/26 01:18:44] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARAW216PM7/eeg/sub-NDARAW216PM7_
+                             task-RestingState_eeg.fdt
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.88s/B]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.88s/B]
-Used Annotations descriptions: [&#39;break cnt&#39;, &#39;dot_no1_OFF&#39;, &#39;dot_no1_ON&#39;, &#39;dot_no2_OFF&#39;, &#39;dot_no2_ON&#39;, &#39;dot_no3_OFF&#39;, &#39;dot_no3_ON&#39;, &#39;dot_no4_OFF&#39;, &#39;dot_no4_ON&#39;, &#39;dot_no5_OFF&#39;, &#39;dot_no5_ON&#39;, &#39;dot_no6_OFF&#39;, &#39;dot_no6_ON&#39;, &#39;dot_no7_OFF&#39;, &#39;dot_no7_ON&#39;, &#39;dot_no8_OFF&#39;, &#39;dot_no8_ON&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;learningBlock_1&#39;, &#39;resting_start&#39;, &#39;seqLearning_start&#39;]
-[04/03/26 09:38:09] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;break cnt&#39;: 1, &#39;dot_no1_OFF&#39;:
-                             2, &#39;dot_no1_ON&#39;: 3,
-                             &#39;dot_no2_OFF&#39;: 4, &#39;dot_no2_ON&#39;:
-                             5, &#39;dot_no3_OFF&#39;: 6,
-                             &#39;dot_no3_ON&#39;: 7, &#39;dot_no4_OFF&#39;:
-                             8, &#39;dot_no4_ON&#39;: 9,
-                             &#39;dot_no5_OFF&#39;: 10,
-                             &#39;dot_no5_ON&#39;: 11,
-                             &#39;dot_no6_OFF&#39;: 12,
-                             &#39;dot_no6_ON&#39;: 13,
-                             &#39;dot_no7_OFF&#39;: 14,
-                             &#39;dot_no7_ON&#39;: 15,
-                             &#39;dot_no8_OFF&#39;: 16,
-                             &#39;dot_no8_ON&#39;: 17,
-                             &#39;instructed_toCloseEyes&#39;: 18,
-                             &#39;instructed_toOpenEyes&#39;: 19,
-                             &#39;learningBlock_1&#39;: 20,
-                             &#39;resting_start&#39;: 21,
-                             &#39;seqLearning_start&#39;: 22}
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.63s/B]
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.63s/B]
+Used Annotations descriptions: [np.str_(&#39;break cnt&#39;), np.str_(&#39;dot_no1_OFF&#39;), np.str_(&#39;dot_no1_ON&#39;), np.str_(&#39;dot_no2_OFF&#39;), np.str_(&#39;dot_no2_ON&#39;), np.str_(&#39;dot_no3_OFF&#39;), np.str_(&#39;dot_no3_ON&#39;), np.str_(&#39;dot_no4_OFF&#39;), np.str_(&#39;dot_no4_ON&#39;), np.str_(&#39;dot_no5_OFF&#39;), np.str_(&#39;dot_no5_ON&#39;), np.str_(&#39;dot_no6_OFF&#39;), np.str_(&#39;dot_no6_ON&#39;), np.str_(&#39;dot_no7_OFF&#39;), np.str_(&#39;dot_no7_ON&#39;), np.str_(&#39;dot_no8_OFF&#39;), np.str_(&#39;dot_no8_ON&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;learningBlock_1&#39;), np.str_(&#39;resting_start&#39;), np.str_(&#39;seqLearning_start&#39;)]
+[04/05/26 01:18:46] INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;break cnt&#39;): 1,
+                             np.str_(&#39;dot_no1_OFF&#39;): 2,
+                             np.str_(&#39;dot_no1_ON&#39;): 3,
+                             np.str_(&#39;dot_no2_OFF&#39;): 4,
+                             np.str_(&#39;dot_no2_ON&#39;): 5,
+                             np.str_(&#39;dot_no3_OFF&#39;): 6,
+                             np.str_(&#39;dot_no3_ON&#39;): 7,
+                             np.str_(&#39;dot_no4_OFF&#39;): 8,
+                             np.str_(&#39;dot_no4_ON&#39;): 9,
+                             np.str_(&#39;dot_no5_OFF&#39;): 10,
+                             np.str_(&#39;dot_no5_ON&#39;): 11,
+                             np.str_(&#39;dot_no6_OFF&#39;): 12,
+                             np.str_(&#39;dot_no6_ON&#39;): 13,
+                             np.str_(&#39;dot_no7_OFF&#39;): 14,
+                             np.str_(&#39;dot_no7_ON&#39;): 15,
+                             np.str_(&#39;dot_no8_OFF&#39;): 16,
+                             np.str_(&#39;dot_no8_ON&#39;): 17,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 18,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 19,
+                             np.str_(&#39;learningBlock_1&#39;): 20,
+                             np.str_(&#39;resting_start&#39;): 21,
+                             np.str_(&#39;seqLearning_start&#39;):
+                             22}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -1615,7 +1698,7 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, Train accuracy: </span><span class="si">{</span><span class="n">train_acc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, Test accuracy: </span><span class="si">{</span><span class="n">test_acc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 50.751 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 39.837 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-hpc-tutorial-eoec-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/hpc/tutorial_eoec.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo3.svg" style="width: 150px;" />
@@ -1690,13 +1773,13 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
 </div>
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/generated/auto_examples/hpc/tutorial_eoec.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="../../../_sources/generated/auto_examples/hpc/tutorial_eoec.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -1711,8 +1794,8 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1738,7 +1821,7 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

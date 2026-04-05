@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 179` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 29` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,11 +91,9 @@ About This Dataset
 
 EEG study of episodic future thinking and delay discounting, to be described in a forthcoming paper. Briefly, participants described a series of future events and were then cued to think about these events as they made intertemporal choices. They were also asked how vivid their mental imagery of these events was.
 
-
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
 
 Dataset Information
@@ -118,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006446.v1.0.0 <https://doi.org/10.18112/openneuro.ds006446.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006446>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006446>`__ | `Source URL <https://openneuro.org/datasets/ds006446/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006446>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006446>`__ | `Source URL <https://openneuro.org/datasets/ds006446>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -155,13 +153,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 29
-      - Recordings: 179
+      - Recordings: 29
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64 (29), 65 (29)
+      - Channels: 65
       - Sampling rate (Hz): 2048.0
       - Duration (hours): 0.0
 
@@ -176,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 16.1 GB
-      - File count: 179
+      - File count: 29
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -11,7 +11,7 @@ DS004389
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (—). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
+**Citation:** Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert (2023). *Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation*. `10.18112/openneuro.ds004389.v1.0.0 <https://doi.org/10.18112/openneuro.ds004389.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -121,7 +121,7 @@ Dataset Information
    * - Title
      - Somatosensory evoked potentials in the human spinal cord to mixed and sensory nerve stimulation
    * - Year
-     - —
+     - 2023
    * - Authors
      - Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess, Gabriel Curio, Vadim V. Nikulin, Falk Eippert
    * - License

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 196` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 38` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,21 +91,10 @@ About This Dataset
 
 We presented twenty adult participants with harmonic complex sound (HCS) stimuli that varied in frequency in an auditory oddball protocol during simultaneous EEG and MEG recording (for details, see Inbar et al., 2025)
 
-
-
-
-
-
-
-
 **References**
 
-
 Inbar, T.C., Badier, JM., Bénar, C. et al. Pre-attentive Pitch Processing of Harmonic Complex Sounds at Sensor and Source Levels: Comparing Simultaneously Recorded EEG and MEG Data. Brain Topogr 38, 71 (2025). https://doi.org/10.1007/s10548-025-01147-6
-
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896file:///media/chanoine/My%20Passport/SINGSING/data/COMB/preproc/FIF/BIDS/dataset_description.json
-
-
 Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A., Henson, R. N., Jas, M., Litvak, V., Moreau, J., Oostenveld, R., Schoffelen, J., Tadel, F., Wexler, J., Baillet, S. (2018). MEG-BIDS, the brain imaging data structure extended to magnetoencephalography. Scientific Data, 5, 180110.https://doi.org/10.1038/sdata.2018.110
 
 Dataset Information
@@ -128,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006629.v1.0.1 <https://doi.org/10.18112/openneuro.ds006629.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006629>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006629>`__ | `Source URL <https://openneuro.org/datasets/ds006629/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006629>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006629>`__ | `Source URL <https://openneuro.org/datasets/ds006629>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -165,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 19
-      - Recordings: 196
+      - Recordings: 38
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64 (38), 339 (38)
+      - Channels: 339
       - Sampling rate (Hz): 250.0
       - Duration (hours): 0.0
 
@@ -186,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 11.2 GB
-      - File count: 196
+      - File count: 38
       - Format: BIDS
 
    .. grid-item-card:: License & citation

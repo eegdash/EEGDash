@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 631` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 30` :bdg-secondary-line:`Recordings: 210` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 Subjects (N = 30) completed a Multiple Object Monitoring (MOM) task. Methodological details can be read within the pre-print: https://doi.org/10.1101/2025.07.10.663816
-
 Please email ben.lowe@mq.edu.au if you have any further questions.
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006768.v1.1.0 <https://doi.org/10.18112/openneuro.ds006768.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006768>`__ | `Source URL <https://openneuro.org/datasets/ds006768/versions/1.1.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006768>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006768>`__ | `Source URL <https://openneuro.org/datasets/ds006768>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,7 +149,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 30
-      - Recordings: 631
+      - Recordings: 210
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 6.5 GB
-      - File count: 631
+      - File count: 210
       - Format: BIDS
 
    .. grid-item-card:: License & citation

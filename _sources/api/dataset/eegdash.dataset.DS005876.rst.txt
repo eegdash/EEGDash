@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 180` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 29` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,11 +92,8 @@ About This Dataset
 
 **Song Familiarity**
 
-
 Twenty-nine participants listened to song melodies and responded as soon as the song felt familiar. Participants were then asked to identify the song, if possible (title, artist, or lyrics). Next, participants were shown a multiple choice display with four song titles, selected a song title, and were given visual feedback (correct: selected option turned green and a checkmark appeared next to the title; incorrect: selected option turned red and an x appeared next to the title.)
-
 Song stimuli are taken from Kostic and Cleary (2009): https://supp.apa.org/psycarticles/supplemental/a0014584/a0014584_supp.html
-
 An audio file with a reconstruction of what each participant heard throughout the experiment can be found in /derivatives. The audio file has been synchronized with the EEG recording.
 
 Dataset Information
@@ -119,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005876.v1.0.1 <https://doi.org/10.18112/openneuro.ds005876.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005876>`__ | `Source URL <https://openneuro.org/datasets/ds005876/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005876>`__ | `Source URL <https://openneuro.org/datasets/ds005876>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,7 +153,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 29
-      - Recordings: 180
+      - Recordings: 29
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -177,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 7.1 GB
-      - File count: 180
+      - File count: 29
       - Format: BIDS
 
    .. grid-item-card:: License & citation

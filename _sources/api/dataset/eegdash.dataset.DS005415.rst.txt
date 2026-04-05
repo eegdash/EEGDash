@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 13` :bdg-secondary-line:`Recordings: 133` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 13` :bdg-secondary-line:`Recordings: 13` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005415.v1.0.0 <https://doi.org/10.18112/openneuro.ds005415.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005415>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005415>`__ | `Source URL <https://openneuro.org/datasets/ds005415/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005415>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005415>`__ | `Source URL <https://openneuro.org/datasets/ds005415>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,14 +148,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 13
-      - Recordings: 133
+      - Recordings: 13
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 182 (4), 266 (2), 188 (2), 246 (2), 194 (2), 230 (2), 210 (2), 228 (2), 200 (2), 202 (2), 224 (2), 192 (2)
-      - Sampling rate (Hz): 1000.0 (20), 2000.0 (6)
+      - Channels: 182 (2), 228, 230, 210, 194, 246, 188, 266, 192, 224, 202, 200
+      - Sampling rate (Hz): 1000.0 (10), 2000.0 (3)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 7.5 GB
-      - File count: 133
+      - File count: 13
       - Format: BIDS
 
    .. grid-item-card:: License & citation

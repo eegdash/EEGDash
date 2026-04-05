@@ -12,4 +12,5 @@ Other Datasets
    eegdash.dataset.DS002799
    eegdash.dataset.DS005083
    eegdash.dataset.DS005511
+   eegdash.dataset.DS005787
    eegdash.dataset.DS006253

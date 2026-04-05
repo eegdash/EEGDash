@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 10` :bdg-secondary-line:`Recordings: 280` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 10` :bdg-secondary-line:`Recordings: 50` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,51 +89,50 @@ Quickstart
 About This Dataset
 ------------------
 
-VR-CCT Dataset                             
-
-Compassion Island was a social world implemented in   
-AltspaceVR by tecchnology collaborators Origami Air.  
-It was specifically created for the study of VR-based 
+VR-CCT Dataset
+Compassion Island was a social world implemented in
+AltspaceVR by tecchnology collaborators Origami Air.
+It was specifically created for the study of VR-based
 augmentation of compassion cultivation training (CCT).
-It featured three main settings – a meditation hall,  
-a garden courtyard with a large willow tree, and a    
-clinic. During experimental sessions, participants    
-interacted with two characters in these spaces,       
+It featured three main settings – a meditation hall,
+a garden courtyard with a large willow tree, and a
+clinic. During experimental sessions, participants
+interacted with two characters in these spaces,
+represented as avatars – namely, a guide, who helped
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
-   VR-CCT Dataset                             
-   
-   Compassion Island was a social world implemented in   
-   AltspaceVR by tecchnology collaborators Origami Air.  
-   It was specifically created for the study of VR-based 
+   VR-CCT Dataset
+   Compassion Island was a social world implemented in
+   AltspaceVR by tecchnology collaborators Origami Air.
+   It was specifically created for the study of VR-based
    augmentation of compassion cultivation training (CCT).
-   It featured three main settings – a meditation hall,  
-   a garden courtyard with a large willow tree, and a    
-   clinic. During experimental sessions, participants    
-   interacted with two characters in these spaces,       
-   represented as avatars – namely, a guide, who helped  
-   the volunteer navigate from setting to setting and    
-   offered other assistance as needed, and Ivan, who was 
-   an agitated patient in the clinic. Both characters    
-   were animated by live actors in separate locations.   
-   Participants were able to converse freely with these  
-   characters whenever they were co-present with either  
+   It featured three main settings – a meditation hall,
+   a garden courtyard with a large willow tree, and a
+   clinic. During experimental sessions, participants
+   interacted with two characters in these spaces,
+   represented as avatars – namely, a guide, who helped
+   the volunteer navigate from setting to setting and
+   offered other assistance as needed, and Ivan, who was
+   an agitated patient in the clinic. Both characters
+   were animated by live actors in separate locations.
+   Participants were able to converse freely with these
+   characters whenever they were co-present with either
    character in the same space. All sessions began in the
-   meditation hall, which featured a pulsating orb       
+   meditation hall, which featured a pulsating orb
    designed to help participants regulate their breathing
-   during an audio-recorded guided meditation. Next,     
+   during an audio-recorded guided meditation. Next,
    participants were ushered outside to the garden, where
    they were invited to contemplate a tree with a glowing
-   core while listening to an audio-recorded compassion  
+   core while listening to an audio-recorded compassion
    meditation and performing visualization exercises that
-   centered on universal compassion for all beings.      
-   Lastly, participants were directed into a virtual     
-   clinic to converse with Ivan, an agitated patient     
-   waiting inside the clinic, where participants would   
-   have the opportunity to practice exercising the       
-   feeling of universal compassion from the garden       
+   centered on universal compassion for all beings.
+   Lastly, participants were directed into a virtual
+   clinic to converse with Ivan, an agitated patient
+   waiting inside the clinic, where participants would
+   have the opportunity to practice exercising the
+   feeling of universal compassion from the garden
    meditation.
 
 
@@ -157,7 +156,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007006.v1.0.0 <https://doi.org/10.18112/openneuro.ds007006.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007006>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007006>`__ | `Source URL <https://openneuro.org/datasets/ds007006/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007006>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007006>`__ | `Source URL <https://openneuro.org/datasets/ds007006>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -194,7 +193,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 10
-      - Recordings: 280
+      - Recordings: 50
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
@@ -215,7 +214,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 918.7 MB
-      - File count: 280
+      - File count: 50
       - Format: BIDS
 
    .. grid-item-card:: License & citation

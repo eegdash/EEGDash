@@ -11,11 +11,11 @@ DS004148
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Yulin Wang, Wei Duan, Debo Dong, Lihong Ding, Xu Lei (2022). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.1 <https://doi.org/10.18112/openneuro.ds004148.v1.0.1>`__
+**Citation:** Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (2022). *A test-retest resting and cognitive state EEG dataset*. `10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 60` :bdg-secondary-line:`Recordings: 5585` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 12.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 60` :bdg-secondary-line:`Recordings: 900` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 12.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -80,9 +80,9 @@ Quickstart
 
          @dataset{ds004148,
            title = {A test-retest resting and cognitive state EEG dataset},
-           author = {Yulin Wang and Wei Duan and Debo Dong and Lihong Ding and Xu Lei},
-           doi = {10.18112/openneuro.ds004148.v1.0.1},
-           url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.1},
+           author = {Yulin Wang and Wei Duan and Lihong Ding and Debo Dong and Xu Lei},
+           doi = {10.18112/openneuro.ds004148.v1.0.0},
+           url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.0},
          }
 
 
@@ -92,53 +92,28 @@ About This Dataset
 
 **General information**
 
-
-This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants 
-during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures 
-
+This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants
+during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures
 
 **Dataset**
 
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+**Presentation**
 
-   
-   **General information**
-   
-   
-   This dataset contains resting(eyes closed, eyes open) and cognitive(subtraction, music, memory) state EEG recordings with 60 participants 
-   during three experimental sessions together with sleep, emotion, mental health, and mind-wandering related measures 
-   
-   
-   **Dataset**
-   
-   
-   
-   **Presentation**
-   
-   
-        The data collection was initiated in September 2019 and was terminated in April 2021. The detailed description of the dataset is currently under working 
-        by Yulin Wang, and will submit to Scientific Data for publication.
-        
-       
-   
-   
-   **EEG acquisition**
-   
-   
-        * EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 64 electrodes) 
-        * Sampling frequency: 500Hz
-        * Impedances were kept below 5k
-   
-   
-   
-   **Contact**
-   
-        * If you have any questions or comments, please contact: 
-        * Xu Lei: xlei@swu.edu.cn
-        * Yulin Wang: yulin.wang90.swu@gmail.com
+     The data collection was initiated in September 2019 and was terminated in April 2021. The detailed description of the dataset is currently under working
+     by Yulin Wang, and will submit to Scientific Data for publication.
 
+**EEG acquisition**
+
+     * EEG system (Brain Products GmbH, Steing- rabenstr, Germany, 64 electrodes)
+     * Sampling frequency: 500Hz
+     * Impedances were kept below 5k
+
+**Contact**
+
+     * If you have any questions or comments, please contact:
+     * Xu Lei: xlei@swu.edu.cn
+     * Yulin Wang: yulin.wang90.swu@gmail.com
 
 Dataset Information
 -------------------
@@ -154,13 +129,13 @@ Dataset Information
    * - Year
      - 2022
    * - Authors
-     - Yulin Wang, Wei Duan, Debo Dong, Lihong Ding, Xu Lei
+     - Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004148.v1.0.1 <https://doi.org/10.18112/openneuro.ds004148.v1.0.1>`__
+     - `doi:10.18112/openneuro.ds004148.v1.0.0 <https://doi.org/10.18112/openneuro.ds004148.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004148>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004148>`__ | `Source URL <https://openneuro.org/datasets/ds004148/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004148>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004148>`__ | `Source URL <https://openneuro.org/datasets/ds004148>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -170,9 +145,9 @@ Dataset Information
 
       @dataset{ds004148,
         title = {A test-retest resting and cognitive state EEG dataset},
-        author = {Yulin Wang and Wei Duan and Debo Dong and Lihong Ding and Xu Lei},
-        doi = {10.18112/openneuro.ds004148.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.1},
+        author = {Yulin Wang and Wei Duan and Lihong Ding and Debo Dong and Xu Lei},
+        doi = {10.18112/openneuro.ds004148.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004148.v1.0.0},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -197,13 +172,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 60
-      - Recordings: 5585
+      - Recordings: 900
       - Tasks: 5
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 61 (1599), 60 (200), 64
+      - Channels: 61
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -218,14 +193,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 30.7 GB
-      - File count: 5585
+      - File count: 900
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004148.v1.0.1
+      - DOI: doi:10.18112/openneuro.ds004148.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

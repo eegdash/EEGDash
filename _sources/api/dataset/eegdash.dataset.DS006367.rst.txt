@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 52` :bdg-secondary-line:`Recordings: 369` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 52` :bdg-secondary-line:`Recordings: 52` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,19 +89,19 @@ Quickstart
 About This Dataset
 ------------------
 
-In this memory interference task, each trial began  
-with a space key press, followed by a fixation dot   
+In this memory interference task, each trial began
+with a space key press, followed by a fixation dot
 for 1000–1500 ms. Then, two lateral objects appeared:
-a cued target (learned) and an irrelevant novel one. 
-Participants memorized the cued object.              
-After a 1400 ms delay, interference objects appeared  
+a cued target (learned) and an irrelevant novel one.
+Participants memorized the cued object.
+After a 1400 ms delay, interference objects appeared
 briefly on half the blocks; otherwise, only fixation.
-A probe then showed two objects vertically aligned,  
+A probe then showed two objects vertically aligned,
 and participants selected the target using arrow keys.
-Feedback followed the response, showing the correct  
-object with color-coded text for 1000 ms.            
-The preprocessing steps to reach this dataset is explained 
-in the following preprint and the mentioned OSF repository 
+Feedback followed the response, showing the correct
+object with color-coded text for 1000 ms.
+The preprocessing steps to reach this dataset is explained
+in the following preprint and the mentioned OSF repository
 xx (Experiment 1)
 
 Dataset Information
@@ -124,7 +124,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006367.v1.0.1 <https://doi.org/10.18112/openneuro.ds006367.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006367>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006367>`__ | `Source URL <https://openneuro.org/datasets/ds006367/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006367>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006367>`__ | `Source URL <https://openneuro.org/datasets/ds006367>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -161,13 +161,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 52
-      - Recordings: 369
+      - Recordings: 52
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 28 (52), 30 (52)
+      - Channels: 30
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -182,7 +182,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 27.8 GB
-      - File count: 369
+      - File count: 52
       - Format: BIDS
 
    .. grid-item-card:: License & citation

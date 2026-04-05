@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 315` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 18` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,7 +91,6 @@ About This Dataset
 
 The data included 18 participants that played at 2 different games during wakefulness in the 3T MRI: the FACE and the MAZE game, intermixed with periods of REST and period of preparation of each game (game session). The tasks were manipulated and at the end of the game session, one game was won (Reward game) and the second was lost (No Reward game), randomly assigned for each participant. Next, during the sleep session, 64 electrodes were placed on the head of the participants, before they slept in the MRI with EEG for 1-2 hours (sleep session). Participants can be separated according to the won game (face or maze) and according sleep depth (whether they reached N3 sleep in the MRI or only N2 sleep). A decoding classifier was trained on the data from the game session at wake and applied to the MRI data acquired during sleep (sleep session). Finally, a memory test was performed the next day on the 2 tasks (face and maze).
 For any question related to the methods, please see the manuscript or contact Virginie Sterpenich (Virginie.Sterpenich@unige.ch)
-
 Files includes are
 1) 2 EPI sessions for the tasks
 2) 1 EPI session during resting including wake and sleep (sleep session)
@@ -118,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003574.v1.0.2 <https://doi.org/10.18112/openneuro.ds003574.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003574>`__ | `Source URL <https://openneuro.org/datasets/ds003574/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003574>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003574>`__ | `Source URL <https://openneuro.org/datasets/ds003574>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -155,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 18
-      - Recordings: 315
-      - Tasks: 4
+      - Recordings: 18
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64 (18), 69 (18)
+      - Channels: 69
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -176,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 18.0 GB
-      - File count: 315
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation

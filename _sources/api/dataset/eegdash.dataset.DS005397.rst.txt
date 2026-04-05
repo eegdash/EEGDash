@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 26` :bdg-secondary-line:`Recordings: 188` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 26` :bdg-secondary-line:`Recordings: 26` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,12 +89,9 @@ Quickstart
 About This Dataset
 ------------------
 
-An EEG dataset and behavioural response data for a task that required participants to view images of scenes and rate their aesthetic properties (beauty, complexity, interestingness), or rate their appropriateness for either a reading activity, or a social activity. 
-
+An EEG dataset and behavioural response data for a task that required participants to view images of scenes and rate their aesthetic properties (beauty, complexity, interestingness), or rate their appropriateness for either a reading activity, or a social activity.
 You can also find the behavioural data already extracted from the EEG events for convenience, and the full stimuli set with identifiable file names.
-
-For detailed information about the methods and an analysis of the data please see the published article: https://doi.org/10.1016/j.jenvp.2025.102528 
-
+For detailed information about the methods and an analysis of the data please see the published article: https://doi.org/10.1016/j.jenvp.2025.102528
 Contact: c.hilton@tu-berlin.de in case of questions.
 
 Dataset Information
@@ -117,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005397.v1.0.4 <https://doi.org/10.18112/openneuro.ds005397.v1.0.4>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005397>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005397>`__ | `Source URL <https://openneuro.org/datasets/ds005397/versions/1.0.4>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005397>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005397>`__ | `Source URL <https://openneuro.org/datasets/ds005397>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,7 +151,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 26
-      - Recordings: 188
+      - Recordings: 26
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -175,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 12.0 GB
-      - File count: 188
+      - File count: 26
       - Format: BIDS
 
    .. grid-item-card:: License & citation

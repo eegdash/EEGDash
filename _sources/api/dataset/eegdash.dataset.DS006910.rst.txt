@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 121` :bdg-secondary-line:`Recordings: 1925` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 121` :bdg-secondary-line:`Recordings: 384` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,13 +90,11 @@ About This Dataset
 ------------------
 
 This dataset, used in the analysis reported by Kochi et al., (2025), contains intracranial EEG recordings from 121 individuals who performed an auditory‑naming task. Electrode coordinates are provided in MNI‑305 space.
-
-Each EDF file is tagged for the auditory naming task with the following event codes:  
-401 – stimulus onset  
-402 – stimulus offset  
-501 – response onset  
-
-Reference: 
+Each EDF file is tagged for the auditory naming task with the following event codes:
+401 – stimulus onset
+402 – stimulus offset
+501 – response onset
+Reference:
 Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano,  Masaki Sonoda, Hidenori Endo, Michael Cools, Robert Rothermel, Aimee F. Luat, Eishi Asano. Whole-Brain Millisecond-Scale Effective Connectivity Atlases of Speech
 
 Dataset Information
@@ -119,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006910.v1.0.1 <https://doi.org/10.18112/openneuro.ds006910.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006910>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006910>`__ | `Source URL <https://openneuro.org/datasets/ds006910/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006910>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006910>`__ | `Source URL <https://openneuro.org/datasets/ds006910>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 121
-      - Recordings: 1925
-      - Tasks: 2
+      - Recordings: 384
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (538), 138 (28), 136 (22), 112 (18), 164 (16), 140 (16), 134 (14), 110 (12), 150 (10), 156 (10), 142 (10), 132 (8), 130 (8), 144 (8), 148 (8), 154 (6), 160 (6), 152 (6), 96 (6), 118 (6), 84 (6), 64 (4), 58 (2)
+      - Channels: 128 (269), 138 (14), 136 (11), 112 (9), 140 (8), 164 (8), 134 (7), 110 (6), 142 (5), 156 (5), 150 (5), 132 (4), 148 (4), 144 (4), 130 (4), 160 (3), 154 (3), 84 (3), 118 (3), 96 (3), 152 (3), 64 (2), 58
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -177,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 44.6 GB
-      - File count: 1925
+      - File count: 384
       - Format: BIDS
 
    .. grid-item-card:: License & citation

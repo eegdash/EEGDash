@@ -11,11 +11,11 @@ DS004817
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). *EEG-attention-rsvp-exp2*. `10.18112/openneuro.ds004817.v1.0.1 <https://doi.org/10.18112/openneuro.ds004817.v1.0.1>`__
+**Citation:** Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). *EEG-attention-rsvp-exp2*. `10.18112/openneuro.ds004817.v1.0.0 <https://doi.org/10.18112/openneuro.ds004817.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 83` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 20` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds004817,
            title = {EEG-attention-rsvp-exp2},
            author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
-           doi = {10.18112/openneuro.ds004817.v1.0.1},
-           url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.1},
+           doi = {10.18112/openneuro.ds004817.v1.0.0},
+           url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.0},
          }
 
 
@@ -111,7 +111,7 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds004817.v1.0.1 <https://doi.org/10.18112/openneuro.ds004817.v1.0.1>`__
+     - `doi:10.18112/openneuro.ds004817.v1.0.0 <https://doi.org/10.18112/openneuro.ds004817.v1.0.0>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds004817>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004817>`__ | `Source URL <https://openneuro.org/datasets/ds004817>`__
 
@@ -124,8 +124,8 @@ Dataset Information
       @dataset{ds004817,
         title = {EEG-attention-rsvp-exp2},
         author = {Grootswagers, Tijl and Robinson, Amanda and Shatek, Sofia and Carlson, Thomas},
-        doi = {10.18112/openneuro.ds004817.v1.0.1},
-        url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.1},
+        doi = {10.18112/openneuro.ds004817.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds004817.v1.0.0},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -150,7 +150,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 83
+      - Recordings: 20
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,14 +171,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 10.1 GB
-      - File count: 83
+      - File count: 20
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds004817.v1.0.1
+      - DOI: doi:10.18112/openneuro.ds004817.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

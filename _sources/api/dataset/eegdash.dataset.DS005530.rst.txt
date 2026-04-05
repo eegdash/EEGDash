@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 431` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 17` :bdg-secondary-line:`Recordings: 21` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,13 +92,13 @@ About This Dataset
 
 **Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep**
 
-
 This dataset contains fMRI and EEG data from a study investigating the effects of Targeted Memory Reactivation (TMR) during REM sleep on emotional reactivity. As well as behavioural data and ECG collected during behavioural tasks.
-
 
 **Study Design**
 
+Participants rated the arousal of 48 affective images paired with semantically matching sounds. Heart rate deceleration was used as a measure of their autonomic arousal. Half of these sounds were cued during REM in the subsequent overnight sleep cycle. Participants rated the images in an MRI scanner with pulse oximetry 48 hours after encoding, and they completed an online follow up two weeks later.
 
+**Sessions**
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -106,15 +106,11 @@ This dataset contains fMRI and EEG data from a study investigating the effects o
    
    **Disarming emotional memories using Targeted Memory Reactivation during Rapid Eye Movement sleep**
    
-   
    This dataset contains fMRI and EEG data from a study investigating the effects of Targeted Memory Reactivation (TMR) during REM sleep on emotional reactivity. As well as behavioural data and ECG collected during behavioural tasks.
-   
    
    **Study Design**
    
-   
    Participants rated the arousal of 48 affective images paired with semantically matching sounds. Heart rate deceleration was used as a measure of their autonomic arousal. Half of these sounds were cued during REM in the subsequent overnight sleep cycle. Participants rated the images in an MRI scanner with pulse oximetry 48 hours after encoding, and they completed an online follow up two weeks later.
-   
    
    **Sessions**
    
@@ -122,17 +118,13 @@ This dataset contains fMRI and EEG data from a study investigating the effects o
    2. Session 48-H: fMRI scanning, pulse oximetry and arousal ratings (48 hours after baseline)
    3. Session 2-Wk: Online follow-up (2 weeks after baseline)
    
-   
    **Data Acquisition**
-   
    
    - **fMRI**: Acquired using a Siemens Magnetom Prisma 3T scanner with a 32-channel head coil
    - **Heart Rate**: Recorded using BrainVision BrainAmp ExG with ExG AUX box and multitrodes during the behavioural session and pulse oximetry during the fMRI session3
    - **Polysomnography**: Recorded using ten electrodes including 6 EEG channels (F3, F4, C3, C4, O1 and O2), 2 EMG channels and 2 EOG channels. All channels were live referenced to the average of left and right mastoids.
    
-   
    **Dataset Contents**
-   
    
    This initial upload contains:
    - T1-weighted structural images
@@ -140,27 +132,18 @@ This dataset contains fMRI and EEG data from a study investigating the effects o
    - B0 field maps
    - Behavioural data from all sessions
    
-   
    **Preprocessing**
    
-   
    fMRI data were preprocessed using fMRIPrep 20.2.7. Details of the preprocessing pipeline can be found in the methods section of the associated publication.
-   
    T1-weighted structural scans were defaced using pydeface version 2.0.2 to ensure participant anonymity.
-   
    Within the behavioral data, the baseline ratings were centered within each participant. This was achieved by subtracting each participant's mean baseline rating from the item-specific ratings they gave to the stimuli.
-   
    
    **Additional Information**
    
-   
    For more detailed information about the study design, methods, and results, please refer to the associated publication (citation to be added upon publication).
-   
    This dataset was initially converted to BIDS format using ezBIDS (https://brainlife.io/ezbids).
    
-   
    **Contact**
-   
    
    For questions about the MRI dataset, please contact:
    Dr Tamas Foldes
@@ -187,7 +170,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005530.v1.0.9 <https://doi.org/10.18112/openneuro.ds005530.v1.0.9>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005530>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005530>`__ | `Source URL <https://openneuro.org/datasets/ds005530/versions/1.0.9>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005530>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005530>`__ | `Source URL <https://openneuro.org/datasets/ds005530>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -223,9 +206,9 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 18
-      - Recordings: 431
-      - Tasks: 2
+      - Subjects: 17
+      - Recordings: 21
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -245,7 +228,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 6.5 GB
-      - File count: 431
+      - File count: 21
       - Format: BIDS
 
    .. grid-item-card:: License & citation

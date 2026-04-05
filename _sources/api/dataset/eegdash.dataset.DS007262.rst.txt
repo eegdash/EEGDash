@@ -11,11 +11,11 @@ DS007262
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Matthew Barras, Liam Booth (2026). *Cognitive Workload 8-level arithmetic*. `10.18112/openneuro.ds007262.v1.0.2 <https://doi.org/10.18112/openneuro.ds007262.v1.0.2>`__
+**Citation:** Matthew Barras, Liam Booth (2026). *Cognitive Workload 8-level arithmetic*. `10.18112/openneuro.ds007262.v1.0.6 <https://doi.org/10.18112/openneuro.ds007262.v1.0.6>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 134` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 18` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds007262,
            title = {Cognitive Workload 8-level arithmetic},
            author = {Matthew Barras and Liam Booth},
-           doi = {10.18112/openneuro.ds007262.v1.0.2},
-           url = {https://doi.org/10.18112/openneuro.ds007262.v1.0.2},
+           doi = {10.18112/openneuro.ds007262.v1.0.6},
+           url = {https://doi.org/10.18112/openneuro.ds007262.v1.0.6},
          }
 
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`_\_
-
 - Original recordings are stored under sourcedata/xdf/ as .xdf files (non-BIDS).
 - EEG was converted to BrainVision format (.vhdr/.eeg/.vmrk) under each sub-\*/eeg/.
 - \*_events.tsv was generated from marker streams and then aligned so onset is relative to the EEG start time.
@@ -100,11 +99,11 @@ This dataset was generated from LSL/XDF recordings. Converted to bids with instr
 - ML analysis note: participants excluded from the ML analysis remain in participants.tsv with analysis_included=false; no epoch rejection was applied to this raw dataset.
 - Participant IDs match the original XDF filenames; missing IDs correspond to excluded participants.
 
+
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`_\_
-   
    - Original recordings are stored under sourcedata/xdf/ as .xdf files (non-BIDS).
    - EEG was converted to BrainVision format (.vhdr/.eeg/.vmrk) under each sub-\*/eeg/.
    - \*_events.tsv was generated from marker streams and then aligned so onset is relative to the EEG start time.
@@ -133,22 +132,16 @@ This dataset was generated from LSL/XDF recordings. Converted to bids with instr
    - Baseline for 60 seconds and then 70 questions, 10 at each difficulty level presented for 6 seconds each.
    
    Task: arithmetic
-   
    Release notes
    - Recorded 20 participants; released 18.
    - Reason: multi-modal acquisition QC failure.
    - Participant IDs match original XDF filenames; missing IDs indicate excluded participants.
    
-   
-   
    **References**
    
    Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-   
    Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
-   
    Clewett CJ, Langley P, Bateson AD et al (2016) Non-invasive, home-based electroencephalography hypoglycaemia warning system for personal monitoring using skin surface electrodes: a single-case feasibility study. Healthc Technol Lett 3:2-5. https://doi.org/10.1049/htl.2015.0037
-   
    Bateson AD, Asghar AUR (2021) Development and evaluation of a smartphone-based electroencephalography (EEG) system. IEEE Access. https://doi.org/10.1109/ACCESS.2021.3079992
 
 
@@ -170,9 +163,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds007262.v1.0.2 <https://doi.org/10.18112/openneuro.ds007262.v1.0.2>`__
+     - `doi:10.18112/openneuro.ds007262.v1.0.6 <https://doi.org/10.18112/openneuro.ds007262.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007262>`__ | `Source URL <https://openneuro.org/datasets/ds007262/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007262>`__ | `Source URL <https://openneuro.org/datasets/ds007262>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -183,8 +176,8 @@ Dataset Information
       @dataset{ds007262,
         title = {Cognitive Workload 8-level arithmetic},
         author = {Matthew Barras and Liam Booth},
-        doi = {10.18112/openneuro.ds007262.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds007262.v1.0.2},
+        doi = {10.18112/openneuro.ds007262.v1.0.6},
+        url = {https://doi.org/10.18112/openneuro.ds007262.v1.0.6},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -209,7 +202,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 18
-      - Recordings: 134
+      - Recordings: 18
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -230,14 +223,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 378.9 MB
-      - File count: 134
+      - File count: 18
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds007262.v1.0.2
+      - DOI: doi:10.18112/openneuro.ds007262.v1.0.6
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

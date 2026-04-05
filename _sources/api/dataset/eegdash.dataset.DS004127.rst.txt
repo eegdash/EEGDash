@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 8` :bdg-secondary-line:`Recordings: 222` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 8` :bdg-secondary-line:`Recordings: 73` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,21 +91,16 @@ About This Dataset
 
 Project Title: DISC Validation in Rat Somatosensory Cortex
 Project ID: 000
-
 Expected experimentation period:
 Start date: N/A
 End date: N/A
-
 Project Description:
-DISC were implanted in rat somatosensory cortex. While anesthetized, whiskers were being stimulated using an air puffer. Task name corresponds to the id of the whisker being stimulated. 
-For more information of the task go to our biorxiv's paper: https://www.biorxiv.org/content/10.1101/2021.09.20.460996v3 
-
+DISC were implanted in rat somatosensory cortex. While anesthetized, whiskers were being stimulated using an air puffer. Task name corresponds to the id of the whisker being stimulated.
+For more information of the task go to our biorxiv's paper: https://www.biorxiv.org/content/10.1101/2021.09.20.460996v3
 Participant categories:
 N/A
-
 Trigger channels:
 N/A
-
 Events:
 N/A
 
@@ -129,7 +124,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004127.v3.0.0 <https://doi.org/10.18112/openneuro.ds004127.v3.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004127>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004127>`__ | `Source URL <https://openneuro.org/datasets/ds004127/versions/3.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004127>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004127>`__ | `Source URL <https://openneuro.org/datasets/ds004127>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -166,13 +161,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 8
-      - Recordings: 222
-      - Tasks: —
+      - Recordings: 73
+      - Tasks: 11
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (28), 112 (9), 104 (9), 102 (9), 110 (9), 105 (6), 106 (2), 111
+      - Channels: 128 (28), 110 (9), 102 (9), 104 (9), 112 (9), 105 (6), 106 (2), 111
       - Sampling rate (Hz): 20000.0
       - Duration (hours): 0.0
 
@@ -187,7 +182,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 187.5 GB
-      - File count: 222
+      - File count: 73
       - Format: BIDS
 
    .. grid-item-card:: License & citation

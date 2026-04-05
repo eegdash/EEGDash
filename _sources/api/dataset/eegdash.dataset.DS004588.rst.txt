@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 42` :bdg-secondary-line:`Recordings: 216` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 42` :bdg-secondary-line:`Recordings: 42` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,8 +89,7 @@ Quickstart
 About This Dataset
 ------------------
 
-A novel multimodal Neuromarketing dataset that encompasses the data from 42 individuals who participated in an advertising brochure-browsing scenario is introduced here. In more detail, participants were exposed to a series of supermarket brochures (containing various products) and instructed to select the products they intended to buy. The data collected for each individual executing this protocol included: (i) encephalographic (EEG) recordings, (ii) eye tracking (ET) recordings, (iii) questionnaire responses (demographic, profiling and product related questions), and (iv) computer mouse data. 
-
+A novel multimodal Neuromarketing dataset that encompasses the data from 42 individuals who participated in an advertising brochure-browsing scenario is introduced here. In more detail, participants were exposed to a series of supermarket brochures (containing various products) and instructed to select the products they intended to buy. The data collected for each individual executing this protocol included: (i) encephalographic (EEG) recordings, (ii) eye tracking (ET) recordings, (iii) questionnaire responses (demographic, profiling and product related questions), and (iv) computer mouse data.
 The preprocessed version of this dataset can be found here: https://figshare.com/articles/dataset/NeuMa_PreProcessed_A_multimodal_Neuromarketing_dataset/22117124
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004588.v1.2.0 <https://doi.org/10.18112/openneuro.ds004588.v1.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004588>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004588>`__ | `Source URL <https://openneuro.org/datasets/ds004588/versions/1.2.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004588>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004588>`__ | `Source URL <https://openneuro.org/datasets/ds004588>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,7 +149,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 42
-      - Recordings: 216
+      - Recordings: 42
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 534.1 MB
-      - File count: 216
+      - File count: 42
       - Format: BIDS
 
    .. grid-item-card:: License & citation

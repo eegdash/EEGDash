@@ -11,11 +11,11 @@ DS005648
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (2024). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
+**Citation:** Alexis Kidder(\*), Genevieve Quek, Tijl Grootswagers (2024). *Mapping object space dimensions: new insights from temporal dynamics*. `10.18112/openneuro.ds005648.v1.0.3 <https://doi.org/10.18112/openneuro.ds005648.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 67` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 21` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -81,8 +81,8 @@ Quickstart
          @dataset{ds005648,
            title = {Mapping object space dimensions: new insights from temporal dynamics},
            author = {Alexis Kidder(*) and Genevieve Quek and Tijl Grootswagers},
-           doi = {10.18112/openneuro.ds005648.v1.0.2},
-           url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.2},
+           doi = {10.18112/openneuro.ds005648.v1.0.3},
+           url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.3},
          }
 
 
@@ -118,7 +118,7 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005648.v1.0.2 <https://doi.org/10.18112/openneuro.ds005648.v1.0.2>`__
+     - `doi:10.18112/openneuro.ds005648.v1.0.3 <https://doi.org/10.18112/openneuro.ds005648.v1.0.3>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/ds005648>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005648>`__ | `Source URL <https://openneuro.org/datasets/ds005648>`__
 
@@ -131,8 +131,8 @@ Dataset Information
       @dataset{ds005648,
         title = {Mapping object space dimensions: new insights from temporal dynamics},
         author = {Alexis Kidder(*) and Genevieve Quek and Tijl Grootswagers},
-        doi = {10.18112/openneuro.ds005648.v1.0.2},
-        url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.2},
+        doi = {10.18112/openneuro.ds005648.v1.0.3},
+        url = {https://doi.org/10.18112/openneuro.ds005648.v1.0.3},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -157,7 +157,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 21
-      - Recordings: 67
+      - Recordings: 21
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -178,14 +178,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 15.5 GB
-      - File count: 67
+      - File count: 21
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005648.v1.0.2
+      - DOI: doi:10.18112/openneuro.ds005648.v1.0.3
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

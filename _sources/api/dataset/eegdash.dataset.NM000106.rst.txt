@@ -7,11 +7,11 @@
 NM000106
 ========
 
-*handwriting: Handwriting Recognition from EMG*
+*FRL Handwriting: Handwriting Decoding from Surface Electromyography*
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). *handwriting: Handwriting Recognition from EMG*. `10.5281/zenodo.17283865 <https://doi.org/10.5281/zenodo.17283865>`__
+**Citation:** Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). *FRL Handwriting: Handwriting Decoding from Surface Electromyography*. `10.82901/nemar.nm000106 <https://doi.org/10.82901/nemar.nm000106>`__
 
 .. rst-class:: sd-badges
 
@@ -79,10 +79,10 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{nm000106,
-           title = {handwriting: Handwriting Recognition from EMG},
+           title = {FRL Handwriting: Handwriting Decoding from Surface Electromyography},
            author = {Patrick Kaifosh and Thomas R. Reardon and CTRL-labs at Reality Labs},
-           doi = {10.5281/zenodo.17283865},
-           url = {https://doi.org/10.5281/zenodo.17283865},
+           doi = {10.82901/nemar.nm000106},
+           url = {https://doi.org/10.82901/nemar.nm000106},
          }
 
 
@@ -247,7 +247,7 @@ Dataset Information
    * - Dataset ID
      - ``NM000106``
    * - Title
-     - handwriting: Handwriting Recognition from EMG
+     - FRL Handwriting: Handwriting Decoding from Surface Electromyography
    * - Year
      - 2025
    * - Authors
@@ -255,7 +255,7 @@ Dataset Information
    * - License
      - CC-BY-NC 4.0
    * - Citation / DOI
-     - `10.5281/zenodo.17283865 <https://doi.org/10.5281/zenodo.17283865>`__
+     - `10.82901/nemar.nm000106 <https://doi.org/10.82901/nemar.nm000106>`__
    * - Source links
      - `OpenNeuro <https://openneuro.org/datasets/nm000106>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=nm000106>`__ | `Source URL <https://nemar.org/dataexplorer/detail/nm000106>`__
 
@@ -266,10 +266,10 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{nm000106,
-        title = {handwriting: Handwriting Recognition from EMG},
+        title = {FRL Handwriting: Handwriting Decoding from Surface Electromyography},
         author = {Patrick Kaifosh and Thomas R. Reardon and CTRL-labs at Reality Labs},
-        doi = {10.5281/zenodo.17283865},
-        url = {https://doi.org/10.5281/zenodo.17283865},
+        doi = {10.82901/nemar.nm000106},
+        url = {https://doi.org/10.82901/nemar.nm000106},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -278,7 +278,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000106&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000106%0A-%20%2A%2ATitle%3A%2A%2A%20handwriting%3A%20Handwriting%20Recognition%20from%20EMG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20NM000106&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20NM000106%0A-%20%2A%2ATitle%3A%2A%2A%20FRL%20Handwriting%3A%20Handwriting%20Decoding%20from%20Surface%20Electromyography%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -314,7 +314,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.2 MB
+      - Size on disk: 11.3 MB
       - File count: 807
       - Format: BIDS
 
@@ -322,7 +322,7 @@ Technical Details
       :class-card: sd-border-1
 
       - License: CC-BY-NC 4.0
-      - DOI: 10.5281/zenodo.17283865
+      - DOI: 10.82901/nemar.nm000106
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

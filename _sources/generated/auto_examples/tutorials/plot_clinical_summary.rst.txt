@@ -83,7 +83,7 @@ to demonstrate the visualization capabilities with the latest categorized metada
 
  .. code-block:: none
 
-    Fetched 549 datasets from API.
+    Fetched 714 datasets from API.
 
 
 
@@ -229,8 +229,10 @@ Data Cleaning
 
  .. code-block:: none
 
-    Plotting 528 studies.
-    Subject Types: ['Healthy']
+    Plotting 688 studies.
+    Subject Types: <ArrowStringArray>
+    ['Healthy']
+    Length: 1, dtype: str
 
 
 
@@ -281,20 +283,13 @@ Plotting
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
-      with pd.option_context('mode.use_inf_as_na', True):
-
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.834 seconds)
+   **Total running time of the script:** (0 minutes 1.267 seconds)
 
 
 .. _sphx_glr_download_generated_auto_examples_tutorials_plot_clinical_summary.py:

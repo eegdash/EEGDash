@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS003844';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1036,8 +1047,8 @@
 <h1>DS003844<a class="headerlink" href="#ds003844" title="Link to this heading">#</a></h1>
 <p><em>Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
-<p><strong>Citation:</strong> Zweiphenning W., Demuru M., van Blooijs D., Hermes D., Leijten F., Zijlmans M. (2021). <em>Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003844.v1.0.3">10.18112/openneuro.ds003844.v1.0.3</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 6</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 435</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 0.0</span></p>
+<p><strong>Citation:</strong> Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (2021). <em>Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds003844.v1.0.1">10.18112/openneuro.ds003844.v1.0.1</a></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 6</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 38</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 0.0</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1086,9 +1097,9 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p><strong>BibTeX</strong></p>
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@dataset</span><span class="p">{</span><span class="nl">ds003844</span><span class="p">,</span>
 <span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zweiphenning W. and Demuru M. and van Blooijs D. and Hermes D. and Leijten F. and Zijlmans M.}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003844.v1.0.3}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003844.v1.0.3}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zweiphenning W. and Demuru M. and van Blooijs D. and Leijten F and Zijlmans M.}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003844.v1.0.1}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003844.v1.0.1}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1099,41 +1110,44 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
 <p>Dataset description
 This dataset is part of a bigger dataset of intracranial EEG (iEEG)  called RESPect (Registry for Epilepsy Surgery Patients), a dataset recorded at the University Medical Center of Utrecht, the Netherlands.
-It consists of 12 patients: six patients recorded intraoperatively using electrocorticography (acute ECoG), six patients with long-term recordings (3 patients recorded with ECoG and 3 patients recorded with stereo-encephalography SEEG). For a detailed description see (Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”.).</p>
-<p>This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a></p>
-<p>Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-RESP0280</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.</p>
+It consists of 12 patients: six patients recorded intraoperatively using electrocorticography (acute ECoG), six patients with long-term recordings (3 patients recorded with ECoG and 3 patients recorded with stereo-encephalography SEEG). For a detailed description see (Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”.).
+This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a>
+Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-RESP0280</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+Two different implementation of the BIDS structure were done according to the different type of recordings (i.e. intraoperative or long-term)
+Intraoperative ECoG
+Surgery with intraoperative ECoG is composed of three main situations that can be logically grouped into BIDS sessions:
+* Pre-resection sessions, consisting of all recordings (with different configurations of the grid and strips/depth) carried out before the surgeon has started the planned resection.
+* Intermediate sessions, consisting of all subsequent recordings performed before any iterative extension of the resection area.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text">Dataset description
 This dataset is part of a bigger dataset of intracranial EEG (iEEG)  called RESPect (Registry for Epilepsy Surgery Patients), a dataset recorded at the University Medical Center of Utrecht, the Netherlands.
-It consists of 12 patients: six patients recorded intraoperatively using electrocorticography (acute ECoG), six patients with long-term recordings (3 patients recorded with ECoG and 3 patients recorded with stereo-encephalography SEEG). For a detailed description see (Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”.).</p>
-<p class="sd-card-text">This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a></p>
-<p class="sd-card-text">Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-RESP0280</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.</p>
-<p class="sd-card-text">Two different implementation of the BIDS structure were done according to the different type of recordings (i.e. intraoperative or long-term)
+It consists of 12 patients: six patients recorded intraoperatively using electrocorticography (acute ECoG), six patients with long-term recordings (3 patients recorded with ECoG and 3 patients recorded with stereo-encephalography SEEG). For a detailed description see (Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”.).
+This data is organized according to the Brain Imaging Data Structure specification. A community- driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a>
+Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-RESP0280</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+Two different implementation of the BIDS structure were done according to the different type of recordings (i.e. intraoperative or long-term)
 Intraoperative ECoG
-Surgery with intraoperative ECoG is composed of three main situations that can be logically grouped into BIDS sessions:</p>
-<ul class="simple">
-<li><p class="sd-card-text">Pre-resection sessions, consisting of all recordings (with different configurations of the grid and strips/depth) carried out before the surgeon has started the planned resection.</p></li>
-<li><p class="sd-card-text">Intermediate sessions, consisting of all subsequent recordings performed before any iterative extension of the resection area.</p></li>
-<li><p class="sd-card-text">Post-resection sessions, consisting of all the recordings performed after the last resection.</p></li>
-</ul>
+Surgery with intraoperative ECoG is composed of three main situations that can be logically grouped into BIDS sessions:
+* Pre-resection sessions, consisting of all recordings (with different configurations of the grid and strips/depth) carried out before the surgeon has started the planned resection.
+* Intermediate sessions, consisting of all subsequent recordings performed before any iterative extension of the resection area.
+* Post-resection sessions, consisting of all the recordings performed after the last resection.</p>
 <p class="sd-card-text">Each situation is labelled with an increasing number starting from 1, indicative of the period in time respective to the surgical resection and a consecutive letter (starting from A) indicative of the position of the grid and strip/depth for a given session.
-As an example see patient RESP0280 who had 4 sessions recorded: two pre-resection sessions, one intermediate sessions and one post-resection session. The first session is SITUATION1A consisting of the first recording, then the grid was moved to another position, resulting in SITUATION1B. After that, the surgeon resected part of the brain and then there was another recording(SITUATION2A). Finally the surgeon applied a resection for the last time and the recording after that was defined as SITUATION3A.</p>
-<p class="sd-card-text">Long-term iEEG
+As an example see patient RESP0280 who had 4 sessions recorded: two pre-resection sessions, one intermediate sessions and one post-resection session. The first session is SITUATION1A consisting of the first recording, then the grid was moved to another position, resulting in SITUATION1B. After that, the surgeon resected part of the brain and then there was another recording(SITUATION2A). Finally the surgeon applied a resection for the last time and the recording after that was defined as SITUATION3A.
+Long-term iEEG
 In long-term recordings, data that are recorded within one monitoring period are logically grouped in the same BIDS session and stored across runs indicating the day and time point of recording in the monitoring period.
 If extra electrodes were added/removed during this period, the session was divided into different sessions (e.g. ses-1A and ses-1b).
 We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
-The task key-value pair in long-term iEEG recordings describes the patient’s state during the recording of this file. Different tasks have been defined, such as “rest” when a patient is awake but not doing a specific task, “sleep” when a patient is sleeping the majority of the file, or “SPESclin” when the clinical SPES protocol has been performed in this file. Other task definitions can be found in the annotation syntax (<a class="github reference external" href="https://github.com/UMCU-EpiLAB/umcuEpi_longterm_ieeg_respect_bids/master/manuals/IFU_annotatingtrc_ECoG">UMCU-EpiLAB/umcuEpi_longterm_ieeg_respect_bids</a>).</p>
-<p class="sd-card-text">License
+The task key-value pair in long-term iEEG recordings describes the patient’s state during the recording of this file. Different tasks have been defined, such as “rest” when a patient is awake but not doing a specific task, “sleep” when a patient is sleeping the majority of the file, or “SPESclin” when the clinical SPES protocol has been performed in this file. Other task definitions can be found in the annotation syntax (<a class="reference external" href="https://github.com/UMCU-EpiLAB/umcuEpi_longterm_ieeg_respect_bids/master/manuals/IFU_annotatingtrc_ECoG">https://github.com/UMCU-EpiLAB/umcuEpi_longterm_ieeg_respect_bids/master/manuals/IFU_annotatingtrc_ECoG</a>).
+License
 This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at
 <a class="reference external" href="https://creativecommons.org/publicdomain/zero/1.0/">https://creativecommons.org/publicdomain/zero/1.0/</a>.
 We hope that all users will follow the ODC Attribution/Share-Alike Community Norms (<a class="reference external" href="http://www.opendatacommons.org/norms/odc-by-sa/">http://www.opendatacommons.org/norms/odc-by-sa/</a>);
 in particular, while not legally required, we hope that all users of the data will acknowledge by citing
 Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”. Submitted to Neuroinformatics.
-in any publications.</p>
-<p class="sd-card-text">Code available at: <a class="github reference external" href="https://github.com/UMCU-EpiLAB">UMCU-EpiLAB</a>.</p>
-<p class="sd-card-text">Acknowledgements
+in any publications.
+Code available at: <a class="reference external" href="https://github.com/UMCU-EpiLAB">https://github.com/UMCU-EpiLAB</a>.
+Acknowledgements
 We would like to thank the patients for providing their data for this dataset, the RESPect team of University Medical Center of Utrecht, for the acquisition of the dataset.
 Please cite Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlmans M, on behalf of the RESPect group. “A Practical Workflow for Organizing Clinical Intraoperative and Long-Term iEEG data in BIDS”. Submitted to Neuroinformatics.
 in any publications.</p>
@@ -1157,16 +1171,16 @@ in any publications.</p>
 <td><p>2021</p></td>
 </tr>
 <tr class="row-even"><td><p>Authors</p></td>
-<td><p>Zweiphenning W., Demuru M., van Blooijs D., Hermes D., Leijten F., Zijlmans M.</p></td>
+<td><p>Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M.</p></td>
 </tr>
 <tr class="row-odd"><td><p>License</p></td>
 <td><p>CC0</p></td>
 </tr>
 <tr class="row-even"><td><p>Citation / DOI</p></td>
-<td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003844.v1.0.3">10.18112/openneuro.ds003844.v1.0.3</a></p></td>
+<td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds003844.v1.0.1">10.18112/openneuro.ds003844.v1.0.1</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003844">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003844">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003844/versions/1.0.3">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds003844">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds003844">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds003844">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1176,9 +1190,9 @@ in any publications.</p>
 <span class="sd-summary-text">Copy-paste BibTeX</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@dataset</span><span class="p">{</span><span class="nl">ds003844</span><span class="p">,</span>
 <span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zweiphenning W. and Demuru M. and van Blooijs D. and Hermes D. and Leijten F. and Zijlmans M.}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003844.v1.0.3}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003844.v1.0.3}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zweiphenning W. and Demuru M. and van Blooijs D. and Leijten F and Zijlmans M.}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.18112/openneuro.ds003844.v1.0.1}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.18112/openneuro.ds003844.v1.0.1}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1201,7 +1215,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 6</p></li>
-<li><p class="sd-card-text">Recordings: 435</p></li>
+<li><p class="sd-card-text">Recordings: 38</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1213,8 +1227,8 @@ Subjects &amp; recordings</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Channels &amp; sampling rate</div>
 <ul class="simple">
-<li><p class="sd-card-text">Channels: 33 (48), 64 (18), 32 (10)</p></li>
-<li><p class="sd-card-text">Sampling rate (Hz): 2048.0 (66), 256.0 (10)</p></li>
+<li><p class="sd-card-text">Channels: 33 (24), 64 (9), 32 (5)</p></li>
+<li><p class="sd-card-text">Sampling rate (Hz): 2048.0 (33), 256.0 (5)</p></li>
 <li><p class="sd-card-text">Duration (hours): 0.0</p></li>
 </ul>
 </div>
@@ -1240,7 +1254,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 2.6 GB</p></li>
-<li><p class="sd-card-text">File count: 435</p></li>
+<li><p class="sd-card-text">File count: 38</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1253,7 +1267,7 @@ Files &amp; format</div>
 License &amp; citation</div>
 <ul class="simple">
 <li><p class="sd-card-text">License: CC0</p></li>
-<li><p class="sd-card-text">DOI: 10.18112/openneuro.ds003844.v1.0.3</p></li>
+<li><p class="sd-card-text">DOI: 10.18112/openneuro.ds003844.v1.0.1</p></li>
 </ul>
 </div>
 </div>
@@ -1423,8 +1437,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1450,7 +1464,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

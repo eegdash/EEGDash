@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 11` :bdg-secondary-line:`Recordings: 108` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 11` :bdg-secondary-line:`Recordings: 105` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-primary:`Metadata: Good (80%)`
 
@@ -90,11 +90,8 @@ About This Dataset
 ------------------
 
 This dataset was created using BCI2000. The goal of this study was to explore the online typing performance of the P300 speller using language models and various flashing paradigms. For more information see Chandravadia et al. (https://www.medrxiv.org/content/10.1101/2022.06.24.22276882v1).
-
 If you reference this dataset in your publications, please acknowledge its authors.
-
 This dataset is made available under CC0.
-
 Note: subject 5 was not included in the analysis because the testing stage did not include all three flashing paradigms.
 
 Dataset Information
@@ -117,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005028.v1.0.0 <https://doi.org/10.18112/openneuro.ds005028.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__ | `Source URL <https://openneuro.org/datasets/ds005028/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005028>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005028>`__ | `Source URL <https://openneuro.org/datasets/ds005028>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,8 +151,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 11
-      - Recordings: 108
-      - Tasks: —
+      - Recordings: 105
+      - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -175,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 422.1 MB
-      - File count: 108
+      - File count: 105
       - Format: BIDS
 
    .. grid-item-card:: License & citation

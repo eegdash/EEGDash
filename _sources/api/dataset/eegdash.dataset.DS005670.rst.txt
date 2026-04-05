@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 2` :bdg-secondary-line:`Recordings: 14` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 2` :bdg-secondary-line:`Recordings: 2` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,18 +89,17 @@ Quickstart
 About This Dataset
 ------------------
 
-Dataset description
 
+**Dataset description**
 
-This SEEG raw dataset includes resting state recordings for two patients with epilepsy. 
-
+This SEEG raw dataset includes resting state recordings for two patients with epilepsy.
 The depth electrodes used in this dataset are Sinovation SDE-08 medical-grade stainless steel electrodes, with the following specifications:
     Diameter: 0.8 mm
     Contact length: 2 mm
     Insulator length: 1.5 mm
     Distance between the center of two contacts: 3.5 mm
-    Between 8 and 16 contacts on each electrode 
 
+**Between 8 and 16 contacts on each electrode**
 
 For questions, please contact Pengfei Xu (pxu@bnu.edu.cn).
 
@@ -124,7 +123,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005670.v1.0.0 <https://doi.org/10.18112/openneuro.ds005670.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005670>`__ | `Source URL <https://openneuro.org/datasets/ds005670/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005670>`__ | `Source URL <https://openneuro.org/datasets/ds005670>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -161,13 +160,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 2
-      - Recordings: 14
+      - Recordings: 2
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 186 (2), 238
+      - Channels: 186, 238
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -182,7 +181,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 708.8 MB
-      - File count: 14
+      - File count: 2
       - Format: BIDS
 
    .. grid-item-card:: License & citation

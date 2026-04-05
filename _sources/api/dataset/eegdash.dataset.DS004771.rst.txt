@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 61` :bdg-secondary-line:`Recordings: 327` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 61` :bdg-secondary-line:`Recordings: 61` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,11 +90,8 @@ About This Dataset
 ------------------
 
 EEG data for the Python reading task (acceptability judgments) described in [Kuo, C-H. and Prat, C.S. Programmers show distinct, language-like brain responses to violations in form and meaning when reading code], pending submission to Nature Communications.
-
 This study recruited 62 total subjects. 1 subject did not complete the EEG session and was removed from all analyses and is not included in this dataset. The remaining 61 individuals' EEG data are included. The participants info file contains information regarding which individuals were included in the final analyses (per artifact rejection criteria detailed in the article).
-
 The stimuli for this study was administered in Presentation; as such, the files are in the formats compatible with this program.
-
 The provided code was used for processing the EEG data. All statistics were run in Jamovi, an R-based open source software; feel free to reach out for the original files if you are interested.
 
 Dataset Information
@@ -117,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004771.v1.0.0 <https://doi.org/10.18112/openneuro.ds004771.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004771>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004771>`__ | `Source URL <https://openneuro.org/datasets/ds004771/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004771>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004771>`__ | `Source URL <https://openneuro.org/datasets/ds004771>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,7 +151,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 61
-      - Recordings: 327
+      - Recordings: 61
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -175,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.4 GB
-      - File count: 327
+      - File count: 61
       - Format: BIDS
 
    .. grid-item-card:: License & citation

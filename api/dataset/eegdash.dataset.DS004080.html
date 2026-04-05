@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS004080';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1037,7 +1048,7 @@
 <p><em>CCEP ECoG dataset across age 4-51</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes (2022). <em>CCEP ECoG dataset across age 4-51</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004080.v1.2.4">10.18112/openneuro.ds004080.v1.2.4</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 74</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 930</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 2.0</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: ieeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 74</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 117</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 2.0</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1098,21 +1109,22 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <section id="about-this-dataset">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
 <p><strong>Dataset description</strong></p>
-<p>This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:</p>
-<ul class="simple">
-<li><p>Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, <a class="reference external" href="https://doi.org/10.1038/s41593-023-01272-0">https://doi.org/10.1038/s41593-023-01272-0</a>
-¹ these authors contributed equally.</p></li>
-</ul>
+<p>This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
+- Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, <a class="reference external" href="https://doi.org/10.1038/s41593-023-01272-0">https://doi.org/10.1038/s41593-023-01272-0</a></p>
+<blockquote>
+<div><p>¹ these authors contributed equally.</p>
+</div></blockquote>
 <p>This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.</p>
+<p><strong>Contact</strong></p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Dataset description</strong></p>
-<p class="sd-card-text">This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:</p>
-<ul class="simple">
-<li><p class="sd-card-text">Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, <a class="reference external" href="https://doi.org/10.1038/s41593-023-01272-0">https://doi.org/10.1038/s41593-023-01272-0</a>
-¹ these authors contributed equally.</p></li>
-</ul>
+<p class="sd-card-text">This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
+- Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, <a class="reference external" href="https://doi.org/10.1038/s41593-023-01272-0">https://doi.org/10.1038/s41593-023-01272-0</a></p>
+<blockquote>
+<div><p class="sd-card-text">¹ these authors contributed equally.</p>
+</div></blockquote>
 <p class="sd-card-text">This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.</p>
 <p class="sd-card-text"><strong>Contact</strong></p>
 <ul class="simple">
@@ -1121,13 +1133,13 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <li><p class="sd-card-text">Dora Hermes: <a class="reference external" href="mailto:hermes&#46;dora&#37;&#52;&#48;mayo&#46;edu">hermes<span>&#46;</span>dora<span>&#64;</span>mayo<span>&#46;</span>edu</a></p></li>
 </ul>
 <p class="sd-card-text"><strong>Data organization</strong></p>
-<p class="sd-card-text">This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a></p>
-<p class="sd-card-text">Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU01</span></code> to <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU74</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.</p>
-<p class="sd-card-text">Data are logically grouped in the same BIDS session and stored across runs that indicating the day and time point of recording during the monitoring period.
+<p class="sd-card-text">This data is organized according to the Brain Imaging Data Structure specification. A community-driven specification for organizing neurophysiology data along with its metadata. For more information on this data specification, see <a class="reference external" href="https://bids-specification.readthedocs.io/en/stable/">https://bids-specification.readthedocs.io/en/stable/</a>
+Each patient has their own folder (e.g., <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU01</span></code> to <code class="docutils literal notranslate"><span class="pre">sub-ccepAgeUMCU74</span></code>) which contains the iEEG recordings data for that patient, as well as the metadata needed to understand the raw data and event timing.
+Data are logically grouped in the same BIDS session and stored across runs that indicating the day and time point of recording during the monitoring period.
 If extra electrodes were added/removed during this period, the session was divided into different sessions (e.g. ses-1a and ses-1b).
 We use the optional run key-value pair to specify the day and the start time of the recording (e.g. run-021315, day 2 after implantation, which is day 1 of the monitoring period, at 13:15).
-The task key-value pair in long-term iEEG recordings describes the patient’s state during the recording of this file. The task label is “SPESclin“ since these files contain data collected during clinical single pulse electrical stimulation (SPES).</p>
-<p class="sd-card-text">Electrode positions include Destrieux atlas labels that were estimated by running Freesurfer on the individual subject MRI scan and taking the most common surface label within a sphere around the electrode. All shared electrode positions were then converted to MNI152 space using the Freesurfer surface based non-linear transformation. We note that this surface based transformation distorts the dimensions of the grids, but maintains the gyral anatomy.</p>
+The task key-value pair in long-term iEEG recordings describes the patient’s state during the recording of this file. The task label is “SPESclin“ since these files contain data collected during clinical single pulse electrical stimulation (SPES).
+Electrode positions include Destrieux atlas labels that were estimated by running Freesurfer on the individual subject MRI scan and taking the most common surface label within a sphere around the electrode. All shared electrode positions were then converted to MNI152 space using the Freesurfer surface based non-linear transformation. We note that this surface based transformation distorts the dimensions of the grids, but maintains the gyral anatomy.</p>
 <p class="sd-card-text"><strong>License</strong></p>
 <p class="sd-card-text">This dataset is made available under the Public Domain Dedication and License CC v1.0, whose full text can be found at
 <a class="reference external" href="https://creativecommons.org/publicdomain/zero/1.0/">https://creativecommons.org/publicdomain/zero/1.0/</a>.
@@ -1135,7 +1147,7 @@ We hope that all users will follow the ODC Attribution/Share-Alike Community Nor
 in particular, while not legally required, we hope that all users of the data will acknowledge by citing the following in any publication:
 Developmental trajectory of transmission speed in the human brain, D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, <a class="reference external" href="https://doi.org/10.1038/s41593-023-01272-0">https://doi.org/10.1038/s41593-023-01272-0</a></p>
 <p class="sd-card-text"><strong>Code</strong></p>
-<p class="sd-card-text">Code to analyses these data is available at: <a class="github reference external" href="https://github.com/MultimodalNeuroimagingLab/mnl_ccepAge">MultimodalNeuroimagingLab/mnl_ccepAge</a></p>
+<p class="sd-card-text">Code to analyses these data is available at: <a class="reference external" href="https://github.com/MultimodalNeuroimagingLab/mnl_ccepAge">https://github.com/MultimodalNeuroimagingLab/mnl_ccepAge</a></p>
 <p class="sd-card-text"><strong>Acknowledgements</strong></p>
 <p class="sd-card-text">We thank the SEIN-UMCU RESPect database group (C.J.J. van Asch, L. van de Berg, S. Blok, M.D. Bourez, K.P.J. Braun, J.W. Dankbaar, C.H. Ferrier, T.A. Gebbink, P.H. Gosselaar, R. van Griethuysen, M.G.G. Hobbelink, F.W.A. Hoefnagels, N.E.C. van Klink, M.A. van ‘t Klooster, G.A.P. deKort, M.H.M. Mantione, A. Muhlebner, J.M. Ophorst, P.C. van Rijen, S.M.A. van der Salm, E.V. Schaft, M.M.J. van Schooneveld, H. Smeding, D. Sun, A. Velders, M.J.E. van Zandvoort, G.J.M. Zijlmans, E. Zuidhoek and J. Zwemmer) for their contributions and help in collecting the data, and G. Ojeda Valencia for proofreading the manuscript.</p>
 <p class="sd-card-text"><strong>Funding</strong></p>
@@ -1172,7 +1184,7 @@ Developmental trajectory of transmission speed in the human brain, D. van Blooij
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004080.v1.2.4">doi:10.18112/openneuro.ds004080.v1.2.4</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004080">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004080">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004080/versions/1.2.4">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004080">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004080">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004080">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1207,7 +1219,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 74</p></li>
-<li><p class="sd-card-text">Recordings: 930</p></li>
+<li><p class="sd-card-text">Recordings: 117</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1219,8 +1231,8 @@ Subjects &amp; recordings</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Channels &amp; sampling rate</div>
 <ul class="simple">
-<li><p class="sd-card-text">Channels: 133 (140), 68 (36), 130 (26), 98 (8), 96 (8), 131 (8), 64 (4), 94 (2), 93 (2)</p></li>
-<li><p class="sd-card-text">Sampling rate (Hz): 2048.0 (224), 512.0 (10)</p></li>
+<li><p class="sd-card-text">Channels: 133 (70), 68 (18), 130 (13), 98 (4), 131 (4), 96 (4), 64 (2), 94, 93</p></li>
+<li><p class="sd-card-text">Sampling rate (Hz): 2048.0 (112), 512.0 (5)</p></li>
 <li><p class="sd-card-text">Duration (hours): 0.0</p></li>
 </ul>
 </div>
@@ -1246,7 +1258,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 269.1 GB</p></li>
-<li><p class="sd-card-text">File count: 930</p></li>
+<li><p class="sd-card-text">File count: 117</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1429,8 +1441,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1456,7 +1468,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

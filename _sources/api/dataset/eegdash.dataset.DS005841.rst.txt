@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 48` :bdg-secondary-line:`Recordings: 870` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 48` :bdg-secondary-line:`Recordings: 288` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -92,14 +92,12 @@ About This Dataset
 
 **EEG Experiment Measuring ERPs in VR**
 
-
 This dataset contains EEG recordings from a study investigating event-related potentials (ERPs) during different visual tasks in virtual reality.
-
 
 **Study Design**
 
 - **Participants**: 48 participants
-- **Tasks**: 
+- **Tasks**:
   - Lumfront
   - Lumperp
   - Regfront
@@ -108,11 +106,9 @@ This dataset contains EEG recordings from a study investigating event-related po
   - Signalvr
 - **Modality**: EEG (512 Hz sampling rate)
 
-
 **Dataset Organization**
 
 The dataset follows the BIDS specification (version 1.6.0). Each subject folder contains EEG recordings and associated metadata.
-
 
 **Funding and Acknowledgements**
 
@@ -138,7 +134,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005841.v1.0.0 <https://doi.org/10.18112/openneuro.ds005841.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005841>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005841>`__ | `Source URL <https://openneuro.org/datasets/ds005841/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005841>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005841>`__ | `Source URL <https://openneuro.org/datasets/ds005841>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -175,7 +171,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 48
-      - Recordings: 870
+      - Recordings: 288
       - Tasks: 6
 
    .. grid-item-card:: Channels & sampling rate
@@ -196,7 +192,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 7.3 GB
-      - File count: 870
+      - File count: 288
       - Format: BIDS
 
    .. grid-item-card:: License & citation

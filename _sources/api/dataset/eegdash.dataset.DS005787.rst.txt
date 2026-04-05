@@ -7,17 +7,17 @@
 DS005787
 ========
 
-*NOD-EEG*
+Dataset from OpenNeuro.
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Yaoze Liu, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
+**Citation:** Unknown (—). **. 
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 2413` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: —` :bdg-secondary-line:`Subjects: —` :bdg-secondary-line:`Recordings: —` :bdg-success-line:`License: —` :bdg-warning-line:`Source: OpenNeuro`
 
-:bdg-success:`Metadata: Complete (100%)`
+:bdg-secondary:`Metadata: Limited (0%)`
 
 Quickstart
 ----------
@@ -79,22 +79,13 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{ds005787,
-           title = {NOD-EEG},
-           author = {Guohao Zhang and Yaoze Liu and Zonglei Zhen},
-           doi = {10.18112/openneuro.ds005787.v1.0.0},
-           url = {https://doi.org/10.18112/openneuro.ds005787.v1.0.0},
          }
 
 
 About This Dataset
 ------------------
 
-
-**References**
-
-Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-
-Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
+No README content is available for this dataset.
 
 Dataset Information
 -------------------
@@ -106,30 +97,17 @@ Dataset Information
    * - Dataset ID
      - ``DS005787``
    * - Title
-     - NOD-EEG
+     - —
    * - Year
-     - 2025
+     - —
    * - Authors
-     - Guohao Zhang, Yaoze Liu, Zonglei Zhen
+     - Unknown
    * - License
-     - CC0
+     - —
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005787.v1.0.0 <https://doi.org/10.18112/openneuro.ds005787.v1.0.0>`__
+     - Unknown
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005787>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005787>`__ | `Source URL <https://openneuro.org/datasets/ds005787/versions/1.0.0>`__
-
-.. dropdown:: Copy-paste BibTeX
-   :class-container: sd-shadow-sm
-   :class-title: sd-bg-light
-
-   .. code-block:: bibtex
-
-      @dataset{ds005787,
-        title = {NOD-EEG},
-        author = {Guohao Zhang and Yaoze Liu and Zonglei Zhen},
-        doi = {10.18112/openneuro.ds005787.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds005787.v1.0.0},
-      }
+     - `OpenNeuro <https://openneuro.org/datasets/ds005787>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005787>`__
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -137,7 +115,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005787&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005787%0A-%20%2A%2ATitle%3A%2A%2A%20NOD-EEG%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005787&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005787%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -152,16 +130,16 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 19
-      - Recordings: 2413
-      - Tasks: 1
+      - Subjects: —
+      - Recordings: —
+      - Tasks: —
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 62 (448), 64 (440), 66 (8)
-      - Sampling rate (Hz): 500.0 (576), 1000.0 (320)
-      - Duration (hours): 0.0
+      - Channels: Varies
+      - Sampling rate (Hz): Varies
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
@@ -173,20 +151,20 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.1 GB
-      - File count: 2413
+      - Size on disk: —
+      - File count: —
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005787.v1.0.0
+      - License: See source
+      - DOI: —
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: openneuro
+      - Source: OpenNeuro
       - OpenNeuro: `ds005787 <https://openneuro.org/datasets/ds005787>`__
       - NeMAR: `ds005787 <https://nemar.org/dataexplorer/detail?dataset_id=ds005787>`__
 

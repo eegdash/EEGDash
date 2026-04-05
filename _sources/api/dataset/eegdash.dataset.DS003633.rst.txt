@@ -11,7 +11,7 @@ DS003633
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (20). *ForrestGump-MEG*. `10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
+**Citation:** Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (2021). *ForrestGump-MEG*. `10.18112/openneuro.ds003633.v1.0.3 <https://doi.org/10.18112/openneuro.ds003633.v1.0.3>`__
 
 .. rst-class:: sd-badges
 
@@ -186,7 +186,7 @@ Dataset Information
    * - Title
      - ForrestGump-MEG
    * - Year
-     - 20
+     - 2021
    * - Authors
      - Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen
    * - License
@@ -251,7 +251,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 154.6 GB
+      - Size on disk: 73.5 GB
       - File count: 96
       - Format: BIDS
 

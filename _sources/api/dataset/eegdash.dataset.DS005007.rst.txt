@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 40` :bdg-secondary-line:`Recordings: 172` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 40` :bdg-secondary-line:`Recordings: 42` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005007.v1.0.0 <https://doi.org/10.18112/openneuro.ds005007.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005007>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005007>`__ | `Source URL <https://openneuro.org/datasets/ds005007/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005007>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005007>`__ | `Source URL <https://openneuro.org/datasets/ds005007>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,13 +148,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 40
-      - Recordings: 172
+      - Recordings: 42
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 100 (6), 116 (4), 66 (4), 58 (4), 86 (4), 156 (4), 78 (4), 74 (4), 82 (4), 124 (2), 102 (2), 72 (2), 91 (2), 142 (2), 138 (2), 154 (2), 140 (2), 128 (2), 94 (2), 68 (2), 155 (2), 127 (2), 122 (2), 88 (2), 184 (2), 129 (2), 114 (2), 48 (2), 163 (2), 120 (2), 137 (2), 51 (2)
+      - Channels: 100 (3), 74 (2), 78 (2), 156 (2), 86 (2), 58 (2), 66 (2), 116 (2), 82 (2), 122, 127, 155, 68, 94, 128, 140, 154, 138, 142, 91, 72, 102, 124, 137, 51, 120, 163, 48, 114, 129, 184, 88
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 8.3 GB
-      - File count: 172
+      - File count: 42
       - Format: BIDS
 
    .. grid-item-card:: License & citation

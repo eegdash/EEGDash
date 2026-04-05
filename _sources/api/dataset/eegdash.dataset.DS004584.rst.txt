@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 149` :bdg-secondary-line:`Recordings: 1049` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 149` :bdg-secondary-line:`Recordings: 149` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,9 +89,9 @@ Quickstart
 About This Dataset
 ------------------
 
-This experiment includes 149 subjects: 100 individuals with Parkinsons disease, 
-and 49 controls. EEG was recorded with a 64-channel BrainVision cap. Resting-state 
-EEG was collected from patients sitting in a quiet room with their eyes open for 
+This experiment includes 149 subjects: 100 individuals with Parkinsons disease,
+and 49 controls. EEG was recorded with a 64-channel BrainVision cap. Resting-state
+EEG was collected from patients sitting in a quiet room with their eyes open for
 two minutes.
 
 Dataset Information
@@ -114,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004584.v1.0.0 <https://doi.org/10.18112/openneuro.ds004584.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004584>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004584>`__ | `Source URL <https://openneuro.org/datasets/ds004584/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004584>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004584>`__ | `Source URL <https://openneuro.org/datasets/ds004584>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -151,13 +151,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 149
-      - Recordings: 1049
+      - Recordings: 149
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 63 (238), 64 (58), 66 (2)
+      - Channels: 63 (119), 64 (29), 66
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -172,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 2.9 GB
-      - File count: 1049
+      - File count: 149
       - Format: BIDS
 
    .. grid-item-card:: License & citation

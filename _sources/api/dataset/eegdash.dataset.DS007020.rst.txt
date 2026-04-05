@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 94` :bdg-secondary-line:`Recordings: 945` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 94` :bdg-secondary-line:`Recordings: 94` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,13 +92,13 @@ About This Dataset
 This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
 Dataset Purpose:
 This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
-
 Participant Information:
 - Participants are labeled as either "living" or "deceased" in participants.tsv
 - No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
 - All participant IDs are anonymized following BIDS convention (e.g., sub-PD1301).
 
 EEG Acquisition Details:
+- Recording type: Resting-state EEG (eyes open)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -106,7 +106,6 @@ EEG Acquisition Details:
    This dataset contains de-identified resting-state EEG recordings from individuals with Parkinson’s disease (PD) and age-matched healthy control subjects. All EEG data were recorded using standard clinical EEG systems at Neurology Clinic.
    Dataset Purpose:
    This dataset was originally used to evaluate whether resting-state EEG can help distinguish subjects who were later deceased from those who remained living (mortality classification). Only de-identified EEG data and mortality labels are included.
-   
    Participant Information:
    - Participants are labeled as either "living" or "deceased" in participants.tsv
    - No other demographic or clinical information (age, cognition, UPDRS, disease duration, etc.) is included per data-sharing guidelines.
@@ -128,17 +127,14 @@ EEG Acquisition Details:
                    sub-<ID>_ses-01_task-rest_eeg.vhdr
                    sub-<ID>_ses-01_task-rest_eeg.eeg
                    sub-<ID>_ses-01_task-rest_eeg.vmrk
-   
    Mortality Label Format:
    - Living subjects: survival_status = "living"
    - Deceased subjects: survival_status = "deceased"
    
    Ethics & Privacy:
    All subjects provided consent for EEG recording at the University of Iowa Hospitals and Clinics. The publicly shared version here is fully de-identified and contains no clinical or personal health information other than mortality classification.
-   
    Suggested Use:
    This dataset can be used to explore EEG biomarkers of mortality risk, EEG signal characteristics in PD, or to build machine learning models for classification.
-   
    Questions or requests:
    Please contact nandakumar-narayanan@uiowa.edu.
 
@@ -163,7 +159,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007020.v1.0.0 <https://doi.org/10.18112/openneuro.ds007020.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007020>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007020>`__ | `Source URL <https://openneuro.org/datasets/ds007020/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007020>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007020>`__ | `Source URL <https://openneuro.org/datasets/ds007020>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -200,13 +196,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 94
-      - Recordings: 945
+      - Recordings: 94
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 63 (170), 64 (18)
+      - Channels: 63 (76), 64 (18)
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -221,7 +217,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.7 GB
-      - File count: 945
+      - File count: 94
       - Format: BIDS
 
    .. grid-item-card:: License & citation

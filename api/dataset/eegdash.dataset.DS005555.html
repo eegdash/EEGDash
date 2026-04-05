@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS005555';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1037,7 +1048,7 @@
 <p><em>The Bitbrain Open Access Sleep (BOAS) dataset</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing (2024). <em>The Bitbrain Open Access Sleep (BOAS) dataset</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds005555.v1.1.1">10.18112/openneuro.ds005555.v1.1.1</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 128</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 1414</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 0.0</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 128</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 256</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 0.0</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1100,27 +1111,28 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <p><strong>README</strong></p>
 <p>The <strong>Bitbrain Open Access Sleep (BOAS)</strong> dataset.</p>
 <p><strong>Overview</strong></p>
+<p>This project aimed at bridging the gap between gold-standard clinical sleep monitoring and emerging wearable EEG technologies. The dataset contains data from **128 nights**in which participants were simultaneously monitored with two technologies: a ** Brain Quick Plus Evolution PSG system by Micromed**and a **wearable EEG headband by Bitbrain**. The Micromed PSG system records a comprehensive and clinically validated set of physiological sleep parameters, while the Bitbrain wearable EEG headband offers a user-friendly, self-administered alternative, limited to forehead EEG electrodes, movement sensors, and photo-plethysmography. **Data from both systems were acquired simultaneously**, allowing for direct comparison and validation of the wearable EEG device against the established PSG standard. This dual-recording approach provides a rich resource for evaluating the performance and potential of wearable EEG technology in sleep studies.
+<em>Human sleep scoring:</em> To ensure robust and reliable sleep staging, we followed a rigorous labeling process. <strong>Three expert sleep scorers independently annotated the PSG recordings**following criteria developed by the American Academy of Sleep Medicine (AASM) (Berry et al., 2015). From the resulting three scorings, a ** consensus label</strong> was derived: each epoch of sleep data received the label scored by at least two of the scorers. In cases where all three scorers had given different labels, a fourth scorer made the final decision. This consensus labeling approach addresses the inherent variability in human-derived sleep scoring, with an estimated inter-scorer agreement of approximately 85% (Danker-Hopfe et al., 2009; Rosenberg and Van Hout, 2013).
+<em>Automatic scoring:</em> We used the human expert consensus labels to train a deep learning model (Esparza-Iaizzo et al., 2024). By implementing a cross-validation procedure, we trained and validated the model separately on the PSG and wearable EEG datasets. The model achieved an 87.13% match between human-consensus and network-provided labels for the PSG data, and an 86.71% match for the wearable EEG data.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>README</strong></p>
 <p class="sd-card-text">The <strong>Bitbrain Open Access Sleep (BOAS)</strong> dataset.</p>
 <p class="sd-card-text"><strong>Overview</strong></p>
-<p class="sd-card-text">This project aimed at bridging the gap between gold-standard clinical sleep monitoring and emerging wearable EEG technologies. The dataset contains data from **128 nights**in which participants were simultaneously monitored with two technologies: a ** Brain Quick Plus Evolution PSG system by Micromed**and a **wearable EEG headband by Bitbrain**. The Micromed PSG system records a comprehensive and clinically validated set of physiological sleep parameters, while the Bitbrain wearable EEG headband offers a user-friendly, self-administered alternative, limited to forehead EEG electrodes, movement sensors, and photo-plethysmography. **Data from both systems were acquired simultaneously**, allowing for direct comparison and validation of the wearable EEG device against the established PSG standard. This dual-recording approach provides a rich resource for evaluating the performance and potential of wearable EEG technology in sleep studies.</p>
-<p class="sd-card-text"><em>Human sleep scoring:</em> To ensure robust and reliable sleep staging, we followed a rigorous labeling process. <strong>Three expert sleep scorers independently annotated the PSG recordings**following criteria developed by the American Academy of Sleep Medicine (AASM) (Berry et al., 2015). From the resulting three scorings, a ** consensus label</strong> was derived: each epoch of sleep data received the label scored by at least two of the scorers. In cases where all three scorers had given different labels, a fourth scorer made the final decision. This consensus labeling approach addresses the inherent variability in human-derived sleep scoring, with an estimated inter-scorer agreement of approximately 85% (Danker-Hopfe et al., 2009; Rosenberg and Van Hout, 2013).</p>
-<p class="sd-card-text"><em>Automatic scoring:</em> We used the human expert consensus labels to train a deep learning model (Esparza-Iaizzo et al., 2024). By implementing a cross-validation procedure, we trained and validated the model separately on the PSG and wearable EEG datasets. The model achieved an 87.13% match between human-consensus and network-provided labels for the PSG data, and an 86.71% match for the wearable EEG data.</p>
-<p class="sd-card-text">Our dataset includes:</p>
-<ol class="arabic simple">
-<li><p class="sd-card-text"><a href="#id1"><span class="problematic" id="id2">**</span></a>PSG recordings**from 128 nights (files ending with “<em>psg_eeg.edf</em>”),</p></li>
-<li><p class="sd-card-text"><a href="#id3"><span class="problematic" id="id4">**</span></a>Wearable EEG recordings**from the same nights (files ending with “<em>headband_eeg.edf</em>”),</p></li>
-<li><p class="sd-card-text"><strong>Human-consensus sleep stage labels</strong>, obtained from the PSG recordings (”<em>stage_hum</em>” in the PSG data’s event files),</p></li>
-<li><p class="sd-card-text"><strong>AI-generated sleep stage labels</strong>, separately obtained from PSG recordings and from wearable EEG recordings (”<em>stage_ai</em>” in both the PSG and headband data’s event files).</p></li>
-<li><p class="sd-card-text"><a href="#id5"><span class="problematic" id="id6">**</span></a>Further meta data**for each recording (i.e., the participants’ age, sex, and BMI, provided in the file “<em>participants.tsv</em>”)</p></li>
-</ol>
+<p class="sd-card-text">This project aimed at bridging the gap between gold-standard clinical sleep monitoring and emerging wearable EEG technologies. The dataset contains data from **128 nights**in which participants were simultaneously monitored with two technologies: a ** Brain Quick Plus Evolution PSG system by Micromed**and a **wearable EEG headband by Bitbrain**. The Micromed PSG system records a comprehensive and clinically validated set of physiological sleep parameters, while the Bitbrain wearable EEG headband offers a user-friendly, self-administered alternative, limited to forehead EEG electrodes, movement sensors, and photo-plethysmography. **Data from both systems were acquired simultaneously**, allowing for direct comparison and validation of the wearable EEG device against the established PSG standard. This dual-recording approach provides a rich resource for evaluating the performance and potential of wearable EEG technology in sleep studies.
+<em>Human sleep scoring:</em> To ensure robust and reliable sleep staging, we followed a rigorous labeling process. <strong>Three expert sleep scorers independently annotated the PSG recordings**following criteria developed by the American Academy of Sleep Medicine (AASM) (Berry et al., 2015). From the resulting three scorings, a ** consensus label</strong> was derived: each epoch of sleep data received the label scored by at least two of the scorers. In cases where all three scorers had given different labels, a fourth scorer made the final decision. This consensus labeling approach addresses the inherent variability in human-derived sleep scoring, with an estimated inter-scorer agreement of approximately 85% (Danker-Hopfe et al., 2009; Rosenberg and Van Hout, 2013).
+<em>Automatic scoring:</em> We used the human expert consensus labels to train a deep learning model (Esparza-Iaizzo et al., 2024). By implementing a cross-validation procedure, we trained and validated the model separately on the PSG and wearable EEG datasets. The model achieved an 87.13% match between human-consensus and network-provided labels for the PSG data, and an 86.71% match for the wearable EEG data.
+Our dataset includes:
+1. <strong>PSG recordings**from 128 nights (files ending with “*psg_eeg.edf*”),
+2. **Wearable EEG recordings**from the same nights (files ending with “*headband_eeg.edf*”),
+3. **Human-consensus sleep stage labels</strong>, obtained from the PSG recordings (”<em>stage_hum</em>” in the PSG data’s event files),
+4. <strong>AI-generated sleep stage labels</strong>, separately obtained from PSG recordings and from wearable EEG recordings (”<em>stage_ai</em>” in both the PSG and headband data’s event files).
+5. <a href="#id1"><span class="problematic" id="id2">**</span></a>Further meta data**for each recording (i.e., the participants’ age, sex, and BMI, provided in the file “<em>participants.tsv</em>”)</p>
 <p class="sd-card-text"><strong>Participants</strong></p>
-<p class="sd-card-text">Participants were members of the general population, provided written informed consent, and received economic compensation of 50€ per night.</p>
-<p class="sd-card-text">In order to represent the general population, we recruited a broad spectrum of participants along the dimensions of age, sex, and body mass index. We did not recruit patients with particular health conditions but only excluded severe conditions that could have affected the feasibility or safety of the study. In detail, inclusion and exclusion criteria were as follows.</p>
-<p class="sd-card-text"><strong>Inclusion criteria</strong>
+<p class="sd-card-text">Participants were members of the general population, provided written informed consent, and received economic compensation of 50€ per night.
+In order to represent the general population, we recruited a broad spectrum of participants along the dimensions of age, sex, and body mass index. We did not recruit patients with particular health conditions but only excluded severe conditions that could have affected the feasibility or safety of the study. In detail, inclusion and exclusion criteria were as follows.
+<strong>Inclusion criteria</strong>
 - Age &gt; 18 years,
 - Sufficient knowledge of Spanish to understand the explanatory text, the consent form and study-related instructions.</p>
 <p class="sd-card-text"><strong>Exclusion criteria</strong>
@@ -1130,10 +1142,10 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 - Current pregnancy or nursing,
 - Use of psychotropic medication, benzodiazepines, gamma-hydroxybutyric acid, and similar drugs before or during the study.</p>
 <p class="sd-card-text"><strong>Format</strong></p>
-<p class="sd-card-text">The dataset is formatted according to the Brain Imaging Data Structure (BIDS). Please note that while the recordings are named from sub-1 up to sub-128, some come from the same participants. 108 unique individuals participated in the recordings, data of which can be matched using the pid (= unique participant ID) property in the file “<em>participants.tsv</em>”</p>
-<p class="sd-card-text">The folder of each recording contains the data recorded with the PSG (”<em>sub-xx_task-Sleep_acq-psg_eeg.edf</em>”) and with the wearable EEG headband (”<em>sub-xx_task-Sleep_acq-headband_eeg.edf</em>”).</p>
-<p class="sd-card-text"><strong>Channel groups</strong></p>
-<p class="sd-card-text">Not all recordings contain data from all available sensors. The full list of available sensors for each recording can be obtained on the “<em>channels.tsv</em>” file. Channels in this file are coded in groups:
+<p class="sd-card-text">The dataset is formatted according to the Brain Imaging Data Structure (BIDS). Please note that while the recordings are named from sub-1 up to sub-128, some come from the same participants. 108 unique individuals participated in the recordings, data of which can be matched using the pid (= unique participant ID) property in the file “<em>participants.tsv</em>”
+The folder of each recording contains the data recorded with the PSG (”<em>sub-xx_task-Sleep_acq-psg_eeg.edf</em>”) and with the wearable EEG headband (”<em>sub-xx_task-Sleep_acq-headband_eeg.edf</em>”).
+<strong>Channel groups</strong>
+Not all recordings contain data from all available sensors. The full list of available sensors for each recording can be obtained on the “<em>channels.tsv</em>” file. Channels in this file are coded in groups:
 - <strong>PSG_EEG</strong>: Electroencephalography recorded with the PSG system. Channels available are F3, F4, C3, C4, O1, O2 (PSG_F3, PSG_F4, PSG_C3, PSG_C4, PSG_O1, PSG_O2).
 - <strong>PSG_EOG</strong>: Electrooculography signals recorded with the PSG system. The location of the EOG electrodes was lateral of the eyes; one slightly lower than the participant’s left eye and one slightly higher than the participant’s right eye (according to AASM guidelines). For recordings containing only one EOG channel (PSG_EOG), the electrodes were recorded as a bipolar derivation. If two EOG channels are present (PSG_EOGR, PSG_EOGL), both electrodes were referenced against the left mastoid.
 - <strong>PSG_EMG</strong>: Electromyography signals recorded with the PSG system. Data contain a single EMG channel (PSG_EMG), which is the result of a bipolar derivation of two chin electrodes.
@@ -1144,8 +1156,8 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 - <strong>HB_EEG</strong>: Electroencephalography recorded with the wearable EEG headband. Headband channels are approximately located at AF7 and AF8 (HB_1, HB_2).
 - <strong>HB_IMU</strong>: Movement activity recorded by an Inertial Measurement Unit (IMU) in the headband. Signals are derived from an accelerometer (HB_IMU_1, HB_IMU_2, HB_IMU_3) and gyroscope (HB_IMU_4, HB_IMU_5, HB_IMU_6), both recording signals for all three spatial dimensions.
 - <strong>HB_PULSE</strong>: Pulse activity recorded with the wearable EEG headband using a PPG sensor (HB_PULSE).</p>
-<p class="sd-card-text"><strong>Sleep staging labels</strong></p>
-<p class="sd-card-text">The sleep stage labels for each recording are coded as events in corresponding event files (stage_hum and stage_ai; see above). Stages are coded as follows:
+<p class="sd-card-text"><strong>Sleep staging labels</strong>
+The sleep stage labels for each recording are coded as events in corresponding event files (stage_hum and stage_ai; see above). Stages are coded as follows:
 - 0: Wake,
 - 1: NonREM sleep stage 1 (N1),
 - 2: NonREM sleep stage 2 (N2),
@@ -1154,13 +1166,13 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 - 8: PSG disconnections (e.g., due to bathroom breaks; human-scored only)
 - -2: Artifacts and missing data (AI-scored only)</p>
 <p class="sd-card-text"><strong>References</strong></p>
-<p class="sd-card-text">Berry, R. B., Brooks, R., Gamaldo, C. E., Harding, S. M., Lloyd, R. M., Marcus, C. L., et al. (2015). The AASM Manual for the Scoring of Sleep and Associated Events: Rules, Terminology and Technical Specifications, Version 2.2. Darien, Illinois.</p>
-<p class="sd-card-text">Danker-Hopfe, H., Anderer, P., Zeitlhofer, J., Boeck, M., Dorn, H., Gruber, G., et al. (2009). Interrater reliability for sleep scoring according to the Rechtschaffen &amp; Kales and the new AASM standard. J. Sleep Res. 18, 74–84. doi: 10.1111/j.1365-2869.2008.00700.x.</p>
-<p class="sd-card-text">Esparza-Iaizzo, M., Sierra-Torralba, M., Klinzing, J. G., Minguez, J., Montesano, L., and López-Larraz, E. (2024). Automatic sleep scoring for real-time monitoring and stimulation in individuals with and without sleep apnea. bioRxiv, 2024.06.12.597764. doi: 10.1101/2024.06.12.597764.</p>
-<p class="sd-card-text">Rosenberg, R. S., and Van Hout, S. (2013). The American Academy of Sleep Medicine inter-scorer reliability program: sleep stage scoring. J. Clin. sleep Med. 9, 81–87. doi: 10.5664/jcsm.2350.</p>
+<p class="sd-card-text">Berry, R. B., Brooks, R., Gamaldo, C. E., Harding, S. M., Lloyd, R. M., Marcus, C. L., et al. (2015). The AASM Manual for the Scoring of Sleep and Associated Events: Rules, Terminology and Technical Specifications, Version 2.2. Darien, Illinois.
+Danker-Hopfe, H., Anderer, P., Zeitlhofer, J., Boeck, M., Dorn, H., Gruber, G., et al. (2009). Interrater reliability for sleep scoring according to the Rechtschaffen &amp; Kales and the new AASM standard. J. Sleep Res. 18, 74–84. doi: 10.1111/j.1365-2869.2008.00700.x.
+Esparza-Iaizzo, M., Sierra-Torralba, M., Klinzing, J. G., Minguez, J., Montesano, L., and López-Larraz, E. (2024). Automatic sleep scoring for real-time monitoring and stimulation in individuals with and without sleep apnea. bioRxiv, 2024.06.12.597764. doi: 10.1101/2024.06.12.597764.
+Rosenberg, R. S., and Van Hout, S. (2013). The American Academy of Sleep Medicine inter-scorer reliability program: sleep stage scoring. J. Clin. sleep Med. 9, 81–87. doi: 10.5664/jcsm.2350.</p>
 <p class="sd-card-text"><strong>Contact</strong></p>
-<p class="sd-card-text">If you have any questions or comments, please contact:</p>
-<p class="sd-card-text">Eduardo López-Larraz: <a class="reference external" href="mailto:eduardo&#46;lopez&#37;&#52;&#48;bitbrain&#46;com">eduardo<span>&#46;</span>lopez<span>&#64;</span>bitbrain<span>&#46;</span>com</a>
+<p class="sd-card-text">If you have any questions or comments, please contact:
+Eduardo López-Larraz: <a class="reference external" href="mailto:eduardo&#46;lopez&#37;&#52;&#48;bitbrain&#46;com">eduardo<span>&#46;</span>lopez<span>&#64;</span>bitbrain<span>&#46;</span>com</a>
 Jens G. Klinzing: <a class="reference external" href="mailto:jens&#46;klinzing&#37;&#52;&#48;bitbrain&#46;com">jens<span>&#46;</span>klinzing<span>&#64;</span>bitbrain<span>&#46;</span>com</a></p>
 </div>
 </details></section>
@@ -1191,7 +1203,7 @@ Jens G. Klinzing: <a class="reference external" href="mailto:jens&#46;klinzing&#
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds005555.v1.1.1">doi:10.18112/openneuro.ds005555.v1.1.1</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005555">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005555">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005555/versions/1.1.1">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds005555">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds005555">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds005555">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1226,7 +1238,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 128</p></li>
-<li><p class="sd-card-text">Recordings: 1414</p></li>
+<li><p class="sd-card-text">Recordings: 256</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1238,7 +1250,7 @@ Subjects &amp; recordings</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Channels &amp; sampling rate</div>
 <ul class="simple">
-<li><p class="sd-card-text">Channels: 2 (144), 11 (106), 9 (98), 8 (73), 14 (25), 13 (19), 16 (19), 3 (18), 12 (5), 15 (5)</p></li>
+<li><p class="sd-card-text">Channels: 9 (96), 11 (68), 14 (25), 16 (19), 3 (18), 2 (16), 8 (9), 15 (5)</p></li>
 <li><p class="sd-card-text">Sampling rate (Hz): 256.0</p></li>
 <li><p class="sd-card-text">Duration (hours): 0.0</p></li>
 </ul>
@@ -1265,7 +1277,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 33.5 GB</p></li>
-<li><p class="sd-card-text">File count: 1414</p></li>
+<li><p class="sd-card-text">File count: 256</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1448,8 +1460,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1475,7 +1487,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

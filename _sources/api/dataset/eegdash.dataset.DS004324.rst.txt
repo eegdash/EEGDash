@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 26` :bdg-secondary-line:`Recordings: 161` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 26` :bdg-secondary-line:`Recordings: 26` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,17 +92,13 @@ About This Dataset
 
 **Images of stylized faces improve ERP features used for emotion detection**
 
-
 For their ease of accessibility and low cost, current Brain-Computer Interfaces (BCI) used to detect subjective emotional and affective states rely largely on electroencephalographic (EEG) signals. Numerous datasets are publicly available for any researcher to design models for affect detection from EEG. However, few designs focus on optimally exploiting the nature of the stimulus elicitation to improve accuracy.
 We found that artificially enhanced human faces with exaggerated visual features significantly improve some commonly used neural correlates of emotion as measured by event-related potentials (ERPs). These images elicit an enhanced N170 component, well known in facial recognition encoding. Our findings suggest that the study of emotion elicitation could exploit consistent stimuli transformations to study the characteristics of ERPs related to specific affective stimuli. Furthermore, this specific result might be useful in the context of affective BCI design, where a higher accuracy in affect detection from EEG can improve the experience of a user.
-
 Participant information has been removed for annonimation reasons.
-
 
 **References**
 
 Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-
 Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103. https://doi.org/10.1038/s41597-019-0104-8
 
 Dataset Information
@@ -125,7 +121,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004324.v1.0.0 <https://doi.org/10.18112/openneuro.ds004324.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004324>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004324>`__ | `Source URL <https://openneuro.org/datasets/ds004324/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004324>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004324>`__ | `Source URL <https://openneuro.org/datasets/ds004324>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -162,13 +158,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 26
-      - Recordings: 161
+      - Recordings: 26
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 28 (26), 38 (26)
+      - Channels: 38
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -183,7 +179,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 2.5 GB
-      - File count: 161
+      - File count: 26
       - Format: BIDS
 
    .. grid-item-card:: License & citation

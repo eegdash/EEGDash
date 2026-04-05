@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 379` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 44` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,13 +92,13 @@ About This Dataset
 
 **Overview**
 
-
 This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
 For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
-
-We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages 
+We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
 performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
-
+The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
+The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
+The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`_\_.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -106,29 +106,20 @@ performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s4
    
    **Overview**
    
-   
    This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
    For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
-   
-   We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages 
+   We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
    performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
-   
    The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
    The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
-   The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`_\_. 
-   
-   In a previous publication, this dataset has been analyzed with a offline software algorithm: `https://doi.org/10.1016/j.clinph.2019.07.008 <https://doi.org/10.1016/j.clinph.2019.07.008>`_\_. 
-   
+   The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`_\_.
+   In a previous publication, this dataset has been analyzed with a offline software algorithm: `https://doi.org/10.1016/j.clinph.2019.07.008 <https://doi.org/10.1016/j.clinph.2019.07.008>`_\_.
    The annotations of the epileptiform patterns detected with the offline approach are provided at: sub-\*/ses-SITUATION\*/sub-\*_ses-SITUATION\*_task-acute_events.tsv.
-   
    The annotations of the epileptiform patterns detected with the online neuromorphic processing are provided at derivative/sub-\*/ses-SITUATION\*/sub-\*_ses-SITUATION\*_task-EV.csv.
-    
    
    **Dataset Structure**
    
-   
    The derivative folder is structured as follows:
-   
     - sub-\*
      - ses-SITUATION1A
        - \*task-BCI.dat
@@ -141,50 +132,36 @@ performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s4
        - \*task-SNN.csv
        - \*task-EV.csv
    
-   
    **File Descriptions**
    
-   
    - derivative
-   
     - *task-BCI.dat:* BCI2000-compatible file containing the ECoG recording.
     - *task-ADM.csv:* ADM encoding of the ECoG recording.
     - *task-SNN.csv:* SNN encoding of the ECoG recording.
     - *task-EV.cvs:*  Annotations of the detected epileptiform patterns in the ECoG recording.
    
-   
    **Data Formats**
-   
    
    Details of the neuromorphic processing pipeline can be found at `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
    
-   
    **task-BCI.dat**
    
-   
    The BCI2000-compatible file contains the raw ECoG recording.
-   
    It can be streamed in real-time using the 'FilePlayback' BCI2000 module.
-   
    
    **task-ADM.csv**
    
-   
    The ADM file is formatted as follows:
-   
     - _pulseType\_: -1 for DN pulse, +1 for UP pulse.
     - _pulseTime\_: Time at which the pulse occurred.
     - _channel\_: Channel in which the pulse occurred.
     - _band\_: 0 for EEG band, 1 for HFO band
    
-   
    **task-SNN.csv**
    
-   
    The SNN file is formatted as follows:
-   
     - _time\_: Time at which the SNN neuron activated.
-    - _neuronId\_: Number id of the SNN neuron (DYNAP-SE numbering from 0 to 1024). 
+    - _neuronId\_: Number id of the SNN neuron (DYNAP-SE numbering from 0 to 1024).
     - _neuronCounter\_: Number id of the SNN neuron (sequential numbering from 0 to 40).
     - _moduleName\_: Population (ACC_4_0; ACC_0_4), band (EEG; HFO) and module number (ch 0-7) of the neuron.
       - ACC_4_0 = ACC UP
@@ -192,25 +169,18 @@ performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s4
     - _moduleId\_: Module number (0-7).
     - _channelId\_: Channel for which the SNN neuron activated.
    
-   
    **task-EV.csv**
    
-   
    The EV file contains annotations of the detected epileptiform patterns with the following format:
-   
     - _time\_: time of the detected event.
     - _channelId\_: channel id of the detected event.
     - _location\_:  channel name of the detected event.
    
-   
    **Contact Information**
-   
    
    For inquiries or additional information, please contact Filippo.Costa@usz.ch or Johannes.Sarnthein@usz.ch
    
-   
    **Acknowledgements**
-   
    
    We thank V. Dimakopoulos for help in reformatting the data to BIDS. We acknowledge a grant awarded by the Swiss National Science Foundation (funded by the SNSF 204651 to JS and GI with GR and NK as project partners). The funder had no role in the design or analysis of the study.
 
@@ -235,7 +205,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004944.v1.1.0 <https://doi.org/10.18112/openneuro.ds004944.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004944>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004944>`__ | `Source URL <https://openneuro.org/datasets/ds004944/versions/1.1.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004944>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004944>`__ | `Source URL <https://openneuro.org/datasets/ds004944>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -272,13 +242,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 22
-      - Recordings: 379
+      - Recordings: 44
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 3 (20), 6 (12), 5 (12), 4 (10), 23 (6), 20 (4), 19 (4), 28 (2), 15 (2), 10 (2), 22 (2), 25 (2), 21 (2), 11 (2), 17 (2), 2 (2), 27 (2)
+      - Channels: 3 (10), 6 (6), 5 (6), 4 (5), 23 (3), 20 (2), 19 (2), 25, 22, 10, 15, 28, 27, 2, 17, 11, 21
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -293,7 +263,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 451.1 MB
-      - File count: 379
+      - File count: 44
       - Format: BIDS
 
    .. grid-item-card:: License & citation

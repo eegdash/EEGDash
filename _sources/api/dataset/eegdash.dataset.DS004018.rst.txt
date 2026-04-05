@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 16` :bdg-secondary-line:`Recordings: 350` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 16` :bdg-secondary-line:`Recordings: 32` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 Grootswagers T.*, Robinson A.K.*, Carlson T.A. (2019). The representational dynamics of visual objects in rapid serial visual processing streams. NeuroImage, 188, 668-679 https://doi.org/10.1016/j.neuroimage.2018.12.046
-
 See also https://osf.io/a7knv/
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004018.v2.0.0 <https://doi.org/10.18112/openneuro.ds004018.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004018>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004018>`__ | `Source URL <https://openneuro.org/datasets/ds004018/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004018>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004018>`__ | `Source URL <https://openneuro.org/datasets/ds004018>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,7 +149,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 16
-      - Recordings: 350
+      - Recordings: 32
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 10.6 GB
-      - File count: 350
+      - File count: 32
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 28` :bdg-secondary-line:`Recordings: 1347` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 28` :bdg-secondary-line:`Recordings: 336` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 This dataset contains raw and processed MEG data for the paper "Model-based aversive learning in humans is supported by preferential task state reactivation" by Toby Wise, Yunzhe Liu, Fatima Chowdhury & Ray Dolan.
-
 Raw data is provided as ``.fif`` files, although it was acquired on a CRF system.
 
 Dataset Information
@@ -113,7 +112,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003682.v1.0.0 <https://doi.org/10.18112/openneuro.ds003682.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003682>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003682>`__ | `Source URL <https://openneuro.org/datasets/ds003682/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003682>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003682>`__ | `Source URL <https://openneuro.org/datasets/ds003682>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -150,13 +149,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 28
-      - Recordings: 1347
+      - Recordings: 336
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 272 (336), 414 (336)
+      - Channels: 414
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
@@ -171,7 +170,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 211.6 GB
-      - File count: 1347
+      - File count: 336
       - Format: BIDS
 
    .. grid-item-card:: License & citation

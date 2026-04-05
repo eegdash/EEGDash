@@ -11,11 +11,11 @@ DS005811
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005811.v1.0.8 <https://doi.org/10.18112/openneuro.ds005811.v1.0.8>`__
+**Citation:** Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li, Zonglei Zhen (2025). *NOD-EEG*. `10.18112/openneuro.ds005811.v1.0.9 <https://doi.org/10.18112/openneuro.ds005811.v1.0.9>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 2413` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 448` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -80,9 +80,9 @@ Quickstart
 
          @dataset{ds005811,
            title = {NOD-EEG},
-           author = {Guohao Zhang and Ming Zhou and Shaohua Tang and Shuyi Zhen and Zheng Li and Zonglei Zhen},
-           doi = {10.18112/openneuro.ds005811.v1.0.8},
-           url = {https://doi.org/10.18112/openneuro.ds005811.v1.0.8},
+           author = {Guohao Zhang and Ming Zhou and Shuyi Zhen and Shaohua Tang and Zheng Li and Zonglei Zhen},
+           doi = {10.18112/openneuro.ds005811.v1.0.9},
+           url = {https://doi.org/10.18112/openneuro.ds005811.v1.0.9},
          }
 
 
@@ -92,12 +92,12 @@ About This Dataset
 
 **Summary**
 
-
 The human brain can rapidly recognize meaningful objects from natural scenes encountered in everyday life. Neuroimaging with large-scale naturalistic stimuli is increasingly employed to elucidate these neural mechanisms of object recognition across these rich and daily natural scenes. However, most existing large-scale neuroimaging datasets with naturalistic stimuli primarily rely on functional magnetic resonance imaging (fMRI), which provides high spatial resolution to characterize spatial representation patterns but is limited in capturing the temporal dynamics inherent in visual cognitive processing.
+To address this limitation, we extended our previously collected Natural Object Dataset-fMRI (NOD-fMRI) by collecting both magnetoencephalography (MEG) and electroencephalography (EEG) data from the same subjects while viewing the same set of naturalistic stimuli. As a result, the NOD uniquely integrates three different modalities—fMRI, MEG, and EEG—thus offering promising avenues to examine brain activity induced by naturalistic stimuli with both high spatial and high temporal resolutions. Additionally, the NOD encompasses a diverse array of naturalistic stimuli and a broader subject pool, enabling researchers to explore differences in neural activation patterns across both stimuli and subjects.
+We anticipate that the NOD dataset will serve as a valuable resource for advancing our understanding of the cognitive and neural mechanisms underlying object recognition.
 
-To address this limitation, we extended our previously collected Natural Object Dataset-fMRI (NOD-fMRI) by collecting both magnetoencephalography (MEG) and electroencephalography (EEG) data from the same subjects while viewing the same set of naturalistic stimuli. As a result, the NOD uniquely integrates three different modalities—fMRI, MEG, and EEG—thus offering promising avenues to examine brain activity induced by naturalistic stimuli with both high spatial and high temporal resolutions. Additionally, the NOD encompasses a diverse array of naturalistic stimuli and a broader subject pool, enabling researchers to explore differences in neural activation patterns across both stimuli and subjects. 
+**The MEG data's accession number is ds005810.**
 
-We anticipate that the NOD dataset will serve as a valuable resource for advancing our understanding of the cognitive and neural mechanisms underlying object recognition. 
 
 
 .. dropdown:: View full README
@@ -106,31 +106,23 @@ We anticipate that the NOD dataset will serve as a valuable resource for advanci
    
    **Summary**
    
-   
    The human brain can rapidly recognize meaningful objects from natural scenes encountered in everyday life. Neuroimaging with large-scale naturalistic stimuli is increasingly employed to elucidate these neural mechanisms of object recognition across these rich and daily natural scenes. However, most existing large-scale neuroimaging datasets with naturalistic stimuli primarily rely on functional magnetic resonance imaging (fMRI), which provides high spatial resolution to characterize spatial representation patterns but is limited in capturing the temporal dynamics inherent in visual cognitive processing.
+   To address this limitation, we extended our previously collected Natural Object Dataset-fMRI (NOD-fMRI) by collecting both magnetoencephalography (MEG) and electroencephalography (EEG) data from the same subjects while viewing the same set of naturalistic stimuli. As a result, the NOD uniquely integrates three different modalities—fMRI, MEG, and EEG—thus offering promising avenues to examine brain activity induced by naturalistic stimuli with both high spatial and high temporal resolutions. Additionally, the NOD encompasses a diverse array of naturalistic stimuli and a broader subject pool, enabling researchers to explore differences in neural activation patterns across both stimuli and subjects.
+   We anticipate that the NOD dataset will serve as a valuable resource for advancing our understanding of the cognitive and neural mechanisms underlying object recognition.
    
-   To address this limitation, we extended our previously collected Natural Object Dataset-fMRI (NOD-fMRI) by collecting both magnetoencephalography (MEG) and electroencephalography (EEG) data from the same subjects while viewing the same set of naturalistic stimuli. As a result, the NOD uniquely integrates three different modalities—fMRI, MEG, and EEG—thus offering promising avenues to examine brain activity induced by naturalistic stimuli with both high spatial and high temporal resolutions. Additionally, the NOD encompasses a diverse array of naturalistic stimuli and a broader subject pool, enabling researchers to explore differences in neural activation patterns across both stimuli and subjects. 
-   
-   We anticipate that the NOD dataset will serve as a valuable resource for advancing our understanding of the cognitive and neural mechanisms underlying object recognition. 
-   
-   The MEG data's accession number is ``ds005810``.
-   
+   **The MEG data's accession number is ds005810.**
    
    
    **Data Records**
    
    
-   
    **Directory Structure**
-   
    
    The raw data from each subject are stored in the ``sub-subID`` directory, while preprocessed data and epoch data are stored in the following directories:
    - *Preprocessed Data:* ``derivatives/preprocessed/raw``
    - *Epoch Data:* ``derivatives/preprocessed/epochs``
    
-   
    **Stimulus Images**
-   
    
    The stimulus images used for MEG and EEG are identical and are stored in the ``stimuli/ImageNet`` directory. Images within this folder are named in the ``synsetID_imageID.JPEG`` Where:
    - ``synsetID`` is the ILSVRC category information.
@@ -138,19 +130,18 @@ We anticipate that the NOD dataset will serve as a valuable resource for advanci
    
    The image metadata, including category information, is available in the table files under the ``stimuli/metadata`` directory.
    
-   
    **Raw Data**
-   
    
    Raw EEG data are stored in BIDS format. Each subject's directory contains multiple session folders, designated as ``ses-sesID``. Comprehensive trial information for each subject is documented in the file: ``derivatives/detailed_events/sub-subID_events.csv`` Where each row corresponds to a trial, and each column contains metadata for that trial, including the session and run number, category information of the stimuli, and subject response.
    
-   
    **Preprocessed Data**
    
-   
    The full time series data of preprocessed data are archived in the ``derivatives/raw`` directory, named as: ``sub-subID_ses-sesID_task-ImageNet_run-runID_eeg_clean.fif``. The epoch data derived from preprocessed data are stored within the ``derivatives/epochs`` directory. In this directory, all data for each subject are concatenated into a single file, labeled as: ``sub-subID_epo.fif``
-   
    The trial information within each subject's epochs data can be accessed via the metadata of the epochs data, which are aligned with the content of the subject's ``sub-subID_events.csv`` file.
+   
+   **References**
+   
+   Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A., and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. *Journal of Open Source Software, 4*(1896). `https://doi.org/10.21105/joss.01896 <https://doi.org/10.21105/joss.01896>`_\_
 
 
 Dataset Information
@@ -167,13 +158,13 @@ Dataset Information
    * - Year
      - 2025
    * - Authors
-     - Guohao Zhang, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen
+     - Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li, Zonglei Zhen
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds005811.v1.0.8 <https://doi.org/10.18112/openneuro.ds005811.v1.0.8>`__
+     - `doi:10.18112/openneuro.ds005811.v1.0.9 <https://doi.org/10.18112/openneuro.ds005811.v1.0.9>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005811>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005811>`__ | `Source URL <https://openneuro.org/datasets/ds005811/versions/1.0.8>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005811>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005811>`__ | `Source URL <https://openneuro.org/datasets/ds005811>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -183,9 +174,9 @@ Dataset Information
 
       @dataset{ds005811,
         title = {NOD-EEG},
-        author = {Guohao Zhang and Ming Zhou and Shaohua Tang and Shuyi Zhen and Zheng Li and Zonglei Zhen},
-        doi = {10.18112/openneuro.ds005811.v1.0.8},
-        url = {https://doi.org/10.18112/openneuro.ds005811.v1.0.8},
+        author = {Guohao Zhang and Ming Zhou and Shuyi Zhen and Shaohua Tang and Zheng Li and Zonglei Zhen},
+        doi = {10.18112/openneuro.ds005811.v1.0.9},
+        url = {https://doi.org/10.18112/openneuro.ds005811.v1.0.9},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -210,14 +201,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 19
-      - Recordings: 2413
+      - Recordings: 448
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 62 (448), 64 (440), 66 (8)
-      - Sampling rate (Hz): 500.0 (576), 1000.0 (320)
+      - Channels: 64 (440), 66 (8)
+      - Sampling rate (Hz): 500.0 (288), 1000.0 (160)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -230,15 +221,15 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.1 GB
-      - File count: 2413
+      - Size on disk: 16.2 GB
+      - File count: 448
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds005811.v1.0.8
+      - DOI: doi:10.18112/openneuro.ds005811.v1.0.9
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

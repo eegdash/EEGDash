@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 205` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 25` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 Exo-EEG Experiment
-
 Participants: see participants.tsv
 Task: exo (see \*_eeg.json)
 Contact: aguedafgt@ugr.es
@@ -115,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds007180.v1.0.0 <https://doi.org/10.18112/openneuro.ds007180.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds007180>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007180>`__ | `Source URL <https://openneuro.org/datasets/ds007180/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds007180>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds007180>`__ | `Source URL <https://openneuro.org/datasets/ds007180>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -152,7 +151,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 25
-      - Recordings: 205
+      - Recordings: 25
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -173,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 14.7 GB
-      - File count: 205
+      - File count: 25
       - Format: BIDS
 
    .. grid-item-card:: License & citation

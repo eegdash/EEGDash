@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 14094` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 7` :bdg-secondary-line:`Recordings: 935` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,24 +91,22 @@ About This Dataset
 
 EEG-Controlled Exoskeleton for Walking and Standing
 A Longitudinal Motor Imagery Study in Healthy Adults
-
 Dataset Overview
 This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
-
 Experimental Design
 * Participants: 7 healthy adults (4 male, 3 female)
 * Sessions: 9 per participant
 * Training Phase: Motor imagery calibration
+* Trial Phase: Closed-loop BMI control (walk/stop)
+* Conditions: Walk / Stop (motor imagery)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    EEG-Controlled Exoskeleton for Walking and Standing
    A Longitudinal Motor Imagery Study in Healthy Adults
-   
    Dataset Overview
    This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
-   
    Experimental Design
    * Participants: 7 healthy adults (4 male, 3 female)
    * Sessions: 9 per participant
@@ -117,25 +115,17 @@ Experimental Design
    * Conditions: Walk / Stop (motor imagery)
    
    Task Structure and Naming Convention
-   
    Each session includes multiple motor imagery tasks organized as follows:
-   
    Training: The training phase is used to calibrate the BMI decoder. Participants perform motor imagery tasks without feedback.
-   
    TrialXX:
    The trial phase consists of 12 closed-loop BMI trials per session, labeled trial01 to trial12. During these trials, participants use motor imagery to control the exoskeleton in real time.
-   
-   Block 1: Trials 1–4  
-   Block 2: Trials 5–8  
-   Block 3: Trials 9–12  
-   
+   Block 1: Trials 1–4
+   Block 2: Trials 5–8
+   Block 3: Trials 9–12
    walk6min / stop6min:
    After completing the 12 trials, participants perform two extended motor imagery tasks:
-   
-   walk6min – Imagining continuous walking for 6 minutes  
-   stop6min – Imagining standing still for 6 minutes  
-   
-   
+   walk6min – Imagining continuous walking for 6 minutes
+   stop6min – Imagining standing still for 6 minutes
    Data Modalities
    * EEG: 60 scalp channels + 4 EOG channels
    * IMU: 3-axis accelerometer, gyroscope, magnetometer, and quaternion
@@ -173,7 +163,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006940.v1.0.0 <https://doi.org/10.18112/openneuro.ds006940.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006940>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006940>`__ | `Source URL <https://openneuro.org/datasets/ds006940/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006940>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006940>`__ | `Source URL <https://openneuro.org/datasets/ds006940>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -210,13 +200,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 7
-      - Recordings: 14094
-      - Tasks: 135
+      - Recordings: 935
+      - Tasks: 15
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 60
+      - Channels: 64
       - Sampling rate (Hz): 100.0
       - Duration (hours): 0.0
 
@@ -231,7 +221,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 3.6 GB
-      - File count: 14094
+      - File count: 935
       - Format: BIDS
 
    .. grid-item-card:: License & citation

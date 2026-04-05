@@ -11,7 +11,7 @@ DS006159
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Mateo Leganes-Fonteneau (—). *Implicit Learning EEG (BioSemi)*. `10.18112/openneuro.ds006159.v1.0.0 <https://doi.org/10.18112/openneuro.ds006159.v1.0.0>`__
+**Citation:** Mateo Leganes-Fonteneau (2025). *Implicit Learning EEG (BioSemi)*. `10.18112/openneuro.ds006159.v1.0.0 <https://doi.org/10.18112/openneuro.ds006159.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -103,7 +103,7 @@ Dataset Information
    * - Title
      - Implicit Learning EEG (BioSemi)
    * - Year
-     - —
+     - 2025
    * - Authors
      - Mateo Leganes-Fonteneau
    * - License
@@ -168,7 +168,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 114.4 GB
+      - Size on disk: 14.3 GB
       - File count: 61
       - Format: BIDS
 

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 166` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 20` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,9 +92,7 @@ About This Dataset
 
 **Temporal Scaling**
 
-
 Twenty participants learned three temporal intervals. There were two subtasks, randomly interleaved. In the Production task, participants produced either a short, medium, or long temporal interval. In the Perception task, participants judged a computer-produced interval as correct or incorrect (again, for a short, medium, or long temporal interval). In both tasks participants received visual feedback (a checkmark or x).
-
 Preprint: https://doi.org/10.1101/2020.12.11.421180
 
 Dataset Information
@@ -117,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004200.v1.0.1 <https://doi.org/10.18112/openneuro.ds004200.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__ | `Source URL <https://openneuro.org/datasets/ds004200/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004200>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004200>`__ | `Source URL <https://openneuro.org/datasets/ds004200>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,7 +152,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 166
+      - Recordings: 20
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -175,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 7.2 GB
-      - File count: 166
+      - File count: 20
       - Format: BIDS
 
    .. grid-item-card:: License & citation

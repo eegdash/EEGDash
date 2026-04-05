@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 4` :bdg-secondary-line:`Recordings: 2896` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 500` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,7 +92,6 @@ About This Dataset
 
 **THINGS-MEG**
 
-
 Understanding object representations visual and semantic processing of objects requires a broad, comprehensive sampling of the objects in our visual world
 with dense measurements of brain activity and behavior. This densely sampled fMRI dataset is part of THINGS-data, a multimodal collection
 of large-scale datasets comprising functional MRI, magnetoencephalographic recordings, and 4.70 million behavioral judgments in response to thousands of photographic images
@@ -101,17 +100,13 @@ the reproducibility of previous findings. The multimodal data allows for studyin
 to behavior and additionally provides the means for combining these datasets for novel insights into object processing. THINGS-data constitutes the core release of
 the `THINGS initiative <https://things-initiative.org>`_\_ for bridging the gap between disciplines and the advancement of cognitive neuroscience.
 
-
 **Dataset overview**
-
 
 We collected extensively sampled object representations using magnetoencephalography (MEG). To this end, we drew on the THINGS database `(Hebart et al., 2019) <https://doi.org/10.1371/journal.pone.0223792>`_\_,
 a richly-annotated database of 1,854 object concepts representative of the American English language which contains 26,107 manually-curated naturalistic object images.
-
 During the fMRI experiment, participants were shown a representative subset of THINGS images, spread across 12 separate sessions (N=4, 22,448 unique images of 1,854 objects).
 Images were shown in fast succession (1.5±0.2s), and participants were instructed to maintain central fixation. To ensure engagement, participants performed an oddball detection task
 responding to occasional artificially-generated images. A subset of images (n=200) were shown repeatedly in each session.
-
 Beyond the core functional imaging data in response to THINGS images, we acquired T1-weighted MRI scans to allow for cortical source localization.
 Eye movements were monitored in the MEG to ensure participants maintained central fixation.
 
@@ -135,7 +130,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004212.v3.0.0 <https://doi.org/10.18112/openneuro.ds004212.v3.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004212>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004212>`__ | `Source URL <https://openneuro.org/datasets/ds004212/versions/3.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004212>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004212>`__ | `Source URL <https://openneuro.org/datasets/ds004212>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -171,14 +166,14 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 4
-      - Recordings: 2896
+      - Subjects: 5
+      - Recordings: 500
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 310 (472), 272 (468)
+      - Channels: 310
       - Sampling rate (Hz): 1200.0
       - Duration (hours): 0.0
 
@@ -193,7 +188,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 237.7 GB
-      - File count: 2896
+      - File count: 500
       - Format: BIDS
 
    .. grid-item-card:: License & citation

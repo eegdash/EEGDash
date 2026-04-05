@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 31` :bdg-secondary-line:`Recordings: 161` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 31` :bdg-secondary-line:`Recordings: 31` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,7 +93,6 @@ This dataset contains high-density EEG recordings collected during a visual stim
 Files are organized according to the EEG-BIDS specification. Raw data are BrainVision (.vhdr/.vmrk/.eeg).
 Task: visual
 Session: ses-01
-
 Provenance: Converted from c:/shared/raw_eeg with this helper script.
 No acquisition-time filters applied (offline preprocessing not included here).
 
@@ -117,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006547.v1.0.0 <https://doi.org/10.18112/openneuro.ds006547.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006547>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006547>`__ | `Source URL <https://openneuro.org/datasets/ds006547/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006547>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006547>`__ | `Source URL <https://openneuro.org/datasets/ds006547>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,7 +153,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 31
-      - Recordings: 161
+      - Recordings: 31
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -175,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 17.6 GB
-      - File count: 161
+      - File count: 31
       - Format: BIDS
 
    .. grid-item-card:: License & citation

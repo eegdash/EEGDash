@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 1685` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 4.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 384` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 4.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,7 +90,6 @@ About This Dataset
 ------------------
 
 Dataset description:
-
 The database consists of a total of 382 electroencephalographic files from 19 participants. All recordings were collected on channels Fz, Cz, P3, Pz,P4, PO7, PO8 and Oz, according to the 10-20 EEG electrode placement standard, grounded to AFz channel and referenced to right mastoid (M2).
 - Each participant (S1-S19) performed 3 experimental sessions (Session01-Session03) and in each session there are 7 data files.
 - The filenames for these data files are ’Training 4’, ’Training 5 - SF’, ’Training 5 - CF’, ’Training 6’, ’Training 7’, ’Training 8’, and ’Training 9’.
@@ -126,7 +125,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003190.v1.0.1 <https://doi.org/10.18112/openneuro.ds003190.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003190>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003190>`__ | `Source URL <https://openneuro.org/datasets/ds003190/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003190>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003190>`__ | `Source URL <https://openneuro.org/datasets/ds003190>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -163,13 +162,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 19
-      - Recordings: 1685
-      - Tasks: 1
+      - Recordings: 384
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 9 (764), 10 (4)
+      - Channels: 9 (382), 10 (2)
       - Sampling rate (Hz): 256.0
       - Duration (hours): 0.0
 
@@ -184,7 +183,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.0 GB
-      - File count: 1685
+      - File count: 384
       - Format: BIDS
 
    .. grid-item-card:: License & citation

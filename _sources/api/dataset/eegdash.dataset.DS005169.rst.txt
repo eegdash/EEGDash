@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 1165` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 112` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,30 +89,25 @@ Quickstart
 About This Dataset
 ------------------
 
-In this dataset we included iEEG recordings of responses to 115 intracranial high frequency stimulations evoking 
+In this dataset we included iEEG recordings of responses to 115 intracranial high frequency stimulations evoking
 visual hallucinations, in 22 patients undergoing stereo-EEG presurgical evaluation for drug-resistant epilepsy.
-
-The dataset contains 21 seconds of iEEG data around each stimulation, 8 seconds before the start of the stimulation, 
+The dataset contains 21 seconds of iEEG data around each stimulation, 8 seconds before the start of the stimulation,
 up to 5 seconds of intracranial stimulation and 8 seconds after the end of the stimulation.
-
-We have used high-frequency bipolar stimulations of different areas of the brain, using alternating polarity 
-biphasic pulses having a duration of 1 ms, at 43.2 Hz or 50 Hz, current intensity between 0.25 to 3 mA, for up to 5 s. 
-Alternating polarity protocol allows disambiguating neuronal responses time-locked to the stimulation pulses 
-from the artefactual components, according to Barborica et al., 2022 (doi: 10.1002/hbm.25749). It is therefore 
-possible to identify the brain networks underlying the clinical effects, and to create symptom-related 
+We have used high-frequency bipolar stimulations of different areas of the brain, using alternating polarity
+biphasic pulses having a duration of 1 ms, at 43.2 Hz or 50 Hz, current intensity between 0.25 to 3 mA, for up to 5 s.
+Alternating polarity protocol allows disambiguating neuronal responses time-locked to the stimulation pulses
+from the artefactual components, according to Barborica et al., 2022 (doi: 10.1002/hbm.25749). It is therefore
+possible to identify the brain networks underlying the clinical effects, and to create symptom-related
 activation/connectivity maps.
-
-The contact pair on which stimulation is applied, the current intensity level and evoked effect are specified 
-in the events tsv. The responses are classified in 14 clinical categories: elementary (unstructured 
-flashes of light), plus hallucination (presence of light in different forms or colors overlaying the background vision), 
-minus hallucination (negative elementary phenomena described as scotoma, quadrantanopia, hemianopia or amaurosis), 
-static, dynamic, continuous hallucination, intermittent hallucination, peripheric, central, 
+The contact pair on which stimulation is applied, the current intensity level and evoked effect are specified
+in the events tsv. The responses are classified in 14 clinical categories: elementary (unstructured
+flashes of light), plus hallucination (presence of light in different forms or colors overlaying the background vision),
+minus hallucination (negative elementary phenomena described as scotoma, quadrantanopia, hemianopia or amaurosis),
+static, dynamic, continuous hallucination, intermittent hallucination, peripheric, central,
 whole visual field, color, non-color, combined visual symptoms, multimodal hallucinations.
-
-Not all patients in which stimulations evoked visual hallucinations met the inclusion criteria for network analysis 
+Not all patients in which stimulations evoked visual hallucinations met the inclusion criteria for network analysis
 that requires running the freesurfer pipeline, for instance patients having prior resections, therefore there are subjects
 that do not contain ieeg data. However, they were kept in order to match the number of patients in the companion manuscript.
-
 Contact: andrei.barborica@fizica.unibuc.ro
 
 Dataset Information
@@ -135,7 +130,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005169.v1.0.0 <https://doi.org/10.18112/openneuro.ds005169.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005169>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005169>`__ | `Source URL <https://openneuro.org/datasets/ds005169/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005169>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005169>`__ | `Source URL <https://openneuro.org/datasets/ds005169>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -172,13 +167,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 1165
+      - Recordings: 112
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 82 (38), 94 (18), 101 (12), 102 (10), 95 (10), 136 (10), 193 (10), 70 (8), 40 (8), 184 (6), 85 (6), 83 (6), 84 (6), 79 (6), 143 (4), 106 (4), 91 (4), 104 (4), 58 (4), 92 (2), 99 (2), 105 (2), 39 (2), 144 (2), 80 (2), 100 (2), 96 (2), 88 (2), 71 (2), 113 (2), 103 (2), 89 (2), 86 (2), 188 (2), 114 (2), 81 (2), 38 (2), 109 (2), 76 (2), 98 (2), 69 (2), 186 (2), 29 (2), 160 (2)
+      - Channels: 82 (19), 94 (9), 101 (6), 136 (5), 95 (5), 102 (5), 193 (5), 70 (4), 40 (4), 83 (3), 85 (3), 184 (3), 79 (3), 84 (3), 106 (2), 143 (2), 58 (2), 104 (2), 91 (2), 113, 71, 88, 96, 100, 80, 39, 144, 105, 99, 92, 160, 29, 186, 69, 98, 76, 109, 38, 81, 114, 188, 86, 89, 103
       - Sampling rate (Hz): 4096.0
       - Duration (hours): 0.0
 
@@ -193,7 +188,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 4.0 GB
-      - File count: 1165
+      - File count: 112
       - Format: BIDS
 
    .. grid-item-card:: License & citation

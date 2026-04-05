@@ -11,7 +11,7 @@ DS005185
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (20). *Ear-EEG Sleep Monitoring 2019 (EESM19)*. `10.18112/openneuro.ds005185.v1.0.2 <https://doi.org/10.18112/openneuro.ds005185.v1.0.2>`__
+**Citation:** Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (2024). *Ear-EEG Sleep Monitoring 2019 (EESM19)*. `10.18112/openneuro.ds005185.v1.0.2 <https://doi.org/10.18112/openneuro.ds005185.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -123,7 +123,7 @@ Dataset Information
    * - Title
      - Ear-EEG Sleep Monitoring 2019 (EESM19)
    * - Year
-     - 20
+     - 2024
    * - Authors
      - Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar
    * - License
@@ -188,7 +188,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 783.2 GB
+      - Size on disk: 267.6 GB
       - File count: 356
       - Format: BIDS
 

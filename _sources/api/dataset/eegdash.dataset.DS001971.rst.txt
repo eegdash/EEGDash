@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 1917` :bdg-success-line:`License: Creative commons` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 273` :bdg-success-line:`License: Creative commons` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,12 +89,11 @@ Quickstart
 About This Dataset
 ------------------
 
-This mobile brain body imaging (MoBI) gait adaptation experiment contains 18 subjects. 
-Participants were walking on a treadmill at a constant speed and were required to step in 
+This mobile brain body imaging (MoBI) gait adaptation experiment contains 18 subjects.
+Participants were walking on a treadmill at a constant speed and were required to step in
 time to an auditory tone sequence and adapt their step length and rate to occasional
 shifts in tempo of the pacing stimulus (i.e., following shifts to a faster or slower tempo).
 The scientific article (see Reference) contains all methodological details
-
 - Johanna Wagner (June 6, 2019)
 
 Dataset Information
@@ -117,7 +116,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds001971.v1.1.1 <https://doi.org/10.18112/openneuro.ds001971.v1.1.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds001971>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001971>`__ | `Source URL <https://openneuro.org/datasets/ds001971/versions/1.1.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds001971>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds001971>`__ | `Source URL <https://openneuro.org/datasets/ds001971>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -154,13 +153,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 1917
+      - Recordings: 273
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 108 (273), 115 (206), 112 (67)
+      - Channels: 115 (206), 112 (67)
       - Sampling rate (Hz): 512.0
       - Duration (hours): 0.0
 
@@ -175,7 +174,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 32.0 GB
-      - File count: 1917
+      - File count: 273
       - Format: BIDS
 
    .. grid-item-card:: License & citation

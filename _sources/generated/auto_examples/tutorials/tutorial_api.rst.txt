@@ -127,6 +127,7 @@ Printing the keys of the first record gives an overview of available fields.
  .. code-block:: none
 
     Keys available in a record:
+      _has_missing_files: False
       _id: '695936adb52d41d9f98c408e'
       bids_relpath: 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.set'
       bidspath: 'ds003039/sub-019/eeg/sub-019_task-neurCorrYoung_eeg.set'
@@ -134,8 +135,8 @@ Printing the keys of the first record gives an overview of available fields.
       data_name: 'ds003039_sub-019_task-neurCorrYoung_eeg.set'
       dataset: 'ds003039'
       datatype: 'eeg'
-      digested_at: '2026-01-22T23:38:50.107630+00:00'
-      entities_mne: {'subject': '019', 'session': None, 'task': 'neurCorrYoung', 'run': None}
+      digested_at: '2026-04-04T19:41:28.872782+00:00'
+      entities_mne: {'subject': '019', 'session': None, 'task': 'neurCorrYoung', 'run': None, 'acquisition': None}
       extension: '.set'
       nchans: 67
       ntimes: 1777354
@@ -144,7 +145,7 @@ Printing the keys of the first record gives an overview of available fields.
       run: None
       sampling_frequency: 500.0
       session: None
-      storage: {'backend': 's3', 'base': 's3://openneuro.org/ds003039', 'raw_key': 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.set', 'dep_keys': ['sub-019/eeg/sub-019_task-neurCorrYoung_channels.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_events.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_electrodes.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_coordsystem.json', 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.json', 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.fdt']}
+      storage: {'backend': 's3', 'base': 's3://openneuro.org/ds003039', 'raw_key': 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.set', 'dep_keys': ['sub-019/eeg/sub-019_task-neurCorrYoung_channels.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_events.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_events.json', 'sub-019/eeg/sub-019_task-neurCorrYoung_electrodes.tsv', 'sub-019/eeg/sub-019_task-neurCorrYoung_coordsystem.json', 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.json', 'sub-019/eeg/sub-019_task-neurCorrYoung_eeg.fdt']}
       subject: '019'
       suffix: 'eeg'
       task: 'neurCorrYoung'
@@ -242,7 +243,7 @@ every recording and derive summary statistics for the whole dataset.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.208 seconds)
+   **Total running time of the script:** (0 minutes 0.342 seconds)
 
 
 .. _sphx_glr_download_generated_auto_examples_tutorials_tutorial_api.py:

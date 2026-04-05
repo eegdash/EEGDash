@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 18` :bdg-secondary-line:`Recordings: 1137` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
+:bdg-primary-line:`Modality: eeg, meg` :bdg-secondary-line:`Subjects: 19` :bdg-secondary-line:`Recordings: 224` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,10 +91,8 @@ About This Dataset
 
 *Introduction:*
 This dataset consists of the MEEG (sMRI+MEG+EEG) portion of the multi-subject, multi-modal face processing dataset (ds000117). This dataset was originally acquired and shared by Daniel Wakeman and Richard Henson (https://pubmed.ncbi.nlm.nih.gov/25977808/). The MEG and EEG data were simultaneously recorded; the sMRI scans were preserved to support M/EEG source localization. Following event log augmentation, reorganization, and HED (v8.0.0) annotation, the EEG data have been repackaged in EEGLAB format.
-
 *Overview of the experiment:*
 Eighteen participants completed two recording sessions spaced three months apart – one session recorded fMRI  and the other simultaneously recorded MEG and EEG data. During each session, participants performed the same simple perceptual task, responding to presented photographs of famous, unfamiliar, and scrambled faces by pressing one of two keyboard keys to indicate a subjective yes or no decision as to the relative spatial symmetry of the viewed face. Famous faces were feature-matched to unfamiliar faces; half the faces were female. The two sessions (MEEG, fMRI) had different organizations of event timing and presentation because of technological requirements of the respective imaging modalities. Each individual face was presented twice during the session. For half of the presented faces, the second presentation followed immediately after the first. For the other half, the second presentation was delayed by 5-15 face presentations.
-
 *Preprocessing:*
 The EEG preprocessing, which was performed using the ``wh_extracteeg_BIDS.m`` located in the code directory, includes the following steps:
 * Ignore MRI data except for sMRI.
@@ -133,7 +131,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003645.v2.0.2 <https://doi.org/10.18112/openneuro.ds003645.v2.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003645>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003645>`__ | `Source URL <https://openneuro.org/datasets/ds003645/versions/2.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003645>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003645>`__ | `Source URL <https://openneuro.org/datasets/ds003645>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -169,9 +167,9 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 18
-      - Recordings: 1137
-      - Tasks: 1
+      - Subjects: 19
+      - Recordings: 224
+      - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -191,7 +189,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 106.3 GB
-      - File count: 1137
+      - File count: 224
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 33` :bdg-secondary-line:`Recordings: 368` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 33` :bdg-secondary-line:`Recordings: 60` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,10 +89,8 @@ Quickstart
 About This Dataset
 ------------------
 
-This is the dataset for Leong et al. (in prep). 33 participants completed both a visual and auditory surprise task in counterbalanced order. Methodological details are contained in the manuscript. 
-
-Certain participants were excluded at various stages of the analyses. Their data and event lists are included up to the stage of processing that their data reached. 
-
+This is the dataset for Leong et al. (in prep). 33 participants completed both a visual and auditory surprise task in counterbalanced order. Methodological details are contained in the manuscript.
+Certain participants were excluded at various stages of the analyses. Their data and event lists are included up to the stage of processing that their data reached.
 Due to incorrect settings specific to OpenBCI GUI v5.0.1, indicated EEG values are 24 times larger than what they should be. The units (also specified in the channels.tsv files) are thus in microvolts / 24.
 
 Dataset Information
@@ -115,7 +113,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006394.v1.0.3 <https://doi.org/10.18112/openneuro.ds006394.v1.0.3>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__ | `Source URL <https://openneuro.org/datasets/ds006394/versions/1.0.3>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006394>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006394>`__ | `Source URL <https://openneuro.org/datasets/ds006394>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -152,7 +150,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 33
-      - Recordings: 368
+      - Recordings: 60
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -173,7 +171,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 534.8 MB
-      - File count: 368
+      - File count: 60
       - Format: BIDS
 
    .. grid-item-card:: License & citation

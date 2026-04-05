@@ -11,7 +11,7 @@ DS005241
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz (2019). *NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis*. `10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
+**Citation:** Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz (2024). *NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis*. `10.18112/openneuro.ds005241.v1.1.0 <https://doi.org/10.18112/openneuro.ds005241.v1.1.0>`__
 
 .. rst-class:: sd-badges
 
@@ -110,7 +110,7 @@ Dataset Information
    * - Title
      - NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis
    * - Year
-     - 2019
+     - 2024
    * - Authors
      - Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz
    * - License

@@ -15,9 +15,9 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 412` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 29` :bdg-secondary-line:`Recordings: 58` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-success:`Metadata: Complete (100%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -89,15 +89,7 @@ Quickstart
 About This Dataset
 ------------------
 
-1.Study introduction:
-
-2.Participant task information(description of the experiment):
-
-3.Participant instructions(as exact as possible):
-
-4.References and links:
-Hu L, Cai MM, Xiao P, Luo F, Iannetti GD. Human brain responses to concomitant stimulation of A�� and C nociceptors. J Neurosci. 2014 Aug 20;34(34):11439-51. doi: 10.1523/JNEUROSCI.1355-14.2014. PMID: 25143623; PMCID: PMC6615513.
-5.Comments:
+No README content is available for this dataset.
 
 Dataset Information
 -------------------
@@ -119,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005473.v1.0.0 <https://doi.org/10.18112/openneuro.ds005473.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__ | `Source URL <https://openneuro.org/datasets/ds005473/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005473>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005473>`__ | `Source URL <https://openneuro.org/datasets/ds005473>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,13 +148,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 29
-      - Recordings: 412
+      - Recordings: 58
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64 (58), 63 (58)
+      - Channels: 64
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -177,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 6.2 GB
-      - File count: 412
+      - File count: 58
       - Format: BIDS
 
    .. grid-item-card:: License & citation

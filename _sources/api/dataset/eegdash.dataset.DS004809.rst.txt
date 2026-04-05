@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 258` :bdg-secondary-line:`Recordings: 7226` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 252` :bdg-secondary-line:`Recordings: 889` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -93,22 +93,17 @@ About This Dataset
 **Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories**
 
 
-
 **Description**
 
 This dataset contains behavioral events and intracranial electrophysiological recordings from a categorized free recall task.  The experiment consists of participants studying a list of words, presented visually one at a time, completing simple arithmetic problems that function as a distractor, and then freely recalling the words from the just-presented list in any order.  The data was collected at clinical sites across the country as part of a collaboration with the Computational Memory Lab at the University of Pennsylvania.
-
-Unique to this paradigm is the semantic construction of the word lists.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be: 
-
+Unique to this paradigm is the semantic construction of the word lists.  Each word comes from one of 25 semantic categories, and each list of 12 items contains 6 pairs of same-category words from 3 different categories.  This means that each list has 4 words from 3 semantic categories, and in each half of the list there will be 1 pair of words from each category.  For example, if a list contains words from categories A, B, and C, a possible list construction would be:
 **A1 - A2 - B1 - B2 - C1 - C2 - A3 - A4 - C3 - C4 - B3 - B4**
-
 
 **To Note**
 
 * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
 * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
 * Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
-
 
 **Contact**
 
@@ -134,7 +129,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004809.v2.2.0 <https://doi.org/10.18112/openneuro.ds004809.v2.2.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__ | `Source URL <https://openneuro.org/datasets/ds004809/versions/2.2.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004809>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004809>`__ | `Source URL <https://openneuro.org/datasets/ds004809>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -170,15 +165,15 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 258
-      - Recordings: 7226
+      - Subjects: 252
+      - Recordings: 889
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 126 (140), 124 (60), 108 (52), 125 (40), 139 (38), 128 (38), 88 (34), 120 (32), 127 (32), 116 (30), 148 (30), 145 (30), 131 (30), 112 (28), 196 (28), 64 (28), 110 (26), 179 (26), 142 (26), 118 (24), 155 (24), 121 (22), 114 (22), 133 (22), 90 (22), 159 (22), 251 (22), 92 (20), 94 (20), 186 (20), 113 (20), 178 (20), 115 (18), 158 (18), 198 (18), 152 (18), 105 (18), 104 (16), 156 (16), 247 (16), 183 (16), 200 (16), 68 (14), 98 (14), 122 (14), 166 (14), 106 (14), 212 (14), 76 (12), 100 (12), 109 (12), 241 (12), 240 (12), 150 (12), 184 (12), 78 (12), 154 (10), 250 (10), 168 (10), 165 (10), 208 (10), 56 (10), 72 (8), 97 (8), 180 (8), 192 (8), 164 (8), 189 (8), 141 (8), 224 (8), 188 (8), 134 (8), 175 (8), 219 (8), 173 (8), 238 (8), 185 (8), 89 (8), 70 (8), 167 (6), 160 (6), 83 (6), 207 (6), 229 (6), 60 (6), 46 (6), 162 (6), 130 (6), 95 (6), 220 (6), 209 (6), 140 (6), 151 (4), 177 (4), 84 (4), 161 (4), 203 (4), 169 (4), 119 (4), 123 (4), 187 (4), 193 (4), 176 (4), 67 (4), 132 (4), 96 (4), 53 (4), 93 (4), 172 (4), 63 (2), 85 (2), 102 (2), 182 (2), 75 (2), 239 (2), 86 (2), 16 (2), 52 (2), 136 (2), 14 (2), 80 (2), 146 (2), 218 (2), 202 (2), 26 (2), 143 (2), 153 (2), 107 (2), 36 (2), 243 (2), 163 (2), 37 (2), 62 (2), 99 (2), 111 (2), 213 (2), 50 (2), 206 (2)
-      - Sampling rate (Hz): 1000.0 (1532), 500.0 (186), 1600.0 (20), 999.0 (16), 1023.999 (12), 1024.0 (8), 499.7071 (4)
+      - Channels: 126 (70), 124 (30), 108 (26), 125 (20), 128 (19), 139 (19), 88 (17), 127 (16), 120 (16), 131 (15), 145 (15), 148 (15), 116 (15), 64 (14), 196 (14), 112 (14), 110 (13), 142 (13), 179 (13), 118 (12), 155 (12), 133 (11), 114 (11), 121 (11), 251 (11), 159 (11), 90 (11), 178 (10), 113 (10), 186 (10), 94 (10), 92 (10), 158 (9), 115 (9), 105 (9), 152 (9), 198 (9), 200 (8), 183 (8), 156 (8), 247 (8), 104 (8), 106 (7), 166 (7), 122 (7), 98 (7), 68 (7), 212 (7), 240 (6), 241 (6), 100 (6), 109 (6), 76 (6), 78 (6), 184 (6), 150 (6), 154 (5), 56 (5), 208 (5), 165 (5), 168 (5), 250 (5), 224 (4), 141 (4), 189 (4), 164 (4), 192 (4), 180 (4), 97 (4), 72 (4), 70 (4), 89 (4), 238 (4), 185 (4), 173 (4), 219 (4), 175 (4), 134 (4), 188 (4), 83 (3), 160 (3), 167 (3), 140 (3), 209 (3), 95 (3), 220 (3), 130 (3), 162 (3), 46 (3), 60 (3), 229 (3), 207 (3), 123 (2), 119 (2), 169 (2), 203 (2), 161 (2), 84 (2), 177 (2), 151 (2), 172 (2), 93 (2), 53 (2), 96 (2), 132 (2), 67 (2), 176 (2), 193 (2), 187 (2), 80, 146, 14, 136, 52, 16, 86, 239, 75, 182, 102, 85, 63, 206, 50, 213, 111, 99, 62, 37, 163, 243, 36, 107, 153, 143, 26, 202, 218
+      - Sampling rate (Hz): 1000.0 (766), 500.0 (93), 1600.0 (10), 999.0 (8), 1023.999 (6), 1024.0 (4), 499.7071 (2)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -192,7 +187,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 477.2 GB
-      - File count: 7226
+      - File count: 889
       - Format: BIDS
 
    .. grid-item-card:: License & citation

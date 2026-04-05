@@ -7,15 +7,15 @@
 DS006945
 ========
 
-*Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)*
+*Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)*
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). *Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)*. `10.18112/openneuro.ds006945.v1.0.0 <https://doi.org/10.18112/openneuro.ds006945.v1.0.0>`__
+**Citation:** Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). *Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)*. `10.18112/openneuro.ds006945.v1.2.1 <https://doi.org/10.18112/openneuro.ds006945.v1.2.1>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 114` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 14` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -79,10 +79,10 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{ds006945,
-           title = {Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)},
+           title = {Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)},
            author = {Shantanu Sarkar and Kevin Nathan and Jose L. Contreras-Vidal},
-           doi = {10.18112/openneuro.ds006945.v1.0.0},
-           url = {https://doi.org/10.18112/openneuro.ds006945.v1.0.0},
+           doi = {10.18112/openneuro.ds006945.v1.2.1},
+           url = {https://doi.org/10.18112/openneuro.ds006945.v1.2.1},
          }
 
 
@@ -90,24 +90,23 @@ About This Dataset
 ------------------
 
 Neuroimaging Data Collected During Kinesthetic Motor Imagery of Walking vs. Rest
-This dataset includes multimodal neuroimaging recordings from five participants performing kinesthetic motor imagery (KI) while viewing themselves walking in an exoskeleton. The recordings combine MRI (structural and functional) and EEG data, organized according to the BIDS specification.
-
-MRI sessions were conducted after participants completed nine sessions of EEG‑controlled exoskeleton walking and standing experiments. doi:10.18112/openneuro.ds006940.v1.0.0
-
+This dataset includes multimodal neuroimaging recordings from five participants performing kinesthetic motor imagery (KI) while viewing themselves walking in an exoskeleton. The dataset includes synchronized MRI (structural and functional) and EEG recordings organized according to the BIDS specification. Functional MRI data were acquired in two runs while participants viewed a 10-minute video, along with a separate baseline scan during which participants simulated a resting state for approximately 5 minutes.
+MRI sessions were conducted after participants completed nine sessions of EEG‑controlled exoskeleton walking and standing experiments.
+Dataset link: <a href="https://openneuro.org/datasets/ds006940" target="_blank"> https://openneuro.org/datasets/ds006940 </a>
 MRI Acquisition:
 - Scanner: Philips Ingenia 3.0T (Koninklijke Philips N.V., The Netherlands)
 - Structural scans: T1‑weighted anatomical images
 - Functional scans (fMRI): Participants viewed a 10‑minute video of themselves walking in the exoskeleton, filmed from a first‑person perspective. The video contained 11 Stop‑Walk‑Stop (SWS) cycles. During viewing, participants were instructed to evoke KI in synchrony with the exoskeleton movements.
 - Baseline condition: Participants mentally simulated resting state for approximately 5 minutes while fMRI data was recorded.
 
+
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
    Neuroimaging Data Collected During Kinesthetic Motor Imagery of Walking vs. Rest
-   This dataset includes multimodal neuroimaging recordings from five participants performing kinesthetic motor imagery (KI) while viewing themselves walking in an exoskeleton. The recordings combine MRI (structural and functional) and EEG data, organized according to the BIDS specification.
-   
-   MRI sessions were conducted after participants completed nine sessions of EEG‑controlled exoskeleton walking and standing experiments. doi:10.18112/openneuro.ds006940.v1.0.0
-   
+   This dataset includes multimodal neuroimaging recordings from five participants performing kinesthetic motor imagery (KI) while viewing themselves walking in an exoskeleton. The dataset includes synchronized MRI (structural and functional) and EEG recordings organized according to the BIDS specification. Functional MRI data were acquired in two runs while participants viewed a 10-minute video, along with a separate baseline scan during which participants simulated a resting state for approximately 5 minutes.
+   MRI sessions were conducted after participants completed nine sessions of EEG‑controlled exoskeleton walking and standing experiments.
+   Dataset link: <a href="https://openneuro.org/datasets/ds006940" target="_blank"> https://openneuro.org/datasets/ds006940 </a>
    MRI Acquisition:
    - Scanner: Philips Ingenia 3.0T (Koninklijke Philips N.V., The Netherlands)
    - Structural scans: T1‑weighted anatomical images
@@ -116,274 +115,113 @@ MRI Acquisition:
    
    EEG Acquisition:
    - MR‑compatible EEG cap (Brain Products GmbH, Gilching, Germany)
-   - Electrode locations are provided in EEGLAB format, with the actual digitized positions captured using the FASTRAK® system (Polhemus, Colchester, VT, USA).
+   - Electrode locations are provided in EEGLAB format.
    - 59 scalp channels + 4 EOG channels + 1 ECG channel
    
    Stimuli:
-   - A video stimulus (``stimuli/walking_exoskeleton_video.mp4``) was presented during walking tasks.
-   - The video is referenced in the respective JSON sidecars for both fMRI and EEG tasks.
+   - A video stimulus (``stimuli/walking_exoskeleton_S1.mp4``) was presented during walking tasks.
    
    Participants:
    Five healthy adults out of seven participated in the EEG‑controlled exoskeleton experiments.
    Participants S6 and S7 did not undergo MRI scanning due to a pause in data collection during the COVID‑19 pandemic.
-   
-   
-   **Folder Structure (Example: Subject 01)**
-   
+   <h3>Folder Structure (Example: Participant S1)</h3>
+   <hr>
+   <pre>
    
    .. code-block:: text
    
       ├── dataset_description.json
-   
-   
-   .. code-block:: text
-   
+      ├── README
       ├── derivatives
-   
-   
-   .. code-block:: text
-   
-      │        └── validation
-   
-   
-   .. code-block:: text
-   
-      │         |        └── MRI_DataValidation.xls
-   
-   
-   .. code-block:: text
-   
-      │         |
-   
-   
-   .. code-block:: text
-   
-      │        └── sub-01
-   
-   
-   .. code-block:: text
-   
-      │                   └── ses-01
-   
-   
-   .. code-block:: text
-   
-      │                                ├── anat
-   
-   
-   .. code-block:: text
-   
-      │                                │          └── sub-01_ses-01_T1w.nii
-   
-   
-   .. code-block:: text
-   
-      │                                ├── dwi
-   
-   
-   .. code-block:: text
-   
-      │                                │          ├── sub-01_ses-01_run-001_dwi.json
-   
-   
-   .. code-block:: text
-   
-      │                                │          └── sub-01_ses-01_run-001_dwi.nii.gz (weighted)
-   
-   
-   .. code-block:: text
-   
-      │                                └── spm
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── sub-01_ses-01_beta_0001.nii
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── sub-01_ses-01_beta_0002.nii
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── ...
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── sub-01_ses-01_con_0001.nii
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── ...
-   
-   
-   .. code-block:: text
-   
-      │                                          ├── sub-01_ses-01_spm.mat
-   
-   
-   .. code-block:: text
-   
-      │                                                  └── sub-01_ses-01_spmt_0004.nii
-   
-   
-   .. code-block:: text
-   
+      │   └── sub-01
+      │       └── ses-01
+      │           ├── anat
+      │           │   └── sub-01_ses-01_T1w.nii
+      │           ├── dwi
+      │           │   ├── sub-01_ses-01_run-001_dwi.json
+      │           │   ├── sub-01_ses-01_run-001_dwi.bval
+      │           │   ├── sub-01_ses-01_run-001_dwi.bvec
+      │           │   └── sub-01_ses-01_run-001_dwi.nii.gz
+      │           │
+      │           └── spm
+      │               ├── sub-01_ses-01_beta_0001.nii
+      │               ├── ...
+      │               ├── sub-01_ses-01_beta_0008.nii
+      │               ├── sub-01_ses-01_con_0001.nii
+      │               ├── ...
+      │               ├── sub-01_ses-01_con_0004.nii
+      │               ├── sub-01_ses-01_smpt_0001.nii
+      │               ├── ...
+      │               ├── sub-01_ses-01_smpt_0004.nii
+      │               ├── sub-01_ses-01_mask.mat
+      │               ├── sub-01_ses-01_resms.mat
+      │               ├── sub-01_ses-01_rpv.mat
+      │               └── sub-01_ses-01_spm.mat
+      │
       ├── stimuli
-   
-   
-   .. code-block:: text
-   
-      │           └── walking_exoskeleton_video.mp4
-   
-   
-   .. code-block:: text
-   
+      │   └── walking_exoskeleton_S1.mp4
+      │
       ├── sub-01
-   
-   
-   .. code-block:: text
-   
-      │           └── ses-01
-   
-   
-   .. code-block:: text
-   
-      │                           ├── anat
-   
-   
-   .. code-block:: text
-   
-      │                          │   ├── sub-01_ses-01_T1w.json
-   
-   
-   .. code-block:: text
-   
-      │                          │   └── sub-01_ses-01_T1w.nii
-   
-   
-   .. code-block:: text
-   
-      │                          ├── eeg
-   
-   
-   .. code-block:: text
-   
-      │                          │   ├── sub-01_ses-01_coordsystem.json
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_electrodes.json
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_electrodes.tsv
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_task-baseline_eeg.eeg
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_task-baseline_eeg.json
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_task-baseline_eeg.vhdr
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_task-baseline_eeg.vmrk
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── sub-01_ses-01_task-walking1_eeg.eeg
-   
-   
-   .. code-block:: text
-   
-      │                         │   ├── ...
-   
-   
-   .. code-block:: text
-   
-      │                         │   └── sub-01_ses-01_task-walking2_eeg.vmrk
-   
-   
-   .. code-block:: text
-   
-      │                         └── func
-   
-   
-   .. code-block:: text
-   
-      │                                ├── sub-01_ses-01_task-baseline_run-001_bold.json
-   
-   
-   .. code-block:: text
-   
-      │                                ├── sub-01_ses-01_task-baseline_run-001_bold.nii.gz
-   
-   
-   .. code-block:: text
-   
-      │                                ├── sub-01_ses-01_task-walking1_run-001_bold.json
-   
-   
-   .. code-block:: text
-   
-      │                                ├── sub-01_ses-01_task-walking1_run-001_bold.nii.gz
-   
-   
-   .. code-block:: text
-   
+      │   └── ses-01
+      │       ├── anat
+      │       │   ├── sub-01_ses-01_T1w.json
+      │       │   └── sub-01_ses-01_T1w.nii
+      │       ├── eeg
+      │       │   ├── sub-01_ses-01_coordsystem.json
+      │       │   ├── sub-01_ses-01_electrodes.json
+      │       │   ├── sub-01_ses-01_electrodes.tsv
+      │       │   ├── sub-01_ses-01_task-baseline_eeg.eeg
+      │       │   ├── sub-01_ses-01_task-baseline_eeg.json
+      │       │   ├── sub-01_ses-01_task-baseline_eeg.vhdr
+      │       │   ├── sub-01_ses-01_task-baseline_eeg.vmrk
+      │       │   ├── sub-01_ses-01_task-walking1_eeg.eeg
+      │       │   ├── ...
+      │       │   └── sub-01_ses-01_task-walking2_eeg.vmrk
+      │       │
+      │       └── func
+      │           ├── sub-01_ses-01_task-baseline_run-001_bold.json
+      │           ├── sub-01_ses-01_task-baseline_run-001_bold.nii.gz
+      │           ├── sub-01_ses-01_task-walking1_run-001_bold.json
+      │           ├── sub-01_ses-01_task-walking1_run-001_bold.nii.gz
       │           ├── sub-01_ses-01_task-walking2_run-001_bold.json
-   
-   
-   .. code-block:: text
-   
       │           └── sub-01_ses-01_task-walking2_run-001_bold.nii.gz
    
-   
-   
+   </pre>
    
    **Validation Data**
    
    A validation file (``derivatives/MRI_DataValidation.xls``) is provided to summarize dataset completeness and quality checks.
-   
-   - **Sheet: Files**  
-     Lists presence/absence of EEG, MRI, and SPM outputs across subjects (S1–S5).  
+   - **Sheet: Files**
+     Lists presence/absence of EEG, MRI, and SPM outputs across subjects (S1–S5).
      Includes counts for beta, con, spmT maps, and DTI volumes.
-   
-   - **Sheet: VMRK-R128**  
+   - **Sheet: VMRK-R128**
      Reports event marker counts (R128 triggers) for baseline, walking1, and walking2 tasks.
-   
-   - **Sheet: EEG-Duration**  
-     Provides task durations (minutes) for baseline, walking1, and walking2 EEG recordings.
-   
+   - **Sheet: EEG-Duration**
+     Provides task durations (minutes) for 'baseline', 'walking1', and 'walking2' EEG recordings.
    
    **Notes on Organization**
    
-   - Raw data (anat, func, eeg, dwi) are stored under each subject (sub-XX/ses-YY).
-   - Derivatives (SPM statistical maps, preprocessed outputs, validation files) are stored separately under derivatives/sub-XX/ses-YY.
-   - Stimuli are stored in the top-level ``/stimuli/`` folder and referenced in JSON sidecars.
-   - Naming conventions follow BIDS entities:
-     - sub-<label> : subject identifier
-     - ses-<label> : session identifier
-     - task-<label> : task name (baseline, walking1, walking2)
-     - run-<index> : run number
-     - <suffix> : modality (T1w, dwi, bold, eeg)
+   * Raw data (anat, func, eeg) are stored under each subject directory (sub-XX/ses-YY).
+   * Derivatives: Preprocessed outputs are stored separately under derivatives/sub-XX/ses-YY, including:
+   
+   &emsp;- Statistical Parametric Mapping (SPM) outputs
+   
+   &emsp;- SPM-normalized (warped) anatomical scans
+   
+   &emsp;- Diffusion Tensor Imaging (DTI) derivatives
+   
+   &emsp;- Validation Excel file
+   
+   * The video stimulus is stored in the top-level stimuli/ folder.
+   * Naming conventions follow BIDS entities:
+   
+   &emsp;- sub-&lt;label&gt;  : subject identifier
+   
+   &emsp;- ses-&lt;label&gt;  : session identifier
+   
+   &emsp;- task-&lt;label&gt; : task name (baseline, walking1, walking2)
+   
+   &emsp;- run-&lt;index&gt;  : run number
    
    
    **Citation**
@@ -401,7 +239,7 @@ Dataset Information
    * - Dataset ID
      - ``DS006945``
    * - Title
-     - Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)
+     - Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)
    * - Year
      - 2025
    * - Authors
@@ -409,9 +247,9 @@ Dataset Information
    * - License
      - CC0
    * - Citation / DOI
-     - `doi:10.18112/openneuro.ds006945.v1.0.0 <https://doi.org/10.18112/openneuro.ds006945.v1.0.0>`__
+     - `doi:10.18112/openneuro.ds006945.v1.2.1 <https://doi.org/10.18112/openneuro.ds006945.v1.2.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006945>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006945>`__ | `Source URL <https://openneuro.org/datasets/ds006945/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006945>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006945>`__ | `Source URL <https://openneuro.org/datasets/ds006945>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -420,10 +258,10 @@ Dataset Information
    .. code-block:: bibtex
 
       @dataset{ds006945,
-        title = {Structural MRI and fMRI of Participants Performing Kinesthetic Motor Imagery of Walking vs. Standing While Viewing a First‑Person Exoskeleton Video Stimulus (11 Stop‑Walk‑Stop Cycles)},
+        title = {Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)},
         author = {Shantanu Sarkar and Kevin Nathan and Jose L. Contreras-Vidal},
-        doi = {10.18112/openneuro.ds006945.v1.0.0},
-        url = {https://doi.org/10.18112/openneuro.ds006945.v1.0.0},
+        doi = {10.18112/openneuro.ds006945.v1.2.1},
+        url = {https://doi.org/10.18112/openneuro.ds006945.v1.2.1},
       }
 
 .. admonition:: Found an issue with this dataset?
@@ -432,7 +270,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006945&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006945%0A-%20%2A%2ATitle%3A%2A%2A%20Structural%20MRI%20and%20fMRI%20of%20Participants%20Performing%20Kinesthetic%20Motor%20Imagery%20of%20Walking%20vs.%20Standing%20While%20Viewing%20a%20First%E2%80%91Person%20Exoskeleton%20Video%20Stimulus%20%2811%20Stop%E2%80%91Walk%E2%80%91Stop%20Cycles%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS006945&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS006945%0A-%20%2A%2ATitle%3A%2A%2A%20Dataset%3A%20T1-Weighted%20Structural%20MRI%20and%20fMRI%20of%20Participants%20Viewing%20Self-Avatar%20Exoskeleton%20Walking%20%2811%20SWS%20Cycles%29%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -448,13 +286,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 5
-      - Recordings: 114
+      - Recordings: 14
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 59
+      - Channels: 64
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
@@ -469,14 +307,14 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 5.4 GB
-      - File count: 114
+      - File count: 14
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
       - License: CC0
-      - DOI: doi:10.18112/openneuro.ds006945.v1.0.0
+      - DOI: doi:10.18112/openneuro.ds006945.v1.2.1
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1

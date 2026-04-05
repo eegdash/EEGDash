@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 512` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 6.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 62` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 6.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,34 +90,22 @@ About This Dataset
 ------------------
 
 **Synopsis**
-This is the **GX dataset** formatted to comply with `BIDS <https://bids.neuroimaging.io/>`_\_ standard format. 
-
+This is the **GX dataset** formatted to comply with `BIDS <https://bids.neuroimaging.io/>`_\_ standard format.
 The tES/EEG/CTT/Vigilance experiment contains 19 unique participants (some repeated experiments).
 Over a 70 min period EEG/ECG/EOG were recorded concurrently with a `CTT <https://sccn.ucsd.edu/~scott/pdf/COMPTRACK.pdf>`_\_
 where participants maintained a ball at the center of the screen
 and were periodically stimulated (with low-intensity noninvasive brain stimulation) for 30 secs with combinations of 9 stimulation montages.
-
-For the **raw data** please see: https://zenodo.org/record/4456079 
-
+For the **raw data** please see: https://zenodo.org/record/4456079
 For methodological details please see corresponding article titled:
     **Dataset of concurrent EEG, ECG, and behavior with multiple doses of transcranial Electrical Stimulation**
-
-
 **Data Descriptor Abstract**
 We present a dataset combining human-participant high-density electroencephalography (EEG) with physiological and continuous behavioral metrics during transcranial electrical stimulation (tES). Data include within participant application of nine High-Definition tES (HD-tES) types, targeting three cortical regions (frontal, motor, parietal) with three stimulation waveforms (DC, 5 Hz, 30 Hz); more than 783 total stimulation trials over 62 sessions with EEG, physiological (ECG, EOG), and continuous behavioral vigilance/alertness metrics. Experiment 1 and 2 consisted of participants performing a continuous vigilance/alertness task over three 70-minute and two 70.5-minute sessions, respectively. Demographic data were collected, as well as self-reported wellness questionnaires before and after each session. Participants received all 9 stimulation types in Experiment 1, with each session including three stimulation types, with 4 trials per type. Participants received 2 stimulation types in Experiment 2, with 20 trials of a given stimulation type per session. Within-participant reliability was tested by repeating select sessions. This unique dataset supports a range of hypothesis testing including interactions of tDCS/tACS location and frequency, brain-state, physiology, fatigue, and cognitive performance.
-
 For more details please see the full data descriptor article.
-
-
 Code used to import and process this dataset can be found here:
 **GitHub** : https://github.com/ngebodh/GX_tES_EEG_Physio_Behavior
-
 For downsampled data please see:
 **Experiment 1** : https://doi.org/10.5281/zenodo.3840615
 **Experiment 2** : https://doi.org/10.5281/zenodo.3840617
-
-
-
 - Nigel Gebodh (May 26th, 2021)
 
 Dataset Information
@@ -140,7 +128,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003670.v1.1.0 <https://doi.org/10.18112/openneuro.ds003670.v1.1.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003670>`__ | `Source URL <https://openneuro.org/datasets/ds003670/versions/1.1.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003670>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003670>`__ | `Source URL <https://openneuro.org/datasets/ds003670>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -177,13 +165,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 25
-      - Recordings: 512
+      - Recordings: 62
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 32 (62), 35 (62)
+      - Channels: 35
       - Sampling rate (Hz): 2000.0
       - Duration (hours): 0.0
 
@@ -198,7 +186,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 72.2 GB
-      - File count: 512
+      - File count: 62
       - Format: BIDS
 
    .. grid-item-card:: License & citation

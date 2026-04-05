@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 561` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 12` :bdg-secondary-line:`Recordings: 186` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,7 +92,6 @@ About This Dataset
 
 **ArEEG: Arabic EEG Dataset**
 
-
 This dataset is a collection of Inner Speech EEG recordings from 12 subjects, 7 males and 5 females with visual cues written in Modern Standard Arabic.
 Go to `GitHub Repository <https://github.com/Eslam21/ArEEG-an-Open-Access-Arabic-Inner-Speech-EEG-Dataset>`_\_ for usage instructions.
 
@@ -116,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005262.v1.0.1 <https://doi.org/10.18112/openneuro.ds005262.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__ | `Source URL <https://openneuro.org/datasets/ds005262/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005262>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005262>`__ | `Source URL <https://openneuro.org/datasets/ds005262>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -153,8 +152,8 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 12
-      - Recordings: 561
-      - Tasks: —
+      - Recordings: 186
+      - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -174,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 688.8 MB
-      - File count: 561
+      - File count: 186
       - Format: BIDS
 
    .. grid-item-card:: License & citation

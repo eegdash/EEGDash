@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 17` :bdg-secondary-line:`Recordings: 107` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 17` :bdg-secondary-line:`Recordings: 17` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (90%)`
 
@@ -111,7 +111,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004980.v1.0.0 <https://doi.org/10.18112/openneuro.ds004980.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004980>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__ | `Source URL <https://openneuro.org/datasets/ds004980/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004980>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004980>`__ | `Source URL <https://openneuro.org/datasets/ds004980>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -148,14 +148,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 17
-      - Recordings: 107
+      - Recordings: 17
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 64
-      - Sampling rate (Hz): 500.0 (8), 499.9917286 (2), 499.9911824 (2), 499.9912809 (2), 499.9914353 (2), 499.9919367 (2), 499.9917272 (2), 499.9914553 (2), 499.9919292 (2), 499.9923017 (2), 499.9917378 (2), 499.991385 (2), 499.9923795 (2), 499.9915179 (2)
+      - Sampling rate (Hz): 500.0 (4), 499.9914353, 499.9919367, 499.9923017, 499.9923795, 499.9917272, 499.9914553, 499.9919292, 499.9917286, 499.9911824, 499.9912809, 499.9917378, 499.991385, 499.9915179
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -169,7 +169,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 15.8 GB
-      - File count: 107
+      - File count: 17
       - Format: BIDS
 
    .. grid-item-card:: License & citation

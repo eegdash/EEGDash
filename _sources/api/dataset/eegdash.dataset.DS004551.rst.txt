@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 114` :bdg-secondary-line:`Recordings: 504` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 114` :bdg-secondary-line:`Recordings: 125` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -89,8 +89,8 @@ Quickstart
 About This Dataset
 ------------------
 
-This dataset was curated for publication as part of the manuscript in Sakakura et al. (in preparation). 
-It contains iEEGs collected from 114 individuals during slow wave sleep. 
+This dataset was curated for publication as part of the manuscript in Sakakura et al. (in preparation).
+It contains iEEGs collected from 114 individuals during slow wave sleep.
 The available Matlab code can be found at https://github.com/kaz1126/MI_HFO.
 The iEEG coordinate system employed in this dataset is MNI305.
 
@@ -114,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004551.v1.0.6 <https://doi.org/10.18112/openneuro.ds004551.v1.0.6>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004551>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004551>`__ | `Source URL <https://openneuro.org/datasets/ds004551/versions/1.0.6>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004551>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004551>`__ | `Source URL <https://openneuro.org/datasets/ds004551>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -151,13 +151,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 114
-      - Recordings: 504
+      - Recordings: 125
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (164), 112 (10), 118 (6), 138 (6), 142 (4), 108 (4), 124 (4), 110 (4), 134 (4), 104 (4), 144 (4), 130 (4), 102 (4), 122 (4), 148 (4), 120 (2), 58 (2), 132 (2), 126 (2), 136 (2), 116 (2), 84 (2), 146 (2), 106 (2), 96 (2)
+      - Channels: 128 (82), 112 (5), 118 (3), 138 (3), 104 (2), 134 (2), 110 (2), 124 (2), 108 (2), 142 (2), 148 (2), 122 (2), 102 (2), 130 (2), 144 (2), 120, 96, 106, 146, 84, 116, 136, 126, 132, 58
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -172,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 68.9 GB
-      - File count: 504
+      - File count: 125
       - Format: BIDS
 
    .. grid-item-card:: License & citation

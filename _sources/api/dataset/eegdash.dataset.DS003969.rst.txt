@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 98` :bdg-secondary-line:`Recordings: 1181` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 7.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 98` :bdg-secondary-line:`Recordings: 392` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 7.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,9 +90,7 @@ About This Dataset
 ------------------
 
 Data collection took place at the Meditation Research Institute (MRI) in Rishikesh, India, under the supervision of Arnaud Delorme, Ph.D. The project was approved by the local MRI Indian ethical committee and the ethical committee of the University of California San Diego (IRB project # 090731).
-
 Participants sat either on a blanket on the floor or on a chair for both experimental periods depending on their personal preference. Participants were asked to keep their eyes closed, and all lighting in the room was turned off during data collection. An intercom allowed communication between the experimental and the recording room.
-
 Participants performed four blocks, 2 meditation blocks interspaced by two thining blocks (in which they are instructed to think actively). Half of the participants start with a meditation block, and half of them start with a thinking block. The first meditation block is a breath counting meditation for all participants. The second block is a tradition-specific meditation - except for the control group, for which it is a breath counting meditation.
 
 Dataset Information
@@ -115,7 +113,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003969.v1.0.0 <https://doi.org/10.18112/openneuro.ds003969.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003969>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003969>`__ | `Source URL <https://openneuro.org/datasets/ds003969/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003969>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003969>`__ | `Source URL <https://openneuro.org/datasets/ds003969>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -152,14 +150,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 98
-      - Recordings: 1181
-      - Tasks: 1
+      - Recordings: 392
+      - Tasks: 4
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 64 (392), 79 (294), 72 (98)
-      - Sampling rate (Hz): 1024.0 (772), 2048.0 (12)
+      - Channels: 79 (294), 72 (98)
+      - Sampling rate (Hz): 1024.0 (386), 2048.0 (6)
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -173,7 +171,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 54.5 GB
-      - File count: 1181
+      - File count: 392
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/core/tutorial_feature_extractor_open_close_eye';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -450,7 +455,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -555,7 +567,7 @@
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
 <section class="sphx-glr-example-title" id="eegdash-feature-extractor">
-<span id="tutorial-open-closed"></span><span id="sphx-glr-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py"></span><h1>EEGDash Feature Extractor<a class="headerlink" href="#eegdash-feature-extractor" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">46 minutes</span></div>
+<span id="tutorial-open-closed"></span><span id="sphx-glr-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py"></span><h1>EEGDash Feature Extractor<a class="headerlink" href="#eegdash-feature-extractor" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">27 minutes</span></div>
 <p>EEGDash example for eyes open vs. closed classification.</p>
 <p>This example uses the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library in combination with PyTorch to develop a deep learning model for analyzing EEG data, specifically for eyes open vs. closed classification in a single subject.</p>
 <ol class="arabic simple">
@@ -695,12 +707,19 @@ corresponding to their respective event markers).</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-Used Annotations descriptions: [&#39;boundary&#39;, &#39;break cnt&#39;, &#39;instructed_toCloseEyes&#39;, &#39;instructed_toOpenEyes&#39;, &#39;resting_start&#39;]
-[04/03/26 09:23:29] INFO     Original events found with ids: preprocessing.py:66
-                             {&#39;boundary&#39;: 1, &#39;break cnt&#39;: 2,
-                             &#39;instructed_toCloseEyes&#39;: 3,
-                             &#39;instructed_toOpenEyes&#39;: 4,
-                             &#39;resting_start&#39;: 5}
+[04/05/26 01:09:22] WARNING  File not found on S3, skipping:   downloader.py:146
+                             s3://openneuro.org/ds005514/sub-N
+                             DARDB033FW5/eeg/sub-NDARDB033FW5_
+                             task-RestingState_eeg.fdt
+Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
+                    INFO     Original events found with ids: preprocessing.py:66
+                             {np.str_(&#39;boundary&#39;): 1,
+                             np.str_(&#39;break cnt&#39;): 2,
+                             np.str_(&#39;instructed_toCloseEyes
+                             &#39;): 3,
+                             np.str_(&#39;instructed_toOpenEyes&#39;
+                             ): 4, np.str_(&#39;resting_start&#39;):
+                             5}
 NOTE: pick_channels() is a legacy function. New code should use inst.pick(...).
 Filtering raw data in 1 contiguous segment
 Setting up band-pass filter from 1 - 55 Hz
@@ -811,12 +830,9 @@ signal is present and looks as expected.</p>
 <span class="n">features_ds</span> <span class="o">=</span> <a href="../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span><span class="n">windows_ds</span><span class="p">,</span> <span class="n">features_dict</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]/home/runner/work/EEGDash/EEGDash/eegdash/features/feature_bank/spectral.py:370: FutureWarning: `rcond` parameter will change to the default of machine precision times ``max(M, N)`` where M and N are the input matrix dimensions.
-To use the future default and silence this warning we advise to pass `rcond=None`, to keep using the old, explicitly pass `rcond=-1`.
-  r = np.linalg.lstsq(log_f, p.reshape(-1, p.shape[-1]).T)[0]
-
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.35it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.35it/s]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.14it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.14it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -843,8 +859,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th></th>
       <th>i_dataset</th>
       <th>i_start_in_trial</th>
-      <th>i_window_in_trial</th>
       <th>i_stop_in_trial</th>
+      <th>i_window_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -929,8 +945,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>0</th>
       <td>0</td>
       <td>8092</td>
-      <td>0</td>
       <td>8348</td>
+      <td>0</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -1013,8 +1029,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>1</th>
       <td>0</td>
       <td>8348</td>
-      <td>0</td>
       <td>8604</td>
+      <td>0</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -1097,8 +1113,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>2</th>
       <td>0</td>
       <td>8604</td>
-      <td>0</td>
       <td>8860</td>
+      <td>0</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -1181,8 +1197,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>3</th>
       <td>0</td>
       <td>8860</td>
-      <td>0</td>
       <td>9116</td>
+      <td>0</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -1265,8 +1281,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>4</th>
       <td>0</td>
       <td>9116</td>
-      <td>0</td>
       <td>9372</td>
+      <td>0</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -1433,8 +1449,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>65</th>
       <td>0</td>
       <td>43163</td>
-      <td>0</td>
       <td>43419</td>
+      <td>0</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1517,8 +1533,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>66</th>
       <td>0</td>
       <td>43419</td>
-      <td>0</td>
       <td>43675</td>
+      <td>0</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1601,8 +1617,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>67</th>
       <td>0</td>
       <td>43675</td>
-      <td>0</td>
       <td>43931</td>
+      <td>0</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1685,8 +1701,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>68</th>
       <td>0</td>
       <td>43931</td>
-      <td>0</td>
       <td>44187</td>
+      <td>0</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1769,8 +1785,8 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
       <th>69</th>
       <td>0</td>
       <td>44187</td>
-      <td>0</td>
       <td>44443</td>
+      <td>0</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -1859,1043 +1875,40 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
 <span class="n">features_ds</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="sphx-glr-script-out highlight-pytb notranslate"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/examples/core/tutorial_feature_extractor_open_close_eye.py&quot;</span>, line <span class="m">239</span>, in <span class="n">&lt;module&gt;</span>
+<span class="w">    </span><span class="n">features_ds</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/eegdash/features/datasets.py&quot;</span>, line <span class="m">922</span>, in <span class="n">zscore</span>
+<span class="w">    </span><span class="n">ds</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numeric_columns</span><span class="p">()]</span> <span class="o">=</span> <span class="p">(</span>
+<span class="w">    </span><span class="pm">~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">938</span>, in <span class="n">__setitem__</span>
+<span class="w">    </span><span class="n">iloc</span><span class="o">.</span><span class="n">_setitem_with_indexer</span><span class="p">(</span><span class="n">indexer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">1953</span>, in <span class="n">_setitem_with_indexer</span>
+<span class="w">    </span><span class="bp">self</span><span class="o">.</span><span class="n">_setitem_with_indexer_split_path</span><span class="p">(</span><span class="n">indexer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">1988</span>, in <span class="n">_setitem_with_indexer_split_path</span>
+<span class="w">    </span><span class="bp">self</span><span class="o">.</span><span class="n">_setitem_with_indexer_frame_value</span><span class="p">(</span><span class="n">indexer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">2120</span>, in <span class="n">_setitem_with_indexer_frame_value</span>
+<span class="w">    </span><span class="bp">self</span><span class="o">.</span><span class="n">_setitem_single_column</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">pi</span><span class="p">)</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">2163</span>, in <span class="n">_setitem_single_column</span>
+<span class="w">    </span><span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<span class="gr">TypeError</span>: <span class="n">Invalid value &#39;0     0.271942</span>
+<span class="x">1     1.391704</span>
+<span class="x">2     1.839608</span>
+<span class="x">3     1.103765</span>
+<span class="x">4     1.327717</span>
+<span class="x">        ...</span>
+<span class="x">65   -0.079983</span>
+<span class="x">66   -0.047990</span>
+<span class="x">67    0.015997</span>
+<span class="x">68   -0.911806</span>
+<span class="x">69   -1.295724</span>
+<span class="x">Name: sig_zero_x_E22, Length: 70, dtype: float64&#39; for dtype &#39;int64&#39;</span>
+</pre></div>
+</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>sig_mean_E22</th>
-      <th>sig_mean_E9</th>
-      <th>sig_mean_E33</th>
-      <th>sig_mean_E24</th>
-      <th>sig_mean_E11</th>
-      <th>sig_mean_E124</th>
-      <th>sig_mean_E122</th>
-      <th>sig_mean_E29</th>
-      <th>sig_mean_E6</th>
-      <th>sig_mean_E111</th>
-      <th>sig_mean_E45</th>
-      <th>sig_mean_E36</th>
-      <th>sig_mean_E104</th>
-      <th>sig_mean_E108</th>
-      <th>sig_mean_E42</th>
-      <th>sig_mean_E55</th>
-      <th>sig_mean_E93</th>
-      <th>sig_mean_E58</th>
-      <th>sig_mean_E52</th>
-      <th>sig_mean_E62</th>
-      <th>sig_mean_E92</th>
-      <th>sig_mean_E96</th>
-      <th>sig_mean_E70</th>
-      <th>sig_mean_Cz</th>
-      <th>sig_var_E22</th>
-      <th>sig_var_E9</th>
-      <th>sig_var_E33</th>
-      <th>sig_var_E24</th>
-      <th>sig_var_E11</th>
-      <th>sig_var_E124</th>
-      <th>sig_var_E122</th>
-      <th>sig_var_E29</th>
-      <th>sig_var_E6</th>
-      <th>sig_var_E111</th>
-      <th>sig_var_E45</th>
-      <th>sig_var_E36</th>
-      <th>sig_var_E104</th>
-      <th>sig_var_E108</th>
-      <th>sig_var_E42</th>
-      <th>sig_var_E55</th>
-      <th>...</th>
-      <th>spec_slope_exp_E111</th>
-      <th>spec_slope_exp_E45</th>
-      <th>spec_slope_exp_E36</th>
-      <th>spec_slope_exp_E104</th>
-      <th>spec_slope_exp_E108</th>
-      <th>spec_slope_exp_E42</th>
-      <th>spec_slope_exp_E55</th>
-      <th>spec_slope_exp_E93</th>
-      <th>spec_slope_exp_E58</th>
-      <th>spec_slope_exp_E52</th>
-      <th>spec_slope_exp_E62</th>
-      <th>spec_slope_exp_E92</th>
-      <th>spec_slope_exp_E96</th>
-      <th>spec_slope_exp_E70</th>
-      <th>spec_slope_exp_Cz</th>
-      <th>spec_slope_int_E22</th>
-      <th>spec_slope_int_E9</th>
-      <th>spec_slope_int_E33</th>
-      <th>spec_slope_int_E24</th>
-      <th>spec_slope_int_E11</th>
-      <th>spec_slope_int_E124</th>
-      <th>spec_slope_int_E122</th>
-      <th>spec_slope_int_E29</th>
-      <th>spec_slope_int_E6</th>
-      <th>spec_slope_int_E111</th>
-      <th>spec_slope_int_E45</th>
-      <th>spec_slope_int_E36</th>
-      <th>spec_slope_int_E104</th>
-      <th>spec_slope_int_E108</th>
-      <th>spec_slope_int_E42</th>
-      <th>spec_slope_int_E55</th>
-      <th>spec_slope_int_E93</th>
-      <th>spec_slope_int_E58</th>
-      <th>spec_slope_int_E52</th>
-      <th>spec_slope_int_E62</th>
-      <th>spec_slope_int_E92</th>
-      <th>spec_slope_int_E96</th>
-      <th>spec_slope_int_E70</th>
-      <th>spec_slope_int_Cz</th>
-      <th>target</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.001951</td>
-      <td>-0.006719</td>
-      <td>0.025121</td>
-      <td>0.004072</td>
-      <td>0.000266</td>
-      <td>-0.005717</td>
-      <td>-0.012260</td>
-      <td>0.003947</td>
-      <td>-0.000029</td>
-      <td>-0.000534</td>
-      <td>-0.000968</td>
-      <td>0.004046</td>
-      <td>-0.001965</td>
-      <td>-0.010382</td>
-      <td>0.005371</td>
-      <td>-0.000123</td>
-      <td>-0.001221</td>
-      <td>0.005291</td>
-      <td>0.004466</td>
-      <td>0.001198</td>
-      <td>-0.000150</td>
-      <td>-0.000128</td>
-      <td>0.003222</td>
-      <td>0.0</td>
-      <td>-0.000013</td>
-      <td>5.523004e-07</td>
-      <td>8.361981e-07</td>
-      <td>3.235755e-07</td>
-      <td>-2.889065e-07</td>
-      <td>4.224450e-08</td>
-      <td>8.075199e-07</td>
-      <td>2.056527e-07</td>
-      <td>-3.244810e-08</td>
-      <td>2.577373e-07</td>
-      <td>4.241905e-07</td>
-      <td>3.050408e-07</td>
-      <td>4.227976e-07</td>
-      <td>9.721692e-07</td>
-      <td>1.081002e-06</td>
-      <td>5.316444e-09</td>
-      <td>...</td>
-      <td>1.492490</td>
-      <td>3.939595</td>
-      <td>2.151313</td>
-      <td>2.204210</td>
-      <td>1.641740</td>
-      <td>0.953571</td>
-      <td>1.650173</td>
-      <td>2.643766</td>
-      <td>1.092136</td>
-      <td>1.994584</td>
-      <td>1.001964</td>
-      <td>2.225460</td>
-      <td>1.626073</td>
-      <td>0.985645</td>
-      <td>0.0</td>
-      <td>1.447121</td>
-      <td>1.450051</td>
-      <td>-1.489614</td>
-      <td>0.409050</td>
-      <td>1.018804</td>
-      <td>0.370136</td>
-      <td>-2.237950</td>
-      <td>-1.557122</td>
-      <td>-0.577616</td>
-      <td>-0.311079</td>
-      <td>-2.769303</td>
-      <td>-1.093724</td>
-      <td>-1.422565</td>
-      <td>-0.217352</td>
-      <td>0.599968</td>
-      <td>-0.076764</td>
-      <td>-1.885502</td>
-      <td>-0.579490</td>
-      <td>-1.409001</td>
-      <td>0.012830</td>
-      <td>-1.395235</td>
-      <td>-0.920786</td>
-      <td>-0.362538</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.003736</td>
-      <td>0.001662</td>
-      <td>-0.002745</td>
-      <td>0.003785</td>
-      <td>0.001641</td>
-      <td>0.001832</td>
-      <td>-0.000768</td>
-      <td>0.001844</td>
-      <td>-0.000069</td>
-      <td>0.000265</td>
-      <td>0.009657</td>
-      <td>0.001819</td>
-      <td>0.000772</td>
-      <td>0.009694</td>
-      <td>0.000576</td>
-      <td>0.000328</td>
-      <td>0.001118</td>
-      <td>0.001992</td>
-      <td>0.000923</td>
-      <td>0.000750</td>
-      <td>0.001301</td>
-      <td>0.002992</td>
-      <td>0.001803</td>
-      <td>0.0</td>
-      <td>-0.000017</td>
-      <td>-5.109961e-06</td>
-      <td>-7.133039e-07</td>
-      <td>-1.305241e-07</td>
-      <td>-7.603062e-07</td>
-      <td>-3.011882e-07</td>
-      <td>-3.152575e-07</td>
-      <td>-9.290543e-10</td>
-      <td>-3.808679e-08</td>
-      <td>-6.545192e-09</td>
-      <td>-9.159266e-07</td>
-      <td>-3.352464e-08</td>
-      <td>-2.866534e-08</td>
-      <td>-3.433118e-07</td>
-      <td>-1.231895e-07</td>
-      <td>-1.727352e-08</td>
-      <td>...</td>
-      <td>1.512826</td>
-      <td>1.764399</td>
-      <td>0.995077</td>
-      <td>1.258441</td>
-      <td>1.296934</td>
-      <td>1.154090</td>
-      <td>1.554212</td>
-      <td>1.295095</td>
-      <td>0.967133</td>
-      <td>1.028553</td>
-      <td>0.811013</td>
-      <td>1.044905</td>
-      <td>0.639442</td>
-      <td>1.069751</td>
-      <td>0.0</td>
-      <td>-1.051914</td>
-      <td>-1.736985</td>
-      <td>-0.800559</td>
-      <td>-1.099110</td>
-      <td>-0.890059</td>
-      <td>-2.830874</td>
-      <td>-2.246926</td>
-      <td>-0.386441</td>
-      <td>-0.644879</td>
-      <td>-1.813293</td>
-      <td>-1.453910</td>
-      <td>-0.816922</td>
-      <td>-1.200489</td>
-      <td>-1.409381</td>
-      <td>-1.034594</td>
-      <td>-1.313005</td>
-      <td>-1.347661</td>
-      <td>-0.728354</td>
-      <td>-0.717287</td>
-      <td>-0.848564</td>
-      <td>-1.163734</td>
-      <td>-0.851869</td>
-      <td>-0.956851</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>-0.002586</td>
-      <td>0.001989</td>
-      <td>0.000614</td>
-      <td>0.000250</td>
-      <td>0.000836</td>
-      <td>-0.000843</td>
-      <td>0.000064</td>
-      <td>0.000225</td>
-      <td>0.001181</td>
-      <td>-0.000820</td>
-      <td>-0.001165</td>
-      <td>-0.000676</td>
-      <td>-0.000905</td>
-      <td>-0.001305</td>
-      <td>-0.000453</td>
-      <td>-0.000796</td>
-      <td>-0.001060</td>
-      <td>-0.002792</td>
-      <td>-0.001091</td>
-      <td>-0.001151</td>
-      <td>-0.001478</td>
-      <td>-0.001000</td>
-      <td>-0.001425</td>
-      <td>0.0</td>
-      <td>-0.000018</td>
-      <td>-5.295695e-06</td>
-      <td>-9.436373e-07</td>
-      <td>-3.623856e-07</td>
-      <td>-8.109753e-07</td>
-      <td>-2.612164e-07</td>
-      <td>-3.528331e-07</td>
-      <td>-4.402409e-08</td>
-      <td>-3.996750e-08</td>
-      <td>-2.607291e-08</td>
-      <td>-1.140657e-06</td>
-      <td>-7.239448e-08</td>
-      <td>-7.331385e-08</td>
-      <td>-3.173424e-07</td>
-      <td>-1.277883e-07</td>
-      <td>-1.688024e-08</td>
-      <td>...</td>
-      <td>0.894163</td>
-      <td>0.815037</td>
-      <td>0.626455</td>
-      <td>0.812631</td>
-      <td>0.805864</td>
-      <td>0.513520</td>
-      <td>0.829918</td>
-      <td>0.694662</td>
-      <td>1.835851</td>
-      <td>0.460670</td>
-      <td>1.231540</td>
-      <td>1.081952</td>
-      <td>1.286763</td>
-      <td>2.296780</td>
-      <td>0.0</td>
-      <td>-1.045416</td>
-      <td>-1.351148</td>
-      <td>-1.584586</td>
-      <td>-2.164762</td>
-      <td>-1.489290</td>
-      <td>-1.470687</td>
-      <td>-0.491378</td>
-      <td>-0.647959</td>
-      <td>-1.501203</td>
-      <td>-0.989137</td>
-      <td>-1.214011</td>
-      <td>-0.699421</td>
-      <td>-1.040951</td>
-      <td>-0.806000</td>
-      <td>-0.506333</td>
-      <td>-1.196132</td>
-      <td>-1.085559</td>
-      <td>-1.712426</td>
-      <td>-0.454518</td>
-      <td>-1.433267</td>
-      <td>-1.404927</td>
-      <td>-1.219589</td>
-      <td>-2.298327</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.001268</td>
-      <td>-0.000500</td>
-      <td>-0.000834</td>
-      <td>-0.001115</td>
-      <td>-0.001898</td>
-      <td>0.001444</td>
-      <td>0.000468</td>
-      <td>-0.000842</td>
-      <td>-0.001271</td>
-      <td>0.000365</td>
-      <td>0.000538</td>
-      <td>0.000669</td>
-      <td>0.000916</td>
-      <td>0.000672</td>
-      <td>0.001077</td>
-      <td>0.000620</td>
-      <td>0.000463</td>
-      <td>0.002384</td>
-      <td>0.000958</td>
-      <td>0.000238</td>
-      <td>0.000699</td>
-      <td>-0.000798</td>
-      <td>0.000738</td>
-      <td>0.0</td>
-      <td>-0.000015</td>
-      <td>-2.205157e-06</td>
-      <td>-8.321263e-07</td>
-      <td>1.662175e-07</td>
-      <td>-4.246717e-07</td>
-      <td>-1.728402e-07</td>
-      <td>-4.937308e-07</td>
-      <td>-7.237159e-08</td>
-      <td>-2.028431e-08</td>
-      <td>-5.884707e-08</td>
-      <td>-1.143828e-06</td>
-      <td>-1.163991e-07</td>
-      <td>-1.050998e-07</td>
-      <td>-4.292795e-07</td>
-      <td>-1.744050e-07</td>
-      <td>-1.984031e-08</td>
-      <td>...</td>
-      <td>0.887129</td>
-      <td>1.515845</td>
-      <td>1.041634</td>
-      <td>0.212483</td>
-      <td>1.099224</td>
-      <td>1.257482</td>
-      <td>0.331860</td>
-      <td>0.536455</td>
-      <td>1.150326</td>
-      <td>1.412189</td>
-      <td>0.107774</td>
-      <td>0.741675</td>
-      <td>0.407186</td>
-      <td>0.279717</td>
-      <td>0.0</td>
-      <td>1.330218</td>
-      <td>1.197191</td>
-      <td>-0.607167</td>
-      <td>0.566309</td>
-      <td>1.553999</td>
-      <td>0.114613</td>
-      <td>-0.980614</td>
-      <td>-0.624033</td>
-      <td>1.210656</td>
-      <td>-1.207074</td>
-      <td>-1.716050</td>
-      <td>-1.572751</td>
-      <td>-0.533749</td>
-      <td>-1.651582</td>
-      <td>-1.489786</td>
-      <td>-0.422384</td>
-      <td>-0.720034</td>
-      <td>-1.238557</td>
-      <td>-1.520727</td>
-      <td>0.037745</td>
-      <td>-0.621054</td>
-      <td>-0.426815</td>
-      <td>-0.507861</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.003570</td>
-      <td>0.008277</td>
-      <td>0.002027</td>
-      <td>0.000686</td>
-      <td>0.001812</td>
-      <td>0.001860</td>
-      <td>0.006170</td>
-      <td>-0.001526</td>
-      <td>-0.001018</td>
-      <td>0.001280</td>
-      <td>0.001653</td>
-      <td>-0.001145</td>
-      <td>0.001469</td>
-      <td>0.005680</td>
-      <td>-0.001221</td>
-      <td>0.000932</td>
-      <td>0.002577</td>
-      <td>0.003511</td>
-      <td>0.001295</td>
-      <td>0.002860</td>
-      <td>0.003318</td>
-      <td>0.005038</td>
-      <td>0.004875</td>
-      <td>0.0</td>
-      <td>-0.000017</td>
-      <td>-5.131880e-06</td>
-      <td>-8.022458e-07</td>
-      <td>-2.553753e-07</td>
-      <td>-8.072310e-07</td>
-      <td>-2.683064e-07</td>
-      <td>-4.648580e-07</td>
-      <td>-6.768422e-08</td>
-      <td>-4.242959e-08</td>
-      <td>-7.302839e-08</td>
-      <td>-1.075236e-06</td>
-      <td>-7.610794e-08</td>
-      <td>-1.159172e-07</td>
-      <td>-4.111793e-07</td>
-      <td>-1.414685e-07</td>
-      <td>-1.308539e-08</td>
-      <td>...</td>
-      <td>1.038347</td>
-      <td>1.348529</td>
-      <td>0.438874</td>
-      <td>0.290329</td>
-      <td>0.429666</td>
-      <td>0.413403</td>
-      <td>0.488711</td>
-      <td>0.069017</td>
-      <td>0.923069</td>
-      <td>0.863997</td>
-      <td>0.615711</td>
-      <td>0.261521</td>
-      <td>0.825766</td>
-      <td>0.900234</td>
-      <td>0.0</td>
-      <td>-1.315896</td>
-      <td>-1.324571</td>
-      <td>-1.941301</td>
-      <td>-1.125760</td>
-      <td>-1.575175</td>
-      <td>-2.089463</td>
-      <td>-1.707018</td>
-      <td>-1.460361</td>
-      <td>-1.440382</td>
-      <td>-1.865687</td>
-      <td>-1.511484</td>
-      <td>-0.495093</td>
-      <td>-1.071253</td>
-      <td>-0.933400</td>
-      <td>-0.322594</td>
-      <td>-0.746763</td>
-      <td>-0.487501</td>
-      <td>-0.821214</td>
-      <td>-0.632061</td>
-      <td>-0.656504</td>
-      <td>-0.548569</td>
-      <td>-1.001451</td>
-      <td>-0.958422</td>
-      <td>0.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>65</th>
-      <td>0.008385</td>
-      <td>0.009738</td>
-      <td>0.000410</td>
-      <td>0.004293</td>
-      <td>0.002907</td>
-      <td>0.002263</td>
-      <td>0.002275</td>
-      <td>0.001433</td>
-      <td>0.000193</td>
-      <td>-0.000364</td>
-      <td>-0.000885</td>
-      <td>0.000168</td>
-      <td>0.001143</td>
-      <td>0.001393</td>
-      <td>-0.002646</td>
-      <td>-0.000495</td>
-      <td>-0.000583</td>
-      <td>-0.002497</td>
-      <td>-0.002430</td>
-      <td>-0.002052</td>
-      <td>-0.001917</td>
-      <td>-0.002467</td>
-      <td>-0.002257</td>
-      <td>0.0</td>
-      <td>-0.000017</td>
-      <td>-4.620806e-06</td>
-      <td>-3.224363e-07</td>
-      <td>-4.038952e-07</td>
-      <td>-6.380095e-07</td>
-      <td>-1.168905e-07</td>
-      <td>2.121189e-07</td>
-      <td>1.525802e-08</td>
-      <td>-1.520116e-08</td>
-      <td>1.903438e-08</td>
-      <td>-6.686158e-07</td>
-      <td>8.296481e-08</td>
-      <td>6.743984e-08</td>
-      <td>-3.264812e-09</td>
-      <td>2.062562e-07</td>
-      <td>1.731128e-08</td>
-      <td>...</td>
-      <td>0.577687</td>
-      <td>-0.502699</td>
-      <td>-0.080326</td>
-      <td>0.324878</td>
-      <td>-0.454054</td>
-      <td>-0.375960</td>
-      <td>-1.955621</td>
-      <td>-0.275593</td>
-      <td>-0.030228</td>
-      <td>-0.517258</td>
-      <td>-1.493082</td>
-      <td>-0.991565</td>
-      <td>-0.308624</td>
-      <td>-0.224947</td>
-      <td>0.0</td>
-      <td>-0.071086</td>
-      <td>0.066848</td>
-      <td>0.649722</td>
-      <td>0.740692</td>
-      <td>0.845824</td>
-      <td>1.037743</td>
-      <td>0.611480</td>
-      <td>1.042069</td>
-      <td>1.721805</td>
-      <td>-0.044772</td>
-      <td>0.514017</td>
-      <td>0.390676</td>
-      <td>0.092366</td>
-      <td>1.004166</td>
-      <td>0.760085</td>
-      <td>2.183237</td>
-      <td>0.830590</td>
-      <td>-0.045842</td>
-      <td>0.855998</td>
-      <td>1.697784</td>
-      <td>1.395802</td>
-      <td>0.466582</td>
-      <td>0.091526</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>66</th>
-      <td>-0.003484</td>
-      <td>-0.001743</td>
-      <td>0.001369</td>
-      <td>-0.001656</td>
-      <td>-0.000621</td>
-      <td>0.000579</td>
-      <td>0.001785</td>
-      <td>0.000604</td>
-      <td>0.000187</td>
-      <td>0.001643</td>
-      <td>-0.007637</td>
-      <td>0.001537</td>
-      <td>-0.000450</td>
-      <td>0.008693</td>
-      <td>0.001913</td>
-      <td>-0.000459</td>
-      <td>0.001027</td>
-      <td>0.001950</td>
-      <td>0.001671</td>
-      <td>-0.000002</td>
-      <td>0.003866</td>
-      <td>0.003625</td>
-      <td>0.001778</td>
-      <td>0.0</td>
-      <td>-0.000018</td>
-      <td>-4.716401e-06</td>
-      <td>-4.442309e-07</td>
-      <td>-5.347920e-07</td>
-      <td>-6.939244e-07</td>
-      <td>-1.768252e-07</td>
-      <td>4.499890e-07</td>
-      <td>-2.438438e-08</td>
-      <td>-3.410006e-08</td>
-      <td>1.859689e-07</td>
-      <td>2.557715e-06</td>
-      <td>4.672518e-08</td>
-      <td>3.319292e-07</td>
-      <td>1.237658e-06</td>
-      <td>4.956287e-08</td>
-      <td>-1.064000e-08</td>
-      <td>...</td>
-      <td>2.126629</td>
-      <td>0.428372</td>
-      <td>1.716424</td>
-      <td>2.095365</td>
-      <td>0.890186</td>
-      <td>1.151056</td>
-      <td>0.806022</td>
-      <td>1.776219</td>
-      <td>-0.622457</td>
-      <td>0.127213</td>
-      <td>-0.532718</td>
-      <td>0.793411</td>
-      <td>-0.418016</td>
-      <td>-0.563951</td>
-      <td>0.0</td>
-      <td>-0.038327</td>
-      <td>-0.071352</td>
-      <td>-0.865609</td>
-      <td>-0.034366</td>
-      <td>-0.115474</td>
-      <td>-0.295782</td>
-      <td>-0.478502</td>
-      <td>-0.816613</td>
-      <td>-0.217458</td>
-      <td>-2.217268</td>
-      <td>-0.151332</td>
-      <td>-1.986353</td>
-      <td>-2.152753</td>
-      <td>-0.323970</td>
-      <td>-1.342364</td>
-      <td>-0.527354</td>
-      <td>-1.643065</td>
-      <td>0.584303</td>
-      <td>-0.198386</td>
-      <td>0.498081</td>
-      <td>-0.522150</td>
-      <td>0.465945</td>
-      <td>0.633883</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>67</th>
-      <td>0.003119</td>
-      <td>0.003513</td>
-      <td>-0.001861</td>
-      <td>-0.001506</td>
-      <td>-0.000021</td>
-      <td>-0.000920</td>
-      <td>-0.002148</td>
-      <td>-0.002157</td>
-      <td>-0.000666</td>
-      <td>-0.001500</td>
-      <td>0.005802</td>
-      <td>-0.002387</td>
-      <td>-0.000567</td>
-      <td>-0.010534</td>
-      <td>-0.001426</td>
-      <td>0.000633</td>
-      <td>-0.001631</td>
-      <td>-0.001141</td>
-      <td>-0.001271</td>
-      <td>0.000582</td>
-      <td>-0.003330</td>
-      <td>-0.004021</td>
-      <td>-0.000952</td>
-      <td>0.0</td>
-      <td>-0.000016</td>
-      <td>-3.046160e-06</td>
-      <td>-1.626005e-07</td>
-      <td>-2.363122e-07</td>
-      <td>-6.338478e-07</td>
-      <td>-4.835607e-08</td>
-      <td>3.454434e-07</td>
-      <td>2.179852e-08</td>
-      <td>-1.481991e-08</td>
-      <td>1.601726e-07</td>
-      <td>1.307083e-06</td>
-      <td>7.355165e-08</td>
-      <td>2.433262e-07</td>
-      <td>1.322368e-06</td>
-      <td>1.143754e-07</td>
-      <td>-2.000804e-08</td>
-      <td>...</td>
-      <td>1.160152</td>
-      <td>-0.091111</td>
-      <td>0.460180</td>
-      <td>1.352625</td>
-      <td>1.144454</td>
-      <td>0.598972</td>
-      <td>1.805412</td>
-      <td>1.426298</td>
-      <td>-0.172344</td>
-      <td>0.261959</td>
-      <td>1.843682</td>
-      <td>2.028037</td>
-      <td>0.912660</td>
-      <td>0.431645</td>
-      <td>0.0</td>
-      <td>0.121477</td>
-      <td>-0.207895</td>
-      <td>0.324684</td>
-      <td>-0.041448</td>
-      <td>-0.604717</td>
-      <td>-0.136321</td>
-      <td>-0.058526</td>
-      <td>0.102491</td>
-      <td>-0.901672</td>
-      <td>-0.462106</td>
-      <td>0.566778</td>
-      <td>0.040591</td>
-      <td>-0.993579</td>
-      <td>-0.678191</td>
-      <td>0.074762</td>
-      <td>-1.277769</td>
-      <td>-1.041160</td>
-      <td>0.591766</td>
-      <td>0.484735</td>
-      <td>-0.958089</td>
-      <td>-1.668116</td>
-      <td>-0.510849</td>
-      <td>-0.025727</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>68</th>
-      <td>-0.420671</td>
-      <td>-0.155885</td>
-      <td>-0.007724</td>
-      <td>-0.015703</td>
-      <td>-0.055058</td>
-      <td>-0.028641</td>
-      <td>-0.005765</td>
-      <td>-0.003522</td>
-      <td>-0.009457</td>
-      <td>-0.005920</td>
-      <td>0.015254</td>
-      <td>-0.004500</td>
-      <td>0.000654</td>
-      <td>-0.009633</td>
-      <td>-0.006677</td>
-      <td>-0.002028</td>
-      <td>0.000350</td>
-      <td>-0.001534</td>
-      <td>-0.008704</td>
-      <td>-0.000215</td>
-      <td>-0.002462</td>
-      <td>-0.009693</td>
-      <td>-0.003551</td>
-      <td>0.0</td>
-      <td>0.000231</td>
-      <td>4.257076e-05</td>
-      <td>-5.134130e-07</td>
-      <td>1.792708e-07</td>
-      <td>3.187155e-06</td>
-      <td>9.027512e-07</td>
-      <td>-8.702277e-08</td>
-      <td>-4.177658e-08</td>
-      <td>8.902436e-08</td>
-      <td>1.009831e-07</td>
-      <td>-3.924615e-07</td>
-      <td>-2.377740e-08</td>
-      <td>9.944061e-08</td>
-      <td>1.935233e-07</td>
-      <td>4.426169e-08</td>
-      <td>-2.321988e-09</td>
-      <td>...</td>
-      <td>1.447874</td>
-      <td>-0.095355</td>
-      <td>0.495220</td>
-      <td>1.446053</td>
-      <td>0.912874</td>
-      <td>0.081189</td>
-      <td>0.056174</td>
-      <td>1.268544</td>
-      <td>0.248741</td>
-      <td>0.268951</td>
-      <td>-0.752419</td>
-      <td>0.477252</td>
-      <td>-0.872018</td>
-      <td>-0.072550</td>
-      <td>0.0</td>
-      <td>-0.133320</td>
-      <td>-0.846122</td>
-      <td>-0.944433</td>
-      <td>0.031091</td>
-      <td>-0.435373</td>
-      <td>-0.952162</td>
-      <td>-1.665273</td>
-      <td>-0.477310</td>
-      <td>0.055683</td>
-      <td>-1.106361</td>
-      <td>0.182202</td>
-      <td>-0.049772</td>
-      <td>-1.093813</td>
-      <td>-0.481836</td>
-      <td>0.256586</td>
-      <td>0.491902</td>
-      <td>-0.839939</td>
-      <td>0.041646</td>
-      <td>0.042934</td>
-      <td>0.868420</td>
-      <td>0.012729</td>
-      <td>1.000178</td>
-      <td>0.311507</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>69</th>
-      <td>0.432379</td>
-      <td>0.112794</td>
-      <td>0.010002</td>
-      <td>0.016587</td>
-      <td>0.055594</td>
-      <td>0.028310</td>
-      <td>0.005667</td>
-      <td>0.003944</td>
-      <td>0.010092</td>
-      <td>0.005203</td>
-      <td>-0.016494</td>
-      <td>0.004998</td>
-      <td>-0.003022</td>
-      <td>0.012374</td>
-      <td>0.006195</td>
-      <td>0.000845</td>
-      <td>-0.002259</td>
-      <td>0.001431</td>
-      <td>0.007795</td>
-      <td>-0.001550</td>
-      <td>0.000739</td>
-      <td>0.010690</td>
-      <td>0.003556</td>
-      <td>0.0</td>
-      <td>0.000764</td>
-      <td>8.498816e-05</td>
-      <td>-5.323530e-07</td>
-      <td>1.248699e-06</td>
-      <td>1.867609e-05</td>
-      <td>6.041827e-06</td>
-      <td>1.869367e-07</td>
-      <td>3.153289e-07</td>
-      <td>4.468949e-07</td>
-      <td>3.319391e-07</td>
-      <td>1.013002e-06</td>
-      <td>7.981873e-08</td>
-      <td>1.583297e-07</td>
-      <td>9.276458e-07</td>
-      <td>9.497467e-08</td>
-      <td>2.085551e-08</td>
-      <td>...</td>
-      <td>1.412272</td>
-      <td>-0.120817</td>
-      <td>0.372631</td>
-      <td>1.524991</td>
-      <td>1.258274</td>
-      <td>1.190961</td>
-      <td>0.948269</td>
-      <td>1.725263</td>
-      <td>0.880457</td>
-      <td>1.697255</td>
-      <td>1.121921</td>
-      <td>2.224943</td>
-      <td>0.766317</td>
-      <td>0.533288</td>
-      <td>0.0</td>
-      <td>1.556647</td>
-      <td>0.806527</td>
-      <td>0.084195</td>
-      <td>0.593485</td>
-      <td>1.446757</td>
-      <td>1.054941</td>
-      <td>-0.855537</td>
-      <td>0.261691</td>
-      <td>1.281020</td>
-      <td>-1.209881</td>
-      <td>0.331028</td>
-      <td>-0.294167</td>
-      <td>-1.672284</td>
-      <td>-0.959734</td>
-      <td>-1.198695</td>
-      <td>-0.613996</td>
-      <td>-1.645327</td>
-      <td>-0.495712</td>
-      <td>-1.536545</td>
-      <td>-0.824347</td>
-      <td>-1.661145</td>
-      <td>-0.523750</td>
-      <td>-0.378330</td>
-      <td>0.0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p>70 rows × 481 columns</p>
-</div>
-</div>
-<br />
-<br /></section>
+</section>
 <section id="creating-training-and-test-sets">
 <h2>Creating training and test sets<a class="headerlink" href="#creating-training-and-test-sets" title="Link to this heading">#</a></h2>
 <p>The code below creates a training and test set. We first split the data into
@@ -2963,12 +1976,6 @@ shuffling.</p></li>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>labels:  [1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0
- 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0]
-Shape of data torch.Size([56, 480]) number of samples - Train: 6, Test: 2
-Eyes-Open/Eyes-Closed balance, train: 0.50, test: 0.50
-</pre></div>
-</div>
 </section>
 <section id="check-labels">
 <h2>Check labels<a class="headerlink" href="#check-labels" title="Link to this heading">#</a></h2>
@@ -2980,9 +1987,6 @@ further investigation.</p>
 <span class="n">dataiter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
 <span class="n">first_item</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">dataiter</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
 <span class="n">label</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([0, 1, 1, 1, 1, 0, 1, 1, 0, 0])
 </pre></div>
 </div>
 </section>
@@ -3006,49 +2010,6 @@ and an input window size of 256 samples (2 seconds of EEG data).</p>
 <span class="p">)</span>
 
 <span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">first_item</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>==========================================================================================
-Layer (type:depth-idx)                   Output Shape              Param #
-==========================================================================================
-Sequential                               [10, 2]                   --
-├─Flatten: 1-1                           [10, 480]                 --
-├─Linear: 1-2                            [10, 100]                 48,100
-├─Linear: 1-3                            [10, 100]                 10,100
-├─Linear: 1-4                            [10, 100]                 10,100
-├─Linear: 1-5                            [10, 2]                   202
-==========================================================================================
-Total params: 68,502
-Trainable params: 68,502
-Non-trainable params: 0
-Total mult-adds (Units.MEGABYTES): 0.69
-==========================================================================================
-Input size (MB): 0.02
-Forward/backward pass size (MB): 0.02
-Params size (MB): 0.27
-Estimated Total Size (MB): 0.32
-==========================================================================================
-
-==========================================================================================
-Layer (type:depth-idx)                   Output Shape              Param #
-==========================================================================================
-Sequential                               [10, 2]                   --
-├─Flatten: 1-1                           [10, 480]                 --
-├─Linear: 1-2                            [10, 100]                 48,100
-├─Linear: 1-3                            [10, 100]                 10,100
-├─Linear: 1-4                            [10, 100]                 10,100
-├─Linear: 1-5                            [10, 2]                   202
-==========================================================================================
-Total params: 68,502
-Trainable params: 68,502
-Non-trainable params: 0
-Total mult-adds (Units.MEGABYTES): 0.69
-==========================================================================================
-Input size (MB): 0.02
-Forward/backward pass size (MB): 0.02
-Params size (MB): 0.27
-Estimated Total Size (MB): 0.32
-==========================================================================================
 </pre></div>
 </div>
 </section>
@@ -3116,14 +2077,6 @@ calculates test accuracy by comparing outputs with actual labels.</p></li>
     <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Epoch 0, Train accuracy: 0.55, Test accuracy: 0.79
-Epoch 1, Train accuracy: 0.79, Test accuracy: 0.79
-Epoch 2, Train accuracy: 0.82, Test accuracy: 0.79
-Epoch 3, Train accuracy: 0.82, Test accuracy: 0.79
-Epoch 4, Train accuracy: 0.89, Test accuracy: 0.64
-Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span>
 
 <span class="n">data_df</span> <span class="o">=</span> <span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3146,130 +2099,15 @@ Epoch 5, Train accuracy: 0.89, Test accuracy: 0.64
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train accuracy: </span><span class="si">{</span><span class="n">correct_train</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, Validation accuracy: </span><span class="si">{</span><span class="n">correct_val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000260 seconds.
-You can set `force_col_wise=true` to remove the overhead.
-[LightGBM] [Info] Total Bins 9205
-[LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
-[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=0.000000
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
-Train accuracy: 1.00, Validation accuracy: 0.86
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_importance</span>
 
 <span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_002.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_002.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;gain&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" srcset="../../../_images/sphx_glr_tutorial_feature_extractor_open_close_eye_003.png" alt="Feature importance" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;Feature importance&#39;}, xlabel=&#39;Feature importance&#39;, ylabel=&#39;Features&#39;&gt;
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.346 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.842 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />
@@ -3334,8 +2172,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
     class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-retrieval-using-eegdash">Data Retrieval Using EEGDash</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-using-braindecode">Data Preprocessing Using Braindecode</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-a-single-channel-for-one-sample">Plotting a Single Channel for One Sample</a></li>
@@ -3364,13 +2202,13 @@ Train accuracy: 1.00, Validation accuracy: 0.86
 </div>
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="../../../_sources/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -3385,8 +2223,8 @@ Train accuracy: 1.00, Validation accuracy: 0.86
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -3412,7 +2250,7 @@ Train accuracy: 1.00, Validation accuracy: 0.86
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

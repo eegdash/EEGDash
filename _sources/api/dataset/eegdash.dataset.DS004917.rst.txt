@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 53` :bdg-secondary-line:`Recordings: 874` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 24` :bdg-secondary-line:`Recordings: 24` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,16 +90,11 @@ About This Dataset
 ------------------
 
 Summary
-
 This dataset forms part of a study supported by the Social Neuroscience and Neuromodulation Laboratory of Universidad del Desarrollo, Chile.
 The full dataset is described in a submission to Scientific Data.
-
 Abstract
-
 In our daily lives, we frequently encounter decisions where the potential outcomes are unclear, leading to a state of heightened uncertainty. The complete or partial lack of knowledge regarding the probability of outcomes is called ambiguity and presents significant challenges for individuals. While recent studies have associated the level of ambiguity in decision-making with neural activity in the parietal cortex, the precise role of this brain region and its interactions with other brain regions during decision-making processes are not well known. Here, we present a comprehensive dataset detailing human decision-making under conditions of risk and ambiguity. This dataset includes data from 53 healthy volunteers aged between 18 and 31 years, consisting of structural magnetic resonance imaging (MRI: T1w, T2w, and DWI) and functional MRI (fMRI) acquired during task performance, as well as concurrent electrophysiological (EEG) recordings during inhibitory transcranial magnetic stimulation (TMS) applied over two parietal regions and the vertex. This dataset offers an opportunity to delve into the neurobiological mechanisms of decision-making in detail, highlighting the role of the parietal cortex.
-
 Additional Usage Notes
-
 - All code related to this dataset can be found on GitHub (https://github.com/neurocics/LAN_current) and and the additional data set of study are available in the free and open repository of OSF (https://osf.io/zd3g7/) (DOI: 10.17605/OSF.IO/ZD3G7). This includes sourcedata for the scanner tasks and also stimulus presentation scripts.
 
 Dataset Information
@@ -122,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004917.v1.0.1 <https://doi.org/10.18112/openneuro.ds004917.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004917>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004917>`__ | `Source URL <https://openneuro.org/datasets/ds004917/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004917>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004917>`__ | `Source URL <https://openneuro.org/datasets/ds004917>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -158,8 +153,8 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: 53
-      - Recordings: 874
+      - Subjects: 24
+      - Recordings: 24
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -180,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 37.5 GB
-      - File count: 874
+      - File count: 24
       - Format: BIDS
 
    .. grid-item-card:: License & citation

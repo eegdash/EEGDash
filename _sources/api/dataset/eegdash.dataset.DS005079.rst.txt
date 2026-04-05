@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 210` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 60` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,9 +90,7 @@ About This Dataset
 ------------------
 
 **Summary**: In this case study, a self-described practitioner of energy medicine (PEM) participated in a study, engaging in multiple (n=60) treatment and control (non-treatment) sessions under double-blind conditions.
-
 **Protocol:** Data were collected during 40 sessions over 10 days, with ten sessions of about 25 minutes daily. Each session was comprised of one file divided into five segments. First, there was a 2-minute control period where the PEM rested in the absence of cells (BaselinePre) for 2 minutes. Next, the cells (alive or control) were brought in, and the PEM conducted a 5-minute treatment of the cells while remaining still (TreatmentFirst5min). Next, the PEM performed another 5-minute treatment of the cells, but movement was allowed (Treatment 2). During a third treatment period (TreatmentMid5min), the PEM remained still while treating the cells, as in first treatment period (TreatmentLast5min). Finally, the cells were removed from the PEM's vicinity, and physiology data were collected for another 2-minute control period (BaselinePost). The PEM was fully blind to the type of cells presented to him, and cell type presentation to the PEM was randomized. The experimenter presenting the cell to the PEM was also blind to the type of cells. In 40 sessions, live cells were presented to the PEM (CellPresent condition). In 10 sessions, no cells (medium only) were presented to the PEM. In the other ten sessions, dead cells (x-rayed) were presented to the PEM (Control1 and Control2 conditions). In order to have control samples for the cellular outcomes and control for the passage of time and potential effects of the equipment, 40 matching set of cells were treated in a different location by a sham therapist (these are available in the behavioral files (BEH) as control cell measures.
-
 Data curators: Data acquired at the MD Anderson Cancer Research Center
 
 Dataset Information
@@ -115,7 +113,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds005079.v2.0.0 <https://doi.org/10.18112/openneuro.ds005079.v2.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005079>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005079>`__ | `Source URL <https://openneuro.org/datasets/ds005079/versions/2.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005079>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005079>`__ | `Source URL <https://openneuro.org/datasets/ds005079>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -152,13 +150,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 1
-      - Recordings: 210
-      - Tasks: 1
+      - Recordings: 60
+      - Tasks: 15
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 65 (60), 64 (60)
+      - Channels: 65
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -173,7 +171,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.7 GB
-      - File count: 210
+      - File count: 60
       - Format: BIDS
 
    .. grid-item-card:: License & citation

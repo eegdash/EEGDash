@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 119` :bdg-secondary-line:`Recordings: 1517` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 119` :bdg-secondary-line:`Recordings: 378` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,13 +90,11 @@ About This Dataset
 ------------------
 
 This dataset, used in the analysis reported by Kochi et al., (2025), contains intracranial EEG recordings from 119 individuals who performed an auditory‑naming task. Electrode coordinates are provided in MNI‑305 space.
-
-Each EDF file is tagged for the auditory naming task with the following event codes:  
-401 – stimulus onset  
-402 – stimulus offset  
-501 – response onset  
-
-Reference: 
+Each EDF file is tagged for the auditory naming task with the following event codes:
+401 – stimulus onset
+402 – stimulus offset
+501 – response onset
+Reference:
 Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Hidenori Endo, Michael Cools, Robert Rothermel, Aimee F. Luat, Eishi Asano. Naming is Shaped by Early Facilitative and Late Compensatory Neural Interactions: An Intracranial Study of 125 Patients
 
 Dataset Information
@@ -119,7 +117,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds006234.v1.0.0 <https://doi.org/10.18112/openneuro.ds006234.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds006234>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006234>`__ | `Source URL <https://openneuro.org/datasets/ds006234/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds006234>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds006234>`__ | `Source URL <https://openneuro.org/datasets/ds006234>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,13 +154,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 119
-      - Recordings: 1517
+      - Recordings: 378
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (538), 138 (28), 136 (22), 112 (18), 140 (16), 164 (16), 134 (14), 110 (12), 150 (10), 156 (10), 142 (10), 148 (8), 130 (8), 132 (8), 144 (8), 152 (6), 84 (6), 96 (6), 118 (6), 64 (4), 58 (2)
+      - Channels: 128 (269), 138 (14), 136 (11), 112 (9), 140 (8), 164 (8), 134 (7), 110 (6), 142 (5), 156 (5), 150 (5), 132 (4), 130 (4), 148 (4), 144 (4), 152 (3), 118 (3), 96 (3), 84 (3), 64 (2), 58
       - Sampling rate (Hz): 1000.0
       - Duration (hours): 0.0
 
@@ -177,7 +175,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 43.9 GB
-      - File count: 1517
+      - File count: 378
       - Format: BIDS
 
    .. grid-item-card:: License & citation

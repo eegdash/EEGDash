@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 40` :bdg-secondary-line:`Recordings: 377` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 40` :bdg-secondary-line:`Recordings: 119` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,13 +90,9 @@ About This Dataset
 ------------------
 
 Data collection took place at Macquarie University in Sydney Australia. The study was approved by the Macquarie University Ethics Committee.
-
-We used time-resolved multivariate pattern analysis on whole-brain EEG data from people with and without vicarious touch experiences to test whether seen touch evokes overlapping neural representations with the first-hand experience of touch. Participants felt touch to the fingers (tactile trials) or watched carefully matched videos of touch to another person’s fingers (visual trials). 
-
+We used time-resolved multivariate pattern analysis on whole-brain EEG data from people with and without vicarious touch experiences to test whether seen touch evokes overlapping neural representations with the first-hand experience of touch. Participants felt touch to the fingers (tactile trials) or watched carefully matched videos of touch to another person’s fingers (visual trials).
 There were 12 runs in total, divided into four blocks of 36 trials (with alternating sets of nine tactile and nine visual trials) resulting in a total of 1728 trials (864 tactile and 864 visual). There were an additional 240 target trials (20 per run), which were excluded from analysis.
-
 Between trials there was an inter-trial-interval of 800ms. Each run lasted approximately 7-8 minutes with short breaks between blocks and runs.
-
 Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system (Biosemi, Inc.) at 2048Hz and 10-20 standard caps. Stimuli were presented using MATLAB (MathWorks) and Psychtoolbox (Brainard and Vision). The experiment presentation script, all analysis code, and stimuli are made available (see code and stimuli folder). The data is made available both in raw form (see each participant's file) and after processing (see derivatives).
 
 Dataset Information
@@ -119,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004563.v1.0.1 <https://doi.org/10.18112/openneuro.ds004563.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004563>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004563>`__ | `Source URL <https://openneuro.org/datasets/ds004563/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004563>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004563>`__ | `Source URL <https://openneuro.org/datasets/ds004563>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -156,7 +152,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 40
-      - Recordings: 377
+      - Recordings: 119
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -177,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 100.9 GB
-      - File count: 377
+      - File count: 119
       - Format: BIDS
 
    .. grid-item-card:: License & citation

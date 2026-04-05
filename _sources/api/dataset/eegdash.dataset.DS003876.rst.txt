@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 39` :bdg-secondary-line:`Recordings: 343` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 39` :bdg-secondary-line:`Recordings: 54` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 3.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,13 +92,13 @@ About This Dataset
 
 **Epilepsy Interictal Dataset**
 
-
 This dataset was updated and prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in [1] and [2].
-
 
 **Summary**
 
-
+This dataset comprises of de-identified subjects with interictal iEEG recordings possibly with sleep or awake state annotated. The subjects come from the following centers:
+- National Institute of Health (NIH)
+- Johns Hopkins Hospital (JHH)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -106,53 +106,38 @@ This dataset was updated and prepared for release as part of a manuscript by Ber
    
    **Epilepsy Interictal Dataset**
    
-   
    This dataset was updated and prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in [1] and [2].
-   
    
    **Summary**
    
-   
    This dataset comprises of de-identified subjects with interictal iEEG recordings possibly with sleep or awake state annotated. The subjects come from the following centers:
-   
    - National Institute of Health (NIH)
    - Johns Hopkins Hospital (JHH)
    - University of Miami Florida Jackson Memorial Hospital (UMF)
    
    In the actual study, there is also data from Kansas University Medical Center (KUMC), University of Pittsburgh Medical Center and Cleveland Clinic, whose data is not shared due to restrictions imposed by the centers there.
-   
    Some subjects, namely with the ``rns`` prefix in their subject ID were treated with RNS rather then surgical resection/ablation.
-   
    
    **Derivatives**
    
-   
    The processed data corresponding to the ``source-sink`` analysis and ``hfo`` comparisons are shown in the ``derivatives/`` folder. The HFO analysis consists of two folders, one is an RMS detector and the other is a Hilbert detector. See the paper for details.
-   
    
    **Ties to Other Datasets**
    
-   
    NIH ``pt1, pt2, pt3``, JHH ``jh103, jh105`` subjects are also datasets in ``https://openneuro.org/datasets/ds003029``, where the ictal snapshots are stored. These correspond to the following:
-   
    - pt1: pt01
    - pt2: pt2
    - pt3: pt3
    - jh103: jh103
    - jh105: jh105
    
-   Moreover, the cclinic subjects are used in that study, but not open-access due to data sharing limitations at Cleveland Clinic. Those ictal datasets were analyzed in https://www.nature.com/articles/s41593-021-00901-w. 
-   
+   Moreover, the cclinic subjects are used in that study, but not open-access due to data sharing limitations at Cleveland Clinic. Those ictal datasets were analyzed in https://www.nature.com/articles/s41593-021-00901-w.
    
    **References**
    
-   
    [1] Li, A., Huynh, C., Fitzgerald, Z. et al. Neural fragility as an EEG marker of the seizure onset zone. Nat Neurosci 24, 1465â1474 (2021). https://doi.org/10.1038/s41593-021-00901-w
-   
    [2] Kristin M. Gunnarsdottir, Adam Li, Rachel J. Smith, Joon-Yi Kang, Nathan E. Crone, Anna Korzeniewska, Adam Rouse, Nathaniel Cameron, Iahn Cajigas, Sara Inati, Kareem A. Zaghloul, Varina L. Boerwinkle, Sarah Wyckoff, Nirav Barot, Jorge Gonzalez-Martinez, Sridevi V. Sarma. Source-sink connectivity: a novel resting-state EEG marker of the epileptogenic zone. bioRxiv 2021.10.15.464594; doi: https://doi.org/10.1101/2021.10.15.464594
-   
    [3] Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., HÃ¶chenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896). https://doi.org/10.21105/joss.01896
-   
    [4] Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D'Ambrosio, S., David, O., â¦ Hermes, D. (2019). iEEG-BIDS, extending the Brain Imaging Data Structure specification to human intracranial electrophysiology. Scientific Data, 6, 102. https://doi.org/10.1038/s41597-019-0105-7
 
 
@@ -176,7 +161,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003876.v1.0.2 <https://doi.org/10.18112/openneuro.ds003876.v1.0.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003876>`__ | `Source URL <https://openneuro.org/datasets/ds003876/versions/1.0.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003876>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003876>`__ | `Source URL <https://openneuro.org/datasets/ds003876>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -213,14 +198,14 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 39
-      - Recordings: 343
+      - Recordings: 54
       - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 128 (20), 129 (16), 98 (8), 135 (8), 86 (8), 111 (4), 110 (4), 47 (4), 101 (4), 107 (2), 121 (2), 95 (2), 146 (2), 168 (2), 170 (2), 114 (2), 118 (2), 182 (2), 147 (2), 190 (2), 193 (2), 134 (2), 125 (2), 186 (2), 46 (2)
-      - Sampling rate (Hz): 1000.0 (50), 2000.0 (14), 999.4121105232217 (12), 1024.0 (10), 999.9999999999999 (8), 1024.5997950800408 (4), 499.7071044492829 (4), 500.0 (4), 512.0 (2)
+      - Channels: 128 (10), 129 (8), 86 (4), 135 (4), 98 (4), 111 (2), 101 (2), 47 (2), 110 (2), 182, 118, 114, 170, 168, 95, 146, 121, 107, 46, 186, 125, 134, 193, 190, 147
+      - Sampling rate (Hz): 1000.0 (25), 2000.0 (7), 999.4121105232217 (6), 1024.0 (5), 999.9999999999999 (4), 499.7071044492829 (2), 1024.5997950800408 (2), 500.0 (2), 512.0
       - Duration (hours): 0.0
 
    .. grid-item-card:: Tags
@@ -234,7 +219,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 5.0 GB
-      - File count: 343
+      - File count: 54
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
 
     <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -59,6 +59,7 @@
     <script src="../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/dataset/eegdash.dataset.DS004117';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -79,6 +80,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -90,13 +97,11 @@
   <!-- End Google Tag Manager -->
 
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
-
+  <body data-default-mode="light">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
@@ -128,7 +133,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -446,7 +451,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -847,7 +859,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005776.html">DS005776</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005777.html">DS005777</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005779.html">DS005779</a></li>
-<li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005787.html">DS005787</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005795.html">DS005795</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005810.html">DS005810</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eegdash.dataset.DS005811.html">DS005811</a></li>
@@ -1037,7 +1048,7 @@
 <p><em>Sternberg Working Memory</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (2022). <em>Sternberg Working Memory</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004117.v1.0.1">10.18112/openneuro.ds004117.v1.0.1</a></p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 23</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 601</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 2.0</span></p>
+<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 23</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 85</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 2.0</span></p>
 <p><span class="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">Metadata: Complete (100%)</span></p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
@@ -1098,83 +1109,84 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 <section id="about-this-dataset">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
 <p><strong>Modified Sternberg Working Memory Experiment</strong></p>
-<p><em>Project name:</em> EEG and working memory</p>
-<p><em>Years the project ran:</em> 2004-05</p>
-<p><em>Brief overview of experiment task:</em> The purpose of this Modified Sternberg task study was to
-explore source-resolved EEG brain dynamics associated with selectively committing a series of letters to memory,</p>
+<p><em>Project name:</em> EEG and working memory
+<em>Years the project ran:</em> 2004-05
+<em>Brief overview of experiment task:</em> The purpose of this Modified Sternberg task study was to
+explore source-resolved EEG brain dynamics associated with selectively committing a series of letters to memory,
+then after a brief maintenance period responding by button press either yes or no to the question of whether
+a presented query letter had been in the just-presented set of to-be-memorized letters.
+The task is a modified version of the classic Sternberg working memory task, with two added features:</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">View full README</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><strong>Modified Sternberg Working Memory Experiment</strong></p>
-<p class="sd-card-text"><em>Project name:</em> EEG and working memory</p>
-<p class="sd-card-text"><em>Years the project ran:</em> 2004-05</p>
-<p class="sd-card-text"><em>Brief overview of experiment task:</em> The purpose of this Modified Sternberg task study was to
+<p class="sd-card-text"><em>Project name:</em> EEG and working memory
+<em>Years the project ran:</em> 2004-05
+<em>Brief overview of experiment task:</em> The purpose of this Modified Sternberg task study was to
 explore source-resolved EEG brain dynamics associated with selectively committing a series of letters to memory,
 then after a brief maintenance period responding by button press either yes or no to the question of whether
-a presented query letter had been in the just-presented set of to-be-memorized letters.</p>
-<p class="sd-card-text">The task is a modified version of the classic Sternberg working memory task, with two added features:
+a presented query letter had been in the just-presented set of to-be-memorized letters.
+The task is a modified version of the classic Sternberg working memory task, with two added features:
 (1) interspersing the sequence of presented (black) letters to be memorized with (green) letters to be ignored,
 and (2) delivering auditory feedback on each trial as to the correctness of the participant response
-(beep = correct, buzz = incorrect).</p>
-<p class="sd-card-text"><em>Data collection:</em> Scalp EEG data were collected from 71 scalp electrode channels,
+(beep = correct, buzz = incorrect).
+<em>Data collection:</em> Scalp EEG data were collected from 71 scalp electrode channels,
 each referred to a right mastoid electrode, at a sampling rate of 250 Hz/channel within an
-analog passband of 0.1 to 100 Hz.</p>
-<p class="sd-card-text"><a href="#id1"><span class="problematic" id="id2">**</span></a>Contact person:   Julie Onton &lt;<a class="reference external" href="mailto:julieonton&#37;&#52;&#48;gmail&#46;com">julieonton<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;, ORCID#:0000-0002-5602-3557.</p>
-<p class="sd-card-text"><em>Access information:</em>  Contributed to OpenNeuro.org and NEMAR.org in BIDS format
-following annotation using HED 8.0.0 in April, 2022.</p>
-<p class="sd-card-text"><em>Independent variables:</em> Letter category (to_memorize, to_ignore);
+analog passband of 0.1 to 100 Hz.
+<strong>Contact person:   Julie Onton &lt;julieonton&#64;gmail.com&gt;, ORCID#:0000-0002-5602-3557.
+*Access information:*  Contributed to OpenNeuro.org and NEMAR.org in BIDS format
+following annotation using HED 8.0.0 in April, 2022.
+*Independent variables:* Letter category (to_memorize, to_ignore);
 numbers of presented letters to_memorize/to_ignore (3/5, 5/3, 7/1);
-probe letter category (in/not in the presented set). Note, only letters to be memorized appear as in set probe letters.</p>
-<p class="sd-card-text"><em>Dependent variables:</em>  EEG; button press response latency;  participant response (correct/incorrect).</p>
-<p class="sd-card-text"><em>Participant pool:</em> The dataset includes data collected from 23 healthy young adult subjects
-(7 male, 6 female, 11 unidentified) between the ages of 19 and 40 years of age.</p>
-<p class="sd-card-text"><em>Apparatus:</em> A Neurobehavioral Systems, Inc. EEG system running under Window98 acquired the data.
-The experiment control program was Presentation (Neurobehavioral Systems, Inc.).</p>
-<p class="sd-card-text"><em>Initial setup:</em> EEG data were collected from 71 channels (69 scalp and two periocular electrodes,
+probe letter category (in/not in the presented set). Note, only letters to be memorized appear as in set probe letters.
+*Dependent variables:*  EEG; button press response latency;  participant response (correct/incorrect).
+*Participant pool:* The dataset includes data collected from 23 healthy young adult subjects
+(7 male, 6 female, 11 unidentified) between the ages of 19 and 40 years of age.
+*Apparatus:* A Neurobehavioral Systems, Inc. EEG system running under Window98 acquired the data.
+The experiment control program was Presentation (Neurobehavioral Systems, Inc.).
+*Initial setup:* EEG data were collected from 71 channels (69 scalp and two periocular electrodes,
 all referred to right mastoid) with an analog pass band of 0.01 to 100 Hz (SA Instrumentation, San Diego).
-Input impedances were brought under 5 kOhms by careful scalp preparation.</p>
-<p class="sd-card-text">Data for subjects 1-12 was acquired at a sampling rate of 250Hz. The data for subject 14 was acquired at
-1000 Hz and the data for subjects 15-24 was a acquired using a 500 Hz sampling rate.</p>
-<p class="sd-card-text"><em>Task organization:</em>  Data was organized into runs of 25 trials each followed by a rest.
-Each block was a separate run in the BIDS dataset.</p>
-<p class="sd-card-text"><em>Task details:</em> Each trial consisted of the following sequence of events:</p>
-<p class="sd-card-text"><strong>[Trial initiation]</strong>. After a self-selected, variable delay,
+Input impedances were brought under 5 kOhms by careful scalp preparation.
+Data for subjects 1-12 was acquired at a sampling rate of 250Hz. The data for subject 14 was acquired at
+1000 Hz and the data for subjects 15-24 was a acquired using a 500 Hz sampling rate.
+*Task organization:*  Data was organized into runs of 25 trials each followed by a rest.
+Each block was a separate run in the BIDS dataset.
+*Task details:* Each trial consisted of the following sequence of events:
+**[Trial initiation]</strong>. After a self-selected, variable delay,
 the subject initiated the next trial by pressing either response button,
-triggering the reappearance of the fixation cross.</p>
-<p class="sd-card-text"><strong>[Letter sequence presentation]</strong>. In these experiments, following a 5s presentation of a central
+triggering the reappearance of the fixation cross.
+<strong>[Letter sequence presentation]</strong>. In these experiments, following a 5s presentation of a central
 fixation cross cue, a series of 8 visual letters (~2 deg of visual angle) were presented at
-screen center for 1.2s followed by a 0.2s ISI:</p>
-<ul class="simple">
-<li><p class="sd-card-text">Either 3, 5, or 7 of these were colored black.</p></li>
-<li><p class="sd-card-text">The participant was to memorize as letters in this set.</p></li>
-<li><p class="sd-card-text">The other 5, 3, or 1 letters in the sequence were colored green and participants were to ignore these.</p></li>
-<li><p class="sd-card-text">The letters were drawn without substitution from the English alphabet (omitting only A, E, I, O, and U).</p></li>
-<li><p class="sd-card-text">The presentation order of black and green letters was pseudo-random.</p></li>
-</ul>
+screen center for 1.2s followed by a 0.2s ISI:
+- Either 3, 5, or 7 of these were colored black.
+- The participant was to memorize as letters in this set.
+- The other 5, 3, or 1 letters in the sequence were colored green and participants were to ignore these.
+- The letters were drawn without substitution from the English alphabet (omitting only A, E, I, O, and U).
+- The presentation order of black and green letters was pseudo-random.</p>
 <p class="sd-card-text"><strong>[Memory maintenance]</strong>. In place of a ninth letter, a dash appeared on the screen to signal the
 beginning of a Memory Maintenance period lasting between 2 to 4 s.
-During this period subjects were to silently rehearse the identities of the memorized letters.</p>
-<p class="sd-card-text"><strong>[Memory probe]</strong>. A (red) probe letter then appeared, prompting the subject to respond by
+During this period subjects were to silently rehearse the identities of the memorized letters.
+<strong>[Memory probe]</strong>. A (red) probe letter then appeared, prompting the subject to respond by
 pressing one of two buttons (with the thumb or index finger of their dominant hand)
-to indicate whether or not the probe letter had been in the trial?s to-be-memorized letter set.</p>
-<p class="sd-card-text"><strong>[Response feedback]</strong>. An auditory feedback signal (a confirmatory beep or cautionary buzz),
+to indicate whether or not the probe letter had been in the trial?s to-be-memorized letter set.
+<strong>[Response feedback]</strong>. An auditory feedback signal (a confirmatory beep or cautionary buzz),
 then presented beginning at 400 ms after the button press, informed the subject whether their
-response was correct or incorrect. Note: responses in the task were largely correct.</p>
-<p class="sd-card-text"><strong>[Session time structure]</strong>. Each task session comprised of 3 or 4 task blocks of 25 trials each
-separated into individual run files.</p>
-<p class="sd-card-text"><strong>Experiment location</strong>:  Swartz Center for Neural Computation (SCCN), University of California San Diego, La Jolla CA (USA).</p>
-<p class="sd-card-text"><strong>Note 1</strong>: Results presented in Onton, J., Delorme, A. and Makeig, S., 2005.
-Frontal midline EEG dynamics during working memory. Neuroimage, 27(2), pp.341-356.</p>
-<p class="sd-card-text"><strong>Note 2</strong>: This paradigm is one of 20 event-related EEG task paradigms selected for replication by the EEGManyLabs project.
-For details, see <a class="reference external" href="https://psyarxiv.com/528nr/">https://psyarxiv.com/528nr/</a>. Contact: Yuri Pavlov &lt;<a class="reference external" href="mailto:pavlovug&#37;&#52;&#48;gmail&#46;com">pavlovug<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;.</p>
-<p class="sd-card-text"><strong>Note 3</strong>: Participant 5 did not have feedback events in the trials.</p>
-<p class="sd-card-text"><strong>Note 4</strong>: The code subdirectory has several auxilliary files that were produced during
+response was correct or incorrect. Note: responses in the task were largely correct.
+<strong>[Session time structure]</strong>. Each task session comprised of 3 or 4 task blocks of 25 trials each
+separated into individual run files.
+<strong>Experiment location</strong>:  Swartz Center for Neural Computation (SCCN), University of California San Diego, La Jolla CA (USA).
+<strong>Note 1</strong>: Results presented in Onton, J., Delorme, A. and Makeig, S., 2005.
+Frontal midline EEG dynamics during working memory. Neuroimage, 27(2), pp.341-356.
+<strong>Note 2</strong>: This paradigm is one of 20 event-related EEG task paradigms selected for replication by the EEGManyLabs project.
+For details, see <a class="reference external" href="https://psyarxiv.com/528nr/">https://psyarxiv.com/528nr/</a>. Contact: Yuri Pavlov &lt;<a class="reference external" href="mailto:pavlovug&#37;&#52;&#48;gmail&#46;com">pavlovug<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;.
+<strong>Note 3</strong>: Participant 5 did not have feedback events in the trials.
+<strong>Note 4</strong>: The code subdirectory has several auxilliary files that were produced during
 the curation process. The curation was done using a series of Jupyter notebooks
-that are available as run in the code/curation_notebooks subdirectory.</p>
-<p class="sd-card-text">During the running of these curation notebooks information about the status was logged
-using the HEDLogger. The output of the logging process is in code/curation_logs.</p>
-<p class="sd-card-text">Updated versions of the curation notebooks can be found at:
-<a class="github reference external" href="https://github.com/hed-standard/hed-examples/tree/main/hedcode/jupyter_notebooks/dataset_specific_processing/sternberg">hed-standard/hed-examples</a></p>
+that are available as run in the code/curation_notebooks subdirectory.
+During the running of these curation notebooks information about the status was logged
+using the HEDLogger. The output of the logging process is in code/curation_logs.
+Updated versions of the curation notebooks can be found at:
+<a class="reference external" href="https://github.com/hed-standard/hed-examples/tree/main/hedcode/jupyter_notebooks/dataset_specific_processing/sternberg">https://github.com/hed-standard/hed-examples/tree/main/hedcode/jupyter_notebooks/dataset_specific_processing/sternberg</a></p>
 </div>
 </details></section>
 <section id="dataset-information">
@@ -1204,7 +1216,7 @@ using the HEDLogger. The output of the logging process is in code/curation_logs.
 <td><p><a class="reference external" href="https://doi.org/10.18112/openneuro.ds004117.v1.0.1">doi:10.18112/openneuro.ds004117.v1.0.1</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004117">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004117">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004117/versions/1.0.1">Source URL</a></p></td>
+<td><p><a class="reference external" href="https://openneuro.org/datasets/ds004117">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=ds004117">NeMAR</a> | <a class="reference external" href="https://openneuro.org/datasets/ds004117">Source URL</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1239,7 +1251,7 @@ loading errors, etc.), please let us know!</p>
 Subjects &amp; recordings</div>
 <ul class="simple">
 <li><p class="sd-card-text">Subjects: 23</p></li>
-<li><p class="sd-card-text">Recordings: 601</p></li>
+<li><p class="sd-card-text">Recordings: 85</p></li>
 <li><p class="sd-card-text">Tasks: 1</p></li>
 </ul>
 </div>
@@ -1251,8 +1263,8 @@ Subjects &amp; recordings</div>
 <div class="sd-card-title sd-font-weight-bold docutils">
 Channels &amp; sampling rate</div>
 <ul class="simple">
-<li><p class="sd-card-text">Channels: 69 (85), 71 (85)</p></li>
-<li><p class="sd-card-text">Sampling rate (Hz): 250.0 (94), 500.0 (48), 500.059 (22), 1000.0 (6)</p></li>
+<li><p class="sd-card-text">Channels: 71</p></li>
+<li><p class="sd-card-text">Sampling rate (Hz): 250.0 (47), 500.0 (24), 500.059 (11), 1000.0 (3)</p></li>
 <li><p class="sd-card-text">Duration (hours): 0.0</p></li>
 </ul>
 </div>
@@ -1278,7 +1290,7 @@ Tags</div>
 Files &amp; format</div>
 <ul class="simple">
 <li><p class="sd-card-text">Size on disk: 5.8 GB</p></li>
-<li><p class="sd-card-text">File count: 601</p></li>
+<li><p class="sd-card-text">File count: 85</p></li>
 <li><p class="sd-card-text">Format: BIDS</p></li>
 </ul>
 </div>
@@ -1461,8 +1473,8 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1488,7 +1500,7 @@ NeMAR dataset: <a class="reference external" href="https://nemar.org/dataexplore
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
 </p></div>
       
     </div>

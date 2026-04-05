@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 4` :bdg-secondary-line:`Recordings: 99` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: meg` :bdg-secondary-line:`Subjects: 4` :bdg-secondary-line:`Recordings: 25` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,14 +90,9 @@ About This Dataset
 ------------------
 
 This dataset is a part of the data used for the study: 'Bahners B.H., Lofredi R. , Sander T., Schnitzler A., Kuhn A.A., Florin E. Deep brain stimulation device-specific artefacts in MEG recordings. 2023, submitted. doi: tba'
-
-
 Please use the latest version of the dataset.
- 
-
-For detailed information about measurement protocol please refer to doi: tba. Additional information about Neuromag Phantom measurement is provided below. 
-
-Neuromag Phantom Measurement 
+For detailed information about measurement protocol please refer to doi: tba. Additional information about Neuromag Phantom measurement is provided below.
+Neuromag Phantom Measurement
 Movement onset is recorded with an accelerometer and captured with MISC006-MISC008
 
 Dataset Information
@@ -120,7 +115,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004738.v1.0.1 <https://doi.org/10.18112/openneuro.ds004738.v1.0.1>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004738>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004738>`__ | `Source URL <https://openneuro.org/datasets/ds004738/versions/1.0.1>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004738>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004738>`__ | `Source URL <https://openneuro.org/datasets/ds004738>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -157,13 +152,13 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 4
-      - Recordings: 99
+      - Recordings: 25
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 9 (13), 323 (13), 160 (12), 125 (12)
+      - Channels: 323 (13), 160 (12)
       - Sampling rate (Hz): 5000.0
       - Duration (hours): 0.0
 
@@ -178,7 +173,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 6.1 GB
-      - File count: 99
+      - File count: 25
       - Format: BIDS
 
    .. grid-item-card:: License & citation

@@ -11,7 +11,7 @@ DS006554
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Yaner Su (—). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
+**Citation:** Yaner Su (2025). *Social Observation EEG raw data*. `10.18112/openneuro.ds006554.v1.0.0 <https://doi.org/10.18112/openneuro.ds006554.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -212,7 +212,7 @@ Dataset Information
    * - Title
      - Social Observation EEG raw data
    * - Year
-     - —
+     - 2025
    * - Authors
      - Yaner Su
    * - License

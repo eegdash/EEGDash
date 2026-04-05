@@ -11,7 +11,7 @@ DS005574
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson (—). *The "Podcast" ECoG dataset*. `10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
+**Citation:** Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson (2024). *The "Podcast" ECoG dataset*. `10.18112/openneuro.ds005574.v1.0.2 <https://doi.org/10.18112/openneuro.ds005574.v1.0.2>`__
 
 .. rst-class:: sd-badges
 
@@ -104,7 +104,7 @@ Dataset Information
    * - Title
      - The "Podcast" ECoG dataset
    * - Year
-     - —
+     - 2024
    * - Authors
      - Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson
    * - License
@@ -155,7 +155,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 178, 138, 114, 174, 167, 205, 264, 91, 124
+      - Channels: 178, 174, 114, 138, 264, 124, 167, 91, 205
       - Sampling rate (Hz): 512.0 (8), 2048.0
       - Duration (hours): 0.0
 
@@ -169,7 +169,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 14.4 GB
+      - Size on disk: 3.2 GB
       - File count: 9
       - Format: BIDS
 

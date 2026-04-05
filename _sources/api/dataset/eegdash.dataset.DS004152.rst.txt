@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 194` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 21` :bdg-secondary-line:`Recordings: 21` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -92,51 +92,31 @@ About This Dataset
 
 **Drum Trainer**
 
-
 Twenty-one participants learned to play two drumming patterns (pattern 1: AABA, pattern 2: AAABAA) at three different tempos (fast: 150 bpm, medium: 100 bpm, slow: 60 bpm). Responses were recorded using the f and j keys on a standard keyboard. Visual feedback in the form of a coloured circle coincided with each button press and indicated whether the response was early, on time, or late. Feedback was determined by comparing the response time, relative to the previous response, to a window around the target duration. The window was adapted trial-by-trial to ensure that roughly half the outcomes were "on time".
-
-Participant 12 should be excluded from event-locked analyses due to bad triggers (trigger cable was partially disconnected).   
-
-Timing  
+Participant 12 should be excluded from event-locked analyses due to bad triggers (trigger cable was partially disconnected).
+Timing
 Repeat for 72 trials: fixation dot (until response) -> feedback circle (50 ms)
-
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
-
-   
-   **Drum Trainer**
-   
-   
-   Twenty-one participants learned to play two drumming patterns (pattern 1: AABA, pattern 2: AAABAA) at three different tempos (fast: 150 bpm, medium: 100 bpm, slow: 60 bpm). Responses were recorded using the f and j keys on a standard keyboard. Visual feedback in the form of a coloured circle coincided with each button press and indicated whether the response was early, on time, or late. Feedback was determined by comparing the response time, relative to the previous response, to a window around the target duration. The window was adapted trial-by-trial to ensure that roughly half the outcomes were "on time".
-   
-   Participant 12 should be excluded from event-locked analyses due to bad triggers (trigger cable was partially disconnected).   
-   
-   Timing  
-   Repeat for 72 trials: fixation dot (until response) -> feedback circle (50 ms)
-   
-   Condition Codes  
-   1: "Fast, pattern 1, left-hand start"  
-   2: "Fast, pattern 1, right-hand start"  
-   3: "Fast, pattern 2, left-hand start"  
-   4: "Fast, pattern 2, right-hand start"  
-   5: "Medium, pattern 1, left-hand start"  
-   6: "Medium, pattern 1, right-hand start"  
-   7: "Medium, pattern 2, left-hand start"  
-   8: "Medium, pattern 2, right-hand start"  
-   9: "Slow, pattern 1, left-hand start"  
-   10: "Slow, pattern 1, right-hand start"  
-   11: "Slow, pattern 2, left-hand start"  
-   12: "Slow, pattern 2, right-hand start"  
-   
-   Trigger Modifiers  
-   Add 0: Metronome beat (pre-block)  
-   Add 20: Ready screen (pre-block)  
-   Add 40: First response (can't be early, on time, or late)  
-   Add 60: Early response  
-   Add 80: On time response  
-   Add 100: Late response  
-   Add 120: Red X (wrong key pressed)
-
+Condition Codes
+1: "Fast, pattern 1, left-hand start"
+2: "Fast, pattern 1, right-hand start"
+3: "Fast, pattern 2, left-hand start"
+4: "Fast, pattern 2, right-hand start"
+5: "Medium, pattern 1, left-hand start"
+6: "Medium, pattern 1, right-hand start"
+7: "Medium, pattern 2, left-hand start"
+8: "Medium, pattern 2, right-hand start"
+9: "Slow, pattern 1, left-hand start"
+10: "Slow, pattern 1, right-hand start"
+11: "Slow, pattern 2, left-hand start"
+12: "Slow, pattern 2, right-hand start"
+Trigger Modifiers
+Add 0: Metronome beat (pre-block)
+Add 20: Ready screen (pre-block)
+Add 40: First response (can't be early, on time, or late)
+Add 60: Early response
+Add 80: On time response
+Add 100: Late response
+Add 120: Red X (wrong key pressed)
 
 Dataset Information
 -------------------
@@ -158,7 +138,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds004152.v1.1.2 <https://doi.org/10.18112/openneuro.ds004152.v1.1.2>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds004152>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004152>`__ | `Source URL <https://openneuro.org/datasets/ds004152/versions/1.1.2>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds004152>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds004152>`__ | `Source URL <https://openneuro.org/datasets/ds004152>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -195,7 +175,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 21
-      - Recordings: 194
+      - Recordings: 21
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -216,7 +196,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 4.8 GB
-      - File count: 194
+      - File count: 21
       - Format: BIDS
 
    .. grid-item-card:: License & citation

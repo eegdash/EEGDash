@@ -164,7 +164,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 16 (59), 20 (59)
+      - Channels: 20
       - Sampling rate (Hz): 500.0
       - Duration (hours): 0.0
 
@@ -178,7 +178,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 663.7 MB
+      - Size on disk: 663.4 MB
       - File count: 59
       - Format: BIDS
 

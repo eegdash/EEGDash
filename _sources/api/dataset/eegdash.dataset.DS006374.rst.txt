@@ -11,7 +11,7 @@ DS006374
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn, Falk Eippert (2019). *Expectation effects on repetition suppression in nociception*. `10.18112/openneuro.ds006374.v1.0.0 <https://doi.org/10.18112/openneuro.ds006374.v1.0.0>`__
+**Citation:** Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn, Falk Eippert (2025). *Expectation effects on repetition suppression in nociception*. `10.18112/openneuro.ds006374.v1.0.0 <https://doi.org/10.18112/openneuro.ds006374.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
@@ -107,7 +107,7 @@ Dataset Information
    * - Title
      - Expectation effects on repetition suppression in nociception
    * - Year
-     - 2019
+     - 2025
    * - Authors
      - Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn, Falk Eippert
    * - License
@@ -172,7 +172,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 42.7 GB
+      - Size on disk: 31.1 GB
       - File count: 358
       - Format: BIDS
 

@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 13` :bdg-secondary-line:`Recordings: 118` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 4.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 13` :bdg-secondary-line:`Recordings: 24` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 4.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -91,7 +91,7 @@ About This Dataset
 
    Introduction
 
-This experiment was designed to entrain the brain oscillations through synthetic auditory stimulation conducted on a group of elderly suffering from dementia. Recently, gamma entrainment has been proposed and shown effective in improving several symptoms of Alzheimer's Diseases (AD). The aim of this study is to investigate the effect of entrainment on brain oscillations using EEG signal recording during the auditory brain stimulation. 
+This experiment was designed to entrain the brain oscillations through synthetic auditory stimulation conducted on a group of elderly suffering from dementia. Recently, gamma entrainment has been proposed and shown effective in improving several symptoms of Alzheimer's Diseases (AD). The aim of this study is to investigate the effect of entrainment on brain oscillations using EEG signal recording during the auditory brain stimulation.
 This study was approved by the Review Board of Tehran University of Medical Sciences (Approval ID: IR.TUMS.MEDICINE.REC.1398.524) and all participants provided informed consent before participating and were free to withdraw at any time.
 
    Rest data
@@ -100,11 +100,11 @@ Before the main task, a one-minute data was recorded with open eyes for measurin
 
    Auditory stimulation
 
-Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant's ears at a distance of 50cm. The sound intensity was around -40dB within a fixed range for all participants. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for each participant. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of six trials of 40sec stimulus interleaved by five trials of 20sec rest (silence). The entire session resulted in 340sec (6*40+5*20) of recorded EEG signal. 
+Two speakers were placed in front of the participant 50cm apart from each other and directly pointed at the participant's ears at a distance of 50cm. The sound intensity was around -40dB within a fixed range for all participants. Before starting the task, the participant was asked if the volume was loud enough and the sound volume was set at a comfortable level for each participant. The auditory stimulus was a 5kHz carrier tone amplitude modulated with a 40Hz rectangular wave (40Hz On and Off cycles). Since a 40Hz audio signal cannot be easily heard, the 5KHz carrier frequency was used to render the 40Hz pulse train audible. In order to minimize the effect of the carrier sound, the duty cycle of the modulating 40Hz waveform was set to 4% (1ms of the 25ms cycle was On). The auditory stimulant was generated in MATLAB and played as a .wav file. This file consisted of six trials of 40sec stimulus interleaved by five trials of 20sec rest (silence). The entire session resulted in 340sec (6*40+5*20) of recorded EEG signal.
 
-   EEG recording and preprocessing 
+   EEG recording and preprocessing
 
-All EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 250Hz, and the impedance of the electrodes was kept under 20kOhm. 
+All EEG data were recorded using 19 monopolar channels in the standard 10/20 system referenced to the earlobes, sampled at 250Hz, and the impedance of the electrodes was kept under 20kOhm.
 Data from all the participants were preprocessed identically following Makoto's preprocessing pipeline: Highpass filtering above 1Hz; removal of the line noise; rejecting potential bad channels; interpolating rejected channels; re-referencing data to the average; Artifact Subspace Reconstruction (ASR); re-referencing data to the average again; estimating the brain source activity using independent component analysis (ICA); dipole fitting; rejecting bad dipoles (sources) for further cleaning the data. These preprocessing steps were performed using EEGLab MATLAB toolbox.
 
    Instructions
@@ -131,7 +131,7 @@ Dataset Information
    * - Citation / DOI
      - `10.18112/openneuro.ds003800.v1.0.0 <https://doi.org/10.18112/openneuro.ds003800.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003800>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003800>`__ | `Source URL <https://openneuro.org/datasets/ds003800/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003800>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003800>`__ | `Source URL <https://openneuro.org/datasets/ds003800>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -168,7 +168,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 13
-      - Recordings: 118
+      - Recordings: 24
       - Tasks: 2
 
    .. grid-item-card:: Channels & sampling rate
@@ -189,7 +189,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 189.3 MB
-      - File count: 118
+      - File count: 24
       - Format: BIDS
 
    .. grid-item-card:: License & citation

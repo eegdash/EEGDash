@@ -15,7 +15,7 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 165` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 20` :bdg-secondary-line:`Recordings: 20` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 2.0`
 
 :bdg-success:`Metadata: Complete (100%)`
 
@@ -90,9 +90,8 @@ About This Dataset
 ------------------
 
 This mobile EEG auditory attention experiment consists of 20 participants.
-In a two-competing speaker paradigm subjects either sat on a chair or walked a route indoors 
-Attention was disrupted by environmental salient eventsfrom in front of the participant 
-
+In a two-competing speaker paradigm subjects either sat on a chair or walked a route indoors
+Attention was disrupted by environmental salient eventsfrom in front of the participant
 - Lisa Straetmans (Sep, 2021)
 
 Dataset Information
@@ -115,7 +114,7 @@ Dataset Information
    * - Citation / DOI
      - `doi:10.18112/openneuro.ds003801.v1.0.0 <https://doi.org/10.18112/openneuro.ds003801.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds003801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`__ | `Source URL <https://openneuro.org/datasets/ds003801/versions/1.0.0>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds003801>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds003801>`__ | `Source URL <https://openneuro.org/datasets/ds003801>`__
 
 .. dropdown:: Copy-paste BibTeX
    :class-container: sd-shadow-sm
@@ -152,7 +151,7 @@ Technical Details
       :class-card: sd-border-1 highlight-primary
 
       - Subjects: 20
-      - Recordings: 165
+      - Recordings: 20
       - Tasks: 1
 
    .. grid-item-card:: Channels & sampling rate
@@ -173,7 +172,7 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: 1.1 GB
-      - File count: 165
+      - File count: 20
       - Format: BIDS
 
    .. grid-item-card:: License & citation

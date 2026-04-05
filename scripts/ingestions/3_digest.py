@@ -1015,57 +1015,46 @@ def extract_record(
     # ===========================================================
     ext = bids_file_path.suffix.lower()
 
-    # Helper to apply parsed metadata fields
-    def _apply_parsed(metadata):
-        nonlocal sampling_frequency, nchans, ntimes, ch_names
-        if not metadata:
-            return
-        if not sampling_frequency:
-            sampling_frequency = metadata.get("sampling_frequency")
-        if not nchans:
-            nchans = metadata.get("nchans")
-        if not ntimes:
-            ntimes = metadata.get("n_times") or metadata.get("n_samples")
-        if not ch_names:
-            ch_names = metadata.get("ch_names")
+    # Parser fallback helpers
+    _parsers = {
+        ".vhdr": lambda p: parse_vhdr_metadata(p),
+        ".snirf": lambda p: parse_snirf_metadata(p),
+        ".mefd": lambda p: parse_mef3_metadata(p),
+        ".edf": lambda p: _parse_edf_with_mne(p),
+        ".bdf": lambda p: _parse_edf_with_mne(p),
+        ".set": lambda p: parse_set_metadata(p),
+    }
 
-    # VHDR (BrainVision) fallback — text parser for sfreq/nchans/ch_names,
-    # then MNE for n_times (requires reading binary companion)
-    if (not sampling_frequency or not nchans or not ntimes or not ch_names) and ext == ".vhdr":
-        _apply_parsed(parse_vhdr_metadata(bids_file_path))
-        if not ntimes:
-            try:
-                raw = mne.io.read_raw_brainvision(
-                    str(bids_file_path), preload=False, verbose=False
-                )
-                if raw.n_times and raw.n_times > 0:
-                    ntimes = int(raw.n_times)
-                raw.close()
-            except Exception:
-                pass
+    if ext in _parsers and (not sampling_frequency or not nchans or not ntimes or not ch_names):
+        md = _parsers[ext](bids_file_path)
+        if md:
+            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
+            nchans = nchans or md.get("nchans")
+            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
+            ch_names = ch_names or md.get("ch_names")
 
-    # SNIRF (fNIRS) fallback
-    if (not sampling_frequency or not nchans or not ntimes) and ext == ".snirf":
-        _apply_parsed(parse_snirf_metadata(bids_file_path))
-
-    # MEF3 (.mefd directory) fallback
-    if (not sampling_frequency or not nchans or not ntimes) and ext == ".mefd":
-        _apply_parsed(parse_mef3_metadata(bids_file_path))
-
-    # EDF/BDF fallback using MNE
-    if (not sampling_frequency or not nchans or not ntimes) and ext in (".edf", ".bdf"):
-        _apply_parsed(_parse_edf_with_mne(bids_file_path))
+    # VHDR: also try MNE for n_times (requires binary companion)
+    if ext == ".vhdr" and not ntimes:
+        try:
+            raw = mne.io.read_raw_brainvision(
+                str(bids_file_path), preload=False, verbose=False
+            )
+            if raw.n_times and raw.n_times > 0:
+                ntimes = int(raw.n_times)
+            raw.close()
+        except Exception:
+            pass
 
     # FIF fallback using MNE
     fif_is_split = False
     fif_continuations_ok = True
-    if (not sampling_frequency or not nchans or not ntimes) and ext == ".fif":
+    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
         fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
-        _apply_parsed(fif_metadata)
-
-    # EEGLAB .set fallback
-    if (not sampling_frequency or not nchans or not ntimes) and ext == ".set":
-        _apply_parsed(parse_set_metadata(bids_file_path))
+        if fif_metadata:
+            sampling_frequency = sampling_frequency or fif_metadata.get("sampling_frequency")
+            nchans = nchans or fif_metadata.get("nchans")
+            ntimes = ntimes or fif_metadata.get("n_times")
+            ch_names = ch_names or fif_metadata.get("ch_names")
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []

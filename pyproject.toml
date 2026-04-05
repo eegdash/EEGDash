@@ -37,13 +37,13 @@ classifiers = [
 ]
 
 dependencies = [
-  "braindecode[hub]>=1.3.2",
+  "braindecode[hub]>=1.4.0",
   "eeglabio",
-  "mne", # Source overridden in [tool.uv.sources]
+  "mne>=1.11.0",
   "mne_bids>=0.18.0",
   "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
   "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
-  "pandas>=2.0,<2.2", # Pin <2.2 due to wfdb ArrowStringArray compatibility
+  "pandas",
   "pyarrow",
   "pydantic",
   "pymatreader",
@@ -63,16 +63,6 @@ required-environments = [
   "sys_platform == 'linux' and platform_machine == 'x86_64'",   # Linux 64-bit
   "sys_platform == 'win32' and platform_machine == 'AMD64'"     # Windows 64-bit
 ]
-override-dependencies = [
-  "mne>=0.0.0",  # Override braindecode's mne>=1.11.0 constraint
-  "mne-bids>=0.0.0",  # Override version constraint for git source
-]
-
-[tool.uv.sources]
-# Solve this when we release a new version of braindecode and mne-python
-braindecode = { git = "https://github.com/braindecode/braindecode.git", branch = "master" }
-mne = { git = "https://github.com/mne-tools/mne-python.git", branch = "main" }
-mne_bids = { git = "https://github.com/AmanJaiswal1503/mne-bids.git", branch = "fix/read-raw-bids-optional-task" }
 
 [project.urls]
 Homepage = "https://github.com/sccn/EEG-Dash-Data"

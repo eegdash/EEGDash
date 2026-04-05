@@ -74,6 +74,7 @@ def test_parse_fif_passes_on_split_missing_warn(fif_parser, tmp_path):
 
     mock_raw = MagicMock()
     mock_raw.info = {"sfreq": 1000.0, "ch_names": ["MEG1"]}
+    mock_raw.n_times = 5000
 
     with patch("mne.io.read_raw_fif", return_value=mock_raw) as mock_read:
         result, is_split = fif_parser(fif_path)
@@ -93,6 +94,7 @@ def test_parse_fif_detects_split_warning(fif_parser, tmp_path):
 
     mock_raw = MagicMock()
     mock_raw.info = {"sfreq": 1000.0, "ch_names": ["MEG1"]}
+    mock_raw.n_times = 5000
 
     def fake_read(*args, **kwargs):
         warnings.warn("Split raw file detected. Missing continuation not found.")

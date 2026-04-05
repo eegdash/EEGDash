@@ -2102,6 +2102,7 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
                 "datasets": data.get("datasets_total", 0),
                 "subjects": data.get("subjects_total", 0),
                 "recording": data.get("recording_total", 0),
+                "duration_hours": data.get("duration_hours", 0),
                 "modalities": data.get("modalities_total", 0),
                 "sources": data.get("sources_total", 0),
             }
@@ -2165,6 +2166,7 @@ _DATASET_COUNTER_PLACEHOLDERS = {
     "|datasets_total|": _format_counter("datasets"),
     "|subjects_total|": _format_counter("subjects"),
     "|recording_total|": _format_counter("recording"),
+    "|duration_hours|": _format_counter("duration_hours"),
     "|modalities_total|": _format_counter("modalities"),
     "|sources_total|": _format_counter("sources"),
 }

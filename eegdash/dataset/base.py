@@ -40,6 +40,7 @@ from .io import (
     _generate_vhdr_from_metadata,
     _generate_vhdr_from_sibling,
     _generate_vmrk_stub,
+    _get_optional_task_fn,
     _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
@@ -706,14 +707,34 @@ class EEGDashRaw(RawDataset):
         Uses a no-op file lock to avoid ``PermissionError`` when the dataset
         directory is read-only (e.g. shared cluster storage where mne-bids
         cannot create ``.json.lock`` files).
+
+        When ``self.bidspath.task`` is ``None`` and the installed mne-bids
+        rejects it, retries with a backported function from mne-bids
+        PR #1527.  If mne-bids already supports ``task=None`` natively,
+        the first call succeeds and no retry is needed.
         """
         with _noop_filelock():
-            return mne_bids.read_raw_bids(
-                bids_path=self.bidspath,
-                extra_params=extra_params,
-                verbose="ERROR",
-                on_ch_mismatch="rename",
-            )
+            try:
+                return mne_bids.read_raw_bids(
+                    bids_path=self.bidspath,
+                    extra_params=extra_params,
+                    verbose="ERROR",
+                    on_ch_mismatch="rename",
+                )
+            except RuntimeError as exc:
+                # mne-bids < 0.19 rejects task=None with a RuntimeError
+                # whose message contains "missing `task`".  Retry with
+                # the backported function that removes this requirement.
+                if self.bidspath.task is None and "missing `task`" in str(exc):
+                    patched_fn = _get_optional_task_fn()
+                    if patched_fn is not None:
+                        return patched_fn(
+                            bids_path=self.bidspath,
+                            extra_params=extra_params,
+                            verbose="ERROR",
+                            on_ch_mismatch="rename",
+                        )
+                raise
 
     def _download_split_fif_continuation(
         self,
@@ -961,8 +982,17 @@ class EEGDashRaw(RawDataset):
                         issues=[msg],
                     ) from first_error
 
-                # Bad record metadata (e.g. .json extension, missing task entity)
-                if "must contain" in msg and "task" in msg:
+                # Bad record metadata (e.g. .json extension, missing task entity).
+                # Match "task" in messages about required attributes, but
+                # exclude errors about other missing attributes (e.g.
+                # mne-bids 0.18.0 mentions "task" in its error template
+                # even when *subject* is the missing one).
+                if (
+                    "must contain" in msg
+                    and "task" in msg
+                    and "missing `subject`" not in msg
+                    and "missing `root`" not in msg
+                ):
                     if self.filecache:
                         logger.warning(
                             "Missing 'task' entity in BIDSPath — "

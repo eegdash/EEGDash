@@ -4,12 +4,15 @@ from .decorators import (
     FeaturePredecessor,
     PreprocessorOutputType,
     bivariate_feature,
+    metadata_perprocessor,
     multivariate_feature,
     univariate_feature,
 )
 from .extractors import (
+    AsInputOutputType,
     BasePreprocessorOutputType,
     BivariateFeature,
+    BivariateIterator,
     DirectedBivariateFeature,
     FeatureExtractor,
     MultivariateFeature,
@@ -22,6 +25,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
+    complexity_multiscale_entropy,
     complexity_sample_entropy,
     complexity_svd_entropy,
     connectivity_coherency_preprocessor,
@@ -33,6 +37,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
+    pick_channels_preprocessor,
     signal_decorrelation_time,
     signal_filter_preprocessor,
     signal_hilbert_preprocessor,
@@ -80,6 +85,7 @@ from .serialization import (
 from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
+    "AsInputOutputType",
     "BasePreprocessorOutputType",
     "FeaturesConcatDataset",
     "FeaturesDataset",
@@ -87,9 +93,11 @@ __all__ = [
     "FeaturePredecessor",
     "PreprocessorOutputType",
     "bivariate_feature",
+    "metadata_perprocessor",
     "multivariate_feature",
     "univariate_feature",
     "BivariateFeature",
+    "BivariateIterator",
     "DirectedBivariateFeature",
     "FeatureExtractor",
     "MultivariateFeature",
@@ -112,6 +120,7 @@ __all__ = [
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
+    "complexity_multiscale_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
@@ -128,6 +137,8 @@ __all__ = [
     "dimensionality_katz_fractal_dim",
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
+    # Pick
+    "pick_channels_preprocessor",
     # Signal
     "SignalOutputType",
     "signal_filter_preprocessor",

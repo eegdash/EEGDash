@@ -16,7 +16,7 @@ Datasets Catalog
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
 
 
-.. grid:: 1 2 2 4
+.. grid:: 1 2 3 5
     :gutter: 3
     :margin: 4 4 0 0
 
@@ -25,7 +25,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
         :text-align: center
 
         :octicon:`database;2em;sd-text-primary`
-        
+
         **|datasets_total|**
 
     .. grid-item-card::  Subjects
@@ -33,15 +33,23 @@ To leverage recent and ongoing advancements in large-scale computational methods
         :text-align: center
 
         :octicon:`people;2em;sd-text-secondary`
-        
+
         **|subjects_total|**
+
+    .. grid-item-card::  Duration (hours)
+        :class-card: dataset-counter-card
+        :text-align: center
+
+        :octicon:`clock;2em;sd-text-info`
+
+        **|duration_hours|**
 
     .. grid-item-card::  Modalities
         :class-card: dataset-counter-card
         :text-align: center
 
         :octicon:`pulse;2em;sd-text-success`
-        
+
         **|modalities_total|**
 
     .. grid-item-card::  Sources
@@ -49,7 +57,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
         :text-align: center
 
         :octicon:`globe;2em;sd-text-warning`
-        
+
         **|sources_total|**
 
 

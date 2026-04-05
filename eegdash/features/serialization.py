@@ -179,6 +179,34 @@ def _func_from_dict(func_dict: dict) -> FunctionType | partial:
     return func
 
 
+def _adjust_dict_types(d: dict) -> dict:
+    """Adjust a dictionary keys so they can be saved to config files.
+
+    Parameters
+    ----------
+    d : dict
+        The dictionary to adjust.
+
+    Returns
+    -------
+    dict
+        The adjusted dictionary.
+
+    """
+    dd = {}
+    for k, v in d.items():
+        # values
+        if isinstance(v, dict):
+            v = _adjust_dict_types(v)
+        # keys
+        if k == "_":
+            k = ""
+        elif isinstance(k, str) and k.lstrip("-+").isdigit():
+            k = int(k)
+        dd[k] = v
+    return dd
+
+
 def feature_extractor_from_dict(fe_dict: dict) -> FeatureExtractor:
     r"""Get a feature extractor from a dictionary.
 
@@ -207,6 +235,7 @@ def feature_extractor_from_dict(fe_dict: dict) -> FeatureExtractor:
     - Feature extractors including non-function callables are not supported.
 
     """
+    fe_dict = _adjust_dict_types(fe_dict)
     assert "feature_extractors" in fe_dict
     kwargs = {}
     if "preprocessor" in fe_dict:

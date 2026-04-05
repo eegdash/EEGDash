@@ -674,8 +674,7 @@ def fetch_chart_data_from_api(
             "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
             "dataset_created_at": timestamps.get("dataset_created_at", ""),
             "nemar_citation_count": ds.get("nemar_citation_count"),
-            # Treemap requires this field; None triggers fallback to records
-            "duration_hours_total": None,
+            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
         }
         rows.append(row)
 

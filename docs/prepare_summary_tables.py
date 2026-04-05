@@ -239,14 +239,17 @@ def save_summary_stats(df_raw: pd.DataFrame) -> None:
         pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
     )
 
-    duration_col = (
-        "total_duration_s"
-        if "total_duration_s" in df_raw.columns
-        else "total_duration"
-    )
-    duration_hours = int(
-        pd.to_numeric(df_raw.get(duration_col, 0), errors="coerce").sum() / 3600
-    )
+    # Duration may appear as total_duration_s (seconds) or duration_hours_total (hours)
+    if "duration_hours_total" in df_raw.columns:
+        duration_hours = int(
+            pd.to_numeric(df_raw["duration_hours_total"], errors="coerce").sum()
+        )
+    elif "total_duration_s" in df_raw.columns:
+        duration_hours = int(
+            pd.to_numeric(df_raw["total_duration_s"], errors="coerce").sum() / 3600
+        )
+    else:
+        duration_hours = 0
 
     summary_stats = {
         "datasets_total": len(df_raw),

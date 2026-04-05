@@ -6,9 +6,11 @@ file system operations.
 """
 
 import configparser
+import inspect
 import json
 import os
 import re
+import textwrap
 from collections import Counter
 from contextlib import contextmanager
 from difflib import SequenceMatcher
@@ -1498,6 +1500,94 @@ def _fix_negative_annotation_durations():
         yield
     finally:
         mne.Annotations.crop = _orig_crop
+
+
+# Cached state for _get_optional_task_fn().  Computed once on first use;
+# the result cannot change within a process lifetime.
+_OPTIONAL_TASK_PATCHED_FN = None  # compiled patched function, or None
+_OPTIONAL_TASK_DETECTION_DONE = False
+
+
+def _build_optional_task_patch():
+    """Build a patched ``read_raw_bids`` that allows ``task=None``.
+
+    Returns the patched function, or ``None`` if the installed mne-bids
+    already supports ``task=None`` natively.
+    """
+    import mne_bids.read as _read_mod
+
+    try:
+        src = inspect.getsource(_read_mod.read_raw_bids)
+    except (OSError, TypeError):
+        return None
+
+    if '"root", "subject", "task"' not in src:
+        return None  # Already supports task=None
+
+    # Apply the three patches from PR #1527 via source replacement:
+    # 1. Remove "task" from the required attributes list
+    # 2. Update the error message template to match
+    # 3. Guard bids_path.task.startswith("rest") against None
+    patched_src = (
+        src.replace(
+            'for required in ["root", "subject", "task"]:',
+            'for required in ["root", "subject"]:',
+        )
+        .replace(
+            '"bids_path" must contain `root`, `subject`, and `task` ',
+            '"bids_path" must contain `root` and `subject` ',
+        )
+        .replace(
+            'bids_path.task.startswith("rest")',
+            '(bids_path.task is not None and bids_path.task.startswith("rest"))',
+        )
+    )
+
+    if patched_src == src:
+        logger.warning(
+            "mne-bids task=None backport: source replacement had no effect. "
+            "The upstream source may have changed format. Skipping patch."
+        )
+        return None
+
+    # Strip decorators (e.g. @verbose) — they are already applied to
+    # the original and we must not double-apply them.
+    lines = patched_src.splitlines()
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith("def read_raw_bids"):
+            patched_src = textwrap.dedent("\n".join(lines[i:]))
+            break
+
+    # Compile in the module's namespace so all references resolve
+    local_ns = {}
+    exec(  # noqa: S102
+        compile(patched_src, _read_mod.__file__, "exec"),
+        _read_mod.__dict__,
+        local_ns,
+    )
+    return local_ns.get("read_raw_bids")
+
+
+def _get_optional_task_fn():
+    """Return a patched ``read_raw_bids`` that accepts ``task=None``.
+
+    Returns ``None`` if the installed mne-bids already supports
+    ``task=None`` natively (mne-bids >= 0.19 / PR #1527).
+
+    The detection and compilation are cached at module level so that only
+    the first call pays the ``inspect.getsource`` + ``compile`` cost.
+    """
+    global _OPTIONAL_TASK_PATCHED_FN, _OPTIONAL_TASK_DETECTION_DONE  # noqa: PLW0603
+
+    if not _OPTIONAL_TASK_DETECTION_DONE:
+        _OPTIONAL_TASK_PATCHED_FN = _build_optional_task_patch()
+        _OPTIONAL_TASK_DETECTION_DONE = True
+        if _OPTIONAL_TASK_PATCHED_FN is not None:
+            logger.info(
+                "mne-bids does not support task=None natively; "
+                "backport of PR #1527 available."
+            )
+    return _OPTIONAL_TASK_PATCHED_FN
 
 
 def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw

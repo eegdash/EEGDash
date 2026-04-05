@@ -20,19 +20,21 @@ from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from types import FunctionType
-from typing import Dict
+from typing import Dict, Iterable, Tuple
 
 import numpy as np
 from numba.core.dispatcher import Dispatcher
 
 __all__ = [
+    "AsInputOutputType",
+    "BasePreprocessorOutputType",
     "BivariateFeature",
+    "BivariateIterator",
     "DirectedBivariateFeature",
     "FeatureExtractor",
     "MultivariateFeature",
     "TrainableFeature",
     "UnivariateFeature",
-    "BasePreprocessorOutputType",
 ]
 
 
@@ -93,6 +95,36 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
     return func_dict
 
 
+def _adjust_dict_types(d: dict) -> dict:
+    """Adjust a dictionary keys so they can be saved to config files.
+
+    Parameters
+    ----------
+    d : dict
+        The dictionary to adjust.
+
+    Returns
+    -------
+    dict
+        The adjusted dictionary.
+
+    """
+    dd = {}
+    for k, v in d.items():
+        # values
+        if isinstance(v, tuple):
+            v = list(v)
+        elif isinstance(v, dict):
+            v = _adjust_dict_types(v)
+        # keys
+        if not isinstance(k, str):
+            k = str(k)
+        elif k == "":
+            k = "_"
+        dd[k] = v
+    return dd
+
+
 class BasePreprocessorOutputType(ABC):
     """An abstract class representing a type of preprocessor output.
 
@@ -126,9 +158,26 @@ class BasePreprocessorOutputType(ABC):
         r"""Call the underlying preprocessor with the provided arguments."""
         return self.preprocessor(*args, **kwargs)
 
-    def _call_metadata(self, *args, _metadata, **kwargs):
+    def _call_metadata(self, *args, _metadata: dict, **kwargs):
         r"""Call the underlying preprocessor with the provided arguments and metadata."""
         return self.preprocessor(*args, _metadata=_metadata, **kwargs)
+
+
+class AsInputOutputType(BasePreprocessorOutputType):
+    """A special class for preprocessors where the output type is the same
+    as their input type.
+
+    If used as a preprocessor predecessor, the preprocessor must not have any
+    other predecessors.
+
+    Parameters
+    ----------
+    preprocessor : callable
+        The underlying preprocessor callable.
+
+    """
+
+    pass
 
 
 class TrainableFeature(ABC):
@@ -253,7 +302,8 @@ class FeatureExtractor(TrainableFeature):
         preprocessor: Callable | None = None,
     ):
         self.preprocessor = preprocessor
-        self.feature_extractors_dict = self._validate_execution_tree(feature_extractors)
+        self._validate_execution_tree(feature_extractors)
+        self.feature_extractors_dict = feature_extractors
         self._is_trainable = self._check_is_trainable(feature_extractors)
         super().__init__()
 
@@ -270,13 +320,17 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(fe, partial):
                 self.features_kwargs[fn] = fe.keywords
 
-    def _validate_execution_tree(self, feature_extractors: dict) -> dict:
+    def _validate_execution_tree(
+        self, feature_extractors: dict, parent_type=None
+    ) -> dict:
         r"""Validate the consistency of the feature dependency graph.
 
         Parameters
         ----------
         feature_extractors : dict
             The dictionary of extractors to validate.
+        parent_type :
+            Parent preprocessor type (optional).
 
         Returns
         -------
@@ -290,34 +344,45 @@ class FeatureExtractor(TrainableFeature):
             current preprocessor.
 
         """
-        preprocessor = (
-            None
-            if self.preprocessor is None
-            else _get_underlying_func(self.preprocessor)
-        )
+        if parent_type is None:
+            preprocessor = (
+                None
+                if self.preprocessor is None
+                else _get_underlying_func(self.preprocessor)
+            )
+            pp_parent_type = getattr(preprocessor, "parent_extractor_type", [None])
+            if preprocessor is None or AsInputOutputType in pp_parent_type:
+                assert preprocessor is None or len(pp_parent_type) == 1
+                return
+            parent_type = preprocessor
+
         for fname, f in feature_extractors.items():
+            fe = None
             if isinstance(f, FeatureExtractor):
+                fe = f
                 f = f.preprocessor
             f = _get_underlying_func(f)
             pe_type = getattr(f, "parent_extractor_type", [None])
-            if preprocessor not in pe_type:
+            if fe is not None and AsInputOutputType in pe_type:
+                fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
+                continue
+            if parent_type not in pe_type:
                 is_valid_by_output_type = False
                 for pet in pe_type:
                     if (
                         inspect.isclass(pet)
                         and issubclass(pet, BasePreprocessorOutputType)
                         and pet is not BasePreprocessorOutputType
-                        and isinstance(preprocessor, pet)
+                        and isinstance(parent_type, pet)
                     ):
                         is_valid_by_output_type = True
                         break
                 if not is_valid_by_output_type:
-                    parent = getattr(preprocessor, "__name__", preprocessor)
+                    parent = getattr(parent_type, "__name__", parent_type)
                     child = getattr(f, "__name__", f)
                     raise TypeError(
                         f"Feature '{fname}: {child}' cannot be a child of {parent}"
                     )
-        return feature_extractors
 
     def _check_is_trainable(self, feature_extractors: dict) -> bool:
         r"""Scan the execution tree for components requiring training.
@@ -336,7 +401,7 @@ class FeatureExtractor(TrainableFeature):
                 return True
         return False
 
-    def preprocess(self, *x, _metadata):
+    def preprocess(self, *x, _metadata: dict):
         r"""Apply the shared preprocessor to the input data.
 
         Parameters
@@ -351,16 +416,27 @@ class FeatureExtractor(TrainableFeature):
         tuple
             The preprocessed data passed as a tuple to support multi-output
             preprocessors.
+        _metadata: dict
+            The preprocessed metadata. Only relevant for metadata preprocessors.
 
         """
         if self.preprocessor is None:
-            return (*x,)
+            z = (*x,)
         elif "_metadata" in inspect.signature(self.preprocessor).parameters:
-            return self.preprocessor(*x, _metadata=_metadata)
+            if hasattr(
+                _get_underlying_func(self.preprocessor), "metadata_preprocessor"
+            ):
+                *z, _metadata = self.preprocessor(*x, _metadata=_metadata.copy())
+                z = tuple(z)
+            else:
+                z = self.preprocessor(*x, _metadata=_metadata)
         else:
-            return self.preprocessor(*x)
+            z = self.preprocessor(*x)
+        if not isinstance(z, tuple):
+            z = (z,)
+        return z, _metadata
 
-    def __call__(self, *x, _metadata) -> dict:
+    def __call__(self, *x, _metadata: dict) -> dict:
         r"""Execute the full extraction pipeline on a batch of data.
 
         This method applies preprocessing, executes all child extractors,
@@ -390,9 +466,7 @@ class FeatureExtractor(TrainableFeature):
         if self._is_trainable:
             super().__call__()
         results_dict = dict()
-        z = self.preprocess(*x, _metadata=_metadata)
-        if not isinstance(z, tuple):
-            z = (z,)
+        z, _metadata = self.preprocess(*x, _metadata=_metadata)
         for fname, f in self.feature_extractors_dict.items():
             if (
                 isinstance(f, FeatureExtractor)
@@ -403,7 +477,7 @@ class FeatureExtractor(TrainableFeature):
                 r = f(*z)
             f_und = _get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
-                r = f_und.feature_kind(r, _ch_names=_metadata["info"]["ch_names"])
+                r = f_und.feature_kind(r, _metadata=_metadata)
             if not isinstance(fname, str) or not fname:
                 fname = getattr(f_und, "__name__", "")
             if isinstance(r, dict):
@@ -448,7 +522,7 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, TrainableFeature):
                 f.clear()
 
-    def partial_fit(self, *x, y=None, _metadata):
+    def partial_fit(self, *x, y=None, _metadata: dict):
         r"""Propagate partial fitting to all trainable children.
 
         Parameters
@@ -463,9 +537,7 @@ class FeatureExtractor(TrainableFeature):
         """
         if not self._is_trainable:
             return
-        z = self.preprocess(*x, _metadata=_metadata)
-        if not isinstance(z, tuple):
-            z = (z,)
+        z, _metadata = self.preprocess(*x, _metadata=_metadata)
         for f in self.feature_extractors_dict.values():
             f = _get_underlying_func(f)
             if isinstance(f, TrainableFeature):
@@ -515,7 +587,7 @@ class FeatureExtractor(TrainableFeature):
             else:
                 fes[k] = _func_to_dict(v)
         fe_dict["feature_extractors"] = fes
-        return fe_dict
+        return _adjust_dict_types(fe_dict)
 
     def to_json(self, path: str | Path):
         r"""Dumps the feature extractor to a json file.
@@ -599,6 +671,49 @@ class FeatureExtractor(TrainableFeature):
             )
 
 
+class BivariateIterator:
+    r"""Pairs iterator for iterating pairs of channels.
+
+    Parameters
+    ----------
+    pairs : Iterable[tuple[int, int]] | int
+        If an iterable of tuples is given, it represents the channel index
+        pairs to iterate
+        If an integer ``n`` is given, iterate through all unique pairs
+        out of ``n`` channels.
+    directed : bool
+        If an integer was given in ``pairs``, this parameter controls whether
+        all directed pairs should be iterated.
+        Otherwise this parameter is ignored.
+        Default is False.
+
+    """
+
+    def __init__(self, pairs: Iterable[Tuple[int, int]] | int, directed=False):
+        if isinstance(pairs, int):
+            if not directed:
+                pairs = list(zip(*np.triu_indices(pairs, 1)))
+            else:
+                pairs = list(zip(*np.triu_indices(pairs, 1))) + list(
+                    zip(*np.tril_indices(pairs, -1))
+                )
+        self.pairs = pairs
+
+    def get_pair_iterators(self) -> tuple[np.ndarray, np.ndarray]:
+        r"""Get indices for pairs of channels.
+
+        Computes the upper triangle indices of an (n, n) matrix,
+        excluding the diagonal.
+
+        Returns
+        -------
+        tuple of ndarray
+            The row and column indices for the unique pairs.
+
+        """
+        return tuple((np.array(x) for x in zip(*self.pairs)))
+
+
 class MultivariateFeature:
     r"""Logic wrapper for features that operate on one or more EEG channels.
 
@@ -614,17 +729,15 @@ class MultivariateFeature:
 
     """
 
-    def __call__(
-        self, x: np.ndarray, _ch_names: list[str] | None = None
-    ) -> dict | np.ndarray:
+    def __call__(self, x: np.ndarray, _metadata: dict) -> dict | np.ndarray:
         r"""Convert a raw feature array into a named dictionary.
 
         Parameters
         ----------
         x : numpy.ndarray
             The computed feature array from the extraction function.
-        _ch_names : list of str, optional
-            The list of channel names from the original recording.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -634,8 +747,7 @@ class MultivariateFeature:
             cannot be resolved.
 
         """
-        assert _ch_names is not None
-        f_channels = self.feature_channel_names(_ch_names)
+        f_channels = self.feature_channel_names(_metadata)
         if isinstance(x, dict):
             r = dict()
             for k, v in x.items():
@@ -665,7 +777,6 @@ class MultivariateFeature:
             `f_channels` is empty.
 
         """
-        assert isinstance(x, np.ndarray)
         if not f_channels:
             return {name: x} if name else x
         assert x.shape[1] == len(f_channels), f"{x.shape[1]} != {len(f_channels)}"
@@ -674,13 +785,13 @@ class MultivariateFeature:
         names = [f"{prefix}{ch}" for ch in f_channels]
         return dict(zip(names, x))
 
-    def feature_channel_names(self, ch_names: list[str]) -> list[str]:
+    def feature_channel_names(self, _metadata: dict) -> list[str]:
         r"""Generate feature-specific names based on input channels.
 
         Parameters
         ----------
-        ch_names : list of str
-            The names of the input channels.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -698,9 +809,21 @@ class UnivariateFeature(MultivariateFeature):
     Used when a single feature value is produced per channel.
     """
 
-    def feature_channel_names(self, ch_names: list[str]) -> list[str]:
-        r"""Return the channel names themselves as feature names."""
-        return ch_names
+    def feature_channel_names(self, _metadata: dict) -> list[str]:
+        r"""Return the channel names themselves as feature names.
+
+        Parameters
+        ----------
+        _metadata : dict
+            A dictionary of record and batch metadata.
+
+        Returns
+        -------
+        list of str
+            A list of channel names.
+
+        """
+        return _metadata["info"]["ch_names"]
 
 
 class BivariateFeature(MultivariateFeature):
@@ -740,13 +863,13 @@ class BivariateFeature(MultivariateFeature):
         """
         return np.triu_indices(n, 1)
 
-    def feature_channel_names(self, ch_names: list[str]) -> list[str]:
+    def feature_channel_names(self, _metadata: dict) -> list[str]:
         r"""Generate feature names for each unique pair of channels.
 
         Parameters
         ----------
-        ch_names : list of str
-            The input channel names.
+        _metadata : dict
+            A dictionary of record and batch metadata.
 
         Returns
         -------
@@ -754,6 +877,7 @@ class BivariateFeature(MultivariateFeature):
             Formatted strings representing channel pairs (e.g., 'F3<>F4').
 
         """
+        ch_names = _metadata["info"]["ch_names"]
         return [
             self.channel_pair_format.format(ch_names[i], ch_names[j])
             for i, j in zip(*self.get_pair_iterators(len(ch_names)))

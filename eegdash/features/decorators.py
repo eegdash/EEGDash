@@ -32,9 +32,10 @@ __all__ = [
     "bivariate_feature",
     "FeatureKind",
     "FeaturePredecessor",
+    "metadata_perprocessor",
     "multivariate_feature",
-    "univariate_feature",
     "PreprocessorOutputType",
+    "univariate_feature",
 ]
 
 
@@ -236,3 +237,31 @@ class PreprocessorOutputType:
                 "__doc__": preprocessor.__doc__,
             },
         )(preprocessor)
+
+
+def metadata_perprocessor(func: Callable):
+    r"""Decorator to set a feature preprocessor as a metadata preprocessor.
+
+    A metadata preprocessor must get a keyword argument named ``"_metadata"``
+    and return a copy of it as its last output argument.
+
+    Parameters
+    ----------
+    func : callable
+        The feature preprocessor function to decorate.
+
+    Returns
+    -------
+    callable
+        The decorated function with the `metadata_preprocessor` attribute set.
+
+    """
+    f = _get_underlying_func(func)
+    if "_metadata" not in inspect.signature(func).parameters:
+        raise TypeError(
+            f"{f.__name__} cannot be set as a metadata preprocessor "
+            + "because it does not get a keyword argument named "
+            + "``'_metadata'``"
+        )
+    f.metadata_preprocessor = True
+    return func

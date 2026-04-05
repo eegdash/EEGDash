@@ -27,7 +27,27 @@ __all__ = [
 ]
 
 
-def _channel_names_to_indices(channels: List[str], ch_names: List[str]):
+def _channel_names_to_indices(channels: List[str], ch_names: List[str]) -> List[int]:
+    r"""Converts a list of channel names to channel indices in another list.
+
+    Parameters
+    ----------
+    channels : List[str]
+        A list of channel names.
+    ch_names : List[str]
+        A list of existing channel names to take indices from.
+
+    Returns
+    -------
+    List[int]
+        A list of channel indices.
+
+    Raises
+    ------
+    ValueError
+        If the channel name was not found in the existing channels list.
+
+    """
     channel_idx = []
     for channel in channels:
         if channel in ch_names:
@@ -77,15 +97,3 @@ def pick_channels_preprocessor(
         y[i] = x[i].swapaxes(0, axis)[pick_idx].swapaxes(0, axis)
     _metadata["info"] = mne.pick_info(_metadata["info"], pick_idx, copy=True)
     return *y, _metadata
-
-
-@FeaturePredecessor(AsInputOutputType)
-@metadata_perprocessor
-def pick_channel_pairs(
-    *x,
-    _metadata,
-    pairs: Iterable[tuple[str, str]],
-    index: int | Iterable[int] = -1,
-    axis: int = -2,
-):
-    raise NotImplementedError()

@@ -24,6 +24,7 @@ from .signal import SIGNAL_PREDECESSORS
 __all__ = [
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
+    "complexity_multiscale_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
@@ -178,6 +179,42 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
     A = np.sum(counts_mp1 - 1, axis=-1)
     B = np.sum(counts_m - 1, axis=-1)
     return -np.log(A / B)
+
+
+@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@univariate_feature
+def complexity_multiscale_entropy(x, /, m=2, r=0.2, l_max=16):
+    r"""Calculate Multiscale Entropy (MSE).
+
+    Computes the sample entropy (SampEn) for multiple timescales (from 1
+    to ``l_max``), then calculate the integral of the SampEn as a function
+    of timescale.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal of shape (..., n_times).
+    m : int, optional
+        Embedding dimension (length of compared sequences).
+    r : float, optional
+        Tolerance threshold, expressed as a fraction of the signal
+        standard deviation.
+    l_max : int, optional
+        The maximal lag or delay between successive embedding vectors.
+
+    Returns
+    -------
+    ndarray
+        MSE values. Shape is ``x.shape[:-1]``.
+
+    """
+    samp_en = np.empty((*x.shape[:-1], l_max))
+    for l in range(l_max):
+        samp_en[..., l] = complexity_sample_entropy(
+            *complexity_entropy_preprocessor(x, m=m, r=r, l=l + 1)
+        )
+    samp_en[~np.isfinite(samp_en)] = 0
+    return np.trapezoid(samp_en, dx=1, axis=-1) / l_max
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)

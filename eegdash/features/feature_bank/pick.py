@@ -94,6 +94,6 @@ def pick_channels_preprocessor(
     pick_idx = _channel_names_to_indices(channels, _metadata["info"]["ch_names"])
     y = list(x)
     for i in index:
-        y[i] = x[i].swapaxes(0, axis)[pick_idx].swapaxes(0, axis)
+        y[i] = x[i].take(pick_idx, axis=axis)
     _metadata["info"] = mne.pick_info(_metadata["info"], pick_idx, copy=True)
     return *y, _metadata

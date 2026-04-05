@@ -55,7 +55,19 @@ SIGNAL_PREDECESSORS = [None, SignalOutputType]
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
 @PreprocessorOutputType(SignalOutputType)
 def signal_hilbert_preprocessor(x, /):
-    r"""Compute the amplitude envelope of the analytic signal."""
+    r"""Compute the amplitude envelope of the analytic signal.
+
+    Parameters
+    ----------
+    x : ndarray
+        Input signal
+
+    Returns
+    -------
+    ndarray
+        The signal envelope, with the same shape as the input.
+
+    """
     return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
 

@@ -366,11 +366,11 @@ def test_multivariate_feature_dict_input():
     from eegdash.features.extractors import UnivariateFeature
 
     uf = UnivariateFeature()
-    ch_names = ["ch1", "ch2"]
+    _metadata = {"info": {"ch_names": ["ch1", "ch2"]}}
 
     # Create dict input
     x = {"key": np.array([[1, 2], [3, 4]])}
-    result = uf(x, _ch_names=ch_names)
+    result = uf(x, _metadata=_metadata)
     assert isinstance(result, dict)
 
 
@@ -379,21 +379,11 @@ def test_bivariate_feature_channel_names():
     from eegdash.features.extractors import BivariateFeature
 
     bf = BivariateFeature()
-    ch_names = ["A", "B", "C"]
-    result = bf.feature_channel_names(ch_names)
+    _metadata = {"info": {"ch_names": ["A", "B", "C"]}}
+    result = bf.feature_channel_names(_metadata=_metadata)
     # Should have 3 pairs: A<>B, A<>C, B<>C
     assert len(result) == 3
     assert "A<>B" in result
-
-
-def test_directed_bivariate_feature():
-    """Test DirectedBivariateFeature pair iterators."""
-    from eegdash.features.extractors import DirectedBivariateFeature
-
-    dbf = DirectedBivariateFeature()
-    result = dbf.get_pair_iterators(3)
-    # Should have 6 directed pairs for 3 channels
-    assert len(result) == 2
 
 
 def test_feature_extractor_clear_non_trainable():

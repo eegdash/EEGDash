@@ -2,7 +2,6 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
-import pytest
 
 from eegdash.features.extractors import (
     FeatureExtractor,
@@ -91,8 +90,6 @@ def test_utils_gaps(features_dataset):
     )
 
     mv = MultivariateFeature()
-    with pytest.raises(AssertionError):
-        mv(np.array([1]))  # _ch_names is None
 
     # 309-316: _array_to_dict
     mv._array_to_dict(np.array([1]), [])
@@ -146,7 +143,7 @@ def test_utils_gaps(features_dataset):
     def f_kind(x):
         return x
 
-    f_kind.feature_kind = lambda r, _ch_names: r
+    f_kind.feature_kind = lambda r, _metadata: r
     f_kind.parent_extractor_type = [None]
     fe_kind = FeatureExtractor({"f": f_kind})
     fe_kind(
@@ -190,7 +187,7 @@ def test_utils_gaps(features_dataset):
 
     # 296-302, 312-316: MultivariateFeature branches
     mv._ch_names = ["ch1"]
-    mv(np.array([[[1.0]]]), _ch_names=["ch1"])
+    mv(np.array([[[1.0]]]), _metadata={"info": {"ch_names": ["ch1"]}})
     mv._array_to_dict(np.array([[1.0]]), ["ch1"])
 
     # 240-243, 247-255, 259-265: loops
@@ -202,9 +199,13 @@ def test_utils_gaps(features_dataset):
     # 340, 365: feature_channel_names
     from eegdash.features.extractors import BivariateFeature, DirectedBivariateFeature
 
-    UnivariateFeature().feature_channel_names(["ch1"])
-    BivariateFeature().feature_channel_names(["ch1", "ch2"])
-    DirectedBivariateFeature().feature_channel_names(["ch1", "ch2"])
+    UnivariateFeature().feature_channel_names(_metadata={"info": {"ch_names": ["ch1"]}})
+    BivariateFeature().feature_channel_names(
+        _metadata={"info": {"ch_names": ["ch1", "ch2"]}}
+    )
+    DirectedBivariateFeature().feature_channel_names(
+        _metadata={"info": {"ch_names": ["ch1", "ch2"]}}
+    )
 
     pass
 

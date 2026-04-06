@@ -361,6 +361,7 @@ def fetch_datasets_from_api(
         Database name.
     force_refresh : bool
         If True, bypass the local cache and always fetch from the API.
+
     """
     cache_dir = get_default_cache_dir()
     cache_file = cache_dir / "dataset_summary.csv"
@@ -451,7 +452,7 @@ def fetch_datasets_from_api(
             "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
             "type of exp": cognitive_domain,  # cognitive domain only
             "Type Subject": type_subject,
-            "duration_hours_total": 0.0,  # Not available in summary endpoint
+            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
             "size_bytes": ds.get("size_bytes") or 0,
             "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
             "source": ds.get("source") or "unknown",

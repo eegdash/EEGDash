@@ -20,6 +20,7 @@ Inspired by the MOABB plotting style and hierarchical data visualizations.
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 from pathlib import Path
 from typing import Any, Literal
@@ -271,10 +272,18 @@ def generate_moabb_bubble(
         bubble_size = _get_bubble_size(duration_min_per_sub, scale)
         alpha = _get_alpha(n_sessions)
 
+        # Extra searchable metadata (matching web app search fields)
+        pathology = str(row.get("Type Subject", "") or "")
+        exp_modality = str(row.get("modality of exp", "") or "")
+        exp_type = str(row.get("type of exp", "") or "")
+
         dataset_node = {
             "name": row["dataset"],
             "title": row.get("dataset_title", "") or "",
             "modality": modality,
+            "pathology": pathology,
+            "expModality": exp_modality,
+            "expType": exp_type,
             "n_subjects": n_subjects,
             "n_sessions": n_sessions,
             "n_records": n_records,
@@ -315,6 +324,18 @@ def generate_moabb_bubble(
         )
 
     hierarchy_json = json.dumps(hierarchy)
+
+    # Encode logo as base64 data URI for portable embedding
+    _logo_candidates = [
+        Path(__file__).resolve().parent.parent / "source" / "_static" / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent / "_build" / "html" / "_static" / "eegdash_long.svg",
+    ]
+    _logo_data_uri = ""
+    for _logo_path in _logo_candidates:
+        if _logo_path.exists():
+            _logo_b64 = base64.b64encode(_logo_path.read_bytes()).decode("ascii")
+            _logo_data_uri = f"data:image/svg+xml;base64,{_logo_b64}"
+            break
 
     # Generate canvas-based HTML
     html_content = f"""<!DOCTYPE html>
@@ -449,8 +470,8 @@ def generate_moabb_bubble(
             <button id="zoom-reset" title="Reset view">&#8962;</button>
         </div>
         <div class="branding">
-            <img src="../_static/eegdash_text_v2.svg" alt="EEGDash" onerror="this.style.display='none'">
-            <span class="branding-version">EEGDash v{_eegdash_version}</span>
+            <img src="{_logo_data_uri}" alt="EEGDash" style="{'display:none' if not _logo_data_uri else ''}">
+            <span class="branding-version">v{_eegdash_version}</span>
         </div>
         <div class="hint"><b>Hover</b> to highlight &middot; <b>Scroll/buttons</b> to zoom &middot; <b>Click</b> to open &middot; <b>Click legend</b> to filter</div>
     </div>
@@ -559,6 +580,8 @@ modalityPacks.forEach(mp => {{
         if (dsNameToIdx[ds.name] === undefined) {{
             dsNameToIdx[ds.name] = allDatasets.length;
             allDatasets.push({{ name: ds.name, title: ds.title || "", modality: mod.name,
+                pathology: ds.pathology || "", expModality: ds.expModality || "",
+                expType: ds.expType || "",
                 color: ds.color, alpha: ds.alpha, url: ds.url,
                 n_subjects: ds.n_subjects, n_sessions: ds.n_sessions,
                 n_records: ds.n_records, nchans: ds.nchans, sfreq: ds.sfreq,
@@ -765,9 +788,14 @@ canvas.addEventListener("mousemove", function(e) {{
             canvas.style.cursor = "pointer";
             tooltip.style.display = "block";
             tooltip.style.borderColor = ds.color;
+            const metaTags = [ds.pathology, ds.expModality, ds.expType]
+                .filter(t => t && t !== "\u2014").map(t =>
+                    '<span style="display:inline-block;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:4px;font-size:13px;margin:1px 3px 1px 0">' + t + '</span>'
+                ).join("");
             tooltip.innerHTML =
                 '<div class="tooltip-title">' + ds.name + '</div>' +
                 '<div class="tooltip-subtitle">' + ds.title + '</div>' +
+                (metaTags ? '<div style="margin-bottom:8px">' + metaTags + '</div>' : '') +
                 '<div class="tooltip-row"><span class="tooltip-label">Subjects</span><span class="tooltip-value">' + ds.n_subjects.toLocaleString() + '</span></div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Duration/subject</span><span class="tooltip-value">' + (ds.duration_min_per_subject > 0 ? ds.duration_min_per_subject.toFixed(1) + ' min' : '\u2014') + '</span></div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Sessions</span><span class="tooltip-value">' + ds.n_sessions.toLocaleString() + '</span></div>' +
@@ -902,7 +930,9 @@ function performSearch(query) {{
 
     searchMatches = new Set();
     allDatasets.forEach((ds, i) => {{
-        if (ds.name.toLowerCase().includes(q)) searchMatches.add(i);
+        const haystack = [ds.name, ds.title, ds.modality, ds.pathology,
+                          ds.expModality, ds.expType].join(" ").toLowerCase();
+        if (haystack.includes(q)) searchMatches.add(i);
     }});
     searchResultsEl.textContent = searchMatches.size > 0 ? searchMatches.size + " found" : "No matches";
     draw();

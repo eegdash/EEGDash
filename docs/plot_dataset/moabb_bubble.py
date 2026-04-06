@@ -311,59 +311,59 @@ def generate_moabb_bubble(
             position: absolute;
             background: rgba(255,255,255,0.98);
             border: 2px solid #3b82f6;
-            border-radius: 10px;
-            padding: 14px 18px;
-            font-size: 14px;
-            line-height: 1.5;
+            border-radius: 12px;
+            padding: 18px 22px;
+            font-size: 17px;
+            line-height: 1.6;
             box-shadow: 0 6px 24px rgba(0,0,0,0.15);
             pointer-events: none;
             z-index: 1000;
-            max-width: 340px;
+            max-width: 400px;
             display: none;
         }}
-        .tooltip-title {{ font-weight: 700; font-size: 16px; color: #1f2937; margin-bottom: 2px; }}
-        .tooltip-subtitle {{ color: #6b7280; font-size: 13px; margin-bottom: 10px; }}
-        .tooltip-row {{ display: flex; justify-content: space-between; margin: 4px 0; gap: 16px; }}
-        .tooltip-label {{ color: #6b7280; font-size: 13px; }}
-        .tooltip-value {{ font-weight: 600; color: #1f2937; font-size: 13px; }}
-        .tooltip-hint {{ margin-top: 10px; padding-top: 8px; border-top: 1px solid #e5e7eb; color: #3b82f6; font-size: 12px; font-style: italic; }}
+        .tooltip-title {{ font-weight: 700; font-size: 20px; color: #1f2937; margin-bottom: 4px; }}
+        .tooltip-subtitle {{ color: #6b7280; font-size: 15px; margin-bottom: 12px; }}
+        .tooltip-row {{ display: flex; justify-content: space-between; margin: 5px 0; gap: 20px; }}
+        .tooltip-label {{ color: #6b7280; font-size: 16px; }}
+        .tooltip-value {{ font-weight: 600; color: #1f2937; font-size: 16px; }}
+        .tooltip-hint {{ margin-top: 12px; padding-top: 10px; border-top: 1px solid #e5e7eb; color: #3b82f6; font-size: 14px; font-style: italic; }}
 
         .legend {{
-            position: absolute; top: 12px; left: 12px;
+            position: absolute; top: 16px; left: 16px;
             background: rgba(255,255,255,0.95);
-            padding: 16px 20px; border-radius: 10px;
+            padding: 20px 24px; border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 15px; line-height: 1.7;
+            font-size: 18px; line-height: 1.8;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
-        .legend-title {{ font-weight: 700; margin-bottom: 6px; color: #374151; font-size: 17px; }}
-        .legend-item {{ color: #4b5563; font-size: 14px; }}
+        .legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 22px; }}
+        .legend-item {{ color: #4b5563; font-size: 17px; }}
 
         .modality-legend {{
-            position: absolute; top: 210px; left: 12px;
+            position: absolute; top: 260px; left: 16px;
             background: rgba(255,255,255,0.95);
-            padding: 12px 16px; border-radius: 10px;
+            padding: 16px 20px; border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 14px;
+            font-size: 17px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            max-height: calc(100% - 230px);
+            max-height: calc(100% - 280px);
             overflow-y: auto;
         }}
-        .modality-legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 16px; }}
-        .modality-legend-item {{ display: flex; align-items: center; margin: 6px 0; cursor: pointer; font-size: 14px; transition: opacity 0.15s; }}
+        .modality-legend-title {{ font-weight: 700; margin-bottom: 10px; color: #374151; font-size: 20px; }}
+        .modality-legend-item {{ display: flex; align-items: center; margin: 8px 0; cursor: pointer; font-size: 17px; transition: opacity 0.15s; }}
         .modality-legend-item:hover {{ opacity: 0.7; }}
         .modality-legend-item.hidden {{ opacity: 0.35; text-decoration: line-through; }}
-        .modality-swatch {{ width: 16px; height: 16px; border-radius: 50%; margin-right: 10px; border: 2px solid transparent; }}
+        .modality-swatch {{ width: 20px; height: 20px; border-radius: 50%; margin-right: 12px; border: 2px solid transparent; }}
         .modality-legend-item.hidden .modality-swatch {{ background: #ccc !important; }}
 
         .controls {{
-            position: absolute; bottom: 50px; right: 12px;
-            display: flex; flex-direction: column; gap: 4px;
+            position: absolute; bottom: 60px; right: 16px;
+            display: flex; flex-direction: column; gap: 6px;
         }}
         .controls button {{
-            width: 36px; height: 36px; border: 1px solid rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.95); border-radius: 6px;
-            font-size: 18px; cursor: pointer; color: #374151;
+            width: 44px; height: 44px; border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255,255,255,0.95); border-radius: 8px;
+            font-size: 22px; cursor: pointer; color: #374151;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             transition: background 0.15s, transform 0.1s;
         }}
@@ -371,26 +371,26 @@ def generate_moabb_bubble(
         .controls button:active {{ transform: scale(0.95); }}
 
         .search-box {{
-            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 8px;
-            background: rgba(255,255,255,0.95); padding: 8px 14px;
-            border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);
+            position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.95); padding: 12px 18px;
+            border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
         .search-box input {{
-            border: none; outline: none; font-size: 14px; width: 180px;
+            border: none; outline: none; font-size: 17px; width: 220px;
             background: transparent; color: #1f2937;
         }}
         .search-box input::placeholder {{ color: #9ca3af; }}
-        .search-icon {{ color: #6b7280; font-size: 14px; }}
-        .search-clear {{ cursor: pointer; color: #9ca3af; font-size: 16px; display: none; }}
+        .search-icon {{ color: #6b7280; font-size: 18px; }}
+        .search-clear {{ cursor: pointer; color: #9ca3af; font-size: 20px; display: none; }}
         .search-clear:hover {{ color: #6b7280; }}
-        .search-results {{ font-size: 12px; color: #6b7280; margin-left: 8px; }}
+        .search-results {{ font-size: 15px; color: #6b7280; margin-left: 10px; }}
 
         .hint {{
-            position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-            background: rgba(255,255,255,0.95); padding: 10px 20px; border-radius: 6px;
-            font-size: 14px; color: #4b5563;
+            position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+            background: rgba(255,255,255,0.95); padding: 12px 24px; border-radius: 8px;
+            font-size: 17px; color: #4b5563;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
     </style>
@@ -499,7 +499,7 @@ modalityPacks.forEach(mp => {{
         strokeColor: mod.color, strokeDash: true, modality: mod.name }});
 
     // Label position for modality title — large, bold, prominent
-    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 18, r: 0,
+    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 24, r: 0,
         label: mod.name, color: mod.color, isModality: true, modality: mod.name,
         count: mod.children.length }});
 
@@ -520,9 +520,9 @@ modalityPacks.forEach(mp => {{
         // Only label top-N datasets per modality (marked by Python)
         if (ds.showLabel && node.r > 12) {{
             const lbl = ds.name.toUpperCase();
-            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 11, r: node.r,
-                label: lbl, color: "#374151", isModality: false, modality: mod.name,
-                fontSize: Math.max(11, Math.min(14, node.r / 2.5)) }});
+            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 14, r: node.r,
+                label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
+                fontSize: Math.max(14, Math.min(20, node.r / 2)) }});
         }}
     }});
 
@@ -661,26 +661,26 @@ function draw() {{
         ctx.globalAlpha = alpha;
         if (lc.isModality) {{
             // Large bold modality title — primary visual anchor
-            ctx.font = "800 24px Inter, system-ui, sans-serif";
+            ctx.font = "800 32px Inter, system-ui, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             // White halo for contrast
             ctx.strokeStyle = "rgba(255,255,255,0.9)";
-            ctx.lineWidth = 5;
+            ctx.lineWidth = 6;
             ctx.lineJoin = "round";
             const titleText = lc.label + " (" + (lc.count || "") + ")";
             ctx.strokeText(titleText, lc.x, lc.y);
             ctx.fillStyle = lc.color;
             ctx.fillText(titleText, lc.x, lc.y);
         }} else {{
-            const fs = lc.fontSize || 12;
-            ctx.font = "600 " + fs + "px Inter, system-ui, sans-serif";
+            const fs = lc.fontSize || 14;
+            ctx.font = "700 " + fs + "px Inter, system-ui, sans-serif";
             ctx.fillStyle = lc.color;
             ctx.textAlign = "center";
             ctx.textBaseline = "top";
             // White halo for readability
-            ctx.strokeStyle = "rgba(255,255,255,0.85)";
-            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(255,255,255,0.9)";
+            ctx.lineWidth = 4;
             ctx.lineJoin = "round";
             ctx.strokeText(lc.label, lc.x, lc.y);
             ctx.fillText(lc.label, lc.x, lc.y);

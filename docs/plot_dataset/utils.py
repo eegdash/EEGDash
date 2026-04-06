@@ -194,11 +194,11 @@ def _get_eegdash_version() -> str:
 
 _BRANDING_CSS = """\
 .eegdash-branding {
-    position: fixed; bottom: 12px; left: 12px; z-index: 9999;
+    position: relative; margin: 4px 0 0 60px; z-index: 9999;
     display: flex; align-items: center; gap: 8px; opacity: 0.7;
 }
-.eegdash-branding img { height: 28px; }
-.eegdash-branding span { font-size: 13px; color: #9ca3af; font-weight: 500;
+.eegdash-branding img { height: 24px; }
+.eegdash-branding span { font-size: 12px; color: #9ca3af; font-weight: 500;
     font-family: Inter, system-ui, -apple-system, sans-serif; }
 """
 

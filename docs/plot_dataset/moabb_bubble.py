@@ -54,13 +54,16 @@ MODALITY_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "EMG", "Other"]
 
 # Background colors for modality regions (semi-transparent)
 MODALITY_BG_COLORS = {
-    "EEG": "rgba(59, 130, 246, 0.08)",
-    "MEG": "rgba(168, 85, 247, 0.08)",
-    "iEEG": "rgba(6, 182, 212, 0.08)",
-    "fNIRS": "rgba(249, 115, 22, 0.08)",
-    "EMG": "rgba(16, 185, 129, 0.08)",
-    "Other": "rgba(148, 163, 184, 0.08)",
+    "EEG": "rgba(59, 130, 246, 0.06)",
+    "MEG": "rgba(168, 85, 247, 0.06)",
+    "iEEG": "rgba(6, 182, 212, 0.06)",
+    "fNIRS": "rgba(249, 115, 22, 0.06)",
+    "EMG": "rgba(16, 185, 129, 0.06)",
+    "Other": "rgba(148, 163, 184, 0.06)",
 }
+
+# Top-N datasets to label per modality (by subject count)
+TOP_LABELS_PER_MODALITY = 5
 
 
 def _get_bubble_size(records_per_subject: float, scale: float = 1.0) -> float:
@@ -71,7 +74,7 @@ def _get_bubble_size(records_per_subject: float, scale: float = 1.0) -> float:
 
 def _get_alpha(n_sessions: int) -> float:
     """Calculate bubble alpha based on number of sessions."""
-    alphas = [0.9, 0.75, 0.6, 0.45, 0.35]
+    alphas = [0.92, 0.82, 0.72, 0.60, 0.50]
     idx = min(max(0, n_sessions - 1), len(alphas) - 1)
     return alphas[idx]
 
@@ -140,8 +143,8 @@ def generate_moabb_bubble(
     *,
     color_by: Literal["modality", "type", "pathology"] = "modality",
     scale: float = 1.0,
-    width: int = 1400,
-    height: int = 900,
+    width: int = 1600,
+    height: int = 1100,
 ) -> Path:
     """Generate optimized MOABB-style circle-packing bubble plot using D3.js."""
     data = df.copy()
@@ -268,6 +271,13 @@ def generate_moabb_bubble(
         }
         modality_groups[modality].append(dataset_node)
 
+    # Mark the top-N datasets per modality for labeling (by subject count)
+    for modality, nodes in modality_groups.items():
+        sorted_by_subjects = sorted(nodes, key=lambda d: d["n_subjects"], reverse=True)
+        top_names = {d["name"] for d in sorted_by_subjects[:TOP_LABELS_PER_MODALITY]}
+        for node in nodes:
+            node["showLabel"] = node["name"] in top_names
+
     ordered_modalities = [m for m in MODALITY_ORDER if m in modality_groups]
     ordered_modalities += [m for m in modality_groups if m not in ordered_modalities]
 
@@ -321,29 +331,29 @@ def generate_moabb_bubble(
         .legend {{
             position: absolute; top: 12px; left: 12px;
             background: rgba(255,255,255,0.95);
-            padding: 14px 18px; border-radius: 10px;
+            padding: 16px 20px; border-radius: 10px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 14px; line-height: 1.7;
+            font-size: 15px; line-height: 1.7;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
-        .legend-title {{ font-weight: 700; margin-bottom: 6px; color: #374151; font-size: 15px; }}
-        .legend-item {{ color: #4b5563; font-size: 13px; }}
+        .legend-title {{ font-weight: 700; margin-bottom: 6px; color: #374151; font-size: 17px; }}
+        .legend-item {{ color: #4b5563; font-size: 14px; }}
 
         .modality-legend {{
-            position: absolute; top: 200px; left: 12px;
+            position: absolute; top: 210px; left: 12px;
             background: rgba(255,255,255,0.95);
-            padding: 10px 14px; border-radius: 10px;
+            padding: 12px 16px; border-radius: 10px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 13px;
+            font-size: 14px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            max-height: calc(100% - 220px);
+            max-height: calc(100% - 230px);
             overflow-y: auto;
         }}
-        .modality-legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 15px; }}
-        .modality-legend-item {{ display: flex; align-items: center; margin: 5px 0; cursor: pointer; font-size: 13px; transition: opacity 0.15s; }}
+        .modality-legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 16px; }}
+        .modality-legend-item {{ display: flex; align-items: center; margin: 6px 0; cursor: pointer; font-size: 14px; transition: opacity 0.15s; }}
         .modality-legend-item:hover {{ opacity: 0.7; }}
         .modality-legend-item.hidden {{ opacity: 0.35; text-decoration: line-through; }}
-        .modality-swatch {{ width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; border: 2px solid transparent; }}
+        .modality-swatch {{ width: 16px; height: 16px; border-radius: 50%; margin-right: 10px; border: 2px solid transparent; }}
         .modality-legend-item.hidden .modality-swatch {{ background: #ccc !important; }}
 
         .controls {{
@@ -379,8 +389,8 @@ def generate_moabb_bubble(
 
         .hint {{
             position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-            background: rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 6px;
-            font-size: 13px; color: #4b5563;
+            background: rgba(255,255,255,0.95); padding: 10px 20px; border-radius: 6px;
+            font-size: 14px; color: #4b5563;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
     </style>
@@ -449,18 +459,22 @@ data.children.forEach(modality => {{
     modalityPacks.push({{ modality: modality, packed: pack(h), size: size, radius: size / 2 }});
 }});
 
-// ---- Simple row-based grid layout (no force simulation) ----
+// ---- Smart row-based grid layout ----
+// Sort largest first, then wrap rows based on total content width
 modalityPacks.sort((a, b) => b.size - a.size);
-const gap = 30;
+const gap = 35;
+// Compute total width to determine a sensible row-break threshold
+const totalW = modalityPacks.reduce((s, mp) => s + mp.size + gap, 0);
+const rowBreak = Math.max(totalW * 0.55, modalityPacks[0].size + gap * 2);
 let curX = gap, curY = gap, rowH = 0;
 modalityPacks.forEach(mp => {{
-    if (curX + mp.size > W * 2 && curX > gap) {{
+    if (curX + mp.size > rowBreak && curX > gap) {{
         curX = gap;
-        curY += rowH + gap + 20;
+        curY += rowH + gap + 30;
         rowH = 0;
     }}
     mp.ox = curX;
-    mp.oy = curY + 20;
+    mp.oy = curY + 30;
     curX += mp.size + gap;
     rowH = Math.max(rowH, mp.size);
 }});
@@ -484,9 +498,10 @@ modalityPacks.forEach(mp => {{
         color: mod.bgColor, alpha: 1, dsIdx: -1, isBg: true,
         strokeColor: mod.color, strokeDash: true, modality: mod.name }});
 
-    // Label position for modality title
-    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 12, r: 0,
-        label: mod.name, color: mod.color, isModality: true, modality: mod.name }});
+    // Label position for modality title — large, bold, prominent
+    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 18, r: 0,
+        label: mod.name, color: mod.color, isModality: true, modality: mod.name,
+        count: mod.children.length }});
 
     const datasetNodes = mp.packed.descendants().filter(d => d.depth === 1);
     const subjectNodes = mp.packed.descendants().filter(d => d.depth === 2);
@@ -502,12 +517,12 @@ modalityPacks.forEach(mp => {{
                 n_records: ds.n_records, nchans: ds.nchans, sfreq: ds.sfreq,
                 size: ds.size, records_per_subject: ds.records_per_subject }});
         }}
-        // Dataset label if big enough
-        if (node.r > 25 && ds.n_subjects > 3) {{
-            const lbl = ds.name.length > 10 ? ds.name.substring(0, 10).toUpperCase() : ds.name.toUpperCase();
-            labelCircles.push({{ x: ox + node.x, y: oy + node.y, r: node.r,
-                label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
-                fontSize: Math.max(9, Math.min(12, node.r / 3)) }});
+        // Only label top-N datasets per modality (marked by Python)
+        if (ds.showLabel && node.r > 12) {{
+            const lbl = ds.name.toUpperCase();
+            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 11, r: node.r,
+                label: lbl, color: "#374151", isModality: false, modality: mod.name,
+                fontSize: Math.max(11, Math.min(14, node.r / 2.5)) }});
         }}
     }});
 
@@ -557,7 +572,7 @@ function computeInitialTransform() {{
         maxY = Math.max(maxY, c.y + c.r);
     }});
     const bw = maxX - minX, bh = maxY - minY;
-    scale = Math.min(0.88 * W / bw, 0.88 * H / bh, 1);
+    scale = Math.min(0.82 * W / bw, 0.82 * H / bh, 1);
     tx = W / 2 - scale * (minX + bw / 2);
     ty = H / 2 - scale * (minY + bh / 2);
 }}
@@ -645,19 +660,26 @@ function draw() {{
         ctx.save();
         ctx.globalAlpha = alpha;
         if (lc.isModality) {{
-            ctx.font = "700 " + (16 / 1) + "px Inter, system-ui, sans-serif";
-            ctx.fillStyle = lc.color;
+            // Large bold modality title — primary visual anchor
+            ctx.font = "800 24px Inter, system-ui, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText(lc.label, lc.x, lc.y);
+            // White halo for contrast
+            ctx.strokeStyle = "rgba(255,255,255,0.9)";
+            ctx.lineWidth = 5;
+            ctx.lineJoin = "round";
+            const titleText = lc.label + " (" + (lc.count || "") + ")";
+            ctx.strokeText(titleText, lc.x, lc.y);
+            ctx.fillStyle = lc.color;
+            ctx.fillText(titleText, lc.x, lc.y);
         }} else {{
-            const fs = lc.fontSize || 10;
+            const fs = lc.fontSize || 12;
             ctx.font = "600 " + fs + "px Inter, system-ui, sans-serif";
             ctx.fillStyle = lc.color;
             ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            // Text shadow via stroke
-            ctx.strokeStyle = "white";
+            ctx.textBaseline = "top";
+            // White halo for readability
+            ctx.strokeStyle = "rgba(255,255,255,0.85)";
             ctx.lineWidth = 3;
             ctx.lineJoin = "round";
             ctx.strokeText(lc.label, lc.x, lc.y);
@@ -862,8 +884,8 @@ def main() -> None:
         "--output", type=Path, default=Path("dataset_moabb_bubble.html")
     )
     parser.add_argument("--scale", type=float, default=1.0)
-    parser.add_argument("--width", type=int, default=1400)
-    parser.add_argument("--height", type=int, default=900)
+    parser.add_argument("--width", type=int, default=1600)
+    parser.add_argument("--height", type=int, default=1100)
     args = parser.parse_args()
 
     df = pd.read_csv(args.source, index_col=False, header=0, skipinitialspace=True)

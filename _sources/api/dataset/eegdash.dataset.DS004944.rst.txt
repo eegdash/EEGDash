@@ -95,10 +95,10 @@ About This Dataset
 This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
 For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
 We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
-performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
+performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`__.
 The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
 The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
-The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`_\_.
+The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`__.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -109,11 +109,11 @@ The code to perform preprocessing and ADM encoding in BCI2000, together with the
    This dataset comprises recordings of intraoperative Electrocorticography (ECoG) from 22 patients undergoing resective epilepsy surgery.
    For each patient, the dataset is organized into pre-resection recording (referred to as SITUATION1A) and post-resection recording (referred to as SITUATION2A).
    We provide raw ECoG recordings for each patient and a derivative folder that contains all the main processing stages
-   performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
+   performed with our neuromorphic processing pipeline: `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`__.
    The pipeline preprocesses ECoG recordings in real-time and performs Asynchronous Delta Modulator (ADM) encoding with a custom BCI2000 module.
    The ADM-encoded data are processed by a hardware Spiking Neural Network (SNN). The SNN-encoded data are then used to detect epileptiform patterns in the ECoG.
-   The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`_\_.
-   In a previous publication, this dataset has been analyzed with a offline software algorithm: `https://doi.org/10.1016/j.clinph.2019.07.008 <https://doi.org/10.1016/j.clinph.2019.07.008>`_\_.
+   The code to perform preprocessing and ADM encoding in BCI2000, together with the code to detect epileptiform patterns from SNN-encoded data, are provided at `https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git <https://github.com/CostaFilippo/BCI2000_DYNAP-SE.git>`__.
+   In a previous publication, this dataset has been analyzed with a offline software algorithm: `https://doi.org/10.1016/j.clinph.2019.07.008 <https://doi.org/10.1016/j.clinph.2019.07.008>`__.
    The annotations of the epileptiform patterns detected with the offline approach are provided at: sub-\*/ses-SITUATION\*/sub-\*_ses-SITUATION\*_task-acute_events.tsv.
    The annotations of the epileptiform patterns detected with the online neuromorphic processing are provided at derivative/sub-\*/ses-SITUATION\*/sub-\*_ses-SITUATION\*_task-EV.csv.
    
@@ -126,6 +126,7 @@ The code to perform preprocessing and ADM encoding in BCI2000, together with the
        - \*task-ADM.csv
        - \*task-SNN.csv
        - \*task-EV.csv
+   
      - ses-SITUATION2A
        - \*task-BCI.dat
        - \*task-ADM.csv
@@ -142,7 +143,7 @@ The code to perform preprocessing and ADM encoding in BCI2000, together with the
    
    **Data Formats**
    
-   Details of the neuromorphic processing pipeline can be found at `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`_\_.
+   Details of the neuromorphic processing pipeline can be found at `https://doi.org/10.1038/s41467-024-47495-y <https://doi.org/10.1038/s41467-024-47495-y>`__.
    
    **task-BCI.dat**
    
@@ -166,6 +167,7 @@ The code to perform preprocessing and ADM encoding in BCI2000, together with the
     - _moduleName\_: Population (ACC_4_0; ACC_0_4), band (EEG; HFO) and module number (ch 0-7) of the neuron.
       - ACC_4_0 = ACC UP
       - ACC_0_4 = ACC DN
+   
     - _moduleId\_: Module number (0-7).
     - _channelId\_: Channel for which the SNN neuron activated.
    
@@ -250,7 +252,7 @@ Technical Details
 
       - Channels: 3 (10), 6 (6), 5 (6), 4 (5), 23 (3), 20 (2), 19 (2), 25, 22, 10, 15, 28, 27, 2, 17, 11, 21
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 3.0518518055555552
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

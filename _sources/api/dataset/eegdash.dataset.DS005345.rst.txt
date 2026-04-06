@@ -121,7 +121,7 @@ Participants underwent both EEG and fMRI experiments while listening to the Chin
    
    **Stimuli**
    
-   The stimuli were selected excerpts from the Chinese version of *Le Petit Prince* (available at `xiaowangzi.org <http://www.xiaowangzi.org/>`_\_). These audio clips were previously used in both EEG (Li et al., 2024) and fMRI (Li et al., 2022) studies.
+   The stimuli were selected excerpts from the Chinese version of *Le Petit Prince* (available at `xiaowangzi.org <http://www.xiaowangzi.org/>`__). These audio clips were previously used in both EEG (Li et al., 2024) and fMRI (Li et al., 2022) studies.
    The English and Chinese versions were enhanced with visual stimuli (e.g., images of scenes from the book) to align with the storyline. However, visual stimuli were not presented in the French version to comply with legal restrictions.
    
    **Acquisition**
@@ -140,6 +140,7 @@ Participants underwent both EEG and fMRI experiments while listening to the Chin
       - Skull stripping
       - Segmentation into gray matter (GM), white matter (WM), and cerebrospinal fluid (CSF)
       - Registration to the Montreal Neurological Institute (MNI) space using MNI152NLin2009cAsym:res-2 template.
+   
    3. Functional Preprocessing:
       - Motion correction
       - Slice-timing correction
@@ -214,7 +215,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 19.983922222222223
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

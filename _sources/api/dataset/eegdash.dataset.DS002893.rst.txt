@@ -221,7 +221,7 @@ Technical Details
 
       - Channels: 36
       - Sampling rate (Hz): 250.0 (42), 250.0293378038558 (10)
-      - Duration (hours): 0.0
+      - Duration (hours): 37.7789260473112
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

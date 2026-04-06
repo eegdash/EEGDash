@@ -137,8 +137,8 @@ If you use this data as a part of any publications, please use the following cit
    **Raw data**
    
    Raw data is stored with the Brainvision data format. This can be read in to memory with the following tools:
-   * Python: The ``pybv`` package (https://github.com/bids-standard/pybv)
-   * Matlab: BrainVision analyzer (https://www.mathworks.com/products/connections/product_detail/brainvision-analyzer.html)
+   \* Python: The ``pybv`` package (https://github.com/bids-standard/pybv)
+   \* Matlab: BrainVision analyzer (https://www.mathworks.com/products/connections/product_detail/brainvision-analyzer.html)
 
 
 Dataset Information
@@ -206,7 +206,7 @@ Technical Details
 
       - Channels: 96 (2), 118
       - Sampling rate (Hz): 1525.9 (2), 3051.76
-      - Duration (hours): 0.0
+      - Duration (hours): 0.1946988794917
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

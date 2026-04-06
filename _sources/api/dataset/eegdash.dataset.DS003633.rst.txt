@@ -118,60 +118,60 @@ the data were organized following the MEG-BIDS using MNE-BIDS toolbox.
    
    .. code-block:: text
    
-      	|---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/meg/
-      		|---sub-xx_ses-movie_coordsystem.json
-      		|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
-      		|---sub-xx_ses-movie_task-movie_run-xx_decomposition.tsv
-      		|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
-      		|---sub-xx_ses-movie_task-movie_run-xx_ica.fif.gz
-      		|---sub-xx_ses-movie_task-movie_run-xx_meg.fif
-      		|---sub-xx_ses-movie_task-movie_run-xx_meg.json
-      		|---...
-      		|---sub-xx_ses-movie_task-movie_trans.fif
+        |---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/meg/
+          |---sub-xx_ses-movie_coordsystem.json
+          |---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
+          |---sub-xx_ses-movie_task-movie_run-xx_decomposition.tsv
+          |---sub-xx_ses-movie_task-movie_run-xx_events.tsv
+          |---sub-xx_ses-movie_task-movie_run-xx_ica.fif.gz
+          |---sub-xx_ses-movie_task-movie_run-xx_meg.fif
+          |---sub-xx_ses-movie_task-movie_run-xx_meg.json
+          |---...
+          |---sub-xx_ses-movie_task-movie_trans.fif
    
    *the pre-processed MRI data*
    The preprocessed MRI volume, reconstructed surface, and other associations including transformation files are hosted here
    
    .. code-block:: text
    
-      	|---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/anat/
-      		|---sub-xx_ses-movie_desc-preproc_T1w.nii.gz
-      		|---sub-xx_ses-movie_hemi-L_inflated.surf.gii
-      		|---sub-xx_ses-movie_hemi-L_midthickness.surf.gii
-      		|---sub-xx_ses-movie_hemi-L_pial.surf.gii
-      		|---sub-xx_ses-movie_hemi-L_smoothwm.surf.gii
-      		|---sub-xx_ses-movie_hemi-R_inflated.surf.gii
-      		|---sub-xx_ses-movie_hemi-R_midthickness.surf.gii
-      		|---sub-xx_ses-movie_hemi-R_pial.surf.gii
-      		|---sub-xx_ses-movie_hemi-R_smoothwm.surf.gii
-      		|---sub-xx_ses-movie_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz
-      		|---sub-xx_ses-movie_space-MNI152NLin6Asym_desc-preproc_T1w.nii.gz
-      		|---...
+        |---./derivatives/preproc_meg-mne_mri-fmriprep/sub-xx/ses-movie/anat/
+          |---sub-xx_ses-movie_desc-preproc_T1w.nii.gz
+          |---sub-xx_ses-movie_hemi-L_inflated.surf.gii
+          |---sub-xx_ses-movie_hemi-L_midthickness.surf.gii
+          |---sub-xx_ses-movie_hemi-L_pial.surf.gii
+          |---sub-xx_ses-movie_hemi-L_smoothwm.surf.gii
+          |---sub-xx_ses-movie_hemi-R_inflated.surf.gii
+          |---sub-xx_ses-movie_hemi-R_midthickness.surf.gii
+          |---sub-xx_ses-movie_hemi-R_pial.surf.gii
+          |---sub-xx_ses-movie_hemi-R_smoothwm.surf.gii
+          |---sub-xx_ses-movie_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz
+          |---sub-xx_ses-movie_space-MNI152NLin6Asym_desc-preproc_T1w.nii.gz
+          |---...
    
    the FreeSurfer surface data, the high-resolution head surface and the MRI-fiducials are provided here
    
    .. code-block:: text
    
-      	|---./derivatives/preproc_meg-mne_mri-fmriprep/sourcedata/
-      		|---freesurfer
-      		    |---sub-xx
-      		    |---...
+        |---./derivatives/preproc_meg-mne_mri-fmriprep/sourcedata/
+          |---freesurfer
+              |---sub-xx
+              |---...
    
    *the raw data*
    
    .. code-block:: text
    
-      	|---./sub-xx/ses-movie/
-      		|---meg/
-      		|	|---sub-xx_ses-movie_coordsystem.json
-      		|	|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
-      		|	|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
-      		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.ds
-      		|	|---sub-xx_ses-movie_task-movie_run-xx_meg.json
-      		|	|---...
-      		|---anat/
-      			|---sub-xx_ses-movie_T1w.json
-      			|---sub-xx_ses-movie_T1w.nii.gz
+        |---./sub-xx/ses-movie/
+          |---meg/
+          |	|---sub-xx_ses-movie_coordsystem.json
+          |	|---sub-xx_ses-movie_task-movie_run-xx_channels.tsv
+          |	|---sub-xx_ses-movie_task-movie_run-xx_events.tsv
+          |	|---sub-xx_ses-movie_task-movie_run-xx_meg.ds
+          |	|---sub-xx_ses-movie_task-movie_run-xx_meg.json
+          |	|---...
+          |---anat/
+            |---sub-xx_ses-movie_T1w.json
+            |---sub-xx_ses-movie_T1w.nii.gz
 
 
 Dataset Information
@@ -239,7 +239,7 @@ Technical Details
 
       - Channels: 409 (89), 378 (7)
       - Sampling rate (Hz): 600.0 (89), 1200.0 (7)
-      - Duration (hours): 0.0
+      - Duration (hours): 21.97826087962963
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

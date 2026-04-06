@@ -93,7 +93,7 @@ About This Dataset
 **Emotion Processing and Regulation Task (Static Stimuli) — tDCS‑EEG Dataset**
 
 This repository provides EEG recordings and behavioral data from the \**Emotion Processing and Regulation**task conducted with \**transcranial direct current stimulation (tDCS)*\*.
-*\*Preregistration:* `https://osf.io/qdp3w <https://osf.io/qdp3w>`_\_
+\*\\*Preregistration:\* `https://osf.io/qdp3w <https://osf.io/qdp3w>`__
 
 *** Preprint: https://osf.io/qtm8r**
 
@@ -107,7 +107,7 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    **Emotion Processing and Regulation Task (Static Stimuli) — tDCS‑EEG Dataset**
    
    This repository provides EEG recordings and behavioral data from the \**Emotion Processing and Regulation**task conducted with \**transcranial direct current stimulation (tDCS)*\*.
-   *\*Preregistration:* `https://osf.io/qdp3w <https://osf.io/qdp3w>`_\_
+   \*\\*Preregistration:\* `https://osf.io/qdp3w <https://osf.io/qdp3w>`__
    
    *** Preprint: https://osf.io/qtm8r**
    
@@ -115,17 +115,17 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    **Overview**
    
    Each participant took part in **two experimental sessions**:
-   * \**``ses-1``** — Sham stimulation
-   * \**``ses-2``** — Active stimulation
+   \* \**``ses-1``** — Sham stimulation
+   \* \**``ses-2``** — Active stimulation
    
    **The order of sham/active conditions was counterbalanced across participants.**
    
    
    **Participants**
    
-   * \**N = 120** right‑handed, neurologically healthy adults with normal or corrected‑to‑normal vision.
+   \* \**N = 120** right‑handed, neurologically healthy adults with normal or corrected‑to‑normal vision.
    
-   *\*Missing data:* Participant ``sub-005`` completed only ``ses-1`` due to a recording error during ``ses-2``.
+   \*\\*Missing data:\* Participant ``sub-005`` completed only ``ses-1`` due to a recording error during ``ses-2``.
    
    **Experimental Task**
    
@@ -138,35 +138,37 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    **Electrode Montage**
    
    Stimulation was targeted to the dorsolateral prefrontal cortex (dlPFC) in two alternative montages:
-   * \**Right dlPFC stimulation**
-     *\*Anode:* \**F4**
-     *\*Returns:* \**FP2, FZ, FC2, FC6**
-   * \**Left dlPFC stimulation**
-     *\*Anode:* \**F3**
-     *\*Returns:* \**FP1, FZ, FC1, FC5**
+   \* \**Right dlPFC stimulation**
+     \*\\*Anode:\* \**F4**
+     \*\\*Returns:\* \**FP2, FZ, FC2, FC6**
+   
+   \* \**Left dlPFC stimulation**
+     \*\\*Anode:\* \**F3**
+     \*\\*Returns:\* \**FP1, FZ, FC1, FC5**
+   
    **Electrode areas**
-   *\*Anodal:* 8 cm²
-   *\*Return:* π cm²
-   *\*Ground:* left earlobe
+   \*\\*Anodal:\* 8 cm²
+   \*\\*Return:\* π cm²
+   \*\\*Ground:\* left earlobe
    
    **Stimulation Protocol**
    
-   *\*Active:* 2 mA for 20 min (with 30 s ramp‑up)
-   *\*Sham:* only ramp‑up periods at start and end; no sustained current
-   * *Questionnaires:* After each session, participants completed the **tDCS Sensation Questionnaire**(Polish version: `https://osf.io/ufszr <https://osf.io/ufszr>`_\_) to evaluate potential side effects. Additionally, after the final session, they indicated whether they believed each session involved*real*,*sham*, or*I don’t know* stimulation to assess **blinding effectiveness*\*.
+   \*\\*Active:\* 2 mA for 20 min (with 30 s ramp‑up)
+   \*\\*Sham:\* only ramp‑up periods at start and end; no sustained current
+   \* \*Questionnaires:\* After each session, participants completed the **tDCS Sensation Questionnaire**(Polish version: `https://osf.io/ufszr <https://osf.io/ufszr>`__) to evaluate potential side effects. Additionally, after the final session, they indicated whether they believed each session involved*real*,*sham*, or*I don’t know\* stimulation to assess **blinding effectiveness*\*.
    
    **EEG Acquisition**
    
-   *\*Cap:* 64‑channel QuickCap (32  EEG electrodes used)
-   *\*Amplifier:* Neuroscan SynampsRT
-   *\*Sampling rate:* 1000 Hz
-   *\*Impedance:* kept < 10 kΩ
+   \*\\*Cap:\* 64‑channel QuickCap (32  EEG electrodes used)
+   \*\\*Amplifier:\* Neuroscan SynampsRT
+   \*\\*Sampling rate:\* 1000 Hz
+   \*\\*Impedance:\* kept < 10 kΩ
    *Active EEG electrodes (32):*
    FP1, FP2, F7, F3, FZ, F4, F8, FT7, FC3, FCZ, FC4, FT8,
    T7, C3, CZ, C4, T8, M1, TP7, CP3, CPZ, CP4, TP8, M2,
    P7, P3, PZ, P4, P8, O1, OZ, O2
    **Additional sensors**
-   *\*EOG:* Horizontal (HEO) and Vertical (VEO) channels were available on the cap but \**were not connected** during recording.
+   \*\\*EOG:\* Horizontal (HEO) and Vertical (VEO) channels were available on the cap but \**were not connected** during recording.
    
    *** Physio: ECG and GSR/EDA were recorded via auxiliary channels.**
    
@@ -200,8 +202,8 @@ This repository provides EEG recordings and behavioral data from the \**Emotion 
    
    **derivatives/sideeffectsblinding_effectiveness/**
    
-   * ``side_effects_blinding_effectiveness_english.csv`` — _blinding effectiveness and side effects questionnaire
-   * ``side_effects_blinding_effectiveness_data_dictionary.csv`` — data dictionary with variable names and value coding
+   \* ``side_effects_blinding_effectiveness_english.csv`` — _blinding effectiveness and side effects questionnaire
+   \* ``side_effects_blinding_effectiveness_data_dictionary.csv`` — data dictionary with variable names and value coding
    
    **code/**
    
@@ -275,7 +277,7 @@ Technical Details
 
       - Channels: 37
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 99.5760275
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

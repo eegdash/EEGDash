@@ -96,6 +96,7 @@ software (Version 2) at Arkansas Children Nutrition Center (ACNC), Little Rock, 
 The University of Arkansas for Medical Sciences (UAMS) approved the study protocol. This research
 was supported by USDA/Agricultural Research Service Project 6026-51000-012-06S.
  Raw data files
+
 The data was acquired with a Geodesic Net Amps 300 system running Netstation 4.5.2 software using
 the 128-channel Geodesic Hydrocell Sensor Net™ (Magstim EGI., Eugene OR, USA).
 No operations have been performed on the data.
@@ -178,7 +179,7 @@ Technical Details
 
       - Channels: 128
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

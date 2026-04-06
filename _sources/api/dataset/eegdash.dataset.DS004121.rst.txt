@@ -120,7 +120,7 @@ prolonged time-on-task measurements of subjects performing a driving task in a s
    Mind Wandering extended the paradigm by adding different types of background audio
    (task relevant, non-task relevant, internal focus) and a vigilance task (identify police vehicles),
    in addition to increasing perturbation magnitude and frequency vs. baseline driving.
-   Further information is available on request from `cancta.net <https://cancta.net>`_\_.
+   Further information is available on request from `cancta.net <https://cancta.net>`__.
    
    **Methods**
    
@@ -157,7 +157,7 @@ prolonged time-on-task measurements of subjects performing a driving task in a s
    *Dependent variables:* Reaction times to perturbations, continuous performance based on vehicle log
    (steering wheel angle, lane position, heading error, etc.), reaction times to target vehicles (police),
    Task-Induced Fatigue Scale (TIFS), Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
-   Note: questionnaire data is available upon request from `cancta.net <https://cancta.net>`_\_.
+   Note: questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
    *Additional data acquired:* Participant Enrollment Questionnaire, Subject Questionnaire for Current Session,
    Simulator Sickness Questionnaire.
    *Experimental Location:* Teledyne Corporation, Durham, NC.
@@ -230,7 +230,7 @@ Technical Details
 
       - Channels: 74
       - Sampling rate (Hz): 1024.0
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

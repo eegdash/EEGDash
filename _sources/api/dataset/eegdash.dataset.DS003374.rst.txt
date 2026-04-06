@@ -133,12 +133,12 @@ This dataset allows the investigation of amygdalar response to dynamic aversive 
    
    Contains MATLAB code for loading the data and generating the publication figures. Main_Load_NIX_Data.m contains code snippets for reading NIX data and task related information. Main_Plot_Figures.m uses the functions Figure_2.m and Figure_3.m to generate figures.
    Required dependencies to run the script Main_Load_NIX_Data.m:
-   *  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`_\_
+   \*  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`__
    
    Required dependencies to run the script Main_Plot_Figures.m:
-   *  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`_\_
-   *  `Gramm <https://github.com/piermorel/gramm/>`_\_
-   *  `FieldTrip <http://www.fieldtriptoolbox.org/download/>`_\_
+   \*  `Nix-mx v1.4.1 <https://github.com/G-Node/nix-mx/>`__
+   \*  `Gramm <https://github.com/piermorel/gramm/>`__
+   \*  `FieldTrip <http://www.fieldtriptoolbox.org/download/>`__
    
    **Directory data_NIX**
    
@@ -147,7 +147,7 @@ This dataset allows the investigation of amygdalar response to dynamic aversive 
    
    **Support**
    
-   For questions on the dataset or the task, contact Johannes Sarnthein at `johannes.sarnthein@usz.ch <johannes.sarnthein@usz.ch>`_\_.
+   For questions on the dataset or the task, contact Johannes Sarnthein at `johannes.sarnthein@usz.ch <johannes.sarnthein@usz.ch>`__.
 
 
 Dataset Information
@@ -215,7 +215,7 @@ Technical Details
 
       - Channels: 4 (10), 2 (8)
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 2.61
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

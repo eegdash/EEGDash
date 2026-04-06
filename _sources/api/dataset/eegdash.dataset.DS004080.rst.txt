@@ -95,10 +95,10 @@ About This Dataset
 This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
 - Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, https://doi.org/10.1038/s41593-023-01272-0
   ¹ these authors contributed equally.
+
 This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.
 
 **Contact**
-
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -109,6 +109,7 @@ This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) dat
    This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical Evoked Potentials (CCEPs) were measured with Electro-CorticoGraphy (ECoG) during single pulse electrical stimulation. For a detailed description see:
    - Developmental trajectory of transmission speed in the human brain. D. van Blooijs¹, M.A. van den Boom¹, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes, Nature Neuroscience, 2023, https://doi.org/10.1038/s41593-023-01272-0
      ¹ these authors contributed equally.
+   
    This dataset is part of the RESPect (Registry for Epilepsy Surgery Patients) database, a dataset recorded at the University Medical Center of Utrecht, the Netherlands. The study was approved by the Medical Ethical Committee from the UMC Utrecht.
    
    **Contact**
@@ -213,7 +214,7 @@ Technical Details
 
       - Channels: 133 (70), 68 (18), 130 (13), 98 (4), 131 (4), 96 (4), 64 (2), 94, 93
       - Sampling rate (Hz): 2048.0 (112), 512.0 (5)
-      - Duration (hours): 0.0
+      - Duration (hours): 89.39102945963542
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

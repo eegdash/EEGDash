@@ -131,11 +131,10 @@ https://orcid.org/0000-0003-0250-765X
    Each EEG file contains data segmented into the three phases of the experiment: baseline, visual stimulus, and audiovisual stimulus, allowing researchers to directly compare neural responses across conditions.
    This dataset offers a comprehensive resource for researchers interested in investigating the effects of immersive VR environments on user engagement, and attention, making it highly applicable and useful.
    - Description of the contents of the dataset
-   
-   	sub-N  - Raw data
-   	sub-Np - Preprocesed data
-   	Example:
-   	sub-1  - Raw data of subject 1
+     sub-N  - Raw data
+     sub-Np - Preprocesed data
+     Example:
+     sub-1  - Raw data of subject 1
        	sub-1p - Preprocesed data of subject 1
    
    **Subjects**
@@ -228,7 +227,7 @@ Technical Details
 
       - Channels: 8
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0.0
+      - Duration (hours): 20.953197777777778
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

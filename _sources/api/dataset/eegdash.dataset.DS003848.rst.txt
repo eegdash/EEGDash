@@ -97,9 +97,9 @@ Each patient has their own folder (e.g., ``sub-RESP0280``) which contains the iE
 Two different implementation of the BIDS structure were done according to the different type of recordings (i.e. intraoperative or long-term)
 Intraoperative ECoG
 Surgery with intraoperative ECoG is composed of three main situations that can be logically grouped into BIDS sessions:
-* Pre-resection sessions, consisting of all recordings (with different configurations of the grid and strips/depth) carried out before the surgeon has started the planned resection.
-* Intermediate sessions, consisting of all subsequent recordings performed before any iterative extension of the resection area.
-* Post-resection sessions, consisting of all the recordings performed after the last resection.
+\* Pre-resection sessions, consisting of all recordings (with different configurations of the grid and strips/depth) carried out before the surgeon has started the planned resection.
+\* Intermediate sessions, consisting of all subsequent recordings performed before any iterative extension of the resection area.
+\* Post-resection sessions, consisting of all the recordings performed after the last resection.
 
 Each situation is labelled with an increasing number starting from 1, indicative of the period in time respective to the surgical resection and a consecutive letter (starting from A) indicative of the position of the grid and strip/depth for a given session.
 As an example see patient RESP0280 who had 4 sessions recorded: two pre-resection sessions, one intermediate sessions and one post-resection session. The first session is SITUATION1A consisting of the first recording, then the grid was moved to another position, resulting in SITUATION1B. After that, the surgeon resected part of the brain and then there was another recording(SITUATION2A). Finally the surgeon applied a resection for the last time and the recording after that was defined as SITUATION3A.
@@ -183,7 +183,7 @@ Technical Details
 
       - Channels: 133 (18), 68 (4)
       - Sampling rate (Hz): 2048.0 (21), 512.0
-      - Duration (hours): 0.0
+      - Duration (hours): 20.275720486111112
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

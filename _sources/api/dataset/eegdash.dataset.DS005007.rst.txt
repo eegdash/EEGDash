@@ -156,7 +156,7 @@ Technical Details
 
       - Channels: 100 (3), 74 (2), 78 (2), 156 (2), 86 (2), 58 (2), 66 (2), 116 (2), 82 (2), 122, 127, 155, 68, 94, 128, 140, 154, 138, 142, 91, 72, 102, 124, 137, 51, 120, 163, 48, 114, 129, 184, 88
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 9.423494444444446
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

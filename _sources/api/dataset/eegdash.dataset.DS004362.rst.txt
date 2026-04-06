@@ -96,9 +96,9 @@ This data set was originally created and contributed to PhysioBank by Gerwin Sch
 **Experiment Protocol**
 
  This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.
+
 Subjects performed different motor/imagery tasks while 64-channel EEG were recorded using the BCI2000 system (http://www.bci2000.org). Each subject performed 14 experimental runs: two one-minute baseline runs (one with eyes open, one with eyes closed), and three two-minute runs of each of the four following tasks:
 **[Task 1]** A target appears on either the left or the right side of the screen. The subject opens and closes the corresponding fist until the target disappears. Then the subject relaxes.
-**[Task 2]** A target appears on either the left or the right side of the screen. The subject imagines opening and closing the corresponding fist until the target disappears. Then the subject relaxes.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -110,6 +110,7 @@ Subjects performed different motor/imagery tasks while 64-channel EEG were recor
    **Experiment Protocol**
    
     This data set consists of over 1500 one- and two-minute EEG recordings, obtained from 109 volunteers, as described below.
+   
    Subjects performed different motor/imagery tasks while 64-channel EEG were recorded using the BCI2000 system (http://www.bci2000.org). Each subject performed 14 experimental runs: two one-minute baseline runs (one with eyes open, one with eyes closed), and three two-minute runs of each of the four following tasks:
    **[Task 1]** A target appears on either the left or the right side of the screen. The subject opens and closes the corresponding fist until the target disappears. Then the subject relaxes.
    **[Task 2]** A target appears on either the left or the right side of the screen. The subject imagines opening and closing the corresponding fist until the target disappears. Then the subject relaxes.
@@ -213,7 +214,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 160.0 (1490), 128.0 (36)
-      - Duration (hours): 0.0
+      - Duration (hours): 48.534444444444446
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

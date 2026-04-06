@@ -149,7 +149,7 @@ The data is recorded with a BioSemi ActiveTwo system, using 64 electrodes
    dataset have been preprocessed with a basic, fully automated pipeline (see
    /code/s2_preprocess.m for details) directory for details. The derived files are
    stored as EEGLAB .set files in a directory structure identical to that of the
-   raw files. Please note that the *\*_channels.tsv* files associated with the
+   raw files. Please note that the \*\\*_channels.tsv\* files associated with the
    derived files have been updated with status information about each channel
    ("good" or "bad"). The "bad" channels are – for the sake of consistency –
    interpolated, and thus still present in the data. It might be advisable to
@@ -250,7 +250,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 1024.0
-      - Duration (hours): 0.0
+      - Duration (hours): 10.2
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

@@ -204,7 +204,7 @@ corresponding to their respective event markers).
 
     /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
       warn(
-    [04/05/26 01:09:22] WARNING  File not found on S3, skipping:   downloader.py:146
+    [04/06/26 14:14:54] WARNING  File not found on S3, skipping:   downloader.py:146
                                  s3://openneuro.org/ds005514/sub-N                  
                                  DARDB033FW5/eeg/sub-NDARDB033FW5_                  
                                  task-RestingState_eeg.fdt                          
@@ -362,7 +362,7 @@ Features
 
  .. code-block:: none
 
-    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.14it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.14it/s]
+    Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.34it/s]    Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.34it/s]
 
 
 
@@ -400,8 +400,8 @@ Features
         <tr style="text-align: right;">
           <th></th>
           <th>i_dataset</th>
-          <th>i_start_in_trial</th>
           <th>i_stop_in_trial</th>
+          <th>i_start_in_trial</th>
           <th>i_window_in_trial</th>
           <th>sig_mean_E22</th>
           <th>sig_mean_E9</th>
@@ -486,8 +486,8 @@ Features
         <tr>
           <th>0</th>
           <td>0</td>
-          <td>8092</td>
           <td>8348</td>
+          <td>8092</td>
           <td>0</td>
           <td>5.647381e-07</td>
           <td>-2.509246e-06</td>
@@ -570,8 +570,8 @@ Features
         <tr>
           <th>1</th>
           <td>0</td>
-          <td>8348</td>
           <td>8604</td>
+          <td>8348</td>
           <td>0</td>
           <td>1.130721e-06</td>
           <td>1.416919e-07</td>
@@ -654,8 +654,8 @@ Features
         <tr>
           <th>2</th>
           <td>0</td>
-          <td>8604</td>
           <td>8860</td>
+          <td>8604</td>
           <td>0</td>
           <td>-8.737620e-07</td>
           <td>2.451451e-07</td>
@@ -738,8 +738,8 @@ Features
         <tr>
           <th>3</th>
           <td>0</td>
-          <td>8860</td>
           <td>9116</td>
+          <td>8860</td>
           <td>0</td>
           <td>3.482372e-07</td>
           <td>-5.419446e-07</td>
@@ -822,8 +822,8 @@ Features
         <tr>
           <th>4</th>
           <td>0</td>
-          <td>9116</td>
           <td>9372</td>
+          <td>9116</td>
           <td>0</td>
           <td>1.078094e-06</td>
           <td>2.234204e-06</td>
@@ -990,8 +990,8 @@ Features
         <tr>
           <th>65</th>
           <td>0</td>
-          <td>43163</td>
           <td>43419</td>
+          <td>43163</td>
           <td>0</td>
           <td>2.604641e-06</td>
           <td>2.696607e-06</td>
@@ -1074,8 +1074,8 @@ Features
         <tr>
           <th>66</th>
           <td>0</td>
-          <td>43419</td>
           <td>43675</td>
+          <td>43419</td>
           <td>0</td>
           <td>-1.158709e-06</td>
           <td>-9.353611e-07</td>
@@ -1158,8 +1158,8 @@ Features
         <tr>
           <th>67</th>
           <td>0</td>
-          <td>43675</td>
           <td>43931</td>
+          <td>43675</td>
           <td>0</td>
           <td>9.350503e-07</td>
           <td>7.273056e-07</td>
@@ -1242,8 +1242,8 @@ Features
         <tr>
           <th>68</th>
           <td>0</td>
-          <td>43931</td>
           <td>44187</td>
+          <td>43931</td>
           <td>0</td>
           <td>-1.334396e-04</td>
           <td>-4.969487e-05</td>
@@ -1326,8 +1326,8 @@ Features
         <tr>
           <th>69</th>
           <td>0</td>
-          <td>44187</td>
           <td>44443</td>
+          <td>44187</td>
           <td>0</td>
           <td>1.370442e-04</td>
           <td>3.529626e-05</td>
@@ -1710,7 +1710,7 @@ accuracy across six epochs.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.842 seconds)
+   **Total running time of the script:** (0 minutes 2.717 seconds)
 
 
 .. _sphx_glr_download_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py:

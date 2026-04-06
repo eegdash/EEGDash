@@ -134,22 +134,22 @@ For additional clinical metadata about each subject, refer to the clinical Excel
    **Derivatives**
    
    Derivatives include:
-   * fragility analysis
-   * frequency analysis
-   * graph metrics analysis
-   * figures
+   \* fragility analysis
+   \* frequency analysis
+   \* graph metrics analysis
+   \* figures
    
    These can be computed by following the following paper:
-   `Neural Fragility as an EEG Marker for the Seizure Onset Zone <https://www.biorxiv.org/content/10.1101/862797v3>`_\_
+   `Neural Fragility as an EEG Marker for the Seizure Onset Zone <https://www.biorxiv.org/content/10.1101/862797v3>`__
    
    **Events and Descriptions**
    
    Within each EDF file, there contain event markers that are annotated by clinicians, which may inform you of specific clinical events that are occuring in time, or of when they saw seizures onset and offset (clinical and electrographic).
    During a seizure event, specifically event markers may follow this time course:
-   	* eeg onset, or clinical onset - the onset of a seizure that is either marked electrographically, or by clinical behavior. Note that the clinical onset may not always be present, since some seizures manifest without clinical behavioral changes.
-   	* Marker/Mark On - these are usually annotations within some cases, where a health practitioner injects a chemical marker for use in ICTAL SPECT imaging after a seizure occurs. This is commonly done to see which portions of the brain are active metabolically.
-   	* Marker/Mark Off - This is when the ICTAL SPECT stops imaging.
-   	* eeg offset, or clinical offset - this is the offset of the seizure, as determined either electrographically, or by clinical symptoms.
+     * eeg onset, or clinical onset - the onset of a seizure that is either marked electrographically, or by clinical behavior. Note that the clinical onset may not always be present, since some seizures manifest without clinical behavioral changes.
+     * Marker/Mark On - these are usually annotations within some cases, where a health practitioner injects a chemical marker for use in ICTAL SPECT imaging after a seizure occurs. This is commonly done to see which portions of the brain are active metabolically.
+     * Marker/Mark Off - This is when the ICTAL SPECT stops imaging.
+     * eeg offset, or clinical offset - this is the offset of the seizure, as determined either electrographically, or by clinical symptoms.
    
    Other events included may be beneficial for you to understand the time-course of each seizure. Note that ICTAL SPECT occurs in all Cleveland Clinic data. Note that seizure markers are not consistent in their description naming, so one might encode some specific regular-expression rules to consistently capture seizure onset/offset markers across all dataset. In the case of UMMC data, all onset and offset markers were provided by the clinicians on an Excel sheet instead of via the EDF file. So we went in and added the annotations manually to each EDF file.
    
@@ -162,8 +162,8 @@ For additional clinical metadata about each subject, refer to the clinical Excel
    
    What is actually important in the evaluation of datasets is the clinical annotations of their localization hypotheses of the seizure onset zone.
    These generally include:
-   	* early onset: the earliest onset electrodes participating in the seizure that clinicians saw
-   	* early/late spread (optional): the electrodes that showed epileptic spread activity after seizure onset. Not all seizures has spread contacts annotated.
+     * early onset: the earliest onset electrodes participating in the seizure that clinicians saw
+     * early/late spread (optional): the electrodes that showed epileptic spread activity after seizure onset. Not all seizures has spread contacts annotated.
    
    **Surgical Zone (Resection or Ablation) Annotations**
    
@@ -244,7 +244,7 @@ Technical Details
 
       - Channels: 129 (30), 132 (8), 135 (6), 88 (6), 147 (6), 123 (6), 101 (5), 91 (4), 98 (4), 110 (3), 53 (3), 81 (3), 99 (3), 60 (3), 111 (3), 80 (3), 89 (3), 86 (3), 65 (2), 216, 47
       - Sampling rate (Hz): 1000.0 (56), 999.4121105232217 (13), 249.85355222464145 (10), 999.9999999999999 (9), 499.7071044492829 (7), 1000.0000000000001 (7), 2000.0000000000002 (3), 1024.5997950800408
-      - Duration (hours): 0.0
+      - Duration (hours): 8.208814574268422
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

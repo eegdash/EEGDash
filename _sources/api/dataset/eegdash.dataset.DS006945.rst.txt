@@ -194,15 +194,17 @@ MRI Acquisition:
    - **Sheet: Files**
      Lists presence/absence of EEG, MRI, and SPM outputs across subjects (S1–S5).
      Includes counts for beta, con, spmT maps, and DTI volumes.
+   
    - **Sheet: VMRK-R128**
      Reports event marker counts (R128 triggers) for baseline, walking1, and walking2 tasks.
+   
    - **Sheet: EEG-Duration**
      Provides task durations (minutes) for 'baseline', 'walking1', and 'walking2' EEG recordings.
    
    **Notes on Organization**
    
-   * Raw data (anat, func, eeg) are stored under each subject directory (sub-XX/ses-YY).
-   * Derivatives: Preprocessed outputs are stored separately under derivatives/sub-XX/ses-YY, including:
+   \* Raw data (anat, func, eeg) are stored under each subject directory (sub-XX/ses-YY).
+   \* Derivatives: Preprocessed outputs are stored separately under derivatives/sub-XX/ses-YY, including:
    
    &emsp;- Statistical Parametric Mapping (SPM) outputs
    
@@ -212,8 +214,8 @@ MRI Acquisition:
    
    &emsp;- Validation Excel file
    
-   * The video stimulus is stored in the top-level stimuli/ folder.
-   * Naming conventions follow BIDS entities:
+   \* The video stimulus is stored in the top-level stimuli/ folder.
+   \* Naming conventions follow BIDS entities:
    
    &emsp;- sub-&lt;label&gt;  : subject identifier
    
@@ -294,7 +296,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 5000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 2.110611111111111
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

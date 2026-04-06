@@ -203,6 +203,7 @@ About This Dataset
      - Sub-15 ses-GranettDream run 12
      - Sub-07 ses-GranettDream run 18 (substituted by run 19)
          Notice: Sub-07 ses-GranettDream run 19 read chapter 19 of GranettDream instead of chapter 18.
+   
    - Eyetracking data:
      - Sub-08 ses-LittlePrince run 1-2
    
@@ -210,6 +211,7 @@ About This Dataset
    - In the 0.5-30 Hz filtered version:
      - Sub-15 ses-LittlePrince run 1-7
      - Sub-15 ses-GranettDream run 1, 2, 3, 7, 10, 16
+   
    - In the 0.5-80 Hz filtered version:
      - Sub-13 ses-LittlePrince run 4, 5
      - Sub-15 ses-LittlePrince run 1-7
@@ -291,7 +293,7 @@ Technical Details
 
       - Channels: 128
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 121.74074361111111
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

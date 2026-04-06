@@ -98,11 +98,11 @@ of large-scale datasets comprising functional MRI, magnetoencephalographic recor
 for up to 1,854 object concepts. THINGS-data is unique in its breadth of richly-annotated objects, allowing for testing countless novel hypotheses at scale while assessing
 the reproducibility of previous findings. The multimodal data allows for studying both the temporal and spatial dynamics of object representations and their relationship
 to behavior and additionally provides the means for combining these datasets for novel insights into object processing. THINGS-data constitutes the core release of
-the `THINGS initiative <https://things-initiative.org>`_\_ for bridging the gap between disciplines and the advancement of cognitive neuroscience.
+the `THINGS initiative <https://things-initiative.org>`__ for bridging the gap between disciplines and the advancement of cognitive neuroscience.
 
 **Dataset overview**
 
-We collected extensively sampled object representations using magnetoencephalography (MEG). To this end, we drew on the THINGS database `(Hebart et al., 2019) <https://doi.org/10.1371/journal.pone.0223792>`_\_,
+We collected extensively sampled object representations using magnetoencephalography (MEG). To this end, we drew on the THINGS database `(Hebart et al., 2019) <https://doi.org/10.1371/journal.pone.0223792>`__,
 a richly-annotated database of 1,854 object concepts representative of the American English language which contains 26,107 manually-curated naturalistic object images.
 During the fMRI experiment, participants were shown a representative subset of THINGS images, spread across 12 separate sessions (N=4, 22,448 unique images of 1,854 objects).
 Images were shown in fast succession (1.5±0.2s), and participants were instructed to maintain central fixation. To ensure engagement, participants performed an oddball detection task
@@ -175,7 +175,7 @@ Technical Details
 
       - Channels: 310
       - Sampling rate (Hz): 1200.0
-      - Duration (hours): 0.0
+      - Duration (hours): 45.239891666666665
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

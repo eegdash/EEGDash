@@ -96,11 +96,13 @@ Authors
   <li>Carlos Valle</li>
   <li>Carolina Mendez-Orellana</li>
   <li>María Rodríguez-Fernández</li>
+
 </ul>
 Resources:
 <ul>
     <li>Code availaible at: https://github.com/cgvalle/Large_Spanish_EEG</li>
     <li>Publication: Valle, C., Mendez-Orellana, C., Herff, C., & Rodriguez-Fernandez, M. (2024). Identification of perceived sentences using deep neural networks in EEG. Journal of neural engineering, 21(5), 056044. </li>
+
 </ul>
 Abstract:
 Decoding speech from brain activity can enable communication for individuals with speech disorders. Deep neural networks have shown great potential for speech decoding applications, but the large data sets required for these models are usually not available for neural recordings of speech impaired subjects. Harnessing data from other participants would thus be ideal to create speech neuroprostheses without the need of patient-specific training data.
@@ -179,7 +181,7 @@ Technical Details
 
       - Channels: 69
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 53.72865
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

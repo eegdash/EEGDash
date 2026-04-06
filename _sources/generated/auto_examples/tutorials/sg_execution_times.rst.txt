@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:01.949** total execution time for 11 files **from generated/auto_examples/tutorials**:
+**00:02.127** total execution time for 11 files **from generated/auto_examples/tutorials**:
 
 .. container::
 
@@ -33,13 +33,13 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_plot_clinical_summary.py` (``plot_clinical_summary.py``)
-     - 00:01.267
+     - 00:01.440
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_api.py` (``tutorial_api.py``)
-     - 00:00.342
+     - 00:00.360
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_transfer_learning.py` (``tutorial_transfer_learning.py``)
-     - 00:00.340
+     - 00:00.327
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_noplot_tutorial_age_prediction.py` (``noplot_tutorial_age_prediction.py``)
      - 00:00.000

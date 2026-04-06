@@ -122,8 +122,8 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    
    **Work team**
    
-   * MAGMA Ingeniería research group
-   * Hogares Claret foundation
+   \* MAGMA Ingeniería research group
+   \* Hogares Claret foundation
    
    **Institutions**
    
@@ -191,10 +191,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
       - Alpha band features
       - First closed-eyes epoch
       - Channel A1 (Frontal electrode 1)
+   
    2. ``FR_Dats_band_THETA_EP_O_2_can_C15.xlsx``
       - Theta band features
       - Second open-eyes epoch
       - Channel C15 (Posterior electrode 15)
+   
    3. ``FR_Dats_band_BETA_EP_C_2_can_B7.xlsx``
       - Beta band features
       - Second closed-eyes epoch
@@ -205,6 +207,7 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    - 4 epochs per subject:
      - 2 closed-eyes: ``EP_C_1``, ``EP_C_2``
      - 2 open-eyes: ``EP_O_1``, ``EP_O_2``
+   
    - 128 channels (A1-D32)
    - 4 frequency bands
    - Total files per subject: 4 epochs × 128 channels × 4 bands = 2,048 files
@@ -291,6 +294,7 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      - Sequence:
        - 4 min alternating eyes closed/open (COCO: Closed-Open-Closed-Open)
        - 8 min eyes closed (excluded from current dataset)
+   
    - **Segment trimming**:
        - 5s post-event onset
        - 5s pre-event offset (to avoid transition artifacts)
@@ -300,19 +304,24 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
    1. **Visual inspection**:
       - Raw data review using BDFreader
       - Identification of bad channels/artifacts
+   
    2. **Downsampling**:
       - 2048 Hz → 128 Hz (resting-state data)
+   
    3. **Rereferencing**:
       - Average reference (replaced failed earlobe reference)
+   
    4. **Filtering**:
       - Bandpass FIR: 1-40 Hz
       - High-pass: 1 Hz (0.5 Hz cutoff, 425 points)
       - Low-pass: 40 Hz (45 Hz cutoff, 45 points)
+   
    5. **Artifact Removal**:
       - Bad channel rejection:
         - Flat signals > 5s
         - SD > 4
         - Correlation < 0.8 with neighbors
+   
       - ASR (Artifact Subspace Reconstruction)
       - ICA + ICLabel (components >90% non-brain removed)
    
@@ -324,6 +333,7 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      - Theta (θ): 4-8 Hz
      - Alpha (α): 8-13 Hz
      - Beta (β): 13-30 Hz
+   
    - **Features per band/channel**:
      1. Mean Power
      2. RMS of PSD
@@ -332,6 +342,7 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      5. Maximum Power
      6. Skewness
      7. Kurtosis
+   
    - **Feature volume**: 14,336 features/subject (4 bands × 128 channels × 4 segments × 7 features)
    
    **Technical Specifications**
@@ -340,10 +351,12 @@ Desarrollo de un sistema inteligente multiparamétrico para el reconocimiento de
      - Intel Core i5-9400F @2.9GHz
      - 16GB RAM
      - Windows 10 (64-bit)
+   
    - **Software**:
      - MATLAB 2020a
      - EEGLAB toolbox
      - Python (scikit-learn, pandas for feature selection)
+   
    - **Processing Time**: ~10 minutes/subject
    
    **Funding**
@@ -420,7 +433,7 @@ Technical Details
 
       - Channels: 128
       - Sampling rate (Hz): 128.0
-      - Duration (hours): 0.0
+      - Duration (hours): 37.333333333333336
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

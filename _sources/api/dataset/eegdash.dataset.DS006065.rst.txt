@@ -113,7 +113,7 @@ For questions or further information, contact:
    *Kragel et al., 2025, Nature Communications:*
    *“Closed-loop control of theta oscillations enhances human hippocampal network connectivity”*
    For questions or further information, contact:
-   - *James Kragel:* `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`_\_
+   - *James Kragel:* `jkragel@uchicago.edu <mailto:jkragel@uchicago.edu>`__
    
    **- Joel Voss: joelvoss@uchicago.edu**
    
@@ -121,7 +121,7 @@ For questions or further information, contact:
    **License**
    
    This dataset is made available under the \**Public Domain Dedication and License v1.0*\*.
-   Full text: `http://www.opendatacommons.org/licenses/pddl/1.0 <http://www.opendatacommons.org/licenses/pddl/1.0>`_\_
+   Full text: `http://www.opendatacommons.org/licenses/pddl/1.0 <http://www.opendatacommons.org/licenses/pddl/1.0>`__
    
    **Dataset and Protocol**
    
@@ -142,8 +142,8 @@ For questions or further information, contact:
    **Raw Data**
    
    The raw data are stored in **BrainVision format** (``vhdr``, ``vmrk``, and ``eeg`` files). You can read these files into memory using the following tools:
-   - *MATLAB:* `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`_\_
-   - *Python:* ``pybv`` package <https://github.com/bids-standard/pybv>\`_\_
+   - *MATLAB:* `FieldTrip toolbox <https://www.fieldtriptoolbox.org/getting_started/eeg/brainvision/>`__
+   - *Python:* ``pybv`` package <https://github.com/bids-standard/pybv>\\`__
    
    **Electrode Coordinates**
    
@@ -215,7 +215,7 @@ Technical Details
 
       - Channels: 168 (15), 175 (10), 82 (5), 68 (5), 181 (5), 43 (5)
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 10.699191111111112
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

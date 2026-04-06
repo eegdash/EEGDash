@@ -138,6 +138,7 @@ Please contact the following authors for further information:
        presented simultaneously, each set to 65 dB.
        NOTE: files for each story were completely randomized. Random combinations
        were created so that each story was equally represented in the data.
+   
    The code for stimulus preprocessing and EEG analysis is available on Github:
        https://github.com/polonenkolab/peaky_snr
    
@@ -149,6 +150,7 @@ Please contact the following authors for further information:
    files contain the audio ('audio'), and regressors for the deconvolution
    ('pinds' are the pulse indices, 'anm' is an auditory nerve model regressor,
     which was used during analyses but was not included as part of the article).
+   
    Generally, you can find detailed event data in the .tsv files and descriptions
    in the accompanying .json files. Raw eeg files are provided in the Brain
    Products format.
@@ -257,7 +259,7 @@ Technical Details
 
       - Channels: 2
       - Sampling rate (Hz): 10000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 56.87177694444444
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

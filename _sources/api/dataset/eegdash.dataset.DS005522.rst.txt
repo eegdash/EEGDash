@@ -116,6 +116,7 @@ The trials are blocked by a counterbalanced scheme, so for every trial there is 
        - **(x1', y1')**
        - **(x1'', y1'')**
        - **(x1''', y1''')**
+   
    - **(X2, Y2)**
        - **(x2', y2')**
        - **(x2'', y2'')**
@@ -126,6 +127,7 @@ The trials are blocked by a counterbalanced scheme, so for every trial there is 
        - **(-x2', -y2')**
        - **(-x2'', -y2'')**
        - **(-x2''', -y2''')**
+   
    - **(-X1, -Y1)**
        - **(-x1', -y1')**
        - **(-x1'', -y1'')**
@@ -133,9 +135,9 @@ The trials are blocked by a counterbalanced scheme, so for every trial there is 
    
    **To Note**
    
-   * The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
-   * Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
-   * Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+   \* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+   \* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+   \* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
    
    **Contact**
    
@@ -207,7 +209,7 @@ Technical Details
 
       - Channels: 133 (8), 110 (8), 88 (7), 120 (7), 72 (6), 188 (6), 173 (6), 126 (6), 108 (5), 56 (5), 46 (4), 128 (4), 127 (4), 68 (4), 112 (4), 64 (4), 144 (3), 146 (3), 92 (3), 123 (3), 186 (3), 124 (3), 50 (3), 104 (3), 182 (3), 86 (3), 160 (2), 59 (2), 180 (2), 138 (2), 163 (2), 85 (2), 75 (2), 140 (2), 111 (2), 70 (2), 130 (2), 63 (2), 170 (2), 96 (2), 166 (2), 158 (2), 118 (2), 100 (2), 90, 54, 151, 105, 109, 94, 149, 172, 122, 174, 76, 78, 178, 84, 165, 125, 177, 169, 136, 80, 60, 116
       - Sampling rate (Hz): 1000.0 (70), 500.0 (61), 1600.0 (26), 999.0 (13), 2000.0 (4), 1999.0 (2)
-      - Duration (hours): 0.0
+      - Duration (hours): 145.237675247194
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

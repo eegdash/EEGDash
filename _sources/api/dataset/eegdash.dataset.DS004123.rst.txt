@@ -116,7 +116,7 @@ identify periods of driver fatigue via predictive algorithms formulated from the
    in comparison to the objective performance measures, and in contrast with the (non-fatigued)
    Calibration driving session for the subject. Traffic Complexity extended the paradigm by modulating
    the visual complexity and the frequency of perturbation events vs. Baseline Driving.
-   Further information is available on request from `cancta.net <https://cancta.net>`_\_.
+   Further information is available on request from `cancta.net <https://cancta.net>`__.
    
    **Methods**
    
@@ -145,7 +145,7 @@ identify periods of driver fatigue via predictive algorithms formulated from the
    *Dependent variables:* Reaction times to perturbations, continuous performance based on vehicle
    log (steering wheel angle, lane position, heading error, etc.), Task-Induced Fatigue Scale (TIFS),
    Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
-   *Note:* Questionnaire data is available upon request from `cancta.net <https://cancta.net>`_\_.
+   *Note:* Questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
    *Additional data acquired:* Participant Enrollment Questionnaire, Subject Questionnaire for Current Session,
    Simulator Sickness Questionnaire.
    *Experimental Locations:*  Teledyne Corporation, Durham, NC.
@@ -220,7 +220,7 @@ Technical Details
 
       - Channels: 74
       - Sampling rate (Hz): 1024.0
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

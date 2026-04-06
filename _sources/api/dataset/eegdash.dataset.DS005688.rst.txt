@@ -130,6 +130,7 @@ Tan H, Griggs DJ, Chen L, et al. Diagnostic ultrasound enhances, then reduces, e
      1. Light-only cohort: Exposed to blinking light only.
      2. US-only cohort: Exposed to tDUS without light.
      3. US+Light cohort: Exposed to blinking light combined with tDUS.
+   
    - Electrode Placement: ECoG electrodes targeted visual and somatosensory cortices.
    - Recording Conditions: Data recorded at 20 kS/s, filtered (5–55 Hz), and analyzed with MATLAB.
    
@@ -224,7 +225,7 @@ Technical Details
 
       - Channels: 5 (86), 1 (3)
       - Sampling rate (Hz): 10000.0 (74), 20000.0 (15)
-      - Duration (hours): 0.0
+      - Duration (hours): 1.731666666666667
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

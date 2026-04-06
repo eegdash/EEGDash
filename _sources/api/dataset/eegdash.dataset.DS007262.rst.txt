@@ -89,7 +89,7 @@ Quickstart
 About This Dataset
 ------------------
 
-This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`_\_
+This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`__
 - Original recordings are stored under sourcedata/xdf/ as .xdf files (non-BIDS).
 - EEG was converted to BrainVision format (.vhdr/.eeg/.vmrk) under each sub-\*/eeg/.
 - \*_events.tsv was generated from marker streams and then aligned so onset is relative to the EEG start time.
@@ -103,7 +103,7 @@ This dataset was generated from LSL/XDF recordings. Converted to bids with instr
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
 
-   This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`_\_
+   This dataset was generated from LSL/XDF recordings. Converted to bids with instructions and code `presented here <https://github.com/LMBooth/QT-arithmetic_study/tree/main/conversion_package>`__
    - Original recordings are stored under sourcedata/xdf/ as .xdf files (non-BIDS).
    - EEG was converted to BrainVision format (.vhdr/.eeg/.vmrk) under each sub-\*/eeg/.
    - \*_events.tsv was generated from marker streams and then aligned so onset is relative to the EEG start time.
@@ -210,7 +210,7 @@ Technical Details
 
       - Channels: 24
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0.0
+      - Duration (hours): 4.58342
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

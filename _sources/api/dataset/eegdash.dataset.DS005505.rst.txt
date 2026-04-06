@@ -130,22 +130,22 @@ This dataset comprises electroencephalogram (EEG) data and behavioral responses 
    
    **Contents**
    
-   *\*EEG Data:* High-resolution EEG recordings capture a wide range of neural activity during various tasks.
-   *\*Behavioral Responses:* Participant responses during EEG tasks, including reaction times and accuracy. This data was originally recorded within the behavior directory of the HBN data. The data is now included with the EEG data within the ``events.tsv`` files.
+   \*\\*EEG Data:\* High-resolution EEG recordings capture a wide range of neural activity during various tasks.
+   \*\\*Behavioral Responses:\* Participant responses during EEG tasks, including reaction times and accuracy. This data was originally recorded within the behavior directory of the HBN data. The data is now included with the EEG data within the ``events.tsv`` files.
    
    **Special Features**
    
-   *\*Hierarchical Event Descriptors (HED):* Events, including the original EEG events and the included behavioral events, have clear explanations, including proper HED annotation suitable for systematic meta and mega analysis of the data.
-   *\*P-Factor, Attention, Internalization and Externalization:* Derived from the CBCL questionnaire, these factors provide valuable insights into the psychopathology of the participants, adding a rich layer of interpretation to the EEG and behavioral data.
-   *\*Data quality and availability:* We performed minimal quality control to ensure that the data was not corrupted, each task had its necessary events, and was ready for preprocessing. The results of this quality control are available in the ``participants.tsv`` file.
-   *\*Future Releases:* We are committed to enhancing this dataset with additional, valuable features in its next stages, including:
-     *\*Personalized EEG Electrode Locations:* To offer more detailed insights into individual neural activity patterns.
-     *\*Personalized Lead Field Matrix:* Enabling better understanding and interpretation of EEG data.
-     *\*Eye-Tracking Data:* Providing a window into the visual attention and processing mechanisms during EEG experiments.
+   \*\\*Hierarchical Event Descriptors (HED):\* Events, including the original EEG events and the included behavioral events, have clear explanations, including proper HED annotation suitable for systematic meta and mega analysis of the data.
+   \*\\*P-Factor, Attention, Internalization and Externalization:\* Derived from the CBCL questionnaire, these factors provide valuable insights into the psychopathology of the participants, adding a rich layer of interpretation to the EEG and behavioral data.
+   \*\\*Data quality and availability:\* We performed minimal quality control to ensure that the data was not corrupted, each task had its necessary events, and was ready for preprocessing. The results of this quality control are available in the ``participants.tsv`` file.
+   \*\\*Future Releases:\* We are committed to enhancing this dataset with additional, valuable features in its next stages, including:
+     \*\\*Personalized EEG Electrode Locations:\* To offer more detailed insights into individual neural activity patterns.
+     \*\\*Personalized Lead Field Matrix:\* Enabling better understanding and interpretation of EEG data.
+     \*\\*Eye-Tracking Data:\* Providing a window into the visual attention and processing mechanisms during EEG experiments.
    
    **Other HBN-EEG Datasets**
    
-   For access all releases of the HBN-EEG dataset, follow this `link on NEMAR.org <https://nemar.org/dataexplorer/local?search=HBN-EEG>`_\_. The links to the individual releases are below:
+   For access all releases of the HBN-EEG dataset, follow this `link on NEMAR.org <https://nemar.org/dataexplorer/local?search=HBN-EEG>`__. The links to the individual releases are below:
    
    **Release 1 \| DS005505**
    
@@ -281,7 +281,7 @@ Technical Details
 
       - Channels: 129
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 117.5389038888889
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

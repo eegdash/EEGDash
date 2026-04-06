@@ -221,6 +221,7 @@ About This Dataset
      - ``type``: gesture_X (where X is the gesture name)
      - ``latency``: Sample index when gesture was prompted
      - ``gesture_type``: Specific gesture (e.g., "index_pinch", "thumb_swipe_left")
+   
    - **Stage boundaries**: Recording session phases
      - ``type``: stage_boundary
      - ``stage_name``: Stage identifier
@@ -456,7 +457,7 @@ Technical Details
 
       - Channels: 16
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 63.93759180555556
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
@@ -468,7 +469,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 6.6 MB
+      - Size on disk: 20.6 GB
       - File count: 100
       - Format: BIDS
 

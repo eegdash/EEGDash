@@ -95,10 +95,10 @@ About This Dataset
 
 **Table of Contents**
 
-- `1. Experimental Design <#1-experimental-design>`_\_
-  - `1.1 Study Overview <#11-study-overview>`_\_
-  - `1.2 Electrophysiological Measurements <#12-electrophysiological-measurements>`_\_
-- `2. Pain Perception and Anxiety-Depression Levels <#2-pain-perception-and-anxiety-depression-levels>`_\_
+- `1. Experimental Design <#1-experimental-design>`__
+  - `1.1 Study Overview <#11-study-overview>`__
+  - `1.2 Electrophysiological Measurements <#12-electrophysiological-measurements>`__
+
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -109,11 +109,12 @@ About This Dataset
    
    **Table of Contents**
    
-   - `1. Experimental Design <#1-experimental-design>`_\_
-     - `1.1 Study Overview <#11-study-overview>`_\_
-     - `1.2 Electrophysiological Measurements <#12-electrophysiological-measurements>`_\_
-   - `2. Pain Perception and Anxiety-Depression Levels <#2-pain-perception-and-anxiety-depression-levels>`_\_
-   - `3. Code GIT repository <#3-code-GIT-repository>`_\_
+   - `1. Experimental Design <#1-experimental-design>`__
+     - `1.1 Study Overview <#11-study-overview>`__
+     - `1.2 Electrophysiological Measurements <#12-electrophysiological-measurements>`__
+   
+   - `2. Pain Perception and Anxiety-Depression Levels <#2-pain-perception-and-anxiety-depression-levels>`__
+   - `3. Code GIT repository <#3-code-GIT-repository>`__
    
    **1. Experimental Design**
    
@@ -136,6 +137,7 @@ About This Dataset
      - Pre-Intervention (PRE): The resting state was measured as a baseline with the patient's eyes closed or fixed at a point.
      - MAR MTI: The specialist performed the MAR MTI.
      - Post-Intervention (POST): Measurements were taken during the patient's reincorporation after MAR.
+   
    - **Equipment**: Recordings were made with the Micromed LTM64 equipment with a sampling frequency of at least 256Hz. The Micromed LTM64 is of clinical quality and has approval from the Colombian National Institute for Drug and Food Safety (approval ID: 20090486-2015).
    - **Electrode Setup**:
      - EEG: The electrode montage followed the international System 10-20. Due to time limitations, the number of electrodes was reduced to eight: FP1, FP2, T3, T4, C3, C4, O1, and O2. The reference electrode was set to Cz, and the ground electrode was placed on the mastoids.
@@ -223,7 +225,7 @@ Technical Details
 
       - Channels: 10 (45), 9 (3), 8 (3)
       - Sampling rate (Hz): 1024.0 (33), 512.0 (15), 256.0 (3)
-      - Duration (hours): 0.0
+      - Duration (hours): 10.935833333333331
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

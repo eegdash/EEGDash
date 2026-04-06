@@ -134,8 +134,8 @@ There are 10 patients (median age 40 y, range 19-56 y, 6 female) who underwent b
    
    [1] Vasileios Dimakopoulos, Marian C. Neidert, Johannes Sarnthein, Low impedance electrodes improve detection of high frequency oscillations in the intracranial EEG, Clinical Neurophysiology, 2023, ISSN 1388-2457, https://doi.org/10.1016/j.clinph.2023.07.002
    If you have any inquiries or questions, contact:
-   * Vasileios Dimakopoulos (vasileios.dimakopoulos@usz.ch)
-   * Johannes Sarnthein (johannes.sarnthein@usz.ch)
+   \* Vasileios Dimakopoulos (vasileios.dimakopoulos@usz.ch)
+   \* Johannes Sarnthein (johannes.sarnthein@usz.ch)
 
 
 Dataset Information
@@ -203,7 +203,7 @@ Technical Details
 
       - Channels: 8 (7), 9 (2), 10
       - Sampling rate (Hz): 20000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 1.069361111111111
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

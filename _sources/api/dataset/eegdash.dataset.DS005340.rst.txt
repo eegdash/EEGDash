@@ -140,6 +140,7 @@ Please contact the following authors for further information:
        NOTE: f0s used: original f0s (low & high respectively) and f0s
        shifted to the other narrator's f0 and an f0 at the midpoint between the f0s.
        click rates used: set to the mean f0s used for the speech
+   
    The code for stimulus preprocessing and EEG analysis is available on Github:
        https://github.com/polonenkolab/peaky_pitchshift
    
@@ -151,6 +152,7 @@ Please contact the following authors for further information:
    files contain the audio ('x'), and regressors for the deconvolution
    ('pinds' are the pulse indices, 'anm' is an auditory nerve model regressor,
     which was used during analyses but was not included as part of the article).
+   
    Generally, you can find detailed event data in the .tsv files and descriptions
    in the accompanying .json files. Raw eeg files are provided in the Brain
    Products format.
@@ -259,7 +261,7 @@ Technical Details
 
       - Channels: 2
       - Sampling rate (Hz): 10000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 35.29713844444445
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

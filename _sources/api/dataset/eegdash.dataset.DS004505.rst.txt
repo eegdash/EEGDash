@@ -158,7 +158,7 @@ Technical Details
 
       - Channels: 313 (13), 270 (4), 299 (2), 312 (2), 303, 327, 326, 340
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0.0
+      - Duration (hours): 30.398184444444443
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

@@ -15,9 +15,9 @@ Access recordings and metadata through EEGDash.
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 25` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
+:bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 25` :bdg-secondary-line:`Recordings: 25` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-success:`Metadata: Complete (100%)`
+:bdg-primary:`Metadata: Good (80%)`
 
 Quickstart
 ----------
@@ -154,9 +154,9 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: 66
-      - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Channels: Varies
+      - Sampling rate (Hz): Varies
+      - Duration (hours): 10.10425
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

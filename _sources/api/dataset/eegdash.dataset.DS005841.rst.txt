@@ -104,6 +104,7 @@ This dataset contains EEG recordings from a study investigating event-related po
   - Regperp
   - Signalscreen
   - Signalvr
+
 - **Modality**: EEG (512 Hz sampling rate)
 
 **Dataset Organization**
@@ -179,7 +180,7 @@ Technical Details
 
       - Channels: Varies
       - Sampling rate (Hz): 512.0
-      - Duration (hours): 0.0
+      - Duration (hours): 21.566111111111116
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

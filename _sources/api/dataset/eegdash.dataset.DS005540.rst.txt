@@ -202,6 +202,7 @@ Xin XU[^1,†], Xinke SHEN[^1,†,*], Xuyang CHEN[^1], Qingzhu ZHANG[^1], Sitian
    53. ``['neu8', 'neu4', 'neu5', 'dis5', 'sad4', 'fear4', 'joy5', 'ins4', 'ten4', 'fear8', 'sad5', 'sad8', 'ten8', 'joy4', 'ten5', 'fear5', 'dis4', 'dis8', 'joy8', 'ins5', 'ins8']``
    - **sub54 Imagery sequence**:
      ``['ten8', 'ten5', 'ten4', 'fear8', 'fear5', 'fear4', 'dis8', 'dis5', 'dis4', 'joy8', 'joy5', 'joy4', 'sad8', 'sad5', 'sad4', 'neu8', 'neu5', 'neu4', 'ins8', 'ins5', 'ins4']``
+   
    - **sub54 Video sequence**:
      ``['joy8', 'joy5', 'joy4', 'sad8', 'sad5', 'sad4', 'dis8', 'dis5', 'dis4', 'ins8', 'ins5', 'ins4', 'fear8', 'fear5', 'fear4', 'neu8', 'neu5', 'neu4', 'ten8', 'ten5', 'ten4']``
    
@@ -210,29 +211,39 @@ Xin XU[^1,†], Xinke SHEN[^1,†,*], Xuyang CHEN[^1], Qingzhu ZHANG[^1], Sitian
    For participants with missing trials (**sub55-sub60**), the experimental sequences differ slightly:
    - **sub55**: The sequence for imagery and video trials is:
      ``['dis5', 'sad4', 'fear8', 'joy4', 'joy5', 'ten8', 'fear5', 'sad8', 'sad5', 'joy8', 'ten5', 'ins8', 'dis8', 'dis4', 'fear4', 'ins5', 'ten4', 'ins4']``
+   
    - **sub56**:
      - Imagery sequence:
        ``['joy8', 'joy5', 'ins4', 'sad4', 'fear5', 'dis8', 'neu4', 'neu8', 'neu5', 'ten8', 'joy4', 'ins5', 'fear4', 'dis5', 'sad8', 'ins8', 'ten5', 'ten4', 'sad5']``
+   
      - Video sequence:
        ``['joy8', 'joy5', 'ins4', 'sad4', 'fear5', 'dis8', 'neu4', 'neu8', 'neu5', 'ten8', 'joy4', 'ins5', 'fear4', 'dis5', 'sad8', 'ins8', 'ten5', 'ten4', 'sad5', 'dis4', 'fear8']``
+   
    - **sub57**:
      - Imagery sequence:
        ``['neu8', 'neu5', 'neu4', 'ins4', 'joy5', 'sad5', 'sad8', 'ins8', 'joy4', 'ten8', 'dis5', 'fear8', 'joy8', 'ins5', 'ten5', 'fear4', 'fear5']``
+   
      - Video sequence:
        ``['neu8', 'ins4', 'joy5', 'ten4', 'sad5', 'sad4', 'sad8', 'ins8', 'joy4', 'ten8', 'dis8', 'dis5', 'ten5', 'fear4', 'fear5']``
+   
    - **sub58**:
      - Imagery sequence:
        ``['sad5', 'fear5', 'sad8', 'ins8', 'joy5', 'joy4', 'sad4', 'dis8', 'neu5', 'neu8', 'neu4', 'ten8', 'joy8', 'ten4', 'fear4', 'fear8', 'dis5', 'ins5']``
+   
      - Video sequence:
        ``['sad5', 'fear5', 'sad8', 'ins8', 'joy5', 'joy4', 'sad4', 'dis8', 'dis4', 'neu5', 'neu8', 'neu4', 'ten8', 'joy8', 'ten4', 'fear4', 'fear8', 'dis5', 'ins5', 'ten5', 'ins4']``
+   
    - **sub59**:
      - Imagery sequence:
        ``['dis5', 'fear4', 'ins8', 'fear8', 'dis8', 'fear5', 'neu4', 'neu8', 'joy4', 'ten8', 'ten4', 'dis4', 'sad5', 'sad4', 'joy5']``
+   
      - Video sequence:
        ``['dis5', 'sad8', 'fear4', 'joy8', 'ins8', 'ins5', 'fear8', 'fear5', 'neu4', 'neu8', 'neu5', 'joy4', 'ten8', 'ten4', 'sad5', 'ten5', 'joy5']``
+   
    - **sub60**:
      - Imagery sequence:
        ``['neu5', 'neu4', 'neu8', 'dis5', 'sad4', 'dis4', 'ten4']``
+   
      - Video sequence:
        ``['neu5', 'neu4', 'neu8', 'dis5', 'sad4', 'dis4', 'ten4', 'ins4', 'ten5']``
    
@@ -293,6 +304,7 @@ Xin XU[^1,†], Xinke SHEN[^1,†,*], Xuyang CHEN[^1], Qingzhu ZHANG[^1], Sitian
    1. **Locate Raw Data**:
       - The raw EEG data is in the directory: ``sub-idx\eeg\sub-idx_task-emotion_eeg.edf``.
       - Triggers are marked directly in the ``.edf`` file's notations.
+   
    2. **Map Triggers to Trial Types**:
       - Mapping information between 'TypeID' in ``.edf`` file's notations and trial categories is here:
         sub-01: vid-31  ima-30  fade-28  rating-29
@@ -356,8 +368,10 @@ Xin XU[^1,†], Xinke SHEN[^1,†,*], Xuyang CHEN[^1], Qingzhu ZHANG[^1], Sitian
         sub-59: vid-26 rating-24 ima-25 fade-23
         sub-60: vid-36 rating-34 ima-35 fade-33
         (tips: For many participants, triggers end with "vid-6 rating-4 ima-5 fade-3", so you can %10 to get the same sequence.)
+   
    3. **Segment Data**:
       - Based on the trigger-trial mapping, segment the data accordingly.
+   
    4. **Reorder Trials**:
       - Use the sequence provided in the **Trial Reordering** section above to rearrange the trials in your preferred order.
    
@@ -493,7 +507,7 @@ Technical Details
 
       - Channels: 68
       - Sampling rate (Hz): 600.0 (95), 1200.0 (8)
-      - Duration (hours): 0.0
+      - Duration (hours): 167.10194444444446
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

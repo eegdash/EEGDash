@@ -156,7 +156,7 @@ Technical Details
 
       - Channels: 182 (2), 228, 230, 210, 194, 246, 188, 266, 192, 224, 202, 200
       - Sampling rate (Hz): 1000.0 (10), 2000.0 (3)
-      - Duration (hours): 0.0
+      - Duration (hours): 4.21944125
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

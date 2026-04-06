@@ -116,7 +116,7 @@ studies investigating fatigue.
    Collectively, the Calibration Driving recordings comprise a 'virtual' study, in which driving performance
    at the calibration level can be analyzed. When analyzed with other same-subject data, involving much longer tasks,
    the calibration data sets can be used as the basis for non-fatigue state performance.
-   Further information is available on request from `cancta.net <https://cancta.net>`_\_.
+   Further information is available on request from `cancta.net <https://cancta.net>`__.
    The task was performed using identical systems at three different sites:
    - Army Research Laboratory, Aberdeen MD (T1)
    - Teledyne Corporation, Durham, NC (T2)
@@ -140,6 +140,7 @@ studies investigating fatigue.
     Video Refresh Rate (VRR) = 900 Hz; Vehicle data log file Sampling Rate (SR) = 100 Hz);
     EEG (BioSemi 256 (+8) channel systems with 4 eye and 2 mastoid channels recorded; SR=1024 Hz);
     Eye Tracking (Sensomotoric Instruments (SMI); REDEYE250).
+   
    *Initial setup:* Upon arrival to the lab, subjects were given an introduction to the primary study
    for which they were recruited and provided informed consent and provided demographics information.
    This was followed by a practice session, to acclimate the subject to the driving simulator.
@@ -156,7 +157,7 @@ studies investigating fatigue.
    *Dependent variables:* Reaction times to perturbations, continuous performance based on vehicle log
    (steering wheel angle, lane position, heading error, etc.), Task-Induced Fatigue Scale (TIFS),
    Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
-   *Note:* questionnaire data is available upon request from `cancta.net <https://cancta.net>`_\_.
+   *Note:* questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
    *Additional data acquired:* Participant Enrollment Questionnaire, Subject Questionnaire for Current Session,
    Simulator Sickness Questionnaire.
    *Experimental Locations:*  Army Research Laboratory, Aberdeen MD (site T1);
@@ -234,7 +235,7 @@ Technical Details
 
       - Channels: 266 (128), 74 (119)
       - Sampling rate (Hz): 1024.0 (226), 2048.0 (21)
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

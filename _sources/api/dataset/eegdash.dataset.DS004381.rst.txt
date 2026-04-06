@@ -127,7 +127,7 @@ In total there are 34 medianus SEP and 32 tibial SEP sessions.
    Contains the raw eeg data in .edf format for each subject.
    Each \*eeg.edf file contains EEG data from one stimulation rate (see scans.tsv column stimRate).
    Details about the channels are given in the corresponding .tsv file.
-   * SEP rate/derivatives
+   \* SEP rate/derivatives
    
    Contains folders for each subject,named sub-<subject number> and session information that include processed data
    *SEP rate/derivatives/sub-\*\*/ses-01/eeg/
@@ -216,7 +216,7 @@ Technical Details
 
       - Channels: 4 (333), 8 (47), 5 (26), 7 (26), 10 (5)
       - Sampling rate (Hz): 20000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 11.815105777777775
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

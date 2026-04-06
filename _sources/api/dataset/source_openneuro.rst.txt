@@ -42,6 +42,7 @@ Openneuro Datasets
    eegdash.dataset.DS002761
    eegdash.dataset.DS002778
    eegdash.dataset.DS002791
+   eegdash.dataset.DS002799
    eegdash.dataset.DS002814
    eegdash.dataset.DS002833
    eegdash.dataset.DS002885
@@ -60,6 +61,7 @@ Openneuro Datasets
    eegdash.dataset.DS003343
    eegdash.dataset.DS003352
    eegdash.dataset.DS003374
+   eegdash.dataset.DS003380
    eegdash.dataset.DS003392
    eegdash.dataset.DS003420
    eegdash.dataset.DS003421
@@ -215,6 +217,7 @@ Openneuro Datasets
    eegdash.dataset.DS004520
    eegdash.dataset.DS004521
    eegdash.dataset.DS004532
+   eegdash.dataset.DS004541
    eegdash.dataset.DS004551
    eegdash.dataset.DS004554
    eegdash.dataset.DS004561
@@ -300,6 +303,7 @@ Openneuro Datasets
    eegdash.dataset.DS005059
    eegdash.dataset.DS005065
    eegdash.dataset.DS005079
+   eegdash.dataset.DS005083
    eegdash.dataset.DS005087
    eegdash.dataset.DS005089
    eegdash.dataset.DS005095
@@ -432,11 +436,14 @@ Openneuro Datasets
    eegdash.dataset.DS006104
    eegdash.dataset.DS006107
    eegdash.dataset.DS006126
+   eegdash.dataset.DS006136
    eegdash.dataset.DS006142
    eegdash.dataset.DS006159
    eegdash.dataset.DS006171
+   eegdash.dataset.DS006222
    eegdash.dataset.DS006233
    eegdash.dataset.DS006234
+   eegdash.dataset.DS006253
    eegdash.dataset.DS006260
    eegdash.dataset.DS006269
    eegdash.dataset.DS006317
@@ -446,6 +453,7 @@ Openneuro Datasets
    eegdash.dataset.DS006370
    eegdash.dataset.DS006374
    eegdash.dataset.DS006377
+   eegdash.dataset.DS006386
    eegdash.dataset.DS006392
    eegdash.dataset.DS006394
    eegdash.dataset.DS006434
@@ -495,18 +503,55 @@ Openneuro Datasets
    eegdash.dataset.DS006940
    eegdash.dataset.DS006945
    eegdash.dataset.DS006963
+   eegdash.dataset.DS006979
    eegdash.dataset.DS007006
    eegdash.dataset.DS007020
    eegdash.dataset.DS007028
+   eegdash.dataset.DS007052
+   eegdash.dataset.DS007056
+   eegdash.dataset.DS007069
    eegdash.dataset.DS007081
    eegdash.dataset.DS007095
+   eegdash.dataset.DS007096
    eegdash.dataset.DS007118
    eegdash.dataset.DS007119
    eegdash.dataset.DS007120
+   eegdash.dataset.DS007137
+   eegdash.dataset.DS007139
    eegdash.dataset.DS007162
+   eegdash.dataset.DS007169
    eegdash.dataset.DS007172
    eegdash.dataset.DS007175
    eegdash.dataset.DS007176
    eegdash.dataset.DS007180
    eegdash.dataset.DS007181
+   eegdash.dataset.DS007216
+   eegdash.dataset.DS007221
    eegdash.dataset.DS007262
+   eegdash.dataset.DS007314
+   eegdash.dataset.DS007315
+   eegdash.dataset.DS007322
+   eegdash.dataset.DS007338
+   eegdash.dataset.DS007347
+   eegdash.dataset.DS007353
+   eegdash.dataset.DS007358
+   eegdash.dataset.DS007406
+   eegdash.dataset.DS007420
+   eegdash.dataset.DS007427
+   eegdash.dataset.DS007431
+   eegdash.dataset.DS007445
+   eegdash.dataset.DS007454
+   eegdash.dataset.DS007463
+   eegdash.dataset.DS007471
+   eegdash.dataset.DS007473
+   eegdash.dataset.DS007477
+   eegdash.dataset.DS007521
+   eegdash.dataset.DS007523
+   eegdash.dataset.DS007524
+   eegdash.dataset.DS007526
+   eegdash.dataset.DS007554
+   eegdash.dataset.DS007558
+   eegdash.dataset.DS007591
+   eegdash.dataset.DS007602
+   eegdash.dataset.DS007609
+   eegdash.dataset.DS007615

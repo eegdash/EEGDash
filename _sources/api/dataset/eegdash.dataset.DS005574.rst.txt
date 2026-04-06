@@ -157,7 +157,7 @@ Technical Details
 
       - Channels: 178, 174, 114, 138, 264, 124, 167, 91, 205
       - Sampling rate (Hz): 512.0 (8), 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 4.499995524088542
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

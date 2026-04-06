@@ -93,12 +93,12 @@ About This Dataset
 **Emotion Processing and Regulation Task (Static Stimuli) — EEG Dataset**
 
 This dataset contains EEG recordings and behavioral data from the **Emotion Processing and Regulation** task with static emotional stimuli.
-*\*Preregistration:* `https://osf.io/g8qey <https://osf.io/g8qey>`_\_
-*\*Preprint:* `https://osf.io/preprints/psyarxiv/v9dt3_v2 <https://osf.io/preprints/psyarxiv/v9dt3_v2>`_\_
+\*\\*Preregistration:\* `https://osf.io/g8qey <https://osf.io/g8qey>`__
+\*\\*Preprint:\* `https://osf.io/preprints/psyarxiv/v9dt3_v2 <https://osf.io/preprints/psyarxiv/v9dt3_v2>`__
 
 **Participants**
 
-* \**N = 148** right-handed, neurologically healthy adults with normal or corrected-to-normal vision.
+\* \**N = 148** right-handed, neurologically healthy adults with normal or corrected-to-normal vision.
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -107,12 +107,12 @@ This dataset contains EEG recordings and behavioral data from the **Emotion Proc
    **Emotion Processing and Regulation Task (Static Stimuli) — EEG Dataset**
    
    This dataset contains EEG recordings and behavioral data from the **Emotion Processing and Regulation** task with static emotional stimuli.
-   *\*Preregistration:* `https://osf.io/g8qey <https://osf.io/g8qey>`_\_
-   *\*Preprint:* `https://osf.io/preprints/psyarxiv/v9dt3_v2 <https://osf.io/preprints/psyarxiv/v9dt3_v2>`_\_
+   \*\\*Preregistration:\* `https://osf.io/g8qey <https://osf.io/g8qey>`__
+   \*\\*Preprint:\* `https://osf.io/preprints/psyarxiv/v9dt3_v2 <https://osf.io/preprints/psyarxiv/v9dt3_v2>`__
    
    **Participants**
    
-   * \**N = 148** right-handed, neurologically healthy adults with normal or corrected-to-normal vision.
+   \* \**N = 148** right-handed, neurologically healthy adults with normal or corrected-to-normal vision.
    
    **Experimental Design**
    
@@ -120,10 +120,10 @@ This dataset contains EEG recordings and behavioral data from the **Emotion Proc
    
    **EEG Data Acquisition**
    
-   *\*EEG Cap:* 64-channel QuickCap
-   *\*Amplifier:* Neuroscan SynampsRT
-   *\*Sampling rate:* 1000 Hz
-   *\*Impedance:* below 5 kΩ
+   \*\\*EEG Cap:\* 64-channel QuickCap
+   \*\\*Amplifier:\* Neuroscan SynampsRT
+   \*\\*Sampling rate:\* 1000 Hz
+   \*\\*Impedance:\* below 5 kΩ
    
    **Recorded Channels**
    
@@ -134,9 +134,9 @@ This dataset contains EEG recordings and behavioral data from the **Emotion Proc
    
    **Additional Sensors**
    
-   * HEO (Horizontal EOG)
-   * VEO (Vertical EOG)
-   * EKG
+   \* HEO (Horizontal EOG)
+   \* VEO (Vertical EOG)
+   \* EKG
    
    *** GSR/EDA**
    
@@ -238,7 +238,7 @@ Technical Details
 
       - Channels: 69
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 123.35075777777776
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

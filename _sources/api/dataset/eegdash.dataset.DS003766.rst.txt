@@ -110,7 +110,7 @@ The EEG data were acquired using a 128-channel cap based on the standard 10/20 S
 
 **Others**
 
-Please refer to the `corresponding paper <https://doi.org/10.1038/s41597-022-01538-5>`_\_ and `GitHub code <https://github.com/andlab-um/MT-EEG-dataset>`_\_ to get more details.
+Please refer to the `corresponding paper <https://doi.org/10.1038/s41597-022-01538-5>`__ and `GitHub code <https://github.com/andlab-um/MT-EEG-dataset>`__ to get more details.
 
 **References**
 
@@ -183,7 +183,7 @@ Technical Details
 
       - Channels: 129
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 40.77816472222222
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

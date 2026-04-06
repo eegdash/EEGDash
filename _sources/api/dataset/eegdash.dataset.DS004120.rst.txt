@@ -118,7 +118,7 @@ via predictive algorithms formulated from the analysis of driver EEG data, in co
    BCIT program, which featured multiple studies investigating fatigue.
    Collectively, the Baseline Driving recordings comprise a virtual study, in which long time-on-task
    driving performance can be analyzed for fatigue-related EEG biomarkers based on measured driving
-   performance degradation. Further information is available on request from `cancta.net <https://cancta.net>`_\_.
+   performance degradation. Further information is available on request from `cancta.net <https://cancta.net>`__.
    The task was performed using identical systems at three different sites:
    - Army Research Laboratory, Aberdeen MD (T1)
    - Teledyne Corporation, Durham, NC (T2)
@@ -164,7 +164,7 @@ via predictive algorithms formulated from the analysis of driver EEG data, in co
    *Dependent variables:* Reaction times to perturbations, continuous performance based
    on vehicle log (steering wheel angle, lane position, heading error, etc.),
    Task-Induced Fatigue Scale (TIFS), Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
-   Note: questionnaire data is available upon request from `cancta.net <https://cancta.net>`_\_.
+   Note: questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
    *Additional data acquired:* Participant Enrollment Questionnaire, Subject Questionnaire for Current Session,
    Simulator Sickness Questionnaire.
    *Experimental Locations:*  Army Research Laboratory, Aberdeen MD (site T1);
@@ -241,7 +241,7 @@ Technical Details
 
       - Channels: 266 (81), 74 (50)
       - Sampling rate (Hz): 1024.0 (109), 2048.0 (22)
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

@@ -97,7 +97,7 @@ About This Dataset
 
 - Data user agreement
 
-The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`_\_ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
+The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`__ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
 Please ensure compliance with any applicable ethical and institutional guidelines.
 
 .. dropdown:: View full README
@@ -111,7 +111,7 @@ Please ensure compliance with any applicable ethical and institutional guideline
    
    - Data user agreement
    
-   The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`_\_ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
+   The EEG dataset is licensed under the `Creative Commons Attribution 4.0 International (CC BY 4.0) <https://creativecommons.org/licenses/by/4.0/>`__ license. You are free to use, share, and adapt the data, provided appropriate credit is given.
    Please ensure compliance with any applicable ethical and institutional guidelines.
    Ethical approval for the data collection was obtained from the Ethics Board of the Institute of Psychology and Ergonomics at Technische Universität Berlin (ethics protocol BPN_GRA_230,415).
    - Contact person
@@ -265,7 +265,7 @@ Technical Details
 
       - Channels: 66
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 78.82088222222221
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

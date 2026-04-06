@@ -169,6 +169,7 @@ About This Dataset
    
    - **Handwriting prompts**: Text to be written
      - ``prompt_text``: Displayed phrase
+   
    - **Stage boundaries**: Posture changes (sitting/standing), session phases
    
    **Coordinate System**
@@ -302,7 +303,7 @@ Technical Details
 
       - Channels: 16
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 140.70160930555554
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
@@ -314,7 +315,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 11.3 MB
+      - Size on disk: 45.3 GB
       - File count: 807
       - Format: BIDS
 

@@ -100,10 +100,10 @@ The main manipulation in this paradigm is the repetition of items in the studied
 
 **To Note**
 
-* The duration of the encoding events (i.e., length of word presentation) varies among sessions.  For some sessions, the words remained on screen from 750 ms, while in other sessions presentation lasted for 1600 ms. The ``duration`` column of the events tsv files contains this information.
-* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
-* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
-* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
+\* The duration of the encoding events (i.e., length of word presentation) varies among sessions.  For some sessions, the words remained on screen from 750 ms, while in other sessions presentation lasted for 1600 ms. The ``duration`` column of the events tsv files contains this information.
+\* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+\* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available.
+\* Recordings done with the Blackrock system are in units of 250 nV, while recordings done with the Medtronic system are estimated through testing to have units of 0.1 uV.  We have completed the scaling to provide values in V.
 
 **Contact**
 
@@ -174,7 +174,7 @@ Technical Details
 
       - Channels: 120 (12), 118 (10), 109 (9), 153 (7), 168 (7), 122 (6), 116 (6), 126 (6), 110 (6), 182 (5), 106 (5), 192 (4), 115 (4), 169 (4), 211 (4), 108 (4), 200 (4), 167 (4), 134 (4), 155 (4), 152 (4), 133 (3), 132 (3), 105 (3), 127 (3), 141 (3), 121 (3), 184 (2), 166 (2), 44 (2), 55 (2), 186 (2), 213 (2), 187 (2), 99 (2), 173 (2), 181 (2), 96 (2), 160 (2), 94 (2), 195 (2), 140 (2), 84 (2), 154, 98, 230, 107, 159, 111, 138, 236, 123, 158, 210, 202, 128, 101, 232, 176, 165, 218, 239, 104, 142, 119, 215, 129
       - Sampling rate (Hz): 1000.0 (150), 2048.0 (21), 2000.0 (10), 512.0 (8), 1024.0 (4)
-      - Duration (hours): 0.0
+      - Duration (hours): 140.0236284722222
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

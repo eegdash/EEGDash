@@ -7,17 +7,17 @@
 DS005083
 ========
 
-Dataset from OpenNeuro.
+*Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy*
 
 Access recordings and metadata through EEGDash.
 
-**Citation:** Unknown (—). **. 
+**Citation:** Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko, John Zempel, Peter Brunner, Sean D McEvoy, Matthew D Smyth, Jarod L Roland (—). *Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy*. `10.18112/openneuro.ds005083.v1.0.0 <https://doi.org/10.18112/openneuro.ds005083.v1.0.0>`__
 
 .. rst-class:: sd-badges
 
-:bdg-primary-line:`Modality: —` :bdg-secondary-line:`Subjects: —` :bdg-secondary-line:`Recordings: —` :bdg-success-line:`License: —` :bdg-warning-line:`Source: OpenNeuro`
+:bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 61` :bdg-secondary-line:`Recordings: 1357` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-secondary:`Metadata: Limited (0%)`
+:bdg-primary:`Metadata: Good (80%)`
 
 Quickstart
 ----------
@@ -79,13 +79,18 @@ Quickstart
       .. code-block:: bibtex
 
          @dataset{ds005083,
+           title = {Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy},
+           author = {Peter H Yang and Nathan Wulfekammer and Amanda V. Jenson and Elliot Neal and Stuart Tomko and John Zempel and Peter Brunner and Sean D McEvoy and Matthew D Smyth and Jarod L Roland},
+           doi = {10.18112/openneuro.ds005083.v1.0.0},
+           url = {https://doi.org/10.18112/openneuro.ds005083.v1.0.0},
          }
 
 
 About This Dataset
 ------------------
 
-No README content is available for this dataset.
+BIDS iEEG dataset for the SEEG electrode data used for analysis in the manuscript title "Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy."
+All coordinates are recorded in the individual native post-operative CT imaging space. There was no alignment to other imaging modalities or standardized atlases.
 
 Dataset Information
 -------------------
@@ -97,17 +102,30 @@ Dataset Information
    * - Dataset ID
      - ``DS005083``
    * - Title
-     - —
+     - Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy
    * - Year
      - —
    * - Authors
-     - Unknown
+     - Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko, John Zempel, Peter Brunner, Sean D McEvoy, Matthew D Smyth, Jarod L Roland
    * - License
-     - —
+     - CC0
    * - Citation / DOI
-     - Unknown
+     - `doi:10.18112/openneuro.ds005083.v1.0.0 <https://doi.org/10.18112/openneuro.ds005083.v1.0.0>`__
    * - Source links
-     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__
+     - `OpenNeuro <https://openneuro.org/datasets/ds005083>`__ | `NeMAR <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__ | `Source URL <https://openneuro.org/datasets/ds005083/versions/1.0.0>`__
+
+.. dropdown:: Copy-paste BibTeX
+   :class-container: sd-shadow-sm
+   :class-title: sd-bg-light
+
+   .. code-block:: bibtex
+
+      @dataset{ds005083,
+        title = {Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy},
+        author = {Peter H Yang and Nathan Wulfekammer and Amanda V. Jenson and Elliot Neal and Stuart Tomko and John Zempel and Peter Brunner and Sean D McEvoy and Matthew D Smyth and Jarod L Roland},
+        doi = {10.18112/openneuro.ds005083.v1.0.0},
+        url = {https://doi.org/10.18112/openneuro.ds005083.v1.0.0},
+      }
 
 .. admonition:: Found an issue with this dataset?
    :class: tip
@@ -115,7 +133,7 @@ Dataset Information
    If you encounter any problems with this dataset (missing files, incorrect metadata,
    loading errors, etc.), please let us know!
 
-   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005083&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005083%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
+   .. button-link:: https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20DS005083&body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20DS005083%0A-%20%2A%2ATitle%3A%2A%2A%20Safety%20and%20Accuracy%20of%20Stereoelectroencephalography%20for%20Pediatric%20Patients%20with%20Prior%20Craniotomy%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&labels=dataset
       :color: primary
       :outline:
 
@@ -130,9 +148,9 @@ Technical Details
    .. grid-item-card:: Subjects & recordings
       :class-card: sd-border-1 highlight-primary
 
-      - Subjects: —
-      - Recordings: —
-      - Tasks: —
+      - Subjects: 61
+      - Recordings: 1357
+      - Tasks: 3
 
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
@@ -152,19 +170,19 @@ Technical Details
       :class-card: sd-border-1
 
       - Size on disk: —
-      - File count: —
+      - File count: 1357
       - Format: BIDS
 
    .. grid-item-card:: License & citation
       :class-card: sd-border-1
 
-      - License: See source
-      - DOI: —
+      - License: CC0
+      - DOI: doi:10.18112/openneuro.ds005083.v1.0.0
 
    .. grid-item-card:: Provenance
       :class-card: sd-border-1
 
-      - Source: OpenNeuro
+      - Source: openneuro
       - OpenNeuro: `ds005083 <https://openneuro.org/datasets/ds005083>`__
       - NeMAR: `ds005083 <https://nemar.org/dataexplorer/detail?dataset_id=ds005083>`__
 

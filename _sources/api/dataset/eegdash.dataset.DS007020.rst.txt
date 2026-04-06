@@ -127,6 +127,7 @@ EEG Acquisition Details:
                    sub-<ID>_ses-01_task-rest_eeg.vhdr
                    sub-<ID>_ses-01_task-rest_eeg.eeg
                    sub-<ID>_ses-01_task-rest_eeg.vmrk
+   
    Mortality Label Format:
    - Living subjects: survival_status = "living"
    - Deceased subjects: survival_status = "deceased"
@@ -204,7 +205,7 @@ Technical Details
 
       - Channels: 63 (76), 64 (18)
       - Sampling rate (Hz): 500.0
-      - Duration (hours): 0.0
+      - Duration (hours): 4.106407222222223
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

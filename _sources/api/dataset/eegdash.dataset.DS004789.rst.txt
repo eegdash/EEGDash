@@ -99,9 +99,9 @@ This dataset contains behavioral events and intracranial electrophysiological re
 
 **To Note**
 
-* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
-* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
-* Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
+\* The iEEG recordings are labeled either "monopolar" or "bipolar."  The monopolar recordings are referenced (typically a mastoid reference), but should always be re-referenced before analysis.  The bipolar recordings are referenced according to a paired scheme indicated by the accompanying bipolar channels tables.
+\* Each subject has a unique montage of electrode locations.  MNI and Talairach coordinates are provided when available, along with brain region annotations.
+\* Recordings were made on multiple different systems, so we have done the scaling to provide all voltage values in V.
 
 **Contact**
 
@@ -172,7 +172,7 @@ Technical Details
 
       - Channels: 126 (87), 108 (32), 112 (32), 110 (31), 88 (29), 120 (28), 128 (28), 127 (24), 116 (22), 124 (21), 196 (20), 109 (19), 111 (18), 106 (17), 100 (17), 113 (16), 125 (15), 86 (14), 107 (13), 64 (13), 60 (13), 158 (12), 118 (12), 68 (11), 104 (11), 178 (10), 76 (10), 180 (10), 122 (10), 121 (10), 102 (9), 80 (9), 142 (9), 56 (9), 153 (8), 97 (8), 140 (8), 75 (8), 188 (7), 114 (7), 62 (7), 85 (7), 146 (7), 172 (7), 130 (7), 148 (7), 90 (7), 83 (7), 92 (6), 72 (6), 162 (6), 168 (6), 139 (6), 173 (6), 70 (6), 134 (6), 78 (6), 96 (5), 74 (5), 206 (5), 93 (5), 165 (5), 141 (5), 160 (5), 84 (4), 161 (4), 203 (4), 119 (4), 136 (4), 177 (4), 224 (4), 54 (4), 200 (4), 46 (4), 123 (4), 208 (3), 186 (3), 50 (3), 176 (3), 37 (3), 212 (3), 138 (3), 59 (3), 94 (3), 99 (3), 154 (3), 103 (3), 152 (3), 166 (3), 133 (3), 69 (3), 151 (2), 170 (2), 95 (2), 58 (2), 55 (2), 184 (2), 218 (2), 213 (2), 36 (2), 156 (2), 52 (2), 67 (2), 179 (2), 87 (2), 182 (2), 105 (2), 149 (2), 43 (2), 26 (2), 77, 53, 101, 190, 16, 129, 98, 202, 14, 209, 216, 48, 195, 175, 229, 73, 65, 215, 131, 38, 63
       - Sampling rate (Hz): 1000.0 (785), 500.0 (119), 1600.0 (32), 999.0 (19), 499.7071 (16), 2000.0 (6), 1024.0 (4), 512.0 (2)
-      - Duration (hours): 0.0
+      - Duration (hours): 776.4940177977268
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

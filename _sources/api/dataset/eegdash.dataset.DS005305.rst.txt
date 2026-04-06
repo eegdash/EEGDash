@@ -125,13 +125,14 @@ Summary: This study aimed to specifically explore the relationship between intri
    Available Modalities: EEG
    Independent variables: NA
    Dependent variables:
-   	DV1: Mean score in the nine executive functions tasks (z-scored)
-   	DV2: resting-state EEG microstates metrics (number of occurrences, mean duration)
+     DV1: Mean score in the nine executive functions tasks (z-scored)
+     DV2: resting-state EEG microstates metrics (number of occurrences, mean duration)
+   
    Control variables:
-   	Age
-   	Gender
-   	Education
-   	Handedness
+     Age
+     Gender
+     Education
+     Handedness
    
    **Methods**
    
@@ -419,7 +420,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 512.0 (164), 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 14.136398111979169
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

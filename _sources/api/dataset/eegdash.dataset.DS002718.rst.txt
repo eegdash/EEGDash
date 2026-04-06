@@ -123,6 +123,7 @@ minimal preprocessing including (see wh_extracteeg_BIDS.m):
    - Correcting event latencies (events have a shift of 34 ms)
    - Resampling data to 250 Hz (this is a step that is done because
      this dataset is used as tutorial for EEGLAB and need to be lightweight)
+   
    - Merging run 1 to 6
    - Removing event fields urevent and duration
    - Filling up empty fields for events boundary and stim_file.
@@ -205,7 +206,7 @@ Technical Details
 
       - Channels: 74
       - Sampling rate (Hz): 250.0
-      - Duration (hours): 0.0
+      - Duration (hours): 14.844166666666666
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

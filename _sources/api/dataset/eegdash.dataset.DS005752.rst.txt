@@ -94,7 +94,7 @@ About This Dataset
 
 A comprehensive dataset characterizing healthy research volunteers in terms of clinical assessments, mood-related psychometrics, cognitive function neuropsychological tests, structural and functional magnetic resonance imaging (MRI), along with diffusion tensor imaging (DTI), and a comprehensive magnetoencephalography battery (MEG).
 In addition, blood samples are currently banked for future genetic analysis.  All data collected in this protocol are broadly shared in the OpenNeuro repository, in the Brain Imaging Data Structure (BIDS) format.  In addition, task paradigms and basic pre-processing scripts are shared on GitHub.  This dataset is unprecedented in its depth of characterization of a healthy population and will allow a wide array of investigations into normal cognition and mood regulation.
-This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <https://creativecommons.org/publicdomain/zero/1.0/>`_\_.
+This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <https://creativecommons.org/publicdomain/zero/1.0/>`__.
 
 **Release Notes**
 
@@ -108,7 +108,7 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    
    A comprehensive dataset characterizing healthy research volunteers in terms of clinical assessments, mood-related psychometrics, cognitive function neuropsychological tests, structural and functional magnetic resonance imaging (MRI), along with diffusion tensor imaging (DTI), and a comprehensive magnetoencephalography battery (MEG).
    In addition, blood samples are currently banked for future genetic analysis.  All data collected in this protocol are broadly shared in the OpenNeuro repository, in the Brain Imaging Data Structure (BIDS) format.  In addition, task paradigms and basic pre-processing scripts are shared on GitHub.  This dataset is unprecedented in its depth of characterization of a healthy population and will allow a wide array of investigations into normal cognition and mood regulation.
-   This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <https://creativecommons.org/publicdomain/zero/1.0/>`_\_.
+   This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <https://creativecommons.org/publicdomain/zero/1.0/>`__.
    
    **Release Notes**
    
@@ -125,10 +125,11 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
      7. MRI:
        - Replaced ADNI-3 resting state sequence with a multi-echo sequence with higher spatial resolution.
        - Replaced field map scans with a shorter reversed-blipped EPI scan.
+   
      8. MEG:
        - Some participants have 6-minute empty room data instead of the shorter duration empty room acquisition.
    
-   See the `CHANGES <./CHANGES>`_\_ file for complete version-wise changelog.
+   See the `CHANGES <./CHANGES>`__ file for complete version-wise changelog.
    
    **Participant Eligibility**
    
@@ -136,7 +137,7 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
    
    **Clinical Measures**
    
-   All potential volunteers visit `the study website <https://nimhresearchvolunteer.ctss.nih.gov>`_\_, check a box indicating consent, and fill out preliminary screening questionnaires.  The questionnaires include basic demographics, the World Health Organization Disability Assessment Schedule 2.0 (WHODAS 2.0), the DSM-5 Self-Rated Level 1 Cross-Cutting Symptom Measure, the DSM-5 Level 2 Cross-Cutting Symptom Measure - Substance Use, the Alcohol Use Disorders Identification Test (AUDIT), the Edinburgh Handedness Inventory, and a brief clinical history checklist.  The WHODAS 2.0 is a 15 item questionnaire that assesses overall general health and disability, with 14 items distributed over 6 domains: cognition, mobility, self-care, “getting along”, life activities, and participation.  The DSM-5 Level 1 cross-cutting measure uses 23 items to assess symptoms across diagnoses, although an item regarding self-injurious behavior was removed from the online self-report version.  The DSM-5 Level 2 cross-cutting measure is adapted from the NIDA ASSIST measure, and contains 15 items to assess use of both illicit drugs and prescription drugs without a doctor’s prescription.  The AUDIT is a 10 item screening assessment used to detect harmful levels of alcohol consumption, and the Edinburgh Handedness Inventory is a systematic assessment of handedness.  These online results do not contain any personally identifiable information (PII).  At the conclusion of the questionnaires, participants are prompted to send an email to the study team. These results are reviewed by the study team, who determines if the participant is appropriate for an in-person interview.
+   All potential volunteers visit `the study website <https://nimhresearchvolunteer.ctss.nih.gov>`__, check a box indicating consent, and fill out preliminary screening questionnaires.  The questionnaires include basic demographics, the World Health Organization Disability Assessment Schedule 2.0 (WHODAS 2.0), the DSM-5 Self-Rated Level 1 Cross-Cutting Symptom Measure, the DSM-5 Level 2 Cross-Cutting Symptom Measure - Substance Use, the Alcohol Use Disorders Identification Test (AUDIT), the Edinburgh Handedness Inventory, and a brief clinical history checklist.  The WHODAS 2.0 is a 15 item questionnaire that assesses overall general health and disability, with 14 items distributed over 6 domains: cognition, mobility, self-care, “getting along”, life activities, and participation.  The DSM-5 Level 1 cross-cutting measure uses 23 items to assess symptoms across diagnoses, although an item regarding self-injurious behavior was removed from the online self-report version.  The DSM-5 Level 2 cross-cutting measure is adapted from the NIDA ASSIST measure, and contains 15 items to assess use of both illicit drugs and prescription drugs without a doctor’s prescription.  The AUDIT is a 10 item screening assessment used to detect harmful levels of alcohol consumption, and the Edinburgh Handedness Inventory is a systematic assessment of handedness.  These online results do not contain any personally identifiable information (PII).  At the conclusion of the questionnaires, participants are prompted to send an email to the study team. These results are reviewed by the study team, who determines if the participant is appropriate for an in-person interview.
    Participants who meet all inclusion criteria are scheduled for an in-person screening visit to determine if there are any further exclusions to participation.  At this visit, participants receive a History and Physical exam, Structured Clinical Interview for DSM-5 Disorders (SCID-5), the Beck Depression Inventory-II (BDI-II), Beck Anxiety Inventory (BAI), and the Kaufman Brief Intelligence Test, Second Edition (KBIT-2).  The purpose of these cognitive and psychometric tests is two-fold.  First, these measures are designed to provide a sensitive test of psychopathology.  Second, they provide a comprehensive picture of cognitive functioning, including mood regulation.  The SCID-5 is a structured interview, administered by a clinician, that establishes the absence of any DSM-5 axis I disorder.  The KBIT-2 is a brief (20 minute) assessment of intellectual functioning administered by a trained examiner.  There are three subtests, including verbal knowledge, riddles, and matrices.
    
    **Biological and physiological measures**
@@ -300,6 +301,7 @@ This dataset is licensed under the `Creative Commons Zero (CC0) v1.0 License <ht
        - ``bold``
        - ``meg``
        - ``asl``
+   
    - ``<extension>``: indicates meg data files' type = ``acq``, ``bak``, ``hc``, ``hist``, ``infods``, ``meg4``, ``newds``, ``res4``, ``xml``
 
 
@@ -368,7 +370,7 @@ Technical Details
 
       - Channels: 305 (240), 306 (183), 304 (123), 302 (117), 303 (110), 301 (71), 382 (59), 300 (57), 378 (20), 377 (16), 379 (16), 381 (15), 380 (15), 299 (3), 387, 388
       - Sampling rate (Hz): 1200.0 (926), 4800.0 (121)
-      - Duration (hours): 0.0
+      - Duration (hours): 102.62917361111111
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

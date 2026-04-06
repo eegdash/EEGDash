@@ -117,7 +117,7 @@ The data collected for the two driving tasks is not included in this dataset.
    and a different subject pool, is not included in this dataset. In the Basic Guard Duty study the rate of
    ID presentation varied among tasks. In the Advanced Guard Duty study both the rate of ID presentation
    and the criteria for verification varied among blocks. Further information is available on request
-   from `cancta.net <https://cancta.net>`_\_.
+   from `cancta.net <https://cancta.net>`__.
    
    **Methods**
    
@@ -185,7 +185,7 @@ The data collected for the two driving tasks is not included in this dataset.
    *Independent variables:* ID presentation rate (varied by block)
    *Dependent variables:* ID disposition accuracy and processing times, Task-Induced Fatigue Scale (TIFS),
    Karolinska Sleepiness Scale (KSS), Visual Analog Scale of Fatigue (VAS-F).
-   Note: The questionnaire data is available upon request from `cancta.net <https://cancta.net>`_\_.
+   Note: The questionnaire data is available upon request from `cancta.net <https://cancta.net>`__.
    *Additional data acquired:* Participant Enrollment Questionnaire, Subject Questionnaire
    for Current Session, Simulator Sickness Questionnaire.
    *Experimental Location:* Science Applications International Corporation, Louisville, CO
@@ -260,7 +260,7 @@ Technical Details
 
       - Channels: 262
       - Sampling rate (Hz): 1024.0
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

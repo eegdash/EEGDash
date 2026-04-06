@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:39.837** total execution time for 1 file **from generated/auto_examples/hpc**:
+**00:38.805** total execution time for 1 file **from generated/auto_examples/hpc**:
 
 .. container::
 
@@ -33,5 +33,5 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_hpc_tutorial_eoec.py` (``tutorial_eoec.py``)
-     - 00:39.837
+     - 00:38.805
      - 0.0

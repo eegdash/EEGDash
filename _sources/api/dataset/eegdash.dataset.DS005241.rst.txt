@@ -91,7 +91,7 @@ About This Dataset
 
 KIT/Yokogawa MEG system with 208 magnetometer channels
 24 subjects amounting to over 17 hours of data
-Supplementary code can be found `here <github.com/amilleah/neuromorph>`_\_
+Supplementary code can be found `here <github.com/amilleah/neuromorph>`__
 
 **References**
 
@@ -163,7 +163,7 @@ Technical Details
 
       - Channels: 256
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 3.731936944444445
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

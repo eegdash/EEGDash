@@ -223,6 +223,7 @@ About This Dataset
      - ``latency``: Sample index of keystroke
      - ``duration``: Samples from press to release
      - ``key``: Character typed
+   
    - **Prompt events**: Text prompts shown to participant
      - ``type``: prompt
      - ``prompt_text``: Displayed text
@@ -472,7 +473,7 @@ Technical Details
 
       - Channels: 32
       - Sampling rate (Hz): 2000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 346.3244476388889
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
@@ -484,7 +485,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: 402.7 MB
+      - Size on disk: 223.3 GB
       - File count: 1136
       - Format: BIDS
 

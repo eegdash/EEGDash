@@ -94,11 +94,11 @@ A Longitudinal Motor Imagery Study in Healthy Adults
 Dataset Overview
 This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
 Experimental Design
-* Participants: 7 healthy adults (4 male, 3 female)
-* Sessions: 9 per participant
-* Training Phase: Motor imagery calibration
-* Trial Phase: Closed-loop BMI control (walk/stop)
-* Conditions: Walk / Stop (motor imagery)
+\* Participants: 7 healthy adults (4 male, 3 female)
+\* Sessions: 9 per participant
+\* Training Phase: Motor imagery calibration
+\* Trial Phase: Closed-loop BMI control (walk/stop)
+\* Conditions: Walk / Stop (motor imagery)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -108,11 +108,11 @@ Experimental Design
    Dataset Overview
    This dataset contains multimodal recordings from a brain–machine interface (BMI) training study involving seven healthy adult participants (ages 20–30, Mean = 24.3, SD = 3.8). The study focused on open-loop and closed-loop control of a lower-limb exoskeleton (Rex Bionics) using EEG and inertial sensor data. Each participant completed nine sessions over several weeks, structured into training and trial phases.
    Experimental Design
-   * Participants: 7 healthy adults (4 male, 3 female)
-   * Sessions: 9 per participant
-   * Training Phase: Motor imagery calibration
-   * Trial Phase: Closed-loop BMI control (walk/stop)
-   * Conditions: Walk / Stop (motor imagery)
+   \* Participants: 7 healthy adults (4 male, 3 female)
+   \* Sessions: 9 per participant
+   \* Training Phase: Motor imagery calibration
+   \* Trial Phase: Closed-loop BMI control (walk/stop)
+   \* Conditions: Walk / Stop (motor imagery)
    
    Task Structure and Naming Convention
    Each session includes multiple motor imagery tasks organized as follows:
@@ -127,20 +127,20 @@ Experimental Design
    walk6min – Imagining continuous walking for 6 minutes
    stop6min – Imagining standing still for 6 minutes
    Data Modalities
-   * EEG: 60 scalp channels + 4 EOG channels
-   * IMU: 3-axis accelerometer, gyroscope, magnetometer, and quaternion
-   * Sensor Placement: IMUs mounted on participant forehead and exosuit back brace
-   * Decoder Signals/Feedback: Logged control signals and BMI predictions
+   \* EEG: 60 scalp channels + 4 EOG channels
+   \* IMU: 3-axis accelerometer, gyroscope, magnetometer, and quaternion
+   \* Sensor Placement: IMUs mounted on participant forehead and exosuit back brace
+   \* Decoder Signals/Feedback: Logged control signals and BMI predictions
    
    Additional Materials
-   * MIQ-RS: Motor Imagery Questionnaire – Revised Second Version (PDFs in derivatives/MIQ-RS/)
-   * Validation Tables: Data availability, synchronization, and electrode placement (derivatives/validation/)
-   * Raw Data: Provided without filtering or artifact removal
+   \* MIQ-RS: Motor Imagery Questionnaire – Revised Second Version (PDFs in derivatives/MIQ-RS/)
+   \* Validation Tables: Data availability, synchronization, and electrode placement (derivatives/validation/)
+   \* Raw Data: Provided without filtering or artifact removal
    
    BIDS Structure
-   * dataset_description.json: Metadata and provenance
-   * sub-XX/ses-YY/: EEG and IMU recordings per session
-   * derivatives/: MIQ-RS responses and validation spreadsheets
+   \* dataset_description.json: Metadata and provenance
+   \* sub-XX/ses-YY/: EEG and IMU recordings per session
+   \* derivatives/: MIQ-RS responses and validation spreadsheets
 
 
 Dataset Information
@@ -208,7 +208,7 @@ Technical Details
 
       - Channels: 64
       - Sampling rate (Hz): 100.0
-      - Duration (hours): 0.0
+      - Duration (hours): 34.022077777777774
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

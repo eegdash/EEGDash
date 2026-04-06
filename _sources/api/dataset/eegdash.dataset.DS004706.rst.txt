@@ -92,7 +92,7 @@ About This Dataset
 This dataset contains behavioral events and electrophysiological recordings from an experiment run in the Computational Memory Lab at the University of Pennsylvania from 2021-2022 with funding from U.S. Army Medical Research and Development Command (USAMRDC) through the Medical Technology Enterprise Consortium (MTEC) project MTEC-20-06-MOM-013, "Restoring memory with task-independent semi-chronic closed-loop direct brain stimulation and non-invasive closed-loop stimulus timing optimization". This experiment constitutes the non-invasive portion of the project, which targeted memory improvement through classifier-based stimulus presentation.
 The experiment is a hybrid spatial-navigation and free recall paradigm in which subjects play the role of a courier delivering items to stores across a virtual town, and are subsequently asked to recall their deliveries. There are two phases - "read-only" and "closed-loop". In read-only sessions, there is no classifier-based timing manipulation and participants simply perform the task in order to generate training data for the models used in subsequent closed-loop sessions. After collecting sufficient training data, classifier models predict recall in closed-loop sessions and the stimulus presentation is timed to coincide with predicted good or bad memory encoding.
 Two publications are based on this experiment:
-`"Neural correlates of memory in an immersive spatiotemporal context" <https://www.biorxiv.org/content/10.1101/2022.11.30.518606>`_\_ studies the navigation and memory dynamics in read-only sessions, and "Optimizing learning via real-time neural decoding" (link pending) explores the results of the closed-loop manipulation.
+`"Neural correlates of memory in an immersive spatiotemporal context" <https://www.biorxiv.org/content/10.1101/2022.11.30.518606>`__ studies the navigation and memory dynamics in read-only sessions, and "Optimizing learning via real-time neural decoding" (link pending) explores the results of the closed-loop manipulation.
 Note: memory dynamics in closed-loop sessions are potentially influenced by the closed-loop timing manipulation, and so may be biased in a way that precludes them from analyses of general mnemonic function. The read-only sessions, however, were not subject to this manipulation and therefore can be used for studying spatial and episodic memory (as in the first paper mentioned above).
 
 Dataset Information
@@ -160,7 +160,7 @@ Technical Details
 
       - Channels: 137
       - Sampling rate (Hz): 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 470.60607069227433
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

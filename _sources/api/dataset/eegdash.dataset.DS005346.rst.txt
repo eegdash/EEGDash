@@ -94,7 +94,7 @@ About This Dataset
 
 Thirty participants (17 females, mean age=23.17±2.31 years) were recruited for the fMRI experiment at Shanghai International Studies University, Shanghai, China. An additional thirty participants (16 females, mean age=22.67±1.99 years) were recruited from the West China Hospital of Sichuan University, Chengdu, China for MEG experiment. All participants were right-handed, had normal or corrected-to-normal vision, and reported no history of neurological disorders. Before the experiment, all participants provided written informed consent and were compensated for their participation.
 Data from 6 participants in the MEG experiment exhibited distinct PSD patterns that diverged from the other 24 participants (10 females, mean age=22.75±1.94 years; see figure below), we excluded their data from the ISC and regression analysis for MEG data. However, all datasets remain available in the OpenNeuro repository for other researchers’ use.
-`Power Spectrum Analysis `https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`__`_\_
+`Power Spectrum Analysis <https://raw.githubusercontent.com/compneurolinglab/baba/main/psd.png>`__
 
 **Experiment Procedure**
 
@@ -180,7 +180,7 @@ Technical Details
 
       - Channels: 66 (72), 65 (18)
       - Sampling rate (Hz): 1000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 20.35939638888889
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

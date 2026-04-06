@@ -173,22 +173,25 @@ This dataset contains EEG data from a study investigating the effects of propofo
      - ``awake``: Wakefulness
      - ``sed``: Sedation condition
      - ``sed2``: One-minute resting EEG recorded just before an awakening
+   
    - **acq-<acquisition>**: Type of acquisition:
      - ``EC``: Eyes Closed (during wakefulness)
      - ``EO``: Eyes Open (during wakefulness)
      - ``tms``: Session with Transcranial Magnetic Stimulation
      - ``rest``: Rest condition (during sedation)
+   
    - **run-<run_number>**: Specifies the run number for the data collection:
      - ``run-1``, ``run-2``, ``run-3`` (indicating different awakenings in sedation)
-   - \*\*.<extension>**: File extension indicating the type of file (e.g., ``.eeg``, ``.vhdr``, ``.vmrk``, etc.).
+   
+   - \\*\\*.<extension>**: File extension indicating the type of file (e.g., ``.eeg``, ``.vhdr``, ``.vmrk``, etc.).
    
    **File Types**
    
-   - \*\*.eeg**: Raw EEG data.
-   - \*\*.vhdr**: BrainVision header file.
-   - \*\*.vmrk**: BrainVision marker file.
-   - \*\*_events.json / _events.tsv**: Event markers.
-   - \*\*_channels.tsv / _eeg.json**: Channel information and metadata.
+   - \\*\\*.eeg**: Raw EEG data.
+   - \\*\\*.vhdr**: BrainVision header file.
+   - \\*\\*.vmrk**: BrainVision marker file.
+   - \\*\\*_events.json / _events.tsv**: Event markers.
+   - \\*\\*_channels.tsv / _eeg.json**: Channel information and metadata.
    
    **Usage Instructions**
    
@@ -277,7 +280,7 @@ Technical Details
 
       - Channels: 64 (132), 65 (70)
       - Sampling rate (Hz): 5000.0
-      - Duration (hours): 0.0
+      - Duration (hours): 17.939717444444444
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

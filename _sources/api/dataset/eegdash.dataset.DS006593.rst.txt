@@ -111,7 +111,7 @@ The datasets follows the BIDS convention with the following structure: /sub-[sub
 
 **Contact Information**
 
-For questions or issues regarding this dataset, please contact the corresponding author `Basak Celik <celik.b@northeastern.edu>`_\_ via email.
+For questions or issues regarding this dataset, please contact the corresponding author `Basak Celik <celik.b@northeastern.edu>`__ via email.
 [1] Memmott T, Koçanaoğulları A, Lawhead M, Klee D, Dudy S, Fried-Oken M, Oken B. BciPy: brain-computer interface software in Python. Brain-Computer Interfaces, 8(4), 137-53, 2021.
 
 Dataset Information
@@ -179,7 +179,7 @@ Technical Details
 
       - Channels: 19
       - Sampling rate (Hz): 300.0
-      - Duration (hours): 0.0
+      - Duration (hours): 5.610982407407407
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

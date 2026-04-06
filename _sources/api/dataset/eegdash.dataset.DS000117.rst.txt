@@ -95,10 +95,10 @@ Note that it is a subset of the data available on OpenfMRI (http://www.openfmri.
 Description:  Multi-subject, multi-modal (sMRI+fMRI+MEG+EEG) neuroimaging dataset on face processing
 Please cite the following reference if you use these data:
      Wakeman, D.G. & Henson, R.N. (2015). A multi-subject, multi-modal human neuroimaging dataset. Sci. Data 2:150001 doi: 10.1038/sdata.2015.1
+
 The data have been used in several publications including, for example:
    Henson, R.N., Abdulrahman, H., Flandin, G. & Litvak, V. (2019). Multimodal integration of M/EEG and f/MRI data in SPM12. Frontiers in Neuroscience, Methods, 13, 300.
     Henson, R.N., Wakeman, D.G., Litvak, V. & Friston, K.J. (2011). A Parametric Empirical Bayesian framework for the EEG/MEG inverse problem: generative models for multisubject and multimodal integration. Frontiers in Human Neuroscience, 5, 76, 1-16.
-    Chapter 42 of the SPM12 manual (http://www.fil.ion.ucl.ac.uk/spm/doc/manual.pdf)
 
 .. dropdown:: View full README
    :class-container: sd-shadow-sm
@@ -109,10 +109,12 @@ The data have been used in several publications including, for example:
    Description:  Multi-subject, multi-modal (sMRI+fMRI+MEG+EEG) neuroimaging dataset on face processing
    Please cite the following reference if you use these data:
         Wakeman, D.G. & Henson, R.N. (2015). A multi-subject, multi-modal human neuroimaging dataset. Sci. Data 2:150001 doi: 10.1038/sdata.2015.1
+   
    The data have been used in several publications including, for example:
       Henson, R.N., Abdulrahman, H., Flandin, G. & Litvak, V. (2019). Multimodal integration of M/EEG and f/MRI data in SPM12. Frontiers in Neuroscience, Methods, 13, 300.
        Henson, R.N., Wakeman, D.G., Litvak, V. & Friston, K.J. (2011). A Parametric Empirical Bayesian framework for the EEG/MEG inverse problem: generative models for multisubject and multimodal integration. Frontiers in Human Neuroscience, 5, 76, 1-16.
        Chapter 42 of the SPM12 manual (http://www.fil.ion.ucl.ac.uk/spm/doc/manual.pdf)
+   
    (see ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/Publications for full list), as well as the BioMag2010 data competition and the Kaggle competition: https://www.kaggle.com/c/decoding-the-human-brain)
    
    **func/**
@@ -164,16 +166,20 @@ The data have been used in several publications including, for example:
    There are multiple versions of the dataset available on the web (see notes above), and these entailed a renumbering of the subjects for various reasons. Here are all the versions and how to match subjects between them (plus some rationale and history for different versions):
    1. Original Paper (N=19): Wakeman & Henson (2015): doi:10.1038/sdata.2015.1
        Number refers to order that tested (and some, eg 4, 7, 13 etc were excluded for not completing both MRI and MEG sessions)
+   
    2. openfMRI, renumbered from paper: http://openfmri.org/s3-browser/?prefix=ds000117/ds000117_R0.1.1/uncompressed/
        Numbers 1-19 just made contiguous
+   
    3. FTP subset of N=16: ftp: ftp://ftp.mrc-cbu.cam.ac.uk/personal/rik.henson/wakemandg_hensonrn/
        This set was used for SPM Courses
        Designed to illustrate multimodal integration, so wanted good MRI+MEG+EEG data for all subjects
        Removed original subject_01 and subject_06 because bad EEG data; subject_19 because poor EEG and fMRI data
        (And renumbered subject_14 for some reason).
+   
    4. Current OpenNeuro subset N=16 used for (BIDS): https://openneuro.org/datasets/ds000117
        OpenNeuro was rebranding of openfMRI, and enforced BIDS format
        Since this version designed to illustrate multi-modal BIDS, kept same numbering as FTP
+   
    W&H2015       openfMRI    FTP      openNeuro
    ========       ======        ===     =======
    subject_01      sub001
@@ -262,7 +268,7 @@ Technical Details
 
       - Channels: 394
       - Sampling rate (Hz): 1100.0
-      - Duration (hours): 0.0
+      - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

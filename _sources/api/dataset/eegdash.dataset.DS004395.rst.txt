@@ -90,11 +90,11 @@ About This Dataset
 ------------------
 
 The Penn Electrophysiology of Encoding and Retrieval Study (PEERS) aimed to characterize the behavioral and electrophysiological (EEG) correlates of memory encoding and retrieval in highly practiced individuals. Across five PEERS experiments, 300+ subjects contributed more than 7,000 90 minute memory testing sessions with recorded EEG data.
-See the Computational Memory Lab's `wiki page <https://memory.psych.upenn.edu/PEERS>`_\_ for more detailed information, and `this paper <https://psyarxiv.com/bu5x8/>`_\_ for a discussion of the main findings and lessons learned from this large-scale study.
+See the Computational Memory Lab's `wiki page <https://memory.psych.upenn.edu/PEERS>`__ for more detailed information, and `this paper <https://psyarxiv.com/bu5x8/>`__ for a discussion of the main findings and lessons learned from this large-scale study.
 This dataset contains 3 experiments:
-* ltpFR (a.k.a. PEERS1-3)
-* ltpFR2 (a.k.a. PEERS4)
-* VFFR (a.k.a. PEERS5)
+\* ltpFR (a.k.a. PEERS1-3)
+\* ltpFR2 (a.k.a. PEERS4)
+\* VFFR (a.k.a. PEERS5)
 
 Electroencephalogram (EEG) data were recorded with either a 129-channel Geodesic Sensor Net (either GSN 200 model or HydroCel GSN model) using the Netstation acquisition environment (Electrical Geodesics, Inc.; EGI) or with a 128-channel BioSemi headcap using the Biosemi ActiveTwo acquisition system.
 *Note:* subject-specific electrode layouts were NOT recorded. Despite being labeled as "CapTrak" space, the coordinates reflect a generic electrode layout for a given headcap and do NOT represent any individual's head shape.
@@ -169,7 +169,7 @@ Technical Details
 
       - Channels: 129 (4980), 137 (1490), 144 (11), 272 (2)
       - Sampling rate (Hz): 500.0 (4946), 2048.0 (1466), 512.0 (28), 250.0 (17), 1000.0 (15), 1024.0 (11)
-      - Duration (hours): 0.0
+      - Duration (hours): 9115.806919930556
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

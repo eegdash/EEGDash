@@ -93,11 +93,11 @@ About This Dataset
 **Basis Profile Curve identification in the human ventral temporal cortex**
 
 This dataset contains intracranial EEG recordings from five patients during single pulse electrical stimulation as described in:
-* H Huang, NM Gregg, G Ojeda Valencia, BH Brinkmann, BN Lundstrom, GA Worrell, KJ Miller, and D Hermes (2022) Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. (Under Review)
+\* H Huang, NM Gregg, G Ojeda Valencia, BH Brinkmann, BN Lundstrom, GA Worrell, KJ Miller, and D Hermes (2022) Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. (Under Review)
 
 Please cite this work when using the data. These data were recorded at the Mayo Clinic in Rochester, MN, as part of the NIH Brain Initiative supported project R01 MH122258 "CRCNS: Processing speed in the human connectome across the lifespan". Research reported in this publication was supported by the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH122258 and by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number T32GM065841. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health. The data was collected by Harvey Huang, Dora Hermes, Nick Gregg, Brian Lundstrom, Cindy Nelson, Gregg Worrell and Kai J. Miller. The BIDS formatting was performed by Harvey Huang, Dora Hermes and Gabriela Ojeda Valencia.
 Data can be analyzed using the Matlab code at:
-* https://github.com/hharveygit/VTCBPC_JNS_Manu
+\* https://github.com/hharveygit/VTCBPC_JNS_Manu
 
 **Format**
 
@@ -176,7 +176,7 @@ Technical Details
 
       - Channels: 206, 178, 194, 135, 192
       - Sampling rate (Hz): 2048.0
-      - Duration (hours): 0.0
+      - Duration (hours): 5.6259163411458335
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary

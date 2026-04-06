@@ -26,6 +26,14 @@ __all__ = [
 
 _SEPARATORS = ("/", "|", ";")
 
+# Figure registry: stores Plotly figures during HTML generation for PDF export
+_figure_registry: dict[str, object] = {}
+
+
+def get_figure_registry() -> dict[str, object]:
+    """Return all figures registered during chart generation."""
+    return dict(_figure_registry)
+
 
 def primary_modality(value: Any) -> str:
     """Return the canonical modality label for a record."""
@@ -272,6 +280,10 @@ def build_and_export_html(
         The path to the written HTML file.
 
     """
+    # Register figure for PDF export retrieval
+    if fig is not None:
+        _figure_registry[div_id] = fig
+
     # Determine plotly.js inclusion mode
     plotlyjs_mode = False
     if include_plotlyjs is True or include_plotlyjs == "cdn":

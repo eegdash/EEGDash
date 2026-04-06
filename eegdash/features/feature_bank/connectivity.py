@@ -20,8 +20,7 @@ from itertools import chain
 import numpy as np
 from scipy.signal import csd
 
-from ..decorators import FeaturePredecessor, bivariate_feature
-from ..extractors import BivariateIterator
+from ..decorators import FeaturePredecessor, bivariate_feature, channel_pairer
 from . import utils
 from .signal import SIGNAL_PREDECESSORS
 
@@ -34,6 +33,7 @@ __all__ = [
 
 
 @FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@channel_pairer
 def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.
 
@@ -80,7 +80,7 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     """
     f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
     n = x.shape[1]
-    idx_x, idx_y = BivariateIterator(n, directed=False).get_pair_iterators()
+    idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
     ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))
     f, s = csd(x[:, ix], x[:, iy], **kwargs)
     f_min, f_max = utils.get_valid_freq_band(kwargs["fs"], x.shape[-1], f_min, f_max)

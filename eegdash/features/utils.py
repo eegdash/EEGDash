@@ -36,6 +36,7 @@ from .datasets import FeaturesConcatDataset, FeaturesDataset
 __all__ = [
     "extract_features",
     "fit_feature_extractors",
+    "channel_names_to_indices",
 ]
 
 
@@ -275,3 +276,35 @@ def fit_feature_extractors(
             features.partial_fit(X.numpy(), y=np.array(y), _metadata=batch_metadata)
     features.fit()
     return features
+
+
+def channel_names_to_indices(channels: List[str], ch_names: List[str]) -> List[int]:
+    r"""Converts a list of channel names to channel indices in another list.
+
+    Parameters
+    ----------
+    channels : List[str]
+        A list of channel names.
+    ch_names : List[str]
+        A list of existing channel names to take indices from.
+
+    Returns
+    -------
+    List[int]
+        A list of channel indices.
+
+    Raises
+    ------
+    ValueError
+        If the channel name was not found in the existing channels list.
+
+    """
+    channel_idx = []
+    for channel in channels:
+        if channel in ch_names:
+            channel_idx.append(ch_names.index(channel))
+        else:
+            raise ValueError(
+                f"Channel {channel} not found in metadata channels: {ch_names}."
+            )
+    return channel_idx

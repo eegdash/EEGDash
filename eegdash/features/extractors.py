@@ -138,17 +138,6 @@ class BasePreprocessorOutputType(ABC):
     def __init__(self, preprocessor: Callable):
         super().__init__()
         self.preprocessor = preprocessor
-        uf_preprocessor = _get_underlying_func(preprocessor)
-        if hasattr(uf_preprocessor, "parent_extractor_type"):
-            self.parent_extractor_type = preprocessor.parent_extractor_type
-        if hasattr(uf_preprocessor, "feature_kind"):
-            self.feature_kind = preprocessor.feature_kind
-        if hasattr(uf_preprocessor, "__name__"):
-            self.__name__ = preprocessor.__name__
-        if hasattr(uf_preprocessor, "__module__"):
-            self.__module__ = preprocessor.__module__
-        if hasattr(uf_preprocessor, "__doc__"):
-            self.__doc__ = preprocessor.__doc__
         if "_metadata" in inspect.signature(preprocessor).parameters:
             self.__call__ = self._call_metadata
         else:
@@ -427,7 +416,7 @@ class FeatureExtractor(TrainableFeature):
                 _get_underlying_func(self.preprocessor), "metadata_preprocessor"
             ):
                 *z, _metadata = self.preprocessor(*x, _metadata=_metadata.copy())
-                z = tuple(z)
+                z = (*z,)
             else:
                 z = self.preprocessor(*x, _metadata=_metadata)
         else:
@@ -697,7 +686,7 @@ class BivariateIterator:
                 pairs = list(zip(*np.triu_indices(pairs, 1))) + list(
                     zip(*np.tril_indices(pairs, -1))
                 )
-        self.pairs = pairs
+        self.pairs = list(pairs)
 
     def get_pair_iterators(self) -> tuple[np.ndarray, np.ndarray]:
         r"""Get indices for pairs of channels.
@@ -711,7 +700,7 @@ class BivariateIterator:
             The row and column indices for the unique pairs.
 
         """
-        return tuple((np.array(x) for x in zip(*self.pairs)))
+        return tuple([np.array(x) for x in zip(*self.pairs)])
 
 
 class MultivariateFeature:
@@ -880,7 +869,7 @@ class BivariateFeature(MultivariateFeature):
         ch_names = _metadata["info"]["ch_names"]
         return [
             self.channel_pair_format.format(ch_names[i], ch_names[j])
-            for i, j in zip(*self.get_pair_iterators(len(ch_names)))
+            for i, j in zip(*_metadata["ch_pair_iterator"].get_pair_iterators())
         ]
 
 

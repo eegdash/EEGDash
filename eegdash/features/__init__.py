@@ -4,7 +4,7 @@ from .decorators import (
     FeaturePredecessor,
     PreprocessorOutputType,
     bivariate_feature,
-    metadata_perprocessor,
+    metadata_preprocessor,
     multivariate_feature,
     univariate_feature,
 )
@@ -37,6 +37,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
+    pick_channel_pairs_preprocessor,
     pick_channels_preprocessor,
     signal_decorrelation_time,
     signal_filter_preprocessor,
@@ -93,7 +94,7 @@ __all__ = [
     "FeaturePredecessor",
     "PreprocessorOutputType",
     "bivariate_feature",
-    "metadata_perprocessor",
+    "metadata_preprocessor",
     "multivariate_feature",
     "univariate_feature",
     "BivariateFeature",
@@ -138,6 +139,7 @@ __all__ = [
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
     # Pick
+    "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
     "SignalOutputType",

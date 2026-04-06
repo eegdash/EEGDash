@@ -28,6 +28,7 @@ from .dimensionality import (
     dimensionality_petrosian_fractal_dim,
 )
 from .pick import (
+    pick_channel_pairs_preprocessor,
     pick_channels_preprocessor,
 )
 from .signal import (
@@ -86,6 +87,7 @@ __all__ = [
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
     # Pick
+    "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
     "SignalOutputType",

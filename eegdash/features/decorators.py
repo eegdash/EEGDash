@@ -15,28 +15,86 @@ The module provides the following decorators:
 
 """
 
+import functools
 import inspect
 from collections.abc import Callable
-from typing import List, Type
+from typing import Iterable, List, Tuple, Type
 
 from .extractors import (
     BasePreprocessorOutputType,
     BivariateFeature,
+    BivariateIterator,
     DirectedBivariateFeature,
     MultivariateFeature,
     UnivariateFeature,
     _get_underlying_func,
 )
+from .utils import channel_names_to_indices
 
 __all__ = [
     "bivariate_feature",
     "FeatureKind",
     "FeaturePredecessor",
-    "metadata_perprocessor",
+    "metadata_preprocessor",
     "multivariate_feature",
     "PreprocessorOutputType",
     "univariate_feature",
 ]
+
+_WRAPPER_ASSIGNMENTS = [
+    *functools.WRAPPER_ASSIGNMENTS,
+    "parent_extractor_type",
+    "feature_kind",
+    "metadata_preprocessor",
+]
+
+
+def _update_wrapper(
+    wrapper,
+    wrapped,
+    assigned=_WRAPPER_ASSIGNMENTS,
+    updated=functools.WRAPPER_UPDATES,
+):
+    """Update a wrapper function to look like the wrapped function
+
+    wrapper is the function to be updated
+    wrapped is the original function
+    assigned is a tuple naming the attributes assigned directly
+    from the wrapped function to the wrapper function (defaults to
+    functools.WRAPPER_ASSIGNMENTS)
+    updated is a tuple naming the attributes of the wrapper that
+    are updated with the corresponding attribute from the wrapped
+    function (defaults to functools.WRAPPER_UPDATES)
+    """
+    wrapped_f = _get_underlying_func(wrapped)
+    for attr in assigned:
+        try:
+            value = getattr(wrapped_f, attr)
+        except AttributeError:
+            pass
+        else:
+            setattr(wrapper, attr, value)
+    for attr in updated:
+        getattr(wrapper, attr).update(getattr(wrapped_f, attr, {}))
+    # Issue #17482: set __wrapped__ last so we don't inadvertently copy it
+    # from the wrapped function when updating __dict__
+    wrapper.__wrapped__ = wrapped
+    # Return the wrapper so this can be used as a decorator via partial()
+    return wrapper
+
+
+def _wraps(wrapped, assigned=_WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES):
+    """Decorator factory to apply update_wrapper() to a wrapper function
+
+    Returns a decorator that invokes update_wrapper() with the decorated
+    function as the wrapper argument and the arguments to wraps() as the
+    remaining arguments. Default arguments are as for update_wrapper().
+    This is a convenience function to simplify applying partial() to
+    update_wrapper().
+    """
+    return functools.partial(
+        _update_wrapper, wrapped=wrapped, assigned=assigned, updated=updated
+    )
 
 
 class FeaturePredecessor:
@@ -226,20 +284,22 @@ class PreprocessorOutputType:
             `output_type`, with the original preprocessor function as its implementation.
 
         """
-        return type(
-            preprocessor.__name__,
-            (self.output_type,),
-            {
-                "__call__": self.output_type._call_metadata
-                if "_metadata" in inspect.signature(preprocessor).parameters
-                else self.output_type._call,
-                "__module__": preprocessor.__module__,
-                "__doc__": preprocessor.__doc__,
-            },
-        )(preprocessor)
+        return _wraps(preprocessor)(
+            type(
+                preprocessor.__name__,
+                (self.output_type,),
+                {
+                    "__call__": self.output_type._call_metadata
+                    if "_metadata" in inspect.signature(preprocessor).parameters
+                    else self.output_type._call,
+                    "__module__": preprocessor.__module__,
+                    "__doc__": preprocessor.__doc__,
+                },
+            )(preprocessor)
+        )
 
 
-def metadata_perprocessor(func: Callable):
+def metadata_preprocessor(func: Callable):
     r"""Decorator to set a feature preprocessor as a metadata preprocessor.
 
     A metadata preprocessor must get a keyword argument named ``"_metadata"``
@@ -257,7 +317,7 @@ def metadata_perprocessor(func: Callable):
 
     """
     f = _get_underlying_func(func)
-    if "_metadata" not in inspect.signature(func).parameters:
+    if "_metadata" not in inspect.signature(f).parameters:
         raise TypeError(
             f"{f.__name__} cannot be set as a metadata preprocessor "
             + "because it does not get a keyword argument named "
@@ -265,3 +325,42 @@ def metadata_perprocessor(func: Callable):
         )
     f.metadata_preprocessor = True
     return func
+
+
+class ChannelPairer:
+    def __init__(self, directed: bool = False):
+        self.directed = directed
+
+    def __call__(self, func: Callable):
+        @metadata_preprocessor
+        @_wraps(func)
+        def func_wrapper(
+            *args,
+            _metadata: dict,
+            pairs: Iterable[Tuple[str, str]] | None = None,
+            **kwargs,
+        ):
+            ch_names = _metadata["info"]["ch_names"]
+            if pairs is None:
+                pairs = len(ch_names)
+            else:
+                pairs = list(
+                    zip(*[channel_names_to_indices(x, ch_names) for x in zip(*pairs)])
+                )
+            _metadata["ch_pair_iterator"] = BivariateIterator(
+                pairs, directed=self.directed
+            )
+            f = _get_underlying_func(func)
+            if "_metadata" in inspect.signature(f).parameters:
+                kwargs["_metadata"] = _metadata
+            if hasattr(f, "metadata_preprocessor") and f.metadata_preprocessor:
+                return (*func(*args, **kwargs),)
+            else:
+                return (*func(*args, **kwargs), _metadata)
+
+        return func_wrapper
+
+
+# Syntax sugar
+channel_pairer = ChannelPairer(directed=False)
+channel_directed_pairer = ChannelPairer(directed=True)

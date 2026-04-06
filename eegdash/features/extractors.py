@@ -187,9 +187,7 @@ class FeatureExtractor(TrainableFeature):
                 if self.preprocessor is None
                 else get_underlying_func(self.preprocessor)
             )
-            pp_parent_type = getattr(preprocessor, "parent_extractor_type", [None])
-            if preprocessor is None or AsInputOutputType in pp_parent_type:
-                assert preprocessor is None or len(pp_parent_type) == 1
+            if isinstance(preprocessor, AsInputOutputType):
                 return
             parent_type = preprocessor
 
@@ -199,27 +197,28 @@ class FeatureExtractor(TrainableFeature):
                 fe = f
                 f = f.preprocessor
             f = get_underlying_func(f)
-            pe_type = getattr(f, "parent_extractor_type", [None])
-            if fe is not None and AsInputOutputType in pe_type:
+            if fe is not None and isinstance(f, AsInputOutputType):
                 fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
                 continue
-            if parent_type not in pe_type:
-                is_valid_by_output_type = False
-                for pet in pe_type:
-                    if (
-                        inspect.isclass(pet)
-                        and issubclass(pet, BasePreprocessorOutputType)
-                        and pet is not BasePreprocessorOutputType
-                        and isinstance(parent_type, pet)
-                    ):
+            pe_type = getattr(f, "parent_extractor_type", [None])
+            if parent_type in pe_type:
+                continue
+            is_valid_by_output_type = False
+            for pet in pe_type:
+                if (
+                    inspect.isclass(pet)
+                    and issubclass(pet, BasePreprocessorOutputType)
+                    and pet is not BasePreprocessorOutputType
+                ):
+                    if isinstance(parent_type, pet):
                         is_valid_by_output_type = True
                         break
-                if not is_valid_by_output_type:
-                    parent = getattr(parent_type, "__name__", parent_type)
-                    child = getattr(f, "__name__", f)
-                    raise TypeError(
-                        f"Feature '{fname}: {child}' cannot be a child of {parent}"
-                    )
+            if not is_valid_by_output_type:
+                parent = getattr(parent_type, "__name__", parent_type)
+                child = getattr(f, "__name__", f)
+                raise TypeError(
+                    f"Feature '{fname}: {child}' cannot be a child of {parent}"
+                )
 
     def _check_is_trainable(self, feature_extractors: dict) -> bool:
         r"""Scan the execution tree for components requiring training.

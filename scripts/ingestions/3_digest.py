@@ -705,9 +705,11 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes — prefer source API value, then manifest total_size,
-    # then compute from local files (resolving git-annex pointers).
-    size_bytes = metadata.get("size_bytes") or metadata.get("total_size")
+    # Extract size_bytes — prefer source API value (e.g. OpenNeuro sets this
+    # during fetch), otherwise compute from local files resolving git-annex
+    # pointers.  Do NOT trust manifest "total_size" — it was computed from
+    # clone pointer files and is wrong for git-annex datasets.
+    size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
         size_bytes = sum(
             get_file_size(f)

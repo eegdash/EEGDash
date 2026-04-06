@@ -73,7 +73,7 @@ def test_utils_gaps(features_dataset):
     raw_tf.clear()
     raw_tf.partial_fit(1)
     raw_tf.fit()  # marks as fitted
-    assert raw_tf._is_fitted
+    assert raw_tf._is_trained
 
     # 205: super().__call__() in FeatureExtractor
     # Already called via trainable_fe(...) below but let's be explicit
@@ -112,11 +112,11 @@ def test_utils_gaps(features_dataset):
         def clear(self):
             pass
 
-        def partial_fit(self, *x, y=None):
+        def partial_fit(self, *x, y=None, _metadata):
             pass
 
         def fit(self):
-            self._is_fitted = True
+            self._is_trained = True
 
     # We need a real extractor instance that is trainable
     def feat(x):
@@ -138,7 +138,9 @@ def test_utils_gaps(features_dataset):
     # 209: z = (z,)
     fe_simple = FeatureExtractor({"f": lambda x: x})
     fe_simple.features_kwargs = {"f": {}}
-    fe_simple(np.array([[[1.0]]]), _batch_size=1, _ch_names=["ch1"])
+    fe_simple(
+        np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
+    )
 
     # 217: feature_kind
     def f_kind(x):
@@ -147,13 +149,15 @@ def test_utils_gaps(features_dataset):
     f_kind.feature_kind = lambda r, _ch_names: r
     f_kind.parent_extractor_type = [None]
     fe_kind = FeatureExtractor({"f": f_kind})
-    fe_kind(np.array([[[1.0]]]), _batch_size=1, _ch_names=["ch1"])
+    fe_kind(
+        np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
+    )
 
     # 240-243: clear
     trainable_fe.clear()
 
     # 247-255: partial_fit
-    trainable_fe.partial_fit(np.array([[[1.0]]]))
+    trainable_fe.partial_fit(np.array([[[1.0]]]), _metadata={})
 
     # 161: _check_is_trainable with pure TrainableFeature
     # Use spec=TrainableFeature to pass isinstance check reliably
@@ -169,15 +173,19 @@ def test_utils_gaps(features_dataset):
     _get_underlying_func(mock_dispatcher)
 
     # 205: call trainable fe
-    trainable_fe(np.array([[[1.0]]]), _batch_size=1, _ch_names=["ch1"])
+    trainable_fe(
+        np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
+    )
 
     # 212: r = f(...) if f is FeatureExtractor
     fe_nest = FeatureExtractor({"nest": fe_simple})
-    fe_nest(np.array([[[1.0]]]), _batch_size=1, _ch_names=["ch1"])
+    fe_nest(
+        np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
+    )
 
     # 248, 251, 260: non-trainable returns
     fe_simple.clear()
-    fe_simple.partial_fit(np.array([[[1.0]]]))
+    fe_simple.partial_fit(np.array([[[1.0]]]), _metadata={})
     fe_simple.fit()
 
     # 296-302, 312-316: MultivariateFeature branches
@@ -188,7 +196,7 @@ def test_utils_gaps(features_dataset):
     # 240-243, 247-255, 259-265: loops
     fe_outer = FeatureExtractor({"inner": trainable_fe})
     fe_outer.clear()
-    fe_outer.partial_fit(np.array([[[1.0]]]))
+    fe_outer.partial_fit(np.array([[[1.0]]]), _metadata={})
     fe_outer.fit()
 
     # 340, 365: feature_channel_names

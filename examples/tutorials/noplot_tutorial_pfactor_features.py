@@ -41,11 +41,18 @@ raw_all = EEGDashDataset(
     description_fields=desc_fields,
 )
 
-# Filter datasets that have p_factor
+# Filter datasets that have p_factor and valid raw data
 filtered_datasets = []
 from braindecode.datasets import BaseConcatDataset
 
 for ds in raw_all.datasets:
+    # Skip datasets whose raw data could not be loaded (e.g. Access Denied)
+    try:
+        if ds.raw is None or len(ds.raw.times) == 0:
+            continue
+    except Exception:
+        continue
+
     # Check if p_factor is present in description (populated from DB)
     p_val = ds.description.get("p_factor")
     if p_val is not None:
@@ -59,7 +66,10 @@ for ds in raw_all.datasets:
             pass
 
 if not filtered_datasets:
-    raise RuntimeError("No records with p_factor metadata found (API).")
+    raise RuntimeError(
+        "No records with valid raw data and p_factor metadata found. "
+        "Ensure the EEG2025r5 dataset is accessible (may require S3 credentials)."
+    )
 
 # Limit to requested number and reconstitute
 filtered_datasets = filtered_datasets[:RECORD_LIMIT]
@@ -282,7 +292,7 @@ random_seed = 137
 
 model = LGBMRegressor(
     random_state=random_seed,
-    n_jobs=-1,
+    n_jobs=1,
     n_estimators=10000,
     num_leaves=5,
     max_depth=2,

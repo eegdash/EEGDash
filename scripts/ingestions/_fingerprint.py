@@ -68,10 +68,19 @@ def fingerprint_from_files(
 
 
 def fingerprint_from_records(dataset_id: str, source: str, records: list[dict]) -> str:
-    """Compute a fingerprint from record entries."""
+    """Compute a fingerprint from record entries.
+
+    Uses the file path and size to generate a stable hash. The path is derived from:
+    1. storage.raw_key (preferred - set by create_record)
+    2. bids_relpath (fallback - the canonical field)
+
+    Note: storage.raw_key == bids_relpath when records are created via create_record(),
+    so the fallback mainly handles legacy or manually created records.
+    """
     entries: list[tuple[str, int]] = []
     for record in records:
         storage = record.get("storage", {}) if isinstance(record, dict) else {}
+        # Prefer storage.raw_key, fall back to bids_relpath (both should have same value)
         key = storage.get("raw_key") or record.get("bids_relpath") or ""
         size = int(record.get("size_bytes", 0) or 0)
         if key:

@@ -18,18 +18,44 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
+import re
 import sys
+import urllib.error
+import urllib.request
+import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import mne
+import numpy as np
 import pandas as pd
+from _constants import (
+    CTF_INTERNAL_EXTENSIONS,
+    MEF3_INTERNAL_DIRS,
+    MEF3_INTERNAL_EXTENSIONS,
+    MODALITY_CANONICAL_MAP,
+    MODALITY_DETECTION_TARGETS,
+    NEURO_MODALITIES,
+)
+from _file_utils import get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
+from _mef3_parser import parse_mef3_metadata
+from _set_parser import parse_set_metadata
+from _snirf_parser import parse_snirf_metadata
+from _vhdr_parser import parse_vhdr_metadata
 from tqdm import tqdm
 
+from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
+from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import Storage, create_dataset, create_record
+
+# Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
+os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
 # Storage configuration per source
 # Each source has a backend type and base URL pattern
@@ -125,6 +151,272 @@ def detect_source(dataset_dir: Path) -> str:
         return "nemar"
 
     return "openneuro"
+
+
+def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
+    """Parse metadata from EDF/BDF file using MNE.
+
+    Parameters
+    ----------
+    edf_path : Path
+        Path to the EDF or BDF file.
+
+    Returns
+    -------
+    dict[str, Any] | None
+        Dictionary with sampling_frequency, nchans, ch_names,
+        or None if parsing fails.
+
+    """
+    # Check if file exists and is readable (not a broken git-annex symlink)
+    if not edf_path.exists():
+        return None
+    try:
+        resolved = edf_path.resolve()
+        if not resolved.exists():
+            return None
+    except (OSError, RuntimeError):
+        return None
+
+    try:
+        # Read with preload=False to avoid loading data into memory
+        # verbose=False to suppress MNE's logging
+        raw = mne.io.read_raw_edf(str(edf_path), preload=False, verbose=False)
+        try:
+            result: dict[str, Any] = {}
+
+            # Extract sampling frequency
+            sfreq = raw.info.get("sfreq")
+            if sfreq:
+                result["sampling_frequency"] = float(sfreq)
+
+            # Extract channel info
+            ch_names = raw.info.get("ch_names")
+            if ch_names:
+                result["ch_names"] = list(ch_names)
+                result["nchans"] = len(ch_names)
+
+            # Extract n_times (available from header without loading data)
+            if raw.n_times and raw.n_times > 0:
+                result["n_times"] = int(raw.n_times)
+
+            return result if result else None
+        finally:
+            try:
+                raw.close()
+            except Exception:
+                pass
+
+    except Exception:
+        return None
+
+
+def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
+    """Parse metadata from FIF file using MNE.
+
+    Uses ``on_split_missing="warn"`` so that git-annex datasets where
+    content-hash filenames break MNE's split-file linkage can still
+    have their header metadata extracted.
+
+    Parameters
+    ----------
+    fif_path : Path
+        Path to the FIF file.
+
+    Returns
+    -------
+    tuple[dict[str, Any] | None, bool]
+        A tuple of (metadata dict or None, is_split flag).
+        The is_split flag is True when MNE detects a split raw file.
+
+    """
+    # Check if file exists and is readable (not a broken git-annex symlink)
+    if not fif_path.exists():
+        return None, False
+    try:
+        resolved = fif_path.resolve()
+        if not resolved.exists():
+            return None, False
+    except (OSError, RuntimeError):
+        return None, False
+
+    try:
+        is_split = False
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            raw = mne.io.read_raw_fif(
+                str(fif_path), preload=False, on_split_missing="warn", verbose=False
+            )
+        for w in caught:
+            if "split" in str(w.message).lower():
+                is_split = True
+                break
+
+        try:
+            result: dict[str, Any] = {}
+
+            sfreq = raw.info.get("sfreq")
+            if sfreq:
+                result["sampling_frequency"] = float(sfreq)
+
+            ch_names = raw.info.get("ch_names")
+            if ch_names:
+                result["ch_names"] = list(ch_names)
+                result["nchans"] = len(ch_names)
+
+            if raw.n_times and raw.n_times > 0:
+                result["n_times"] = int(raw.n_times)
+
+            return (result if result else None), is_split
+        finally:
+            try:
+                raw.close()
+            except Exception:
+                pass
+
+    except Exception:
+        return None, False
+
+
+# Companion files required for different formats
+# These are critical files without which the data cannot be loaded
+COMPANION_FILE_REQUIREMENTS = {
+    ".vhdr": {
+        "required": [".eeg", ".dat"],  # Need at least one of these
+        "optional": [".vmrk"],
+        "mode": "any",  # any = at least one required file must exist
+    },
+    ".set": {
+        "required": [".fdt"],
+        "optional": [],
+        "mode": "optional",  # optional = may or may not have .fdt (data can be in .set)
+    },
+}
+
+
+def _file_exists_or_symlink(path: Path, allow_symlinks: bool = True) -> bool:
+    """Check if file exists, considering symlinks.
+
+    Parameters
+    ----------
+    path : Path
+        Path to check.
+    allow_symlinks : bool
+        If True, accept broken symlinks (git-annex) as "existing".
+
+    Returns
+    -------
+    bool
+        True if file exists or is a symlink (when allow_symlinks is True).
+
+    """
+    if path.exists():
+        return True
+    if allow_symlinks and path.is_symlink():
+        return True
+    return False
+
+
+def validate_companion_files(
+    file_path: Path, allow_symlinks: bool = True
+) -> dict[str, Any]:
+    """Validate that required companion files exist for a data file.
+
+    Parameters
+    ----------
+    file_path : Path
+        Path to the primary data file (e.g., .vhdr, .set)
+    allow_symlinks : bool
+        If True, accept broken symlinks (git-annex) as "existing"
+
+    Returns
+    -------
+    dict
+        Validation result with keys:
+        - valid: bool - True if file can be processed
+        - missing_required: list[str] - Missing required companion files
+        - missing_optional: list[str] - Missing optional companion files
+        - found: list[str] - Found companion files
+        - warnings: list[str] - Warning messages
+        - errors: list[str] - Error messages
+
+    """
+    result = {
+        "valid": True,
+        "missing_required": [],
+        "missing_optional": [],
+        "found": [],
+        "warnings": [],
+        "errors": [],
+    }
+
+    ext = file_path.suffix.lower()
+    requirements = COMPANION_FILE_REQUIREMENTS.get(ext)
+
+    if not requirements:
+        # No companion file requirements for this format
+        return result
+
+    parent_dir = file_path.parent
+    stem = file_path.stem
+
+    # Check required companions
+    required_exts = requirements.get("required", [])
+    mode = requirements.get("mode", "all")
+
+    found_required = []
+    for req_ext in required_exts:
+        companion_path = parent_dir / f"{stem}{req_ext}"
+        if _file_exists_or_symlink(companion_path, allow_symlinks):
+            found_required.append(req_ext)
+            result["found"].append(str(companion_path.name))
+
+    # Validate based on mode
+    if mode == "any":
+        # At least one required file must exist
+        if required_exts and not found_required:
+            result["valid"] = False
+            result["missing_required"] = required_exts
+            result["errors"].append(f"Missing data file: need one of {required_exts}")
+    elif mode == "all":
+        # All required files must exist
+        missing = [e for e in required_exts if e not in found_required]
+        if missing:
+            result["valid"] = False
+            result["missing_required"] = missing
+            result["errors"].append(f"Missing required files: {missing}")
+    elif mode == "optional":
+        # Required files are not strictly required (e.g., .set can contain data)
+        missing = [e for e in required_exts if e not in found_required]
+        if missing:
+            result["warnings"].append(f"Optional companion files not found: {missing}")
+            result["missing_optional"].extend(missing)
+
+    # Check optional companions
+    optional_exts = requirements.get("optional", [])
+    for opt_ext in optional_exts:
+        companion_path = parent_dir / f"{stem}{opt_ext}"
+        if _file_exists_or_symlink(companion_path, allow_symlinks):
+            result["found"].append(str(companion_path.name))
+        else:
+            result["missing_optional"].append(opt_ext)
+
+    # Special case for BrainVision: try to read VHDR to check referenced files
+    if ext == ".vhdr" and not result["valid"]:
+        # Try to get more information from the VHDR file
+        try:
+            from _vhdr_parser import extract_vhdr_references
+
+            refs = extract_vhdr_references(file_path)
+            if refs.get("datafile"):
+                data_file = refs["datafile"]
+                result["errors"].append(
+                    f"VHDR references missing data file: {data_file}"
+                )
+        except Exception:
+            pass
+
+    return result
 
 
 def extract_dataset_metadata(
@@ -300,6 +592,20 @@ def extract_dataset_metadata(
         except Exception:
             pass
 
+    # Warn when participants.tsv row count differs from sub-* folder count
+    folder_subjects = {
+        d.name for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")
+    }
+    if participants_path.exists() and subjects_count > 0 and folder_subjects:
+        if subjects_count != len(folder_subjects):
+            logging.warning(
+                "%s: participants.tsv has %d rows but found %d sub-* folders "
+                "(possible naming convention mismatch)",
+                dataset_id,
+                subjects_count,
+                len(folder_subjects),
+            )
+
     # Count subjects from directories if participants.tsv based count is inconsistent or we prefer file based
     # User request: "count only subject from the modalities that are validated"
     # So we should prioritize the count derived from valid files (len(subjects))
@@ -328,6 +634,10 @@ def extract_dataset_metadata(
     senior_author = metadata.get("senior_author")
     contact_info = metadata.get("contact_info")
 
+    # Extract clinical classification fields
+    is_clinical = metadata.get("is_clinical")
+    clinical_purpose = metadata.get("clinical_purpose")
+
     if not dataset_modified_at:
         # Try to get from manifest timestamps dict if present
         ts = metadata.get("timestamps", {})
@@ -335,10 +645,17 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes
+    # Extract size_bytes — prefer source API value (e.g. OpenNeuro sets this
+    # during fetch), otherwise compute from local files resolving git-annex
+    # pointers.  Do NOT trust manifest "total_size" — it was computed from
+    # clone pointer files and is wrong for git-annex datasets.
     size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
-        size_bytes = sum(f.stat().st_size for f in bids_root.rglob("*") if f.is_file())
+        size_bytes = sum(
+            get_annex_file_size(f)
+            for f in bids_root.rglob("*")
+            if f.is_file() or f.is_symlink()
+        )
 
     # Build Storage info for global files
     storage_info: Storage | None = None
@@ -398,18 +715,20 @@ def extract_dataset_metadata(
             if not item.is_file():
                 continue
 
-            name = item.name
+            item_name = item.name
             if (
-                name in found_files
-                or name.lower() in ignored_files
-                or name.startswith(".")
+                item_name in found_files
+                or item_name.lower() in ignored_files
+                or item_name.startswith(".")
             ):
                 continue
 
             # Include typical BIDS metadata extensions
-            if name.lower().endswith((".json", ".tsv", ".txt", ".md", ".yaml", ".yml")):
-                dep_keys.append(name)
-                found_files.add(name)
+            if item_name.lower().endswith(
+                (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
+            ):
+                dep_keys.append(item_name)
+                found_files.add(item_name)
 
         # Deduplicate keys and sort
         dep_keys = sorted(list(set(dep_keys)))
@@ -453,6 +772,9 @@ def extract_dataset_metadata(
         senior_author=senior_author,
         contact_info=contact_info,
         storage=storage_info,
+        # Clinical classification
+        is_clinical=is_clinical,
+        clinical_purpose=clinical_purpose,
     )
 
     return dict(dataset)
@@ -491,6 +813,7 @@ def extract_record(
     session = bids_dataset.get_bids_file_attribute("session", bids_file)
     task = bids_dataset.get_bids_file_attribute("task", bids_file)
     run = bids_dataset.get_bids_file_attribute("run", bids_file)
+    acquisition = bids_dataset.get_bids_file_attribute("acquisition", bids_file)
     modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
     mod_canon = normalize_modality(modality) or "eeg"
 
@@ -508,9 +831,18 @@ def extract_record(
     storage_backend = get_storage_backend(source)
 
     # Extract technical metadata from BIDS sidecars via EEGBIDSDataset
-    sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
-    nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
-    ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+    # Wrap in try/except to handle broken git-annex symlinks (FileNotFoundError)
+    sampling_frequency = None
+    nchans = None
+    ntimes = None
+    try:
+        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
+        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
+        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+    except (FileNotFoundError, OSError):
+        # BIDS sidecar JSON may be a broken git-annex symlink
+        # Fallback code below will attempt to extract from data files directly
+        pass
 
     # Convert sfreq to float and nchans to int if found
     if sampling_frequency:
@@ -527,9 +859,178 @@ def extract_record(
     except Exception:
         pass
 
-    # Fallback for nchans if not in sidecar but we have channel names
-    if not nchans and ch_names:
+    # Prefer channel_labels count over sidecar nchans
+    # channels.tsv is the authoritative source for channel information
+    # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
+    if ch_names:
         nchans = len(ch_names)
+    elif not nchans:
+        # Fallback: no channels.tsv and no sidecar nchans
+        nchans = None
+
+    # ===========================================================
+    # FALLBACK: Read from BIDS sidecar files directly
+    # This handles MEG/iEEG datasets where primary extraction fails
+    # BIDS uses inheritance - sidecars can be in parent directories
+    # and may not include run/acquisition entities
+    # ===========================================================
+    bids_file_path = Path(bids_file)
+
+    # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
+    bids_root = Path(bids_dataset.bidsdir)
+    if not sampling_frequency or not nchans:
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
+
+        # Try modality-specific sidecars
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                for sidecar_suffix in [
+                    "_meg.json",
+                    "_eeg.json",
+                    "_ieeg.json",
+                    "_nirs.json",
+                ]:
+                    sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
+                    if sidecar_path.exists():
+                        try:
+                            with open(sidecar_path) as f:
+                                sidecar_data = json.load(f)
+
+                            # Extract SamplingFrequency
+                            if (
+                                not sampling_frequency
+                                and "SamplingFrequency" in sidecar_data
+                            ):
+                                sampling_frequency = float(
+                                    sidecar_data["SamplingFrequency"]
+                                )
+
+                            # Extract channel count from various BIDS fields
+                            if not nchans:
+                                # Sum all channel type counts if available
+                                channel_count_fields = [
+                                    "MEGChannelCount",
+                                    "EEGChannelCount",
+                                    "EOGChannelCount",
+                                    "ECGChannelCount",
+                                    "EMGChannelCount",
+                                    "MiscChannelCount",
+                                    "TriggerChannelCount",
+                                    "iEEGChannelCount",
+                                    "SEEGChannelCount",
+                                    "ECOGChannelCount",
+                                    "NIRSChannelCount",
+                                    "ACCELChannelCount",
+                                ]
+                                total_channels = sum(
+                                    sidecar_data.get(field, 0) or 0
+                                    for field in channel_count_fields
+                                )
+                                if total_channels > 0:
+                                    nchans = total_channels
+                            break  # Found a valid sidecar in this dir
+                        except Exception:
+                            pass
+
+    # Try to read from channels.tsv if still missing
+    if not sampling_frequency or not nchans:
+        base_names_to_try, dirs_to_try = _build_bids_search_paths(
+            bids_file_path, bids_root
+        )
+
+        for search_dir in dirs_to_try:
+            if sampling_frequency and nchans:
+                break
+            for base_name in base_names_to_try:
+                if sampling_frequency and nchans:
+                    break
+                channels_path = search_dir / f"{base_name}_channels.tsv"
+                if channels_path.exists():
+                    try:
+                        channels_df = pd.read_csv(
+                            channels_path,
+                            sep="\t",
+                            dtype="string",
+                            keep_default_na=False,
+                        )
+
+                        # Get nchans from row count
+                        if not nchans:
+                            nchans = len(channels_df)
+
+                        # Get sampling_frequency from the first valid row
+                        if not sampling_frequency:
+                            for col in ["sampling_frequency", "SamplingFrequency"]:
+                                if col in channels_df.columns:
+                                    for val in channels_df[col]:
+                                        try:
+                                            sfreq_val = float(val)
+                                            if sfreq_val > 0:
+                                                sampling_frequency = sfreq_val
+                                                break
+                                        except (ValueError, TypeError):
+                                            pass
+                                    if sampling_frequency:
+                                        break
+                        break  # Found a valid channels file
+                    except Exception:
+                        pass
+
+    # ===========================================================
+    # FALLBACK 3: Parse data files directly when sidecars missing
+    # ===========================================================
+    ext = bids_file_path.suffix.lower()
+
+    # Parser fallback helpers
+    _parsers = {
+        ".vhdr": lambda p: parse_vhdr_metadata(p),
+        ".snirf": lambda p: parse_snirf_metadata(p),
+        ".mefd": lambda p: parse_mef3_metadata(p),
+        ".edf": lambda p: _parse_edf_with_mne(p),
+        ".bdf": lambda p: _parse_edf_with_mne(p),
+        ".set": lambda p: parse_set_metadata(p),
+    }
+
+    if ext in _parsers and (
+        not sampling_frequency or not nchans or not ntimes or not ch_names
+    ):
+        md = _parsers[ext](bids_file_path)
+        if md:
+            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
+            nchans = nchans or md.get("nchans")
+            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
+            ch_names = ch_names or md.get("ch_names")
+
+    # VHDR: also try MNE for n_times (requires binary companion)
+    if ext == ".vhdr" and not ntimes:
+        try:
+            raw = mne.io.read_raw_brainvision(
+                str(bids_file_path), preload=False, verbose=False
+            )
+            if raw.n_times and raw.n_times > 0:
+                ntimes = int(raw.n_times)
+            raw.close()
+        except Exception:
+            pass
+
+    # FIF fallback using MNE
+    fif_is_split = False
+    fif_continuations_ok = True
+    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
+        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
+        if fif_metadata:
+            sampling_frequency = sampling_frequency or fif_metadata.get(
+                "sampling_frequency"
+            )
+            nchans = nchans or fif_metadata.get("nchans")
+            ntimes = ntimes or fif_metadata.get("n_times")
+            ch_names = ch_names or fif_metadata.get("ch_names")
 
     # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
     dep_keys = []
@@ -562,49 +1063,136 @@ def extract_record(
         "meg",
         "ieeg",
         "beh",
+        "nirs",
     ]:
         search_dirs.append(parent_dir.parent)
+
+    # Build list of base names to search: full base_name and session-level base_name
+    # Session-level sidecars (like optodes) don't have task/run entities
+    base_names_to_search = [base_name]
+    # Extract session-level base name by removing task/run entities
+    # e.g., "sub-6016_ses-1_task-MA_run-01" -> "sub-6016_ses-1"
+    session_base = re.sub(r"_task-[^_]+", "", base_name)
+    session_base = re.sub(r"_run-[^_]+", "", session_base)
+    session_base = re.sub(r"_acq-[^_]+", "", session_base)
+    if session_base != base_name:
+        base_names_to_search.append(session_base)
 
     for search_dir in search_dirs:
         for dep_suffix in [
             "_channels.tsv",
             "_events.tsv",
+            "_events.json",
             "_electrodes.tsv",
             "_coordsystem.json",
             "_eeg.json",
+            # NIRS-specific sidecars
+            "_optodes.tsv",
+            "_optodes.json",
+            "_nirs.json",
         ]:
-            dep_file = search_dir / f"{base_name}{dep_suffix}"
-            if dep_file.exists() or dep_file.is_symlink():
+            for search_base in base_names_to_search:
+                dep_file = search_dir / f"{search_base}{dep_suffix}"
+                if dep_file.exists() or dep_file.is_symlink():
+                    try:
+                        dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
+                        dep_keys.append(str(dep_relpath))
+                    except ValueError:
+                        pass
+
+    # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
+    # Always add BIDS-standard companions to dep_keys so the download
+    # pipeline fetches them even when the local git-annex clone is incomplete.
+    ext = bids_file_path.suffix.lower()
+    companion_exts = _COMPANION_FILES.get(ext, [])
+    for comp_ext in companion_exts:
+        comp_file = bids_file_path.with_suffix(comp_ext)
+        try:
+            comp_relpath = comp_file.relative_to(bids_dataset.bidsdir)
+            dep_keys.append(str(comp_relpath))
+        except ValueError:
+            pass
+
+    if ext == ".fif":
+        # Check filesystem for split FIF continuation files
+        if not fif_is_split:
+            cont_check = bids_file_path.parent / f"{bids_file_path.stem}-1{ext}"
+            if cont_check.exists() or cont_check.is_symlink():
+                fif_is_split = True
+
+        if fif_is_split:
+            fif_continuations_ok = True
+            for i in range(1, 100):
+                cont = bids_file_path.parent / f"{bids_file_path.stem}-{i}{ext}"
+                if not cont.exists() and not cont.is_symlink():
+                    break
+                if cont.is_symlink() and not cont.resolve().exists():
+                    fif_continuations_ok = False
                 try:
-                    dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                    dep_keys.append(str(dep_relpath))
+                    dep_keys.append(str(cont.relative_to(bids_dataset.bidsdir)))
                 except ValueError:
                     pass
 
-    # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
-    ext = bids_file_path.suffix.lower()
-    if ext == ".set":
-        # EEGLAB .set files may have a companion .fdt file with the same stem
-        fdt_file = bids_file_path.with_suffix(".fdt")
-        if fdt_file.exists() or fdt_file.is_symlink():
-            try:
-                fdt_relpath = fdt_file.relative_to(bids_dataset.bidsdir)
-                dep_keys.append(str(fdt_relpath))
-            except ValueError:
-                pass
-    elif ext == ".vhdr":
-        # BrainVision .vhdr files have .vmrk (markers) and .eeg (data) companions
-        # First try standard BIDS names (matching the .vhdr stem)
-        found_bv_exts = set()
-        for bv_ext in [".vmrk", ".eeg", ".dat"]:
-            bv_file = bids_file_path.with_suffix(bv_ext)
-            if bv_file.exists() or bv_file.is_symlink():
-                try:
-                    bv_relpath = bv_file.relative_to(bids_dataset.bidsdir)
-                    dep_keys.append(str(bv_relpath))
-                    found_bv_exts.add(bv_ext)
-                except ValueError:
-                    pass
+    # Validate companion files exist
+    companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
+    data_integrity_issues = []
+
+    if not companion_validation["valid"]:
+        for error in companion_validation["errors"]:
+            logging.warning("Data integrity issue for %s: %s", bids_relpath, error)
+            data_integrity_issues.append(error)
+
+    for warning in companion_validation.get("warnings", []):
+        logging.info("Companion file note for %s: %s", bids_relpath, warning)
+
+    # Flag split FIF files with missing continuation files
+    if ext == ".fif" and fif_is_split and not fif_continuations_ok:
+        data_integrity_issues.append(
+            "Split FIF: continuation files not available in source"
+        )
+
+    # Validate extracted metadata
+    # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
+    if sampling_frequency is not None:
+        if sampling_frequency <= 0:
+            logging.warning(
+                "Invalid sampling_frequency <= 0 for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+            sampling_frequency = None
+        elif sampling_frequency > 1_000_000:
+            logging.warning(
+                "Suspicious sampling_frequency > 1MHz for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+
+    # Check nchans is positive
+    if nchans is not None:
+        if nchans <= 0:
+            logging.warning(
+                "Invalid nchans <= 0 for %s: %s",
+                bids_relpath,
+                nchans,
+            )
+            nchans = None
+        elif nchans > 10000:
+            logging.warning(
+                "Suspicious nchans > 10000 for %s: %s",
+                bids_relpath,
+                nchans,
+            )
+
+    # Validate ch_names count matches nchans
+    if ch_names and nchans:
+        if len(ch_names) != nchans:
+            logging.debug(
+                "ch_names count (%d) != nchans (%d) for %s",
+                len(ch_names),
+                nchans,
+                bids_relpath,
+            )
 
     # Create record using the schema
     record = create_record(
@@ -615,6 +1203,7 @@ def extract_record(
         session=session,
         task=task,
         run=str(run) if run is not None else None,
+        acquisition=acquisition,
         dep_keys=dep_keys,
         datatype=datatype,
         suffix=suffix,
@@ -630,6 +1219,11 @@ def extract_record(
     # Restore participant_tsv metadata if available
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)
     if participant_tsv:
+        has_real_data = any(v not in (None, "n/a") for v in participant_tsv.values())
+        if not has_real_data:
+            logging.debug(
+                "No participant match for %s, storing column skeleton", bids_relpath
+            )
         # Convert numeric strings to floats for better API/Client compatibility
         # but preserve participant_id as string
         for k, v in participant_tsv.items():
@@ -643,6 +1237,13 @@ def extract_record(
                 except (ValueError, TypeError):
                     pass
         record["participant_tsv"] = participant_tsv
+
+    # Add data integrity information if there are issues
+    if data_integrity_issues:
+        record["_data_integrity_issues"] = data_integrity_issues
+        record["_has_missing_files"] = True
+    else:
+        record["_has_missing_files"] = False
 
     return dict(record)
 
@@ -666,8 +1267,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         Extracted BIDS entities (subject, session, task, run, modality, etc.)
 
     """
-    import re
-
     entities = {}
     filename = Path(filepath).name
     filepath_lower = filepath.lower()
@@ -784,42 +1383,79 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-# Semantic mapping to canonical BIDS modalities
-MODALITY_CANONICAL_MAP = {
-    "nirs": "fnirs",
-    "fnirs": "fnirs",
-    "spike": "ieeg",
-    "lfp": "ieeg",
-    "mea": "ieeg",
-}
+def _build_bids_search_paths(
+    bids_file_path: Path, bids_root: Path
+) -> tuple[list[str], list[Path]]:
+    """Build base names and directories for BIDS inheritance sidecar search.
 
-# Supported canonical neurophysiology modalities
-NEURO_MODALITIES = ("eeg", "meg", "ieeg", "emg", "fnirs")
+    BIDS uses inheritance - sidecars can be in parent directories and may not
+    include run/acquisition entities. This function generates the various base
+    name variants and directories to search when looking for sidecars.
 
-# Modalities we care about detecting (including aliases/variants)
-MODALITY_DETECTION_TARGETS = (
-    "eeg",
-    "meg",
-    "ieeg",
-    "emg",
-    "nirs",
-    "fnirs",
-    "spike",
-    "lfp",
-    "mea",
-)
+    Parameters
+    ----------
+    bids_file_path : Path
+        Path to the BIDS data file
+    bids_root : Path
+        Root directory of the BIDS dataset
 
-# CTF MEG uses .ds directories containing multiple files
-# We should only match the .ds directory path, not files inside
-CTF_INTERNAL_EXTENSIONS = {
-    ".meg4",
-    ".res4",
-    ".hc",
-    ".infods",
-    ".acq",
-    ".hist",
-    ".newds",
-}
+    Returns
+    -------
+    tuple[list[str], list[Path]]
+        A tuple of (base_names_to_try, dirs_to_try) where:
+        - base_names_to_try: List of base name variants to search for
+        - dirs_to_try: List of directories from file's parent up to BIDS root
+
+    """
+    # Parse entities from the file name
+    # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
+    stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
+    parts = stem.split("_")
+
+    # Build different base name variants for BIDS inheritance
+    # Full base: sub-13_ses-meg_task-facerecognition_run-05
+    # Without run: sub-13_ses-meg_task-facerecognition
+    # Without run and acq: sub-13_ses-meg_task-facerecognition
+    base_names_to_try: list[str] = []
+
+    # Get base without the modality suffix (last part)
+    full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
+
+    # Add full base first
+    base_names_to_try.append(full_base)
+
+    # Try without run-XX
+    if "_run-" in full_base:
+        without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
+        base_names_to_try.append(without_run)
+
+    # Try without acquisition too
+    if "_acq-" in full_base:
+        without_acq_run = "_".join(
+            p
+            for p in parts[:-1]
+            if not p.startswith("run-") and not p.startswith("acq-")
+        )
+        base_names_to_try.append(without_acq_run)
+
+    # Build task-only base name for BIDS inheritance
+    # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
+    task_part = next((p for p in parts if p.startswith("task-")), None)
+    if task_part and task_part not in base_names_to_try:
+        base_names_to_try.append(task_part)
+
+    # Directories to search - walk up to BIDS root for proper inheritance
+    # BIDS inheritance: sidecars can be at any level from root to file's directory
+    parent_dir = bids_file_path.parent
+    dirs_to_try: list[Path] = [parent_dir]
+    current = parent_dir
+    while current != bids_root and current.parent != current:
+        current = current.parent
+        dirs_to_try.append(current)
+        if current == bids_root:
+            break
+
+    return base_names_to_try, dirs_to_try
 
 
 def normalize_modality(modality: str | None) -> str | None:
@@ -836,15 +1472,10 @@ NEURO_DATA_EXTENSIONS: set[str] | None = None
 
 
 def _load_neuro_data_extensions() -> set[str]:
-    """Lazily load neurophysiology data extensions from MNE-BIDS."""
+    """Load neurophysiology data extensions from MNE-BIDS (cached)."""
     global NEURO_DATA_EXTENSIONS
     if NEURO_DATA_EXTENSIONS is not None:
         return NEURO_DATA_EXTENSIONS
-
-    # Avoid numba cache issues on CI/help by setting cache dir before import.
-    os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
-
-    from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 
     extensions: set[str] = set()
     for modality, exts in ALLOWED_DATATYPE_EXTENSIONS.items():
@@ -853,8 +1484,6 @@ def _load_neuro_data_extensions() -> set[str]:
 
     NEURO_DATA_EXTENSIONS = extensions
     return extensions
-
-    return False
 
 
 def is_neuro_data_file(filepath: str) -> bool:
@@ -877,6 +1506,26 @@ def is_neuro_data_file(filepath: str) -> bool:
     """
     filepath_lower = filepath.lower()
 
+    # Skip files in derivatives folders - these are processed data, not raw recordings
+    # Common patterns: /derivatives/, /derivative/, derivatives at root level
+    if "/derivatives/" in filepath_lower or filepath_lower.startswith("derivatives/"):
+        return False
+
+    # Skip BIDS sidecar/metadata files - these are never data files
+    # even when located in modality folders
+    sidecar_extensions = {
+        ".json",
+        ".tsv",
+        ".txt",
+        ".md",
+        ".html",
+        ".pdf",
+        ".csv",
+    }
+    for ext in sidecar_extensions:
+        if filepath_lower.endswith(ext):
+            return False
+
     # Skip files inside CTF .ds directories (we want the .ds directory itself)
     # e.g., skip "sub-01_meg.ds/sub-01_meg.meg4" but keep "sub-01_meg.ds"
     if ".ds/" in filepath_lower:
@@ -885,6 +1534,25 @@ def is_neuro_data_file(filepath: str) -> bool:
     # Also skip CTF internal files by extension
     for ext in CTF_INTERNAL_EXTENSIONS:
         if filepath_lower.endswith(ext):
+            return False
+
+    # Skip files inside MEF3 .mefd directories (we want the .mefd directory itself)
+    # e.g., skip "sub-01_ieeg.mefd/LTG9.timd/LTG9-000000.segd/LTG9-000000.tdat"
+    # but keep "sub-01_ieeg.mefd"
+    if ".mefd/" in filepath_lower:
+        return False
+
+    # Also skip MEF3 internal files by extension
+    for ext in MEF3_INTERNAL_EXTENSIONS:
+        if filepath_lower.endswith(ext):
+            return False
+
+    # Skip MEF3 internal directories that may appear in archive listings
+    for internal_dir in MEF3_INTERNAL_DIRS:
+        if (
+            filepath_lower.endswith(internal_dir)
+            or f"{internal_dir}/" in filepath_lower
+        ):
             return False
 
     # Check for modality indicators (makes detection more robust for non-BIDS)
@@ -1097,9 +1765,6 @@ def digest_from_manifest(
 
     # Fallback: Try to fetch metadata files if counts/tasks are missing
     if subjects_count == 0 or not tasks:
-        import urllib.error
-        import urllib.request
-
         # Look for key metadata files in the file list
         desc_url = None
         participants_url = None
@@ -1233,6 +1898,7 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
                 dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
@@ -1284,6 +1950,7 @@ def digest_from_manifest(
                         session=entities.get("session"),
                         task=entities.get("task"),
                         run=entities.get("run"),
+                        acquisition=entities.get("acquisition"),
                         dep_keys=[],
                         datatype=entities.get("datatype", detected_modality),
                         suffix=entities.get("suffix", detected_modality),
@@ -1306,8 +1973,6 @@ def digest_from_manifest(
             continue  # Skip to next file (we've processed the ZIP contents)
 
         # Handle ZIP files without extracted contents
-        import re
-
         if filepath.lower().endswith(".zip"):
             # Pattern 1: Subject ZIP files like sub-01.zip
             subject_match = re.match(
@@ -1467,7 +2132,8 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
-                dep_keys=[],  # Can't determine dependencies without actual files
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
                 storage_backend=get_storage_backend(source),
@@ -1509,6 +2175,7 @@ def digest_from_manifest(
                 session=entities.get("session"),
                 task=entities.get("task"),
                 run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
                 dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
@@ -1590,8 +2257,6 @@ def digest_dataset(
         Summary of digestion results
 
     """
-    from eegdash.dataset.bids_dataset import EEGBIDSDataset
-
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
@@ -1606,12 +2271,16 @@ def digest_dataset(
     manifest_path = dataset_dir / "manifest.json"
     has_manifest = manifest_path.exists()
 
-    # Check if there are actual EEG files or symlinks (git-annex uses broken symlinks)
+    # Check if there are actual EEG/MEG/fNIRS/iEEG files or symlinks (git-annex uses broken symlinks)
     # We accept both real files and symlinks for metadata extraction
+    # Include .ds directories for CTF MEG format and .mefd directories for MEF3
     has_actual_files = any(
-        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt"]
+        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt", ".snirf", ".mefd"]
         for f in dataset_dir.rglob("*")
         if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
+    ) or any(
+        (f.suffix == ".ds" and f.is_dir()) or (f.suffix == ".mefd" and f.is_dir())
+        for f in dataset_dir.rglob("*")
     )
 
     # For API-only sources, use manifest-based digestion
@@ -1623,6 +2292,9 @@ def digest_dataset(
 
     # Generate timestamp
     digested_at = datetime.now(timezone.utc).isoformat()
+
+    # Repair participants.tsv ID mismatches before BIDS parsing
+    _repair_participants_tsv_ids(dataset_dir)
 
     # Load BIDS dataset
     try:
@@ -1694,6 +2366,18 @@ def digest_dataset(
             record = extract_record(
                 bids_dataset, bids_file, dataset_id, source, digested_at
             )
+            # Skip records for split FIF files with missing continuations
+            if any(
+                "Split FIF" in issue
+                for issue in record.get("_data_integrity_issues", [])
+            ):
+                errors.append(
+                    {
+                        "file": str(bids_file),
+                        "error": "Split FIF without continuation files — skipped",
+                    }
+                )
+                continue
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
@@ -1717,6 +2401,25 @@ def digest_dataset(
     with open(dataset_path, "w") as f:
         json.dump(dataset_meta, f, indent=2, default=_json_serializer)
 
+    # Count records with data integrity issues and add author contact info
+    records_with_issues = [r for r in records if r.get("_has_missing_files", False)]
+    integrity_issues_count = len(records_with_issues)
+
+    # Enrich records with integrity issues with dataset author/contact info
+    # This allows the error message to include who to contact about the issue
+    if records_with_issues:
+        authors = dataset_meta.get("authors", [])
+        contact_info = dataset_meta.get("contact_info")
+        source_url = dataset_meta.get("external_links", {}).get("source_url")
+
+        for rec in records_with_issues:
+            if authors:
+                rec["_dataset_authors"] = authors
+            if contact_info:
+                rec["_dataset_contact"] = contact_info
+            if source_url:
+                rec["_source_url"] = source_url
+
     # Save Records document
     records_path = dataset_output_dir / f"{dataset_id}_records.json"
     records_data = {
@@ -1724,6 +2427,7 @@ def digest_dataset(
         "source": source,
         "digested_at": digested_at,
         "record_count": len(records),
+        "records_with_integrity_issues": integrity_issues_count,
         "records": records,
     }
     with open(records_path, "w") as f:
@@ -1736,9 +2440,21 @@ def digest_dataset(
         "source": source,
         "record_count": len(records),
         "error_count": len(errors),
+        "integrity_issues_count": integrity_issues_count,
         "dataset_file": str(dataset_path),
         "records_file": str(records_path),
     }
+
+    # Log warnings for datasets with integrity issues
+    if integrity_issues_count > 0:
+        logging.warning(
+            "Dataset %s has %d record(s) with missing companion files",
+            dataset_id,
+            integrity_issues_count,
+        )
+        for rec in records_with_issues:
+            issues = rec.get("_data_integrity_issues", [])
+            logging.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
 
     summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
     with open(summary_path, "w") as f:
@@ -1749,8 +2465,6 @@ def digest_dataset(
 
 def _json_serializer(obj):
     """Handle non-serializable objects."""
-    import numpy as np
-
     if isinstance(obj, (np.integer, np.floating)):
         return obj.item()
     elif isinstance(obj, np.ndarray):

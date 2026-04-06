@@ -135,19 +135,6 @@ def test_dataset_clinical_info():
     assert dataset["clinical"]["purpose"] == "epilepsy"
 
 
-def test_dataset_paradigm_info():
-    """Test paradigm classification at Dataset level."""
-    dataset = create_dataset(
-        dataset_id="ds000001",
-        paradigm_modality="visual",
-        cognitive_domain="attention",
-        is_10_20_system=True,
-    )
-    assert dataset["paradigm"]["modality"] == "visual"
-    assert dataset["paradigm"]["cognitive_domain"] == "attention"
-    assert dataset["paradigm"]["is_10_20_system"] is True
-
-
 # =============================================================================
 # Dataset Tests
 # =============================================================================
@@ -474,3 +461,165 @@ def test_schemas_run_digit_coverage():
 
     assert schemas._sanitize_run_for_mne("A123") is None
     assert schemas._sanitize_run_for_mne("01") == "01"
+
+
+# =============================================================================
+# Schema Contract Tests - Pydantic Models vs TypedDicts
+# =============================================================================
+
+import pytest
+
+from eegdash import schemas
+
+
+def _get_typeddict_fields(td_class: type) -> set[str]:
+    """Extract field names from a TypedDict."""
+    annotations = set()
+    # Walk through MRO to get all annotations including inherited ones
+    for cls in td_class.__mro__:
+        if hasattr(cls, "__annotations__"):
+            annotations.update(cls.__annotations__.keys())
+    return annotations
+
+
+def _get_pydantic_fields(model_class: type) -> set[str]:
+    """Extract field names from a Pydantic model."""
+    return set(model_class.model_fields.keys())
+
+
+# =============================================================================
+# Auto-discovered schema pairs: (PydanticModel, TypedDict)
+# Add new pairs here and they will be automatically tested
+# =============================================================================
+
+PYDANTIC_TYPEDDICT_PAIRS = [
+    (schemas.StorageModel, schemas.Storage),
+    (schemas.EntitiesModel, schemas.Entities),
+    # Note: RecordModel and DatasetModel are intentionally lighter than their
+    # TypedDict counterparts (they only validate core fields for API input)
+]
+
+# These pairs have Pydantic models that are subsets of TypedDicts
+# (Pydantic validates input, TypedDict represents full document)
+PYDANTIC_SUBSET_PAIRS = [
+    (schemas.RecordModel, schemas.Record),
+    (schemas.DatasetModel, schemas.Dataset),
+]
+
+# All TypedDicts that should have documentation
+DOCUMENTED_TYPEDDICTS = [
+    schemas.Demographics,
+    schemas.Clinical,
+    schemas.Tags,
+    schemas.ExternalLinks,
+    schemas.Storage,
+    schemas.Entities,
+    schemas.Timestamps,
+    schemas.RepositoryStats,
+    schemas.Record,
+    schemas.Dataset,
+]
+
+# Deprecated schemas that should NOT exist
+REMOVED_SCHEMAS = ["Paradigm"]
+
+
+class TestSchemaContract:
+    """Tests to ensure Pydantic models and TypedDicts stay in sync.
+
+    These tests use pytest.parametrize to automatically test all schema pairs.
+    When adding a new Pydantic/TypedDict pair, just add it to the lists above.
+    """
+
+    @pytest.mark.parametrize(
+        "pydantic_model,typeddict",
+        PYDANTIC_TYPEDDICT_PAIRS,
+        ids=lambda x: getattr(x, "__name__", str(x)),
+    )
+    def test_pydantic_typeddict_fields_match(self, pydantic_model, typeddict):
+        """Verify Pydantic model fields match TypedDict fields exactly."""
+        pydantic_fields = _get_pydantic_fields(pydantic_model)
+        typeddict_fields = _get_typeddict_fields(typeddict)
+
+        # Check TypedDict fields exist in Pydantic model
+        missing_in_pydantic = typeddict_fields - pydantic_fields
+        assert not missing_in_pydantic, (
+            f"{typeddict.__name__} has fields not in {pydantic_model.__name__}: "
+            f"{missing_in_pydantic}"
+        )
+
+        # Check Pydantic fields exist in TypedDict
+        missing_in_typeddict = pydantic_fields - typeddict_fields
+        assert not missing_in_typeddict, (
+            f"{pydantic_model.__name__} has fields not in {typeddict.__name__}: "
+            f"{missing_in_typeddict}"
+        )
+
+    @pytest.mark.parametrize(
+        "pydantic_model,typeddict",
+        PYDANTIC_SUBSET_PAIRS,
+        ids=lambda x: getattr(x, "__name__", str(x)),
+    )
+    def test_pydantic_subset_of_typeddict(self, pydantic_model, typeddict):
+        """Verify Pydantic model fields are a subset of TypedDict fields.
+
+        Some Pydantic models (like RecordModel, DatasetModel) are intentionally
+        lighter than their TypedDict counterparts - they validate API input
+        while TypedDicts represent the full stored document.
+        """
+        pydantic_fields = _get_pydantic_fields(pydantic_model)
+        typeddict_fields = _get_typeddict_fields(typeddict)
+
+        # All Pydantic fields must exist in TypedDict
+        missing_in_typeddict = pydantic_fields - typeddict_fields
+        assert not missing_in_typeddict, (
+            f"{pydantic_model.__name__} has fields not in {typeddict.__name__}: "
+            f"{missing_in_typeddict}"
+        )
+
+    @pytest.mark.parametrize(
+        "typeddict", DOCUMENTED_TYPEDDICTS, ids=lambda x: x.__name__
+    )
+    def test_typeddict_has_docstring(self, typeddict):
+        """Verify TypedDict has a docstring with Attributes section."""
+        assert typeddict.__doc__ is not None, f"{typeddict.__name__} missing docstring"
+        assert "Attributes" in typeddict.__doc__, (
+            f"{typeddict.__name__} docstring should have 'Attributes' section"
+        )
+
+    @pytest.mark.parametrize("schema_name", REMOVED_SCHEMAS)
+    def test_deprecated_schema_removed(self, schema_name):
+        """Verify deprecated schemas have been removed."""
+        assert not hasattr(schemas, schema_name), (
+            f"{schema_name} should be removed from schemas"
+        )
+        assert schema_name not in schemas.__all__, (
+            f"{schema_name} should not be in __all__"
+        )
+
+    def test_create_dataset_no_deprecated_params(self):
+        """Verify create_dataset doesn't accept deprecated parameters."""
+        import inspect
+
+        sig = inspect.signature(schemas.create_dataset)
+        param_names = list(sig.parameters.keys())
+
+        # Check for paradigm-related params (removed)
+        paradigm_params = [p for p in param_names if "paradigm" in p.lower()]
+        assert not paradigm_params, (
+            f"create_dataset still has paradigm params: {paradigm_params}"
+        )
+
+    def test_all_exported_typeddicts_documented(self):
+        """Verify all TypedDicts in __all__ are in DOCUMENTED_TYPEDDICTS."""
+        from typing import _TypedDictMeta
+
+        documented_names = {td.__name__ for td in DOCUMENTED_TYPEDDICTS}
+
+        for name in schemas.__all__:
+            obj = getattr(schemas, name, None)
+            if obj is not None and isinstance(obj, _TypedDictMeta):
+                assert name in documented_names, (
+                    f"TypedDict '{name}' is exported but not in DOCUMENTED_TYPEDDICTS. "
+                    f"Add it to the list in test_schemas.py"
+                )

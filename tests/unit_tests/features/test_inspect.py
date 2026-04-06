@@ -47,17 +47,17 @@ def test_inspect_gaps():
 
     # 113-117, 132-140, 156-159
     from eegdash.features.inspect import (
-        get_all_feature_extractors,
         get_all_feature_kinds,
         get_all_feature_preprocessors,
+        get_all_preprocessor_output_types,
     )
 
-    all_extractors = get_all_feature_extractors()
-    assert isinstance(all_extractors, list)
     all_preprocs = get_all_feature_preprocessors()
     assert isinstance(all_preprocs, list)
     all_kinds = get_all_feature_kinds()
     assert isinstance(all_kinds, list)
+    all_output_types = get_all_preprocessor_output_types()
+    assert isinstance(all_output_types, list)
 
 
 def test_get_feature_predecessors_none():

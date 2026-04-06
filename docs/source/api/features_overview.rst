@@ -16,8 +16,8 @@ High-level discovery helpers
 .. autofunction:: get_all_features
 .. autofunction:: get_feature_kind
 .. autofunction:: get_feature_predecessors
-.. autofunction:: get_all_feature_extractors
 .. autofunction:: get_all_feature_kinds
+.. autofunction:: get_all_preprocessor_output_types
 
 Dataset and extraction utilities
 --------------------------------

@@ -1,7 +1,7 @@
 """Performance regression tests for EEGBIDSDataset.
 
 This module tests that the optimized EEGBIDSDataset (using mne_bids.find_matching_paths)
-doesn't introduce performance regressi
+doesn't introduce performance regressions compared to the original implementation
 (using pybids.BIDSLayout).
 
 The tests verify:
@@ -14,9 +14,20 @@ Note: This module uses the shared `bids_mini_dataset_path` and `cache_dir` fixtu
 from conftest.py to ensure consistent caching and avoid redundant downloads.
 """
 
+import sys
 import time
+from pathlib import Path
 
 import pytest
+
+# Add parent directory to path for conftest import
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from conftest import is_bids_dataset_available
+
+# Module-level skip if dataset not available
+_available, _reason = is_bids_dataset_available()
+if not _available:
+    pytest.skip(_reason, allow_module_level=True)
 
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
 

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Any
 
@@ -134,6 +135,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     auth_token : str | None
         Authentication token for accessing protected databases. Required for
         staging or admin operations.
+    on_error : str, default "raise"
+        How to handle :class:`DataIntegrityError` when accessing ``.raw``
+        on individual recordings:
+
+        - ``"raise"`` (default): propagate the exception.
+        - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
+        - ``"skip"``: silently set ``.raw`` to ``None``.
+
+        Use :meth:`drop_bad` after iteration to remove skipped recordings.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -156,11 +166,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         eeg_dash_instance: Any = None,
         database: str | None = None,
         auth_token: str | None = None,
+        on_error: str = "raise",
         **kwargs,
     ):
         # Parameters that don't need validation
         _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
         self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
+        self._on_error = on_error
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
@@ -207,6 +219,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         base_dataset_kwargs = {
             k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
         }
+        base_dataset_kwargs["on_error"] = self._on_error
 
         if "dataset" not in self.query:
             # If explicit records are provided, infer dataset from records
@@ -354,6 +367,91 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         super().__init__(datasets, lazy=True)
 
+    def drop_bad(self) -> list[dict]:
+        """Remove skipped datasets and return their records.
+
+        Call after accessing ``.raw`` on all datasets (e.g. after iteration
+        or preprocessing) to clean up the dataset list.
+
+        Returns
+        -------
+        list of dict
+            Records that were removed because loading failed.
+
+        """
+        bad = []
+        valid_datasets = []
+        valid_records = []
+        for ds, record in zip(self.datasets, self.records):
+            if getattr(ds, "_skipped", False):
+                bad.append(record)
+            else:
+                valid_datasets.append(ds)
+                valid_records.append(record)
+        self.datasets = valid_datasets
+        self.records = valid_records
+        return bad
+
+    def drop_short(self, min_samples: int) -> list[dict]:
+        """Remove recordings shorter than *min_samples* and return their records.
+
+        This is useful when downstream processing (e.g., fixed-length
+        windowing) requires a minimum number of samples per recording.
+        Recordings whose ``.raw`` is ``None`` (failed to load) are also
+        dropped.
+
+        Parameters
+        ----------
+        min_samples : int
+            Minimum number of time-domain samples a recording must have
+            to be kept.
+
+        Returns
+        -------
+        list of dict
+            Records that were removed.
+
+        """
+        dropped = []
+        valid_datasets = []
+        valid_records = []
+        for ds, record in zip(self.datasets, self.records):
+            raw = ds.raw
+            if raw is None or raw.n_times < min_samples:
+                dropped.append(record)
+                ds._raw = None
+            else:
+                valid_datasets.append(ds)
+                valid_records.append(record)
+        self.datasets = valid_datasets
+        self.records = valid_records
+        return dropped
+
+    @property
+    def cumulative_sizes(self) -> list[int]:
+        """Recompute cumulative sizes from current dataset lengths.
+
+        Overrides the cached version from BaseConcatDataset because individual
+        dataset lengths can change after lazy raw loading (estimated ntimes
+        from JSON metadata may differ from actual n_times in the raw file).
+        """
+        from torch.utils.data import ConcatDataset
+
+        return ConcatDataset.cumsum(self.datasets)
+
+    @cumulative_sizes.setter
+    def cumulative_sizes(self, value):
+        # Accept writes from ConcatDataset.__init__ but discard; we always recompute.
+        pass
+
+    def _ensure_cumulative_sizes(self) -> list[int]:
+        """Always recompute cumulative sizes.
+
+        Overrides BaseConcatDataset's cached version (used by __len__) to
+        stay consistent with the dynamic cumulative_sizes property.
+        """
+        return self.cumulative_sizes
+
     def _normalize_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Apply dataset-level record normalization before building datasets.
 
@@ -427,16 +525,16 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 targets.append(ds)
 
         if not targets:
+            self._download_dataset_files()
             return
 
         if n_jobs == 1:
             for ds in targets:
                 ds._download_required_files()
-            return
-
-        Parallel(n_jobs=n_jobs, prefer="threads")(
-            delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
-        )
+        else:
+            Parallel(n_jobs=n_jobs, prefer="threads")(
+                delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+            )
 
         # Download global dataset files (participants.tsv, etc.)
         self._download_dataset_files()
@@ -804,6 +902,9 @@ class EEGChallengeDataset(EEGDashDataset):
             warning_message = str(message_text)
             logger.warning(warning_message)
 
+        if not kwargs.get("download", True) and "modality" not in kwargs:
+            kwargs["modality"] = "eeg"
+
         super().__init__(
             dataset=dataset_id,
             query=query,
@@ -815,11 +916,16 @@ class EEGChallengeDataset(EEGDashDataset):
         )
 
 
+_from_api = os.getenv("EEGDASH_DATASET_REGISTRY_FROM_API", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 registered_classes = register_openneuro_datasets(
     summary_file=Path(__file__).with_name("dataset_summary.csv"),
     base_class=EEGDashDataset,
     namespace=globals(),
-    from_api=True,
+    from_api=_from_api,
 )
 
 

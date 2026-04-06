@@ -7,25 +7,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-04-06
+
 ### Added
-- CNAME configuration for custom domain support
-- Documentation improvements for API reference
-- New EEGDash logo and branding assets
-- Favicon configuration for documentation
+- Publication-quality chart redesign with PDF export (#299)
+- EEGDash API tutorial (#283)
+- Intel Mac system support with conditional `numba` and `torch` pinning (#294)
+- Preprocessor output type system with documentation and inspection (#278, #289, #290, #291, #292)
+- Feature extractor configuration files (#286)
+- Optional recording-info parameter for feature extractors (#284, #285)
+- `on_error` parameter to skip bad records during data loading (#276)
+- CTF direct reader for `.ds` directories (#279)
+- Robust BrainVision handling with auto-repair and metadata generation (#236)
+- Enhanced documentation search with autocomplete and live search (#238)
+- fNIRS metadata extraction support (#238)
+- EDF/BDF metadata extraction via MNE
+- Auto-sync dataset CSV with git-annex size correction (#298)
+- Duration computation for recordings
+- `datasets_dict` dictionary for programmatic dataset access (#209)
+- HTTP API client (#214)
+- `acq-` BIDS entity support in record pipeline (#247)
+- Pathology and modality labels for dataset summary (#212)
+- Number of sessions column in dataset summary table
+- Unified color palette across plots and CSS tags
 
 ### Fixed
+- Robust data loading across 522 EEG datasets (#282)
+- Git-annex key path resolution to BIDS names for S3 downloads (#280)
+- BIDS TSV whitespace-padded `n/a` values (#278)
+- BIDS coordinate system validation and extended non-numeric run fallback (#277)
+- EEGLAB format: truncated `.fdt` handling (#266), epoch/trial mismatch (#275), latin-1 encoding (#269), error handling (#272)
+- CTF "Illegal date" handling for numeric dash dates (#262)
+- Corrupt MAT/EEGLAB file detection (#265)
+- Participants.tsv subject/session ID repair (#264)
+- Non-numeric run entities via `check=False` in BIDSPath (#263)
+- Empty or malformed `channels.tsv` handling (#270)
+- Auto-discovery and download of companion files `.fdt`, `.eeg`, `.vmrk` (#268)
+- Split FIF file handling and continuation file downloads (#273)
+- TSV encoding fallback order (#240, #241)
+- Case-insensitive BIDS sidecar matching for task entity mismatches (#242, #243)
+- Duplicate `participant_id` in `participants.tsv` (#244)
+- European comma decimal separators in BIDS TSV files (#257)
+- iEEG `coordsystem.json` key handling (#236)
+- Git-annex key pointer rewriting in VHDR files (#259, #261)
+- Corrupt data, bad timestamps, and invalid BIDS entity handling (#260)
+- Directory-based format recursive download support (#253)
+- Dynamic `cumulative_sizes` and accurate `nchans` computation (#243)
+- Robust BIDSPath entity extraction for git-annex datasets (#245)
+- Robust subject/participant TSV fallback (#248)
+- Signal filter preprocessor bug (#288)
+- Anonymous hyperlinks in docstrings to avoid duplicate target warnings
+- MNE/Dataset compatibility with retry handlers for multiple failing datasets (#271)
+
+### Changed
+- Switched to released PyPI versions for MNE and MNE-BIDS dependencies
+- Required `pandas>=2.0` (#210)
+- Consolidated `_load_raw` error handling into single retry loop
+- Expanded default BIDS modalities to include SNIRF
+- Bumped `braindecode` dependency to `>=1.4.0`
+
+### Documentation
+- Comprehensive docstrings for Features module (#281, #287)
+- Dataset documentation with tags, feedback section, and visualization updates (#235)
+- P3 oddball tutorial updates (#192)
+- Improved dataset page layout and README parser
+
+## [0.5.0] - 2026-01-07
+
+### Added
+- New EEGDash logo and branding assets (#200)
+- CNAME configuration for custom domain support (#187)
+- Favicon configuration for documentation
+- Preprocessors as standalone functions (#194)
+- Data digestion pipeline v2 (#193, #215)
+- Mass ingestion fixes and optimization (#227)
+- HPC, Docker, and Singularity usage examples
+- Age regression tutorial
+- iEEG documentation
+
+### Fixed
+- Warning spam during EEGChallengeDataset download (#226)
 - Sphinx documentation build warnings
 - Import path resolution in documentation generation
-- Image path warnings in documentation
 - Completed missing entries in the dataset summary table
 
 ### Changed
 - Updated repository organization to eegdash/EEGDash
+- Updated license from GPL to BSD-3-Clause (#199)
 - Updated color theme to match new logo (primary blue: #003D82, accent orange: #FF8000)
 - Updated GitHub references to new organization
+- Cleaned up legacy code and removed dead code (#182, #184)
+- Use API dataset summary for CI docs (#224)
+
+### Documentation
+- Parallelized documentation build for faster generation (#232)
+- Improved quickstart guide aesthetics (#232)
+- Regenerated dataset summary and documentation (#220)
 - Enhanced footer with logo branding
+- Updated tutorial documentation (#202)
 - Improved documentation styling and visual hierarchy
-- Added hidden page title for SEO
 
 ## [0.4.1] - 2025-10-21
 
@@ -216,6 +296,8 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICE
 
 | Version | Release Date | Key Features |
 |---------|-------------|--------------|
+| 0.6.0 | 2026-04-06 | Robust loading across 522 datasets, publication charts, API tutorial, fNIRS support |
+| 0.5.0 | 2026-01-07 | New branding, digestion pipeline v2, preprocessors as functions, BSD-3 license |
 | 0.4.1 | 2025-10-21 | Performance optimizations, visualization tools, comprehensive documentation |
 | 0.4.0 | 2025-10-11 | Dataset registry, feature preprocessing refactor, multi-release support |
 | 0.3.x | 2025-09-xx | Documentation system, tutorials, GitHub Pages deployment |

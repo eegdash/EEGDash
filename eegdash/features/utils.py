@@ -1,3 +1,19 @@
+r"""Feature Extraction Utilities.
+
+This module provides the primary entry points for applying feature extraction
+pipelines to windowed datasets.
+
+The module provides the following functions:
+
+- :func:`extract_features` — The main interface for computing features
+  across an entire concatenated dataset.
+- :func:`fit_feature_extractors` — Fits trainable features using a
+  representative dataset.
+- :func:`_extract_features_from_windowsdataset` — Internal helper for
+  processing individual recording datasets.
+
+"""
+
 import copy
 from collections.abc import Callable
 from typing import Dict, List
@@ -23,30 +39,89 @@ __all__ = [
 ]
 
 
+def _get_record_metadata(win_ds):
+    """Get record metadata.
+
+    Parameters
+    ----------
+    win_ds : EEGWindowsDataset
+        A braindecode wimdowed EEG dataset.
+
+    Returns
+    -------
+    dict
+        Record metadata, including:
+
+        - info : MNE's record info.
+        - description : braindesode's dataset description.
+
+    """
+    return {
+        "info": win_ds.raw.info,
+        "description": win_ds.description,
+    }
+
+
+def _get_batch_metadata(win_ds, X, crop_inds):
+    """Get batch metadata.
+
+    Parameters
+    ----------
+    win_ds : EEGWindowsDataset
+        A braindecode wimdowed EEG dataset.
+    X : ndarray
+        A batch of EEG windows.
+    crop_inds : list of tuples
+        a tuple of `(i_window_in_trial, i_start_in_trial, i_stop_in_trial)` for each
+        sample in the batch.
+
+    Returns
+    -------
+    dict
+        Batch metadata, including:
+
+        - batch_size : the number of samples in the batch.
+        - crop_inds : a tuple of `(i_window_in_trial, i_start_in_trial, i_stop_in_trial)`
+           for each sample in the batch.
+
+    """
+    return {
+        "batch_size": X.shape[0],
+        "crop_inds": crop_inds,
+    }
+
+
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
     feature_extractor: extractors.FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
-    """Extract features from a single `WindowsDataset`.
+    r"""Extract features from a single recording windowed dataset.
 
-    This is a helper function that iterates through a `WindowsDataset` in
-    batches, applies a `FeatureExtractor`, and returns the results as a
-    `FeaturesDataset`.
+    This helper function iterates through a :class:`WindowsDataset` in
+    batches, applies a :class:`FeatureExtractor`, and packages the
+    resulting feature vectors into a :class:`FeaturesDataset` instance.
 
     Parameters
     ----------
     win_ds : EEGWindowsDataset or WindowsDataset
-        The windowed dataset to extract features from.
+        The windowed dataset containing raw EEG data to extract features from.
     feature_extractor : ~eegdash.features.extractors.FeatureExtractor
-        The feature extractor instance to apply.
+        The configured feature extractor pipeline to apply to the windows.
     batch_size : int, default 512
-        The number of windows to process in each batch.
+        The number of windows to process in each batch via the DataLoader.
 
     Returns
     -------
     ~eegdash.features.datasets.FeaturesDataset
-        A new dataset containing the extracted features and associated metadata.
+        A recording-level dataset containing the extracted feature table
+        and associated recording metadata.
+
+    Notes
+    -----
+    If the input dataset does not have targets pre-loaded in metadata,
+    this function will automatically extract them during the iteration
+    and update the returned metadata accordingly.
 
     """
     metadata = win_ds.metadata
@@ -60,15 +135,14 @@ def _extract_features_from_windowsdataset(
         )
     win_dl = DataLoader(win_ds, batch_size=batch_size, shuffle=False, drop_last=False)
     features_dict = dict()
-    ch_names = win_ds.raw.ch_names
+    batch_metadata = _get_record_metadata(win_ds)
     for X, y, crop_inds in win_dl:
         X = X.numpy()
         if hasattr(y, "tolist"):
             y = y.tolist()
+        batch_metadata.update(_get_batch_metadata(win_ds, X, crop_inds))
         win_dict = dict()
-        win_dict.update(
-            feature_extractor(X, _batch_size=X.shape[0], _ch_names=ch_names)
-        )
+        win_dict.update(feature_extractor(X, _metadata=batch_metadata))
         if not win_ds.targets_from == "metadata":
             # Convert transposed crop_inds from DataLoader to list of tuples for MultiIndex
             crop_inds_tuples = list(zip(*[idx.tolist() for idx in crop_inds]))
@@ -100,32 +174,32 @@ def extract_features(
     batch_size: int = 512,
     n_jobs: int = 1,
 ) -> FeaturesConcatDataset:
-    """Extract features from a concatenated dataset of windows.
+    r"""Extract features from a collection of windowed recordings.
 
-    This function applies a feature extractor to each `WindowsDataset` within a
-    `BaseConcatDataset` in parallel and returns a `FeaturesConcatDataset`
-    with the results.
+    This function applies a feature extraction pipeline to every
+    individual recording in a :class:`BaseConcatDataset`.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
-        A concatenated dataset of `WindowsDataset` or `EEGWindowsDataset`
-        instances.
+        A concatenated dataset of :class:`WindowsDataset` or
+        :class:`EEGWindowsDataset` instances.
     features : ~eegdash.features.extractors.FeatureExtractor or dict or list
         The feature extractor(s) to apply. Can be a
-        :class:`~eegdash.features.extractors.FeatureExtractor`
-        instance, a dictionary of named feature functions, or a list of
-        feature functions.
+        :class:`~eegdash.features.extractors.FeatureExtractor` instance,
+        a dictionary of named feature functions, or a list of feature
+        functions.
     batch_size : int, default 512
-        The size of batches to use for feature extraction.
+        The size of batches used for feature extraction within each recording.
     n_jobs : int, default 1
-        The number of parallel jobs to use for extracting features from the
-        datasets.
+        The number of parallel jobs to use for processing different
+        recordings simultaneously.
 
     Returns
     -------
     ~eegdash.features.datasets.FeaturesConcatDataset
-        A new concatenated dataset containing the extracted features.
+        A unified collection of feature datasets corresponding to the
+        input recordings.
 
     """
     if isinstance(features, list):
@@ -152,26 +226,32 @@ def fit_feature_extractors(
     features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
 ) -> extractors.FeatureExtractor:
-    """Fit trainable feature extractors on a dataset.
+    r"""Fit trainable feature extractors on a concatenated dataset.
 
-    If the provided feature extractor (or any of its sub-extractors) is
-    trainable (i.e., subclasses
-    :class:`~eegdash.features.extractors.TrainableFeature`), this function
-    iterates through the dataset to fit it.
+    Scans the provided feature pipeline for components that require training
+    (subclasses of :class:`~eegdash.features.extractors.TrainableFeature`).
+    If found, the function iterates through the dataset in batches to
+    perform partial fitting before finalization.
 
     Parameters
     ----------
     concat_dataset : BaseConcatDataset
-        The dataset to use for fitting the feature extractors.
+        The dataset used to train the feature extractors.
     features : ~eegdash.features.extractors.FeatureExtractor or dict or list
-        The feature extractor(s) to fit.
+        The feature extractor pipeline(s) to fit.
     batch_size : int, default 8192
-        The batch size to use when iterating through the dataset for fitting.
+        The batch size to use when streaming data through the
+        :meth:`partial_fit` phase.
 
     Returns
     -------
     ~eegdash.features.extractors.FeatureExtractor
-        The fitted feature extractor.
+        The fitted feature extractor instance, ready for feature extraction.
+
+    Notes
+    -----
+    If the provided extractors are not trainable, the function returns
+    the original input without modification.
 
     """
     if isinstance(features, list):
@@ -181,12 +261,17 @@ def fit_feature_extractors(
     if not features._is_trainable:
         return features
     features.clear()
-    concat_dl = DataLoader(
-        concat_dataset, batch_size=batch_size, shuffle=False, drop_last=False
-    )
-    for X, y, _ in tqdm(
-        concat_dl, total=len(concat_dl), desc="Fitting feature extractors"
+    for win_ds in tqdm(
+        concat_dataset.datasets,
+        total=len(concat_dataset.datasets),
+        desc="Fitting feature extractors",
     ):
-        features.partial_fit(X.numpy(), y=np.array(y))
+        win_dl = DataLoader(
+            win_ds, batch_size=batch_size, shuffle=False, drop_last=False
+        )
+        batch_metadata = _get_record_metadata(win_ds)
+        for X, y, crop_inds in win_dl:
+            batch_metadata.update(_get_batch_metadata(win_ds, X, crop_inds))
+            features.partial_fit(X.numpy(), y=np.array(y), _metadata=batch_metadata)
     features.fit()
     return features

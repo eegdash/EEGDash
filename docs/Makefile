@@ -7,6 +7,8 @@ SOURCEDIR     = source
 BUILDDIR      = _build
 PKG ?= eegdash
 APIDIR := $(SOURCEDIR)/api
+# Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
+EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
 .PHONY: help clean apidoc html html-noplot html-fast
 
@@ -22,19 +24,19 @@ apidoc:
 
 # Standard build runs examples
 html: apidoc
-	python prepare_summary_tables.py --target $(BUILDDIR)
-	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
+	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Fast build: do NOT execute examples (sphinx-gallery)
 html-noplot: apidoc
-	@python prepare_summary_tables.py --target $(BUILDDIR)
-	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
+	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
+	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
 # Very fast build: limit datasets to 5
 html-fast: apidoc
-	@EEGDASH_DOC_LIMIT=5 python prepare_summary_tables.py --target $(BUILDDIR)
-	@EEGDASH_DOC_LIMIT=5 $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
+	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
+	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
 # Custom clean target to remove generated API docs and build files
@@ -48,7 +50,7 @@ clean:
 	@echo "Removing other generated directories..."
 	@rm -rf "$(SOURCEDIR)/generated"
 	@rm -rf "$(SOURCEDIR)/gen_modules"
-	@echo "Removing build directory..."
+	@echo "Removing build directory (including CSV cache)..."
 	@rm -rf "$(BUILDDIR)" build
 	@echo "Clean completed."
 
@@ -57,5 +59,5 @@ clean:
 Makefile: ;
 
 %: Makefile
-	python prepare_summary_tables.py --target $(BUILDDIR)
-	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
+	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

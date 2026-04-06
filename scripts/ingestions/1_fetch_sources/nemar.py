@@ -78,6 +78,46 @@ def extract_ages_from_participants(participants: list[dict] | None) -> list[int]
     return [int(a) for a in ages.astype(float).tolist()]
 
 
+def extract_sex_distribution(participants: list[dict] | None) -> dict[str, int] | None:
+    """Extract sex distribution from participants data."""
+    if not participants:
+        return None
+    df = pd.DataFrame(participants)
+    if df.empty:
+        return None
+    sex_cols = [c for c in df.columns if str(c).strip().lower() == "sex"]
+    if not sex_cols:
+        return None
+    counts = df[sex_cols[0]].str.strip().str.upper().value_counts().to_dict()
+    if not counts:
+        return None
+    # Normalize keys
+    normalized = {}
+    for k, v in counts.items():
+        key = str(k).strip().upper()
+        if key in ("M", "MALE"):
+            normalized["M"] = normalized.get("M", 0) + int(v)
+        elif key in ("F", "FEMALE"):
+            normalized["F"] = normalized.get("F", 0) + int(v)
+        else:
+            normalized[key] = int(v)
+    return normalized if normalized else None
+
+
+def extract_paper_doi(bids_desc: dict | None) -> str | None:
+    """Extract associated paper DOI from ReferencesAndLinks."""
+    if not bids_desc:
+        return None
+    refs = bids_desc.get("ReferencesAndLinks") or []
+    for ref in refs:
+        ref = str(ref).strip()
+        if "doi.org/" in ref:
+            return ref.split("doi.org/")[-1]
+        if ref.startswith("10."):
+            return ref
+    return None
+
+
 def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str | None:
     """Fetch README from a repository."""
     readme_names = ["README.md", "README", "README.txt", "readme.md", "readme"]
@@ -153,6 +193,7 @@ def fetch_repositories(
         license_str = None
         bids_version = None
         dataset_doi = None
+        associated_paper_doi = None
         name = repo.get("description") or repo_name
 
         if bids_desc:
@@ -162,10 +203,12 @@ def fetch_repositories(
             license_str = bids_desc.get("License")
             bids_version = bids_desc.get("BIDSVersion")
             dataset_doi = bids_desc.get("DatasetDOI")
+            associated_paper_doi = extract_paper_doi(bids_desc)
 
-        # Extract ages from participants
+        # Extract demographics from participants
         ages = extract_ages_from_participants(participants)
         subjects_count = len(participants) if participants else 0
+        sex_distribution = extract_sex_distribution(participants)
 
         # Build NEMAR GitHub URL
         nemar_url = (
@@ -178,8 +221,7 @@ def fetch_repositories(
             name=name,
             source="nemar",
             readme=readme,
-            recording_modality="eeg",  # NEMAR is EEG-focused
-            experimental_modalities=["eeg"],
+            recording_modality=["eeg"],
             bids_version=bids_version,
             license=license_str,
             authors=authors
@@ -193,10 +235,15 @@ def fetch_repositories(
             if funding
             else [],
             dataset_doi=dataset_doi,
+            associated_paper_doi=associated_paper_doi,
             subjects_count=subjects_count,
             ages=ages,
-            species="Human",  # NEMAR datasets are human
+            sex_distribution=sex_distribution,
+            species="Human",
             source_url=nemar_url,
+            stars=repo.get("stargazers_count"),
+            forks=repo.get("forks_count"),
+            watchers=repo.get("watchers_count"),
             dataset_modified_at=repo.get("pushed_at"),
         )
 

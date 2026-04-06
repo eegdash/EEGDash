@@ -3,6 +3,9 @@
 
 Upload Dataset and Record documents from digested datasets into separate MongoDB collections.
 
+IMPORTANT: Validation is run automatically before injection to ensure data quality.
+Use --skip-validation to bypass this check (not recommended).
+
 Usage:
     # Inject all digested datasets to development
     python 5_inject.py --input digestion_output --database eegdash_dev
@@ -24,6 +27,9 @@ Usage:
 
     # Force injection even if unchanged
     python 5_inject.py --input digestion_output --database eegdash_dev --force
+
+    # Skip validation (not recommended)
+    python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
 import argparse
@@ -31,6 +37,7 @@ import json
 import math
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from _fingerprint import fingerprint_from_records
@@ -41,6 +48,7 @@ from _http import (
     make_retry_client,
     request_json,
 )
+from _validate import validate_digestion_output
 from tqdm import tqdm
 
 # Datasets to explicitly ignore during ingestion
@@ -86,6 +94,40 @@ EXCLUDED_DATASETS = {
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
+
+
+def _sanitize_for_json(obj):
+    """Sanitize object for JSON serialization, handling NaN/Inf floats."""
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(i) for i in obj]
+    return obj
+
+
+def _inject_records_batch(batch_idx: int, batch: list, url: str, session) -> dict:
+    """Worker function for parallel records injection."""
+    try:
+        result, _ = request_json(
+            "post",
+            url,
+            json_body=_sanitize_for_json(batch),
+            timeout=60,
+            raise_for_status=True,
+            raise_for_request=True,
+            client=session,
+        )
+        return {
+            "inserted": (result or {}).get("inserted_count", 0),
+            "updated": (result or {}).get("updated_count", 0),
+            "error": None,
+        }
+    except (RequestError, HTTPStatusError) as e:
+        return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
 
 
 def fetch_existing_dataset(
@@ -206,10 +248,26 @@ def _flatten_entities(record: dict) -> dict:
 
     The EEGDash API expects subject, task, session, run at the top level,
     not nested in an entities dict.
+
+    Conflict Resolution:
+    -------------------
+    If a key exists both at the top level AND in the entities dict, the
+    top-level value takes precedence (the entity value is NOT overwritten).
+    This ensures that explicitly set values from the digestion pipeline
+    are preserved, while nested entities serve as fallback values.
+
+    Example:
+        record = {
+            "subject": "01",           # Explicit top-level value
+            "entities": {"subject": "1", "task": "rest"}  # Nested values
+        }
+        Result: {"subject": "01", "task": "rest"}  # top-level "subject" preserved
+
     """
     result = record.copy()
 
     # Extract entities to top level if present
+    # Only copy if key doesn't already exist at top level (no overwrite)
     entities = result.pop("entities", {})
     if entities:
         for key in ("subject", "task", "session", "run"):
@@ -242,24 +300,13 @@ def inject_datasets(
     inserted_count = 0
     errors = []
 
-    def sanitize_for_json(obj):
-        if isinstance(obj, float):
-            if math.isnan(obj) or math.isinf(obj):
-                return None
-            return obj
-        elif isinstance(obj, dict):
-            return {k: sanitize_for_json(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [sanitize_for_json(i) for i in obj]
-        return obj
-
     for i in range(0, len(datasets), batch_size):
         batch = datasets[i : i + batch_size]
         try:
             result, _response = request_json(
                 "post",
                 url,
-                json_body=sanitize_for_json(batch),
+                json_body=_sanitize_for_json(batch),
                 timeout=60,
                 raise_for_status=True,
                 raise_for_request=True,
@@ -299,41 +346,6 @@ def inject_records(
     updated_count = 0
     errors = []
 
-    # Batch insert records
-    import math
-
-    def sanitize_for_json(obj):
-        if isinstance(obj, float):
-            if math.isnan(obj) or math.isinf(obj):
-                return None
-            return obj
-        elif isinstance(obj, dict):
-            return {k: sanitize_for_json(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [sanitize_for_json(i) for i in obj]
-        return obj
-
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
-    def inject_batch(batch_idx, batch):
-        try:
-            result, _ = request_json(
-                "post",
-                url,
-                json_body=sanitize_for_json(batch),
-                timeout=60,
-                raise_for_status=True,
-                raise_for_request=True,
-                client=session,
-            )
-            return {
-                "inserted": (result or {}).get("inserted_count", 0),
-                "updated": (result or {}).get("updated_count", 0),
-                "error": None,
-            }
-        except (RequestError, HTTPStatusError) as e:
-            return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
-
     # Prepare batches
     batches = []
     for i in range(0, len(records), batch_size):
@@ -342,7 +354,8 @@ def inject_records(
     # Parallel execution
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {
-            executor.submit(inject_batch, idx, batch): idx for idx, batch in batches
+            executor.submit(_inject_records_batch, idx, batch, url, session): idx
+            for idx, batch in batches
         }
         for future in tqdm(
             as_completed(futures), total=len(batches), desc="Injecting batches"
@@ -479,6 +492,22 @@ def main():
         action="store_true",
         help="Inject even if ingestion_fingerprint matches existing dataset",
     )
+    parser.add_argument(
+        "--skip-validation",
+        action="store_true",
+        help="Skip validation before injection (not recommended)",
+    )
+    parser.add_argument(
+        "--data-quality-threshold",
+        type=float,
+        default=10.0,
+        help="Max percentage of records with missing nchans/sampling_frequency before warning (default: 10%%)",
+    )
+    parser.add_argument(
+        "--compute-stats",
+        action="store_true",
+        help="Automatically recompute dataset stats (nchans_counts, sfreq_counts) after injection",
+    )
 
     args = parser.parse_args()
 
@@ -491,6 +520,59 @@ def main():
 
     # Get admin token (validated later if injection is needed)
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
+
+    # Run validation first (unless explicitly skipped)
+    if not args.skip_validation:
+        print("Running validation...")
+        validation_result = validate_digestion_output(args.input, verbose=False)
+        print(validation_result.summary())
+
+        # Check for critical errors
+        if not validation_result.is_valid():
+            print(
+                "\nValidation FAILED - fix errors before injection or use --skip-validation",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Check data quality threshold
+        total_records = validation_result.stats["records_checked"]
+        missing_nchans = validation_result.stats["missing_nchans"]
+        missing_sampling_frequency = validation_result.stats[
+            "missing_sampling_frequency"
+        ]
+
+        if total_records > 0:
+            nchans_pct = missing_nchans / total_records * 100
+            sampling_frequency_pct = missing_sampling_frequency / total_records * 100
+
+            if nchans_pct > args.data_quality_threshold:
+                print(
+                    f"\nWARNING: {nchans_pct:.1f}% of records missing nchans "
+                    f"(threshold: {args.data_quality_threshold}%)",
+                    file=sys.stderr,
+                )
+                if not args.dry_run:
+                    print(
+                        "Use --skip-validation to proceed anyway, or fix the data first.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+            if sampling_frequency_pct > args.data_quality_threshold:
+                print(
+                    f"\nWARNING: {sampling_frequency_pct:.1f}% of records missing sampling_frequency "
+                    f"(threshold: {args.data_quality_threshold}%)",
+                    file=sys.stderr,
+                )
+                if not args.dry_run:
+                    print(
+                        "Use --skip-validation to proceed anyway, or fix the data first.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+        print("\nValidation PASSED - proceeding with injection\n")
 
     # Find dataset directories
     dataset_dirs = find_digested_datasets(args.input, args.datasets)
@@ -646,6 +728,35 @@ def main():
                 errors.append({"dataset": "records_collection", "error": str(e)})
                 print(f"  Error injecting records: {e}", file=sys.stderr)
 
+        # Compute stats for affected datasets if requested
+        if args.compute_stats and not args.only_datasets:
+            # Get unique dataset IDs from injected records
+            affected_datasets = sorted(
+                set(r.get("dataset") for r in all_records if r.get("dataset"))
+            )
+            if affected_datasets:
+                print(f"\nComputing stats for {len(affected_datasets)} datasets...")
+                try:
+                    datasets_param = ",".join(affected_datasets)
+                    url = f"{args.api_url}/admin/{args.database}/datasets/compute-stats?datasets={datasets_param}"
+                    with _make_session(admin_token) as client:
+                        result, response = request_json(
+                            "post",
+                            url,
+                            timeout=120,
+                            raise_for_status=True,
+                            raise_for_request=True,
+                            client=client,
+                        )
+                        stats["stats_computed"] = (result or {}).get(
+                            "datasets_updated", 0
+                        )
+                        print(
+                            f"  Stats computed for {stats['stats_computed']} datasets"
+                        )
+                except Exception as e:
+                    print(f"  Warning: Failed to compute stats: {e}", file=sys.stderr)
+
     # Print summary
     print("\n" + "=" * 60)
     print("INJECTION SUMMARY")
@@ -654,6 +765,8 @@ def main():
     print(f"  Datasets:   {stats['datasets_injected']}")
     print(f"  Records Ins:{stats['records_injected']}")
     print(f"  Records Upd:{stats.get('records_updated', 0)}")
+    if stats.get("stats_computed"):
+        print(f"  Stats Comp: {stats['stats_computed']}")
     print(f"  Skipped:    {stats['datasets_skipped']}")
     print(f"  Errors:     {stats['errors']}")
 

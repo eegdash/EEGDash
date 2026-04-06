@@ -15,15 +15,54 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from mne_bids import BIDSPath, find_matching_paths
+from mne_bids import BIDSPath, find_matching_paths, get_entities_from_fname
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES, reader
 
 # Known companion/sidecar files for specific formats (BIDS spec requirement)
 # These files must be downloaded together with the primary file
 _COMPANION_FILES = {
     ".set": [".fdt"],  # EEGLAB: data file
-    ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
+    ".vhdr": [".eeg", ".vmrk", ".dat"],  # BrainVision: data + marker files
 }
+
+# Modality directory aliases - different sources use different naming conventions
+# BIDS spec uses 'nirs' but some sources (NEMAR, older datasets) use 'fnirs'
+_MODALITY_DIR_ALIASES = {
+    "nirs": ["nirs", "fnirs"],
+    "fnirs": ["nirs", "fnirs"],
+}
+
+_TSV_ENCODINGS = ("utf-8", "cp1252", "latin-1")
+
+
+def _read_tsv_column(tsv_path: Path, column: str) -> list[str]:
+    """Read a column from a TSV file, trying multiple encodings."""
+    for encoding in _TSV_ENCODINGS:
+        try:
+            return pd.read_csv(tsv_path, sep="\t", encoding=encoding)[column].tolist()
+        except UnicodeDecodeError:
+            continue
+        except Exception:
+            return []
+    return []
+
+
+def _read_participants_tsv(tsv_path: Path) -> pd.DataFrame | None:
+    """Read and parse a participants.tsv file.
+
+    Returns a DataFrame indexed by participant_id, or None if the file
+    is missing, empty, or unreadable.
+    """
+    if not tsv_path.exists():
+        return None
+    try:
+        df = pd.read_csv(tsv_path, sep="\t", dtype=str)
+    except Exception:
+        return None
+    if df.empty:
+        return None
+    df.set_index("participant_id", inplace=True)
+    return df
 
 
 class EEGBIDSDataset:
@@ -123,7 +162,7 @@ class EEGBIDSDataset:
         # (e.g., dsXXXXX-bdf, dsXXXXX-bdf-mini) to avoid collisions.
         dir_name = self.bidsdir.name
         if not (dir_name == self.dataset or dir_name.startswith(self.dataset + "-")):
-            raise AssertionError(
+            raise ValueError(
                 f"BIDS directory '{dir_name}' does not correspond to dataset '{self.dataset}'"
             )
 
@@ -181,6 +220,55 @@ class EEGBIDSDataset:
                     # Continue searching for other extensions and modalities to ensure
                     # we capture all data (e.g., mixed EEG/MEG datasets).
 
+    def _get_bids_entities_from_file(self, data_filepath: str) -> dict[str, Any]:
+        """Parse BIDS filename entities for a data file with caching."""
+        if data_filepath not in self._bids_entity_cache:
+            filepath = Path(data_filepath)
+
+            # Detect modality from the directory path
+            # BIDS structure: .../sub-XX/[ses-YY/]<modality>/sub-XX_...
+            modality = "eeg"  # default
+            for part in filepath.parts:
+                if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
+                    # Normalize fnirs -> nirs for MNE-BIDS compatibility
+                    modality = "nirs" if part == "fnirs" else part
+                    break
+
+            # Use MNE-BIDS to parse all standard entities from the filename.
+            # on_error="warn" tolerates non-standard entity keys that appear
+            # in some real-world datasets.
+            entities = get_entities_from_fname(filepath.name, on_error="warn")
+
+            task_val = entities.get("task")
+            run_val = entities.get("run")
+
+            # Sanitize task if it incorrectly absorbed 'run' due to missing
+            # underscore separator in the original filename.
+            # get_entities_from_fname("task-ECONrun-1_eeg.set") -> task="ECONrun"
+            # We want task="ECON", run="1".
+            if task_val and re.search(r"run\d*$", task_val):
+                task_val = re.split(r"run\d*$", task_val)[0]
+                if run_val is None:
+                    run_match = re.search(r"run-([^_/.]*)", filepath.name)
+                    if run_match:
+                        run_val = run_match.group(1)
+
+            self._bids_entity_cache[data_filepath] = {
+                "subject": entities.get("subject"),
+                "session": entities.get("session"),
+                "task": task_val,
+                "acquisition": entities.get("acquisition"),
+                "run": run_val,
+                "processing": entities.get("processing"),
+                "recording": entities.get("recording"),
+                "space": entities.get("space"),
+                "split": entities.get("split"),
+                "description": entities.get("description"),
+                "modality": modality,
+            }
+
+        return self._bids_entity_cache[data_filepath]
+
     def _get_bids_path_from_file(self, data_filepath: str):
         """Get a BIDSPath object for a data file with caching.
 
@@ -196,63 +284,34 @@ class EEGBIDSDataset:
 
         """
         if data_filepath not in self._bids_path_cache:
-            # Parse the filename to extract BIDS entities
             filepath = Path(data_filepath)
-            filename = filepath.name
+            entities = self._get_bids_entities_from_file(data_filepath)
+            task_val = entities.get("task")
+            run_val = entities.get("run")
 
-            # Detect modality from the directory path
-            # BIDS structure: .../sub-XX/[ses-YY/]<modality>/sub-XX_...
-            path_parts = filepath.parts
-            modality = "eeg"  # default
-            for part in path_parts:
-                if part in ["eeg", "meg", "ieeg", "emg", "nirs", "fnirs"]:
-                    modality = part
-                    break
-
-            # Extract entities from filename using BIDS pattern
-            # Expected format: sub-<label>[_ses-<label>][_task-<label>][_run-<label>]_<modality>.<ext>
-            subject = re.search(r"sub-([^_/.]*)", filename)
-            session = re.search(r"ses-([^_/.]*)", filename)
-            task = re.search(r"task-([^_/.]*)", filename)
-            run = re.search(r"run-([^_/.]*)", filename)
-
-            # Extract raw values
-            subject_val = subject.group(1) if subject else None
-            session_val = session.group(1) if session else None
-            task_val = task.group(1) if task else None
-            run_val = run.group(1) if run else None
-
-            # Sanitize task if it incorrectly absorbed 'run-' due to missing separator
-            # e.g., "task-ECONrun-1" -> task="ECON"
-            if task_val and "run-" in task_val:
-                task_parts = task_val.split("run-")
-                task_val = task_parts[0]
-
-            # BIDSPath enforces "run" to be an index; accept numeric strings, but
-            # drop non-numeric runs (e.g., "5F") while preserving them in the cache.
-            run_value_for_bidspath = None
-            if run_val is not None:
-                run_str = str(run_val)
-                if run_str.isdigit():
-                    run_value_for_bidspath = run_str
+            # BIDSPath requires run to be numeric or None; preserve the
+            # original non-numeric value in the entity cache for attribute lookups.
+            run_for_bidspath = run_val
+            if run_val is not None and not str(run_val).isdigit():
+                run_for_bidspath = None
 
             bids_path = BIDSPath(
-                subject=subject_val,
-                session=session_val,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
                 task=task_val,
-                run=run_value_for_bidspath,
-                datatype=modality,
+                acquisition=entities.get("acquisition"),
+                run=run_for_bidspath,
+                processing=entities.get("processing"),
+                recording=entities.get("recording"),
+                space=entities.get("space"),
+                split=entities.get("split"),
+                description=entities.get("description"),
+                datatype=entities.get("modality"),
                 extension=filepath.suffix,
                 root=self.bidsdir,
+                check=False,
             )
             self._bids_path_cache[data_filepath] = bids_path
-            self._bids_entity_cache[data_filepath] = {
-                "subject": subject_val,
-                "session": session_val,
-                "task": task_val,
-                "run": run_val,
-                "modality": modality,
-            }
 
         return self._bids_path_cache[data_filepath]
 
@@ -291,12 +350,17 @@ class EEGBIDSDataset:
             else:
                 # Look for BIDS-specific JSON files (e.g., "sub-001_task-rest_eeg.json")
                 # Match files ending with the json_filename pattern
+                suffix_key = f"_{json_filename.split('.')[0]}"
                 for json_file in current_dir.glob(f"*_{json_filename}"):
                     # Check if this JSON corresponds to the data file
                     data_basename = Path(data_filepath).stem
                     json_basename = json_file.stem
                     # They should share the same BIDS entities prefix
-                    if data_basename.split("_eeg")[0] == json_basename.split("_eeg")[0]:
+                    # Use case-insensitive comparison to handle task-name
+                    # case mismatches (e.g., task-Emotion vs task-emotion)
+                    data_prefix = data_basename.split(suffix_key)[0].lower()
+                    json_prefix = json_basename.split(suffix_key)[0].lower()
+                    if data_prefix == json_prefix:
                         with open(json_file) as f:
                             json_dict.update(json.load(f))
                         break
@@ -446,121 +510,91 @@ class EEGBIDSDataset:
             The value of the requested attribute, or None if not found.
 
         """
-        bids_path = self._get_bids_path_from_file(data_filepath)
-        entities = self._bids_entity_cache.get(data_filepath, {})
+        entities = self._get_bids_entities_from_file(data_filepath)
 
-        # Direct BIDSPath properties for entities
         direct_attrs = {
-            "subject": entities.get("subject", bids_path.subject),
-            "session": entities.get("session", bids_path.session),
-            "task": entities.get("task", bids_path.task),
-            "run": entities.get("run", bids_path.run),
-            "modality": entities.get("modality", bids_path.datatype),
+            "subject": entities.get("subject"),
+            "session": entities.get("session"),
+            "task": entities.get("task"),
+            "run": entities.get("run"),
+            "acquisition": entities.get("acquisition"),
+            "modality": entities.get("modality"),
         }
 
         if attribute in direct_attrs:
             return direct_attrs[attribute]
 
         # For JSON-based attributes, read the modality-specific JSON file
-        # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG)
-        modality = bids_path.datatype or "eeg"
+        # (eeg.json for EEG, meg.json for MEG, ieeg.json for iEEG, nirs.json for NIRS)
+        modality = entities.get("modality") or "eeg"
         json_filename = f"{modality}.json"
         modality_json = self._get_json_with_inheritance(data_filepath, json_filename)
+
+        # Sum all channel type counts from the JSON for a more accurate total.
+        # BIDS sidecars report per-type counts (MEGChannelCount,
+        # MEGREFChannelCount, etc.) but no single total field.
+        _channel_count_keys = [
+            "EEGChannelCount",
+            "MEGChannelCount",
+            "MEGREFChannelCount",
+            "iEEGChannelCount",
+            "NIRSChannelCount",
+            "EOGChannelCount",
+            "ECGChannelCount",
+            "EMGChannelCount",
+            "MiscChannelCount",
+            "TriggerChannelCount",
+        ]
+        nchans_total = sum(modality_json.get(k, 0) or 0 for k in _channel_count_keys)
 
         json_attrs = {
             "sfreq": modality_json.get("SamplingFrequency"),
             "duration": modality_json.get("RecordingDuration"),
-            "nchans": modality_json.get("EEGChannelCount")
-            or modality_json.get("MEGChannelCount")
-            or modality_json.get("iEEGChannelCount"),
+            "nchans": nchans_total or None,
         }
+
+        if attribute == "ntimes":
+            sfreq = json_attrs.get("sfreq")
+            duration = json_attrs.get("duration")
+            if sfreq is None or duration is None:
+                return None
+            try:
+                return int(float(sfreq) * float(duration))
+            except (TypeError, ValueError):
+                return None
 
         return json_attrs.get(attribute)
 
-    def channel_labels(self, data_filepath: str) -> list[str]:
-        """Get a list of channel labels from channels.tsv.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        list of str
-            A list of channel names.
-
-        """
-        # Find channels.tsv in the same directory as the data file
-        # It can be named either "channels.tsv" or "*_channels.tsv"
+    def _find_channels_tsv(self, data_filepath: str) -> Path:
+        """Find channels.tsv for a data file."""
         filepath = Path(data_filepath)
-        parent_dir = filepath.parent
-
-        # Try the standard channels.tsv first
-        channels_tsv_path = parent_dir / "channels.tsv"
+        channels_tsv_path = filepath.parent / "channels.tsv"
         if not channels_tsv_path.exists():
-            # Try to find *_channels.tsv matching the filename prefix
-            base_name = filepath.stem  # filename without extension
-            for tsv_file in parent_dir.glob("*_channels.tsv"):
-                # Check if it matches by looking at task/run components
-                tsv_name = tsv_file.stem.replace("_channels", "")
-                if base_name.startswith(tsv_name):
-                    channels_tsv_path = tsv_file
-                    break
+            for tsv_file in filepath.parent.glob("*_channels.tsv"):
+                prefix = tsv_file.stem.replace("_channels", "").lower()
+                if filepath.stem.lower().startswith(prefix):
+                    return tsv_file
+        return channels_tsv_path
 
+    def channel_labels(self, data_filepath: str) -> list[str]:
+        """Get a list of channel labels from channels.tsv."""
+        channels_tsv_path = self._find_channels_tsv(data_filepath)
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
-
-        try:
-            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-            return channels_tsv["name"].tolist()
-        except Exception:
-            return []
+        return _read_tsv_column(channels_tsv_path, "name")
 
     def channel_types(self, data_filepath: str) -> list[str]:
-        """Get a list of channel types from channels.tsv.
-
-        Parameters
-        ----------
-        data_filepath : str
-            The path to the data file.
-
-        Returns
-        -------
-        list of str
-            A list of channel types.
-
-        """
-        # Find channels.tsv in the same directory as the data file
-        # It can be named either "channels.tsv" or "*_channels.tsv"
-        filepath = Path(data_filepath)
-        parent_dir = filepath.parent
-
-        # Try the standard channels.tsv first
-        channels_tsv_path = parent_dir / "channels.tsv"
-        if not channels_tsv_path.exists():
-            # Try to find *_channels.tsv matching the filename prefix
-            base_name = filepath.stem  # filename without extension
-            for tsv_file in parent_dir.glob("*_channels.tsv"):
-                # Check if it matches by looking at task/run components
-                tsv_name = tsv_file.stem.replace("_channels", "")
-                if base_name.startswith(tsv_name):
-                    channels_tsv_path = tsv_file
-                    break
-
+        """Get a list of channel types from channels.tsv."""
+        channels_tsv_path = self._find_channels_tsv(data_filepath)
         if not channels_tsv_path.exists():
             raise FileNotFoundError(f"No channels.tsv found for {data_filepath}")
-
-        try:
-            channels_tsv = pd.read_csv(channels_tsv_path, sep="\t")
-            return channels_tsv["type"].tolist()
-        except Exception:
-            return []
+        return _read_tsv_column(channels_tsv_path, "type")
 
     def num_times(self, data_filepath: str) -> int:
         """Get the number of time points in the recording.
 
-        Calculated from ``SamplingFrequency`` and ``RecordingDuration`` in eeg.json.
+        Calculated from ``SamplingFrequency`` and ``RecordingDuration`` in the
+        modality-specific JSON sidecar (e.g., ``eeg.json`` or ``meg.json``).
 
         Parameters
         ----------
@@ -573,11 +607,8 @@ class EEGBIDSDataset:
             The approximate number of time points.
 
         """
-        eeg_json_dict = self._get_json_with_inheritance(data_filepath, "eeg.json")
-        return int(
-            eeg_json_dict.get("SamplingFrequency", 0)
-            * eeg_json_dict.get("RecordingDuration", 0)
-        )
+        ntimes = self.get_bids_file_attribute("ntimes", data_filepath)
+        return int(ntimes or 0)
 
     def subject_participant_tsv(self, data_filepath: str) -> dict[str, Any]:
         """Get the participants.tsv record for a subject.
@@ -598,18 +629,10 @@ class EEGBIDSDataset:
         )
         if not participants_tsv_files:
             return {}
-        # the participant first column is always 'participant_id' or
-        # some variation like 'participantID'
         participants_tsv_path = participants_tsv_files[0]
-        # Use dtype=str to avoid pandas auto-converting values (e.g., '5F' being interpreted as hex)
-        try:
-            participants_tsv = pd.read_csv(participants_tsv_path, sep="\t", dtype=str)
-        except Exception:
+        participants_tsv = _read_participants_tsv(participants_tsv_path)
+        if participants_tsv is None:
             return {}
-
-        if participants_tsv.empty:
-            return {}
-        participants_tsv.set_index("participant_id", inplace=True)
 
         subj_val = self.get_bids_file_attribute("subject", data_filepath)
         if subj_val is None:
@@ -622,11 +645,85 @@ class EEGBIDSDataset:
 
         # Handle case where subject not found in participants.tsv
         if subject not in participants_tsv.index:
-            return {}
+            matched = _match_subject_fallback(subject, subj_val, participants_tsv.index)
+            if matched is not None:
+                subject = matched
+            else:
+                # Return skeleton row — column names with "n/a" (BIDS standard)
+                return {col: "n/a" for col in participants_tsv.columns}
 
-        row_dict = participants_tsv.loc[subject].to_dict()
+        row = participants_tsv.loc[subject]
+        # Handle duplicate participant_id entries (e.g., multi-session datasets)
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        row_dict = row.to_dict()
         # Convert NaN values to None for JSON compatibility
         return {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
+
+    def get_all_participants_tsv(self) -> dict[str, dict[str, Any]]:
+        """Get all rows from participants.tsv as a dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary mapping participant_id to a dict of column values.
+            Returns ``{}`` if no participants.tsv exists or it is empty.
+
+        """
+        df = _read_participants_tsv(self.bidsdir / "participants.tsv")
+        if df is None:
+            return {}
+        result = {}
+        for pid, row in df.iterrows():
+            row_dict = row.to_dict()
+            result[pid] = {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
+        return result
+
+    def get_orphan_participants(self) -> dict[str, dict[str, Any]]:
+        """Get participant rows that have no matching file in the dataset.
+
+        Identifies subjects present in ``participants.tsv`` but with no
+        corresponding recording file in ``self.files``.
+
+        Returns
+        -------
+        dict
+            A dictionary mapping orphan participant_id to their TSV data.
+            Returns ``{}`` if there are no orphans, no TSV, or no files.
+
+        """
+        all_participants = self.get_all_participants_tsv()
+        if not all_participants:
+            return {}
+
+        tsv_index = pd.Index(all_participants.keys())
+
+        # Build the set of TSV IDs matched by at least one file-subject
+        matched_tsv_ids = set()
+        seen_file_subjects = set()
+        for f in self.files:
+            subj_val = self.get_bids_file_attribute("subject", f)
+            if subj_val is None or subj_val in seen_file_subjects:
+                continue
+            seen_file_subjects.add(subj_val)
+
+            subject = f"sub-{subj_val}" if not subj_val.startswith("sub-") else subj_val
+
+            # Direct match
+            if subject in all_participants:
+                matched_tsv_ids.add(subject)
+                continue
+
+            # Fallback match
+            matched = _match_subject_fallback(subject, subj_val, tsv_index)
+            if matched is not None:
+                matched_tsv_ids.add(matched)
+
+        return {
+            pid: data
+            for pid, data in all_participants.items()
+            if pid not in matched_tsv_ids
+        }
 
     def eeg_json(self, data_filepath: str) -> dict[str, Any]:
         """Get the merged eeg.json metadata for a data file.
@@ -643,6 +740,79 @@ class EEGBIDSDataset:
 
         """
         return self._get_json_with_inheritance(data_filepath, "eeg.json")
+
+
+def _match_subject_fallback(subject: str, subj_val: str, index: pd.Index) -> str | None:
+    """Try to match a subject ID against participants.tsv index using fuzzy strategies.
+
+    Matching tiers (tried in order):
+    1. Case-insensitive exact match
+    2. Numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1)
+    3. Numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+
+    Parameters
+    ----------
+    subject : str
+        The full subject string (with ``sub-`` prefix).
+    subj_val : str
+        The subject entity value (may or may not have ``sub-`` prefix).
+    index : pd.Index
+        The participants.tsv index to match against.
+
+    Returns
+    -------
+    str or None
+        The matched participant_id string, or None if no match found.
+
+    """
+    # Build a case-insensitive lookup: lowered -> original
+    lower_map = {entry.lower(): entry for entry in index}
+
+    # Tier 1: case-insensitive exact match
+    if subject.lower() in lower_map:
+        return lower_map[subject.lower()]
+
+    # Extract the part after "sub-"
+    bare = subj_val.removeprefix("sub-")
+
+    numeric_match = re.search(r"(\d+)$", bare)
+    if not numeric_match:
+        return None
+
+    digits = numeric_match.group(1)
+    prefix = bare[: numeric_match.start()]
+    stripped = digits.lstrip("0") or "0"
+
+    # Tier 2: numeric suffix with prefix preserved (e.g., sub-S01 -> sub-S1, sub-S001)
+    if prefix:
+        candidates_prefix = [
+            f"sub-{prefix}{digits}",
+            f"sub-{prefix}{stripped}",
+            f"sub-{prefix}{stripped.zfill(2)}",
+            f"sub-{prefix}{stripped.zfill(3)}",
+            f"sub-{prefix}{stripped.zfill(4)}",
+        ]
+        for candidate in candidates_prefix:
+            if candidate in index:
+                return candidate
+            if candidate.lower() in lower_map:
+                return lower_map[candidate.lower()]
+
+    # Tier 3: numeric suffix with prefix stripped (e.g., sub-FFE001 -> sub-001)
+    candidates_stripped = [
+        f"sub-{digits}",
+        f"sub-{stripped}",
+        f"sub-{stripped.zfill(2)}",
+        f"sub-{stripped.zfill(3)}",
+        f"sub-{stripped.zfill(4)}",
+    ]
+    for candidate in candidates_stripped:
+        if candidate in index:
+            return candidate
+        if candidate.lower() in lower_map:
+            return lower_map[candidate.lower()]
+
+    return None
 
 
 def _is_valid_eeg_file(filepath: Path, allow_symlinks: bool = False) -> bool:
@@ -709,13 +879,24 @@ def _find_bids_files(
                     bidsdir, datatypes=modality, extensions=extension
                 )
                 if paths:
-                    all_files.extend([str(p.fpath) for p in paths])
+                    all_files.extend(
+                        [
+                            str(p.fpath)
+                            for p in paths
+                            if Path(str(p.fpath)).exists()
+                            and "derivatives" not in Path(str(p.fpath)).parts
+                        ]
+                    )
             except Exception:
                 pass  # Continue to fallback search
 
         # Fallback: manual glob search (finds symlinks too)
-        pattern = f"**/{modality}/*{extension}"
-        found = list(bidsdir.glob(pattern))
+        # Search for both the modality name and its aliases (e.g., nirs and fnirs)
+        dir_names = _MODALITY_DIR_ALIASES.get(modality, [modality])
+        found = []
+        for dir_name in dir_names:
+            pattern = f"**/{dir_name}/*{extension}"
+            found.extend(bidsdir.glob(pattern))
 
         # Filter based on validation mode and exclude derivatives
         valid_files = [

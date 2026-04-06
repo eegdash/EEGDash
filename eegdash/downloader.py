@@ -17,6 +17,8 @@ import s3fs
 from fsspec.callbacks import Callback, TqdmCallback
 from rich.console import Console
 
+from .logging import logger
+
 
 def get_s3_filesystem() -> s3fs.S3FileSystem:
     """Get an anonymous S3 filesystem object.
@@ -106,6 +108,7 @@ def download_files(
     *,
     filesystem: s3fs.S3FileSystem | None = None,
     skip_existing: bool = True,
+    skip_missing: bool = False,
 ) -> list[Path]:
     """Download multiple S3 URIs to local destinations.
 
@@ -117,6 +120,8 @@ def download_files(
         Optional pre-created filesystem to reuse across multiple downloads.
     skip_existing : bool
         If True, do not download files that already exist locally.
+    skip_missing : bool
+        If True, skip files that do not exist on S3 instead of raising.
 
     """
     filesystem = filesystem or get_s3_filesystem()
@@ -132,9 +137,16 @@ def download_files(
                     continue
             dest.unlink(missing_ok=True)
 
-        _filesystem_get(
-            filesystem=filesystem, s3path=uri, filepath=dest, size=remote_size
-        )
+        try:
+            _filesystem_get(
+                filesystem=filesystem, s3path=uri, filepath=dest, size=remote_size
+            )
+        except FileNotFoundError:
+            if skip_missing:
+                logger.warning("File not found on S3, skipping: %s", uri)
+                continue
+            raise
+
         if remote_size is not None and dest.stat().st_size != remote_size:
             dest.unlink(missing_ok=True)
             raise OSError(
@@ -248,7 +260,7 @@ def _filesystem_get(
         )
 
     try:
-        filesystem.get(s3path, str(filepath), callback=callback)
+        filesystem.get(s3path, str(filepath), callback=callback, recursive=True)
     finally:
         # Ensure callback is closed properly (important for Rich to clean up display)
         if hasattr(callback, "close"):

@@ -74,9 +74,7 @@ TOP_LABELS_PER_MODALITY = 5
 TOP_LABELS_OVERRIDES = {"EEG": 12}
 
 
-def _get_bubble_size(
-    duration_min_per_subject: float, scale: float = 1.0
-) -> float:
+def _get_bubble_size(duration_min_per_subject: float, scale: float = 1.0) -> float:
     """Calculate bubble size from recording duration per subject (minutes)."""
     size = max(0.5, float(duration_min_per_subject))
     return np.log(size + 1.0) * scale * 10
@@ -327,8 +325,15 @@ def generate_moabb_bubble(
 
     # Encode logo as base64 data URI for portable embedding
     _logo_candidates = [
-        Path(__file__).resolve().parent.parent / "source" / "_static" / "eegdash_long.svg",
-        Path(__file__).resolve().parent.parent / "_build" / "html" / "_static" / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent
+        / "source"
+        / "_static"
+        / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent
+        / "_build"
+        / "html"
+        / "_static"
+        / "eegdash_long.svg",
     ]
     _logo_data_uri = ""
     for _logo_path in _logo_candidates:
@@ -470,7 +475,7 @@ def generate_moabb_bubble(
             <button id="zoom-reset" title="Reset view">&#8962;</button>
         </div>
         <div class="branding">
-            <img src="{_logo_data_uri}" alt="EEGDash" style="{'display:none' if not _logo_data_uri else ''}">
+            <img src="{_logo_data_uri}" alt="EEGDash" style="{"display:none" if not _logo_data_uri else ""}">
             <span class="branding-version">v{_eegdash_version}</span>
         </div>
         <div class="hint"><b>Hover</b> to highlight &middot; <b>Scroll/buttons</b> to zoom &middot; <b>Click</b> to open &middot; <b>Click legend</b> to filter</div>

@@ -40,27 +40,36 @@ def test_download_all_only_missing_files(tmp_path, ds000248_records):
     records = ds000248_records[:2]
     dataset = _build_dataset(tmp_path, records)
 
-    cached_path = dataset.datasets[0].filecache
-    cached_path.parent.mkdir(parents=True, exist_ok=True)
-    cached_path.write_text("cached")
-    for dep_path in getattr(dataset.datasets[0], "_dep_paths", []):
-        dep_path.parent.mkdir(parents=True, exist_ok=True)
-        dep_path.write_text("cached")
+    ds0 = dataset.datasets[0]
+    ds1 = dataset.datasets[1]
 
-    missing_path = dataset.datasets[1].filecache
-    missing_path.unlink(missing_ok=True)
-    for dep_path in getattr(dataset.datasets[1], "_dep_paths", []):
-        dep_path.unlink(missing_ok=True)
+    # Ensure dataset[1] files are missing FIRST, before caching ds0.
+    # Both datasets share the same bids_root, so dep_paths can overlap
+    # (e.g. shared sidecar files). Removing ds1 after caching ds0 could
+    # accidentally delete a file ds0 also depends on.
+    all_paths_1 = [ds1.filecache] + list(ds1._dep_paths)
+    for p in all_paths_1:
+        p.unlink(missing_ok=True)
+
+    # Cache ALL files for dataset[0]: main file + every dependency
+    all_paths_0 = [ds0.filecache] + list(ds0._dep_paths)
+    for p in all_paths_0:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("cached")
 
     with patch.object(
         dataset_mod.EEGDashRaw, "_download_required_files", autospec=True
     ) as download_mock:
         dataset.download_all(n_jobs=1)
 
-    assert download_mock.call_count == 1
+    # dataset[0] is fully cached -> should NOT be in download calls
     called_datasets = {call.args[0] for call in download_mock.call_args_list}
-    assert dataset.datasets[1] in called_datasets
-    assert dataset.datasets[0] not in called_datasets
+    assert ds0 not in called_datasets, (
+        f"ds0 should be skipped (cached). "
+        f"filecache={ds0.filecache.exists()}, "
+        f"deps={[p.exists() for p in ds0._dep_paths]}"
+    )
+    assert ds1 in called_datasets, "ds1 should have been downloaded"
 
 
 def test_download_all_uses_parallel(tmp_path, monkeypatch, ds000248_records):

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,7 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, MODALITY_COLOR_MAP  # type: ignore
 
 __all__ = [
+    "branding_html",
     "build_and_export_html",
     "detect_modality_column",
     "get_dataset_url",
@@ -23,6 +25,14 @@ __all__ = [
 ]
 
 _SEPARATORS = ("/", "|", ";")
+
+# Figure registry: stores Plotly figures during HTML generation for PDF export
+_figure_registry: dict[str, object] = {}
+
+
+def get_figure_registry() -> dict[str, object]:
+    """Return all figures registered during chart generation."""
+    return dict(_figure_registry)
 
 
 def primary_modality(value: Any) -> str:
@@ -160,6 +170,62 @@ def ensure_directory(path: str | Path) -> Path:
     return dest
 
 
+def _get_logo_data_uri() -> str:
+    """Return the EEGDash logo as a base64 data URI, or empty string."""
+    candidates = [
+        Path(__file__).resolve().parent.parent
+        / "source"
+        / "_static"
+        / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent
+        / "_build"
+        / "html"
+        / "_static"
+        / "eegdash_long.svg",
+    ]
+    for path in candidates:
+        if path.exists():
+            b64 = base64.b64encode(path.read_bytes()).decode("ascii")
+            return f"data:image/svg+xml;base64,{b64}"
+    return ""
+
+
+def _get_eegdash_version() -> str:
+    """Return the EEGDash version string."""
+    try:
+        from eegdash import __version__
+
+        return __version__
+    except ImportError:
+        return "dev"
+
+
+_BRANDING_CSS = """\
+.eegdash-branding {
+    position: relative; margin: 4px 0 0 60px; z-index: 9999;
+    display: flex; align-items: center; gap: 8px; opacity: 0.7;
+}
+.eegdash-branding img { height: 24px; }
+.eegdash-branding span { font-size: 12px; color: #9ca3af; font-weight: 500;
+    font-family: Inter, system-ui, -apple-system, sans-serif; }
+"""
+
+
+def branding_html() -> tuple[str, str]:
+    """Return (css, html) for the EEGDash bottom-left branding badge."""
+    logo_uri = _get_logo_data_uri()
+    version = _get_eegdash_version()
+    css = _BRANDING_CSS
+    img_style = "display:none" if not logo_uri else ""
+    html = (
+        f'<div class="eegdash-branding">'
+        f'<img src="{logo_uri}" alt="EEGDash" style="{img_style}">'
+        f"<span>v{version}</span>"
+        f"</div>"
+    )
+    return css, html
+
+
 def build_and_export_html(
     fig,
     out_path: str | Path,
@@ -214,6 +280,10 @@ def build_and_export_html(
         The path to the written HTML file.
 
     """
+    # Register figure for PDF export retrieval
+    if fig is not None:
+        _figure_registry[div_id] = fig
+
     # Determine plotly.js inclusion mode
     plotlyjs_mode = False
     if include_plotlyjs is True or include_plotlyjs == "cdn":
@@ -232,6 +302,9 @@ def build_and_export_html(
             div_id=div_id,
         )
 
+    # Inject branding into all charts
+    brand_css, brand_div = branding_html()
+
     if include_default_style:
         styled_html = f"""
 <style>
@@ -239,20 +312,61 @@ def build_and_export_html(
     width: 100% !important;
     height: {height}px !important;
     min-height: {height}px;
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
 }}
 #{div_id} .plotly-graph-div {{
     width: 100% !important;
     height: 100% !important;
 }}
+.eegdash-figure {{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}}
+/* Remove sphinx-design tab card padding/border around charts */
+.sd-tab-content:has(.eegdash-figure) {{
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+}}
+{brand_css}
 {extra_style}
 </style>
 {pre_html}{html_content}
 {extra_html}
+{brand_div}
+<script>
+(function() {{
+  var el = document.getElementById("{div_id}");
+  if (!el) return;
+  function tryResize() {{
+    if (el.offsetWidth > 0 && typeof Plotly !== "undefined") {{
+      Plotly.Plots.resize(el);
+    }}
+  }}
+  /* Resize when hidden tab becomes visible (sphinx-design sd-tab) */
+  var tab = el.closest(".sd-tab-content");
+  if (tab) {{
+    new MutationObserver(function() {{
+      if (tab.style.display !== "none") setTimeout(tryResize, 50);
+    }}).observe(tab, {{ attributes: true, attributeFilter: ["style"] }});
+  }}
+  /* Also resize on window resize and initial intersection */
+  window.addEventListener("resize", tryResize);
+  new IntersectionObserver(function(e) {{
+    if (e[0].isIntersecting) tryResize();
+  }}).observe(el);
+}})();
+</script>
 """
     else:
         # Custom HTML structure without default styling
-        styled_html = f"{extra_style}{pre_html}{html_content}{extra_html}"
+        styled_html = (
+            f"<style>{brand_css}</style>"
+            f"{extra_style}{pre_html}{html_content}{extra_html}"
+            f"{brand_div}"
+        )
 
     dest = Path(out_path)
     dest.parent.mkdir(parents=True, exist_ok=True)

@@ -12,9 +12,10 @@
 .. raw:: html
 
    <figcaption class="eegdash-caption">
-     Figure: MOABB-style circle-packing visualization. Each small circle represents one subject,
-     grouped into clusters by dataset. Circle size encodes data volume (log of records × sessions),
-     opacity indicates number of sessions (fewer sessions = more opaque), and color shows recording
-     modality (EEG, MEG, iEEG, fNIRS, EMG). Click on a cluster to open the dataset page.
+     Figure: Circle-packing overview of 719 datasets (35 010 subjects) catalogued in EEGDash.
+     Each small circle represents one subject, grouped by dataset and colored by recording modality.
+     Size encodes per-subject recording duration (log-scaled minutes); opacity encodes session count
+     (fewer sessions = more opaque). Interactive: hover to inspect, scroll to zoom, click to navigate,
+     search to filter.
    </figcaption>
    </figure>

@@ -21,7 +21,7 @@ import numpy as np
 from scipy import signal, stats
 
 from ..decorators import FeaturePredecessor, PreprocessorOutputType, univariate_feature
-from ..extractors import BasePreprocessorOutputType
+from ..output_types import BasePreprocessorOutputType
 
 __all__ = [
     "SignalOutputType",

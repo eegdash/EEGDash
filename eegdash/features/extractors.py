@@ -3,68 +3,29 @@ r"""Core Feature Extraction Orchestration.
 This module defines the fundamental building blocks for creating feature
 extraction pipelines.
 
-The module provides the base classes:
+The module provides the base class:
 
 - :class:`FeatureExtractor` - The central pipeline for execution trees.
-- :class:`TrainableFeature` - The interface for features requiring a
-  fitting phase.
-- :class:`MultivariateFeature` and its subclasses - Logic for mapping
-  raw arrays to named features.
 """
 
 from __future__ import annotations
 
 import inspect
-from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from types import FunctionType
-from typing import Dict, Iterable, Tuple
+from typing import Dict
 
 import numpy as np
-from numba.core.dispatcher import Dispatcher
+
+from .base_utils import get_underlying_func
+from .output_types import AsInputOutputType, BasePreprocessorOutputType
+from .trainable import TrainableFeature
 
 __all__ = [
-    "AsInputOutputType",
-    "BasePreprocessorOutputType",
-    "BivariateFeature",
-    "BivariateIterator",
-    "DirectedBivariateFeature",
     "FeatureExtractor",
-    "MultivariateFeature",
-    "TrainableFeature",
-    "UnivariateFeature",
 ]
-
-
-def _get_underlying_func(func: Callable) -> Callable:
-    r"""Retrieve the original Python function from a potential wrapper.
-
-    Parameters
-    ----------
-    func : callable
-        The function to unwrap. Typically a raw function, a
-        :class:`functools.partial` object, or a Numba :class:`Dispatcher`.
-
-    Returns
-    -------
-    callable
-        The underlying Python function.
-
-    Notes
-    -----
-    This utility specifically handles:
-    * **functools.partial**: Returns the ``.func`` attribute.
-    * **numba.Dispatcher**: Returns the ``.py_func`` attribute.
-
-    """
-    f = func
-    if isinstance(f, partial):
-        f = f.func
-    if isinstance(f, Dispatcher):
-        f = f.py_func
-    return f
 
 
 def _func_to_dict(func: FunctionType | partial) -> dict:
@@ -86,7 +47,7 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
     _func_from_dict
 
     """
-    func_dict = {"name": _get_underlying_func(func).__name__}
+    func_dict = {"name": get_underlying_func(func).__name__}
     if isinstance(func, partial):
         if func.args:
             func_dict["args"] = list(func.args)
@@ -123,119 +84,6 @@ def _adjust_dict_types(d: dict) -> dict:
             k = "_"
         dd[k] = v
     return dd
-
-
-class BasePreprocessorOutputType(ABC):
-    """An abstract class representing a type of preprocessor output.
-
-    Parameters
-    ----------
-    preprocessor : callable
-        The underlying preprocessor callable.
-
-    """
-
-    def __init__(self, preprocessor: Callable):
-        super().__init__()
-        self.preprocessor = preprocessor
-        if "_metadata" in inspect.signature(preprocessor).parameters:
-            self.__call__ = self._call_metadata
-        else:
-            self.__call__ = self._call
-
-    def _call(self, *args, **kwargs):
-        r"""Call the underlying preprocessor with the provided arguments."""
-        return self.preprocessor(*args, **kwargs)
-
-    def _call_metadata(self, *args, _metadata: dict, **kwargs):
-        r"""Call the underlying preprocessor with the provided arguments and metadata."""
-        return self.preprocessor(*args, _metadata=_metadata, **kwargs)
-
-
-class AsInputOutputType(BasePreprocessorOutputType):
-    """A special class for preprocessors where the output type is the same
-    as their input type.
-
-    If used as a preprocessor predecessor, the preprocessor must not have any
-    other predecessors.
-
-    Parameters
-    ----------
-    preprocessor : callable
-        The underlying preprocessor callable.
-
-    """
-
-    pass
-
-
-class TrainableFeature(ABC):
-    r"""Abstract base class for features requiring a training phase.
-
-    This class provides the interface for features that must be
-    fitted on a representative dataset before they can process new samples.
-
-    Attributes
-    ----------
-    _is_trained : bool
-        Internal flag indicating whether the feature has completed
-        its training phase.
-
-    """
-
-    def __init__(self):
-        self._is_trained = False
-        self.clear()
-
-    @abstractmethod
-    def clear(self):
-        r"""Reset the internal state of the feature.
-
-        This method must be implemented by subclasses to clear any learned
-        parameters, statistics, or buffers.
-        """
-        pass
-
-    @abstractmethod
-    def partial_fit(self, *x, y=None):
-        r"""Update the extractor's state using a single batch of data.
-
-        This method allows for incremental learning, making it possible to
-        train on datasets that are too large to fit into memory at once.
-
-        Parameters
-        ----------
-        *x : tuple of ndarray
-            The input data batch.
-        y : ndarray, optional
-            Target labels associated with the batch, required for supervised
-            feature extraction methods.
-
-        """
-        pass
-
-    def fit(self):
-        r"""Finalize the training of the feature extractor.
-
-        This method should be called after the entire training set has been
-        processed via :meth:`partial_fit`. It transitions the object to a
-        "trained" state, enabling the :meth:`__call__` method.
-        """
-        self._is_trained = True
-
-    def __call__(self, *args, **kwargs):
-        r"""Validate the fitted state before execution.
-
-        Raises
-        ------
-        RuntimeError
-            If the feature is called before :meth:`fit` has been executed.
-
-        """
-        if not self._is_trained:
-            raise RuntimeError(
-                f"{self.__class__} cannot be called, it has to be trained first."
-            )
 
 
 class FeatureExtractor(TrainableFeature):
@@ -337,7 +185,7 @@ class FeatureExtractor(TrainableFeature):
             preprocessor = (
                 None
                 if self.preprocessor is None
-                else _get_underlying_func(self.preprocessor)
+                else get_underlying_func(self.preprocessor)
             )
             pp_parent_type = getattr(preprocessor, "parent_extractor_type", [None])
             if preprocessor is None or AsInputOutputType in pp_parent_type:
@@ -350,7 +198,7 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, FeatureExtractor):
                 fe = f
                 f = f.preprocessor
-            f = _get_underlying_func(f)
+            f = get_underlying_func(f)
             pe_type = getattr(f, "parent_extractor_type", [None])
             if fe is not None and AsInputOutputType in pe_type:
                 fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
@@ -386,7 +234,7 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, FeatureExtractor):
                 if f._is_trainable:
                     return True
-            elif isinstance(_get_underlying_func(f), TrainableFeature):
+            elif isinstance(get_underlying_func(f), TrainableFeature):
                 return True
         return False
 
@@ -412,9 +260,7 @@ class FeatureExtractor(TrainableFeature):
         if self.preprocessor is None:
             z = (*x,)
         elif "_metadata" in inspect.signature(self.preprocessor).parameters:
-            if hasattr(
-                _get_underlying_func(self.preprocessor), "metadata_preprocessor"
-            ):
+            if hasattr(get_underlying_func(self.preprocessor), "metadata_preprocessor"):
                 *z, _metadata = self.preprocessor(*x, _metadata=_metadata.copy())
                 z = (*z,)
             else:
@@ -464,7 +310,7 @@ class FeatureExtractor(TrainableFeature):
                 r = f(*z, _metadata=_metadata)
             else:
                 r = f(*z)
-            f_und = _get_underlying_func(f)
+            f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
                 r = f_und.feature_kind(r, _metadata=_metadata)
             if not isinstance(fname, str) or not fname:
@@ -507,7 +353,7 @@ class FeatureExtractor(TrainableFeature):
         if not self._is_trainable:
             return
         for f in self.feature_extractors_dict.values():
-            f = _get_underlying_func(f)
+            f = get_underlying_func(f)
             if isinstance(f, TrainableFeature):
                 f.clear()
 
@@ -528,7 +374,7 @@ class FeatureExtractor(TrainableFeature):
             return
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
         for f in self.feature_extractors_dict.values():
-            f = _get_underlying_func(f)
+            f = get_underlying_func(f)
             if isinstance(f, TrainableFeature):
                 if (
                     isinstance(f, FeatureExtractor)
@@ -543,7 +389,7 @@ class FeatureExtractor(TrainableFeature):
         if not self._is_trainable:
             return
         for f in self.feature_extractors_dict.values():
-            f = _get_underlying_func(f)
+            f = get_underlying_func(f)
             if isinstance(f, TrainableFeature):
                 f.fit()
         super().fit()
@@ -658,246 +504,3 @@ class FeatureExtractor(TrainableFeature):
             outfile.write(
                 HOCONConverter.to_hocon(ConfigFactory.from_dict(self.to_dict()))
             )
-
-
-class BivariateIterator:
-    r"""Pairs iterator for iterating pairs of channels.
-
-    Parameters
-    ----------
-    pairs : Iterable[tuple[int, int]] | int
-        If an iterable of tuples is given, it represents the channel index
-        pairs to iterate
-        If an integer ``n`` is given, iterate through all unique pairs
-        out of ``n`` channels.
-    directed : bool
-        If an integer was given in ``pairs``, this parameter controls whether
-        all directed pairs should be iterated.
-        Otherwise this parameter is ignored.
-        Default is False.
-
-    """
-
-    def __init__(self, pairs: Iterable[Tuple[int, int]] | int, directed=False):
-        if isinstance(pairs, int):
-            if not directed:
-                pairs = list(zip(*np.triu_indices(pairs, 1)))
-            else:
-                pairs = list(zip(*np.triu_indices(pairs, 1))) + list(
-                    zip(*np.tril_indices(pairs, -1))
-                )
-        self.pairs = list(pairs)
-
-    def get_pair_iterators(self) -> tuple[np.ndarray, np.ndarray]:
-        r"""Get indices for pairs of channels.
-
-        Computes the upper triangle indices of an (n, n) matrix,
-        excluding the diagonal.
-
-        Returns
-        -------
-        tuple of ndarray
-            The row and column indices for the unique pairs.
-
-        """
-        return tuple([np.array(x) for x in zip(*self.pairs)])
-
-
-class MultivariateFeature:
-    r"""Logic wrapper for features that operate on one or more EEG channels.
-
-    This class defines the logic for mapping raw numerical results into
-    structured, named dictionaries. It determines the "kind" of a feature
-    (e.g., univariate, bivariate) and handles the association of feature
-    values with specific channels or channel groupings.
-
-    Notes
-    -----
-    Subclasses should override :meth:`feature_channel_names` to define
-    specific naming conventions for the extracted features.
-
-    """
-
-    def __call__(self, x: np.ndarray, _metadata: dict) -> dict | np.ndarray:
-        r"""Convert a raw feature array into a named dictionary.
-
-        Parameters
-        ----------
-        x : numpy.ndarray
-            The computed feature array from the extraction function.
-        _metadata : dict
-            A dictionary of record and batch metadata.
-
-        Returns
-        -------
-        dict or numpy.ndarray
-            A dictionary where keys are formatted feature names and values
-            are feature arrays. Returns the original array if channel names
-            cannot be resolved.
-
-        """
-        f_channels = self.feature_channel_names(_metadata)
-        if isinstance(x, dict):
-            r = dict()
-            for k, v in x.items():
-                r.update(self._array_to_dict(v, f_channels, k))
-            return r
-        return self._array_to_dict(x, f_channels)
-
-    @staticmethod
-    def _array_to_dict(
-        x: np.ndarray, f_channels: list[str], name: str = ""
-    ) -> dict | np.ndarray:
-        r"""Map a numpy array to a dictionary with named keys.
-
-        Parameters
-        ----------
-        x : numpy.ndarray
-            The feature values to be mapped.
-        f_channels : list of str
-            The list of generated feature channel names.
-        name : str, default=""
-            A prefix for the feature name.
-
-        Returns
-        -------
-        dict or numpy.ndarray
-            A dictionary of named features or the original array if
-            `f_channels` is empty.
-
-        """
-        if not f_channels:
-            return {name: x} if name else x
-        assert x.shape[1] == len(f_channels), f"{x.shape[1]} != {len(f_channels)}"
-        x = x.swapaxes(0, 1)
-        prefix = f"{name}_" if name else ""
-        names = [f"{prefix}{ch}" for ch in f_channels]
-        return dict(zip(names, x))
-
-    def feature_channel_names(self, _metadata: dict) -> list[str]:
-        r"""Generate feature-specific names based on input channels.
-
-        Parameters
-        ----------
-        _metadata : dict
-            A dictionary of record and batch metadata.
-
-        Returns
-        -------
-        list of str
-            A list of strings defining the naming for each output feature.
-            Returns an empty list in the base implementation.
-
-        """
-        return []
-
-
-class UnivariateFeature(MultivariateFeature):
-    r"""Feature kind for operations applied to each channel independently.
-
-    Used when a single feature value is produced per channel.
-    """
-
-    def feature_channel_names(self, _metadata: dict) -> list[str]:
-        r"""Return the channel names themselves as feature names.
-
-        Parameters
-        ----------
-        _metadata : dict
-            A dictionary of record and batch metadata.
-
-        Returns
-        -------
-        list of str
-            A list of channel names.
-
-        """
-        return _metadata["info"]["ch_names"]
-
-
-class BivariateFeature(MultivariateFeature):
-    r"""Feature kind for operations on pairs of channels.
-
-    Designed for undirected relationship measures between two signals.
-
-    Parameters
-    ----------
-    channel_pair_format : str, default="{}<>{}"
-        A format string used to create feature names from pairs of
-        channel names.
-
-    """
-
-    def __init__(self, *args, channel_pair_format: str = "{}<>{}"):
-        super().__init__(*args)
-        self.channel_pair_format = channel_pair_format
-
-    @staticmethod
-    def get_pair_iterators(n: int) -> tuple[np.ndarray, np.ndarray]:
-        r"""Get indices for unique, unordered pairs of channels.
-
-        Computes the upper triangle indices of an (n, n) matrix,
-        excluding the diagonal.
-
-        Parameters
-        ----------
-        n : int
-            The number of channels.
-
-        Returns
-        -------
-        tuple of ndarray
-            The row and column indices for the unique pairs.
-
-        """
-        return np.triu_indices(n, 1)
-
-    def feature_channel_names(self, _metadata: dict) -> list[str]:
-        r"""Generate feature names for each unique pair of channels.
-
-        Parameters
-        ----------
-        _metadata : dict
-            A dictionary of record and batch metadata.
-
-        Returns
-        -------
-        list of str
-            Formatted strings representing channel pairs (e.g., 'F3<>F4').
-
-        """
-        ch_names = _metadata["info"]["ch_names"]
-        return [
-            self.channel_pair_format.format(ch_names[i], ch_names[j])
-            for i, j in zip(*_metadata["ch_pair_iterator"].get_pair_iterators())
-        ]
-
-
-class DirectedBivariateFeature(BivariateFeature):
-    r"""Feature kind for directed operations on pairs of channels.
-
-    Used for features where the interaction from channel A to B is
-    distinct from the interaction from B to A.
-    """
-
-    @staticmethod
-    def get_pair_iterators(n: int) -> list[np.ndarray]:
-        r"""Get indices for all ordered pairs of channels.
-
-        Includes both directions while excluding self-pairs.
-
-        Parameters
-        ----------
-        n : int
-            The number of channels.
-
-        Returns
-        -------
-        list of ndarray
-            A list containing two arrays: the row indices and column indices.
-
-        """
-        return [
-            np.append(a, b)
-            for a, b in zip(np.tril_indices(n, -1), np.triu_indices(n, 1))
-        ]

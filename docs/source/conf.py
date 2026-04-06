@@ -18,6 +18,8 @@ from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 
 sys.path.insert(0, os.path.abspath(".."))
+if os.environ.get("SPHINX_BUILD", "") == "":
+    os.environ["SPHINX_BUILD"] = "1"
 
 import eegdash
 import eegdash.dataset as dataset_module

@@ -9,8 +9,6 @@ The module provides the following functions:
   across an entire concatenated dataset.
 - :func:`fit_feature_extractors` — Fits trainable features using a
   representative dataset.
-- :func:`_extract_features_from_windowsdataset` — Internal helper for
-  processing individual recording datasets.
 
 """
 
@@ -30,13 +28,12 @@ from braindecode.datasets.base import (
     WindowsDataset,
 )
 
-from . import extractors
 from .datasets import FeaturesConcatDataset, FeaturesDataset
+from .extractors import FeatureExtractor
 
 __all__ = [
     "extract_features",
     "fit_feature_extractors",
-    "channel_names_to_indices",
 ]
 
 
@@ -94,7 +91,7 @@ def _get_batch_metadata(win_ds, X, crop_inds):
 
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
-    feature_extractor: extractors.FeatureExtractor,
+    feature_extractor: FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
     r"""Extract features from a single recording windowed dataset.
@@ -170,7 +167,7 @@ def _extract_features_from_windowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     *,
     batch_size: int = 512,
     n_jobs: int = 1,
@@ -205,8 +202,8 @@ def extract_features(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, extractors.FeatureExtractor):
-        features = extractors.FeatureExtractor(features)
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
@@ -224,9 +221,9 @@ def extract_features(
 
 def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
-    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
-) -> extractors.FeatureExtractor:
+) -> FeatureExtractor:
     r"""Fit trainable feature extractors on a concatenated dataset.
 
     Scans the provided feature pipeline for components that require training
@@ -257,8 +254,8 @@ def fit_feature_extractors(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, extractors.FeatureExtractor):
-        features = extractors.FeatureExtractor(features)
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
     if not features._is_trainable:
         return features
     features.clear()
@@ -276,35 +273,3 @@ def fit_feature_extractors(
             features.partial_fit(X.numpy(), y=np.array(y), _metadata=batch_metadata)
     features.fit()
     return features
-
-
-def channel_names_to_indices(channels: List[str], ch_names: List[str]) -> List[int]:
-    r"""Converts a list of channel names to channel indices in another list.
-
-    Parameters
-    ----------
-    channels : List[str]
-        A list of channel names.
-    ch_names : List[str]
-        A list of existing channel names to take indices from.
-
-    Returns
-    -------
-    List[int]
-        A list of channel indices.
-
-    Raises
-    ------
-    ValueError
-        If the channel name was not found in the existing channels list.
-
-    """
-    channel_idx = []
-    for channel in channels:
-        if channel in ch_names:
-            channel_idx.append(ch_names.index(channel))
-        else:
-            raise ValueError(
-                f"Channel {channel} not found in metadata channels: {ch_names}."
-            )
-    return channel_idx

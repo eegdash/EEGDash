@@ -9,16 +9,21 @@ Feature API
 .. autosummary::
    :toctree: generated/api-features
 
+   eegdash.features.base_utils
    eegdash.features.datasets
    eegdash.features.decorators
    eegdash.features.extractors
    eegdash.features.inspect
+   eegdash.features.kinds
    eegdash.features.serialization
+   eegdash.features.output_types
+   eegdash.features.trainable
    eegdash.features.utils
    eegdash.features.feature_bank.complexity
    eegdash.features.feature_bank.connectivity
    eegdash.features.feature_bank.csp
    eegdash.features.feature_bank.dimensionality
+   eegdash.features.feature_bank.pick
    eegdash.features.feature_bank.signal
    eegdash.features.feature_bank.spectral
    eegdash.features.feature_bank.utils

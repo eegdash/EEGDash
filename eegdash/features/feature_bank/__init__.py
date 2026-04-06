@@ -2,7 +2,7 @@ r"""Feature bank public API exports.
 
 This module consolidates and re-exports the feature extractors and
 feature functions so users can import them directly from
-``eegdash.features.feature_bank``.
+:mod:`eegdash.features.feature_bank`.
 """
 
 from .complexity import (

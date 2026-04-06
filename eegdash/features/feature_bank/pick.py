@@ -1,8 +1,8 @@
 r"""Channel-picking feature preprocessors
 =====================================
 
-This module provides the ability to pick specific channels for further
-processing.
+This module provides the ability to pick specific channels or channel
+pairs for further processing.
 
 Data Shape Convention
 ---------------------
@@ -19,9 +19,12 @@ from typing import Iterable, Tuple
 
 import mne
 
-from ..decorators import FeaturePredecessor, metadata_preprocessor
-from ..extractors import AsInputOutputType, BivariateIterator
-from ..utils import channel_names_to_indices
+from ..base_utils import BivariateIterator, channel_names_to_indices
+from ..decorators import (
+    FeaturePredecessor,
+    metadata_preprocessor,
+)
+from ..output_types import AsInputOutputType
 
 __all__ = [
     "pick_channel_pairs_preprocessor",

@@ -1,4 +1,4 @@
-"""Connectivity Feature Extraction
+r"""Connectivity Feature Extraction
 ===============================
 
 This module computes bivariate connectivity features based on the complex

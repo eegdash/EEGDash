@@ -23,7 +23,9 @@ import inspect
 from collections.abc import Callable
 
 from . import extractors, feature_bank
-from .extractors import _get_underlying_func
+from .base_utils import get_underlying_func
+from .kinds import MultivariateFeature
+from .output_types import AsInputOutputType, BasePreprocessorOutputType
 
 __all__ = [
     "get_all_feature_preprocessors",
@@ -36,13 +38,13 @@ __all__ = [
 
 
 def _is_feature(x) -> bool:
-    r"""Check if x is a feature (has feature_kind attribute)."""
-    return hasattr(_get_underlying_func(x), "feature_kind")
+    r"""Check if x is a feature (has ``feature_kind`` attribute)."""
+    return hasattr(get_underlying_func(x), "feature_kind")
 
 
 def _is_feature_preprocessor(x) -> bool:
-    """Check if x is a preprocessor (has parent_extractor_type but no feature_kind)."""
-    y = _get_underlying_func(x)
+    """Check if x is a preprocessor (has ``parent_extractor_type`` but no ``feature_kind``)."""
+    y = get_underlying_func(x)
     return (
         callable(y)
         and not hasattr(y, "feature_kind")
@@ -51,13 +53,13 @@ def _is_feature_preprocessor(x) -> bool:
 
 
 def _is_preprocessor_output_type(x) -> bool:
-    """Check if x is a preprocessor output type (subclass of BasePreprocessorOutputType)."""
-    return inspect.isclass(x) and issubclass(x, extractors.BasePreprocessorOutputType)
+    """Check if x is a preprocessor output type (subclass of :class:`BasePreprocessorOutputType`)."""
+    return inspect.isclass(x) and issubclass(x, BasePreprocessorOutputType)
 
 
 def _is_feature_kind(x) -> bool:
     r"""Check if x is a feature kind class (subclass of MultivariateFeature)."""
-    return inspect.isclass(x) and issubclass(x, extractors.MultivariateFeature)
+    return inspect.isclass(x) and issubclass(x, MultivariateFeature)
 
 
 def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
@@ -101,7 +103,7 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
         return [None]
     if isinstance(current, extractors.FeatureExtractor):
         current = current.preprocessor
-    current = _get_underlying_func(feature_or_extractor)
+    current = get_underlying_func(feature_or_extractor)
     predecessor = getattr(current, "parent_extractor_type", [None])
     if len(predecessor) == 1:
         return [current, *get_feature_predecessors(predecessor[0])]
@@ -113,7 +115,7 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
         return [current, tuple(predecessors)]
 
 
-def get_feature_kind(feature: Callable) -> extractors.MultivariateFeature:
+def get_feature_kind(feature: Callable) -> MultivariateFeature:
     r"""Get the 'kind' of a feature function.
 
     Identifies whether a feature is univariate, bivariate, or multivariate
@@ -126,11 +128,11 @@ def get_feature_kind(feature: Callable) -> extractors.MultivariateFeature:
 
     Returns
     -------
-    :class:`~eegdash.features.extractors.MultivariateFeature`
+    :class:`~eegdash.features.kinds.MultivariateFeature`
         An instance of the feature kind.
 
     """
-    return _get_underlying_func(feature).feature_kind
+    return get_underlying_func(feature).feature_kind
 
 
 def get_all_features() -> list[tuple[str, Callable]]:
@@ -171,7 +173,7 @@ def get_all_preprocessor_output_types() -> list[
     r"""Get a list of all available preprocessor output type classes.
 
     Scans the :mod:`~eegdash.features.feature_bank` module for all classes
-    that subclass :class:`~eegdash.features.extractors.BasePreprocessorOutputType`.
+    that subclass :class:`~eegdash.features.output_types.BasePreprocessorOutputType`.
 
     Returns
     -------
@@ -179,14 +181,16 @@ def get_all_preprocessor_output_types() -> list[
         A list of (name, class) tuples for all discovered preprocessor output types.
 
     """
-    return inspect.getmembers(feature_bank, _is_preprocessor_output_type)
+    return [AsInputOutputType] + inspect.getmembers(
+        feature_bank, _is_preprocessor_output_type
+    )
 
 
-def get_all_feature_kinds() -> list[tuple[str, type[extractors.MultivariateFeature]]]:
+def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:
     r"""Get a list of all available feature 'kind' classes.
 
-    Scans the :mod:`~eegdash.features.extractors` module for all classes
-    that subclass :class:`~eegdash.features.extractors.MultivariateFeature`.
+    Scans the :mod:`~eegdash.features.kinds` module for all classes
+    that subclass :class:`~eegdash.features.kinds.MultivariateFeature`.
 
     Returns
     -------

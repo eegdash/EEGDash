@@ -1,3 +1,11 @@
+r"""Feature Extraction Module.
+
+This module provides tools for feature extraction from :mode:`braindecode`
+datasets, as well as a bank of predefined features.
+
+"""
+
+from .base_utils import BivariateIterator
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
     FeatureKind,
@@ -8,17 +16,7 @@ from .decorators import (
     multivariate_feature,
     univariate_feature,
 )
-from .extractors import (
-    AsInputOutputType,
-    BasePreprocessorOutputType,
-    BivariateFeature,
-    BivariateIterator,
-    DirectedBivariateFeature,
-    FeatureExtractor,
-    MultivariateFeature,
-    TrainableFeature,
-    UnivariateFeature,
-)
+from .extractors import FeatureExtractor
 from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
     SignalOutputType,
@@ -76,6 +74,15 @@ from .inspect import (
     get_feature_kind,
     get_feature_predecessors,
 )
+from .kinds import (
+    BivariateFeature,
+    MultivariateFeature,
+    UnivariateFeature,
+)
+from .output_types import (
+    AsInputOutputType,
+    BasePreprocessorOutputType,
+)
 from .serialization import (
     feature_extractor_from_dict,
     load_feature_extractor_from_hocon,
@@ -83,11 +90,11 @@ from .serialization import (
     load_feature_extractor_from_yaml,
     load_features_concat_dataset,
 )
+from .trainable import TrainableFeature
 from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
-    "AsInputOutputType",
-    "BasePreprocessorOutputType",
+    "BivariateIterator",
     "FeaturesConcatDataset",
     "FeaturesDataset",
     "FeatureKind",
@@ -97,24 +104,24 @@ __all__ = [
     "metadata_preprocessor",
     "multivariate_feature",
     "univariate_feature",
-    "BivariateFeature",
-    "BivariateIterator",
-    "DirectedBivariateFeature",
     "FeatureExtractor",
-    "MultivariateFeature",
-    "TrainableFeature",
-    "UnivariateFeature",
     "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
     "get_all_preprocessor_output_types",
     "get_feature_kind",
     "get_feature_predecessors",
+    "BivariateFeature",
+    "MultivariateFeature",
+    "UnivariateFeature",
+    "AsInputOutputType",
+    "BasePreprocessorOutputType",
     "feature_extractor_from_dict",
     "load_feature_extractor_from_hocon",
     "load_feature_extractor_from_json",
     "load_feature_extractor_from_yaml",
     "load_features_concat_dataset",
+    "TrainableFeature",
     "extract_features",
     "fit_feature_extractors",
     # Feature part

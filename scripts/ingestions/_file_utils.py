@@ -559,11 +559,48 @@ def list_datarn_files(source_url: str) -> list[dict]:
     return result
 
 
+def _annex_real_size(path: Path, stat_size: int) -> int:
+    """Extract real file size from a git-annex pointer or symlink.
+
+    After a shallow clone with ``GIT_LFS_SKIP_SMUDGE=1``, git-annex data
+    files are small text pointers whose content encodes the real size in
+    the annex key (e.g. ``/annex/objects/MD5E-s128356352--…``).
+
+    Returns *stat_size* unchanged when *path* is not an annex pointer.
+    """
+    import re
+
+    _ANNEX_RE = re.compile(r"-s(\d+)--")
+
+    if path.is_symlink():
+        try:
+            m = _ANNEX_RE.search(str(path.readlink()))
+            if m:
+                return int(m.group(1))
+        except (OSError, ValueError):
+            pass
+        return 0
+
+    # Small regular file — might be a text pointer
+    if stat_size < 256:
+        try:
+            content = path.read_text(encoding="utf-8", errors="ignore").strip()
+            if "/annex/" in content:
+                m = _ANNEX_RE.search(content)
+                if m:
+                    return int(m.group(1))
+        except (OSError, UnicodeDecodeError):
+            pass
+
+    return stat_size
+
+
 def list_git_files(clone_dir: Path) -> list[dict]:
     """List files from a cloned git repository.
 
-    Includes both regular files and symlinks (even broken ones like git-annex pointers).
-    For symlinks, size is reported as 0 since the actual data may not be available.
+    Includes both regular files and symlinks (even broken ones like git-annex
+    pointers).  Resolves git-annex pointer files and symlinks to their real
+    data size.
     """
     result = []
 
@@ -571,21 +608,19 @@ def list_git_files(clone_dir: Path) -> list[dict]:
         if ".git" in path.parts:
             continue
 
-        # Include regular files and symlinks (even broken git-annex symlinks)
         if path.is_file():
-            # Regular file or resolved symlink
+            stat_size = path.stat().st_size
             result.append(
                 {
                     "name": str(path.relative_to(clone_dir)),
-                    "size": path.stat().st_size,
+                    "size": _annex_real_size(path, stat_size),
                 }
             )
         elif path.is_symlink():
-            # Broken symlink (e.g., git-annex pointer) - still include it
             result.append(
                 {
                     "name": str(path.relative_to(clone_dir)),
-                    "size": 0,  # Size unknown for unresolved symlinks
+                    "size": _annex_real_size(path, 0),
                 }
             )
 

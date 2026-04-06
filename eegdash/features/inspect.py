@@ -22,8 +22,9 @@ from __future__ import annotations
 import inspect
 from collections.abc import Callable
 
-from . import extractors, feature_bank
+from . import feature_bank, kinds
 from .base_utils import get_underlying_func
+from .extractors import FeatureExtractor
 from .kinds import MultivariateFeature
 from .output_types import AsInputOutputType, BasePreprocessorOutputType
 
@@ -45,10 +46,9 @@ def _is_feature(x) -> bool:
 def _is_feature_preprocessor(x) -> bool:
     """Check if x is a preprocessor (has ``parent_extractor_type`` but no ``feature_kind``)."""
     y = get_underlying_func(x)
-    return (
-        callable(y)
-        and not hasattr(y, "feature_kind")
-        and hasattr(y, "parent_extractor_type")
+    return callable(y) and (
+        (not hasattr(y, "feature_kind") and hasattr(y, "parent_extractor_type"))
+        or isinstance(y, BasePreprocessorOutputType)
     )
 
 
@@ -101,7 +101,7 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
     current = feature_or_extractor
     if current is None:
         return [None]
-    if isinstance(current, extractors.FeatureExtractor):
+    if isinstance(current, FeatureExtractor):
         current = current.preprocessor
     current = get_underlying_func(feature_or_extractor)
     predecessor = getattr(current, "parent_extractor_type", [None])
@@ -168,7 +168,7 @@ def get_all_feature_preprocessors() -> list[tuple[str, Callable]]:
 
 
 def get_all_preprocessor_output_types() -> list[
-    tuple[str, type[extractors.BasePreprocessorOutputType]]
+    tuple[str, type[BasePreprocessorOutputType]]
 ]:
     r"""Get a list of all available preprocessor output type classes.
 
@@ -181,7 +181,7 @@ def get_all_preprocessor_output_types() -> list[
         A list of (name, class) tuples for all discovered preprocessor output types.
 
     """
-    return [AsInputOutputType] + inspect.getmembers(
+    return [(AsInputOutputType.__name__, AsInputOutputType)] + inspect.getmembers(
         feature_bank, _is_preprocessor_output_type
     )
 
@@ -198,4 +198,4 @@ def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:
         A list of (name, class) tuples for all discovered feature kinds.
 
     """
-    return inspect.getmembers(extractors, _is_feature_kind)
+    return inspect.getmembers(kinds, _is_feature_kind)

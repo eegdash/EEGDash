@@ -318,6 +318,29 @@ def build_and_export_html(
 {pre_html}{html_content}
 {extra_html}
 {brand_div}
+<script>
+(function() {{
+  var el = document.getElementById("{div_id}");
+  if (!el) return;
+  function tryResize() {{
+    if (el.offsetWidth > 0 && typeof Plotly !== "undefined") {{
+      Plotly.Plots.resize(el);
+    }}
+  }}
+  /* Resize when hidden tab becomes visible (sphinx-design sd-tab) */
+  var tab = el.closest(".sd-tab-content");
+  if (tab) {{
+    new MutationObserver(function() {{
+      if (tab.style.display !== "none") setTimeout(tryResize, 50);
+    }}).observe(tab, {{ attributes: true, attributeFilter: ["style"] }});
+  }}
+  /* Also resize on window resize and initial intersection */
+  window.addEventListener("resize", tryResize);
+  new IntersectionObserver(function(e) {{
+    if (e[0].isIntersecting) tryResize();
+  }}).observe(el);
+}})();
+</script>
 """
     else:
         # Custom HTML structure without default styling

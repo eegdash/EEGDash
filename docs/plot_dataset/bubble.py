@@ -389,7 +389,13 @@ def generate_dataset_bubble(
         log_y = np.log10(numeric_y[mask])
 
         # Draw 1:1 line only when both axes share units (e.g., records vs subjects)
-        show_one_to_one = x_field in {"records", "duration_h", "size_gb", "tasks"}
+        show_one_to_one = x_field in {
+            "records",
+            "duration_h",
+            "size_gb",
+            "tasks",
+            "subjects",
+        }
         # 1:1 line across the data range
         lx_min = max(log_x.min(), log_y.min())
         lx_max = min(log_x.max(), log_y.max())
@@ -413,6 +419,7 @@ def generate_dataset_bubble(
         # Arrow label ~60% along the 1:1 segment for stable placement
         ref_labels = {
             "records": "One record per subject",
+            "subjects": "One record per subject",
             "duration_h": "One hour per subject",
             "size_gb": "One GB per subject",
             "tasks": "One task per subject",

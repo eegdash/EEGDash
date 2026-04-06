@@ -125,9 +125,65 @@ def _format_int(value) -> str:
         return str(value)
 
 
+_BACKGROUND_CATS = {"Other", "Unknown", "other", "unknown"}
+
+
+def _build_modality_traces(
+    data,
+    x_field,
+    y_field,
+    sizeref,
+    custom_data,
+    label_col,
+    color_map,
+    legendgroup_prefix,
+    visible,
+):
+    """Build scatter traces, drawing neutral categories first (behind)."""
+    present = [l for l in color_map if l in data[label_col].unique()]
+    bg = [m for m in present if m in _BACKGROUND_CATS]
+    fg = [m for m in present if m not in _BACKGROUND_CATS]
+    ordered = bg + fg
+
+    traces = []
+    for modality in ordered:
+        mask = data[label_col] == modality
+        if not mask.any():
+            continue
+        subset = data[mask]
+        is_bg = modality in _BACKGROUND_CATS
+        if visible and is_bg:
+            trace_visible = "legendonly"
+        else:
+            trace_visible = visible
+        traces.append(
+            go.Scatter(
+                x=subset[x_field],
+                y=subset[y_field],
+                mode="markers",
+                name=modality,
+                marker=dict(
+                    size=subset["bubble_size"],
+                    color=color_map.get(modality, "#94a3b8"),
+                    sizemode="area",
+                    sizeref=sizeref,
+                    sizemin=5,
+                    line=dict(width=1, color="rgba(255,255,255,0.8)"),
+                    opacity=0.35 if is_bg else 0.7,
+                ),
+                customdata=custom_data[mask.values],
+                hovertemplate=None,
+                visible=trace_visible,
+                legendgroup=f"{legendgroup_prefix}-{modality}",
+            )
+        )
+    return traces
+
+
 def _build_hover_template(x_field: str, y_field: str) -> tuple[str, str]:
     x_map = {
         "duration_h": "Duration (x): %{x:.2f} h",
+        "dur_per_subject": "Duration/subject (x): %{x:.1f} min",
         "size_gb": "Size (x): %{x:.2f} GB",
         "tasks": "Tasks (x): %{x:,}",
         "subjects": "Subjects (x): %{x:,}",
@@ -180,24 +236,33 @@ def generate_dataset_bubble(
     GB = 1024**3
     data["size_gb"] = data["size_bytes"] / GB
 
+    # Duration per subject (minutes) — key metric for spreading data
+    data["dur_per_subject"] = np.where(
+        (data["duration_h"] > 0) & (data["subjects"] > 0),
+        data["duration_h"] * 60 / data["subjects"],
+        np.nan,
+    )
+
     x_field = (
         x_var
-        if x_var in {"records", "duration_h", "size_gb", "tasks", "subjects"}
+        if x_var
+        in {"records", "duration_h", "size_gb", "tasks", "subjects", "dur_per_subject"}
         else "records"
     )
     axis_labels = {
         "records": "#Records",
         "duration_h": "Duration (hours)",
+        "dur_per_subject": "Recording Duration / Subject (min)",
         "size_gb": "Size (GB)",
         "tasks": "#Tasks",
         "subjects": "#Subjects",
     }
-    x_label = f"{axis_labels[x_field]} (log scale)"
+    x_label = axis_labels[x_field]
     y_field = "subjects" if x_field != "subjects" else "records"
-    y_label = f"{axis_labels[y_field]} (log scale)"
+    y_label = axis_labels[y_field]
     x_hover, y_hover = _build_hover_template(x_field, y_field)
 
-    required_columns = {x_field, y_field, "size_gb"}
+    required_columns = {x_field, y_field}
     data = data.replace([np.inf, -np.inf], np.nan)
     data = data.dropna(subset=list(required_columns))
     data = data[(data[x_field] > 0) & (data[y_field] > 0)]
@@ -214,15 +279,26 @@ def generate_dataset_bubble(
         out_path.write_text(empty_html, encoding="utf-8")
         return out_path
 
-    size_max = data["size_gb"].max()
+    # Bubble size = log(1 + duration_per_subject_min) — depth of recording per person
+    data["bubble_size"] = np.log1p(data["dur_per_subject"].fillna(0).clip(lower=0))
+    data["bubble_size"] = data["bubble_size"].clip(lower=0.5)  # min visible size
+    size_max = data["bubble_size"].max()
     if not np.isfinite(size_max) or size_max <= 0:
         size_max = 1.0
-    sizeref = (2.0 * size_max) / (40.0**2)
+    sizeref = (2.0 * size_max) / (34.0**2)
 
     sfreq_str = data["sfreq"].map(_format_int)
     nchans_str = data["nchans"].map(_format_int)
     size_str = data["size_bytes"].map(
         lambda bytes_: human_readable_size(safe_int(bytes_, 0))
+    )
+
+    # Duration strings for hover
+    duration_str = data["duration_h"].map(
+        lambda h: f"{h:.1f} h" if pd.notna(h) and h > 0 else "—"
+    )
+    dur_per_subj_str = data["dur_per_subject"].map(
+        lambda m: f"{m:.1f} min" if pd.notna(m) and m > 0 else "—"
     )
 
     # Build custom data array for hover
@@ -238,76 +314,36 @@ def generate_dataset_bubble(
             data["exp_modality_label"].values,
             data["rec_modality_label"].values,
             data["dataset_url"].values,
+            duration_str.values,
+            dur_per_subj_str.values,
         ]
     )
 
     # Build traces for experiment modality (default view)
-    exp_traces = []
-    exp_modalities = [
-        label
-        for label in EXPERIMENTAL_MODALITY_COLORS.keys()
-        if label in data["exp_modality_label"].unique()
-    ]
-    for modality in exp_modalities:
-        mask = data["exp_modality_label"] == modality
-        if not mask.any():
-            continue
-        subset = data[mask]
-        exp_traces.append(
-            go.Scatter(
-                x=subset[x_field],
-                y=subset[y_field],
-                mode="markers",
-                name=modality,
-                marker=dict(
-                    size=subset["size_gb"],
-                    color=EXPERIMENTAL_MODALITY_COLORS.get(modality, "#94a3b8"),
-                    sizemode="area",
-                    sizeref=sizeref,
-                    sizemin=6,
-                    line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
-                    opacity=0.75,
-                ),
-                customdata=custom_data[mask.values],
-                hovertemplate=None,  # Will be set later
-                visible=True,
-                legendgroup="exp",
-            )
-        )
+    exp_traces = _build_modality_traces(
+        data,
+        x_field,
+        y_field,
+        sizeref,
+        custom_data,
+        "exp_modality_label",
+        EXPERIMENTAL_MODALITY_COLORS,
+        "exp",
+        True,
+    )
 
     # Build traces for recording modality (hidden by default)
-    rec_traces = []
-    rec_modalities = [
-        label
-        for label in RECORDING_MODALITY_COLORS.keys()
-        if label in data["rec_modality_label"].unique()
-    ]
-    for modality in rec_modalities:
-        mask = data["rec_modality_label"] == modality
-        if not mask.any():
-            continue
-        subset = data[mask]
-        rec_traces.append(
-            go.Scatter(
-                x=subset[x_field],
-                y=subset[y_field],
-                mode="markers",
-                name=modality,
-                marker=dict(
-                    size=subset["size_gb"],
-                    color=RECORDING_MODALITY_COLORS.get(modality, "#94a3b8"),
-                    sizemode="area",
-                    sizeref=sizeref,
-                    sizemin=6,
-                    line=dict(width=0.6, color="rgba(0,0,0,0.3)"),
-                    opacity=0.75,
-                ),
-                customdata=custom_data[mask.values],
-                hovertemplate=None,  # Will be set later
-                visible=False,
-                legendgroup="rec",
-            )
-        )
+    rec_traces = _build_modality_traces(
+        data,
+        x_field,
+        y_field,
+        sizeref,
+        custom_data,
+        "rec_modality_label",
+        RECORDING_MODALITY_COLORS,
+        "rec",
+        False,
+    )
 
     # Create figure with experiment modality traces visible by default
     fig = go.Figure()
@@ -325,8 +361,18 @@ def generate_dataset_bubble(
     n_rec_traces = len(rec_traces)
 
     # Update axis labels
-    fig.update_xaxes(title_text=x_label, type="log")
-    fig.update_yaxes(title_text=y_label, type="log")
+    fig.update_xaxes(
+        title_text=x_label,
+        type="log",
+        title_font=dict(size=18),
+        tickfont=dict(size=15),
+    )
+    fig.update_yaxes(
+        title_text=y_label,
+        type="log",
+        title_font=dict(size=18),
+        tickfont=dict(size=15),
+    )
 
     # ---------- Reference line, OLS fit, and arrow (all robust in log space)
     numeric_x = pd.to_numeric(data[x_field], errors="coerce")
@@ -338,16 +384,22 @@ def generate_dataset_bubble(
         & (numeric_y > 0)
     )
 
-    fit_annotation_text = None
     if mask.sum() >= 2:
         log_x = np.log10(numeric_x[mask])
         log_y = np.log10(numeric_y[mask])
-        ss_tot = np.sum((log_y - log_y.mean()) ** 2)
 
-        # Draw 1:1 line as an underlying shape, using actual data bounds
+        # Draw 1:1 line only when both axes share units (e.g., records vs subjects)
+        show_one_to_one = x_field in {
+            "records",
+            "duration_h",
+            "size_gb",
+            "tasks",
+            "subjects",
+        }
+        # 1:1 line across the data range
         lx_min = max(log_x.min(), log_y.min())
         lx_max = min(log_x.max(), log_y.max())
-        if lx_min < lx_max:
+        if show_one_to_one and lx_min < lx_max:
             x0 = 10**lx_min
             x1 = 10**lx_max
             fig.add_shape(
@@ -359,62 +411,42 @@ def generate_dataset_bubble(
                 xref="x",
                 yref="y",
                 layer="below",
-                line=dict(color="#9ca3af", width=1.5, dash="dash"),
+                line=dict(color="#9ca3af", width=1.2, dash="dash"),
             )
 
-        # Red dotted OLS line (computed in log space), using actual data bounds
-        if np.ptp(log_x) > 0 and np.ptp(log_y) > 0 and ss_tot > 0:
-            slope, intercept = np.polyfit(log_x, log_y, 1)
-            line_log_x = np.linspace(log_x.min(), log_x.max(), 200)
-            line_x = 10**line_log_x
-            line_y = 10 ** (slope * line_log_x + intercept)
-            fig.add_trace(
-                go.Scatter(
-                    x=line_x,
-                    y=line_y,
-                    mode="lines",
-                    name="log-log fit",
-                    line=dict(color="#dc2626", width=2, dash="dot"),
-                    hoverinfo="skip",
-                    showlegend=False,
-                    opacity=0.35,
-                )
-            )
-            residuals = log_y - (slope * log_x + intercept)
-            r_squared = 1 - np.sum(residuals**2) / ss_tot
-            fit_annotation_text = f"<span style='color:#dc2626'>Red dotted line: log-log OLS fit R² = {r_squared:.3f}</span>"
+        # (ellipse removed — density is self-evident)
 
         # Arrow label ~60% along the 1:1 segment for stable placement
-        if lx_min < lx_max:
-            t = 0.82  # control the position along the line
+        ref_labels = {
+            "records": "One record per subject",
+            "subjects": "One record per subject",
+            "duration_h": "One hour per subject",
+            "size_gb": "One GB per subject",
+            "tasks": "One task per subject",
+        }
+        ref_text = ref_labels.get(x_field)
+        if ref_text and lx_min < lx_max:
+            t = 0.92  # position above the data cloud, on the clean line
             annot_log = (1 - t) * lx_min + t * lx_max
             annot_xy = np.log10(10**annot_log)
             fig.add_annotation(
                 x=annot_xy,
                 y=annot_xy,
-                text="One record per subject",
+                text=ref_text,
                 showarrow=True,
                 arrowhead=3,
-                arrowsize=2,
-                arrowwidth=2,
-                arrowcolor="#6b7280",
-                ax=110,
-                ay=90,
+                arrowsize=1.5,
+                arrowwidth=1.5,
+                arrowcolor="#9ca3af",
+                ax=-80,
+                ay=-50,
                 axref="pixel",
                 ayref="pixel",
-                font=dict(size=20, color="#374151"),
+                font=dict(size=17, color="#6b7280"),
                 align="left",
             )
 
-    # ---------- Build visibility arrays for toggle buttons ----------
-    # Must be done AFTER all traces are added (including OLS line)
-    # Count total traces: exp + rec + OLS line (if present)
-    n_total_traces = len(fig.data)
-    n_ols_traces = n_total_traces - n_exp_traces - n_rec_traces
-
-    # Build visibility: exp traces visible, rec traces hidden, OLS always visible
-    exp_visible = [True] * n_exp_traces + [False] * n_rec_traces + [True] * n_ols_traces
-    rec_visible = [False] * n_exp_traces + [True] * n_rec_traces + [True] * n_ols_traces
+    # NOTE: visibility arrays built later, after all traces (including size legend) are added
 
     # ---------- Hover and styling ----------
     x_hover, y_hover = _build_hover_template(x_field, y_field)
@@ -424,6 +456,8 @@ def generate_dataset_bubble(
         f"<br>{y_hover}"
         "<br>Subjects (total): %{customdata[1]:,}"
         "<br>Records (total): %{customdata[2]:,}"
+        "<br>Duration (total): %{customdata[10]}"
+        "<br>Duration/subject: %{customdata[11]}"
         "<br>Tasks: %{customdata[3]:,}"
         "<br>Channels: %{customdata[4]}"
         "<br>Sampling: %{customdata[5]} Hz"
@@ -448,82 +482,191 @@ def generate_dataset_bubble(
             active=0,
             x=0.0,
             xanchor="left",
-            y=1.18,
-            yanchor="top",
+            y=1.02,
+            yanchor="bottom",
             buttons=[
                 dict(
                     label="Experiment Modality",
                     method="restyle",
-                    args=["visible", exp_visible],
+                    args=["visible", []],  # Updated after all traces added
                 ),
                 dict(
                     label="Recording Modality",
                     method="restyle",
-                    args=["visible", rec_visible],
+                    args=["visible", []],  # Updated after all traces added
                 ),
             ],
-            pad={"r": 10, "t": 10},
+            pad={"r": 8, "t": 8},
             showactive=True,
-            bgcolor="white",
-            bordercolor="#d1d5db",
-            font=dict(size=13),
+            bgcolor="rgba(255,255,255,0.9)",
+            bordercolor="rgba(0,0,0,0.1)",
+            font=dict(size=12, color="#374151"),
         )
     ]
 
     fig.update_layout(
         height=height,
-        width=max_width + 200,  # Wider figure
-        margin=dict(l=60, r=40, t=140, b=60),
+        autosize=True,
+        margin=dict(l=60, r=80, t=50, b=60),
         template="plotly_white",
         updatemenus=updatemenus,
         legend=dict(
-            title=None,  # No title for inline style
-            orientation="h",  # Horizontal inline
-            yanchor="bottom",
-            y=1.08,  # Position above the plot
+            title=None,
+            orientation="v",
+            yanchor="top",
+            y=0.99,
             xanchor="left",
-            x=0.0,  # Left-aligned, next to buttons
+            x=0.01,
             itemclick="toggle",
             itemdoubleclick="toggleothers",
-            font=dict(size=12),
-            tracegroupgap=5,  # Minimal gap between items
+            font=dict(size=13),
+            tracegroupgap=0,
+            bgcolor="rgba(255,255,255,0.9)",
+            bordercolor="rgba(0,0,0,0.06)",
+            borderwidth=1,
+            itemsizing="constant",
+            valign="middle",
         ),
         font=dict(
             family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-            size=14,
+            size=16,
         ),
         title=dict(text="", x=0.01, xanchor="left", y=0.98, yanchor="top"),
-        autosize=False,
     )
 
-    if fit_annotation_text:
-        fig.add_annotation(
-            xref="paper",
-            yref="paper",
-            x=0.02,
-            y=0.98,
-            text=fit_annotation_text,
-            showarrow=False,
-            font=dict(size=15, color="#111827"),
-            bgcolor="rgba(255,255,255,0.75)",
-            bordercolor="rgba(17,24,39,0.25)",
-            borderwidth=1,
-            borderpad=6,
+    # (footnote removed — branding handles attribution)
+
+    # ---------- Bubble size legend (reference circles via hidden traces) ----------
+    ref_durations = [5, 30, 120, 480]  # minutes per subject
+    ref_labels = ["5 min", "30 min", "2 h", "8 h"]
+    ref_bubble_sizes = [np.log1p(d) for d in ref_durations]
+
+    # Use a secondary x-axis in paper space for the legend bubbles
+    fig.add_trace(
+        go.Scatter(
+            x=[None],
+            y=[None],
+            mode="markers",
+            marker=dict(size=0, color="rgba(0,0,0,0)"),
+            showlegend=False,
+            hoverinfo="skip",
         )
+    )
+
+    # Add reference bubbles as real scatter points on a second axes pair
+    fig.update_layout(
+        xaxis2=dict(
+            overlaying="x",
+            range=[0, 1],
+            showgrid=False,
+            zeroline=False,
+            visible=False,
+            fixedrange=True,
+        ),
+        yaxis2=dict(
+            overlaying="y",
+            range=[0, 1],
+            showgrid=False,
+            zeroline=False,
+            visible=False,
+            fixedrange=True,
+        ),
+    )
+
+    # Title
+    fig.add_annotation(
+        xref="x2",
+        yref="y2",
+        x=0.92,
+        y=0.52,
+        xanchor="center",
+        yanchor="bottom",
+        text="<b>Bubble size</b> = duration / subject",
+        showarrow=False,
+        font=dict(size=14, color="#374151"),
+    )
+
+    # Compute pixel sizes for legend bubbles (independent of chart sizeref)
+    legend_sizeref = sizeref * 0.55
+    legend_x_circle = 0.88
+    legend_x_label = 0.93
+
+    # Place reference bubbles vertically, largest at top (natural reading order)
+    for i, (bsz, label) in enumerate(zip(ref_bubble_sizes, ref_labels)):
+        cy = 0.22 + i * 0.07
+        fig.add_trace(
+            go.Scatter(
+                x=[legend_x_circle],
+                y=[cy],
+                xaxis="x2",
+                yaxis="y2",
+                mode="markers",
+                marker=dict(
+                    size=[bsz],
+                    sizemode="area",
+                    sizeref=legend_sizeref,
+                    sizemin=6,
+                    color="rgba(148,163,184,0.45)",
+                    line=dict(width=1, color="rgba(100,116,139,0.35)"),
+                ),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+        fig.add_annotation(
+            xref="x2",
+            yref="y2",
+            x=legend_x_label,
+            y=cy,
+            xanchor="left",
+            yanchor="middle",
+            text=label,
+            showarrow=False,
+            font=dict(size=14, color="#6b7280"),
+        )
+
+    # ---------- Build visibility arrays for toggle buttons ----------
+    # Must be AFTER all traces are added (OLS line + size legend traces)
+    n_total_traces = len(fig.data)
+    n_extra_traces = n_total_traces - n_exp_traces - n_rec_traces
+
+    # Match initial state: background categories as "legendonly"
+    exp_vis = []
+    for t in fig.data[:n_exp_traces]:
+        if t.visible == "legendonly":
+            exp_vis.append("legendonly")
+        else:
+            exp_vis.append(True)
+    rec_vis = []
+    for t in fig.data[n_exp_traces : n_exp_traces + n_rec_traces]:
+        # Rec traces start hidden; when toggled on, bg ones should be legendonly
+        if t.name in _BACKGROUND_CATS:
+            rec_vis.append("legendonly")
+        else:
+            rec_vis.append(True)
+
+    exp_visible = exp_vis + [False] * n_rec_traces + [True] * n_extra_traces
+    rec_visible = [False] * n_exp_traces + rec_vis + [True] * n_extra_traces
+
+    # Update button args with final visibility arrays
+    fig.layout.updatemenus[0].buttons[0].args = ["visible", exp_visible]
+    fig.layout.updatemenus[0].buttons[1].args = ["visible", rec_visible]
 
     fig.update_xaxes(
         showgrid=True,
-        gridcolor="rgba(0,0,0,0.12)",
+        gridcolor="rgba(0,0,0,0.05)",
         zeroline=False,
         type="log",
         dtick=1,
+        selector=dict(overlaying=None),
     )
     fig.update_yaxes(
         showgrid=True,
-        gridcolor="rgba(0,0,0,0.12)",
+        gridcolor="rgba(0,0,0,0.05)",
         zeroline=False,
         type="log",
         dtick=1,
+        selector=dict(overlaying=None),
     )
 
     extra_style = f""".dataset-loading {{

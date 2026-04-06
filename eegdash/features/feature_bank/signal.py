@@ -238,7 +238,7 @@ def signal_root_mean_square(x, /):
     Notes
     -----
     For the RMS definition, see the
-    `Wikipedia entry <https://en.wikipedia.org/wiki/Root_mean_square>`_.
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Root_mean_square>`__.
 
     """
     return np.sqrt(np.power(x, 2).mean(axis=-1))
@@ -268,7 +268,7 @@ def signal_peak_to_peak(x, /, **kwargs):
     details on additional keyword arguments.
 
     For a theoretical overview of Peak-To-Peak amplitude in signal analysis,
-    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Peak-to-peak>`_.
+    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Peak-to-peak>`__.
 
     """
     return np.ptp(x, axis=-1, **kwargs)
@@ -348,7 +348,7 @@ def signal_zero_crossings(x, /, threshold=1e-15):
     Notes
     -----
     For a theoretical overview of zero-crossing rate in signal analysis,
-    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Zero_crossing>`_.
+    see the `Wikipedia entry <https://en.wikipedia.org/wiki/Zero_crossing>`__.
 
     """
     zero_ind = np.logical_and(x > -threshold, x < threshold)
@@ -393,7 +393,7 @@ def signal_hjorth_mobility(x, /):
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
 
     for more details, see the `Wikipedia entry
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`_.
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Mobility>`__.
 
 
     """
@@ -435,7 +435,7 @@ def signal_hjorth_complexity(x, /):
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
 
     For more details, see the `Wikipedia entry
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity>`_.
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Complexity>`__.
 
     """
     return (np.diff(x, 2, axis=-1).std(axis=-1) * x.std(axis=-1)) / np.diff(
@@ -506,5 +506,5 @@ r"""Calculate the Hjorth Activity of the signal.
       Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.
 
     for more details, see the `Wikipedia entry
-    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`_.
+    <https://en.wikipedia.org/wiki/Hjorth_parameters#Hjorth_Activity>`__.
     """

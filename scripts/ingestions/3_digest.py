@@ -41,6 +41,7 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
+from _file_utils import get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _set_parser import parse_set_metadata
@@ -127,38 +128,6 @@ def get_storage_backend(source: str) -> str:
     """Get storage backend type for a source."""
     config = get_storage_config(source)
     return config["backend"]
-
-
-def get_file_size(path: Path) -> int:
-    """Get file size, including for git-annex symlinks.
-
-    Git-annex encodes the file size in the key name:
-    - MD5E-s{size}--{hash}.ext
-    - SHA256E-s{size}--{hash}.ext
-
-    Parameters
-    ----------
-    path : Path
-        Path to the file or symlink.
-
-    Returns
-    -------
-    int
-        File size in bytes, or 0 if size cannot be determined.
-
-    """
-    if path.is_file():
-        return path.stat().st_size
-    elif path.is_symlink():
-        # Git-annex encodes size in the key: MD5E-s{size}-- or SHA256E-s{size}--
-        try:
-            target = str(path.readlink())
-            match = re.search(r"-s(\d+)--", target)
-            if match:
-                return int(match.group(1))
-        except (OSError, ValueError):
-            pass
-    return 0
 
 
 def detect_source(dataset_dir: Path) -> str:
@@ -676,11 +645,14 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes (includes git-annex symlink sizes)
+    # Extract size_bytes — prefer source API value (e.g. OpenNeuro sets this
+    # during fetch), otherwise compute from local files resolving git-annex
+    # pointers.  Do NOT trust manifest "total_size" — it was computed from
+    # clone pointer files and is wrong for git-annex datasets.
     size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
         size_bytes = sum(
-            get_file_size(f)
+            get_annex_file_size(f)
             for f in bids_root.rglob("*")
             if f.is_file() or f.is_symlink()
         )

@@ -44,10 +44,9 @@ def generate_dataset_growth(
             title="Cumulative Number of Dataset Publications (Data Unavailable)"
         )
         fig.add_annotation(text="Timestamp data missing", showarrow=False)
-        p = Path(out_html)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        fig.write_html(p, include_plotlyjs="cdn", full_html=True)
-        return p
+        return build_and_export_html(
+            fig, out_html, div_id="dataset-growth-plot", height=550
+        )
 
     df["date"] = pd.to_datetime(df[date_col], errors="coerce")
     df = df.dropna(subset=["date"])
@@ -76,10 +75,9 @@ def generate_dataset_growth(
 
     if not parts:
         fig = px.line(title="Cumulative Number of Dataset Publications (No Data)")
-        p = Path(out_html)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        fig.write_html(p, include_plotlyjs="cdn", full_html=True)
-        return p
+        return build_and_export_html(
+            fig, out_html, div_id="dataset-growth-plot", height=550
+        )
 
     df_plot = pd.concat(parts)
 
@@ -201,8 +199,7 @@ def generate_dataset_growth(
         legend=dict(x=1.02, y=1),
         margin=dict(t=100, l=60, r=40, b=80),
         height=550,
-        width=width,
-        autosize=False,
+        autosize=True,
     )
 
     return build_and_export_html(

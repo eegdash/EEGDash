@@ -1380,6 +1380,8 @@ def _convert_readme_to_rst(text: str) -> str:
     text = text.lstrip("\ufeff")
     # Normalize HTML line breaks to newlines
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    # Replace leading tabs with spaces (tabs cause RST block-quote interpretation)
+    text = re.sub(r"^\t+", lambda m: "  " * len(m.group(0)), text, flags=re.MULTILINE)
 
     # === Phase 1: Extract reference-style link definitions ===
     # Pattern: [1]: http://... or [name]: http://...
@@ -1617,6 +1619,14 @@ def _convert_readme_to_rst(text: str) -> str:
 
             line = re.sub(r"(?<![\\`])`([^`]+)`(?!`)", stash_inline_code, line)
 
+            # Convert linked images (badges): [![alt](img)](link) -> `alt <link>`__
+            # Must run BEFORE individual image/link handlers to avoid mangling.
+            line = re.sub(
+                r"\[!\[([^\]]*)\]\([^)]+\)\]\(([^)]+)\)",
+                lambda m: f"`{m.group(1).strip() or m.group(2).strip()} <{m.group(2).strip()}>`__",
+                line,
+            )
+
             # Convert markdown images: ![alt](url) -> `alt <url>`__
             def replace_md_image(m: re.Match) -> str:
                 alt = m.group(1).strip()
@@ -1638,8 +1648,22 @@ def _convert_readme_to_rst(text: str) -> str:
 
             line = re.sub(r"!\[([^\]]*)\]\[([^\]]+)\]", replace_ref_image, line)
 
+            # Stash already-converted RST links so the autolink handler
+            # doesn't mangle the <url> inside them (e.g. `DOI <url>`__).
+            rst_link_stash: list[str] = []
+
+            def _stash_rst_link(m: re.Match) -> str:
+                rst_link_stash.append(m.group(0))
+                return f"\x00RST_LINK_{len(rst_link_stash) - 1}\x00"
+
+            line = re.sub(r"`[^`]+\s<[^>]+>`__", _stash_rst_link, line)
+
             # Convert autolinks: <https://example.com>
             line = re.sub(r"<(https?://[^>]+)>", r"`\1 <\1>`__", line)
+
+            # Restore stashed RST links
+            for idx, stashed in enumerate(rst_link_stash):
+                line = line.replace(f"\x00RST_LINK_{idx}\x00", stashed)
 
             # Convert reference-style links: [text][ref] -> `text <url>`__
             def replace_ref_link(m: re.Match) -> str:
@@ -1656,8 +1680,8 @@ def _convert_readme_to_rst(text: str) -> str:
             line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"`\1 <\2>`__", line)
 
             # Escape trailing underscores on words (e.g., auricular_points_)
-            # Matches word_underscore followed by whitespace, punctuation, or end of line
-            line = re.sub(r"(\w)_(?=[\s.,;:!?\)\]\}]|$)", r"\1\_", line)
+            # Uses [a-zA-Z0-9] instead of \w to avoid matching __ (RST link suffix).
+            line = re.sub(r"([a-zA-Z0-9])_(?=[\s.,;:!?\)\]\}]|$)", r"\1\_", line)
 
             # Escape pipe characters that could be interpreted as substitution references
             # Don't escape pipes that are already in table-like structures we've processed
@@ -1816,7 +1840,74 @@ def _convert_readme_to_rst(text: str) -> str:
         prev_was_list_item = is_list_item
         i += 1
 
-    return "\n".join(result)
+    # Post-processing: insert blank lines before unindent transitions to avoid
+    # "Block quote ends without a blank line" warnings in RST.
+    final: list[str] = []
+    for idx, line in enumerate(result):
+        if idx > 0 and final:
+            prev = final[-1]
+            prev_indent = len(prev) - len(prev.lstrip())
+            cur_indent = len(line) - len(line.lstrip()) if line.strip() else -1
+            # Unindent transition: previous line was indented, current is less indented
+            if (
+                cur_indent >= 0
+                and prev.strip()
+                and prev_indent > cur_indent
+                and final[-1] != ""
+            ):
+                final.append("")
+        final.append(line)
+
+    text = "\n".join(final)
+
+    # --- Final sanitization pass ---
+
+    # Convert RST citation directives to plain text to avoid cross-page
+    # duplicate citation warnings (e.g. .. [Hinss2021] -> [Hinss2021])
+    text = re.sub(r"^\.\.\s+(\[[^\]]+\])", r"\1", text, flags=re.MULTILINE)
+
+    # Fix malformed RST links: ``<url>``_ -> `url <url>`__
+    text = re.sub(
+        r"``<(https?://[^>]+)>``_",
+        r"`\1 <\1>`__",
+        text,
+    )
+
+    # Escape orphan backticks that would cause "Inline literal start-string
+    # without end-string" warnings in RST.
+    lines = text.split("\n")
+    for li, line in enumerate(lines):
+        # Skip lines that are RST directives or already have proper markup
+        stripped = line.lstrip()
+        if stripped.startswith("..") or stripped.startswith(":"):
+            continue
+
+        # --- Orphan backtick escaping ---
+        # Remove properly paired backtick patterns first to check
+        cleaned = re.sub(r"``[^`]*``", "", line)  # remove ``code``
+        cleaned = re.sub(r"`[^`]+ <[^>]+>`__", "", cleaned)  # remove `link`__
+        cleaned = re.sub(r"`[^`]+`", "", cleaned)  # remove `ref`
+        if cleaned.count("`") % 2 == 1:
+            lines[li] = re.sub(r"(?<!`)`(?!`)", r"\`", line)
+            line = lines[li]
+
+        # --- Orphan bold/emphasis escaping ---
+        # Remove properly paired **bold** and *emphasis* to check for orphans
+        cleaned = re.sub(r"\*\*[^*]+\*\*", "", line)  # remove **bold**
+        cleaned = re.sub(r"(?<!\*)\*(?!\*)[^*]+\*(?!\*)", "", cleaned)  # remove *em*
+        cleaned = re.sub(r"\\\*", "", cleaned)  # remove already-escaped \*
+        remaining_stars = cleaned.count("*")
+        if remaining_stars > 0:
+            # Escape orphan ** or * that aren't already escaped
+            # First handle \*...*\* patterns (partially escaped)
+            line = re.sub(r"\\\*([^*]+)\*(?!\*)", r"\\\*\1\\*", line)
+            # Escape any remaining unmatched * that aren't part of proper pairs
+            # by escaping * that are adjacent to non-space on only one side
+            line = re.sub(r"(?<![\\*\s])\*(?=\s|$)", r"\\*", line)
+            line = re.sub(r"(?:^|(?<=\s))\*(?![*\s])", r"\\*", line)
+            lines[li] = line
+
+    return "\n".join(lines)
 
 
 def _format_readme_section(context: Mapping[str, object]) -> str:

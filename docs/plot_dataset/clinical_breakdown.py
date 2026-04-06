@@ -169,7 +169,7 @@ def generate_clinical_stacked_bar(
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
         height=650,
-        width=width,
+        autosize=True,
         updatemenus=[
             dict(
                 type="buttons",
@@ -203,7 +203,6 @@ def generate_clinical_stacked_bar(
             ),
         ],
         margin=dict(t=100, l=60, r=40, b=80),
-        autosize=False,
     )
 
     return build_and_export_html(

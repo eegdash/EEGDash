@@ -9,6 +9,7 @@ This script fetches data from the EEGDash API and generates:
 import concurrent.futures
 import json
 import os
+import sys
 import textwrap
 from argparse import ArgumentParser
 from collections import Counter
@@ -31,10 +32,15 @@ from plot_dataset.utils import get_dataset_url as _get_dataset_url
 from plot_dataset.utils import human_readable_size
 from table_tag_utils import _normalize_values, wrap_tags
 
+# Ensure eegdash package is importable (this script lives in docs/)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from eegdash.dataset.registry import fetch_chart_data_from_api, fetch_datasets_from_api
+
 # Directories
 DOCS_DIR = Path(__file__).resolve().parent
 STATIC_DATASET_DIR = DOCS_DIR / "source" / "_static" / "dataset_generated"
 BUILD_STATIC_DIR = DOCS_DIR / "_build" / "html" / "_static" / "dataset_generated"
+PACKAGE_CSV = DOCS_DIR.parent / "eegdash" / "dataset" / "dataset_summary.csv"
 
 # API Configuration
 API_BASE_URL = "https://data.eegdash.org/api"
@@ -703,12 +709,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 def _load_local_dataset_summary() -> pd.DataFrame:
     """Load local dataset_summary.csv as fallback."""
-    csv_path = (
-        Path(__file__).resolve().parents[1]
-        / "eegdash"
-        / "dataset"
-        / "dataset_summary.csv"
-    )
+    csv_path = PACKAGE_CSV
     if not csv_path.exists():
         return pd.DataFrame()
     try:
@@ -717,20 +718,45 @@ def _load_local_dataset_summary() -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def _refresh_package_csv(database: str = DEFAULT_DATABASE) -> None:
+    """Refresh the package-level dataset_summary.csv from the API.
+
+    This ensures that ``register_openneuro_datasets()`` (called at import
+    time by Sphinx) sees the same datasets that appear in the HTML summary
+    tables, preventing broken links in the generated documentation.
+    """
+    print("Refreshing package dataset_summary.csv from API...")
+    df_api = fetch_datasets_from_api(API_BASE_URL, database, force_refresh=True)
+    if df_api.empty:
+        print("  API returned no data; keeping existing CSV.")
+        return
+
+    # Preserve EEG2025 competition entries — the summary endpoint may omit them.
+    try:
+        df_existing = pd.read_csv(PACKAGE_CSV, comment="#", skip_blank_lines=True)
+        api_datasets = set(df_api["dataset"])
+        missing_eeg2025 = df_existing[
+            df_existing["dataset"].str.startswith("EEG2025", na=False)
+            & ~df_existing["dataset"].isin(api_datasets)
+        ]
+        if not missing_eeg2025.empty:
+            df_api = pd.concat([df_api, missing_eeg2025], ignore_index=True)
+    except (FileNotFoundError, pd.errors.EmptyDataError, KeyError) as exc:
+        print(f"  Could not read existing CSV for EEG2025 merge: {exc}")
+
+    df_api.to_csv(PACKAGE_CSV, index=False)
+    print(f"  Updated {PACKAGE_CSV.name}: {len(df_api)} datasets")
+
+
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables and charts from API data."""
-    try:
-        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
-    except ImportError:
-        import sys  # noqa: PLC0415
-
-        sys.path.insert(0, str(Path(__file__).parents[1]))
-        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
-
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)
     BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Refresh the package CSV so Sphinx class registration matches the API
+    _refresh_package_csv(database)
 
     print(f"Fetching chart data from API (database: {database})...")
     df_raw, aggregations = fetch_chart_data_from_api(

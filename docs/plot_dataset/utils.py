@@ -300,11 +300,17 @@ def build_and_export_html(
     width: 100% !important;
     height: {height}px !important;
     min-height: {height}px;
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
 }}
 #{div_id} .plotly-graph-div {{
     width: 100% !important;
     height: 100% !important;
+}}
+.eegdash-figure {{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
 }}
 {brand_css}
 {extra_style}

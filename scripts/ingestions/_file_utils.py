@@ -559,40 +559,52 @@ def list_datarn_files(source_url: str) -> list[dict]:
     return result
 
 
-def _annex_real_size(path: Path, stat_size: int) -> int:
-    """Extract real file size from a git-annex pointer or symlink.
+_ANNEX_SIZE_RE = re.compile(r"-s(\d+)--")
+
+
+def parse_annex_size(text: str) -> int | None:
+    """Extract the real file size from a git-annex key or pointer path.
+
+    Git-annex encodes size in keys like ``MD5E-s{size}--{hash}.ext``.
+    Returns ``None`` if *text* does not contain an annex size.
+    """
+    m = _ANNEX_SIZE_RE.search(text)
+    return int(m.group(1)) if m else None
+
+
+def get_annex_file_size(path: Path) -> int:
+    """Get file size, resolving git-annex pointers and symlinks.
 
     After a shallow clone with ``GIT_LFS_SKIP_SMUDGE=1``, git-annex data
     files are small text pointers whose content encodes the real size in
     the annex key (e.g. ``/annex/objects/MD5E-s128356352--…``).
 
-    Returns *stat_size* unchanged when *path* is not an annex pointer.
+    Returns the real data size for annex-managed files, the stat size for
+    regular files, or 0 for broken symlinks without annex keys.
     """
-    import re
-
-    _ANNEX_RE = re.compile(r"-s(\d+)--")
-
     if path.is_symlink():
         try:
-            m = _ANNEX_RE.search(str(path.readlink()))
-            if m:
-                return int(m.group(1))
+            annex_size = parse_annex_size(str(path.readlink()))
+            if annex_size is not None:
+                return annex_size
         except (OSError, ValueError):
             pass
         return 0
 
-    # Small regular file — might be a text pointer
-    if stat_size < 256:
-        try:
-            content = path.read_text(encoding="utf-8", errors="ignore").strip()
-            if "/annex/" in content:
-                m = _ANNEX_RE.search(content)
-                if m:
-                    return int(m.group(1))
-        except (OSError, UnicodeDecodeError):
-            pass
+    if path.is_file():
+        stat_size = path.stat().st_size
+        if stat_size < 256:
+            try:
+                content = path.read_text(encoding="utf-8", errors="ignore").strip()
+                if "/annex/" in content:
+                    annex_size = parse_annex_size(content)
+                    if annex_size is not None:
+                        return annex_size
+            except (OSError, UnicodeDecodeError):
+                pass
+        return stat_size
 
-    return stat_size
+    return 0
 
 
 def list_git_files(clone_dir: Path) -> list[dict]:
@@ -609,18 +621,17 @@ def list_git_files(clone_dir: Path) -> list[dict]:
             continue
 
         if path.is_file():
-            stat_size = path.stat().st_size
             result.append(
                 {
                     "name": str(path.relative_to(clone_dir)),
-                    "size": _annex_real_size(path, stat_size),
+                    "size": get_annex_file_size(path),
                 }
             )
         elif path.is_symlink():
             result.append(
                 {
                     "name": str(path.relative_to(clone_dir)),
-                    "size": _annex_real_size(path, 0),
+                    "size": get_annex_file_size(path),
                 }
             )
 

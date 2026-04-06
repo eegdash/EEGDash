@@ -41,6 +41,7 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
+from _file_utils import get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _set_parser import parse_set_metadata
@@ -127,67 +128,6 @@ def get_storage_backend(source: str) -> str:
     """Get storage backend type for a source."""
     config = get_storage_config(source)
     return config["backend"]
-
-
-_ANNEX_SIZE_RE = re.compile(r"-s(\d+)--")
-
-
-def _parse_annex_size(text: str) -> int | None:
-    """Extract the real file size from a git-annex key or pointer path.
-
-    Git-annex encodes size in keys like ``MD5E-s{size}--{hash}.ext``.
-    Returns None if the text does not contain an annex size.
-    """
-    m = _ANNEX_SIZE_RE.search(text)
-    return int(m.group(1)) if m else None
-
-
-def get_file_size(path: Path) -> int:
-    """Get file size, resolving git-annex pointers and symlinks.
-
-    After a shallow clone with ``GIT_LFS_SKIP_SMUDGE=1``, git-annex data
-    files are small text pointers (e.g. ``/annex/objects/MD5E-s128356352--…``)
-    rather than symlinks. This function detects both cases and extracts the
-    real size from the annex key.
-
-    Parameters
-    ----------
-    path : Path
-        Path to the file or symlink.
-
-    Returns
-    -------
-    int
-        File size in bytes, or 0 if size cannot be determined.
-
-    """
-    if path.is_symlink():
-        try:
-            target = str(path.readlink())
-            annex_size = _parse_annex_size(target)
-            if annex_size is not None:
-                return annex_size
-        except (OSError, ValueError):
-            pass
-        # Broken symlink without annex key — can't determine size
-        return 0
-
-    if path.is_file():
-        stat_size = path.stat().st_size
-        # Detect git-annex pointer files: small text files whose content
-        # is a path like /annex/objects/MD5E-s{SIZE}--{hash}.ext
-        if stat_size < 256:
-            try:
-                content = path.read_text(encoding="utf-8", errors="ignore").strip()
-                if "/annex/" in content:
-                    annex_size = _parse_annex_size(content)
-                    if annex_size is not None:
-                        return annex_size
-            except (OSError, UnicodeDecodeError):
-                pass
-        return stat_size
-
-    return 0
 
 
 def detect_source(dataset_dir: Path) -> str:
@@ -712,7 +652,7 @@ def extract_dataset_metadata(
     size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
         size_bytes = sum(
-            get_file_size(f)
+            get_annex_file_size(f)
             for f in bids_root.rglob("*")
             if f.is_file() or f.is_symlink()
         )

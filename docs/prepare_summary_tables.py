@@ -9,6 +9,7 @@ This script fetches data from the EEGDash API and generates:
 import concurrent.futures
 import json
 import os
+import sys
 import textwrap
 from argparse import ArgumentParser
 from collections import Counter
@@ -30,6 +31,10 @@ from plot_dataset import (
 from plot_dataset.utils import get_dataset_url as _get_dataset_url
 from plot_dataset.utils import human_readable_size
 from table_tag_utils import _normalize_values, wrap_tags
+
+# Ensure eegdash package is importable (this script lives in docs/)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from eegdash.dataset.registry import fetch_chart_data_from_api, fetch_datasets_from_api
 
 # Directories
 DOCS_DIR = Path(__file__).resolve().parent
@@ -720,8 +725,6 @@ def _refresh_package_csv(database: str = DEFAULT_DATABASE) -> None:
     time by Sphinx) sees the same datasets that appear in the HTML summary
     tables, preventing broken links in the generated documentation.
     """
-    from eegdash.dataset.registry import fetch_datasets_from_api  # noqa: PLC0415
-
     print("Refreshing package dataset_summary.csv from API...")
     df_api = fetch_datasets_from_api(API_BASE_URL, database, force_refresh=True)
     if df_api.empty:
@@ -747,14 +750,6 @@ def _refresh_package_csv(database: str = DEFAULT_DATABASE) -> None:
 
 def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int = 1000):
     """Generate summary tables and charts from API data."""
-    try:
-        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
-    except ImportError:
-        import sys  # noqa: PLC0415
-
-        sys.path.insert(0, str(Path(__file__).parents[1]))
-        from eegdash.dataset.registry import fetch_chart_data_from_api  # noqa: PLC0415
-
     target_dir = Path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     STATIC_DATASET_DIR.mkdir(parents=True, exist_ok=True)

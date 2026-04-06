@@ -459,24 +459,40 @@ data.children.forEach(modality => {{
     modalityPacks.push({{ modality: modality, packed: pack(h), size: size, radius: size / 2 }});
 }});
 
-// ---- Smart row-based grid layout ----
-// Sort largest first, then wrap rows based on total content width
+// ---- Intentional layout: large cluster top-center, small ones beside/below ----
 modalityPacks.sort((a, b) => b.size - a.size);
-const gap = 35;
-// Compute total width to determine a sensible row-break threshold
-const totalW = modalityPacks.reduce((s, mp) => s + mp.size + gap, 0);
-const rowBreak = Math.max(totalW * 0.55, modalityPacks[0].size + gap * 2);
-let curX = gap, curY = gap, rowH = 0;
-modalityPacks.forEach(mp => {{
-    if (curX + mp.size > rowBreak && curX > gap) {{
-        curX = gap;
-        curY += rowH + gap + 30;
-        rowH = 0;
-    }}
-    mp.ox = curX;
-    mp.oy = curY + 30;
-    curX += mp.size + gap;
-    rowH = Math.max(rowH, mp.size);
+const gap = 50;
+
+// Separate the largest modality (EEG) from the rest
+const biggest = modalityPacks[0];
+// Find small modalities (< 25% of biggest) to tuck beside it at top-right
+const smallThreshold = biggest.size * 0.25;
+const small = modalityPacks.filter((mp, i) => i > 0 && mp.size < smallThreshold);
+const medium = modalityPacks.filter((mp, i) => i > 0 && mp.size >= smallThreshold);
+
+// Place biggest at top-left with some offset for legend
+const bigOffsetX = 320;
+biggest.ox = bigOffsetX;
+biggest.oy = gap + 40;
+
+// Place small modalities top-right of biggest
+let smallX = bigOffsetX + biggest.size + gap;
+let smallY = biggest.oy;
+small.forEach(mp => {{
+    mp.ox = smallX;
+    mp.oy = smallY;
+    smallY += mp.size + gap;
+}});
+
+// Place medium modalities in a row below with generous spacing
+const mediumGap = gap + 20;
+const mediumTotalW = medium.reduce((s, mp) => s + mp.size, 0) + (medium.length - 1) * mediumGap;
+let medX = bigOffsetX + (biggest.size - mediumTotalW) / 2;
+const medY = biggest.oy + biggest.size + gap + 40;
+medium.forEach(mp => {{
+    mp.ox = Math.max(gap, medX);
+    mp.oy = medY + 40;
+    medX += mp.size + mediumGap;
 }});
 
 // ---- Flatten all circles into arrays for canvas rendering ----
@@ -520,9 +536,9 @@ modalityPacks.forEach(mp => {{
         // Only label top-N datasets per modality (marked by Python)
         if (ds.showLabel && node.r > 12) {{
             const lbl = ds.name.toUpperCase();
-            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 14, r: node.r,
+            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 16, r: node.r,
                 label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
-                fontSize: Math.max(14, Math.min(20, node.r / 2)) }});
+                fontSize: Math.max(16, Math.min(24, node.r / 1.8)) }});
         }}
     }});
 

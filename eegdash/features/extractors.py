@@ -56,8 +56,35 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
     return func_dict
 
 
-def _adjust_dict_types(d: dict) -> dict:
+def _adjust_list_types(l: list) -> list:
     """Adjust a dictionary keys so they can be saved to config files.
+
+    Parameters
+    ----------
+    l : list
+        The list to adjust.
+
+    Returns
+    -------
+    list
+        The adjusted list.
+
+    """
+    ll = []
+    for v in l:
+        # values
+        if isinstance(v, tuple):
+            v = list(v)
+        if isinstance(v, list):
+            v = _adjust_list_types(v)
+        if isinstance(v, dict):
+            v = _adjust_dict_types(v)
+        ll.append(v)
+    return ll
+
+
+def _adjust_dict_types(d: dict) -> dict:
+    """Adjust a dictionary keys and values so they can be saved to config files.
 
     Parameters
     ----------
@@ -75,7 +102,9 @@ def _adjust_dict_types(d: dict) -> dict:
         # values
         if isinstance(v, tuple):
             v = list(v)
-        elif isinstance(v, dict):
+        if isinstance(v, list):
+            v = _adjust_list_types(v)
+        if isinstance(v, dict):
             v = _adjust_dict_types(v)
         # keys
         if not isinstance(k, str):

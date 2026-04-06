@@ -66,10 +66,12 @@ MODALITY_BG_COLORS = {
 TOP_LABELS_PER_MODALITY = 5
 
 
-def _get_bubble_size(records_per_subject: float, scale: float = 1.0) -> float:
-    """Calculate bubble size from data volume per subject."""
-    size = max(1.0, float(records_per_subject))
-    return np.log(size + 1.0) * scale * 12
+def _get_bubble_size(
+    duration_min_per_subject: float, scale: float = 1.0
+) -> float:
+    """Calculate bubble size from recording duration per subject (minutes)."""
+    size = max(0.5, float(duration_min_per_subject))
+    return np.log(size + 1.0) * scale * 10
 
 
 def _get_alpha(n_sessions: int) -> float:
@@ -195,6 +197,17 @@ def generate_moabb_bubble(
 
     data = data[data["n_subjects"] >= 1].copy()
     data["records_per_subject"] = (data["n_records"] / data["n_subjects"]).clip(lower=1)
+
+    # Duration per subject (minutes) for bubble sizing
+    data["duration_h"] = pd.to_numeric(
+        data.get("duration_hours_total"), errors="coerce"
+    ).fillna(0)
+    data["duration_min_per_subject"] = np.where(
+        (data["duration_h"] > 0) & (data["n_subjects"] > 0),
+        data["duration_h"] * 60 / data["n_subjects"],
+        0,
+    )
+
     data = data.sort_values("dataset").reset_index(drop=True)
 
     # Optional metadata
@@ -241,13 +254,14 @@ def generate_moabb_bubble(
         n_sessions = int(row["n_sessions"])
         n_records = int(row["n_records"])
         records_per_subject = float(row["records_per_subject"])
+        duration_min_per_sub = float(row["duration_min_per_subject"])
         effective_subjects = min(n_subjects, MAX_BUBBLES_PER_DATASET)
 
         nchans = row.get("nchans_median")
         sfreq = row.get("sfreq_median")
         size_bytes = safe_int(row.get("size_bytes_clean", 0), 0)
 
-        bubble_size = _get_bubble_size(records_per_subject, scale)
+        bubble_size = _get_bubble_size(duration_min_per_sub, scale)
         alpha = _get_alpha(n_sessions)
 
         dataset_node = {
@@ -258,6 +272,7 @@ def generate_moabb_bubble(
             "n_sessions": n_sessions,
             "n_records": n_records,
             "records_per_subject": round(records_per_subject, 1),
+            "duration_min_per_subject": round(duration_min_per_sub, 1),
             "nchans": _format_int(nchans) if nchans else "—",
             "sfreq": _format_int(sfreq) if sfreq else "—",
             "size": human_readable_size(size_bytes) if size_bytes else "—",
@@ -401,7 +416,7 @@ def generate_moabb_bubble(
         <div class="tooltip" id="tooltip"></div>
         <div class="legend">
             <div class="legend-title">Legend</div>
-            <div class="legend-item"><b>Circle size</b>: log(records/subject)</div>
+            <div class="legend-item"><b>Circle size</b>: duration / subject</div>
             <div class="legend-item"><b>Opacity</b>: fewer sessions = more opaque</div>
             <div class="legend-item"><b>Each circle</b> = 1 subject</div>
             <div class="legend-item" id="total-datasets" style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e7eb;font-weight:600;"></div>
@@ -531,7 +546,8 @@ modalityPacks.forEach(mp => {{
                 color: ds.color, alpha: ds.alpha, url: ds.url,
                 n_subjects: ds.n_subjects, n_sessions: ds.n_sessions,
                 n_records: ds.n_records, nchans: ds.nchans, sfreq: ds.sfreq,
-                size: ds.size, records_per_subject: ds.records_per_subject }});
+                size: ds.size, records_per_subject: ds.records_per_subject,
+                duration_min_per_subject: ds.duration_min_per_subject || 0 }});
         }}
         // Only label top-N datasets per modality (marked by Python)
         if (ds.showLabel && node.r > 12) {{
@@ -737,6 +753,7 @@ canvas.addEventListener("mousemove", function(e) {{
                 '<div class="tooltip-title">' + ds.name + '</div>' +
                 '<div class="tooltip-subtitle">' + ds.title + '</div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Subjects</span><span class="tooltip-value">' + ds.n_subjects.toLocaleString() + '</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Duration/subject</span><span class="tooltip-value">' + (ds.duration_min_per_subject > 0 ? ds.duration_min_per_subject.toFixed(1) + ' min' : '\u2014') + '</span></div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Sessions</span><span class="tooltip-value">' + ds.n_sessions.toLocaleString() + '</span></div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Records</span><span class="tooltip-value">' + ds.n_records.toLocaleString() + '</span></div>' +
                 '<div class="tooltip-row"><span class="tooltip-label">Channels</span><span class="tooltip-value">' + ds.nchans + '</span></div>' +

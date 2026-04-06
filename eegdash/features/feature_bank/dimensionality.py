@@ -61,7 +61,7 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
     Optimized with Numba.
 
     For a theoretical overview of Higuchi's Fractal Dimension, see the
-    `Wikipedia entry <https://en.wikipedia.org/wiki/Higuchi_dimension>`_.
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Higuchi_dimension>`__.
 
     References
     ----------
@@ -208,7 +208,7 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
     References
     ----------
     For more details on the Hurst Exponent and R/S analysis, visit the
-    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`_.
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`__.
 
     """
     h = np.empty(x.shape[:-1])
@@ -261,7 +261,7 @@ def dimensionality_hurst_exp(x, /):
     to apply the Anis-Lloyd correction for small sample sizes.
 
     For more details on the Hurst Exponent and R/S analysis, visit the
-    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`_.
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`__.
 
     """
     ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
@@ -301,7 +301,7 @@ def dimensionality_detrended_fluctuation_analysis(x, /):
     Optimized with Numba.
 
     For a theoretical overview of Detrended Fluctuation Analysis, see the
-    `Wikipedia entry <https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis>`_.
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis>`__.
 
     """
     ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))

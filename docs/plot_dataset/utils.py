@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 from typing import Any
 
@@ -11,13 +12,27 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, MODALITY_COLOR_MAP  # type: ignore
 
 __all__ = [
+    "branding_html",
+    "build_and_export_html",
+    "detect_modality_column",
     "get_dataset_url",
     "human_readable_size",
+    "normalize_modality_string",
     "primary_modality",
+    "primary_recording_modality",
+    "read_dataset_csv",
     "safe_int",
 ]
 
 _SEPARATORS = ("/", "|", ";")
+
+# Figure registry: stores Plotly figures during HTML generation for PDF export
+_figure_registry: dict[str, object] = {}
+
+
+def get_figure_registry() -> dict[str, object]:
+    """Return all figures registered during chart generation."""
+    return dict(_figure_registry)
 
 
 def primary_modality(value: Any) -> str:
@@ -51,6 +66,52 @@ def primary_modality(value: Any) -> str:
     title_variant = first.title()
     if title_variant in MODALITY_COLOR_MAP:
         return title_variant
+
+    return "Other"
+
+
+# Canonical recording modality order and mapping
+RECORDING_MODALITY_MAP = {
+    "eeg": "EEG",
+    "ieeg": "iEEG",
+    "meg": "MEG",
+    "fnirs": "fNIRS",
+    "nirs": "fNIRS",  # Also accept 'nirs' without 'f' prefix
+    "emg": "EMG",
+    "ecg": "ECG",
+    "fmri": "fMRI",
+    "mri": "MRI",
+}
+
+
+def primary_recording_modality(value: Any) -> str:
+    """Return the canonical recording modality label (EEG, MEG, iEEG, etc.)."""
+    if value is None:
+        return "Unknown"
+    if isinstance(value, float) and pd.isna(value):
+        return "Unknown"
+
+    text = str(value).strip().lower()
+    if not text:
+        return "Unknown"
+
+    # Handle multi-modality entries (e.g., "eeg, meg") - take the first
+    for sep in _SEPARATORS:
+        text = text.replace(sep, ",")
+    tokens = [tok.strip() for tok in text.split(",") if tok.strip()]
+    if not tokens:
+        return "Unknown"
+
+    first = tokens[0].lower()
+
+    # Map to canonical form
+    canonical = RECORDING_MODALITY_MAP.get(first)
+    if canonical:
+        return canonical
+
+    # Try direct match in color map
+    if first.upper() in MODALITY_COLOR_MAP:
+        return first.upper()
 
     return "Other"
 
@@ -107,3 +168,319 @@ def ensure_directory(path: str | Path) -> Path:
     dest = Path(path)
     dest.mkdir(parents=True, exist_ok=True)
     return dest
+
+
+def _get_logo_data_uri() -> str:
+    """Return the EEGDash logo as a base64 data URI, or empty string."""
+    candidates = [
+        Path(__file__).resolve().parent.parent
+        / "source"
+        / "_static"
+        / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent
+        / "_build"
+        / "html"
+        / "_static"
+        / "eegdash_long.svg",
+    ]
+    for path in candidates:
+        if path.exists():
+            b64 = base64.b64encode(path.read_bytes()).decode("ascii")
+            return f"data:image/svg+xml;base64,{b64}"
+    return ""
+
+
+def _get_eegdash_version() -> str:
+    """Return the EEGDash version string."""
+    try:
+        from eegdash import __version__
+
+        return __version__
+    except ImportError:
+        return "dev"
+
+
+_BRANDING_CSS = """\
+.eegdash-branding {
+    position: relative; margin: 4px 0 0 60px; z-index: 9999;
+    display: flex; align-items: center; gap: 8px; opacity: 0.7;
+}
+.eegdash-branding img { height: 24px; }
+.eegdash-branding span { font-size: 12px; color: #9ca3af; font-weight: 500;
+    font-family: Inter, system-ui, -apple-system, sans-serif; }
+"""
+
+
+def branding_html() -> tuple[str, str]:
+    """Return (css, html) for the EEGDash bottom-left branding badge."""
+    logo_uri = _get_logo_data_uri()
+    version = _get_eegdash_version()
+    css = _BRANDING_CSS
+    img_style = "display:none" if not logo_uri else ""
+    html = (
+        f'<div class="eegdash-branding">'
+        f'<img src="{logo_uri}" alt="EEGDash" style="{img_style}">'
+        f"<span>v{version}</span>"
+        f"</div>"
+    )
+    return css, html
+
+
+def build_and_export_html(
+    fig,
+    out_path: str | Path,
+    div_id: str,
+    height: int = 550,
+    extra_style: str = "",
+    pre_html: str = "",
+    extra_html: str = "",
+    config: dict | None = None,
+    include_default_style: bool = True,
+    html_content: str | None = None,
+    include_plotlyjs: bool | str = False,
+) -> Path:
+    """Build styled HTML from a Plotly figure and write it to *out_path*.
+
+    This consolidates the common HTML wrapping and export logic used
+    across all chart generation files.
+
+    Parameters
+    ----------
+    fig : plotly.graph_objects.Figure or None
+        The Plotly figure to export. Can be None if *html_content* is provided.
+    out_path : str | Path
+        Destination file path for the exported HTML.
+    div_id : str
+        The HTML ``id`` attribute for the plot container div.
+    height : int, optional
+        Desired chart height in pixels (default 550).
+    extra_style : str, optional
+        Additional CSS rules to include inside the ``<style>`` block.
+    pre_html : str, optional
+        HTML content to insert before the plot container (e.g., loading divs).
+    extra_html : str, optional
+        Additional HTML/JS to append after the plot container.
+    config : dict, optional
+        Plotly config options. Defaults to responsive mode with no logo.
+    include_default_style : bool, optional
+        Whether to include the default CSS styling block. Set to False for
+        charts with completely custom HTML structure (default True).
+    html_content : str, optional
+        Pre-generated HTML content for the plot. If provided, *fig* is ignored
+        and this content is used directly (useful for custom rendering).
+    include_plotlyjs : bool | str, optional
+        Whether to include Plotly.js in the output. Can be:
+        - False: Don't include (default, for embedding in docs with external Plotly)
+        - True or 'cdn': Include via CDN link (for standalone viewing)
+        - 'inline': Include full Plotly.js inline (larger file, fully offline)
+
+    Returns
+    -------
+    Path
+        The path to the written HTML file.
+
+    """
+    # Register figure for PDF export retrieval
+    if fig is not None:
+        _figure_registry[div_id] = fig
+
+    # Determine plotly.js inclusion mode
+    plotlyjs_mode = False
+    if include_plotlyjs is True or include_plotlyjs == "cdn":
+        plotlyjs_mode = "cdn"
+    elif include_plotlyjs == "inline":
+        plotlyjs_mode = True
+    # else: False (don't include)
+
+    if html_content is None:
+        if config is None:
+            config = {"responsive": True, "displaylogo": False}
+        html_content = fig.to_html(
+            full_html=False,
+            include_plotlyjs=plotlyjs_mode,
+            config=config,
+            div_id=div_id,
+        )
+
+    # Inject branding into all charts
+    brand_css, brand_div = branding_html()
+
+    if include_default_style:
+        styled_html = f"""
+<style>
+#{div_id} {{
+    width: 100% !important;
+    height: {height}px !important;
+    min-height: {height}px;
+    margin: 0;
+    padding: 0;
+}}
+#{div_id} .plotly-graph-div {{
+    width: 100% !important;
+    height: 100% !important;
+}}
+.eegdash-figure {{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}}
+/* Remove sphinx-design tab card padding/border around charts */
+.sd-tab-content:has(.eegdash-figure) {{
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+}}
+{brand_css}
+{extra_style}
+</style>
+{pre_html}{html_content}
+{extra_html}
+{brand_div}
+<script>
+(function() {{
+  var el = document.getElementById("{div_id}");
+  if (!el) return;
+  function tryResize() {{
+    if (el.offsetWidth > 0 && typeof Plotly !== "undefined") {{
+      Plotly.Plots.resize(el);
+    }}
+  }}
+  /* Resize when hidden tab becomes visible (sphinx-design sd-tab) */
+  var tab = el.closest(".sd-tab-content");
+  if (tab) {{
+    new MutationObserver(function() {{
+      if (tab.style.display !== "none") setTimeout(tryResize, 50);
+    }}).observe(tab, {{ attributes: true, attributeFilter: ["style"] }});
+  }}
+  /* Also resize on window resize and initial intersection */
+  window.addEventListener("resize", tryResize);
+  new IntersectionObserver(function(e) {{
+    if (e[0].isIntersecting) tryResize();
+  }}).observe(el);
+}})();
+</script>
+"""
+    else:
+        # Custom HTML structure without default styling
+        styled_html = (
+            f"<style>{brand_css}</style>"
+            f"{extra_style}{pre_html}{html_content}{extra_html}"
+            f"{brand_div}"
+        )
+
+    dest = Path(out_path)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(styled_html, encoding="utf-8")
+    return dest
+
+
+def normalize_modality_string(val: Any) -> str:
+    """Normalize modality string to standard format.
+
+    Handles various input formats and maps them to canonical modality names
+    like EEG, iEEG, MEG, fNIRS, EMG, fMRI, MRI, ECG, Behavior.
+
+    Parameters
+    ----------
+    val : Any
+        The raw modality value (typically a string from a DataFrame column).
+
+    Returns
+    -------
+    str
+        The normalized modality string, or "Unknown" if not recognized.
+
+    """
+    if not isinstance(val, str) or pd.isna(val):
+        return "Unknown"
+
+    lowered = val.lower().strip()
+    if lowered in ("nan", "none", ""):
+        return "Unknown"
+
+    # Priority checks - order matters (e.g., ieeg before eeg)
+    if "ieeg" in lowered or "intracranial" in lowered:
+        return "iEEG"
+    if "meg" in lowered:
+        return "MEG"
+    if "fnirs" in lowered:
+        return "fNIRS"
+    if "emg" in lowered:
+        return "EMG"
+    if "fmri" in lowered or "functional magnetic resonance" in lowered:
+        return "fMRI"
+    if "mri" in lowered:
+        return "MRI"
+    if "eeg" in lowered:
+        return "EEG"
+    if "ecg" in lowered:
+        return "ECG"
+    if "behavior" in lowered:
+        return "Behavior"
+
+    # Fallback: clean up the string (remove list brackets) and title-case
+    cleaned = (
+        val.replace("['", "").replace("']", "").replace('["', "").replace('"]', "")
+    )
+    return cleaned.title() if cleaned else "Unknown"
+
+
+# Default candidates for modality column detection
+_DEFAULT_MODALITY_CANDIDATES = (
+    "recording_modality",
+    "record_modality",
+    "experimental_modality",
+    "modality of exp",
+    "modality",
+    "record modality",
+)
+
+
+def detect_modality_column(
+    df: pd.DataFrame,
+    candidates: tuple[str, ...] | list[str] | None = None,
+) -> str | None:
+    """Detect the modality column from a DataFrame.
+
+    Searches through a list of candidate column names and returns
+    the first one found in the DataFrame.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to search for a modality column.
+    candidates : tuple[str, ...] | list[str] | None, optional
+        Ordered list of candidate column names to check. If None, uses
+        the default candidates: recording_modality, record_modality,
+        experimental_modality, modality of exp, modality, record modality.
+
+    Returns
+    -------
+    str | None
+        The name of the first matching column, or None if no match is found.
+
+    """
+    if candidates is None:
+        candidates = _DEFAULT_MODALITY_CANDIDATES
+
+    for candidate in candidates:
+        if candidate in df.columns:
+            return candidate
+    return None
+
+
+def read_dataset_csv(path: str | Path) -> pd.DataFrame:
+    """Read a dataset summary CSV file into a DataFrame.
+
+    Parameters
+    ----------
+    path : str | Path
+        Path to the CSV file.
+
+    Returns
+    -------
+    pd.DataFrame
+        The loaded DataFrame.
+
+    """
+    return pd.read_csv(path, index_col=False, header=0, skipinitialspace=True)

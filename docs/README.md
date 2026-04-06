@@ -4,11 +4,18 @@
 pip install -e ".[docs]"
 ```
 
-# Build
+# Build (fast, no examples)
 
 ```
 cd docs
-make build
+make html-noplot
+```
+
+# Build (full examples)
+
+```
+cd docs
+make html
 ```
 
 # Run and update in real time
@@ -16,4 +23,3 @@ make build
 ```
 sphinx-autobuild docs docs/_build/html
 ```
-

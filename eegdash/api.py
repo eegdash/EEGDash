@@ -56,6 +56,26 @@ class EEGDash:
         """
         self._client = get_client(api_url, database, auth_token)
 
+    def find_datasets(
+        self, query: dict[str, Any] | None = None, limit: int = 1000
+    ) -> list[Mapping[str, Any]]:
+        """Find datasets matching query.
+
+        Parameters
+        ----------
+        query : dict
+            Filter query.
+        limit : int
+            Max number of datasets to return.
+
+        Returns
+        -------
+        list of dict
+            List of dataset metadata documents.
+
+        """
+        return self._client.find_datasets(query, limit=limit)
+
     def find(
         self, query: dict[str, Any] = None, /, **kwargs
     ) -> list[Mapping[str, Any]]:
@@ -254,6 +274,29 @@ class EEGDash:
         """
         final_query = merge_query(query, require_query=True, **kwargs)
         return self._client.update_many(final_query, update)
+
+    def update_dataset(self, dataset_id: str, update: dict[str, Any]) -> int:
+        """Update metadata for a specific dataset (requires auth_token).
+
+        Parameters
+        ----------
+        dataset_id : str
+            The unique identifier of the dataset (e.g., 'ds002718').
+        update : dict
+            Dictionary of fields to update.
+
+        Returns
+        -------
+        int
+            Number of documents modified (0 or 1).
+
+        Examples
+        --------
+        >>> eeg = EEGDash(auth_token="...")
+        >>> eeg.update_dataset("ds002718", {"clinical.is_clinical": True})
+
+        """
+        return self._client.update_dataset(dataset_id, update)
 
 
 def __getattr__(name: str):

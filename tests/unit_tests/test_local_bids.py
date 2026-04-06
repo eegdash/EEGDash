@@ -2,7 +2,7 @@ from eegdash.local_bids import _normalize_modalities, discover_local_bids_record
 
 
 def test_normalize_modalities():
-    assert _normalize_modalities(None) == ["eeg"]
+    assert _normalize_modalities(None) == ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
     assert _normalize_modalities("eeg") == ["eeg"]
     assert _normalize_modalities(["eeg", "fmri"]) == ["eeg", "fmri"]
     assert _normalize_modalities("fnirs") == ["nirs"]  # Check alias
@@ -139,7 +139,7 @@ def test_normalize_modalities_none():
     from eegdash.local_bids import _normalize_modalities
 
     result = _normalize_modalities(None)
-    assert result == ["eeg"]
+    assert result == ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
 
 
 def test_normalize_modalities_list():

@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import urllib.request
 from collections import Counter
@@ -20,8 +21,6 @@ def human_readable_size(size_bytes):
     i = int(os.fstat(0).st_size).bit_length() // 10 if size_bytes > 0 else 0
     # The above line is wrong for generic size conversion, let's use a standard one
     # Re-implementing based on prepare_summary_tables.py logic or standard logic
-    import math
-
     if size_bytes == 0:
         return "0 B"
     i = int(math.floor(math.log(size_bytes, 1024)))
@@ -63,21 +62,11 @@ def fetch_datasets_from_api(
     return all_datasets
 
 
-def fetch_global_record_stats(database: str, dataset_ids: set[str] = None):
-    """Fetch nchans and sfreq aggregated stats for all datasets."""
-    print("Fetching global record statistics (aggregated endpoint)...")
-    url = f"{API_BASE_URL}/{database}/datasets/stats/records"
-
-    try:
-        with urllib.request.urlopen(url, timeout=120) as response:
-            resp_json = json.loads(response.read().decode("utf-8"))
-    except Exception as e:
-        print(f"Error fetching global stats: {e}")
-        return {}
-
-    data = resp_json.get("data", {})
-    print(f"Fetched stats for {len(data)} datasets")
-    return data
+def get_tag_value(tag_val):
+    """Extract tag value, handling both string and list formats from API."""
+    if isinstance(tag_val, list):
+        return tag_val[0] if tag_val else ""
+    return tag_val or ""
 
 
 def parse_freqs(value) -> str:
@@ -140,7 +129,6 @@ def main():
 
     # Fetch data
     api_datasets = fetch_datasets_from_api()
-    global_stats = fetch_global_record_stats(DEFAULT_DATABASE)
 
     new_rows = []
     for ds in api_datasets:
@@ -148,12 +136,14 @@ def main():
         if not ds_id:
             continue
 
-        ds_stats = global_stats.get(ds_id, {})
-        nchans_list = ds_stats.get("nchans_counts", [])
-        sfreq_list = ds_stats.get("sfreq_counts", [])
+        # Get nchans/sfreq directly from dataset
+        nchans_list = ds.get("nchans_counts") or []
+        sfreq_list = ds.get("sfreq_counts") or []
 
         # Construct row with API data
         # Note: Mapping keys to match existing CSV columns
+        tags = ds.get("tags", {}) or {}
+
         row = {
             "dataset": ds_id,
             "n_records": ds.get("total_files", 0) or 0,
@@ -161,14 +151,15 @@ def main():
             "n_tasks": len(ds.get("tasks", [])) or 0,
             "nchans_set": parse_freqs(nchans_list),
             "sampling_freqs": parse_freqs(sfreq_list),
-            # "duration_hours_total": 0.0, # Not readily available in summary?
+            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
             "source": ds.get("source", ""),
             "DatasetID": ds_id,  # Seems redundant but present in CSV
-            "Type Subject": ds.get("study_domain", ""),
-            "modality of exp": ", ".join(ds.get("modalities", []) or []),
-            "type of exp": ds.get("study_design", ""),
+            # Tags from API (handles both string and list formats)
+            "Type Subject": get_tag_value(tags.get("pathology")),
+            "modality of exp": get_tag_value(tags.get("modality")),
+            "type of exp": get_tag_value(tags.get("type")),
             "record_modality": ", ".join(ds.get("recording_modality", []) or [])
             if isinstance(ds.get("recording_modality"), list)
             else ds.get("recording_modality", ""),

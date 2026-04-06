@@ -1,7 +1,9 @@
 """Fetch OpenNeuro dataset IDs with metadata using requests library."""
 
 import argparse
+import json
 import sys
+import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -14,6 +16,54 @@ setup_paths()
 from eegdash.schemas import Dataset, create_dataset
 
 GRAPHQL_URL = "https://openneuro.org/crn/graphql"
+
+
+def fetch_date_from_doi(doi: str | None) -> str | None:
+    """Fetch publication date from DOI resolution as fallback.
+
+    When OpenNeuro GraphQL API doesn't return a created date,
+    we can resolve the DOI to get at least the publication year.
+
+    Parameters
+    ----------
+    doi : str or None
+        The DOI string (e.g., "10.18112/openneuro.ds002691.v1.1.0")
+
+    Returns
+    -------
+    str or None
+        ISO date string (YYYY-MM-DD) or None if resolution fails.
+        Note: DOI often only provides year, so month/day default to 01-01.
+
+    """
+    if not doi:
+        return None
+
+    # Clean DOI - remove "doi:" prefix if present
+    clean_doi = doi.replace("doi:", "").strip()
+    if not clean_doi:
+        return None
+
+    url = f"https://doi.org/{clean_doi}"
+    req = urllib.request.Request(
+        url, headers={"Accept": "application/vnd.citationstyles.csl+json"}
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            issued = data.get("issued", {})
+            date_parts = issued.get("date-parts", [[]])[0]
+            if date_parts:
+                year = date_parts[0]
+                month = date_parts[1] if len(date_parts) > 1 else 1
+                day = date_parts[2] if len(date_parts) > 2 else 1
+                return f"{year:04d}-{month:02d}-{day:02d}"
+    except Exception:
+        pass
+
+    return None
+
 
 # Query to list datasets by modality (for initial discovery)
 DATASETS_QUERY = """
@@ -241,6 +291,14 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
     # Extract senior author
     senior_author = metadata.get("seniorAuthor")
 
+    # Get dataset DOI for potential date fallback
+    dataset_doi = description.get("DatasetDOI")
+
+    # Get created date - try GraphQL first, then DOI resolution as fallback
+    created_at = raw.get("created") or raw.get("publishDate") or metadata.get("created")
+    if not created_at and dataset_doi:
+        created_at = fetch_date_from_doi(dataset_doi)
+
     return create_dataset(
         dataset_id=dataset_id,
         name=description.get("Name") or raw.get("name"),
@@ -254,7 +312,7 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
         license=description.get("License"),
         authors=description.get("Authors") or [],
         funding=funding_list,
-        dataset_doi=description.get("DatasetDOI"),
+        dataset_doi=dataset_doi,
         associated_paper_doi=paper_doi,
         tasks=tasks_clean,
         sessions=summary.get("sessions") or [],
@@ -267,7 +325,7 @@ def extract_dataset_metadata(raw: dict, modality: str) -> Dataset:
         ages=ages_int,
         species=metadata.get("species"),
         source_url=openneuro_url,
-        dataset_created_at=raw.get("created") or metadata.get("created"),
+        dataset_created_at=created_at,
         dataset_modified_at=snapshot.get("created"),
         senior_author=senior_author,
         contact_info=metadata.get("adminUsers"),
@@ -365,22 +423,25 @@ def fetch_datasets_with_details(
     dataset_ids: list[str] | None = None,
 ) -> list[dict]:
     """Fetch all OpenNeuro datasets with full metadata."""
-    # First, collect all dataset IDs
-    print("Phase 1: Discovering datasets...")
-    dataset_modalities = {}
-    for did, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
-        # Filter specific IDs if requested
-        if dataset_ids and did not in dataset_ids:
-            continue
+    # If specific dataset IDs are provided, skip discovery and fetch directly
+    if dataset_ids:
+        print(f"Fetching {len(dataset_ids)} specified datasets directly...")
+        found_ids = dataset_ids
+        # Use "eeg" as default modality, will be overwritten by actual metadata
+        dataset_modalities = {did: "eeg" for did in dataset_ids}
+    else:
+        # First, collect all dataset IDs via discovery
+        print("Phase 1: Discovering datasets...")
+        dataset_modalities = {}
+        for did, modality in fetch_dataset_ids(page_size=page_size, timeout=timeout):
+            # Track modality (prefer more specific: ieeg > eeg > meg)
+            if did not in dataset_modalities:
+                dataset_modalities[did] = modality
 
-        # Track modality (prefer more specific: ieeg > eeg > meg)
-        if did not in dataset_modalities:
-            dataset_modalities[did] = modality
-
-    found_ids = list(dataset_modalities.keys())
-    if limit:
-        found_ids = found_ids[:limit]
-    print(f"\nFound {len(found_ids)} unique datasets (limit: {limit})")
+        found_ids = list(dataset_modalities.keys())
+        if limit:
+            found_ids = found_ids[:limit]
+        print(f"\nFound {len(found_ids)} unique datasets (limit: {limit})")
 
     # Then fetch full details in batches
     print(f"\nPhase 2: Fetching full metadata (batch size: {batch_size})...")

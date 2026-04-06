@@ -1,7 +1,7 @@
-"""Feature bank public API exports.
+r"""Feature bank public API exports.
 
-This module consolidates and re-exports the feature extractors and feature
-functions so users can import them directly from
+This module consolidates and re-exports the feature extractors and
+feature functions so users can import them directly from
 ``eegdash.features.feature_bank``.
 """
 
@@ -27,7 +27,9 @@ from .dimensionality import (
     dimensionality_petrosian_fractal_dim,
 )
 from .signal import (
+    SignalOutputType,
     signal_decorrelation_time,
+    signal_filter_preprocessor,
     signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
@@ -79,6 +81,8 @@ __all__ = [
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
     # Signal
+    "SignalOutputType",
+    "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",
     "signal_variance",

@@ -345,7 +345,7 @@ X_train, y_train = train_df.drop("target", axis=1), train_df["target"]
 val_df = val_ds.to_dataframe(include_target=True)
 X_val, y_val = val_df.drop("target", axis=1), val_df["target"]
 
-clf = LGBMClassifier()
+clf = LGBMClassifier(n_jobs=1)
 clf.fit(X_train, y_train)
 
 y_hat_train = clf.predict(X_train)

@@ -18,8 +18,10 @@ import plotly.graph_objects as go
 
 try:  # Support execution as a script or as a package module
     from .colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+    from .utils import build_and_export_html
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+    from utils import build_and_export_html  # type: ignore
 
 DEFAULT_COLUMNS = ["Type Subject", "modality of exp", "type of exp"]
 __all__ = ["generate_dataset_sankey", "build_sankey"]
@@ -103,10 +105,8 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
                 node_index[(col, val)] = len(node_labels)
                 node_labels.append(val)
 
-                # Use "Clinical" color for specific pathologies
+                # Get color from map - each condition has its own color
                 node_color = color_map.get(val, "#94a3b8")
-                if col == "Type Subject" and val not in ["Healthy", "Unknown"]:
-                    node_color = color_map.get("Clinical", "#94a3b8")
                 node_colors.append(node_color)
 
     sources: list[int] = []
@@ -153,11 +153,6 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
 
                 # Assign color to the link based on the source node
                 source_color = source_color_map.get(source_val, "#94a3b8")
-                if col_from == "Type Subject" and source_val not in [
-                    "Healthy",
-                    "Unknown",
-                ]:
-                    source_color = source_color_map.get("Clinical", "#94a3b8")
                 link_colors.append(hex_to_rgba(source_color))
 
     # Add counts (subjects and datasets) and percentages to the first column labels
@@ -192,7 +187,13 @@ def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
     )
 
 
-def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
+def build_sankey(
+    df: pd.DataFrame,
+    columns: Sequence[str],
+    *,
+    width: int = 1260,
+    height: int = 1100,
+) -> go.Figure:
     (
         labels,
         colors,
@@ -226,10 +227,9 @@ def build_sankey(df: pd.DataFrame, columns: Sequence[str]) -> go.Figure:
 
     fig.update_layout(
         font=dict(size=14),
-        height=900,
-        width=None,
+        height=height,
         autosize=True,
-        margin=dict(t=40, b=40, l=40, r=40),
+        margin=dict(t=50, b=60, l=40, r=40),
         annotations=[
             dict(
                 x=0,
@@ -279,28 +279,37 @@ def generate_dataset_sankey(
     out_html: str | Path,
     *,
     columns: Sequence[str] | None = None,
+    width: int = 1260,
+    height: int = 1100,
 ) -> Path:
     """Generate the dataset Sankey diagram and write it to *out_html*."""
     selected_columns = list(columns) if columns is not None else list(DEFAULT_COLUMNS)
     prepared = _prepare_dataframe(df, selected_columns)
-    fig = build_sankey(prepared, selected_columns)
+    fig = build_sankey(prepared, selected_columns, width=width, height=height)
 
-    out_path = Path(out_html)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    html_content = fig.to_html(
-        full_html=False,
-        include_plotlyjs=False,
+    extra_style = (
+        f'<div id="dataset-sankey-wrapper" style="width: 100%; height: {height}px;">'
+    )
+    extra_html = """</div>
+<script>
+    window.addEventListener('load', function() {
+        window.dispatchEvent(new Event('resize'));
+    });
+</script>
+"""
+    return build_and_export_html(
+        fig,
+        out_html,
         div_id="dataset-sankey",
         config={
             "responsive": True,
             "displaylogo": False,
             "modeBarButtonsToRemove": ["lasso2d", "select2d"],
         },
+        extra_style=extra_style,
+        extra_html=extra_html,
+        include_default_style=False,
     )
-
-    out_path.write_text(html_content, encoding="utf-8")
-    return out_path
 
 
 def parse_args() -> argparse.Namespace:

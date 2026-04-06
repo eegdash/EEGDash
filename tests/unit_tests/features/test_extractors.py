@@ -106,10 +106,15 @@ def feature_extractor(feature_dict):
     return feats
 
 
+@pytest.mark.benchmark(group="features")
 def test_feature_extraction_benchmark(
     benchmark, windows_ds, feature_extractor, batch_size=512, n_jobs=1
 ):
-    """Benchmark feature extraction function."""
+    """Benchmark feature extraction function.
+
+    Note: This test requires pytest-benchmark plugin. Run with:
+        pytest --benchmark-enable tests/unit_tests/features/test_extractors.py
+    """
     feats = benchmark(
         extract_features,
         windows_ds,
@@ -137,7 +142,13 @@ def test_feature_extractor_basic():
             feature_extractors={"mean": lambda x: np.mean(x, axis=-1)}
         )
         data = np.random.randn(2, 4, 100)
-        feats = ext(data, _batch_size=data.shape[0], _ch_names=["C1", "C2", "C3", "C4"])
+        feats = ext(
+            data,
+            _metadata={
+                "batch_size": data.shape[0],
+                "info": {"ch_names": ["C1", "C2", "C3", "C4"]},
+            },
+        )
         assert "mean" in feats
     except Exception as e:
         print(f"Error in test_feature_extractor_basic: {e}")
@@ -149,7 +160,13 @@ def test_features_pipeline_basic():
     # Use FeatureExtractor instead of FeaturesPipeline
     ext = FeatureExtractor({"mean": lambda x: np.mean(x, axis=-1)})
     data = np.random.randn(2, 4, 100)
-    feats = ext(data, _batch_size=data.shape[0], _ch_names=["C1", "C2", "C3", "C4"])
+    feats = ext(
+        data,
+        _metadata={
+            "batch_size": data.shape[0],
+            "info": {"ch_names": ["C1", "C2", "C3", "C4"]},
+        },
+    )
     assert "mean" in feats
 
 
@@ -178,7 +195,7 @@ def test_extractors_gaps():
             pass
 
     mt = MyTrainable()
-    with pytest.raises(RuntimeError, match="fitted first"):
+    with pytest.raises(RuntimeError, match="trained first"):
         mt()
     mt.fit()
     # Now it shouldn't raise RuntimeError, but maybe it fails because it's an ABC without __call__ implementation in parent?
@@ -242,7 +259,9 @@ def test_extractors_more():
     fe_pre = FeatureExtractor({"feat": f1}, preprocessor=partial(pre, a=2))
     assert "preprocess_kwargs" in fe_pre.features_kwargs
     # 181: call with preprocessor
-    fe_pre(np.array([[[1.0]]]), _batch_size=1, _ch_names=["ch1"])
+    fe_pre(
+        np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
+    )
     fe_inner = FeatureExtractor({"inner": f1})
     fe_outer = FeatureExtractor({"outer": fe_inner})
     assert "outer" in fe_outer.features_kwargs
@@ -320,7 +339,7 @@ def test_trainable_feature_interface():
 
     # Test fit method
     tf.fit()
-    assert tf._is_fitted
+    assert tf._is_trained
 
 
 def test_feature_extractor_with_trainable():
@@ -404,7 +423,7 @@ def test_feature_extractor_partial_fit_non_trainable():
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
-    fe.partial_fit(np.array([[1, 2, 3]]))
+    fe.partial_fit(np.array([[1, 2, 3]]), _metadata={})
 
 
 def test_feature_extractor_fit_non_trainable():
@@ -490,5 +509,5 @@ def test_feature_extractor_preprocess_none():
     feat.parent_extractor_type = [None]
 
     extractor = FeatureExtractor({"feat": feat}, preprocessor=None)
-    result = extractor.preprocess(np.array([1, 2, 3]))
+    result = extractor.preprocess(np.array([1, 2, 3]), _metadata={})
     assert isinstance(result, tuple)

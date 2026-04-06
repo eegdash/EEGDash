@@ -78,6 +78,9 @@ def iter_org_repos(
                     "default_branch": repo.default_branch,
                     "pushed_at": _to_iso(getattr(repo, "pushed_at", None)),
                     "html_url": getattr(repo, "html_url", None),
+                    "stargazers_count": getattr(repo, "stargazers_count", None),
+                    "forks_count": getattr(repo, "forks_count", None),
+                    "watchers_count": getattr(repo, "watchers_count", None),
                 }
             return
         except Exception:
@@ -126,6 +129,9 @@ def iter_org_repos(
                 "default_branch": repo.get("default_branch"),
                 "pushed_at": repo.get("pushed_at"),
                 "html_url": repo.get("html_url"),
+                "stargazers_count": repo.get("stargazers_count"),
+                "forks_count": repo.get("forks_count"),
+                "watchers_count": repo.get("watchers_count"),
             }
 
         link_header = response.headers.get("Link", "")

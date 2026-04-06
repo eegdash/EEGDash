@@ -536,9 +536,10 @@ modalityPacks.forEach(mp => {{
         // Only label top-N datasets per modality (marked by Python)
         if (ds.showLabel && node.r > 12) {{
             const lbl = ds.name.toUpperCase();
-            labelCircles.push({{ x: ox + node.x, y: oy + node.y + node.r + 16, r: node.r,
+            labelCircles.push({{ x: ox + node.x, y: oy + node.y, r: node.r,
                 label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
-                fontSize: Math.max(16, Math.min(24, node.r / 1.8)) }});
+                inside: true,
+                fontSize: Math.max(14, Math.min(22, node.r / 2.2)) }});
         }}
     }});
 
@@ -677,12 +678,12 @@ function draw() {{
         ctx.globalAlpha = alpha;
         if (lc.isModality) {{
             // Large bold modality title — primary visual anchor
-            ctx.font = "800 32px Inter, system-ui, sans-serif";
+            ctx.font = "800 40px Inter, system-ui, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             // White halo for contrast
             ctx.strokeStyle = "rgba(255,255,255,0.9)";
-            ctx.lineWidth = 6;
+            ctx.lineWidth = 8;
             ctx.lineJoin = "round";
             const titleText = lc.label + " (" + (lc.count || "") + ")";
             ctx.strokeText(titleText, lc.x, lc.y);
@@ -693,10 +694,10 @@ function draw() {{
             ctx.font = "700 " + fs + "px Inter, system-ui, sans-serif";
             ctx.fillStyle = lc.color;
             ctx.textAlign = "center";
-            ctx.textBaseline = "top";
+            ctx.textBaseline = lc.inside ? "middle" : "top";
             // White halo for readability
-            ctx.strokeStyle = "rgba(255,255,255,0.9)";
-            ctx.lineWidth = 4;
+            ctx.strokeStyle = "rgba(255,255,255,0.92)";
+            ctx.lineWidth = 5;
             ctx.lineJoin = "round";
             ctx.strokeText(lc.label, lc.x, lc.y);
             ctx.fillText(lc.label, lc.x, lc.y);

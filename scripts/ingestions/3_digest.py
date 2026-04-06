@@ -705,8 +705,9 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes (includes git-annex symlink sizes)
-    size_bytes = metadata.get("size_bytes")
+    # Extract size_bytes — prefer source API value, then manifest total_size,
+    # then compute from local files (resolving git-annex pointers).
+    size_bytes = metadata.get("size_bytes") or metadata.get("total_size")
     if size_bytes is None and bids_root.exists():
         size_bytes = sum(
             get_file_size(f)

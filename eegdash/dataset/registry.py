@@ -344,23 +344,35 @@ EXCLUDED_DATASETS = {
 
 
 def fetch_datasets_from_api(
-    api_url: str = "https://data.eegdash.org/api", database: str = "eegdash"
+    api_url: str = "https://data.eegdash.org/api",
+    database: str = "eegdash",
+    force_refresh: bool = False,
 ) -> pd.DataFrame:
     """Fetch dataset summaries from API and return as DataFrame matching CSV structure.
 
     Note: This function makes a single API call to /datasets/summary.
     Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
     via the compute-stats endpoint, so no separate stats call is needed.
+
+    Parameters
+    ----------
+    api_url : str
+        Base API URL.
+    database : str
+        Database name.
+    force_refresh : bool
+        If True, bypass the local cache and always fetch from the API.
     """
     cache_dir = get_default_cache_dir()
     cache_file = cache_dir / "dataset_summary.csv"
 
-    # Try loading from cache first
-    try:
-        if cache_file.exists():
-            return pd.read_csv(cache_file, comment="#", skip_blank_lines=True)
-    except Exception:
-        pass
+    # Try loading from cache first (unless forced refresh)
+    if not force_refresh:
+        try:
+            if cache_file.exists():
+                return pd.read_csv(cache_file, comment="#", skip_blank_lines=True)
+        except Exception:
+            pass
 
     limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
 

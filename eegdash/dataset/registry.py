@@ -111,9 +111,8 @@ def register_openneuro_datasets(
     df = pd.DataFrame()
     if from_api:
         try:
-            df = _fetch_datasets_from_api(api_url, database)
+            df = fetch_datasets_from_api(api_url, database)
         except Exception:
-            # Fallback to CSV if API fails, or empty if no CSV provided
             pass
 
     if df.empty and summary_file:
@@ -480,95 +479,6 @@ def fetch_datasets_from_api(
             pass
 
     return df
-
-
-def _fetch_datasets_from_api(api_url: str, database: str) -> pd.DataFrame:
-    """Fetch dataset summaries from API and return as DataFrame matching CSV structure."""
-    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
-    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
-    try:
-        with urllib.request.urlopen(url, timeout=10) as response:
-            data = json.loads(response.read().decode("utf-8"))
-    except Exception:
-        return pd.DataFrame()
-
-    if not data.get("success"):
-        return pd.DataFrame()
-
-    datasets = data.get("data", [])
-    rows = []
-    for ds in datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-        # Filter test datasets and excluded ones
-        if (
-            ds_id.lower() in ("test", "test_dataset")
-            or ds_id.upper() in EXCLUDED_DATASETS
-        ):
-            continue
-
-        # Extract demographics
-        demographics = ds.get("demographics", {}) or {}
-        recording_modality = ds.get("recording_modality", []) or []
-        if isinstance(recording_modality, str):
-            recording_modality = [recording_modality]
-
-        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
-        tags = ds.get("tags", {}) or {}
-        clinical = ds.get("clinical", {}) or {}
-        paradigm = ds.get("paradigm", {}) or {}
-
-        # Use tags.pathology if available, otherwise fallback to clinical info
-        pathology_list = tags.get("pathology", [])
-        if pathology_list and isinstance(pathology_list, list):
-            type_subject = ", ".join(pathology_list)
-        elif clinical.get("is_clinical"):
-            type_subject = clinical.get("purpose") or "Unspecified Clinical"
-        elif clinical.get("is_clinical") is False:
-            type_subject = "Healthy"
-        else:
-            type_subject = ""
-
-        # Use tags.modality if available, otherwise fallback to paradigm.modality
-        modality_list = tags.get("modality", [])
-        if modality_list and isinstance(modality_list, list):
-            paradigm_modality = ", ".join(modality_list)
-        else:
-            paradigm_modality = paradigm.get("modality") or ""
-
-        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
-        type_list = tags.get("type", [])
-        if type_list and isinstance(type_list, list):
-            cognitive_domain = ", ".join(type_list)
-        else:
-            cognitive_domain = paradigm.get("cognitive_domain") or ""
-
-        # Map API fields to expected CSV columns
-        row = {
-            "dataset": ds_id,
-            "n_subjects": demographics.get("subjects_count", 0) or 0,
-            "n_records": ds.get("total_files", 0) or 0,
-            "n_tasks": len(ds.get("tasks", []) or []),
-            # IMPORTANT: Keep these columns separate!
-            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
-            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
-            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
-            "type of exp": cognitive_domain,  # cognitive domain only
-            "Type Subject": type_subject,
-            "duration_hours_total": 0.0,
-            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
-            "record_modality": ", ".join(recording_modality),
-            # Use computed_title if available (populated by compute-stats endpoint)
-            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
-            "license": ds.get("license", ""),
-            "doi": ds.get("dataset_doi", ""),
-            # internal/extra fields
-            "source": ds.get("source") or "unknown",
-            # Citation metrics from NEMAR
-            "nemar_citation_count": ds.get("nemar_citation_count"),
-        }
-        rows.append(row)
-
-    return pd.DataFrame(rows)
 
 
 def _normalize_tag_value(val):

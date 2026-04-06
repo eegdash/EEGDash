@@ -485,7 +485,7 @@ small.forEach(mp => {{
 }});
 
 // Place medium modalities in a row below with generous spacing
-const mediumGap = gap + 20;
+const mediumGap = gap + 60;
 const mediumTotalW = medium.reduce((s, mp) => s + mp.size, 0) + (medium.length - 1) * mediumGap;
 let medX = bigOffsetX + (biggest.size - mediumTotalW) / 2;
 const medY = biggest.oy + biggest.size + gap + 40;

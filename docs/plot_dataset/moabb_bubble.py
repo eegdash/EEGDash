@@ -490,24 +490,21 @@ const bigOffsetX = 320;
 biggest.ox = bigOffsetX;
 biggest.oy = gap + 40;
 
-// Place small modalities top-right of biggest
-let smallX = bigOffsetX + biggest.size + gap;
-let smallY = biggest.oy;
-small.forEach(mp => {{
-    mp.ox = smallX;
-    mp.oy = smallY;
-    smallY += mp.size + gap;
+// Place medium modalities (iEEG, MEG) to the right of biggest, stacked vertically
+const sideGap = gap + 20;
+const sideX = bigOffsetX + biggest.size + gap;
+let sideY = biggest.oy;
+medium.forEach(mp => {{
+    mp.ox = sideX;
+    mp.oy = sideY;
+    sideY += mp.size + sideGap;
 }});
 
-// Place medium modalities in a row below with generous spacing
-const mediumGap = gap + 60;
-const mediumTotalW = medium.reduce((s, mp) => s + mp.size, 0) + (medium.length - 1) * mediumGap;
-let medX = bigOffsetX + (biggest.size - mediumTotalW) / 2;
-const medY = biggest.oy + biggest.size + gap + 40;
-medium.forEach(mp => {{
-    mp.ox = Math.max(gap, medX);
-    mp.oy = medY + 40;
-    medX += mp.size + mediumGap;
+// Place small modalities (EMG, fNIRS) below the medium ones on the right
+small.forEach(mp => {{
+    mp.ox = sideX;
+    mp.oy = sideY;
+    sideY += mp.size + sideGap;
 }});
 
 // ---- Flatten all circles into arrays for canvas rendering ----
@@ -530,7 +527,7 @@ modalityPacks.forEach(mp => {{
         strokeColor: mod.color, strokeDash: true, modality: mod.name }});
 
     // Label position for modality title — large, bold, prominent
-    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 24, r: 0,
+    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 30, r: 0,
         label: mod.name, color: mod.color, isModality: true, modality: mod.name,
         count: mod.children.length }});
 
@@ -555,7 +552,7 @@ modalityPacks.forEach(mp => {{
             labelCircles.push({{ x: ox + node.x, y: oy + node.y, r: node.r,
                 label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
                 inside: true,
-                fontSize: Math.max(14, Math.min(22, node.r / 2.2)) }});
+                fontSize: Math.max(16, Math.min(26, node.r / 1.8)) }});
         }}
     }});
 
@@ -694,7 +691,7 @@ function draw() {{
         ctx.globalAlpha = alpha;
         if (lc.isModality) {{
             // Large bold modality title — primary visual anchor
-            ctx.font = "800 40px Inter, system-ui, sans-serif";
+            ctx.font = "800 48px Inter, system-ui, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             // White halo for contrast

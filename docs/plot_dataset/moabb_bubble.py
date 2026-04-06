@@ -9,10 +9,10 @@ This module creates a MOABB-inspired visualization using D3.js circle packing:
 - Datasets are **grouped by modality** into distinct regional clusters
 
 Performance optimizations:
-- Limited bubbles per dataset (max 50) for faster rendering
-- CSS-based hover states for GPU-accelerated transitions
-- Grouped SVG elements by dataset for efficient selection
-- Reduced force simulation iterations
+- Canvas-based rendering for 100K+ circles without DOM overhead
+- D3 quadtree for O(log n) hover hit-testing
+- Simple row-based grid layout (no force simulation)
+- D3 pack layout computed once, rendered as pixels
 
 Inspired by the MOABB plotting style and hierarchical data visualizations.
 """
@@ -46,8 +46,8 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
 
 __all__ = ["generate_moabb_bubble"]
 
-# Maximum bubbles per dataset - reduced for performance
-MAX_BUBBLES_PER_DATASET = 50
+# Maximum bubbles per dataset — canvas rendering handles large counts easily
+MAX_BUBBLES_PER_DATASET = 100
 
 # Modality display order (for consistent regional positioning)
 MODALITY_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "EMG", "Other"]
@@ -283,31 +283,19 @@ def generate_moabb_bubble(
 
     hierarchy_json = json.dumps(hierarchy)
 
-    # Generate optimized HTML
+    # Generate canvas-based HTML
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOABB Bubble Chart</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script defer src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: Inter, system-ui, -apple-system, sans-serif; background: #fff; }}
-        #moabb-bubble {{ width: 100%; height: {height}px; display: block; }}
-
-        /* CSS-based hover states for GPU acceleration */
-        .dataset-group {{ transition: opacity 0.12s ease-out; }}
-        .dataset-group.dimmed {{ opacity: 0.15; }}
-        .dataset-group.highlighted .bubble {{
-            stroke-width: 2.5px;
-            transform: scale(1.08);
-            transform-origin: center;
-        }}
-        .bubble {{
-            transition: transform 0.1s ease-out, stroke-width 0.1s ease-out;
-            will-change: transform, opacity;
-        }}
+        #moabb-canvas {{ display: block; cursor: grab; }}
+        #moabb-canvas:active {{ cursor: grabbing; }}
 
         .tooltip {{
             position: absolute;
@@ -342,12 +330,14 @@ def generate_moabb_bubble(
         .legend-item {{ color: #4b5563; font-size: 13px; }}
 
         .modality-legend {{
-            position: absolute; top: 12px; right: 12px;
+            position: absolute; top: 200px; left: 12px;
             background: rgba(255,255,255,0.95);
-            padding: 14px 18px; border-radius: 10px;
+            padding: 10px 14px; border-radius: 10px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            max-height: calc(100% - 220px);
+            overflow-y: auto;
         }}
         .modality-legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 15px; }}
         .modality-legend-item {{ display: flex; align-items: center; margin: 5px 0; cursor: pointer; font-size: 13px; transition: opacity 0.15s; }}
@@ -387,9 +377,6 @@ def generate_moabb_bubble(
         .search-clear:hover {{ color: #6b7280; }}
         .search-results {{ font-size: 12px; color: #6b7280; margin-left: 8px; }}
 
-        .dataset-group.search-match .bubble {{ stroke: #fbbf24 !important; stroke-width: 3px !important; }}
-        .dataset-group.search-dim {{ opacity: 0.1 !important; }}
-
         .hint {{
             position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
             background: rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 6px;
@@ -399,9 +386,9 @@ def generate_moabb_bubble(
     </style>
 </head>
 <body>
-    <div id="container" style="position:relative;width:{width}px;height:{height}px;margin:0 auto;">
-        <svg id="moabb-bubble"></svg>
-        <div class="tooltip"></div>
+    <div id="container" style="position:relative;width:100%;max-width:{width}px;height:{height}px;margin:0 auto;overflow:hidden;">
+        <canvas id="moabb-canvas" width="{width}" height="{height}"></canvas>
+        <div class="tooltip" id="tooltip"></div>
         <div class="legend">
             <div class="legend-title">Legend</div>
             <div class="legend-item"><b>Circle size</b>: log(records/subject)</div>
@@ -411,204 +398,453 @@ def generate_moabb_bubble(
         </div>
         <div class="modality-legend" id="modality-legend"></div>
         <div class="search-box">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon">&#128269;</span>
             <input type="text" id="search-input" placeholder="Search datasets...">
-            <span class="search-clear" id="search-clear">×</span>
+            <span class="search-clear" id="search-clear">&times;</span>
             <span class="search-results" id="search-results"></span>
         </div>
         <div class="controls">
             <button id="zoom-in" title="Zoom in">+</button>
-            <button id="zoom-out" title="Zoom out">−</button>
-            <button id="zoom-reset" title="Reset view">⌂</button>
+            <button id="zoom-out" title="Zoom out">&minus;</button>
+            <button id="zoom-reset" title="Reset view">&#8962;</button>
         </div>
-        <div class="hint"><b>Hover</b> to highlight · <b>Scroll/buttons</b> to zoom · <b>Click</b> to open · <b>Click legend</b> to filter</div>
+        <div class="hint"><b>Hover</b> to highlight &middot; <b>Scroll/buttons</b> to zoom &middot; <b>Click</b> to open &middot; <b>Click legend</b> to filter</div>
     </div>
 
 <script>
+// Wait for D3 to load (deferred script)
+function init() {{
+if (typeof d3 === "undefined") {{ setTimeout(init, 50); return; }}
+
 const data = {hierarchy_json};
-const width = {width}, height = {height};
+const W = {width}, H = {height};
+const dpr = window.devicePixelRatio || 1;
+const canvas = document.getElementById("moabb-canvas");
+const ctx = canvas.getContext("2d");
 
-const svg = d3.select("#moabb-bubble").attr("width", width).attr("height", height);
-const g = svg.append("g");
-const tooltip = d3.select(".tooltip");
+// HiDPI setup
+canvas.width = W * dpr;
+canvas.height = H * dpr;
+canvas.style.width = W + "px";
+canvas.style.height = H + "px";
+ctx.scale(dpr, dpr);
 
-// Calculate totals
-const totalDatasets = data.children.reduce((sum, m) => sum + m.children.length, 0);
-const totalSubjects = data.children.reduce((sum, m) =>
-    sum + m.children.reduce((s, ds) => s + ds.n_subjects, 0), 0);
+const tooltip = document.getElementById("tooltip");
+
+// ---- Compute totals ----
+const totalDatasets = data.children.reduce((s, m) => s + m.children.length, 0);
+const totalSubjects = data.children.reduce((s, m) =>
+    s + m.children.reduce((a, ds) => a + ds.n_subjects, 0), 0);
 document.getElementById("total-datasets").innerHTML =
-    `<b>${{totalDatasets}}</b> datasets · <b>${{totalSubjects.toLocaleString()}}</b> subjects`;
+    "<b>" + totalDatasets + "</b> datasets &middot; <b>" + totalSubjects.toLocaleString() + "</b> subjects";
 
-// Build legend with filtering
-const legendContainer = d3.select("#modality-legend");
-legendContainer.append("div").attr("class", "modality-legend-title").text("Recording Modality");
-const hiddenModalities = new Set();
-
-data.children.forEach(m => {{
-    const item = legendContainer.append("div")
-        .attr("class", "modality-legend-item")
-        .attr("data-modality", m.name);
-    item.append("div").attr("class", "modality-swatch").style("background", m.color);
-    item.append("span").text(`${{m.name}} (${{m.children.length}})`);
-
-    item.on("click", function() {{
-        const modality = m.name;
-        if (hiddenModalities.has(modality)) {{
-            hiddenModalities.delete(modality);
-            d3.select(this).classed("hidden", false);
-            g.selectAll(`[data-modality="${{modality}}"]`).style("display", null);
-        }} else {{
-            hiddenModalities.add(modality);
-            d3.select(this).classed("hidden", true);
-            g.selectAll(`[data-modality="${{modality}}"]`).style("display", "none");
-        }}
-    }});
-}});
-
-// Pack each modality separately
+// ---- Pack each modality with D3 ----
 const modalityPacks = [];
 data.children.forEach(modality => {{
     const h = d3.hierarchy({{ name: modality.name, children: modality.children }})
         .sum(d => d.value || 0).sort((a, b) => b.value - a.value);
     const size = Math.sqrt(h.value) * 2.8 + 80;
-    const pack = d3.pack().size([size, size]).padding(d => d.depth === 0 ? 15 : d.depth === 1 ? 6 : 1.5);
-    modalityPacks.push({{ modality, packed: pack(h), size, radius: size / 2 }});
+    const pack = d3.pack().size([size, size])
+        .padding(d => d.depth === 0 ? 15 : d.depth === 1 ? 6 : 1.5);
+    modalityPacks.push({{ modality: modality, packed: pack(h), size: size, radius: size / 2 }});
 }});
 
-// Position modalities with force simulation (reduced iterations)
-const sim = d3.forceSimulation(modalityPacks)
-    .force("x", d3.forceX(width / 2).strength(0.06))
-    .force("y", d3.forceY(height / 2).strength(0.06))
-    .force("collide", d3.forceCollide(d => d.radius + 25).strength(0.85))
-    .stop();
-for (let i = 0; i < 150; i++) sim.tick();
-
-// Render
+// ---- Simple row-based grid layout (no force simulation) ----
+modalityPacks.sort((a, b) => b.size - a.size);
+const gap = 30;
+let curX = gap, curY = gap, rowH = 0;
 modalityPacks.forEach(mp => {{
-    const mg = g.append("g").attr("data-modality", mp.modality.name)
-        .attr("transform", `translate(${{mp.x - mp.size/2}},${{mp.y - mp.size/2}})`);
+    if (curX + mp.size > W * 2 && curX > gap) {{
+        curX = gap;
+        curY += rowH + gap + 20;
+        rowH = 0;
+    }}
+    mp.ox = curX;
+    mp.oy = curY + 20;
+    curX += mp.size + gap;
+    rowH = Math.max(rowH, mp.size);
+}});
 
-    // Background circle
-    mg.append("circle").attr("cx", mp.size/2).attr("cy", mp.size/2).attr("r", mp.radius + 15)
-        .attr("fill", mp.modality.bgColor).attr("stroke", mp.modality.color)
-        .attr("stroke-width", 1.5).attr("stroke-dasharray", "4,4").style("pointer-events", "none");
+// ---- Flatten all circles into arrays for canvas rendering ----
+const allCircles = [];   // {{x, y, r, color, alpha, dsIdx}}
+const allDatasets = [];   // {{name, title, modality, color, ...metadata}}
+const dsNameToIdx = {{}};
+const labelCircles = [];  // {{x, y, r, label, modality}}
 
-    // Modality label
-    mg.append("text").attr("x", mp.size/2).attr("y", -12).attr("text-anchor", "middle")
-        .attr("font-size", "16px").attr("font-weight", "700").attr("fill", mp.modality.color)
-        .text(mp.modality.name);
+const hiddenModalities = new Set();
+let highlightedDs = -1;
+let searchMatches = null;  // null = no search active
+
+modalityPacks.forEach(mp => {{
+    const ox = mp.ox, oy = mp.oy;
+    const mod = mp.modality;
+
+    // Modality background region
+    allCircles.push({{ x: ox + mp.size / 2, y: oy + mp.size / 2, r: mp.radius + 15,
+        color: mod.bgColor, alpha: 1, dsIdx: -1, isBg: true,
+        strokeColor: mod.color, strokeDash: true, modality: mod.name }});
+
+    // Label position for modality title
+    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 12, r: 0,
+        label: mod.name, color: mod.color, isModality: true, modality: mod.name }});
 
     const datasetNodes = mp.packed.descendants().filter(d => d.depth === 1);
     const subjectNodes = mp.packed.descendants().filter(d => d.depth === 2);
 
-    // Group bubbles by dataset for efficient hover
-    const datasetGroups = {{}};
+    // Build dataset index
+    datasetNodes.forEach(node => {{
+        const ds = node.data;
+        if (dsNameToIdx[ds.name] === undefined) {{
+            dsNameToIdx[ds.name] = allDatasets.length;
+            allDatasets.push({{ name: ds.name, title: ds.title || "", modality: mod.name,
+                color: ds.color, alpha: ds.alpha, url: ds.url,
+                n_subjects: ds.n_subjects, n_sessions: ds.n_sessions,
+                n_records: ds.n_records, nchans: ds.nchans, sfreq: ds.sfreq,
+                size: ds.size, records_per_subject: ds.records_per_subject }});
+        }}
+        // Dataset label if big enough
+        if (node.r > 25 && ds.n_subjects > 3) {{
+            const lbl = ds.name.length > 10 ? ds.name.substring(0, 10).toUpperCase() : ds.name.toUpperCase();
+            labelCircles.push({{ x: ox + node.x, y: oy + node.y, r: node.r,
+                label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
+                fontSize: Math.max(9, Math.min(12, node.r / 3)) }});
+        }}
+    }});
+
     subjectNodes.forEach(node => {{
         const ds = node.parent.data;
-        if (!datasetGroups[ds.name]) datasetGroups[ds.name] = {{ ds, nodes: [] }};
-        datasetGroups[ds.name].nodes.push(node);
-    }});
-
-    Object.values(datasetGroups).forEach(({{ ds, nodes }}) => {{
-        const dg = mg.append("g").attr("class", "dataset-group").attr("data-dataset", ds.name);
-
-        nodes.forEach(node => {{
-            dg.append("circle").attr("class", "bubble")
-                .attr("cx", node.x).attr("cy", node.y).attr("r", Math.max(node.r, 2))
-                .attr("fill", ds.color).attr("fill-opacity", ds.alpha)
-                .attr("stroke", "rgba(255,255,255,0.6)").attr("stroke-width", 0.5);
-        }});
-
-        // Single event handler per dataset group
-        dg.on("mouseenter", function(event) {{
-            // Dim all, highlight this
-            g.selectAll(".dataset-group").classed("dimmed", true).classed("highlighted", false);
-            d3.select(this).classed("dimmed", false).classed("highlighted", true);
-
-            tooltip.style("display", "block").style("border-color", ds.color)
-                .style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 10) + "px")
-                .html(`<div class="tooltip-title">${{ds.name}}</div>
-                    <div class="tooltip-subtitle">${{ds.title || ''}}</div>
-                    <div class="tooltip-row"><span class="tooltip-label">📊 Subjects</span><span class="tooltip-value">${{ds.n_subjects.toLocaleString()}}</span></div>
-                    <div class="tooltip-row"><span class="tooltip-label">🔄 Sessions</span><span class="tooltip-value">${{ds.n_sessions.toLocaleString()}}</span></div>
-                    <div class="tooltip-row"><span class="tooltip-label">📁 Records</span><span class="tooltip-value">${{ds.n_records.toLocaleString()}}</span></div>
-                    <div class="tooltip-row"><span class="tooltip-label">📡 Channels</span><span class="tooltip-value">${{ds.nchans}}</span></div>
-                    <div class="tooltip-row"><span class="tooltip-label">⚡ Sampling</span><span class="tooltip-value">${{ds.sfreq}} Hz</span></div>
-                    <div class="tooltip-row"><span class="tooltip-label">💾 Size</span><span class="tooltip-value">${{ds.size}}</span></div>
-                    <div class="tooltip-hint">Click to open dataset page →</div>`);
-        }})
-        .on("mousemove", event => tooltip.style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 10) + "px"))
-        .on("mouseleave", () => {{
-            g.selectAll(".dataset-group").classed("dimmed", false).classed("highlighted", false);
-            tooltip.style("display", "none");
-        }})
-        .on("click", () => {{ if (ds.url) window.open(ds.url, '_blank', 'noopener'); }})
-        .style("cursor", "pointer");
-    }});
-
-    // Dataset labels
-    datasetNodes.filter(d => d.r > 25 && d.data.n_subjects > 3).forEach(node => {{
-        const label = node.data.name.length > 10 ? node.data.name.substring(0, 10).toUpperCase() : node.data.name.toUpperCase();
-        mg.append("text").attr("x", node.x).attr("y", node.y).attr("text-anchor", "middle")
-            .attr("dominant-baseline", "middle").attr("font-size", Math.max(9, Math.min(12, node.r / 3)) + "px")
-            .attr("font-weight", "600").attr("fill", "#1f2937").style("pointer-events", "none")
-            .style("text-shadow", "0 0 2px white, 0 0 2px white").text(label);
+        const idx = dsNameToIdx[ds.name];
+        allCircles.push({{ x: ox + node.x, y: oy + node.y, r: Math.max(node.r, 2),
+            color: ds.color, alpha: ds.alpha, dsIdx: idx, isBg: false,
+            modality: mod.name }});
     }});
 }});
 
-// Zoom
-const zoom = d3.zoom().scaleExtent([0.4, 3]).on("zoom", e => g.attr("transform", e.transform));
-svg.call(zoom);
+// ---- Quadtree for fast hover hit-testing ----
+const quadtree = d3.quadtree()
+    .x(d => d.x).y(d => d.y)
+    .addAll(allCircles.filter(c => !c.isBg));
 
-// Center view
-const bounds = g.node().getBBox();
-const initialScale = Math.min(0.88 * width / bounds.width, 0.88 * height / bounds.height, 1);
-const initialTx = width / 2 - initialScale * (bounds.x + bounds.width / 2);
-const initialTy = height / 2 - initialScale * (bounds.y + bounds.height / 2);
-const initialTransform = d3.zoomIdentity.translate(initialTx, initialTy).scale(initialScale);
-svg.call(zoom.transform, initialTransform);
+function findCircle(mx, my) {{
+    let found = null;
+    let bestDist = Infinity;
+    quadtree.visit((node, x0, y0, x1, y1) => {{
+        if (node.length) return false; // internal node, keep searching
+        let d = node;
+        do {{
+            const dx = mx - d.data.x, dy = my - d.data.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < d.data.r + 2 && dist < bestDist) {{
+                bestDist = dist;
+                found = d.data;
+            }}
+        }} while ((d = d.next));
+        return false;
+    }});
+    return found;
+}}
 
-// Zoom controls
-d3.select("#zoom-in").on("click", () => svg.transition().duration(300).call(zoom.scaleBy, 1.4));
-d3.select("#zoom-out").on("click", () => svg.transition().duration(300).call(zoom.scaleBy, 0.7));
-d3.select("#zoom-reset").on("click", () => svg.transition().duration(400).call(zoom.transform, initialTransform));
+// ---- Transform state (pan/zoom) ----
+let tx = 0, ty = 0, scale = 1;
 
-// Search functionality
+function computeInitialTransform() {{
+    // Find bounding box of all content
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    allCircles.forEach(c => {{
+        minX = Math.min(minX, c.x - c.r);
+        minY = Math.min(minY, c.y - c.r - 20);
+        maxX = Math.max(maxX, c.x + c.r);
+        maxY = Math.max(maxY, c.y + c.r);
+    }});
+    const bw = maxX - minX, bh = maxY - minY;
+    scale = Math.min(0.88 * W / bw, 0.88 * H / bh, 1);
+    tx = W / 2 - scale * (minX + bw / 2);
+    ty = H / 2 - scale * (minY + bh / 2);
+}}
+computeInitialTransform();
+const initTx = tx, initTy = ty, initScale = scale;
+
+// ---- Helper: parse rgba/hex color ----
+function parseColor(c) {{
+    if (c.startsWith("rgba")) {{
+        const m = c.match(/rgba\\(([^)]+)\\)/);
+        if (m) {{ const p = m[1].split(","); return {{ r: +p[0], g: +p[1], b: +p[2], a: +p[3] }}; }}
+    }}
+    if (c.startsWith("#") && c.length === 7) {{
+        return {{ r: parseInt(c.slice(1,3),16), g: parseInt(c.slice(3,5),16),
+                 b: parseInt(c.slice(5,7),16), a: 1 }};
+    }}
+    return {{ r: 148, g: 163, b: 184, a: 1 }};
+}}
+
+// ---- Render ----
+function draw() {{
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+    ctx.translate(tx, ty);
+    ctx.scale(scale, scale);
+
+    // Draw background regions first
+    allCircles.forEach(c => {{
+        if (!c.isBg) return;
+        if (hiddenModalities.has(c.modality)) return;
+        const col = parseColor(c.color);
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(" + col.r + "," + col.g + "," + col.b + "," + col.a + ")";
+        ctx.fill();
+        if (c.strokeColor) {{
+            ctx.strokeStyle = c.strokeColor;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }}
+    }});
+
+    // Draw subject circles
+    allCircles.forEach(c => {{
+        if (c.isBg) return;
+        if (hiddenModalities.has(c.modality)) return;
+        const ds = allDatasets[c.dsIdx];
+
+        let alpha = c.alpha;
+        // Dimming logic
+        if (highlightedDs >= 0 && c.dsIdx !== highlightedDs) alpha *= 0.15;
+        if (searchMatches !== null && !searchMatches.has(c.dsIdx)) alpha *= 0.1;
+
+        const col = parseColor(c.color);
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(" + col.r + "," + col.g + "," + col.b + "," + alpha + ")";
+        ctx.fill();
+
+        // Highlight stroke for hovered dataset
+        if (highlightedDs >= 0 && c.dsIdx === highlightedDs) {{
+            ctx.strokeStyle = "rgba(0,0,0,0.5)";
+            ctx.lineWidth = 1.5 / scale;
+            ctx.stroke();
+        }} else if (searchMatches !== null && searchMatches.has(c.dsIdx)) {{
+            ctx.strokeStyle = "#fbbf24";
+            ctx.lineWidth = 2 / scale;
+            ctx.stroke();
+        }} else {{
+            ctx.strokeStyle = "rgba(255,255,255,0.6)";
+            ctx.lineWidth = 0.5 / scale;
+            ctx.stroke();
+        }}
+    }});
+
+    // Draw labels
+    labelCircles.forEach(lc => {{
+        if (hiddenModalities.has(lc.modality)) return;
+        let alpha = 1;
+        if (highlightedDs >= 0) alpha = 0.3;
+        if (searchMatches !== null) alpha = 0.3;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        if (lc.isModality) {{
+            ctx.font = "700 " + (16 / 1) + "px Inter, system-ui, sans-serif";
+            ctx.fillStyle = lc.color;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(lc.label, lc.x, lc.y);
+        }} else {{
+            const fs = lc.fontSize || 10;
+            ctx.font = "600 " + fs + "px Inter, system-ui, sans-serif";
+            ctx.fillStyle = lc.color;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            // Text shadow via stroke
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 3;
+            ctx.lineJoin = "round";
+            ctx.strokeText(lc.label, lc.x, lc.y);
+            ctx.fillText(lc.label, lc.x, lc.y);
+        }}
+        ctx.restore();
+    }});
+
+    ctx.restore();
+}}
+
+draw();
+
+// ---- Mouse interaction ----
+function canvasToWorld(ex, ey) {{
+    const rect = canvas.getBoundingClientRect();
+    const cx = ex - rect.left, cy = ey - rect.top;
+    return [(cx - tx) / scale, (cy - ty) / scale];
+}}
+
+let lastHoverDs = -1;
+canvas.addEventListener("mousemove", function(e) {{
+    const [wx, wy] = canvasToWorld(e.clientX, e.clientY);
+    const hit = findCircle(wx, wy);
+    const dsIdx = hit ? hit.dsIdx : -1;
+
+    if (dsIdx !== lastHoverDs) {{
+        lastHoverDs = dsIdx;
+        highlightedDs = dsIdx;
+        draw();
+
+        if (dsIdx >= 0) {{
+            const ds = allDatasets[dsIdx];
+            canvas.style.cursor = "pointer";
+            tooltip.style.display = "block";
+            tooltip.style.borderColor = ds.color;
+            tooltip.innerHTML =
+                '<div class="tooltip-title">' + ds.name + '</div>' +
+                '<div class="tooltip-subtitle">' + ds.title + '</div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Subjects</span><span class="tooltip-value">' + ds.n_subjects.toLocaleString() + '</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Sessions</span><span class="tooltip-value">' + ds.n_sessions.toLocaleString() + '</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Records</span><span class="tooltip-value">' + ds.n_records.toLocaleString() + '</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Channels</span><span class="tooltip-value">' + ds.nchans + '</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Sampling</span><span class="tooltip-value">' + ds.sfreq + ' Hz</span></div>' +
+                '<div class="tooltip-row"><span class="tooltip-label">Size</span><span class="tooltip-value">' + ds.size + '</span></div>' +
+                '<div class="tooltip-hint">Click to open dataset page &rarr;</div>';
+        }} else {{
+            canvas.style.cursor = "grab";
+            tooltip.style.display = "none";
+        }}
+    }}
+
+    if (tooltip.style.display === "block") {{
+        tooltip.style.left = (e.clientX + 15) + "px";
+        tooltip.style.top = (e.clientY - 10) + "px";
+    }}
+}});
+
+canvas.addEventListener("mouseleave", function() {{
+    highlightedDs = -1;
+    lastHoverDs = -1;
+    tooltip.style.display = "none";
+    canvas.style.cursor = "grab";
+    draw();
+}});
+
+canvas.addEventListener("click", function(e) {{
+    const [wx, wy] = canvasToWorld(e.clientX, e.clientY);
+    const hit = findCircle(wx, wy);
+    if (hit && hit.dsIdx >= 0) {{
+        const url = allDatasets[hit.dsIdx].url;
+        if (url) window.open(url, "_blank", "noopener");
+    }}
+}});
+
+// ---- Zoom with wheel ----
+canvas.addEventListener("wheel", function(e) {{
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    const newScale = Math.max(0.3, Math.min(4, scale * factor));
+    tx = cx - (cx - tx) * (newScale / scale);
+    ty = cy - (cy - ty) * (newScale / scale);
+    scale = newScale;
+    draw();
+}}, {{ passive: false }});
+
+// ---- Pan with drag ----
+let dragging = false, dragX = 0, dragY = 0;
+canvas.addEventListener("mousedown", function(e) {{
+    if (e.button === 0) {{ dragging = true; dragX = e.clientX; dragY = e.clientY; }}
+}});
+window.addEventListener("mousemove", function(e) {{
+    if (!dragging) return;
+    tx += e.clientX - dragX;
+    ty += e.clientY - dragY;
+    dragX = e.clientX;
+    dragY = e.clientY;
+    draw();
+}});
+window.addEventListener("mouseup", function() {{ dragging = false; }});
+
+// ---- Zoom controls ----
+document.getElementById("zoom-in").addEventListener("click", function() {{
+    const f = 1.4;
+    tx = W/2 - (W/2 - tx) * f;
+    ty = H/2 - (H/2 - ty) * f;
+    scale *= f;
+    draw();
+}});
+document.getElementById("zoom-out").addEventListener("click", function() {{
+    const f = 1 / 1.4;
+    tx = W/2 - (W/2 - tx) * f;
+    ty = H/2 - (H/2 - ty) * f;
+    scale *= f;
+    draw();
+}});
+document.getElementById("zoom-reset").addEventListener("click", function() {{
+    tx = initTx; ty = initTy; scale = initScale;
+    draw();
+}});
+
+// ---- Modality legend with filtering ----
+const legendContainer = document.getElementById("modality-legend");
+const legendTitle = document.createElement("div");
+legendTitle.className = "modality-legend-title";
+legendTitle.textContent = "Recording Modality";
+legendContainer.appendChild(legendTitle);
+
+data.children.forEach(m => {{
+    const item = document.createElement("div");
+    item.className = "modality-legend-item";
+    const swatch = document.createElement("div");
+    swatch.className = "modality-swatch";
+    swatch.style.background = m.color;
+    item.appendChild(swatch);
+    const span = document.createElement("span");
+    span.textContent = m.name + " (" + m.children.length + ")";
+    item.appendChild(span);
+
+    item.addEventListener("click", function() {{
+        if (hiddenModalities.has(m.name)) {{
+            hiddenModalities.delete(m.name);
+            item.classList.remove("hidden");
+        }} else {{
+            hiddenModalities.add(m.name);
+            item.classList.add("hidden");
+        }}
+        draw();
+    }});
+    legendContainer.appendChild(item);
+}});
+
+// ---- Search ----
 const searchInput = document.getElementById("search-input");
 const searchClear = document.getElementById("search-clear");
-const searchResults = document.getElementById("search-results");
-let allDatasetNames = [];
-g.selectAll(".dataset-group").each(function() {{
-    allDatasetNames.push(d3.select(this).attr("data-dataset").toLowerCase());
-}});
+const searchResultsEl = document.getElementById("search-results");
 
 function performSearch(query) {{
     const q = query.toLowerCase().trim();
     searchClear.style.display = q ? "block" : "none";
 
     if (!q) {{
-        g.selectAll(".dataset-group").classed("search-match", false).classed("search-dim", false);
-        searchResults.textContent = "";
+        searchMatches = null;
+        searchResultsEl.textContent = "";
+        draw();
         return;
     }}
 
-    let matchCount = 0;
-    g.selectAll(".dataset-group").each(function() {{
-        const name = d3.select(this).attr("data-dataset").toLowerCase();
-        const isMatch = name.includes(q);
-        d3.select(this).classed("search-match", isMatch).classed("search-dim", !isMatch);
-        if (isMatch) matchCount++;
+    searchMatches = new Set();
+    allDatasets.forEach((ds, i) => {{
+        if (ds.name.toLowerCase().includes(q)) searchMatches.add(i);
     }});
-
-    searchResults.textContent = matchCount > 0 ? `${{matchCount}} found` : "No matches";
+    searchResultsEl.textContent = searchMatches.size > 0 ? searchMatches.size + " found" : "No matches";
+    draw();
 }}
 
-searchInput.addEventListener("input", (e) => performSearch(e.target.value));
-searchClear.addEventListener("click", () => {{
+searchInput.addEventListener("input", function(e) {{ performSearch(e.target.value); }});
+searchClear.addEventListener("click", function() {{
     searchInput.value = "";
     performSearch("");
     searchInput.focus();
 }});
+
+}} // end init
+document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>

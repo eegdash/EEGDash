@@ -44,6 +44,11 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
         safe_int,
     )
 
+try:
+    from eegdash import __version__ as _eegdash_version
+except ImportError:
+    _eegdash_version = ""
+
 __all__ = ["generate_moabb_bubble"]
 
 # Maximum bubbles per dataset — canvas rendering handles large counts easily
@@ -64,6 +69,8 @@ MODALITY_BG_COLORS = {
 
 # Top-N datasets to label per modality (by subject count)
 TOP_LABELS_PER_MODALITY = 5
+# Override for specific modalities that have many datasets
+TOP_LABELS_OVERRIDES = {"EEG": 12}
 
 
 def _get_bubble_size(
@@ -288,8 +295,9 @@ def generate_moabb_bubble(
 
     # Mark the top-N datasets per modality for labeling (by subject count)
     for modality, nodes in modality_groups.items():
+        n_labels = TOP_LABELS_OVERRIDES.get(modality, TOP_LABELS_PER_MODALITY)
         sorted_by_subjects = sorted(nodes, key=lambda d: d["n_subjects"], reverse=True)
-        top_names = {d["name"] for d in sorted_by_subjects[:TOP_LABELS_PER_MODALITY]}
+        top_names = {d["name"] for d in sorted_by_subjects[:n_labels]}
         for node in nodes:
             node["showLabel"] = node["name"] in top_names
 
@@ -408,6 +416,13 @@ def generate_moabb_bubble(
             font-size: 17px; color: #4b5563;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
+        .branding {{
+            position: absolute; bottom: 16px; left: 16px;
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0.7;
+        }}
+        .branding img {{ height: 28px; }}
+        .branding-version {{ font-size: 14px; color: #9ca3af; font-weight: 500; }}
     </style>
 </head>
 <body>
@@ -432,6 +447,10 @@ def generate_moabb_bubble(
             <button id="zoom-in" title="Zoom in">+</button>
             <button id="zoom-out" title="Zoom out">&minus;</button>
             <button id="zoom-reset" title="Reset view">&#8962;</button>
+        </div>
+        <div class="branding">
+            <img src="../_static/eegdash_text_v2.svg" alt="EEGDash" onerror="this.style.display='none'">
+            <span class="branding-version">EEGDash v{_eegdash_version}</span>
         </div>
         <div class="hint"><b>Hover</b> to highlight &middot; <b>Scroll/buttons</b> to zoom &middot; <b>Click</b> to open &middot; <b>Click legend</b> to filter</div>
     </div>

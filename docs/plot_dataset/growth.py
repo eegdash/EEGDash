@@ -199,8 +199,7 @@ def generate_dataset_growth(
         legend=dict(x=1.02, y=1),
         margin=dict(t=100, l=60, r=40, b=80),
         height=550,
-        width=width,
-        autosize=False,
+        autosize=True,
     )
 
     return build_and_export_html(

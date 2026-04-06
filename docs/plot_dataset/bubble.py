@@ -506,7 +506,7 @@ def generate_dataset_bubble(
 
     fig.update_layout(
         height=height,
-        width=max_width,
+        autosize=True,
         margin=dict(l=60, r=80, t=50, b=60),
         template="plotly_white",
         updatemenus=updatemenus,
@@ -532,7 +532,6 @@ def generate_dataset_bubble(
             size=16,
         ),
         title=dict(text="", x=0.01, xanchor="left", y=0.98, yanchor="top"),
-        autosize=False,
     )
 
     # (footnote removed — branding handles attribution)

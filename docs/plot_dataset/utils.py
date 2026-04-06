@@ -312,6 +312,12 @@ def build_and_export_html(
     padding: 0 !important;
     width: 100% !important;
 }}
+/* Remove sphinx-design tab card padding/border around charts */
+.sd-tab-content:has(.eegdash-figure) {{
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+}}
 {brand_css}
 {extra_style}
 </style>

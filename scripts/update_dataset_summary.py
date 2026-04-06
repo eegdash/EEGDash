@@ -151,7 +151,7 @@ def main():
             "n_tasks": len(ds.get("tasks", [])) or 0,
             "nchans_set": parse_freqs(nchans_list),
             "sampling_freqs": parse_freqs(sfreq_list),
-            # "duration_hours_total": 0.0, # Not readily available in summary?
+            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
             "size": human_readable_size(ds.get("size_bytes") or 0),
             "size_bytes": ds.get("size_bytes") or 0,
             "source": ds.get("source", ""),

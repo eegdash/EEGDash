@@ -228,8 +228,7 @@ def build_sankey(
     fig.update_layout(
         font=dict(size=14),
         height=height,
-        width=width,
-        autosize=False,
+        autosize=True,
         margin=dict(t=50, b=60, l=40, r=40),
         annotations=[
             dict(

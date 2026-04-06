@@ -12,8 +12,8 @@
 .. raw:: html
 
    <figcaption class="eegdash-caption">
-     Figure: Dataset landscape. Each bubble represents a dataset: x-axis shows the number of records,
-     y-axis the number of subjects, bubble area encodes on-disk size, and color indicates dominant modality.
-     Hover for details and use the legend to highlight modality groups.
+     Figure: Dataset landscape. Each bubble represents a dataset: x-axis shows the number of subjects,
+     y-axis the number of records, bubble size encodes recording duration per subject, and color indicates
+     experiment modality. Hover for details, click to open a dataset page, and use the legend to filter.
    </figcaption>
    </figure>

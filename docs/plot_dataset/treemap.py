@@ -564,8 +564,7 @@ def generate_dataset_treemap(
         margin=dict(t=132, l=28, r=28, b=36),
         hoverlabel=dict(font=dict(size=14), align="left"),
         height=880,
-        width=width,
-        autosize=False,
+        autosize=True,
     )
 
     return build_and_export_html(

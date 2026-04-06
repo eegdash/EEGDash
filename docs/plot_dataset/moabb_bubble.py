@@ -20,7 +20,6 @@ Inspired by the MOABB plotting style and hierarchical data visualizations.
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 from pathlib import Path
 from typing import Any, Literal
@@ -31,6 +30,7 @@ import pandas as pd
 try:  # Allow execution as a script or module
     from .colours import MODALITY_COLOR_MAP
     from .utils import (
+        branding_html,
         get_dataset_url,
         human_readable_size,
         primary_recording_modality,
@@ -39,16 +39,12 @@ try:  # Allow execution as a script or module
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import MODALITY_COLOR_MAP  # type: ignore
     from utils import (  # type: ignore
+        branding_html,
         get_dataset_url,
         human_readable_size,
         primary_recording_modality,
         safe_int,
     )
-
-try:
-    from eegdash import __version__ as _eegdash_version
-except ImportError:
-    _eegdash_version = ""
 
 __all__ = ["generate_moabb_bubble"]
 
@@ -323,24 +319,8 @@ def generate_moabb_bubble(
 
     hierarchy_json = json.dumps(hierarchy)
 
-    # Encode logo as base64 data URI for portable embedding
-    _logo_candidates = [
-        Path(__file__).resolve().parent.parent
-        / "source"
-        / "_static"
-        / "eegdash_long.svg",
-        Path(__file__).resolve().parent.parent
-        / "_build"
-        / "html"
-        / "_static"
-        / "eegdash_long.svg",
-    ]
-    _logo_data_uri = ""
-    for _logo_path in _logo_candidates:
-        if _logo_path.exists():
-            _logo_b64 = base64.b64encode(_logo_path.read_bytes()).decode("ascii")
-            _logo_data_uri = f"data:image/svg+xml;base64,{_logo_b64}"
-            break
+    # Reuse shared branding helper
+    _brand_css, _brand_div = branding_html()
 
     # Generate canvas-based HTML
     html_content = f"""<!DOCTYPE html>
@@ -442,13 +422,7 @@ def generate_moabb_bubble(
             font-size: 17px; color: #4b5563;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
-        .branding {{
-            position: absolute; bottom: 16px; left: 16px;
-            display: flex; align-items: center; gap: 10px;
-            opacity: 0.7;
-        }}
-        .branding img {{ height: 28px; }}
-        .branding-version {{ font-size: 14px; color: #9ca3af; font-weight: 500; }}
+        {_brand_css}
     </style>
 </head>
 <body>
@@ -474,10 +448,7 @@ def generate_moabb_bubble(
             <button id="zoom-out" title="Zoom out">&minus;</button>
             <button id="zoom-reset" title="Reset view">&#8962;</button>
         </div>
-        <div class="branding">
-            <img src="{_logo_data_uri}" alt="EEGDash" style="{"display:none" if not _logo_data_uri else ""}">
-            <span class="branding-version">v{_eegdash_version}</span>
-        </div>
+        {_brand_div}
         <div class="hint"><b>Hover</b> to highlight &middot; <b>Scroll/buttons</b> to zoom &middot; <b>Click</b> to open &middot; <b>Click legend</b> to filter</div>
     </div>
 

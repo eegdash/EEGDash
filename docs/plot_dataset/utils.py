@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,7 @@ except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import CANONICAL_MAP, MODALITY_COLOR_MAP  # type: ignore
 
 __all__ = [
+    "branding_html",
     "build_and_export_html",
     "detect_modality_column",
     "get_dataset_url",
@@ -160,6 +162,62 @@ def ensure_directory(path: str | Path) -> Path:
     return dest
 
 
+def _get_logo_data_uri() -> str:
+    """Return the EEGDash logo as a base64 data URI, or empty string."""
+    candidates = [
+        Path(__file__).resolve().parent.parent
+        / "source"
+        / "_static"
+        / "eegdash_long.svg",
+        Path(__file__).resolve().parent.parent
+        / "_build"
+        / "html"
+        / "_static"
+        / "eegdash_long.svg",
+    ]
+    for path in candidates:
+        if path.exists():
+            b64 = base64.b64encode(path.read_bytes()).decode("ascii")
+            return f"data:image/svg+xml;base64,{b64}"
+    return ""
+
+
+def _get_eegdash_version() -> str:
+    """Return the EEGDash version string."""
+    try:
+        from eegdash import __version__
+
+        return __version__
+    except ImportError:
+        return "dev"
+
+
+_BRANDING_CSS = """\
+.eegdash-branding {
+    position: fixed; bottom: 12px; left: 12px; z-index: 9999;
+    display: flex; align-items: center; gap: 8px; opacity: 0.7;
+}
+.eegdash-branding img { height: 28px; }
+.eegdash-branding span { font-size: 13px; color: #9ca3af; font-weight: 500;
+    font-family: Inter, system-ui, -apple-system, sans-serif; }
+"""
+
+
+def branding_html() -> tuple[str, str]:
+    """Return (css, html) for the EEGDash bottom-left branding badge."""
+    logo_uri = _get_logo_data_uri()
+    version = _get_eegdash_version()
+    css = _BRANDING_CSS
+    img_style = "display:none" if not logo_uri else ""
+    html = (
+        f'<div class="eegdash-branding">'
+        f'<img src="{logo_uri}" alt="EEGDash" style="{img_style}">'
+        f"<span>v{version}</span>"
+        f"</div>"
+    )
+    return css, html
+
+
 def build_and_export_html(
     fig,
     out_path: str | Path,
@@ -232,6 +290,9 @@ def build_and_export_html(
             div_id=div_id,
         )
 
+    # Inject branding into all charts
+    brand_css, brand_div = branding_html()
+
     if include_default_style:
         styled_html = f"""
 <style>
@@ -245,14 +306,20 @@ def build_and_export_html(
     width: 100% !important;
     height: 100% !important;
 }}
+{brand_css}
 {extra_style}
 </style>
 {pre_html}{html_content}
 {extra_html}
+{brand_div}
 """
     else:
         # Custom HTML structure without default styling
-        styled_html = f"{extra_style}{pre_html}{html_content}{extra_html}"
+        styled_html = (
+            f"<style>{brand_css}</style>"
+            f"{extra_style}{pre_html}{html_content}{extra_html}"
+            f"{brand_div}"
+        )
 
     dest = Path(out_path)
     dest.parent.mkdir(parents=True, exist_ok=True)

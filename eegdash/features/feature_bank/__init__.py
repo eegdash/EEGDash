@@ -2,13 +2,14 @@ r"""Feature bank public API exports.
 
 This module consolidates and re-exports the feature extractors and
 feature functions so users can import them directly from
-``eegdash.features.feature_bank``.
+:mod:`eegdash.features.feature_bank`.
 """
 
 from .complexity import (
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
+    complexity_multiscale_entropy,
     complexity_sample_entropy,
     complexity_svd_entropy,
 )
@@ -25,6 +26,10 @@ from .dimensionality import (
     dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
+)
+from .pick import (
+    pick_channel_pairs_preprocessor,
+    pick_channels_preprocessor,
 )
 from .signal import (
     SignalOutputType,
@@ -64,6 +69,7 @@ __all__ = [
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
+    "complexity_multiscale_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
@@ -80,6 +86,9 @@ __all__ = [
     "dimensionality_katz_fractal_dim",
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
+    # Pick
+    "pick_channel_pairs_preprocessor",
+    "pick_channels_preprocessor",
     # Signal
     "SignalOutputType",
     "signal_filter_preprocessor",

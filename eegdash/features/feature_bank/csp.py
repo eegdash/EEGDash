@@ -20,7 +20,7 @@ import scipy
 import scipy.linalg
 
 from ..decorators import FeaturePredecessor, multivariate_feature
-from ..extractors import TrainableFeature
+from ..trainable import TrainableFeature
 from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [

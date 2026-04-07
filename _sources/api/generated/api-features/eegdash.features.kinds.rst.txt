@@ -1,0 +1,20 @@
+﻿eegdash.features.kinds
+======================
+
+.. automodule:: eegdash.features.kinds
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+   :no-index:
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BivariateFeature
+      MultivariateFeature
+      UnivariateFeature
+   
+

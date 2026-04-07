@@ -471,16 +471,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api_core.html">Core API</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api_features.html">Feature API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../features_overview.html">Feature Package Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.base_utils.html">eegdash.features.base_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.inspect.html">eegdash.features.inspect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.kinds.html">eegdash.features.kinds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.output_types.html">eegdash.features.output_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.trainable.html">eegdash.features.trainable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.feature_bank.connectivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.pick.html">eegdash.features.feature_bank.pick</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
@@ -588,7 +593,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L36-L91"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.connectivity.</span></span><span class="sig-name descname"><span class="pre">connectivity_coherency_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/connectivity.py#L35-L91"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compute Complex Coherency for all unique channel pairs.</p>
 <p>The Complex Coherency is calculated by estimating the Cross-Spectral Densities
 (CSD) between pairs of channels and normalizing it by the auto-spectral densities.</p>

@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="eegdash.features.utils" href="eegdash.features.utils.html" />
-    <link rel="prev" title="eegdash.features.inspect" href="eegdash.features.inspect.html" />
+    <link rel="next" title="eegdash.features.output_types" href="eegdash.features.output_types.html" />
+    <link rel="prev" title="eegdash.features.kinds" href="eegdash.features.kinds.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -470,16 +470,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../../api_core.html">Core API</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api_features.html">Feature API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../features_overview.html">Feature Package Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.base_utils.html">eegdash.features.base_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.datasets.html">eegdash.features.datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.inspect.html">eegdash.features.inspect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.kinds.html">eegdash.features.kinds</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.output_types.html">eegdash.features.output_types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.trainable.html">eegdash.features.trainable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.pick.html">eegdash.features.feature_bank.pick</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.signal.html">eegdash.features.feature_bank.signal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.spectral.html">eegdash.features.feature_bank.spectral</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.utils.html">eegdash.features.feature_bank.utils</a></li>
@@ -581,7 +586,7 @@ associated metadata.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">feature_extractor_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L182-L229"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">feature_extractor_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L210-L258"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Get a feature extractor from a dictionary.</p>
 <p>Get a feature extractor object from a dictionary saved by
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">FeatureExtractor.to_dict()</span></code>.</p>
@@ -614,7 +619,7 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_hocon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L295-L323"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_hocon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L324-L352"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a HOCON’s conf file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -643,7 +648,7 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L232-L260"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L261-L289"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -671,7 +676,7 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L263-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L292-L321"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a yaml file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -747,20 +752,20 @@ the feature DataFrames (Parquet), metadata (Pickle), recording info
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.features.inspect.html"
+       href="eegdash.features.kinds.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.features.inspect</p>
+        <p class="prev-next-title">eegdash.features.kinds</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.features.utils.html"
+       href="eegdash.features.output_types.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.features.utils</p>
+        <p class="prev-next-title">eegdash.features.output_types</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

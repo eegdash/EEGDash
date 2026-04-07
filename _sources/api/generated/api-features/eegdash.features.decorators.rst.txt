@@ -14,13 +14,14 @@
    .. autosummary::
    
       univariate_feature
+      bivariate_feature
       multivariate_feature
    
    .. rubric:: Functions
 
    .. autosummary::
    
-      bivariate_feature
+      metadata_preprocessor
    
    .. rubric:: Classes
 

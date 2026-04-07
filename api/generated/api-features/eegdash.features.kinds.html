@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eegdash.features.feature_bank.complexity &#8212; EEG Dash</title>
+    <title>eegdash.features.kinds &#8212; EEG Dash</title>
   
   
   
@@ -58,7 +58,7 @@
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=8c005784"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/api-features/eegdash.features.feature_bank.complexity';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/api-features/eegdash.features.kinds';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
@@ -70,12 +70,12 @@
     <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
     <script src="../../../_static/js/hero-search.js?v=e355ff47"></script>
     <script src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
-    <link rel="canonical" href="https://eegdash.org/api/generated/api-features/eegdash.features.feature_bank.complexity.html" />
+    <link rel="canonical" href="https://eegdash.org/api/generated/api-features/eegdash.features.kinds.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="eegdash.features.feature_bank.connectivity" href="eegdash.features.feature_bank.connectivity.html" />
-    <link rel="prev" title="eegdash.features.utils" href="eegdash.features.utils.html" />
+    <link rel="next" title="eegdash.features.serialization" href="eegdash.features.serialization.html" />
+    <link rel="prev" title="eegdash.features.inspect" href="eegdash.features.inspect.html" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -475,12 +475,12 @@
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.decorators.html">eegdash.features.decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.extractors.html">eegdash.features.extractors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.inspect.html">eegdash.features.inspect</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eegdash.features.kinds.html">eegdash.features.kinds</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.kinds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.serialization.html">eegdash.features.serialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.output_types.html">eegdash.features.output_types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.trainable.html">eegdash.features.trainable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.utils.html">eegdash.features.utils</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">eegdash.features.feature_bank.complexity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.complexity.html">eegdash.features.feature_bank.complexity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.connectivity.html">eegdash.features.feature_bank.connectivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.csp.html">eegdash.features.feature_bank.csp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eegdash.features.feature_bank.dimensionality.html">eegdash.features.feature_bank.dimensionality</a></li>
@@ -538,7 +538,7 @@
     
     <li class="breadcrumb-item"><a href="../../api_features.html" class="nav-link">Feature API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.features.feature_bank.complexity</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">eegdash.features.kinds</span></li>
   </ul>
 </nav>
 </div>
@@ -555,203 +555,118 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="eegdash-features-feature-bank-complexity">
-<h1>eegdash.features.feature_bank.complexity<a class="headerlink" href="#eegdash-features-feature-bank-complexity" title="Link to this heading">#</a></h1>
-<section id="complexity-feature-extraction">
-<h2>Complexity Feature Extraction<a class="headerlink" href="#complexity-feature-extraction" title="Link to this heading">#</a></h2>
-<p>This module provides functions to compute various complexity features from signals.</p>
-<section id="data-shape-convention">
-<h3>Data Shape Convention<a class="headerlink" href="#data-shape-convention" title="Link to this heading">#</a></h3>
-<p>This module follows a <strong>Time-Last</strong> convention:</p>
+  <section id="eegdash-features-kinds">
+<h1>eegdash.features.kinds<a class="headerlink" href="#eegdash-features-kinds" title="Link to this heading">#</a></h1>
+<p>Feature Channel-processing Kinds.</p>
+<p>This module defines the fundamental feature-processing kinds and the
+logic to map raw arrays to named features.</p>
+<p>The module provides the classes:</p>
 <ul class="simple">
-<li><p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">time)</span></code></p></li>
-<li><p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">(...,)</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateFeature</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></p></li>
 </ul>
-<p>All functions collapse the last dimension (time), returning an ndarray of
-features corresponding to the leading dimensions (e.g., subjects, channels).</p>
-<p class="rubric">Functions</p>
+<p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_entropy_preprocessor</span></code>(x, /[, m, r, l])</p></td>
-<td><p>Precompute neighbor counts for Approximate and Sample Entropy.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BivariateFeature</span></code>(*args[, channel_pair_format])</p></td>
+<td><p>Feature kind for operations on pairs of channels.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_approx_entropy</span></code>(counts_m, ...)</p></td>
-<td><p>Calculate Approximate Entropy (ApEn).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariateFeature</span></code>()</p></td>
+<td><p>Logic wrapper for features that operate on one or more EEG channels.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_multiscale_entropy</span></code>(x, /[, m, r, ...])</p></td>
-<td><p>Calculate Multiscale Entropy (MSE).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_sample_entropy</span></code>(counts_m, ...)</p></td>
-<td><p>Calculate Sample Entropy (SampEn).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_svd_entropy</span></code>(x, /[, m, tau])</p></td>
-<td><p>Calculate Singular Value Decomposition (SVD) Entropy.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_lempel_ziv</span></code>(x, /[, threshold, ...])</p></td>
-<td><p>Calculate Lempel-Ziv Complexity (LZC).</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateFeature</span></code>()</p></td>
+<td><p>Feature kind for operations applied to each channel independently.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-</section>
-</section>
-<dl class="py function">
+<dl class="py class">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L90-L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Precompute neighbor counts for Approximate and Sample Entropy.</p>
-<p>This function creates a delay-embedding of the signal and uses a KDTree
-to count how many vectors are within a distance ‘r’ of each other.
-It computes counts for both dimension ‘m’ and ‘m+1’.</p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L134-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></p>
+<p>Feature kind for operations on pairs of channels.</p>
+<p>Designed for undirected relationship measures between two signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal of shape (…, n_times).</p></li>
-<li><p><strong>m</strong> (<em>int</em><em>, </em><em>optional</em>) – Embedding dimension (length of compared sequences).</p></li>
-<li><p><strong>r</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance threshold, expressed as a fraction of the signal
-standard deviation.</p></li>
-<li><p><strong>l</strong> (<em>int</em><em>, </em><em>optional</em>) – The lag or delay between successive embedding vectors.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>channel_pair_format</strong> (<em>str</em><em>, </em><em>default=&quot;{}&lt;&gt;{}&quot;</em>) – A format string used to create feature names from pairs of
+channel names.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L151-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate feature names for each unique pair of channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_metadata</strong> (<em>dict</em>) – A dictionary of record and batch metadata.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
-<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>Formatted strings representing channel pairs (e.g., ‘F3&lt;&gt;F4’).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L131-L154"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate Approximate Entropy (ApEn).</p>
-<p>Approximate Entropy quantifies the amount of regularity and the unpredictability
-of fluctuations over time-series data. Smaller values indicate more regular signals.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
-<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Approximate Entropy values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="py function">
+<dl class="py class">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_multiscale_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L184-L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate Multiscale Entropy (MSE).</p>
-<p>Computes the sample entropy (SampEn) for multiple timescales (from 1
-to <code class="docutils literal notranslate"><span class="pre">l_max</span></code>), then calculate the integral of the SampEn as a function
-of timescale.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal of shape (…, n_times).</p></li>
-<li><p><strong>m</strong> (<em>int</em><em>, </em><em>optional</em>) – Embedding dimension (length of compared sequences).</p></li>
-<li><p><strong>r</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance threshold, expressed as a fraction of the signal
-standard deviation.</p></li>
-<li><p><strong>l_max</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximal lag or delay between successive embedding vectors.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>MSE values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L157-L181"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate Sample Entropy (SampEn).</p>
-<p>A refinement of Approximate Entropy that is more consistent and less
-dependent on signal length. It measures the likelihood that similar patterns
-of data will remain similar when the window size increases.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>counts_m</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m.</p></li>
-<li><p><strong>counts_mp1</strong> (<em>ndarray</em>) – Neighbor counts for embedding dimension m + 1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>SampEn values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L220-L249"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate Singular Value Decomposition (SVD) Entropy.</p>
-<p>SVD Entropy measures the complexity of the signal’s embedding space.
-It indicates the number of independent components required to
-reconstruct the signal. Higher values suggest a more complex signal.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>m</strong> (<em>int</em><em>, </em><em>optional</em>) – The embedding dimension.</p></li>
-<li><p><strong>tau</strong> (<em>int</em><em>, </em><em>optional</em>) – The time delay for embedding.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>SVD Entropy values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L252-L314"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate Lempel-Ziv Complexity (LZC).</p>
-<p>LZC evaluates the randomness of a sequence by counting the number
-of distinct patterns it contains.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Value used to binarize the signal. If None, the median is used.</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, normalizes the result by:</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>LZC values. Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L22-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Logic wrapper for features that operate on one or more EEG channels.</p>
+<p>This class defines the logic for mapping raw numerical results into
+structured, named dictionaries. It determines the “kind” of a feature
+(e.g., univariate, bivariate) and handles the association of feature
+values with specific channels or channel groupings.</p>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>The implementation follows the constructive algorithm for
-production complexity as described by Kaspar and Schuster <a class="reference internal" href="#r60a22090cb8c-1" id="id1">[1]</a>.</p></li>
-<li><p>Optimized with Numba.</p></li>
-</ul>
-<p class="rubric">References</p>
-<div role="list" class="citation-list">
-<div class="citation" id="r60a22090cb8c-1" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Kaspar, F., &amp; Schuster, H. G. (1987). Easily calculable measure for the
-complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
-</div>
-</div>
+<p>Subclasses should override <code class="xref py py-meth docutils literal notranslate"><span class="pre">feature_channel_names()</span></code> to define
+specific naming conventions for the extracted features.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L93-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate feature-specific names based on input channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_metadata</strong> (<em>dict</em>) – A dictionary of record and batch metadata.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of strings defining the naming for each output feature.
+Returns an empty list in the base implementation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L111-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></p>
+<p>Feature kind for operations applied to each channel independently.</p>
+<p>Used when a single feature value is produced per channel.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L117-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the channel names themselves as feature names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_metadata</strong> (<em>dict</em>) – A dictionary of record and batch metadata.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of channel names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -767,20 +682,20 @@ complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="eegdash.features.utils.html"
+       href="eegdash.features.inspect.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">eegdash.features.utils</p>
+        <p class="prev-next-title">eegdash.features.inspect</p>
       </div>
     </a>
     <a class="right-next"
-       href="eegdash.features.feature_bank.connectivity.html"
+       href="eegdash.features.serialization.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">eegdash.features.feature_bank.connectivity</p>
+        <p class="prev-next-title">eegdash.features.serialization</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -796,25 +711,10 @@ complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
 
 
   <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complexity-feature-extraction">Complexity Feature Extraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-shape-convention">Data Shape Convention</a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
-
-  <div class="sidebar-secondary-item">
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/api/generated/api-features/eegdash.features.feature_bank.complexity.rst">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/api/generated/api-features/eegdash.features.kinds.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -829,7 +729,7 @@ complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../../_sources/api/generated/api-features/eegdash.features.feature_bank.complexity.rst.txt">
+    <a href="../../../_sources/api/generated/api-features/eegdash.features.kinds.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

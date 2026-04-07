@@ -1,7 +1,7 @@
-﻿eegdash.features.extractors
-===========================
+﻿eegdash.features.trainable
+==========================
 
-.. automodule:: eegdash.features.extractors
+.. automodule:: eegdash.features.trainable
    :members:
    :undoc-members:
    :show-inheritance:
@@ -13,6 +13,6 @@
 
    .. autosummary::
    
-      FeatureExtractor
+      TrainableFeature
    
 

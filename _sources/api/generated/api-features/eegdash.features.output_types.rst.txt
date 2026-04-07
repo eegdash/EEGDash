@@ -1,0 +1,19 @@
+﻿eegdash.features.output\_types
+==============================
+
+.. automodule:: eegdash.features.output_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource
+   :no-index:
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AsInputOutputType
+      BasePreprocessorOutputType
+   
+

@@ -62,29 +62,30 @@ RECORDING_MODALITY_COLORS = {
 # EXPERIMENTAL MODALITY COLORS (Visual, Auditory, Motor, etc.)
 # =============================================================================
 EXPERIMENTAL_MODALITY_COLORS = {
-    "Visual": "#2563eb",  # blue-600
-    "visual": "#2563eb",
-    "Auditory": "#0ea5e9",  # sky-500
-    "auditory": "#0ea5e9",
-    "Tactile": "#14b8a6",  # teal-500
-    "tactile": "#14b8a6",
-    "Somatosensory": "#14b8a6",  # same as tactile
-    "somatosensory": "#14b8a6",
-    "Multisensory": "#ec4899",  # pink-500
-    "multisensory": "#ec4899",
-    "Motor": "#f59e0b",  # amber-500
-    "motor": "#f59e0b",
-    "Resting State": "#6366f1",  # indigo-500
-    "resting state": "#6366f1",
-    "resting-state": "#6366f1",
-    "Rest": "#6366f1",
-    "rest": "#6366f1",
-    "Sleep": "#7c3aed",  # violet-600
-    "sleep": "#7c3aed",
-    "Other": "#64748b",  # slate-500
-    "other": "#64748b",
-    "Unknown": "#94a3b8",  # slate-400
-    "unknown": "#94a3b8",
+    # Colorblind-safe palette (Okabe-Ito inspired, verified for deuteranopia/protanopia)
+    "Visual": "#0072B2",  # blue (Okabe-Ito)
+    "visual": "#0072B2",
+    "Auditory": "#009E73",  # bluish green (Okabe-Ito)
+    "auditory": "#009E73",
+    "Tactile": "#56B4E9",  # sky blue (Okabe-Ito)
+    "tactile": "#56B4E9",
+    "Somatosensory": "#56B4E9",  # same as tactile
+    "somatosensory": "#56B4E9",
+    "Multisensory": "#CC79A7",  # reddish purple (Okabe-Ito)
+    "multisensory": "#CC79A7",
+    "Motor": "#E69F00",  # orange (Okabe-Ito)
+    "motor": "#E69F00",
+    "Resting State": "#D55E00",  # vermilion (Okabe-Ito)
+    "resting state": "#D55E00",
+    "resting-state": "#D55E00",
+    "Rest": "#D55E00",
+    "rest": "#D55E00",
+    "Sleep": "#000000",  # black (Okabe-Ito 8th color)
+    "sleep": "#000000",
+    "Other": "#999999",  # medium grey
+    "other": "#999999",
+    "Unknown": "#BBBBBB",  # light grey
+    "unknown": "#BBBBBB",
 }
 
 # Combined modality map for backward compatibility

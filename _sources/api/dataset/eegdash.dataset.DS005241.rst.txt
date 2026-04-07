@@ -170,7 +170,7 @@ Technical Details
 
       - Pathology: Healthy
       - Modality: —
-      - Type: —
+      - Type: Other
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

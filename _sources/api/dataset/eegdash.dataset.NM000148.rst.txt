@@ -298,9 +298,9 @@ Technical Details
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Not specified
-      - Modality: —
-      - Type: —
+      - Pathology: Healthy
+      - Modality: Auditory
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

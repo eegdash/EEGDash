@@ -250,9 +250,9 @@ Technical Details
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Not specified
-      - Modality: —
-      - Type: —
+      - Pathology: Parkinson's
+      - Modality: Motor
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

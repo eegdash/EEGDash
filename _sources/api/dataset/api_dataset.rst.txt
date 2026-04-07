@@ -34,31 +34,31 @@ Base Dataset API
    * - Experimental Type
      - Datasets
    * - nan
-     - 389
-   * - Unknown
-     - 69
-   * - Clinical/Intervention
-     - 65
-   * - Perception
-     - 51
+     - 171
    * - Attention
-     - 30
-   * - Memory
-     - 30
-   * - Other
-     - 25
+     - 120
+   * - Perception
+     - 99
+   * - Clinical/Intervention
+     - 86
    * - Motor
+     - 77
+   * - Memory
+     - 49
+   * - Other
+     - 37
+   * - Learning
      - 16
    * - Affect
-     - 12
-   * - Learning
-     - 12
+     - 15
+   * - Unknown
+     - 15
    * - Resting-state
-     - 9
+     - 14
    * - Sleep
-     - 7
+     - 12
    * - Decision-making
-     - 4
+     - 8
 
 
 All Datasets

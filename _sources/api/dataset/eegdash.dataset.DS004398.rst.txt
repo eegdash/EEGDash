@@ -165,7 +165,7 @@ Technical Details
       :class-card: sd-border-1 highlight-tertiary
 
       - Pathology: Not specified
-      - Modality: —
+      - Modality: Visual
       - Type: —
 
    .. grid-item-card:: Files & format

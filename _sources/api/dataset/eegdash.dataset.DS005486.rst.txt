@@ -162,8 +162,8 @@ Technical Details
       :class-card: sd-border-1 highlight-tertiary
 
       - Pathology: Not specified
-      - Modality: —
-      - Type: —
+      - Modality: Resting State
+      - Type: Resting-state
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

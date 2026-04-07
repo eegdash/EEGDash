@@ -167,7 +167,7 @@ Technical Details
       :class-card: sd-border-1 highlight-tertiary
 
       - Pathology: Healthy
-      - Modality: —
+      - Modality: Visual
       - Type: Learning
 
    .. grid-item-card:: Files & format

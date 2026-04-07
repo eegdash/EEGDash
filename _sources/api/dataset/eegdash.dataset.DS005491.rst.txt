@@ -184,7 +184,7 @@ Technical Details
 
       - Pathology: Not specified
       - Modality: Visual
-      - Type: Memory
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

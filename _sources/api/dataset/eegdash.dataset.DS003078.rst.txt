@@ -166,7 +166,7 @@ Technical Details
 
       - Pathology: Surgery
       - Modality: —
-      - Type: Clinical/Intervention
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

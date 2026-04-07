@@ -147,7 +147,7 @@ Technical Details
 
       - Pathology: Not specified
       - Modality: —
-      - Type: —
+      - Type: Motor
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

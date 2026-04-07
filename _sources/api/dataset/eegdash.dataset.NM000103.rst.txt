@@ -188,8 +188,8 @@ Technical Details
       :class-card: sd-border-1 highlight-tertiary
 
       - Pathology: Development
-      - Modality: —
-      - Type: —
+      - Modality: Multisensory
+      - Type: Clinical/Intervention
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

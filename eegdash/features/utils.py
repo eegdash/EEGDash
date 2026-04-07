@@ -9,8 +9,6 @@ The module provides the following functions:
   across an entire concatenated dataset.
 - :func:`fit_feature_extractors` — Fits trainable features using a
   representative dataset.
-- :func:`_extract_features_from_windowsdataset` — Internal helper for
-  processing individual recording datasets.
 
 """
 
@@ -30,8 +28,8 @@ from braindecode.datasets.base import (
     WindowsDataset,
 )
 
-from . import extractors
 from .datasets import FeaturesConcatDataset, FeaturesDataset
+from .extractors import FeatureExtractor
 
 __all__ = [
     "extract_features",
@@ -93,7 +91,7 @@ def _get_batch_metadata(win_ds, X, crop_inds):
 
 def _extract_features_from_windowsdataset(
     win_ds: EEGWindowsDataset | WindowsDataset,
-    feature_extractor: extractors.FeatureExtractor,
+    feature_extractor: FeatureExtractor,
     batch_size: int = 512,
 ) -> FeaturesDataset:
     r"""Extract features from a single recording windowed dataset.
@@ -169,7 +167,7 @@ def _extract_features_from_windowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     *,
     batch_size: int = 512,
     n_jobs: int = 1,
@@ -204,8 +202,8 @@ def extract_features(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, extractors.FeatureExtractor):
-        features = extractors.FeatureExtractor(features)
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
@@ -223,9 +221,9 @@ def extract_features(
 
 def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
-    features: extractors.FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
     batch_size: int = 8192,
-) -> extractors.FeatureExtractor:
+) -> FeatureExtractor:
     r"""Fit trainable feature extractors on a concatenated dataset.
 
     Scans the provided feature pipeline for components that require training
@@ -256,8 +254,8 @@ def fit_feature_extractors(
     """
     if isinstance(features, list):
         features = dict(enumerate(features))
-    if not isinstance(features, extractors.FeatureExtractor):
-        features = extractors.FeatureExtractor(features)
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
     if not features._is_trainable:
         return features
     features.clear()

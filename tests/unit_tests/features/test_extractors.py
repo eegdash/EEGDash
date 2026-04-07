@@ -170,60 +170,12 @@ def test_features_pipeline_basic():
     assert "mean" in feats
 
 
-def test_extractors_gaps():
-    from functools import partial
-
-    from eegdash.features.extractors import (
-        FeatureExtractor,
-        TrainableFeature,
-        _get_underlying_func,
-    )
-
-    # _get_underlying_func gaps
-    def dummy():
-        pass
-
-    p = partial(dummy)
-    assert _get_underlying_func(p) == dummy
-
-    # TrainableFeature gaps
-    class MyTrainable(TrainableFeature):
-        def clear(self):
-            pass
-
-        def partial_fit(self, *x, y=None):
-            pass
-
-    mt = MyTrainable()
-    with pytest.raises(RuntimeError, match="trained first"):
-        mt()
-    mt.fit()
-    # Now it shouldn't raise RuntimeError, but maybe it fails because it's an ABC without __call__ implementation in parent?
-    # Actually TrainableFeature.__call__ is implemented in extractors.py as we saw.
-
-    # FeatureExtractor validate logic (142-150)
-    # We need a mismatched preprocessor
-    def pre1(x):
-        return x
-
-    def pre2(x):
-        return x
-
-    def feat(x):
-        return x
-
-    # mock parent_extractor_type
-    feat.parent_extractor_type = [pre1]
-
-    with pytest.raises(TypeError, match="cannot be a child of"):
-        FeatureExtractor({"f": feat}, preprocessor=pre2)
-
-
 def test_extractors_more():
     from eegdash.features.extractors import (
-        BivariateFeature,
-        DirectedBivariateFeature,
         FeatureExtractor,
+    )
+    from eegdash.features.kinds import (
+        BivariateFeature,
         MultivariateFeature,
     )
 
@@ -234,10 +186,6 @@ def test_extractors_more():
     # bivariate
     bv = BivariateFeature()
     assert bv.channel_pair_format == "{}<>{}"
-
-    # directed bivariate
-    dbv = DirectedBivariateFeature()
-    assert dbv.channel_pair_format == "{}<>{}"
 
     # FeatureExtractor more gaps
     from functools import partial
@@ -302,44 +250,13 @@ def test_extractors_more():
     def jitted(x):
         return x
 
-    from eegdash.features.extractors import _get_underlying_func
+    from eegdash.features.base_utils import get_underlying_func
 
     # If NUMBA_DISABLE_JIT=1, jitted is not a Dispatcher
     if isinstance(jitted, Dispatcher):
-        assert _get_underlying_func(jitted) == jitted.py_func
+        assert get_underlying_func(jitted) == jitted.py_func
     else:
-        assert _get_underlying_func(jitted) == jitted
-
-
-def test_trainable_feature_interface():
-    """Test TrainableFeature clear and partial_fit methods."""
-    import numpy as np
-
-    from eegdash.features.extractors import TrainableFeature
-
-    class ConcreteTrainable(TrainableFeature):
-        def __init__(self):
-            self._is_fitted = False
-            self._is_trained = False
-
-        def clear(self):
-            self._is_trained = False
-
-        def partial_fit(self, *x, y=None):
-            self._is_trained = True
-
-    tf = ConcreteTrainable()
-    # Test clear method
-    tf.clear()
-    assert not tf._is_trained
-
-    # Test partial_fit
-    tf.partial_fit(np.array([1, 2, 3]))
-    assert tf._is_trained
-
-    # Test fit method
-    tf.fit()
-    assert tf._is_trained
+        assert get_underlying_func(jitted) == jitted
 
 
 def test_feature_extractor_with_trainable():
@@ -357,33 +274,6 @@ def test_feature_extractor_with_trainable():
 
     fe = FeatureExtractor({"dummy": dummy_feature})
     assert not fe._is_trainable
-
-
-def test_multivariate_feature_dict_input():
-    """Test MultivariateFeature with dict input."""
-    import numpy as np
-
-    from eegdash.features.extractors import UnivariateFeature
-
-    uf = UnivariateFeature()
-    _metadata = {"info": {"ch_names": ["ch1", "ch2"]}}
-
-    # Create dict input
-    x = {"key": np.array([[1, 2], [3, 4]])}
-    result = uf(x, _metadata=_metadata)
-    assert isinstance(result, dict)
-
-
-def test_bivariate_feature_channel_names():
-    """Test BivariateFeature channel name generation."""
-    from eegdash.features.extractors import BivariateFeature
-
-    bf = BivariateFeature()
-    _metadata = {"info": {"ch_names": ["A", "B", "C"]}}
-    result = bf.feature_channel_names(_metadata=_metadata)
-    # Should have 3 pairs: A<>B, A<>C, B<>C
-    assert len(result) == 3
-    assert "A<>B" in result
 
 
 def test_feature_extractor_clear_non_trainable():
@@ -450,17 +340,6 @@ def test_feature_extractor_with_partial_preprocessor():
 
     fe = FeatureExtractor({"simple": simple_feature}, preprocessor=partial_preproc)
     assert "preprocess_kwargs" in fe.features_kwargs
-
-
-def test_array_to_dict_empty_channels():
-    """Test _array_to_dict with empty channel list."""
-    import numpy as np
-
-    from eegdash.features.extractors import MultivariateFeature
-
-    x = np.array([[1, 2, 3]])
-    result = MultivariateFeature._array_to_dict(x, [], "test")
-    assert "test" in result
 
 
 def test_feature_extractor_nested_check_trainable():

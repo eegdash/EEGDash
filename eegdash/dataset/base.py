@@ -265,6 +265,7 @@ class EEGDashRaw(RawDataset):
         **kwargs,
     ):
         self._on_error = kwargs.pop("on_error", "raise")
+        self._max_concurrency = kwargs.pop("max_concurrency", 20)
         self._skipped = False
         self._integrity_error = None
         super().__init__(None, **kwargs)
@@ -378,7 +379,7 @@ class EEGDashRaw(RawDataset):
 
     def _download_required_files(self) -> None:
         if self._raw_uri is not None:
-            filesystem = downloader.get_s3_filesystem()
+            filesystem = downloader.get_s3_filesystem(max_concurrency=self._max_concurrency)
 
             # Download deps first (sidecars, companions), then raw.
             # skip_missing=True because dep_keys may include companion files
@@ -555,7 +556,7 @@ class EEGDashRaw(RawDataset):
                 ", ".join(missing),
             )
             try:
-                filesystem = downloader.get_s3_filesystem()
+                filesystem = downloader.get_s3_filesystem(max_concurrency=self._max_concurrency)
                 # Strip protocol prefix for s3fs operations
                 s3_prefix = re.sub(r"^s3://", "", self._raw_uri)
                 remote_files = filesystem.ls(s3_prefix, detail=False)
@@ -760,7 +761,7 @@ class EEGDashRaw(RawDataset):
         if not candidates:
             return None
 
-        filesystem = downloader.get_s3_filesystem()
+        filesystem = downloader.get_s3_filesystem(max_concurrency=self._max_concurrency)
         failures: list[str] = []
         for next_key, next_path in candidates:
             if next_key in attempted_keys:

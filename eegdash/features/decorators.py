@@ -57,13 +57,13 @@ _WRAPPER_ASSIGNMENTS = [
 SPHINX_BUILD = bool(os.environ.get("SPHINX_BUILD", ""))
 
 
-def _str_replacer(match, *, new_entries=""):
+def _str_replacer(match: re.Match[str], *, new_entries: str = "") -> str:
     header, existing_params, suffix = match.groups()
     # Ensure we don't double-indent if we are appending
     return f"{header}{existing_params.rstrip()}{new_entries}{suffix}"
 
 
-def _add_params(wrapper, wrapped, new_args):
+def _add_params(wrapper: Callable, wrapped: Callable, new_args: List[dict]) -> Callable:
     """Add new parameter to signature and docs."""
     # Update the Signature (for help() and introspection)
     sig = inspect.signature(wrapped)
@@ -138,12 +138,12 @@ def _add_params(wrapper, wrapped, new_args):
 
 
 def update_wrapper(
-    wrapper,
-    wrapped,
-    assigned=_WRAPPER_ASSIGNMENTS,
-    updated=functools.WRAPPER_UPDATES,
-    new_args=[],
-):
+    wrapper: Callable,
+    wrapped: Callable,
+    assigned: list = _WRAPPER_ASSIGNMENTS,
+    updated: dict = functools.WRAPPER_UPDATES,
+    new_args: List[dict] = [],
+) -> Callable:
     """Update a wrapper function to look like the wrapped function
 
     wrapper is the function to be updated
@@ -180,11 +180,11 @@ def update_wrapper(
 
 
 def wraps(
-    wrapped,
-    assigned=_WRAPPER_ASSIGNMENTS,
-    updated=functools.WRAPPER_UPDATES,
-    new_args=[],
-):
+    wrapped: Callable,
+    assigned: list = _WRAPPER_ASSIGNMENTS,
+    updated: dict = functools.WRAPPER_UPDATES,
+    new_args: List[dict] = [],
+) -> Callable:
     """Decorator factory to apply update_wrapper() to a wrapper function
 
     Returns a decorator that invokes update_wrapper() with the decorated
@@ -206,7 +206,7 @@ def _feature_predecessor_update(
     func: Callable,
     *,
     parent_extractor_type: List[Callable | Type],
-):
+) -> Callable:
     r"""Apply the :func:`feature_predecessor` decorator to a function.
 
     Parameters
@@ -235,7 +235,7 @@ def _feature_predecessor_update(
     return func
 
 
-def feature_predecessor(*parent_extractor_type: List[Callable]):
+def feature_predecessor(*parent_extractor_type: List[Callable]) -> Callable:
     r"""Decorator to specify parent extractors for a feature function.
 
     This decorator attaches a list of immediate parent preprocessing steps to
@@ -260,7 +260,7 @@ def feature_predecessor(*parent_extractor_type: List[Callable]):
     )
 
 
-def _feature_kind_update(func: Callable, *, kind: MultivariateFeature):
+def _feature_kind_update(func: Callable, *, kind: MultivariateFeature) -> Callable:
     r"""Apply the :func:`feature_kind` decorator to a function.
 
     Parameters
@@ -283,7 +283,7 @@ def _feature_kind_update(func: Callable, *, kind: MultivariateFeature):
     return func
 
 
-def feature_kind(kind: MultivariateFeature):
+def feature_kind(kind: MultivariateFeature) -> Callable:
     r"""Decorator to specify the operational dimensionality of a feature.
 
     This decorator attaches a "feature kind" instance to a function,
@@ -330,7 +330,7 @@ rather than channel labels.
 """
 
 
-def metadata_preprocessor(func: Callable):
+def metadata_preprocessor(func: Callable) -> Callable:
     r"""Decorator to set a feature preprocessor as a metadata preprocessor.
 
     A metadata preprocessor must get a keyword argument named ``"_metadata"``
@@ -358,7 +358,9 @@ def metadata_preprocessor(func: Callable):
     return func
 
 
-def _preprocessor_output_type_wrap(preprocessor: Callable, *, output_type: Type):
+def _preprocessor_output_type_wrap(
+    preprocessor: Callable, *, output_type: Type
+) -> Callable:
     r"""Apply the :func:`preprocessor_output_type` decorator to a preprocessor function.
 
     Parameters
@@ -400,7 +402,7 @@ def _preprocessor_output_type_wrap(preprocessor: Callable, *, output_type: Type)
     return preprocessor_instance
 
 
-def preprocessor_output_type(output_type: Type):
+def preprocessor_output_type(output_type: Type) -> Callable:
     r"""Decorator to specify the expected output type of a preprocessor.
 
     Parameters
@@ -419,7 +421,7 @@ def preprocessor_output_type(output_type: Type):
     return partial(_preprocessor_output_type_wrap, output_type=output_type)
 
 
-def _channel_pairer_wrap(func: Callable, *, directed: bool = False):
+def _channel_pairer_wrap(func: Callable, *, directed: bool = False) -> Callable:
     r"""Apply the :func:`channel_pairer` decorator to a function.
 
     Parameters
@@ -473,7 +475,7 @@ def _channel_pairer_wrap(func: Callable, *, directed: bool = False):
     return func_wrapper
 
 
-def channel_pairer(directed: bool = False):
+def channel_pairer(directed: bool = False) -> Callable:
     r"""Decorator to set a feature preprocessor as a channel pairer.
 
     This decorator lets a feature preprocessor get an additional ``pairs``

@@ -8,18 +8,20 @@ datasets, as well as a bank of predefined features.
 from .base_utils import BivariateIterator
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
-    FeatureKind,
-    FeaturePredecessor,
-    PreprocessorOutputType,
     bivariate_feature,
+    channel_pairer,
+    channel_pairer_directed,
+    channel_pairer_undirected,
+    feature_kind,
+    feature_predecessor,
     metadata_preprocessor,
     multivariate_feature,
+    preprocessor_output_type,
     univariate_feature,
 )
 from .extractors import FeatureExtractor
 from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
-    SignalOutputType,
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
@@ -82,6 +84,7 @@ from .kinds import (
 from .output_types import (
     AsInputOutputType,
     BasePreprocessorOutputType,
+    SignalOutputType,
 )
 from .serialization import (
     feature_extractor_from_dict,
@@ -97,12 +100,15 @@ __all__ = [
     "BivariateIterator",
     "FeaturesConcatDataset",
     "FeaturesDataset",
-    "FeatureKind",
-    "FeaturePredecessor",
-    "PreprocessorOutputType",
     "bivariate_feature",
+    "channel_pairer",
+    "channel_pairer_directed",
+    "channel_pairer_undirected",
+    "feature_kind",
+    "feature_predecessor",
     "metadata_preprocessor",
     "multivariate_feature",
+    "preprocessor_output_type",
     "univariate_feature",
     "FeatureExtractor",
     "get_all_feature_preprocessors",
@@ -116,6 +122,7 @@ __all__ = [
     "UnivariateFeature",
     "AsInputOutputType",
     "BasePreprocessorOutputType",
+    "SignalOutputType",
     "feature_extractor_from_dict",
     "load_feature_extractor_from_hocon",
     "load_feature_extractor_from_json",
@@ -149,7 +156,6 @@ __all__ = [
     "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
-    "SignalOutputType",
     "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",

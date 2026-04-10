@@ -99,6 +99,7 @@ def test_utils_gaps(features_dataset):
 
     # 178, 183-192: fit_feature_extractors
     from eegdash.features.kinds import UnivariateFeature
+    from eegdash.features.output_types import SignalOutputType
 
     class MyTrainable(FeatureExtractor):
         def __init__(self, *args, **kwargs):
@@ -118,7 +119,7 @@ def test_utils_gaps(features_dataset):
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
+    feat.parent_extractor_type = [SignalOutputType]
     trainable_fe = MyTrainable({"f": feat})
 
     mock_batch_2 = MagicMock()
@@ -143,7 +144,7 @@ def test_utils_gaps(features_dataset):
         return x
 
     f_kind.feature_kind = lambda r, _metadata: r
-    f_kind.parent_extractor_type = [None]
+    f_kind.parent_extractor_type = [SignalOutputType]
     fe_kind = FeatureExtractor({"f": f_kind})
     fe_kind(
         np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}

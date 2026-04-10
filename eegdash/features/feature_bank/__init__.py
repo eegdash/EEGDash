@@ -32,7 +32,6 @@ from .pick import (
     pick_channels_preprocessor,
 )
 from .signal import (
-    SignalOutputType,
     signal_decorrelation_time,
     signal_filter_preprocessor,
     signal_hilbert_preprocessor,
@@ -90,7 +89,6 @@ __all__ = [
     "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
-    "SignalOutputType",
     "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",

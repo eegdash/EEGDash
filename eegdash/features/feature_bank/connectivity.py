@@ -20,9 +20,12 @@ from itertools import chain
 import numpy as np
 from scipy.signal import csd
 
-from ..decorators import FeaturePredecessor, bivariate_feature, channel_pairer
+from ..decorators import (
+    bivariate_feature,
+    channel_pairer_undirected,
+    feature_predecessor,
+)
 from . import utils
-from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
     "connectivity_coherency_preprocessor",
@@ -32,36 +35,20 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
-@channel_pairer
-def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
+@feature_predecessor()
+@channel_pairer_undirected
+@utils.spectral_kwargs
+def connectivity_coherency_preprocessor(x, /, *, _metadata, f_min, f_max, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.
 
-    The Complex Coherency is calculated by estimating the Cross-Spectral Densities
-    (CSD) between pairs of channels and normalizing it by the auto-spectral densities.
+    The Complex Coherency is calculated by estimating the Cross-Spectral
+    Densities (CSD) between pairs of channels and normalizing it by the
+    auto-spectral densities.
 
     Parameters
     ----------
     x : ndarray
         The input signal of shape (n_trials, n_channels, n_times).
-    fs : int
-        Sampling frequency.
-        Defaults to `sfreq` in MNE's info.
-        Do not use unless you know what you are doing.
-    f_min : float | None
-        The minimum frequency. Use `None` for half the window length.
-        Defaults to the highpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
-    f_max : float | None
-        The maximum frequency. Use `None` for Nyquist.
-        Defaults to the lowpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
-    window_size_in_sec : float
-        Window size in seconds, replacing `nperseg`.
-        Only used if `nperseg` is not provided.
-        Defaults to 4 seconds.
-    overlap_in_sec : float
-        Window overlap in seconds, replacing `noverlap`.
-        Only used if `nperseg` and `noverlap` are not provided.
-        defaults to half of `window_size_in_sec`.
     **kwargs : dict
         Supports any :func:`scipy.signal.csd` arguments like 'nperseg'
         and 'noverlap'.
@@ -78,7 +65,6 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
         - Angle :math:`\arg(c)` is the phase lag.
 
     """
-    f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
     n = x.shape[1]
     idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
     ix, iy = list(chain(range(n), idx_x)), list(chain(range(n), idx_y))
@@ -91,7 +77,7 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     return f, c
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Magnitude Squared Coherence (MSC).
@@ -123,7 +109,7 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Imaginary Coherence (iCOH).
@@ -155,7 +141,7 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Lagged Coherence.

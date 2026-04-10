@@ -86,12 +86,13 @@ def test_feature_extractor_with_trainable():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def dummy_feature(x):
         return np.mean(x, axis=-1, keepdims=True)
 
     # Add parent_extractor_type attribute
-    dummy_feature.parent_extractor_type = [None]
+    dummy_feature.parent_extractor_type = [SignalOutputType]
     dummy_feature.feature_kind = None
 
     fe = FeatureExtractor({"dummy": dummy_feature})

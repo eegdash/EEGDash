@@ -16,10 +16,11 @@ from collections.abc import Callable
 __all__ = [
     "AsInputOutputType",
     "BasePreprocessorOutputType",
+    "SignalOutputType",
 ]
 
 
-class BasePreprocessorOutputType(ABC):
+class BasePreprocessorOutputType(ABC, Callable):
     """An abstract class representing a type of preprocessor output.
 
     Parameters
@@ -52,6 +53,19 @@ class AsInputOutputType(BasePreprocessorOutputType):
 
     If used as a preprocessor predecessor, the preprocessor must not have any
     other predecessors.
+
+    Parameters
+    ----------
+    preprocessor : callable
+        The underlying preprocessor callable.
+
+    """
+
+    pass
+
+
+class SignalOutputType(BasePreprocessorOutputType):
+    """A class for preprocessors where the output type is raw-signal-like.
 
     Parameters
     ----------

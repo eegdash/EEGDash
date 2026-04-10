@@ -20,7 +20,6 @@ from scipy.signal import welch
 
 from ..decorators import feature_predecessor, univariate_feature
 from . import utils
-from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
     "spectral_preprocessor",
@@ -38,7 +37,7 @@ __all__ = [
 ]
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 def spectral_preprocessor(x, /, *, _metadata, **kwargs):
     r"""Compute the Power Spectral Density (PSD) using Welch's method.
 

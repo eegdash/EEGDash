@@ -32,9 +32,7 @@ from .kinds import (
     MultivariateFeature,
     UnivariateFeature,
 )
-from .output_types import (
-    BasePreprocessorOutputType,
-)
+from .output_types import BasePreprocessorOutputType, SignalOutputType
 
 __all__ = [
     "bivariate_feature",
@@ -108,7 +106,9 @@ def wraps(wrapped, assigned=_WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDA
 
 
 def _feature_predecessor_update(
-    func: Callable, *, parent_extractor_type: List[Callable | None]
+    func: Callable,
+    *,
+    parent_extractor_type: List[Callable | Type],
 ):
     r"""Apply the :func:`feature_predecessor` decorator to a function.
 
@@ -116,10 +116,10 @@ def _feature_predecessor_update(
     ----------
     func : callable
         The feature extraction function to decorate.
-    parent_extractor_type : list of callable or None
+    parent_extractor_type : list of callable
         A list of preprocessing functions that this feature immediately
-        depends on. Use ``None`` to indicate that the feature can operate
-        directly on raw signal arrays.
+        depends on.
+        Default is [:class:`~eegdash.features.output_types.SignalOutputType`].
 
     Returns
     -------
@@ -130,15 +130,15 @@ def _feature_predecessor_update(
     """
     parent_func = parent_extractor_type
     if not parent_func:
-        parent_func = [None]
+        parent_func = [SignalOutputType]
     for p_func in parent_func:
-        assert p_func is None or callable(p_func)
+        assert callable(p_func) or issubclass(p_func, BasePreprocessorOutputType)
     f = get_underlying_func(func)
     f.parent_extractor_type = parent_func
     return func
 
 
-def feature_predecessor(*parent_extractor_type: List[Callable | None]):
+def feature_predecessor(*parent_extractor_type: List[Callable]):
     r"""Decorator to specify parent extractors for a feature function.
 
     This decorator attaches a list of immediate parent preprocessing steps to
@@ -148,10 +148,10 @@ def feature_predecessor(*parent_extractor_type: List[Callable | None]):
 
     Parameters
     ----------
-    *parent_extractor_type : list of callable or None
+    *parent_extractor_type : list of callable
         A list of preprocessing functions that this feature immediately
-        depends on. Use ``None`` to indicate that the feature can operate
-        directly on raw signal arrays.
+        depends on.
+        Default is :class:`~eegdash.features.output_types.SignalOutputType`.
 
     Notes
     -----
@@ -270,7 +270,7 @@ def _preprocessor_output_type_wrap(preprocessor: Callable, *, output_type: Type)
         The preprocessor function to decorate.
     output_type : Type
         The expected output type for the preprocessor. Must be a
-        :class:`eegdash.features.output_types.BasePreprocessorOutputType`.
+        :class:`~eegdash.features.output_types.BasePreprocessorOutputType`.
 
     Returns
     -------
@@ -310,7 +310,7 @@ def preprocessor_output_type(output_type: Type):
     ----------
     output_type : Type
         The expected output type for the preprocessor. Must be a
-        :class:`eegdash.features.output_types.BasePreprocessorOutputType`.
+        :class:`~eegdash.features.output_types.BasePreprocessorOutputType`.
 
     Raises
     ------

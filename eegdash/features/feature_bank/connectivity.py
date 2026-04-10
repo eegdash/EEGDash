@@ -26,7 +26,6 @@ from ..decorators import (
     feature_predecessor,
 )
 from . import utils
-from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
     "connectivity_coherency_preprocessor",
@@ -36,7 +35,7 @@ __all__ = [
 ]
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @channel_pairer_undirected
 def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.

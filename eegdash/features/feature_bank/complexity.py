@@ -19,7 +19,6 @@ import numpy as np
 from sklearn.neighbors import KDTree
 
 from ..decorators import feature_predecessor, univariate_feature
-from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
     "complexity_entropy_preprocessor",
@@ -87,7 +86,7 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     return kdtree.query_radius(x_emb, r, count_only=True)
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
     r"""Precompute neighbor counts for Approximate and Sample Entropy.
 
@@ -133,8 +132,9 @@ def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
 def complexity_approx_entropy(counts_m, counts_mp1, /):
     r"""Calculate Approximate Entropy (ApEn).
 
-    Approximate Entropy quantifies the amount of regularity and the unpredictability
-    of fluctuations over time-series data. Smaller values indicate more regular signals.
+    Approximate Entropy quantifies the amount of regularity and the
+    unpredictability of fluctuations over time-series data. Smaller values
+    indicate more regular signals.
 
     Parameters
     ----------
@@ -160,8 +160,8 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
     r"""Calculate Sample Entropy (SampEn).
 
     A refinement of Approximate Entropy that is more consistent and less
-    dependent on signal length. It measures the likelihood that similar patterns
-    of data will remain similar when the window size increases.
+    dependent on signal length. It measures the likelihood that similar
+    patterns of data will remain similar when the window size increases.
 
     Parameters
     ----------
@@ -181,7 +181,7 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
     return -np.log(A / B)
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def complexity_multiscale_entropy(x, /, m=2, r=0.2, l_max=16):
     r"""Calculate Multiscale Entropy (MSE).
@@ -217,7 +217,7 @@ def complexity_multiscale_entropy(x, /, m=2, r=0.2, l_max=16):
     return np.trapezoid(samp_en, dx=1, axis=-1) / l_max
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def complexity_svd_entropy(x, /, m=10, tau=1):
     r"""Calculate Singular Value Decomposition (SVD) Entropy.
@@ -249,7 +249,7 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
     return -np.sum(s * np.log(s), axis=-1)
 
 
-@feature_predecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def complexity_lempel_ziv(x, /, threshold=None, normalize=True):

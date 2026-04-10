@@ -22,7 +22,6 @@ from .decorators import (
 from .extractors import FeatureExtractor
 from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
-    SignalOutputType,
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
@@ -85,6 +84,7 @@ from .kinds import (
 from .output_types import (
     AsInputOutputType,
     BasePreprocessorOutputType,
+    SignalOutputType,
 )
 from .serialization import (
     feature_extractor_from_dict,
@@ -122,6 +122,7 @@ __all__ = [
     "UnivariateFeature",
     "AsInputOutputType",
     "BasePreprocessorOutputType",
+    "SignalOutputType",
     "feature_extractor_from_dict",
     "load_feature_extractor_from_hocon",
     "load_feature_extractor_from_json",
@@ -155,7 +156,6 @@ __all__ = [
     "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
-    "SignalOutputType",
     "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",

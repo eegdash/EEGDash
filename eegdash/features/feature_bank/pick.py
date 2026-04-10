@@ -95,8 +95,8 @@ def pick_channel_pairs_preprocessor(
     ----------
     *x : tuple[ndarray]
         Input batch.
-    channels : Iterable[str]
-        A list of channels to pick.
+    pairs : Iterable[str]
+        A list of channel pairs to pick.
     index: int | Iterable[int]
         The index (or indices) of the input ndarray[s] to pick channel pairs
         from. Default is -1.

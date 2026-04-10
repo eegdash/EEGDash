@@ -15,5 +15,6 @@
    
       AsInputOutputType
       BasePreprocessorOutputType
+      SignalOutputType
    
 

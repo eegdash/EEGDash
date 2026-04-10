@@ -16,19 +16,22 @@
       univariate_feature
       bivariate_feature
       multivariate_feature
+      channel_pairer_undirected
+      channel_pairer_directed
    
    .. rubric:: Functions
 
    .. autosummary::
    
+      bivariate_feature
+      channel_pairer
+      channel_pairer_directed
+      channel_pairer_undirected
+      feature_kind
+      feature_predecessor
       metadata_preprocessor
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      FeatureKind
-      FeaturePredecessor
-      PreprocessorOutputType
+      multivariate_feature
+      preprocessor_output_type
+      univariate_feature
    
 

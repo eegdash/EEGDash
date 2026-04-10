@@ -563,24 +563,41 @@ functions with structural metadata. These annotations define the dependency
 graph (via predecessors) and the data format (via feature kinds).</p>
 <p>The module provides the following decorators:</p>
 <ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code> — Specifies the required input transformation
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">feature_predecessor()</span></code> — Specifies the required input transformation
 for a feature.</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureKind</span></code> — Defines the dimensionality of the feature output.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> — Defines the dimensionality of the feature output.</p>
+<ul>
 <li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">univariate_feature()</span></code> — Sugar for per-channel features.</p></li>
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">bivariate_feature()</span></code> — Sugar for channel-pair features.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">bivariate_feature()</span></code> — Sugar for per channel-pair features.</p></li>
 <li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">multivariate_feature()</span></code> — Sugar for global/all-channel features.</p></li>
+</ul>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">metadata_preprocessor()</span></code> — Specifies a preprocessor returning a modified
+metadata instance.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer()</span></code> — Specifies a preprocessor that creates channel pairs.</p>
+<ul>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer_undirected()</span></code> — Sugar for undirected pairs.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer_directed()</span></code> — Sugar for directed pairs.</p></li>
+</ul>
+</li>
 </ul>
 <p class="rubric">Module Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">univariate_feature</span></code></p></td>
-<td><p>Decorator to mark a feature as univariate.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">univariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code></p></td>
-<td><p>Decorator to mark a feature as bivariate.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multivariate_feature</span></code></p></td>
-<td><p>Decorator to mark a feature as multivariate.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multivariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_pairer_undirected</span></code>(func, *[, directed])</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer()</span></code> decorator to a function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_pairer_directed</span></code>(func, *[, directed])</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer()</span></code> decorator to a function.</p></td>
 </tr>
 </tbody>
 </table>
@@ -588,98 +605,118 @@ for a feature.</p></li>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bivariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_pairer</span></code>([directed])</p></td>
+<td><p>Decorator to set a feature preprocessor as a channel pairer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_pairer_directed</span></code>(func, *[, directed])</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer()</span></code> decorator to a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">channel_pairer_undirected</span></code>(func, *[, directed])</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">channel_pairer()</span></code> decorator to a function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_kind</span></code>(kind)</p></td>
+<td><p>Decorator to specify the operational dimensionality of a feature.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_predecessor</span></code>(*parent_extractor_type)</p></td>
+<td><p>Decorator to specify parent extractors for a feature function.</p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata_preprocessor</span></code>(func)</p></td>
 <td><p>Decorator to set a feature preprocessor as a metadata preprocessor.</p></td>
 </tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Classes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeatureKind</span></code>(feature_kind)</p></td>
-<td><p>Decorator to specify the operational dimensionality of a feature.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multivariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FeaturePredecessor</span></code>(*parent_extractor_type)</p></td>
-<td><p>Decorator to specify parent extractors for a feature function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">PreprocessorOutputType</span></code>(output_type)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessor_output_type</span></code>(output_type)</p></td>
 <td><p>Decorator to specify the expected output type of a preprocessor.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">univariate_feature</span></code>(func, *, kind)</p></td>
+<td><p>Apply the <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_kind()</span></code> decorator to a function.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
-<dl class="py data">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">bivariate_feature</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;eegdash.features.decorators.FeatureKind</span> <span class="pre">object&gt;</span></span></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">bivariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultivariateFeature</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;eegdash.features.kinds.BivariateFeature</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span></dt>
 <dd><p>Decorator to mark a feature as bivariate.</p>
 <p>Specifies that the feature operates on pairs of channels.
 The output will be formatted as a dictionary with keys matching the
 original channel name pairs.</p>
 </dd></dl>
 
-<dl class="py class">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">FeatureKind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultivariateFeature</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L162-L202"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Decorator to specify the operational dimensionality of a feature.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">channel_pairer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L486-L501"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to set a feature preprocessor as a channel pairer.</p>
+<p>This decorator lets a feature preprocessor get an additional <code class="docutils literal notranslate"><span class="pre">pairs</span></code>
+keyword argument, and sets a metadata field named <code class="docutils literal notranslate"><span class="pre">'ch_pair_iterator'</span></code>
+containing a <code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateIterator</span></code>
+accordingly before calling the underlying preprocessor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directed</strong> (<em>bool</em>) – Whether the preprocessor assumes <em>directed</em> or <em>undirected</em> bivariate
+iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">channel_pairer_directed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span></dt>
+<dd><p>Decorator to mark a feature preprocessor as an undirected channel pairer.</p>
+<p>Specifies that the feature preprocessor operates on undirected pairs of
+channels.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">channel_pairer_undirected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span></dt>
+<dd><p>Decorator to mark a feature preprocessor as an undirected channel pairer.</p>
+<p>Specifies that the feature preprocessor operates on undirected pairs of
+channels.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">feature_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultivariateFeature</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L294-L309"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to specify the operational dimensionality of a feature.</p>
 <p>This decorator attaches a “feature kind” instance to a function,
 determining how the <code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>
 should map the resulting numerical arrays to channel names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>feature_kind</strong> (<em>MultivariateFeature</em>) – An instance of a feature kind class, such as
+<dd class="field-odd"><p><strong>kind</strong> (<em>MultivariateFeature</em>) – An instance of a feature kind class, such as
 <code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateFeature</span></code> or
 <code class="xref py py-class docutils literal notranslate"><span class="pre">BivariateFeature</span></code>.</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">feature_kind</span></span></dt>
-<dd><p>The stored kind instance used for output formatting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>MultivariateFeature</em></p>
-</dd>
-</dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">FeaturePredecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L108-L159"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Decorator to specify parent extractors for a feature function.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">feature_predecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L246-L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to specify parent extractors for a feature function.</p>
 <p>This decorator attaches a list of immediate parent preprocessing steps to
 a feature extraction function. This metadata is used by the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code> to validate the
 execution tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*parent_extractor_type</strong> (<em>list</em><em> of </em><em>callable</em><em> or </em><em>None</em>) – A list of preprocessing functions that this feature immediately
-depends on. Use <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate that the feature can operate
-directly on raw signal arrays.</p>
+<dd class="field-odd"><p><strong>*parent_extractor_type</strong> (<em>list</em><em> of </em><em>callable</em>) – A list of preprocessing functions that this feature immediately
+depends on.
+Default is [<code class="xref py py-class docutils literal notranslate"><span class="pre">SignalOutputType</span></code>].</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">parent_extractor_type</span></span></dt>
-<dd><p>The stored list of predecessor functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of callable or None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <p class="rubric">Notes</p>
 <p>A feature can have multiple potential predecessors.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">metadata_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L290-L315"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">metadata_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L341-L366"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Decorator to set a feature preprocessor as a metadata preprocessor.</p>
 <p>A metadata preprocessor must get a keyword argument named <code class="docutils literal notranslate"><span class="pre">&quot;_metadata&quot;</span></code>
 and return a copy of it as its last output argument.</p>
@@ -696,23 +733,23 @@ and return a copy of it as its last output argument.</p>
 </dl>
 </dd></dl>
 
-<dl class="py data">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">multivariate_feature</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;eegdash.features.decorators.FeatureKind</span> <span class="pre">object&gt;</span></span></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">multivariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultivariateFeature</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;eegdash.features.kinds.MultivariateFeature</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span></dt>
 <dd><p>Decorator to mark a feature as multivariate.</p>
 <p>Indicates that the feature operates on all channels simultaneously. The
 output naming convention is determined by the feature’s internal logic
 rather than channel labels.</p>
 </dd></dl>
 
-<dl class="py class">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">PreprocessorOutputType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L234-L287"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Decorator to specify the expected output type of a preprocessor.</p>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">preprocessor_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L413-L429"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to specify the expected output type of a preprocessor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>output_type</strong> (<em>Type</em>) – The expected output type for the preprocessor.</p>
+<dd class="field-odd"><p><strong>output_type</strong> (<em>Type</em>) – The expected output type for the preprocessor. Must be a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BasePreprocessorOutputType</span></code>.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the provided <cite>output_type</cite> does not inherit from
@@ -721,9 +758,9 @@ rather than channel labels.</p>
 </dl>
 </dd></dl>
 
-<dl class="py data">
+<dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">univariate_feature</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;eegdash.features.decorators.FeatureKind</span> <span class="pre">object&gt;</span></span></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">univariate_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MultivariateFeature</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;eegdash.features.kinds.UnivariateFeature</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span></dt>
 <dd><p>Decorator to mark a feature as univariate.</p>
 <p>Indicates that the feature is computed for each channel independently.
 The output will be formatted as a dictionary with keys matching the

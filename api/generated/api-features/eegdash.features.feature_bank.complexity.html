@@ -597,7 +597,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L90-L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L89-L127"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Precompute neighbor counts for Approximate and Sample Entropy.</p>
 <p>This function creates a delay-embedding of the signal and uses a KDTree
 to count how many vectors are within a distance ‘r’ of each other.
@@ -624,10 +624,11 @@ standard deviation.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L131-L154"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L130-L154"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Approximate Entropy (ApEn).</p>
-<p>Approximate Entropy quantifies the amount of regularity and the unpredictability
-of fluctuations over time-series data. Smaller values indicate more regular signals.</p>
+<p>Approximate Entropy quantifies the amount of regularity and the
+unpredictability of fluctuations over time-series data. Smaller values
+indicate more regular signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -675,8 +676,8 @@ standard deviation.</p></li>
 <span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L157-L181"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Sample Entropy (SampEn).</p>
 <p>A refinement of Approximate Entropy that is more consistent and less
-dependent on signal length. It measures the likelihood that similar patterns
-of data will remain similar when the window size increases.</p>
+dependent on signal length. It measures the likelihood that similar
+patterns of data will remain similar when the window size increases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

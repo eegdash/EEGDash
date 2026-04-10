@@ -36,10 +36,4 @@
       signal_variance
       signal_zero_crossings
    
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      SignalOutputType
-   
 

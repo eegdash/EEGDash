@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**10:51.701** total execution time for 20 files **from all galleries**:
+**09:49.041** total execution time for 20 files **from all galleries**:
 
 .. container::
 
@@ -33,34 +33,34 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_2.py` (``../../examples/eeg2025/tutorial_challenge_2.py``)
-     - 06:36.976
+     - 06:23.658
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_minimal.py` (``../../examples/core/tutorial_minimal.py``)
-     - 02:21.239
+     - 02:00.116
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_hpc_tutorial_eoec.py` (``../../examples/hpc/tutorial_eoec.py``)
-     - 00:49.960
+     - 00:32.748
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_challenge_1.py` (``../../examples/eeg2025/tutorial_challenge_1.py``)
-     - 00:39.153
+     - 00:30.569
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_eeg2025_tutorial_eegdash_offline.py` (``../../examples/eeg2025/tutorial_eegdash_offline.py``)
-     - 00:11.932
+     - 00:10.320
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_eoec.py` (``../../examples/core/tutorial_eoec.py``)
-     - 00:07.038
+     - 00:06.373
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_tutorial_feature_extractor_open_close_eye.py` (``../../examples/core/tutorial_feature_extractor_open_close_eye.py``)
-     - 00:03.587
+     - 00:02.650
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_plot_clinical_summary.py` (``../../examples/tutorials/plot_clinical_summary.py``)
-     - 00:01.130
-     - 0.0
-   * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_transfer_learning.py` (``../../examples/tutorials/tutorial_transfer_learning.py``)
-     - 00:00.352
+     - 00:01.771
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_api.py` (``../../examples/tutorials/tutorial_api.py``)
-     - 00:00.333
+     - 00:00.529
+     - 0.0
+   * - :ref:`sphx_glr_generated_auto_examples_tutorials_tutorial_transfer_learning.py` (``../../examples/tutorials/tutorial_transfer_learning.py``)
+     - 00:00.307
      - 0.0
    * - :ref:`sphx_glr_generated_auto_examples_core_p300_transfer_learning.py` (``../../examples/core/p300_transfer_learning.py``)
      - 00:00.000

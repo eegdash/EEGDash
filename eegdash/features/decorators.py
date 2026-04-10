@@ -6,12 +6,20 @@ graph (via predecessors) and the data format (via feature kinds).
 
 The module provides the following decorators:
 
-- :class:`FeaturePredecessor` — Specifies the required input transformation
+- :func:`feature_predecessor` — Specifies the required input transformation
   for a feature.
-- :class:`FeatureKind` — Defines the dimensionality of the feature output.
-- :func:`univariate_feature` — Sugar for per-channel features.
-- :func:`bivariate_feature` — Sugar for channel-pair features.
-- :func:`multivariate_feature` — Sugar for global/all-channel features.
+- :func:`feature_kind` — Defines the dimensionality of the feature output.
+
+  - :func:`univariate_feature` — Sugar for per-channel features.
+  - :func:`bivariate_feature` — Sugar for per channel-pair features.
+  - :func:`multivariate_feature` — Sugar for global/all-channel features.
+
+- :func:`metadata_preprocessor` — Specifies a preprocessor returning a modified
+  metadata instance.
+- :func:`channel_pairer` — Specifies a preprocessor that creates channel pairs.
+
+  - :func:`channel_pairer_undirected` — Sugar for undirected pairs.
+  - :func:`channel_pairer_directed` — Sugar for directed pairs.
 
 """
 
@@ -248,7 +256,7 @@ def feature_predecessor(*parent_extractor_type: List[Callable]) -> Callable:
     *parent_extractor_type : list of callable
         A list of preprocessing functions that this feature immediately
         depends on.
-        Default is :class:`~eegdash.features.output_types.SignalOutputType`.
+        Default is [:class:`~eegdash.features.output_types.SignalOutputType`].
 
     Notes
     -----

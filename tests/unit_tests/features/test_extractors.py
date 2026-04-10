@@ -178,6 +178,7 @@ def test_extractors_more():
         BivariateFeature,
         MultivariateFeature,
     )
+    from eegdash.features.output_types import SignalOutputType
 
     mv = MultivariateFeature()
     # verify it has feature_channel_names
@@ -193,7 +194,7 @@ def test_extractors_more():
     def f1(x, a=1):
         return {"f1": x.mean(axis=(-1, -2))}
 
-    f1.parent_extractor_type = [None]
+    f1.parent_extractor_type = [SignalOutputType]
 
     # 127, 130, 132: features_kwargs
     fe = FeatureExtractor({"feat": partial(f1, a=2)})
@@ -203,7 +204,7 @@ def test_extractors_more():
     def pre(x, a=1):
         return x
 
-    f1.parent_extractor_type = [None, pre]  # add pre to parent types
+    f1.parent_extractor_type = [SignalOutputType, pre]  # add pre to parent types
     fe_pre = FeatureExtractor({"feat": f1}, preprocessor=partial(pre, a=2))
     assert "preprocess_kwargs" in fe_pre.features_kwargs
     # 181: call with preprocessor
@@ -235,7 +236,7 @@ def test_extractors_more():
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
+    feat.parent_extractor_type = [SignalOutputType]
     trainable_fe = MyTrainable({"f": feat})
     fe_outer._check_is_trainable({"f": trainable_fe})
 
@@ -264,12 +265,13 @@ def test_feature_extractor_with_trainable():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def dummy_feature(x):
         return np.mean(x, axis=-1, keepdims=True)
 
     # Add parent_extractor_type attribute
-    dummy_feature.parent_extractor_type = [None]
+    dummy_feature.parent_extractor_type = [SignalOutputType]
     dummy_feature.feature_kind = None
 
     fe = FeatureExtractor({"dummy": dummy_feature})
@@ -279,11 +281,12 @@ def test_feature_extractor_with_trainable():
 def test_feature_extractor_clear_non_trainable():
     """Test that clear() on non-trainable extractor does nothing."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -295,11 +298,12 @@ def test_feature_extractor_partial_fit_non_trainable():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -309,11 +313,12 @@ def test_feature_extractor_partial_fit_non_trainable():
 def test_feature_extractor_fit_non_trainable():
     """Test that fit on non-trainable extractor does nothing."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -325,11 +330,12 @@ def test_feature_extractor_with_partial_preprocessor():
     from functools import partial
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def preprocessor(x, scale=1.0):
         return x * scale
 
-    preprocessor.parent_extractor_type = [None]
+    preprocessor.parent_extractor_type = [SignalOutputType]
 
     def simple_feature(x):
         return x
@@ -345,22 +351,23 @@ def test_feature_extractor_with_partial_preprocessor():
 def test_feature_extractor_nested_check_trainable():
     """Test _check_is_trainable with nested FeatureExtractor."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def inner_feat(x):
         return x
 
-    inner_feat.parent_extractor_type = [None]
+    inner_feat.parent_extractor_type = [SignalOutputType]
 
     inner_extractor = FeatureExtractor({"inner": inner_feat})
 
     def outer_preproc(x):
         return x
 
-    outer_preproc.parent_extractor_type = [None]
+    outer_preproc.parent_extractor_type = [SignalOutputType]
 
     # Mark inner extractor's preprocessor
     inner_extractor.preprocessor = None
-    inner_extractor.parent_extractor_type = [None]
+    inner_extractor.parent_extractor_type = [SignalOutputType]
 
     outer_extractor = FeatureExtractor({"nested": inner_extractor})
     assert not outer_extractor._is_trainable
@@ -371,11 +378,12 @@ def test_feature_extractor_preprocess_none():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
+    feat.parent_extractor_type = [SignalOutputType]
 
     extractor = FeatureExtractor({"feat": feat}, preprocessor=None)
     result = extractor.preprocess(np.array([1, 2, 3]), _metadata={})

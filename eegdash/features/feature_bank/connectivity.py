@@ -20,7 +20,11 @@ from itertools import chain
 import numpy as np
 from scipy.signal import csd
 
-from ..decorators import FeaturePredecessor, bivariate_feature, channel_pairer
+from ..decorators import (
+    bivariate_feature,
+    channel_pairer_undirected,
+    feature_predecessor,
+)
 from . import utils
 from .signal import SIGNAL_PREDECESSORS
 
@@ -32,13 +36,14 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
-@channel_pairer
+@feature_predecessor(*SIGNAL_PREDECESSORS)
+@channel_pairer_undirected
 def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.
 
-    The Complex Coherency is calculated by estimating the Cross-Spectral Densities
-    (CSD) between pairs of channels and normalizing it by the auto-spectral densities.
+    The Complex Coherency is calculated by estimating the Cross-Spectral
+    Densities (CSD) between pairs of channels and normalizing it by the
+    auto-spectral densities.
 
     Parameters
     ----------
@@ -50,10 +55,12 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
         Do not use unless you know what you are doing.
     f_min : float | None
         The minimum frequency. Use `None` for half the window length.
-        Defaults to the highpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
+        Defaults to the highpass frequency used to MNE's
+        :meth:`~mne.io.Raw.filter`.
     f_max : float | None
         The maximum frequency. Use `None` for Nyquist.
-        Defaults to the lowpass frequency used to MNE's :meth:`~mne.io.Raw.filter`.
+        Defaults to the lowpass frequency used to MNE's
+        :meth:`~mne.io.Raw.filter`.
     window_size_in_sec : float
         Window size in seconds, replacing `nperseg`.
         Only used if `nperseg` is not provided.
@@ -91,7 +98,7 @@ def connectivity_coherency_preprocessor(x, /, *, _metadata, **kwargs):
     return f, c
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Magnitude Squared Coherence (MSC).
@@ -123,7 +130,7 @@ def connectivity_magnitude_square_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BA
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Imaginary Coherence (iCOH).
@@ -155,7 +162,7 @@ def connectivity_imaginary_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
 
-@FeaturePredecessor(connectivity_coherency_preprocessor)
+@feature_predecessor(connectivity_coherency_preprocessor)
 @bivariate_feature
 def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     r"""Calculate Lagged Coherence.

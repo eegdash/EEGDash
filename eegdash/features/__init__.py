@@ -8,12 +8,15 @@ datasets, as well as a bank of predefined features.
 from .base_utils import BivariateIterator
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
-    FeatureKind,
-    FeaturePredecessor,
-    PreprocessorOutputType,
     bivariate_feature,
+    channel_pairer,
+    channel_pairer_directed,
+    channel_pairer_undirected,
+    feature_kind,
+    feature_predecessor,
     metadata_preprocessor,
     multivariate_feature,
+    preprocessor_output_type,
     univariate_feature,
 )
 from .extractors import FeatureExtractor
@@ -97,12 +100,15 @@ __all__ = [
     "BivariateIterator",
     "FeaturesConcatDataset",
     "FeaturesDataset",
-    "FeatureKind",
-    "FeaturePredecessor",
-    "PreprocessorOutputType",
     "bivariate_feature",
+    "channel_pairer",
+    "channel_pairer_directed",
+    "channel_pairer_undirected",
+    "feature_kind",
+    "feature_predecessor",
     "metadata_preprocessor",
     "multivariate_feature",
+    "preprocessor_output_type",
     "univariate_feature",
     "FeatureExtractor",
     "get_all_feature_preprocessors",

@@ -18,7 +18,7 @@ import numba as nb
 import numpy as np
 from sklearn.neighbors import KDTree
 
-from ..decorators import FeaturePredecessor, univariate_feature
+from ..decorators import feature_predecessor, univariate_feature
 from .signal import SIGNAL_PREDECESSORS
 
 __all__ = [
@@ -87,7 +87,7 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
     return kdtree.query_radius(x_emb, r, count_only=True)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor(*SIGNAL_PREDECESSORS)
 def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
     r"""Precompute neighbor counts for Approximate and Sample Entropy.
 
@@ -128,7 +128,7 @@ def complexity_entropy_preprocessor(x, /, m=2, r=0.2, l=1):
     return counts_m, counts_mp1
 
 
-@FeaturePredecessor(complexity_entropy_preprocessor)
+@feature_predecessor(complexity_entropy_preprocessor)
 @univariate_feature
 def complexity_approx_entropy(counts_m, counts_mp1, /):
     r"""Calculate Approximate Entropy (ApEn).
@@ -154,7 +154,7 @@ def complexity_approx_entropy(counts_m, counts_mp1, /):
     return phi_m - phi_mp1
 
 
-@FeaturePredecessor(complexity_entropy_preprocessor)
+@feature_predecessor(complexity_entropy_preprocessor)
 @univariate_feature
 def complexity_sample_entropy(counts_m, counts_mp1, /):
     r"""Calculate Sample Entropy (SampEn).
@@ -181,7 +181,7 @@ def complexity_sample_entropy(counts_m, counts_mp1, /):
     return -np.log(A / B)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def complexity_multiscale_entropy(x, /, m=2, r=0.2, l_max=16):
     r"""Calculate Multiscale Entropy (MSE).
@@ -217,7 +217,7 @@ def complexity_multiscale_entropy(x, /, m=2, r=0.2, l_max=16):
     return np.trapezoid(samp_en, dx=1, axis=-1) / l_max
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 def complexity_svd_entropy(x, /, m=10, tau=1):
     r"""Calculate Singular Value Decomposition (SVD) Entropy.
@@ -249,7 +249,7 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
     return -np.sum(s * np.log(s), axis=-1)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor(*SIGNAL_PREDECESSORS)
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def complexity_lempel_ziv(x, /, threshold=None, normalize=True):

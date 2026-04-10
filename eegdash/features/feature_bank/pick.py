@@ -21,8 +21,8 @@ import mne
 
 from ..base_utils import BivariateIterator, channel_names_to_indices
 from ..decorators import (
-    PreprocessorOutputType,
     metadata_preprocessor,
+    preprocessor_output_type,
 )
 from ..output_types import AsInputOutputType
 
@@ -33,7 +33,7 @@ __all__ = [
 
 
 @metadata_preprocessor
-@PreprocessorOutputType(AsInputOutputType)
+@preprocessor_output_type(AsInputOutputType)
 def pick_channels_preprocessor(
     *x,
     channels: Iterable[str],
@@ -74,7 +74,7 @@ def pick_channels_preprocessor(
 
 
 @metadata_preprocessor
-@PreprocessorOutputType(AsInputOutputType)
+@preprocessor_output_type(AsInputOutputType)
 def pick_channel_pairs_preprocessor(
     *x,
     pairs: Iterable[Tuple[str, str]],

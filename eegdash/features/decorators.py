@@ -19,6 +19,7 @@ import functools
 import inspect
 import os
 from collections.abc import Callable
+from functools import partial
 from typing import Iterable, List, Tuple, Type
 
 from .base_utils import (
@@ -37,11 +38,14 @@ from .output_types import (
 
 __all__ = [
     "bivariate_feature",
-    "FeatureKind",
-    "FeaturePredecessor",
+    "channel_pairer",
+    "channel_pairer_directed",
+    "channel_pairer_undirected",
+    "feature_kind",
+    "feature_predecessor",
     "metadata_preprocessor",
     "multivariate_feature",
-    "PreprocessorOutputType",
+    "preprocessor_output_type",
     "univariate_feature",
 ]
 
@@ -54,7 +58,7 @@ _WRAPPER_ASSIGNMENTS = [
 SPHINX_BUILD = bool(os.environ.get("SPHINX_BUILD", ""))
 
 
-def _update_wrapper(
+def update_wrapper(
     wrapper,
     wrapped,
     assigned=_WRAPPER_ASSIGNMENTS,
@@ -91,7 +95,7 @@ def _update_wrapper(
     return wrapper
 
 
-def _wraps(wrapped, assigned=_WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES):
+def wraps(wrapped, assigned=_WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES):
     """Decorator factory to apply update_wrapper() to a wrapper function
 
     Returns a decorator that invokes update_wrapper() with the decorated
@@ -100,12 +104,41 @@ def _wraps(wrapped, assigned=_WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPD
     This is a convenience function to simplify applying partial() to
     update_wrapper().
     """
-    return functools.partial(
-        _update_wrapper, wrapped=wrapped, assigned=assigned, updated=updated
-    )
+    return partial(update_wrapper, wrapped=wrapped, assigned=assigned, updated=updated)
 
 
-class FeaturePredecessor:
+def _feature_predecessor_update(
+    func: Callable, *, parent_extractor_type: List[Callable | None]
+):
+    r"""Apply the :func:`feature_predecessor` decorator to a function.
+
+    Parameters
+    ----------
+    func : callable
+        The feature extraction function to decorate.
+    parent_extractor_type : list of callable or None
+        A list of preprocessing functions that this feature immediately
+        depends on. Use ``None`` to indicate that the feature can operate
+        directly on raw signal arrays.
+
+    Returns
+    -------
+    callable
+        The decorated function with the `parent_extractor_type`
+        attribute attached.
+
+    """
+    parent_func = parent_extractor_type
+    if not parent_func:
+        parent_func = [None]
+    for p_func in parent_func:
+        assert p_func is None or callable(p_func)
+    f = get_underlying_func(func)
+    f.parent_extractor_type = parent_func
+    return func
+
+
+def feature_predecessor(*parent_extractor_type: List[Callable | None]):
     r"""Decorator to specify parent extractors for a feature function.
 
     This decorator attaches a list of immediate parent preprocessing steps to
@@ -120,46 +153,40 @@ class FeaturePredecessor:
         depends on. Use ``None`` to indicate that the feature can operate
         directly on raw signal arrays.
 
-    Attributes
-    ----------
-    parent_extractor_type : list of callable or None
-        The stored list of predecessor functions.
-
     Notes
     -----
     A feature can have multiple potential predecessors.
 
     """
-
-    def __init__(self, *parent_extractor_type: List[Callable | None]):
-        parent_func = parent_extractor_type
-        if not parent_func:
-            parent_func = [None]
-        for p_func in parent_func:
-            assert p_func is None or callable(p_func)
-        self.parent_extractor_type = parent_func
-
-    def __call__(self, func: Callable) -> Callable:
-        r"""Apply the decorator to a function.
-
-        Parameters
-        ----------
-        func : callable
-            The feature extraction function to decorate.
-
-        Returns
-        -------
-        callable
-            The decorated function with the `parent_extractor_type`
-            attribute attached.
-
-        """
-        f = get_underlying_func(func)
-        f.parent_extractor_type = self.parent_extractor_type
-        return func
+    return partial(
+        _feature_predecessor_update, parent_extractor_type=parent_extractor_type
+    )
 
 
-class FeatureKind:
+def _feature_kind_update(func: Callable, *, kind: MultivariateFeature):
+    r"""Apply the :func:`feature_kind` decorator to a function.
+
+    Parameters
+    ----------
+    func : callable
+        The feature extraction function to decorate.
+    kind : ~eegdash.features.extractors.MultivariateFeature
+        An instance of a feature kind class, such as
+        :class:`~eegdash.features.extractors.UnivariateFeature` or
+        :class:`~eegdash.features.extractors.BivariateFeature`.
+
+    Returns
+    -------
+    callable
+        The decorated function with the ``feature_kind`` attribute set.
+
+    """
+    f = get_underlying_func(func)
+    f.feature_kind = kind
+    return func
+
+
+def feature_kind(kind: MultivariateFeature):
     r"""Decorator to specify the operational dimensionality of a feature.
 
     This decorator attaches a "feature kind" instance to a function,
@@ -168,42 +195,17 @@ class FeatureKind:
 
     Parameters
     ----------
-    feature_kind : ~eegdash.features.extractors.MultivariateFeature
+    kind : ~eegdash.features.extractors.MultivariateFeature
         An instance of a feature kind class, such as
         :class:`~eegdash.features.extractors.UnivariateFeature` or
         :class:`~eegdash.features.extractors.BivariateFeature`.
 
-    Attributes
-    ----------
-    feature_kind : ~eegdash.features.extractors.MultivariateFeature
-        The stored kind instance used for output formatting.
-
     """
-
-    def __init__(self, feature_kind: MultivariateFeature):
-        self.feature_kind = feature_kind
-
-    def __call__(self, func: Callable) -> Callable:
-        r"""Apply the decorator to a function.
-
-        Parameters
-        ----------
-        func : callable
-            The feature extraction function to decorate.
-
-        Returns
-        -------
-        callable
-            The decorated function with the `feature_kind` attribute set.
-
-        """
-        f = get_underlying_func(func)
-        f.feature_kind = self.feature_kind
-        return func
+    return partial(_feature_kind_update, kind=kind)
 
 
 # Syntax sugar
-univariate_feature = FeatureKind(UnivariateFeature())
+univariate_feature = feature_kind(UnivariateFeature())
 r"""Decorator to mark a feature as univariate.
 
 Indicates that the feature is computed for each channel independently.
@@ -212,7 +214,7 @@ original channel names.
 """
 
 
-bivariate_feature = FeatureKind(BivariateFeature())
+bivariate_feature = feature_kind(BivariateFeature())
 r"""Decorator to mark a feature as bivariate.
 
 Specifies that the feature operates on pairs of channels.
@@ -222,69 +224,13 @@ original channel name pairs.
 """
 
 
-multivariate_feature = FeatureKind(MultivariateFeature())
+multivariate_feature = feature_kind(MultivariateFeature())
 r"""Decorator to mark a feature as multivariate.
 
 Indicates that the feature operates on all channels simultaneously. The
 output naming convention is determined by the feature's internal logic
 rather than channel labels.
 """
-
-
-class PreprocessorOutputType:
-    r"""Decorator to specify the expected output type of a preprocessor.
-
-    Parameters
-    ----------
-    output_type : Type
-        The expected output type for the preprocessor.
-
-    Raises
-    ------
-    ValueError
-        If the provided `output_type` does not inherit from
-        :class:`~eegdash.features.preprocessors.BasePreprocessorOutputType`.
-
-    """
-
-    def __init__(self, output_type: Type):
-        if (
-            not inspect.isclass(output_type)
-            or not issubclass(output_type, BasePreprocessorOutputType)
-            or output_type is BasePreprocessorOutputType
-        ):
-            raise ValueError(
-                f"`output_type` must inherit from `PreprocessorOutputType`, got `{output_type}`."
-            )
-        self.output_type = output_type
-
-    def __call__(self, preprocessor: Callable) -> Callable:
-        r"""Apply the decorator to a preprocessor function.
-
-        Parameters
-        ----------
-        preprocessor : callable
-            The preprocessor function to decorate.
-
-        Returns
-        -------
-        callable
-            An instance of the class named after the preprocessor, inheriting from the specified
-            `output_type`, with the original preprocessor function as its implementation.
-
-        """
-        preprocessor_class = type(
-            preprocessor.__name__,
-            (self.output_type,),
-            {
-                "__call__": self.output_type._call_metadata
-                if "_metadata" in inspect.signature(preprocessor).parameters
-                else self.output_type._call,
-            },
-        )
-        preprocessor_instance = preprocessor_class(preprocessor)
-        preprocessor_instance = _update_wrapper(preprocessor_instance, preprocessor)
-        return preprocessor_instance
 
 
 def metadata_preprocessor(func: Callable):
@@ -315,7 +261,113 @@ def metadata_preprocessor(func: Callable):
     return func
 
 
-class ChannelPairer:
+def _preprocessor_output_type_wrap(preprocessor: Callable, *, output_type: Type):
+    r"""Apply the :func:`preprocessor_output_type` decorator to a preprocessor function.
+
+    Parameters
+    ----------
+    preprocessor : callable
+        The preprocessor function to decorate.
+    output_type : Type
+        The expected output type for the preprocessor. Must be a
+        :class:`eegdash.features.output_types.BasePreprocessorOutputType`.
+
+    Returns
+    -------
+    callable
+        An instance of the class named after the preprocessor, inheriting from
+        the specified `output_type`, with the original preprocessor function as
+        its implementation.
+
+    """
+    if (
+        not inspect.isclass(output_type)
+        or not issubclass(output_type, BasePreprocessorOutputType)
+        or output_type is BasePreprocessorOutputType
+    ):
+        raise ValueError(
+            "`output_type` must inherit from `BasePreprocessorOutputType`, "
+            + f"got `{output_type}`."
+        )
+    preprocessor_class = type(
+        preprocessor.__name__,
+        (output_type,),
+        {
+            "__call__": output_type._call_metadata
+            if "_metadata" in inspect.signature(preprocessor).parameters
+            else output_type._call,
+        },
+    )
+    preprocessor_instance = preprocessor_class(preprocessor)
+    preprocessor_instance = update_wrapper(preprocessor_instance, preprocessor)
+    return preprocessor_instance
+
+
+def preprocessor_output_type(output_type: Type):
+    r"""Decorator to specify the expected output type of a preprocessor.
+
+    Parameters
+    ----------
+    output_type : Type
+        The expected output type for the preprocessor. Must be a
+        :class:`eegdash.features.output_types.BasePreprocessorOutputType`.
+
+    Raises
+    ------
+    ValueError
+        If the provided `output_type` does not inherit from
+        :class:`~eegdash.features.preprocessors.BasePreprocessorOutputType`.
+
+    """
+    return partial(_preprocessor_output_type_wrap, output_type=output_type)
+
+
+def _channel_pairer_wrap(func: Callable, *, directed: bool = False):
+    r"""Apply the :func:`channel_pairer` decorator to a function.
+
+    Parameters
+    ----------
+    func : callable
+        The preprocessor function to decorate.
+    directed : bool
+        Whether the preprocessor assumes *directed* or *undirected* bivariate
+        iteration.
+
+    Returns
+    -------
+    callable
+        The decorated function with the extra ``pairs`` keyword parameter.
+
+    """
+
+    @metadata_preprocessor
+    @wraps(func)
+    def func_wrapper(
+        *args,
+        _metadata: dict,
+        pairs: Iterable[Tuple[str, str]] | None = None,
+        **kwargs,
+    ):
+        ch_names = _metadata["info"]["ch_names"]
+        if pairs is None:
+            pairs = len(ch_names)
+        else:
+            pairs = list(
+                zip(*[channel_names_to_indices(x, ch_names) for x in zip(*pairs)])
+            )
+        _metadata["ch_pair_iterator"] = BivariateIterator(pairs, directed=directed)
+        f = get_underlying_func(func)
+        if "_metadata" in inspect.signature(f).parameters:
+            kwargs["_metadata"] = _metadata
+        if hasattr(f, "metadata_preprocessor") and f.metadata_preprocessor:
+            return (*func(*args, **kwargs),)
+        else:
+            return (*func(*args, **kwargs), _metadata)
+
+    return func_wrapper
+
+
+def channel_pairer(directed: bool = False):
     r"""Decorator to set a feature preprocessor as a channel pairer.
 
     This decorator lets a feature preprocessor get an additional ``pairs``
@@ -330,42 +382,11 @@ class ChannelPairer:
         iteration.
 
     """
-
-    def __init__(self, directed: bool = False):
-        self.directed = directed
-
-    def __call__(self, func: Callable):
-        @metadata_preprocessor
-        @_wraps(func)
-        def func_wrapper(
-            *args,
-            _metadata: dict,
-            pairs: Iterable[Tuple[str, str]] | None = None,
-            **kwargs,
-        ):
-            ch_names = _metadata["info"]["ch_names"]
-            if pairs is None:
-                pairs = len(ch_names)
-            else:
-                pairs = list(
-                    zip(*[channel_names_to_indices(x, ch_names) for x in zip(*pairs)])
-                )
-            _metadata["ch_pair_iterator"] = BivariateIterator(
-                pairs, directed=self.directed
-            )
-            f = get_underlying_func(func)
-            if "_metadata" in inspect.signature(f).parameters:
-                kwargs["_metadata"] = _metadata
-            if hasattr(f, "metadata_preprocessor") and f.metadata_preprocessor:
-                return (*func(*args, **kwargs),)
-            else:
-                return (*func(*args, **kwargs), _metadata)
-
-        return func_wrapper
+    return partial(_channel_pairer_wrap, directed=directed)
 
 
 # Syntax sugar
-channel_pairer = ChannelPairer(directed=False)
+channel_pairer_undirected = channel_pairer(directed=False)
 r"""Decorator to mark a feature preprocessor as an undirected channel pairer.
 
 Specifies that the feature preprocessor operates on undirected pairs of
@@ -373,7 +394,7 @@ channels.
 
 """
 
-channel_directed_pairer = ChannelPairer(directed=True)
+channel_pairer_directed = channel_pairer(directed=True)
 r"""Decorator to mark a feature preprocessor as an undirected channel pairer.
 
 Specifies that the feature preprocessor operates on undirected pairs of

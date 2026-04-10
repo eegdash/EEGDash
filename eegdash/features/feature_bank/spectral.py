@@ -18,7 +18,7 @@ import numba as nb
 import numpy as np
 from scipy.signal import welch
 
-from ..decorators import FeaturePredecessor, univariate_feature
+from ..decorators import feature_predecessor, univariate_feature
 from . import utils
 from .signal import SIGNAL_PREDECESSORS
 
@@ -38,7 +38,7 @@ __all__ = [
 ]
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor(*SIGNAL_PREDECESSORS)
 def spectral_preprocessor(x, /, *, _metadata, **kwargs):
     r"""Compute the Power Spectral Density (PSD) using Welch's method.
 
@@ -82,7 +82,7 @@ def spectral_preprocessor(x, /, *, _metadata, **kwargs):
     return f, p
 
 
-@FeaturePredecessor(spectral_preprocessor)
+@feature_predecessor(spectral_preprocessor)
 def spectral_normalized_preprocessor(f, p, /):
     r"""Normalize the PSD so that the total power equals 1.
 
@@ -107,7 +107,7 @@ def spectral_normalized_preprocessor(f, p, /):
     return f, p / p.sum(axis=-1, keepdims=True)
 
 
-@FeaturePredecessor(spectral_preprocessor)
+@feature_predecessor(spectral_preprocessor)
 def spectral_db_preprocessor(f, p, /, eps=1e-15):
     r"""Convert the PSD to decibels.
 
@@ -135,7 +135,7 @@ def spectral_db_preprocessor(f, p, /, eps=1e-15):
     return f, 10 * np.log10(p + eps)
 
 
-@FeaturePredecessor(spectral_preprocessor)
+@feature_predecessor(spectral_preprocessor)
 @univariate_feature
 def spectral_root_total_power(f, p, /):
     r"""Calculate the square root of the total spectral power.
@@ -156,7 +156,7 @@ def spectral_root_total_power(f, p, /):
     return np.sqrt(p.sum(axis=-1))
 
 
-@FeaturePredecessor(spectral_normalized_preprocessor)
+@feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_moment(f, p, /):
     r"""Calculate the first spectral moment ('Weighted' Mean Frequency).
@@ -180,7 +180,7 @@ def spectral_moment(f, p, /):
     return np.sum(f * p, axis=-1)
 
 
-@FeaturePredecessor(spectral_preprocessor)
+@feature_predecessor(spectral_preprocessor)
 @univariate_feature
 def spectral_hjorth_activity(f, p, /):
     r"""Calculate Hjorth Activity in the frequency domain.
@@ -209,7 +209,7 @@ def spectral_hjorth_activity(f, p, /):
     return np.sum(p, axis=-1)
 
 
-@FeaturePredecessor(spectral_normalized_preprocessor)
+@feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_hjorth_mobility(f, p, /):
     r"""Calculate Hjorth Mobility in the frequency domain.
@@ -242,7 +242,7 @@ def spectral_hjorth_mobility(f, p, /):
     return np.sqrt(np.sum(np.power(f, 2) * p, axis=-1))
 
 
-@FeaturePredecessor(spectral_normalized_preprocessor)
+@feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_hjorth_complexity(f, p, /):
     r"""Calculate Hjorth Complexity in the frequency domain.
@@ -277,7 +277,7 @@ def spectral_hjorth_complexity(f, p, /):
     return np.sqrt(M4 * M0) / M2
 
 
-@FeaturePredecessor(spectral_normalized_preprocessor)
+@feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_entropy(f, p, /):
     r"""Calculate Spectral Entropy of thepower spectrum.
@@ -309,7 +309,7 @@ def spectral_entropy(f, p, /):
     return -np.sum(plogp, axis=-1)
 
 
-@FeaturePredecessor(spectral_normalized_preprocessor)
+@feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 @nb.njit(cache=True, fastmath=True)
 def spectral_edge(f, p, /, edge=0.9):
@@ -343,7 +343,7 @@ def spectral_edge(f, p, /, edge=0.9):
     return se
 
 
-@FeaturePredecessor(spectral_db_preprocessor)
+@feature_predecessor(spectral_db_preprocessor)
 @univariate_feature
 def spectral_slope(f, p, /):
     r"""Estimate the :math:`1/f` spectral slope using least-squares regression.
@@ -372,7 +372,7 @@ def spectral_slope(f, p, /):
     return {"exp": r[0], "int": r[1]}
 
 
-@FeaturePredecessor(
+@feature_predecessor(
     spectral_preprocessor,
     spectral_normalized_preprocessor,
     spectral_db_preprocessor,

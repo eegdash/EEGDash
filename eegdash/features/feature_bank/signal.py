@@ -28,7 +28,6 @@ from ..decorators import (
 from ..output_types import SignalOutputType
 
 __all__ = [
-    "SignalOutputType",
     "signal_hilbert_preprocessor",
     "signal_filter_preprocessor",
     "signal_decorrelation_time",

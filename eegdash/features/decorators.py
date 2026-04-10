@@ -79,7 +79,14 @@ def _add_params(wrapper, wrapped, new_args):
             kwargs_idx = i
     for new_param in new_args:
         param = new_param["signature"]
-        if param.kind in [
+        param_idx = -1
+        for i, p in enumerate(params):
+            if p.name == param.name:
+                param_idx = i
+                break
+        if param_idx >= 0:
+            params[param_idx] = param
+        elif param.kind in [
             inspect.Parameter.POSITIONAL_ONLY,
             inspect.Parameter.POSITIONAL_OR_KEYWORD,
         ]:

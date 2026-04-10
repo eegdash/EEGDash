@@ -38,31 +38,14 @@ __all__ = [
 
 
 @feature_predecessor()
-def spectral_preprocessor(x, /, *, _metadata, **kwargs):
+@utils.spectral_kwargs
+def spectral_preprocessor(x, /, *, _metadata, f_min, f_max, **kwargs):
     r"""Compute the Power Spectral Density (PSD) using Welch's method.
 
     Parameters
     ----------
     x : ndarray
         The input signal (shape: ..., n_times).
-    fs : int
-        Sampling frequency.
-        Defaults to `sfreq` in MNE's info.
-        Do not use unless you know what you are doing.
-    f_min : float | None
-        The minimum frequency. Use `None` for half the window length.
-        Defaults to the highpass frequency used to MNE's `filter`.
-    f_max : float | None
-        The maximum frequency. Use `None` for Nyquist.
-        Defaults to the lowpass frequency used to MNE's `filter`.
-    window_size_in_sec : float
-        Window size in seconds, replacing `nperseg`.
-        Only used if `nperseg` is not provided.
-        Defaults to 4 seconds.
-    overlap_in_sec : float
-        Window overlap in seconds, replacing `noverlap`.
-        Only used if `nperseg` and `noverlap` are not provided.
-        defaults to half of `window_size_in_sec`.
     **kwargs : dict
         Supports any `scipy.signal.welch` arguments like 'nperseg' and 'noverlap'.
 
@@ -74,7 +57,6 @@ def spectral_preprocessor(x, /, *, _metadata, **kwargs):
         Power Spectral Density.
 
     """
-    f_min, f_max, kwargs = utils.spectral_default_kwargs(kwargs, _metadata)
     f, p = welch(x, **kwargs)
     f_min, f_max = utils.get_valid_freq_band(kwargs["fs"], x.shape[-1], f_min, f_max)
     f, p = utils.slice_freq_band(f, p, f_min=f_min, f_max=f_max)

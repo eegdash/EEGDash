@@ -20,14 +20,16 @@ import numbers
 import numpy as np
 from scipy import signal, stats
 
-from ..decorators import FeaturePredecessor, PreprocessorOutputType, univariate_feature
-from ..output_types import BasePreprocessorOutputType
+from ..decorators import (
+    feature_predecessor,
+    preprocessor_output_type,
+    univariate_feature,
+)
+from ..output_types import SignalOutputType
 
 __all__ = [
-    "SignalOutputType",
     "signal_hilbert_preprocessor",
     "signal_filter_preprocessor",
-    "SIGNAL_PREDECESSORS",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
     "signal_hjorth_complexity",
@@ -45,15 +47,8 @@ __all__ = [
 ]
 
 
-class SignalOutputType(BasePreprocessorOutputType):
-    pass
-
-
-SIGNAL_PREDECESSORS = [None, SignalOutputType]
-
-
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
-@PreprocessorOutputType(SignalOutputType)
+@feature_predecessor()
+@preprocessor_output_type(SignalOutputType)
 def signal_hilbert_preprocessor(x, /):
     r"""Compute the amplitude envelope of the analytic signal.
 
@@ -71,8 +66,8 @@ def signal_hilbert_preprocessor(x, /):
     return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
-@PreprocessorOutputType(SignalOutputType)
+@feature_predecessor()
+@preprocessor_output_type(SignalOutputType)
 def signal_filter_preprocessor(x, /, *, _metadata, f_min, f_max, num_taps=None):
     """Linear-phase FIR band-pass filter.
 
@@ -111,7 +106,7 @@ def signal_filter_preprocessor(x, /, *, _metadata, f_min, f_max, num_taps=None):
     )  # Zero-phase application (preserves waveform shape)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_mean(x, /):
     r"""Compute the temporal mean of the signal.
@@ -131,7 +126,7 @@ def signal_mean(x, /):
     return x.mean(axis=-1)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_variance(x, /, **kwargs):
     r"""Compute the temporal variance of the signal.
@@ -153,7 +148,7 @@ def signal_variance(x, /, **kwargs):
     return x.var(axis=-1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_std(x, /, **kwargs):
     r"""Compute the temporal standard deviation of the signal.
@@ -175,7 +170,7 @@ def signal_std(x, /, **kwargs):
     return x.std(axis=-1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_skewness(x, /, **kwargs):
     r"""Compute the temporal skewness of the signal.
@@ -197,7 +192,7 @@ def signal_skewness(x, /, **kwargs):
     return stats.skew(x, axis=x.ndim - 1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_kurtosis(x, /, **kwargs):
     r"""Compute the temporal kurtosis of the signal.
@@ -219,7 +214,7 @@ def signal_kurtosis(x, /, **kwargs):
     return stats.kurtosis(x, axis=x.ndim - 1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_root_mean_square(x, /):
     r"""Calculate the Root Mean Square (RMS) magnitude.
@@ -244,7 +239,7 @@ def signal_root_mean_square(x, /):
     return np.sqrt(np.power(x, 2).mean(axis=-1))
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_peak_to_peak(x, /, **kwargs):
     r"""Calculate the peak-to-peak (maximum range) of the signal.
@@ -274,7 +269,7 @@ def signal_peak_to_peak(x, /, **kwargs):
     return np.ptp(x, axis=-1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     r"""Compute the q-th quantile of the signal.
@@ -303,7 +298,7 @@ def signal_quantile(x, /, q: numbers.Number = 0.5, **kwargs):
     return np.quantile(x, q=q, axis=-1, **kwargs)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_line_length(x, /):
     r"""Calculate the Mean Signal Line Length.
@@ -323,7 +318,7 @@ def signal_line_length(x, /):
     return np.abs(np.diff(x, axis=-1)).mean(axis=-1)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_zero_crossings(x, /, threshold=1e-15):
     r"""Count the number of times the signal crosses the zero axis.
@@ -359,7 +354,7 @@ def signal_zero_crossings(x, /, threshold=1e-15):
     return zero_cross
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_hjorth_mobility(x, /):
     r"""Calculate the Hjorth Mobility of the signal.
@@ -400,7 +395,7 @@ def signal_hjorth_mobility(x, /):
     return np.diff(x, axis=-1).std(axis=-1) / x.std(axis=-1)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_hjorth_complexity(x, /):
     r"""Calculate the Hjorth Complexity of the signal.
@@ -443,7 +438,7 @@ def signal_hjorth_complexity(x, /):
     ).var(axis=-1)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @univariate_feature
 def signal_decorrelation_time(x, /, *, _metadata):
     r"""Calculate the Decorrelation Time of the signal.

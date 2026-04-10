@@ -22,11 +22,11 @@ from __future__ import annotations
 import inspect
 from collections.abc import Callable
 
-from . import feature_bank, kinds
+from . import feature_bank, kinds, output_types
 from .base_utils import get_underlying_func
 from .extractors import FeatureExtractor
 from .kinds import MultivariateFeature
-from .output_types import AsInputOutputType, BasePreprocessorOutputType
+from .output_types import BasePreprocessorOutputType
 
 __all__ = [
     "get_all_feature_preprocessors",
@@ -54,7 +54,11 @@ def _is_feature_preprocessor(x) -> bool:
 
 def _is_preprocessor_output_type(x) -> bool:
     """Check if x is a preprocessor output type (subclass of :class:`BasePreprocessorOutputType`)."""
-    return inspect.isclass(x) and issubclass(x, BasePreprocessorOutputType)
+    return (
+        inspect.isclass(x)
+        and issubclass(x, BasePreprocessorOutputType)
+        and x is not BasePreprocessorOutputType
+    )
 
 
 def _is_feature_kind(x) -> bool:
@@ -181,9 +185,9 @@ def get_all_preprocessor_output_types() -> list[
         A list of (name, class) tuples for all discovered preprocessor output types.
 
     """
-    return [(AsInputOutputType.__name__, AsInputOutputType)] + inspect.getmembers(
-        feature_bank, _is_preprocessor_output_type
-    )
+    return inspect.getmembers(
+        output_types, _is_preprocessor_output_type
+    ) + inspect.getmembers(feature_bank, _is_preprocessor_output_type)
 
 
 def get_all_feature_kinds() -> list[tuple[str, type[MultivariateFeature]]]:

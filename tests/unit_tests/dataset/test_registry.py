@@ -432,3 +432,154 @@ def test_register_api_success():
     with patch("eegdash.dataset.registry.fetch_datasets_from_api", return_value=df):
         registered = register_openneuro_datasets(from_api=True)
         assert "DS002" in registered
+
+
+# ---------------------------------------------------------------------------
+# Canonical-name aliases
+# ---------------------------------------------------------------------------
+import logging
+import math
+
+import pandas as pd
+import pytest
+
+from eegdash.dataset.registry import (
+    _parse_canonical_names,
+    register_openneuro_datasets,
+)
+
+
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        (None, []),
+        ("", []),
+        ("   ", []),
+        ("nan", []),
+        ("null", []),
+        ("[]", []),
+        ("<NA>", []),
+        (math.nan, []),
+        (pd.NA, []),
+        (pd.NaT, []),
+        ([], []),
+        (["A", " B ", ""], ["A", "B"]),
+        (["Foo", "Foo", "Bar"], ["Foo", "Bar"]),
+        ('["BrainTreeBank"]', ["BrainTreeBank"]),
+        ('["SleepEDF", "SleepEDFPlus"]', ["SleepEDF", "SleepEDFPlus"]),
+        ('["Foo", "Foo"]', ["Foo"]),
+        ('"OnlyOne"', ["OnlyOne"]),
+        ("Foo, Bar", ["Foo", "Bar"]),
+    ],
+)
+def test_parse_canonical_names(raw, expected):
+    assert _parse_canonical_names(raw) == expected
+
+
+def _register(tmp_path, rows, namespace=None):
+    csv_path = tmp_path / "summary.csv"
+    pd.DataFrame(rows).to_csv(csv_path, index=False)
+    ns = {} if namespace is None else namespace
+    register_openneuro_datasets(
+        summary_file=csv_path, namespace=ns, base_class=DummyBase
+    )
+    return ns
+
+
+@pytest.mark.parametrize(
+    "canonical_field, expected_aliases",
+    [
+        ('["BrainTreeBank"]', ["BrainTreeBank"]),
+        ('["SleepEDF", "SleepEDFPlus"]', ["SleepEDF", "SleepEDFPlus"]),
+        ('["Sleep-EDF+", "ValidName"]', ["ValidName"]),
+        ('["class", "None", "True", "GoodName"]', ["GoodName"]),
+        ('["Foo", "Foo", "Bar"]', ["Foo", "Bar"]),
+        ('["   ", "Ok"]', ["Ok"]),
+        ("[]", []),
+        ("", []),
+    ],
+    ids=[
+        "single",
+        "multiple",
+        "bad-ident",
+        "kw",
+        "dup",
+        "blank-entry",
+        "empty",
+        "blank",
+    ],
+)
+def test_canonical_name_registration(tmp_path, canonical_field, expected_aliases):
+    ns = _register(tmp_path, [{"dataset": "ds1", "canonical_name": canonical_field}])
+    assert ns["DS1"].canonical_name == expected_aliases
+    for alias in expected_aliases:
+        assert ns[alias] is ns["DS1"]
+        assert alias in ns["__all__"]
+
+
+def test_canonical_name_column_absent(tmp_path):
+    (tmp_path / "s.csv").write_text("dataset\nds_nocol\n")
+    ns = {}
+    register_openneuro_datasets(
+        summary_file=tmp_path / "s.csv", namespace=ns, base_class=DummyBase
+    )
+    assert ns["DS_NOCOL"].canonical_name == []
+
+
+@pytest.mark.parametrize(
+    "seed, rows, taken, winner_ds",
+    [
+        # Alias-vs-alias: first row wins.
+        (
+            None,
+            [
+                {"dataset": "ds_a", "canonical_name": '["Shared"]'},
+                {"dataset": "ds_b", "canonical_name": '["Shared"]'},
+            ],
+            "Shared",
+            "ds_a",
+        ),
+        # Alias collides with another row's DS class name → DS class keeps it.
+        (
+            None,
+            [
+                {"dataset": "ds_a", "canonical_name": '["DS_B"]'},
+                {"dataset": "ds_b", "canonical_name": "[]"},
+            ],
+            "DS_B",
+            "ds_b",
+        ),
+        # Alias collides with a pre-existing module global → global untouched.
+        (
+            "EEGDashDataset",
+            [{"dataset": "ds1", "canonical_name": '["EEGDashDataset", "Good"]'}],
+            "EEGDashDataset",
+            None,  # None ⇒ expect the seeded object to remain
+        ),
+    ],
+    ids=["alias-vs-alias", "alias-vs-ds-class", "alias-vs-module-global"],
+)
+def test_canonical_name_reserved_names_skipped(
+    tmp_path, caplog, seed, rows, taken, winner_ds
+):
+    seed_obj = object()
+    ns = {seed: seed_obj} if seed else {}
+    with caplog.at_level(logging.WARNING, logger="eegdash.dataset.registry"):
+        _register(tmp_path, rows, namespace=ns)
+
+    if winner_ds is None:
+        assert ns[taken] is seed_obj
+    else:
+        assert ns[taken]._dataset == winner_ds
+    assert any(
+        "already registered" in r.message or "reserved" in r.message
+        for r in caplog.records
+    )
+
+
+def test_canonical_name_in_docstring(tmp_path):
+    ns = _register(
+        tmp_path, [{"dataset": "ds_doc", "canonical_name": '["Foo", "Bar"]'}]
+    )
+    doc = ns["DS_DOC"].__doc__ or ""
+    assert "Also importable as" in doc and "``Foo``" in doc and "``Bar``" in doc

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import keyword
+import logging
 import os
 import urllib.error
 import urllib.request
@@ -10,6 +12,63 @@ from typing import Any, Dict
 import pandas as pd
 
 from ..paths import get_default_cache_dir
+
+logger = logging.getLogger(__name__)
+
+
+def _is_valid_alias(name: str) -> bool:
+    """Return True if ``name`` is safe to inject into a module namespace.
+
+    A valid alias must be a Python identifier and not a reserved keyword
+    (hard or soft), because both forms would make ``from eegdash.dataset
+    import <name>`` fail with ``SyntaxError``.
+    """
+    if not name.isidentifier():
+        return False
+    if keyword.iskeyword(name):
+        return False
+    # `issoftkeyword` added in 3.9; guard for older minors just in case.
+    if getattr(keyword, "issoftkeyword", lambda _s: False)(name):
+        return False
+    return True
+
+
+def _parse_canonical_names(raw: Any) -> list[str]:
+    """Parse the ``canonical_name`` field from a CSV row or API document.
+
+    The field may arrive as: a real ``list`` (API path), a JSON-encoded list
+    string (CSV path), a plain string (legacy / single-name CSV), ``None``,
+    ``pd.NA``/``pd.NaT``, or plain ``NaN``. Empty / null variants normalise
+    to ``[]``. Duplicates within a single row are collapsed, preserving
+    first-seen order. No identifier validation happens here — that is the
+    registry's job.
+    """
+    if raw is None:
+        return []
+    if isinstance(raw, list):
+        items = [str(x).strip() for x in raw if str(x).strip()]
+        return list(dict.fromkeys(items))
+    # ``pd.isna`` handles NaN, pd.NA, and pd.NaT uniformly on scalars but
+    # raises on some non-scalars, so guard.
+    try:
+        if pd.isna(raw):
+            return []
+    except (TypeError, ValueError):
+        pass
+    text = str(raw).strip()
+    if not text or text.lower() in {"nan", "none", "null", "[]", "<na>", "nat"}:
+        return []
+    try:
+        parsed = json.loads(text)
+    except (ValueError, TypeError):
+        parsed = None
+    if isinstance(parsed, list):
+        items = [str(x).strip() for x in parsed if str(x).strip()]
+    elif isinstance(parsed, str) and parsed.strip():
+        items = [parsed.strip()]
+    else:
+        items = [p.strip() for p in text.split(",") if p.strip()]
+    return list(dict.fromkeys(items))
 
 
 def _human_readable_size(num_bytes: int | float | None) -> str:
@@ -120,38 +179,91 @@ def register_openneuro_datasets(
         if summary_path.exists():
             df = pd.read_csv(summary_path, comment="#", skip_blank_lines=True)
 
+    # Materialise once: iterrows is expensive and we traverse twice.
+    rows: list[tuple[str, pd.Series]] = []
+    ds_class_names: set[str] = set()
     for _, row_series in df.iterrows():
-        # Use the explicit 'dataset' column, not the CSV index.
-        dataset_id = str(row_series.get("dataset", "")).strip()
-        if not dataset_id:
+        ds_id = str(row_series.get("dataset", "")).strip()
+        if not ds_id:
             continue
+        rows.append((ds_id, row_series))
+        ds_class_names.add(ds_id.upper())
 
+    # Snapshot existing namespace keys so an alias never shadows a pre-
+    # existing module global (e.g. ``EEGDashDataset``, imports, helpers).
+    # Classes we are about to register get their own ``ds_class_names``
+    # check; module-level names are the blind spot.
+    reserved_names: set[str] = set(namespace.keys())
+
+    taken_aliases: set[str] = set()
+
+    for dataset_id, row_series in rows:
         class_name = dataset_id.upper()
+
+        # Validate canonical names before building the class so the resulting
+        # class attribute reflects only the names we actually expose.
+        raw_aliases = _parse_canonical_names(row_series.get("canonical_name"))
+        valid_aliases: list[str] = []
+        for alias in raw_aliases:
+            if not _is_valid_alias(alias):
+                logger.warning(
+                    "Skipping canonical_name %r for dataset %s: not an "
+                    "importable identifier (must be a valid non-keyword "
+                    "Python name).",
+                    alias,
+                    dataset_id,
+                )
+                continue
+            if alias == class_name:
+                # Alias matches the DS-style class we are about to register;
+                # nothing extra to do and no collision worth warning about.
+                continue
+            if (
+                alias in ds_class_names
+                or alias in taken_aliases
+                or alias in reserved_names
+            ):
+                logger.warning(
+                    "Skipping canonical_name %r for dataset %s: name already "
+                    "registered or reserved in the target namespace.",
+                    alias,
+                    dataset_id,
+                )
+                continue
+            valid_aliases.append(alias)
+            taken_aliases.add(alias)
+
         init = _make_dataset_init(dataset_id, base_class)
 
         # Generate rich docstring with dataset metadata
-        doc = _generate_rich_docstring(dataset_id, row_series, base_class)
-
-        # init.__doc__ = doc
+        doc = _generate_rich_docstring(
+            dataset_id, row_series, base_class, canonical_names=valid_aliases
+        )
 
         cls = type(
             class_name,
             (base_class,),
             {
                 "_dataset": dataset_id,
+                "canonical_name": list(valid_aliases),
                 "__init__": init,
                 "__doc__": doc,
-                "__module__": module_name,  #
+                "__module__": module_name,
             },
         )
 
         namespace[class_name] = cls
         registered[class_name] = cls
 
-        if add_to_all:
-            ns_all = namespace.setdefault("__all__", [])
-            if isinstance(ns_all, list) and class_name not in ns_all:
-                ns_all.append(class_name)
+        ns_all = namespace.setdefault("__all__", []) if add_to_all else None
+        if add_to_all and isinstance(ns_all, list) and class_name not in ns_all:
+            ns_all.append(class_name)
+
+        for alias in valid_aliases:
+            namespace[alias] = cls
+            registered[alias] = cls
+            if add_to_all and isinstance(ns_all, list) and alias not in ns_all:
+                ns_all.append(alias)
 
     return registered
 
@@ -171,7 +283,10 @@ def _clean_or_unknown(value: object) -> str:
 
 
 def _generate_rich_docstring(
-    dataset_id: str, row_series: pd.Series, base_class: type
+    dataset_id: str,
+    row_series: pd.Series,
+    base_class: type,
+    canonical_names: list[str] | None = None,
 ) -> str:
     """Generate a comprehensive, well-formatted docstring for a dataset class.
 
@@ -185,6 +300,10 @@ def _generate_rich_docstring(
     base_class : type
         The base class from which the new dataset class inherits. Used to
         generate the "See Also" section of the docstring.
+    canonical_names : list[str], optional
+        Validated canonical names registered as class aliases for this
+        dataset. When provided, they are listed in the docstring summary so
+        ``help(MyDataset)`` shows every importable name.
 
     Returns
     -------
@@ -192,6 +311,7 @@ def _generate_rich_docstring(
         A formatted docstring.
 
     """
+    canonical_names = list(canonical_names or [])
     n_subjects = _clean_or_unknown(row_series.get("n_subjects"))
     n_records = _clean_or_unknown(row_series.get("n_records"))
     n_tasks = _clean_or_unknown(row_series.get("n_tasks"))
@@ -221,6 +341,10 @@ def _generate_rich_docstring(
     if summary_bits:
         summary_line = f"{summary_line} {'; '.join(summary_bits)}."
     summary_lines = [summary_line]
+
+    if canonical_names:
+        alias_text = ", ".join(f"``{n}``" for n in canonical_names)
+        summary_lines.append(f"Also importable as: {alias_text}.")
 
     # Build the subjects/recordings/tasks line with optional citation badge
     stats_parts = []
@@ -443,6 +567,7 @@ def fetch_datasets_from_api(
         # Map API fields to expected CSV columns
         row = {
             "dataset": ds_id,
+            "canonical_name": json.dumps(ds.get("canonical_name") or []),
             "n_subjects": demographics.get("subjects_count", 0) or 0,
             "n_records": ds.get("total_files", 0) or 0,
             "n_tasks": len(ds.get("tasks", []) or []),
@@ -578,6 +703,7 @@ def fetch_chart_data_from_api(
 
         row = {
             "dataset": ds_id,
+            "canonical_name": json.dumps(ds.get("canonical_name") or []),
             "dataset_title": ds.get("computed_title") or ds.get("name", ""),
             "n_subjects": demographics.get("subjects_count") or 0,
             "n_records": ds.get("total_files") or 0,

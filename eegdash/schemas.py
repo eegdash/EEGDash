@@ -349,6 +349,12 @@ class Dataset(TypedDict, total=False):
         Unique identifier (e.g., "ds001785").
     name : str
         Descriptive title of the dataset.
+    canonical_name : list[str] | None
+        Canonical / community-recognised name(s) for the dataset, each a valid
+        Python identifier (e.g. ``["BrainTreeBank"]``, ``["SleepEDF",
+        "SleepEDFPlus"]``). Used to register importable class aliases alongside
+        the ``DS…``-style ID. Empty list or ``None`` means no alias is
+        registered.
     source : str
         Origin source (e.g., "openneuro", "nemar").
     readme : str | None
@@ -413,6 +419,7 @@ class Dataset(TypedDict, total=False):
     # Identity
     dataset_id: str
     name: str
+    canonical_name: list[str] | None
     source: str
     readme: str | None
     ingestion_fingerprint: str | None
@@ -480,6 +487,7 @@ def create_dataset(
     *,
     dataset_id: str,
     name: str | None = None,
+    canonical_name: list[str] | None = None,
     source: str = "openneuro",
     readme: str | None = None,
     recording_modality: list[str] | None = None,
@@ -546,6 +554,11 @@ def create_dataset(
         Dataset identifier (e.g., "ds001785").
     name : str, optional
         Dataset title/name.
+    canonical_name : list[str], optional
+        Canonical / community-recognised name(s) for the dataset (each a valid
+        Python identifier, e.g. ``["BrainTreeBank"]`` or ``["SleepEDF",
+        "SleepEDFPlus"]``). Used by the dataset class registry to expose
+        importable aliases. Empty list or ``None`` registers no aliases.
     source : str, default "openneuro"
         Data source ("openneuro", "nemar", "gin").
     recording_modality : list[str], optional
@@ -650,9 +663,16 @@ def create_dataset(
         handedness_distribution=handedness_distribution,
     )
 
+    _canonical = (
+        [n.strip() for n in canonical_name if isinstance(n, str) and n.strip()]
+        if canonical_name
+        else []
+    )
+
     dataset = Dataset(
         dataset_id=dataset_id,
         name=name or dataset_id,
+        canonical_name=_canonical or None,
         source=source,
         readme=readme,
         recording_modality=recording_modality or ["eeg"],

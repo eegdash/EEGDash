@@ -234,9 +234,12 @@ class FeatureExtractor(TrainableFeature):
                 fe = f
                 f = f.preprocessor
             f = get_underlying_func(f)
-            if fe is not None and isinstance(f, AsInputOutputType):
-                fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
-                continue
+            if isinstance(f, AsInputOutputType):
+                if fe is not None:
+                    fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
+                    continue
+                elif hasattr(parent_type, "feature_kind"):
+                    continue
             pe_type = getattr(f, "parent_extractor_type", [SignalOutputType])
             if parent_type in pe_type:
                 continue
@@ -338,6 +341,7 @@ class FeatureExtractor(TrainableFeature):
             super().__call__()
         results_dict = dict()
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
+        preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
             if (
                 isinstance(f, FeatureExtractor)
@@ -349,6 +353,10 @@ class FeatureExtractor(TrainableFeature):
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
                 r = f_und.feature_kind(r, _metadata=_metadata)
+            elif hasattr(preprocessor_f_und, "feature_kind") and not isinstance(
+                f_und, FeatureExtractor
+            ):
+                r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
             if not isinstance(fname, str) or not fname:
                 fname = getattr(f_und, "__name__", "")
             if isinstance(r, dict):

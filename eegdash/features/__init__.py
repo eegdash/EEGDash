@@ -39,6 +39,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     dimensionality_petrosian_fractal_dim,
     pick_channel_pairs_preprocessor,
     pick_channels_preprocessor,
+    preprocessor_as_feature,
     signal_decorrelation_time,
     signal_filter_preprocessor,
     signal_hilbert_preprocessor,
@@ -185,4 +186,6 @@ __all__ = [
     "spectral_hjorth_activity",
     "spectral_hjorth_mobility",
     "spectral_hjorth_complexity",
+    # Utils
+    "preprocessor_as_feature",
 ]

@@ -583,3 +583,79 @@ def test_canonical_name_in_docstring(tmp_path):
     )
     doc = ns["DS_DOC"].__doc__ or ""
     assert "Also importable as" in doc and "``Foo``" in doc and "``Bar``" in doc
+
+
+# ---------------------------------------------------------------------------
+# _resolve_author_year: shared precedence rule for the author-year column
+# ---------------------------------------------------------------------------
+from eegdash.dataset.registry import _resolve_author_year  # noqa: E402
+
+
+@pytest.mark.parametrize(
+    "name_source, raw_aliases, explicit, expected",
+    [
+        # Explicit column value always wins.
+        ("author_year", ["Smith2023"], "Jones2024", "Jones2024"),
+        ("canonical", ["BrainTreeBank"], "Smith2023", "Smith2023"),
+        # No explicit → fall back to first alias ONLY when source=author_year.
+        ("author_year", ["Smith2023", "Smith2023_exp2"], None, "Smith2023"),
+        ("author_year", ["Smith2023"], "", "Smith2023"),
+        # Canonical source: no fallback to alias.
+        ("canonical", ["BrainTreeBank"], None, None),
+        # No inputs → None.
+        ("none", [], None, None),
+        ("", None, None, None),
+        # Explicit whitespace-only is treated as empty.
+        ("author_year", ["Smith2023"], "   ", "Smith2023"),
+        # Strips whitespace on alias fallback.
+        ("author_year", ["  Smith2023  "], None, "Smith2023"),
+    ],
+)
+def test_resolve_author_year(name_source, raw_aliases, explicit, expected):
+    assert (
+        _resolve_author_year(
+            name_source=name_source, raw_aliases=raw_aliases, explicit=explicit
+        )
+        == expected
+    )
+
+
+def test_identity_block_rendered_in_docstring(tmp_path):
+    """3-line :Study:/:Author (year):/:Canonical: field block shows up."""
+    ns = _register(
+        tmp_path,
+        [
+            {
+                "dataset": "ds_id",
+                "dataset_title": "Example Study",
+                "source": "openneuro",
+                "canonical_name": '["Foo"]',
+                "name_source": "canonical",
+                "author_year": "Smith2023",
+            }
+        ],
+    )
+    doc = ns["DS_ID"].__doc__ or ""
+    assert "Example Study" in doc.splitlines()[0]
+    assert ":Study: ``ds_id`` (OpenNeuro)" in doc
+    assert ":Author (year): ``Smith2023``" in doc
+    assert ":Canonical: ``Foo``" in doc
+
+
+def test_identity_block_suppresses_author_year_in_canonical(tmp_path):
+    """When canonical equals the author_year, the Canonical row is em-dash."""
+    ns = _register(
+        tmp_path,
+        [
+            {
+                "dataset": "ds_same",
+                "dataset_title": "T",
+                "source": "openneuro",
+                "canonical_name": '["Smith2023"]',
+                "name_source": "author_year",
+            }
+        ],
+    )
+    doc = ns["DS_SAME"].__doc__ or ""
+    assert ":Author (year): ``Smith2023``" in doc
+    assert ":Canonical: —" in doc

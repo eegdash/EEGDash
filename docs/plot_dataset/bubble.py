@@ -426,9 +426,12 @@ def generate_dataset_bubble(
         }
         ref_text = ref_labels.get(x_field)
         if ref_text and lx_min < lx_max:
-            t = 0.92  # position above the data cloud, on the clean line
+            t = 0.92  # position against the clean segment of the 1:1 line
             annot_log = (1 - t) * lx_min + t * lx_max
             annot_xy = np.log10(10**annot_log)
+            # Place the label BELOW the diagonal (toward the data cloud),
+            # with the arrow pointing up-left back to the reference line.
+            # Previously the label sat ABOVE the line in the empty quadrant.
             fig.add_annotation(
                 x=annot_xy,
                 y=annot_xy,
@@ -438,8 +441,8 @@ def generate_dataset_bubble(
                 arrowsize=1.5,
                 arrowwidth=1.5,
                 arrowcolor="#9ca3af",
-                ax=-80,
-                ay=-50,
+                ax=60,
+                ay=50,
                 axref="pixel",
                 ayref="pixel",
                 font=dict(size=17, color="#6b7280"),
@@ -531,7 +534,6 @@ def generate_dataset_bubble(
             family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
             size=16,
         ),
-        title=dict(text="", x=0.01, xanchor="left", y=0.98, yanchor="top"),
     )
 
     # (footnote removed — branding handles attribution)

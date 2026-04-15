@@ -12,7 +12,7 @@ from collections.abc import Callable
 
 import numpy as np
 
-from ..decorators import wraps, preprocessor_output_type
+from ..decorators import preprocessor_output_type, wraps
 from ..output_types import AsInputOutputType
 
 __all__ = [

@@ -15,6 +15,39 @@ from ..paths import get_default_cache_dir
 
 logger = logging.getLogger(__name__)
 
+# Value tags for the ``name_source`` column — the name-suggester pipeline
+# fills these in; downstream code branches on them to render the
+# "Author (year)" vs "Canonical" rows.
+NAME_SOURCE_CANONICAL = "canonical"
+NAME_SOURCE_AUTHOR_YEAR = "author_year"
+NAME_SOURCE_NONE = "none"
+
+
+def _resolve_author_year(
+    *,
+    name_source: str,
+    raw_aliases: list[str] | None,
+    explicit: object = None,
+) -> str | None:
+    """Pick a single ``FirstAuthorSurnameYear`` from catalog metadata.
+
+    Prefers an explicit ``author_year`` column value when present;
+    otherwise falls back to the first alias when the LLM output marked
+    the entry as ``name_source == "author_year"`` (legacy layout).
+    Returns ``None`` when neither yields a usable string.
+    """
+    explicit_str = str(explicit).strip() if explicit else ""
+    if explicit_str:
+        return explicit_str
+    if (
+        name_source
+        and name_source.strip().lower() == NAME_SOURCE_AUTHOR_YEAR
+        and raw_aliases
+    ):
+        first = str(raw_aliases[0]).strip()
+        return first or None
+    return None
+
 
 def _is_valid_alias(name: str) -> bool:
     """Return True if ``name`` is safe to inject into a module namespace.
@@ -233,11 +266,23 @@ def register_openneuro_datasets(
             valid_aliases.append(alias)
             taken_aliases.add(alias)
 
+        # Pull the author-year identifier from the row — see
+        # :func:`_resolve_author_year` for the shared precedence rule.
+        author_year_name = _resolve_author_year(
+            name_source=str(row_series.get("name_source") or ""),
+            raw_aliases=raw_aliases,
+            explicit=row_series.get("author_year"),
+        )
+
         init = _make_dataset_init(dataset_id, base_class)
 
         # Generate rich docstring with dataset metadata
         doc = _generate_rich_docstring(
-            dataset_id, row_series, base_class, canonical_names=valid_aliases
+            dataset_id,
+            row_series,
+            base_class,
+            canonical_names=valid_aliases,
+            author_year_name=author_year_name,
         )
 
         cls = type(
@@ -287,6 +332,7 @@ def _generate_rich_docstring(
     row_series: pd.Series,
     base_class: type,
     canonical_names: list[str] | None = None,
+    author_year_name: str | None = None,
 ) -> str:
     """Generate a comprehensive, well-formatted docstring for a dataset class.
 
@@ -301,9 +347,12 @@ def _generate_rich_docstring(
         The base class from which the new dataset class inherits. Used to
         generate the "See Also" section of the docstring.
     canonical_names : list[str], optional
-        Validated canonical names registered as class aliases for this
-        dataset. When provided, they are listed in the docstring summary so
-        ``help(MyDataset)`` shows every importable name.
+        Validated community / canonical names registered as class aliases
+        for this dataset. When provided, they are listed in the docstring
+        summary so ``help(MyDataset)`` shows every importable name.
+    author_year_name : str, optional
+        ``FirstAuthorSurnameYear`` identifier (e.g. ``"Alexander2017"``)
+        if known. Shown on its own line in the docstring header.
 
     Returns
     -------
@@ -329,6 +378,51 @@ def _generate_rich_docstring(
     else:
         citation_count = None
 
+    # Dataset title becomes the one-line summary (Sphinx picks it up as
+    # the short description).
+    dataset_title = _clean_optional(
+        row_series.get("dataset_title") or row_series.get("name")
+    )
+
+    # Source label for the Study line — the dataset_id alone doesn't tell
+    # readers whether it comes from OpenNeuro, NeMAR, etc.
+    source_raw = _clean_optional(row_series.get("source")) or ""
+    source_label_map = {
+        "openneuro": "OpenNeuro",
+        "nemar": "NeMAR",
+        "gin": "GIN",
+    }
+    source_label = source_label_map.get(source_raw.lower(), source_raw or "OpenNeuro")
+
+    # Three-line identity block: study id, author-year, canonical name.
+    # Each line is a Sphinx field so the rendered page gets a clean
+    # two-column key/value layout. Duplicating the author-year alias on
+    # the Canonical row looks like a bug, so filter it out here.
+    canonical_for_display = [n for n in canonical_names if n != author_year_name]
+    em_dash = "—"
+    identity_lines: list[str] = [
+        f":Study: ``{dataset_id}`` ({source_label})",
+        f":Author (year): ``{author_year_name}``"
+        if author_year_name
+        else f":Author (year): {em_dash}",
+        (
+            ":Canonical: " + ", ".join(f"``{n}``" for n in canonical_for_display)
+            if canonical_for_display
+            else f":Canonical: {em_dash}"
+        ),
+    ]
+
+    # Import-as line: every alias you can use from eegdash.dataset.
+    importable: list[str] = [dataset_id.upper()]
+    if author_year_name and author_year_name not in importable:
+        importable.append(author_year_name)
+    for name in canonical_names:
+        if name not in importable:
+            importable.append(name)
+    alias_line = (
+        "Also importable as: " + ", ".join(f"``{n}``" for n in importable) + "."
+    )
+
     summary_bits: list[str] = []
     if modality:
         summary_bits.append(f"Modality: ``{modality}``")
@@ -336,17 +430,8 @@ def _generate_rich_docstring(
         summary_bits.append(f"Experiment type: ``{exp_type}``")
     if subject_type:
         summary_bits.append(f"Subject type: ``{subject_type}``")
+    modality_line = "; ".join(summary_bits) + "." if summary_bits else ""
 
-    summary_line = f"OpenNeuro dataset ``{dataset_id}``."
-    if summary_bits:
-        summary_line = f"{summary_line} {'; '.join(summary_bits)}."
-    summary_lines = [summary_line]
-
-    if canonical_names:
-        alias_text = ", ".join(f"``{n}``" for n in canonical_names)
-        summary_lines.append(f"Also importable as: {alias_text}.")
-
-    # Build the subjects/recordings/tasks line with optional citation badge
     stats_parts = []
     if n_subjects != "Unknown":
         stats_parts.append(f"Subjects: {n_subjects}")
@@ -354,9 +439,19 @@ def _generate_rich_docstring(
         stats_parts.append(f"recordings: {n_records}")
     if n_tasks != "Unknown":
         stats_parts.append(f"tasks: {n_tasks}")
+    stats_line = "; ".join(stats_parts) + "." if stats_parts else ""
 
-    if stats_parts:
-        stats_line = "; ".join(stats_parts) + "."
+    summary_lines: list[str] = []
+    if dataset_title:
+        summary_lines.append(dataset_title)
+        summary_lines.append("")  # blank line before the field list
+    summary_lines.extend(identity_lines)
+    summary_lines.append("")
+    summary_lines.append(alias_line)
+    if modality_line:
+        summary_lines.append("")
+        summary_lines.append(modality_line)
+    if stats_line:
         summary_lines.append(stats_line)
 
     doi_raw = (
@@ -564,10 +659,25 @@ def fetch_datasets_from_api(
         else:
             cognitive_domain = paradigm.get("cognitive_domain") or ""
 
-        # Map API fields to expected CSV columns
+        # Map API fields to expected CSV columns. ``name_source`` /
+        # ``author_year`` are persisted alongside ``canonical_name`` so the
+        # docs build can render the 3-line identity block (Study /
+        # Author-year / Canonical) without re-querying the API per page.
+        canonical_list = ds.get("canonical_name") or []
+        name_source = (ds.get("name_source") or "").strip()
+        author_year_value = (
+            _resolve_author_year(
+                name_source=name_source,
+                raw_aliases=canonical_list,
+                explicit=ds.get("author_year"),
+            )
+            or ""
+        )
         row = {
             "dataset": ds_id,
-            "canonical_name": json.dumps(ds.get("canonical_name") or []),
+            "canonical_name": json.dumps(canonical_list),
+            "name_source": name_source,
+            "author_year": author_year_value,
             "n_subjects": demographics.get("subjects_count", 0) or 0,
             "n_records": ds.get("total_files", 0) or 0,
             "n_tasks": len(ds.get("tasks", []) or []),
@@ -669,9 +779,11 @@ def fetch_chart_data_from_api(
         ds_id = ds.get("dataset_id", "").strip()
         if ds_id.upper() in EXCLUDED_DATASETS:
             continue
-        # Skip EEG2025* datasets (HBN competition datasets - special handling)
-        if ds_id.startswith("EEG2025"):
-            continue
+        # EEG2025r* entries are the BDF-converted Nemar mirrors of the
+        # HBN releases. They are first-class catalog entries now — expose
+        # them in the summary table so users can find them alongside the
+        # OpenNeuro originals. (Previously filtered out for "special
+        # handling"; that handling is now done at render time.)
 
         # Extract nested fields
         demographics = ds.get("demographics") or {}
@@ -701,9 +813,21 @@ def fetch_chart_data_from_api(
         if not type_of_exp:
             type_of_exp = paradigm.get("cognitive_domain", "")
 
+        canonical_list = ds.get("canonical_name") or []
+        name_source = (ds.get("name_source") or "").strip()
+        author_year_value = (
+            _resolve_author_year(
+                name_source=name_source,
+                raw_aliases=canonical_list,
+                explicit=ds.get("author_year"),
+            )
+            or ""
+        )
         row = {
             "dataset": ds_id,
-            "canonical_name": json.dumps(ds.get("canonical_name") or []),
+            "canonical_name": json.dumps(canonical_list),
+            "name_source": name_source,
+            "author_year": author_year_value,
             "dataset_title": ds.get("computed_title") or ds.get("name", ""),
             "n_subjects": demographics.get("subjects_count") or 0,
             "n_records": ds.get("total_files") or 0,

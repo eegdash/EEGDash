@@ -321,14 +321,24 @@ def build_and_export_html(
 }}
 .eegdash-figure {{
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1.25rem 1rem 0.75rem !important;
     width: 100% !important;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
 }}
-/* Remove sphinx-design tab card padding/border around charts */
+html[data-theme="dark"] .eegdash-figure {{
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(148, 163, 184, 0.18);
+}}
+/* The sphinx-design tab card around the figure should not double-up
+   with the figure's own frame. */
 .sd-tab-content:has(.eegdash-figure) {{
     padding: 0 !important;
     border: none !important;
     border-radius: 0 !important;
+    background: transparent !important;
 }}
 {brand_css}
 {extra_style}

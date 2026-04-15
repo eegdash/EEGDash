@@ -186,7 +186,7 @@ def test_extractors_more():
 
     # bivariate
     bv = BivariateFeature()
-    assert bv.channel_pair_format == "{}<>{}"
+    assert bv.channel_pair_format is None
 
     # FeatureExtractor more gaps
     from functools import partial

@@ -18,6 +18,11 @@ __all__ = [
     "UnivariateFeature",
 ]
 
+DEFAULT_BIVARIATE_FORMAT_BY_DIRECTED = {
+    False: "{}<>{}",
+    True: "{}->{}",
+}
+
 
 class MultivariateFeature:
     r"""Logic wrapper for features that operate on one or more EEG channels.
@@ -138,13 +143,14 @@ class BivariateFeature(MultivariateFeature):
 
     Parameters
     ----------
-    channel_pair_format : str, default="{}<>{}"
+    channel_pair_format : str
         A format string used to create feature names from pairs of
-        channel names.
+        channel names. Default is "{}<>{}" for undirected bivariate features
+        or "{}->{}" for directed bivariate features.
 
     """
 
-    def __init__(self, *args, channel_pair_format: str = "{}<>{}"):
+    def __init__(self, *args, channel_pair_format: str | None = None):
         super().__init__(*args)
         self.channel_pair_format = channel_pair_format
 
@@ -163,7 +169,14 @@ class BivariateFeature(MultivariateFeature):
 
         """
         ch_names = _metadata["info"]["ch_names"]
+        pair_format = (
+            self.channel_pair_format
+            if self.channel_pair_format is not None
+            else DEFAULT_BIVARIATE_FORMAT_BY_DIRECTED[
+                _metadata["ch_pair_iterator"].directed
+            ]
+        )
         return [
-            self.channel_pair_format.format(ch_names[i], ch_names[j])
+            pair_format.format(ch_names[i], ch_names[j])
             for i, j in zip(*_metadata["ch_pair_iterator"].get_pair_iterators())
         ]

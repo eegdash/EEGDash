@@ -1,6 +1,9 @@
-.. title:: Clinical Breakdown
 
-.. rubric:: Clinical Breakdown by Modality
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Clinical breakdown by recording modality</h3>
+   </header>
 
 .. raw:: html
 

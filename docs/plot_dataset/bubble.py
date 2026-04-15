@@ -531,7 +531,6 @@ def generate_dataset_bubble(
             family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
             size=16,
         ),
-        title=dict(text="", x=0.01, xanchor="left", y=0.98, yanchor="top"),
     )
 
     # (footnote removed — branding handles attribution)

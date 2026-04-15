@@ -6,7 +6,34 @@
 
 .. raw:: html
 
-   <script>document.documentElement.classList.add('dataset-summary-page');</script>
+   <script>
+     document.documentElement.classList.add('dataset-summary-page');
+     // Augment sphinx-design tabs with ARIA semantics. sphinx-design renders
+     // a <input type="radio"> + <label> pattern where the input is visually
+     // hidden but still tabindex=0, and neither element gets ARIA roles.
+     // Screen readers announce the radios as unlabelled. Wire up role="tab",
+     // aria-label, aria-selected, and the containing tablist role so they're
+     // discoverable as a real tab panel.
+     window.addEventListener('DOMContentLoaded', function () {
+       document.querySelectorAll('.sd-tab-set').forEach(function (set) {
+         set.setAttribute('role', 'tablist');
+         var inputs = set.querySelectorAll('input[type="radio"]');
+         inputs.forEach(function (input) {
+           var label = set.querySelector('label[for="' + input.id + '"]');
+           if (!label) return;
+           var name = label.textContent.trim();
+           input.setAttribute('role', 'tab');
+           input.setAttribute('aria-label', name);
+           input.setAttribute('aria-selected', input.checked ? 'true' : 'false');
+           input.addEventListener('change', function () {
+             inputs.forEach(function (i) {
+               i.setAttribute('aria-selected', i.checked ? 'true' : 'false');
+             });
+           });
+         });
+       });
+     });
+   </script>
 
 .. rst-class:: dataset-summary-article
 
@@ -16,7 +43,7 @@ Datasets Catalog
 To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
 
 
-.. grid:: 1 2 3 5
+.. grid:: 1 2 2 4
     :gutter: 3
     :margin: 4 4 0 0
 
@@ -51,14 +78,6 @@ To leverage recent and ongoing advancements in large-scale computational methods
         :octicon:`pulse;2em;sd-text-success`
 
         **|modalities_total|**
-
-    .. grid-item-card::  Sources
-        :class-card: dataset-counter-card
-        :text-align: center
-
-        :octicon:`globe;2em;sd-text-warning`
-
-        **|sources_total|**
 
 
 .. raw:: html

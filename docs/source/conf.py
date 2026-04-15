@@ -939,6 +939,15 @@ def _build_dataset_context(
     if not s3_item_count or s3_item_count == "0":
         s3_item_count = _clean_value(details.get("total_files"))
 
+    # Canonical / author-year identifiers — populated from the CSV (or API
+    # response) when the name_suggester pipeline has run, else empty.
+    # Reuses the registry's parser so the rendered docs match the
+    # aliases the runtime catalog registers.
+    from eegdash.dataset.registry import _parse_canonical_names  # noqa: WPS433
+
+    canonical_names = _parse_canonical_names((row or {}).get("canonical_name"))
+    author_year_name = _clean_value((row or {}).get("author_year"))
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
@@ -948,6 +957,8 @@ def _build_dataset_context(
         "authors": details.get("authors", []),
         "license": license_text,
         "doi": doi,
+        "canonical_names": canonical_names,
+        "author_year_name": author_year_name,
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
@@ -1298,9 +1309,19 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
         source_links.append(f"`Source URL <{source_url}>`__")
 
     year = _value_or_unknown(_clean_value(context.get("year")))
+
+    author_year_cell, canonical_cell, importable_cell = _render_identity_cells(
+        dataset_upper=dataset_upper,
+        author_year_name=_clean_value(context.get("author_year_name")),
+        canonical_names=context.get("canonical_names") or [],
+    )
+
     rows = [
         ("Dataset ID", f"``{dataset_upper}``"),
         ("Title", title),
+        ("Author (year)", author_year_cell),
+        ("Canonical", canonical_cell),
+        ("Importable as", importable_cell),
         ("Year", year),
         ("Authors", authors_text),
         ("License", license_text),
@@ -1319,6 +1340,42 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
         lines.append(bibtex_dropdown)
 
     return "\n".join(lines).rstrip()
+
+
+def _render_identity_cells(
+    *,
+    dataset_upper: str,
+    author_year_name: str,
+    canonical_names: object,
+) -> tuple[str, str, str]:
+    """Build the three identity cells (Author year / Canonical / Importable as).
+
+    Falls back to an em-dash for empty columns so the table stays
+    regular. The ``author_year_name`` is stripped from the Canonical
+    list so the same token isn't shown on two rows.
+    """
+    em_dash = "—"
+    author_year_cell = f"``{author_year_name}``" if author_year_name else em_dash
+
+    names_list = canonical_names if isinstance(canonical_names, (list, tuple)) else []
+    canonical_display = [n for n in names_list if n and n != author_year_name]
+    canonical_cell = (
+        ", ".join(f"``{n}``" for n in canonical_display)
+        if canonical_display
+        else em_dash
+    )
+
+    importable = [dataset_upper] if dataset_upper else []
+    if author_year_name and author_year_name not in importable:
+        importable.append(author_year_name)
+    for n in names_list:
+        if n and n not in importable:
+            importable.append(n)
+    importable_cell = (
+        ", ".join(f"``{n}``" for n in importable) if importable else em_dash
+    )
+
+    return author_year_cell, canonical_cell, importable_cell
 
 
 def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> str:

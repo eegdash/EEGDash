@@ -255,7 +255,7 @@ def generate_modality_ridgeline(
             active=0,
             x=0.0,
             xanchor="left",
-            y=1.12,
+            y=1.07,
             yanchor="top",
             buttons=[
                 dict(
@@ -340,15 +340,10 @@ def generate_modality_ridgeline(
             tickfont=dict(size=14),
         ),
         showlegend=False,
-        margin=dict(l=120, r=40, t=130, b=80),
-        title=dict(
-            text=f"<br><sub>Based on EEG-Dash datasets available at {date_stamp}.</sub>",
-            x=0.5,
-            xanchor="center",
-            y=0.98,
-            yanchor="top",
-            font=dict(size=20),
-        ),
+        # No top title anymore — the rst rubric above the card already titles
+        # the figure, and the old centered date-stamp title was colliding with
+        # the toggle buttons at the top-right of the chart.
+        margin=dict(l=120, r=40, t=70, b=90),
         font=dict(size=16),
     )
 
@@ -366,6 +361,22 @@ def generate_modality_ridgeline(
         borderpad=8,
         xanchor="right",
         yanchor="bottom",
+    )
+
+    # Dataset provenance / freshness — muted footer at bottom-right so the
+    # reader can tell when the underlying catalog was pulled. Bottom-left
+    # is already occupied by the EEGDASH card watermark, so anchoring right
+    # avoids the collision.
+    fig.add_annotation(
+        xref="paper",
+        yref="paper",
+        x=1.0,
+        y=-0.085,
+        text=f"Based on EEG-Dash datasets available at {date_stamp}",
+        showarrow=False,
+        font=dict(size=11, color="#94a3b8"),
+        xanchor="right",
+        yanchor="top",
     )
 
     plot_config = {
@@ -393,12 +404,14 @@ def generate_modality_ridgeline(
 
     extra_style = f"""
 <style>
+/* Let the plot fill the card width — the old 1200px cap left a white gutter
+   on either side and made the title row of the card (rst h3) look misaligned
+   with the chart. */
 #dataset-kde-modalities {{
     width: 100% !important;
-    max-width: 1200px;
     height: {kde_height}px !important;
     min-height: {kde_height}px;
-    margin: 0 auto;
+    margin: 0;
     display: none;
 }}
 #dataset-kde-modalities.plotly-graph-div {{
@@ -453,6 +466,24 @@ def generate_modality_ridgeline(
           loading.style.display = 'none';
         }}
         container.style.display = 'block';
+
+        // The KDE card is inside a sphinx-design tab panel, which starts
+        // hidden via display:none. Plotly computes its initial layout
+        // against that 0-width container, so when the tab is activated
+        // the plot renders narrow with huge empty space on the right.
+        // A ResizeObserver on the container fires when the panel reveals
+        // the real width; re-lay out and the plot fills the card.
+        if (window.ResizeObserver) {{
+          let last = 0;
+          const ro = new ResizeObserver((entries) => {{
+            const w = entries[0]?.contentRect?.width || 0;
+            if (w > 0 && Math.abs(w - last) > 2) {{
+              last = w;
+              window.Plotly.Plots.resize(container);
+            }}
+          }});
+          ro.observe(container);
+        }}
 
         plot.on('plotly_click', (event) => {{
           const point = event.points && event.points[0];

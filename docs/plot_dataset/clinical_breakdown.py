@@ -165,11 +165,14 @@ def generate_clinical_stacked_bar(
     fig.update_layout(
         barmode="stack",
         template="plotly_white",
-        font=dict(size=14),
+        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0f172a"),
         yaxis_title="Number of Studies",
         xaxis_title="Electrophysiology Modality",
         height=650,
         autosize=True,
+        margin=dict(t=60, l=60, r=40, b=60),
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
         updatemenus=[
             dict(
                 type="buttons",
@@ -196,13 +199,16 @@ def generate_clinical_stacked_bar(
                 ),
                 pad={"r": 10, "t": 10},
                 showactive=True,
-                x=0.0,
-                xanchor="left",
-                y=1.15,
+                x=1.0,
+                xanchor="right",
+                y=1.14,
                 yanchor="top",
+                bgcolor="#ffffff",
+                bordercolor="rgba(15, 23, 42, 0.12)",
+                borderwidth=1,
+                font=dict(size=12),
             ),
         ],
-        margin=dict(t=100, l=60, r=40, b=80),
     )
 
     return build_and_export_html(

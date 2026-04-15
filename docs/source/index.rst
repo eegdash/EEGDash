@@ -30,7 +30,7 @@
 
          .. rst-class:: hf-hero-title
 
-            Search and use 500+ EEG/MEG datasets - BIDS-first.
+            Search and use 700+ EEG/MEG datasets - BIDS-first.
 
          .. rst-class:: hf-hero-lede
 
@@ -174,7 +174,7 @@
 
       .. rst-class:: hf-stat-value
 
-         500+
+         700+
 
       .. rst-class:: hf-stat-text
 

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004626``
    * - Title
      - Can we dissociate hypervigilance to social threats from altered perceptual decision-making processes in lonely individuals? An exploration with Drift Diffusion Modelling and event-related potentials.
+   * - Author (year)
+     - ``Maka2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004626``, ``Maka2023``
    * - Year
      - 2023
    * - Authors

@@ -153,6 +153,12 @@ Dataset Information
      - ``DS004587``
    * - Title
      - IllusionGameEEG_data
+   * - Author (year)
+     - ``Makowski2023_IllusionGameEEG``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004587``, ``Makowski2023_IllusionGameEEG``
    * - Year
      - 2023
    * - Authors

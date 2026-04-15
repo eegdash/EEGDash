@@ -191,6 +191,12 @@ Dataset Information
      - ``DS007526``
    * - Title
      - PD-EEG: Resting-State & Walking EEG in Parkinson's Disease
+   * - Author (year)
+     - ``Katzir2026``
+   * - Canonical
+     - ``PD_EEG``, ``PDEEG``
+   * - Importable as
+     - ``DS007526``, ``Katzir2026``, ``PD_EEG``, ``PDEEG``
    * - Year
      - 2026
    * - Authors

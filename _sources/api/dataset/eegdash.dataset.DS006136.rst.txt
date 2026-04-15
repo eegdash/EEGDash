@@ -131,6 +131,12 @@ Dataset Information
      - ``DS006136``
    * - Title
      - OWM-Dataset
+   * - Author (year)
+     - ``Omelyusik2025``
+   * - Canonical
+     - ``Omelyusik2026``
+   * - Importable as
+     - ``DS006136``, ``Omelyusik2025``, ``Omelyusik2026``
    * - Year
      - 2025
    * - Authors

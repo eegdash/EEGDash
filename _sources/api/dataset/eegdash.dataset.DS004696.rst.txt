@@ -150,6 +150,12 @@ Dataset Information
      - ``DS004696``
    * - Title
      - HAPwave_bids
+   * - Author (year)
+     - ``Valencia2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004696``, ``Valencia2023``
    * - Year
      - 2023
    * - Authors

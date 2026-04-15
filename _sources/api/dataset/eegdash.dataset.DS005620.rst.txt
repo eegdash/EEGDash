@@ -226,6 +226,12 @@ Dataset Information
      - ``DS005620``
    * - Title
      - A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation
+   * - Author (year)
+     - ``Bajwa2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005620``, ``Bajwa2024``
    * - Year
      - 2024
    * - Authors

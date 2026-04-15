@@ -111,6 +111,12 @@ Dataset Information
      - ``DS005648``
    * - Title
      - Mapping object space dimensions: new insights from temporal dynamics
+   * - Author (year)
+     - ``Kidder2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005648``, ``Kidder2024``
    * - Year
      - 2024
    * - Authors

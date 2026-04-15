@@ -114,6 +114,12 @@ Dataset Information
      - ``DS005261``
    * - Title
      - Gloups_MEG
+   * - Author (year)
+     - ``Todorovic2024``
+   * - Canonical
+     - ``Todorovic2023``
+   * - Importable as
+     - ``DS005261``, ``Todorovic2024``, ``Todorovic2023``
    * - Year
      - 2024
    * - Authors

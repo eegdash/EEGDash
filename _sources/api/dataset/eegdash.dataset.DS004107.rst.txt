@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004107``
    * - Title
      - MIND DATA
+   * - Author (year)
+     - ``Weisend2022``
+   * - Canonical
+     - ``Weisend2007``
+   * - Importable as
+     - ``DS004107``, ``Weisend2022``, ``Weisend2007``
    * - Year
      - 2022
    * - Authors

@@ -156,6 +156,12 @@ Dataset Information
      - ``DS007262``
    * - Title
      - Cognitive Workload 8-level arithmetic
+   * - Author (year)
+     - ``Barras2026_Cognitive``
+   * - Canonical
+     - ``Barras2025``
+   * - Importable as
+     - ``DS007262``, ``Barras2026_Cognitive``, ``Barras2025``
    * - Year
      - 2026
    * - Authors

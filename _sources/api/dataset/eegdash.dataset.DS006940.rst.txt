@@ -154,6 +154,12 @@ Dataset Information
      - ``DS006940``
    * - Title
      - Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals
+   * - Author (year)
+     - ``Sarkar2025_StudyOF``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006940``, ``Sarkar2025_StudyOF``
    * - Year
      - 2025
    * - Authors

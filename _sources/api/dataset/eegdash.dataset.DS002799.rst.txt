@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 27` :bdg-secondary-line:`Recordings: 16824` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -110,6 +110,12 @@ Dataset Information
      - ``DS002799``
    * - Title
      - Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI
+   * - Author (year)
+     - ``Thompson2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002799``, ``Thompson2024``
    * - Year
      - —
    * - Authors
@@ -162,7 +168,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 2 (79), 4
       - Sampling rate (Hz): Varies
       - Duration (hours): Not calculated
 
@@ -176,7 +182,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
+      - Size on disk: 18.6 GB
       - File count: 16824
       - Format: BIDS
 

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005284``
    * - Title
      - 26 By Biosemi
+   * - Author (year)
+     - ``Xiangyue2024_26_Biosemi``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005284``, ``Xiangyue2024_26_Biosemi``
    * - Year
      - 2024
    * - Authors

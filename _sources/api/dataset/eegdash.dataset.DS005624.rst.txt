@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005624``
    * - Title
      - Color Change Detection Task
+   * - Author (year)
+     - ``DS5624_ColorChangeDetection``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005624``, ``DS5624_ColorChangeDetection``
    * - Year
      - 2024
    * - Authors

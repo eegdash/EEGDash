@@ -106,6 +106,12 @@ Dataset Information
      - ``DS003703``
    * - Title
      - Frequency Tagging of Syntactic Structure or Lexical Properties
+   * - Author (year)
+     - ``Kalenkovich2021``
+   * - Canonical
+     - ``Kalenkovich2019``
+   * - Importable as
+     - ``DS003703``, ``Kalenkovich2021``, ``Kalenkovich2019``
    * - Year
      - 2021
    * - Authors

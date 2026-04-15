@@ -78,12 +78,16 @@ Nemar Datasets
    eegdash.dataset.NM000150
    eegdash.dataset.NM000151
    eegdash.dataset.NM000152
-   eegdash.dataset.NM000156
+   eegdash.dataset.NM000155
+   eegdash.dataset.NM000157
    eegdash.dataset.NM000158
+   eegdash.dataset.NM000159
    eegdash.dataset.NM000160
    eegdash.dataset.NM000161
    eegdash.dataset.NM000162
    eegdash.dataset.NM000163
+   eegdash.dataset.NM000165
+   eegdash.dataset.NM000166
    eegdash.dataset.NM000167
    eegdash.dataset.NM000168
    eegdash.dataset.NM000169
@@ -91,7 +95,12 @@ Nemar Datasets
    eegdash.dataset.NM000171
    eegdash.dataset.NM000172
    eegdash.dataset.NM000173
+   eegdash.dataset.NM000175
    eegdash.dataset.NM000176
+   eegdash.dataset.NM000179
+   eegdash.dataset.NM000180
+   eegdash.dataset.NM000181
+   eegdash.dataset.NM000185
    eegdash.dataset.NM000186
    eegdash.dataset.NM000187
    eegdash.dataset.NM000188
@@ -108,8 +117,6 @@ Nemar Datasets
    eegdash.dataset.NM000199
    eegdash.dataset.NM000200
    eegdash.dataset.NM000201
-   eegdash.dataset.NM000202
-   eegdash.dataset.NM000203
    eegdash.dataset.NM000204
    eegdash.dataset.NM000205
    eegdash.dataset.NM000206
@@ -129,15 +136,22 @@ Nemar Datasets
    eegdash.dataset.NM000221
    eegdash.dataset.NM000222
    eegdash.dataset.NM000223
+   eegdash.dataset.NM000225
+   eegdash.dataset.NM000226
    eegdash.dataset.NM000227
+   eegdash.dataset.NM000228
+   eegdash.dataset.NM000229
    eegdash.dataset.NM000230
    eegdash.dataset.NM000231
+   eegdash.dataset.NM000232
    eegdash.dataset.NM000234
    eegdash.dataset.NM000235
    eegdash.dataset.NM000236
    eegdash.dataset.NM000237
+   eegdash.dataset.NM000238
    eegdash.dataset.NM000239
    eegdash.dataset.NM000240
+   eegdash.dataset.NM000241
    eegdash.dataset.NM000242
    eegdash.dataset.NM000243
    eegdash.dataset.NM000244
@@ -147,6 +161,11 @@ Nemar Datasets
    eegdash.dataset.NM000248
    eegdash.dataset.NM000249
    eegdash.dataset.NM000250
+   eegdash.dataset.NM000251
+   eegdash.dataset.NM000253
+   eegdash.dataset.NM000254
+   eegdash.dataset.NM000255
+   eegdash.dataset.NM000256
    eegdash.dataset.NM000259
    eegdash.dataset.NM000260
    eegdash.dataset.NM000264
@@ -167,7 +186,6 @@ Nemar Datasets
    eegdash.dataset.NM000323
    eegdash.dataset.NM000326
    eegdash.dataset.NM000329
-   eegdash.dataset.NM000334
    eegdash.dataset.NM000336
    eegdash.dataset.NM000338
    eegdash.dataset.NM000339
@@ -180,5 +198,4 @@ Nemar Datasets
    eegdash.dataset.NM000346
    eegdash.dataset.NM000347
    eegdash.dataset.NM000348
-   eegdash.dataset.NM000349
    eegdash.dataset.NM000351

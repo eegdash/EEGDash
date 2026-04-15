@@ -123,6 +123,12 @@ Dataset Information
      - ``DS006035``
    * - Title
      - somatomotor
+   * - Author (year)
+     - ``Lin2025``
+   * - Canonical
+     - ``Lin2019``
+   * - Importable as
+     - ``DS006035``, ``Lin2025``, ``Lin2019``
    * - Year
      - 2025
    * - Authors

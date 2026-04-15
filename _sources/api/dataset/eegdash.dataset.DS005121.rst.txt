@@ -117,6 +117,12 @@ Dataset Information
      - ``DS005121``
    * - Title
      - Siefert2024
+   * - Author (year)
+     - ``Siefert2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005121``, ``Siefert2024``
    * - Year
      - 2024
    * - Authors

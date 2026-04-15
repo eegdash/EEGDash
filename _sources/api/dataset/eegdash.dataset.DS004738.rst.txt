@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004738``
    * - Title
      - sfb_meg_phantom (B04/C01)
+   * - Author (year)
+     - ``Bahners2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004738``, ``Bahners2023``
    * - Year
      - 2023
    * - Authors

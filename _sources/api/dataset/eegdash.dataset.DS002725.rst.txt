@@ -109,6 +109,12 @@ Dataset Information
      - ``DS002725``
    * - Title
      - A dataset recording joint EEG-fMRI during affective music listening
+   * - Author (year)
+     - ``Daly2020_joint``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002725``, ``Daly2020_joint``
    * - Year
      - 2020
    * - Authors

@@ -103,6 +103,12 @@ Dataset Information
      - ``DS002181``
    * - Title
      - CRYPTO and PROVIDE EEG Baseline Data
+   * - Author (year)
+     - ``Xie2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002181``, ``Xie2019``
    * - Year
      - 2019
    * - Authors

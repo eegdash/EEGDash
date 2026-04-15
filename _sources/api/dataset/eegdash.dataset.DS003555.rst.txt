@@ -152,6 +152,12 @@ Dataset Information
      - ``DS003555``
    * - Title
      - Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system
+   * - Author (year)
+     - ``Cserpan2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003555``, ``Cserpan2021``
    * - Year
      - 2021
    * - Authors

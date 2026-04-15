@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004502``
    * - Title
      - Anticipatory differences between Attention and Expectation
+   * - Author (year)
+     - ``Penalver2023``
+   * - Canonical
+     - ``Penalver2024``
+   * - Importable as
+     - ``DS004502``, ``Penalver2023``, ``Penalver2024``
    * - Year
      - 2023
    * - Authors

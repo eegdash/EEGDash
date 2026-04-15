@@ -274,6 +274,12 @@ Dataset Information
      - ``NM000147``
    * - Title
      - RomaniBF2025ERP
+   * - Author (year)
+     - ``RomaniBF2025``
+   * - Canonical
+     - ``Romani2025``
+   * - Importable as
+     - ``NM000147``, ``RomaniBF2025``, ``Romani2025``
    * - Year
      - 2019
    * - Authors

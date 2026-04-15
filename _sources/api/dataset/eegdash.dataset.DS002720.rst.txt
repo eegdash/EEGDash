@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002720``
    * - Title
      - A dataset recorded during development of a tempo-based brain-computer music interface
+   * - Author (year)
+     - ``Daly2020_recorded``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002720``, ``Daly2020_recorded``
    * - Year
      - 2020
    * - Authors

@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005416``
    * - Title
      - Fatigue Characterization of EEG under Mixed Reality Stereo Vision
+   * - Author (year)
+     - ``Wu2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005416``, ``Wu2024``
    * - Year
      - 2024
    * - Authors

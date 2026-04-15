@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006673``
    * - Title
      - ball_squeeze_Carlton_2025
+   * - Author (year)
+     - ``Carlton2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006673``, ``Carlton2025``
    * - Year
      - 2025
    * - Authors

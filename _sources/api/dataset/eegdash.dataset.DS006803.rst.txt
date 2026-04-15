@@ -192,6 +192,12 @@ Dataset Information
      - ``DS006803``
    * - Title
      - NeuroTechs Dataset for Stem Skills
+   * - Author (year)
+     - ``PechCanul2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006803``, ``PechCanul2025``
    * - Year
      - 2025
    * - Authors

@@ -114,6 +114,12 @@ Dataset Information
      - ``DS004196``
    * - Title
      - Bimodal dataset on Inner speech
+   * - Author (year)
+     - ``Liwicki2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004196``, ``Liwicki2022``
    * - Year
      - 2022
    * - Authors

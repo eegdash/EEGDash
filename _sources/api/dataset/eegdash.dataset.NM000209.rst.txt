@@ -248,6 +248,12 @@ Dataset Information
      - ``NM000209``
    * - Title
      - Motor imagery + spatial attention dataset from Forenzo & He 2023
+   * - Author (year)
+     - ``Forenzo2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000209``, ``Forenzo2023``
    * - Year
      - 2024
    * - Authors

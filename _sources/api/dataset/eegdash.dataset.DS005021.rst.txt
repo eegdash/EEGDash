@@ -181,6 +181,12 @@ Dataset Information
      - ``DS005021``
    * - Title
      - Tilt Illusion by Phase
+   * - Author (year)
+     - ``Williams2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005021``, ``Williams2024``
    * - Year
      - 2024
    * - Authors

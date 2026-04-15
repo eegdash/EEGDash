@@ -162,6 +162,12 @@ Dataset Information
      - ``DS004381``
    * - Title
      - Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates
+   * - Author (year)
+     - ``Selmin2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004381``, ``Selmin2022``
    * - Year
      - 2022
    * - Authors

@@ -187,6 +187,12 @@ Dataset Information
      - ``DS005555``
    * - Title
      - The Bitbrain Open Access Sleep (BOAS) dataset
+   * - Author (year)
+     - ``LopezLarraz2024``
+   * - Canonical
+     - ``BOAS``
+   * - Importable as
+     - ``DS005555``, ``LopezLarraz2024``, ``BOAS``
    * - Year
      - 2024
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004010``
    * - Title
      - MAVIS
+   * - Author (year)
+     - ``Waschke2022``
+   * - Canonical
+     - ``MAVIS``
+   * - Importable as
+     - ``DS004010``, ``Waschke2022``, ``MAVIS``
    * - Year
      - 2022
    * - Authors

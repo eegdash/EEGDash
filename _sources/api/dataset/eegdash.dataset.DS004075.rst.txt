@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004075``
    * - Title
      - what_are_we_talking_about
+   * - Author (year)
+     - ``Boncz2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004075``, ``Boncz2022``
    * - Year
      - 2022
    * - Authors

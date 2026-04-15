@@ -285,6 +285,12 @@ Dataset Information
      - ``NM000338``
    * - Title
      - Lee2019-MI
+   * - Author (year)
+     - ``Lee2019_MI``
+   * - Canonical
+     - ``OpenBMI_MI``
+   * - Importable as
+     - ``NM000338``, ``Lee2019_MI``, ``OpenBMI_MI``
    * - Year
      - 2019
    * - Authors

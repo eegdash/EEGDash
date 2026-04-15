@@ -127,6 +127,12 @@ Dataset Information
      - ``DS004279``
    * - Title
      - Large Spanish EEG
+   * - Author (year)
+     - ``Araya2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004279``, ``Araya2022``
    * - Year
      - 2022
    * - Authors

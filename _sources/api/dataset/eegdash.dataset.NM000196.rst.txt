@@ -288,6 +288,12 @@ Dataset Information
      - ``NM000196``
    * - Title
      - c-VEP dataset from Thielen et al. (2015)
+   * - Author (year)
+     - ``Thielen2015``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000196``, ``Thielen2015``
    * - Year
      - 2015
    * - Authors

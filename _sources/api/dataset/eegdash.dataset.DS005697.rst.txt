@@ -110,6 +110,12 @@ Dataset Information
      - ``DS005697``
    * - Title
      - PerceiveImagine
+   * - Author (year)
+     - ``Li2024_PerceiveImagine``
+   * - Canonical
+     - ``PerceiveImagine``
+   * - Importable as
+     - ``DS005697``, ``Li2024_PerceiveImagine``, ``PerceiveImagine``
    * - Year
      - 2024
    * - Authors

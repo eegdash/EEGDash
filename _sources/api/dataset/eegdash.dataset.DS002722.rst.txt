@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002722``
    * - Title
      - A dataset recorded during development of an affective brain-computer music interface: calibration session
+   * - Author (year)
+     - ``Daly2020_recorded_development``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002722``, ``Daly2020_recorded_development``
    * - Year
      - 2020
    * - Authors

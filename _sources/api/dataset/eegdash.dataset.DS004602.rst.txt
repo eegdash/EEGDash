@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004602``
    * - Title
      - Registered Replication Report of ERN/Pe Psychometrics
+   * - Author (year)
+     - ``Clayson2023_Registered``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004602``, ``Clayson2023_Registered``
    * - Year
      - 2023
    * - Authors

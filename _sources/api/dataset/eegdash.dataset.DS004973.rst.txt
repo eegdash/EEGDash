@@ -112,6 +112,12 @@ Dataset Information
      - ``DS004973``
    * - Title
      - An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios
+   * - Author (year)
+     - ``Zhang2024_driving_risk_cognition``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004973``, ``Zhang2024_driving_risk_cognition``
    * - Year
      - 2024
    * - Authors

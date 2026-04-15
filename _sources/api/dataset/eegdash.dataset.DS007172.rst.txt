@@ -172,6 +172,12 @@ Dataset Information
      - ``DS007172``
    * - Title
      - EEG-Asymmetries Dataset
+   * - Author (year)
+     - ``Reinke2026``
+   * - Canonical
+     - ``EEGAsymmetries``
+   * - Importable as
+     - ``DS007172``, ``Reinke2026``, ``EEGAsymmetries``
    * - Year
      - 2026
    * - Authors

@@ -164,6 +164,12 @@ Dataset Information
      - ``DS004122``
    * - Title
      - BCIT Speed Control
+   * - Author (year)
+     - ``Touryan2022_BCIT_Speed``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004122``, ``Touryan2022_BCIT_Speed``
    * - Year
      - 2022
    * - Authors

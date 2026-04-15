@@ -343,6 +343,12 @@ Dataset Information
      - ``NM000149``
    * - Title
      - BNCI 2019-001 Motor Imagery dataset for Spinal Cord Injury patients
+   * - Author (year)
+     - ``Ofner2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000149``, ``Ofner2019``
    * - Year
      - 2019
    * - Authors

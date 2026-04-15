@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005571``
    * - Title
      - Expectation of Conflict Stimuli
+   * - Author (year)
+     - ``MartinezMolina2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005571``, ``MartinezMolina2024``
    * - Year
      - 2024
    * - Authors

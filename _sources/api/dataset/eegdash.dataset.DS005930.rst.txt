@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005930``
    * - Title
      - BallSqueezingHD_Gao2023
+   * - Author (year)
+     - ``Gao2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005930``, ``Gao2023``
    * - Year
      - 2025
    * - Authors

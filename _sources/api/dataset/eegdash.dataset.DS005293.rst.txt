@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005293``
    * - Title
      - 95 By BP
+   * - Author (year)
+     - ``Xiangyue2024_95_BP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005293``, ``Xiangyue2024_95_BP``
    * - Year
      - 2024
    * - Authors

@@ -215,6 +215,12 @@ Dataset Information
      - ``NM000351``
    * - Title
      - Mainsah2025-P
+   * - Author (year)
+     - ``Mainsah2025_P``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000351``, ``Mainsah2025_P``
    * - Year
      - 2019
    * - Authors

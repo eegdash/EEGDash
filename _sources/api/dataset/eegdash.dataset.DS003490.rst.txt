@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003490``
    * - Title
      - EEG: 3-Stim Auditory Oddball and Rest in Parkinson's
+   * - Author (year)
+     - ``Cavanagh2021_3``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003490``, ``Cavanagh2021_3``
    * - Year
      - 2021
    * - Authors

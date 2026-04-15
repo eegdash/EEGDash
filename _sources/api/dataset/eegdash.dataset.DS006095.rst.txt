@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006095``
    * - Title
      - Mind in Motion Older Adults Walking Over Uneven Terrain
+   * - Author (year)
+     - ``Liu2025_Mind_Motion_Older``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006095``, ``Liu2025_Mind_Motion_Older``
    * - Year
      - 2025
    * - Authors

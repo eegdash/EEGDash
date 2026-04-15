@@ -179,6 +179,12 @@ Dataset Information
      - ``DS001810``
    * - Title
      - EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS)
+   * - Author (year)
+     - ``Reteig2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS001810``, ``Reteig2019``
    * - Year
      - 2019
    * - Authors

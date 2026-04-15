@@ -152,6 +152,12 @@ Dataset Information
      - ``DS006142``
    * - Title
      - Essex EEG Movie Memory dataset
+   * - Author (year)
+     - ``MatranFernandez2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006142``, ``MatranFernandez2025``
    * - Year
      - 2025
    * - Authors

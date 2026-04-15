@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005929``
    * - Title
      - Motion-Yucel2014
+   * - Author (year)
+     - ``MotionYucel2014``
+   * - Canonical
+     - ``Yucel2014``, ``Motion_Yucel2014``
+   * - Importable as
+     - ``DS005929``, ``MotionYucel2014``, ``Yucel2014``, ``Motion_Yucel2014``
    * - Year
      - 2025
    * - Authors

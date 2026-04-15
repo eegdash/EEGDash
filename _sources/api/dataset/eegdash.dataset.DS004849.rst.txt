@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004849``
    * - Title
      - STRONG
+   * - Author (year)
+     - ``Johnson2023_STRONG``
+   * - Canonical
+     - ``STRONG``
+   * - Importable as
+     - ``DS004849``, ``Johnson2023_STRONG``, ``STRONG``
    * - Year
      - 2023
    * - Authors

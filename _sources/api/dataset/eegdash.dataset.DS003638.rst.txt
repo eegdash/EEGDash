@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003638``
    * - Title
      - EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms
+   * - Author (year)
+     - ``Cavanagh2021_Electrophysiological``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003638``, ``Cavanagh2021_Electrophysiological``
    * - Year
      - 2021
    * - Authors

@@ -635,6 +635,12 @@ Dataset Information
      - ``NM000126``
    * - Title
      - Wang2016 – SSVEP Wang 2016 dataset
+   * - Author (year)
+     - ``Wang2016``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000126``, ``Wang2016``
    * - Year
      - 2016
    * - Authors

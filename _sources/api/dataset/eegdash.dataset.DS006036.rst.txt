@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006036``
    * - Title
      - A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
+   * - Author (year)
+     - ``Ntetska2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006036``, ``Ntetska2025``
    * - Year
      - 2025
    * - Authors

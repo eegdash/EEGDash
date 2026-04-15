@@ -102,6 +102,12 @@ Dataset Information
      - ``DS001849``
    * - Title
      - RS_TMSEEG_Data
+   * - Author (year)
+     - ``Freedberg2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS001849``, ``Freedberg2019``
    * - Year
      - 2019
    * - Authors

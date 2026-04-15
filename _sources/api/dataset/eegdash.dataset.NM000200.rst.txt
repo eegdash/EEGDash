@@ -218,6 +218,12 @@ Dataset Information
      - ``NM000200``
    * - Title
      - BigP3BCI Study I — 9x8 checkerboard/performance-based (13 healthy subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_I``
+   * - Canonical
+     - ``BigP3BCI_StudyI``, ``BigP3BCI_I``
+   * - Importable as
+     - ``NM000200``, ``Mainsah2025_BigP3BCI_I``, ``BigP3BCI_StudyI``, ``BigP3BCI_I``
    * - Year
      - 2019
    * - Authors

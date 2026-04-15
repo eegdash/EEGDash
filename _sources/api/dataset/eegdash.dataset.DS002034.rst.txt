@@ -109,6 +109,12 @@ Dataset Information
      - ``DS002034``
    * - Title
      - Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task
+   * - Author (year)
+     - ``Schneider2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002034``, ``Schneider2019``
    * - Year
      - 2019
    * - Authors

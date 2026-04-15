@@ -115,6 +115,12 @@ Dataset Information
      - ``DS002691``
    * - Title
      - Internal attention study
+   * - Author (year)
+     - ``Delorme2020_Internal_attention``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002691``, ``Delorme2020_Internal_attention``
    * - Year
      - 2020
    * - Authors

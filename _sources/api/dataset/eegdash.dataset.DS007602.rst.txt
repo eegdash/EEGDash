@@ -189,6 +189,12 @@ Dataset Information
      - ``DS007602``
    * - Title
      - EEG-Speech Brain Decoding Dataset
+   * - Author (year)
+     - ``Sato2026_Speech``
+   * - Canonical
+     - ``Sato2024``
+   * - Importable as
+     - ``DS007602``, ``Sato2026_Speech``, ``Sato2024``
    * - Year
      - 2026
    * - Authors

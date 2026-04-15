@@ -115,6 +115,12 @@ Dataset Information
      - ``DS004127``
    * - Title
      - Somatosensory Cortex Rat DISC Data
+   * - Author (year)
+     - ``Abrego2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004127``, ``Abrego2022``
    * - Year
      - 2022
    * - Authors

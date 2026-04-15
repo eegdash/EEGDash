@@ -104,6 +104,12 @@ Dataset Information
      - ``DS005777``
    * - Title
      - Electrical_Morphine_Placebo_2018
+   * - Author (year)
+     - ``Peng2025``
+   * - Canonical
+     - ``Peng2018``
+   * - Importable as
+     - ``DS005777``, ``Peng2025``, ``Peng2018``
    * - Year
      - 2025
    * - Authors

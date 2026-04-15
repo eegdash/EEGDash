@@ -103,6 +103,12 @@ Dataset Information
      - ``DS005574``
    * - Title
      - The "Podcast" ECoG dataset
+   * - Author (year)
+     - ``Zada2024``
+   * - Canonical
+     - ``Podcast``
+   * - Importable as
+     - ``DS005574``, ``Zada2024``, ``Podcast``
    * - Year
      - 2024
    * - Authors

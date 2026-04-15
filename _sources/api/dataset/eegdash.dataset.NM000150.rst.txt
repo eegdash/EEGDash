@@ -99,6 +99,12 @@ Dataset Information
      - ``NM000150``
    * - Title
      - Liu2025 - NEMAR Dataset
+   * - Author (year)
+     - ``Liu2025_NEMAR``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000150``, ``Liu2025_NEMAR``
    * - Year
      - —
    * - Authors

@@ -317,6 +317,12 @@ Dataset Information
      - ``NM000139``
    * - Title
      - BNCI 2014-001 Motor Imagery dataset
+   * - Author (year)
+     - ``Tangermann2014``
+   * - Canonical
+     - ``BNCI2014001``, ``BCICIV1``, ``BCICompIV1``
+   * - Importable as
+     - ``NM000139``, ``Tangermann2014``, ``BNCI2014001``, ``BCICIV1``, ``BCICompIV1``
    * - Year
      - 2019
    * - Authors

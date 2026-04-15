@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004315``
    * - Title
      - Mood Manipulation and PST, Experiment 1
+   * - Author (year)
+     - ``Cavanagh2022_E1``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004315``, ``Cavanagh2022_E1``
    * - Year
      - 2022
    * - Authors

@@ -256,6 +256,12 @@ Dataset Information
      - ``NM000167``
    * - Title
      - Motor imagery dataset from Ma et al. 2020
+   * - Author (year)
+     - ``Ma2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000167``, ``Ma2020``
    * - Year
      - 2019
    * - Authors

@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004346``
    * - Title
      - FLUX: A pipeline for MEG analysis
+   * - Author (year)
+     - ``Ferrante2022``
+   * - Canonical
+     - ``FLUX``
+   * - Importable as
+     - ``DS004346``, ``Ferrante2022``, ``FLUX``
    * - Year
      - 2022
    * - Authors

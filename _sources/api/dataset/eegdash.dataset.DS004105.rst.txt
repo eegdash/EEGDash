@@ -170,6 +170,12 @@ Dataset Information
      - ``DS004105``
    * - Title
      - BCIT Auditory Cueing
+   * - Author (year)
+     - ``Garcia2022``
+   * - Canonical
+     - ``BCIT_Auditory_Cueing``
+   * - Importable as
+     - ``DS004105``, ``Garcia2022``, ``BCIT_Auditory_Cueing``
    * - Year
      - 2022
    * - Authors

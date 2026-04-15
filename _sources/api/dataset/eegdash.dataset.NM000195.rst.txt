@@ -280,6 +280,12 @@ Dataset Information
      - ``NM000195``
    * - Title
      - Mixture of LLP and EM for a visual matrix speller (ERP) dataset from
+   * - Author (year)
+     - ``Hubner2018``
+   * - Canonical
+     - ``Huebner2018``
+   * - Importable as
+     - ``NM000195``, ``Hubner2018``, ``Huebner2018``
    * - Year
      - 2018
    * - Authors

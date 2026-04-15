@@ -111,6 +111,12 @@ Dataset Information
      - ``DS005285``
    * - Title
      - 29 By ANT
+   * - Author (year)
+     - ``Xiangyue2024_29_ANT``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005285``, ``Xiangyue2024_29_ANT``
    * - Year
      - 2024
    * - Authors

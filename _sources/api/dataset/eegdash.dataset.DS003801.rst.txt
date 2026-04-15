@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003801``
    * - Title
      - Neural Tracking to go
+   * - Author (year)
+     - ``Straetmans2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003801``, ``Straetmans2021``
    * - Year
      - 2021
    * - Authors

@@ -131,6 +131,12 @@ Dataset Information
      - ``DS003104``
    * - Title
      - MNE-somato-data-bids (anonymized)
+   * - Author (year)
+     - ``Parkkonen2020``
+   * - Canonical
+     - ``MNESomato``, ``Somato``, ``MNESomatoData``
+   * - Importable as
+     - ``DS003104``, ``Parkkonen2020``, ``MNESomato``, ``Somato``, ``MNESomatoData``
    * - Year
      - 2020
    * - Authors

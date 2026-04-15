@@ -113,6 +113,12 @@ Dataset Information
      - ``DS004532``
    * - Title
      - EEG: Probabilistic Selection Task (PST) + PST with Cabergoline Challenge
+   * - Author (year)
+     - ``Cavanagh2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004532``, ``Cavanagh2023``
    * - Year
      - 2023
    * - Authors

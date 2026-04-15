@@ -126,6 +126,12 @@ Dataset Information
      - ``DS004148``
    * - Title
      - A test-retest resting and cognitive state EEG dataset
+   * - Author (year)
+     - ``Wang2022_test_retest_resting``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004148``, ``Wang2022_test_retest_resting``
    * - Year
      - 2022
    * - Authors

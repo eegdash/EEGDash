@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005876``
    * - Title
      - Song Familiarity
+   * - Author (year)
+     - ``Girard2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005876``, ``Girard2025``
    * - Year
      - 2025
    * - Authors

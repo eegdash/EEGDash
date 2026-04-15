@@ -121,6 +121,12 @@ Dataset Information
      - ``DS005863``
    * - Title
      - Cognitive Electrophysiology in Socioeconomic Context in Adulthood
+   * - Author (year)
+     - ``Isbell2025_Cognitive``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005863``, ``Isbell2025_Cognitive``
    * - Year
      - 2025
    * - Authors

@@ -228,6 +228,12 @@ Dataset Information
      - ``NM000222``
    * - Title
      - Air conditioner control experiment (10 subjects, 4 classes, 25 EEG ch)
+   * - Author (year)
+     - ``Lee2024_Air_conditioner_control``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000222``, ``Lee2024_Air_conditioner_control``
    * - Year
      - 2019
    * - Authors

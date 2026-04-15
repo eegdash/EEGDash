@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005343``
    * - Title
      - Gaffrey Lab Infant Microstates and Attention
+   * - Author (year)
+     - ``Bagdasarov2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005343``, ``Bagdasarov2024``
    * - Year
      - 2024
    * - Authors

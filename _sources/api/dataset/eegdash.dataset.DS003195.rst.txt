@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003195``
    * - Title
      - Placebo Neuroepo multisession
+   * - Author (year)
+     - ``Vega2020_Placebo``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003195``, ``Vega2020_Placebo``
    * - Year
      - 2020
    * - Authors

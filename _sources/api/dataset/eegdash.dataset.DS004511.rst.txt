@@ -152,6 +152,12 @@ Dataset Information
      - ``DS004511``
    * - Title
      - Deception_data
+   * - Author (year)
+     - ``Makowski2023_Deception``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004511``, ``Makowski2023_Deception``
    * - Year
      - 2023
    * - Authors

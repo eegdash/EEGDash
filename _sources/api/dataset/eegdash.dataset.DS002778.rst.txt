@@ -113,6 +113,12 @@ Dataset Information
      - ``DS002778``
    * - Title
      - UC San Diego Resting State EEG Data from Patients with Parkinson's Disease
+   * - Author (year)
+     - ``Rockhill2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002778``, ``Rockhill2020``
    * - Year
      - 2020
    * - Authors

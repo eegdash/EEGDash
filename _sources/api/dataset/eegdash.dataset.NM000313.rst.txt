@@ -215,6 +215,12 @@ Dataset Information
      - ``NM000313``
    * - Title
      - Mainsah2025-S2
+   * - Author (year)
+     - ``Mainsah2025_S2``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000313``, ``Mainsah2025_S2``
    * - Year
      - 2019
    * - Authors

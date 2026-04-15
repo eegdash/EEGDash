@@ -160,6 +160,12 @@ Dataset Information
      - ``DS000247``
    * - Title
      - MEG-BIDS OMEGA RestingState_sample
+   * - Author (year)
+     - ``Niso2018``
+   * - Canonical
+     - ``OMEGA``
+   * - Importable as
+     - ``DS000247``, ``Niso2018``, ``OMEGA``
    * - Year
      - 2018
    * - Authors

@@ -107,6 +107,12 @@ Dataset Information
      - ``DS001971``
    * - Title
      - Audiocue walking study
+   * - Author (year)
+     - ``Wagner2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS001971``, ``Wagner2019``
    * - Year
      - 2019
    * - Authors

@@ -305,6 +305,12 @@ Dataset Information
      - ``DS003620``
    * - Title
      - Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions
+   * - Author (year)
+     - ``Liebherr2021``
+   * - Canonical
+     - ``Runabout``
+   * - Importable as
+     - ``DS003620``, ``Liebherr2021``, ``Runabout``
    * - Year
      - 2021
    * - Authors

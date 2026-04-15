@@ -104,6 +104,12 @@ Dataset Information
      - ``DS006394``
    * - Title
      - Electrophysiological markers of surprise-induced failures of visual and auditory awareness
+   * - Author (year)
+     - ``Leong2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006394``, ``Leong2025``
    * - Year
      - 2025
    * - Authors

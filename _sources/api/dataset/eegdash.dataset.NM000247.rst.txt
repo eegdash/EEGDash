@@ -218,6 +218,12 @@ Dataset Information
      - ``NM000247``
    * - Title
      - BigP3BCI Study S1 — 9x8 face/house paradigm (10 healthy subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_S1``
+   * - Canonical
+     - ``BigP3BCI_StudyS1``, ``BigP3BCI_S1``
+   * - Importable as
+     - ``NM000247``, ``Mainsah2025_BigP3BCI_S1``, ``BigP3BCI_StudyS1``, ``BigP3BCI_S1``
    * - Year
      - 2019
    * - Authors

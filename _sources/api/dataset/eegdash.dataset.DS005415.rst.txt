@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005415``
    * - Title
      - Numbers
+   * - Author (year)
+     - ``Rockhill2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005415``, ``Rockhill2024``
    * - Year
      - 2024
    * - Authors

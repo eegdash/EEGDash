@@ -104,6 +104,12 @@ Dataset Information
      - ``DS003768``
    * - Title
      - Simultaneous EEG and fMRI signals during sleep from humans
+   * - Author (year)
+     - ``Gu2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003768``, ``Gu2021``
    * - Year
      - 2021
    * - Authors

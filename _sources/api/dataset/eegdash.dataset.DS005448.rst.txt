@@ -118,6 +118,12 @@ Dataset Information
      - ``DS005448``
    * - Title
      - STReEF
+   * - Author (year)
+     - ``Jelsma2024``
+   * - Canonical
+     - ``STReEF``
+   * - Importable as
+     - ``DS005448``, ``Jelsma2024``, ``STReEF``
    * - Year
      - 2024
    * - Authors

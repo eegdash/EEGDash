@@ -105,6 +105,12 @@ Dataset Information
      - ``DS007477``
    * - Title
      - TimeSeries BIDS converted
+   * - Author (year)
+     - ``Niu2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007477``, ``Niu2026``
    * - Year
      - 2026
    * - Authors

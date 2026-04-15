@@ -162,6 +162,12 @@ Dataset Information
      - ``DS006012``
    * - Title
      - A geometric shape regularity effect in the human brain: MEG dataset
+   * - Author (year)
+     - ``SableMeyer2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006012``, ``SableMeyer2025``
    * - Year
      - 2025
    * - Authors

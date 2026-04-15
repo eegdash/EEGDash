@@ -110,6 +110,12 @@ Dataset Information
      - ``DS006468``
    * - Title
      - MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.
+   * - Author (year)
+     - ``Habersetzer2025``
+   * - Canonical
+     - ``MEG_SCANS``
+   * - Importable as
+     - ``DS006468``, ``Habersetzer2025``, ``MEG_SCANS``
    * - Year
      - 2025
    * - Authors

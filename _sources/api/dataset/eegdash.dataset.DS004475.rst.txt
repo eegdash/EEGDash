@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004475``
    * - Title
      - Mobile EEG split-belt walking study
+   * - Author (year)
+     - ``Jacobsen2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004475``, ``Jacobsen2023``
    * - Year
      - 2023
    * - Authors

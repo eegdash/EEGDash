@@ -125,6 +125,12 @@ Dataset Information
      - ``DS004504``
    * - Title
      - A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects
+   * - Author (year)
+     - ``Miltiadous2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004504``, ``Miltiadous2023``
    * - Year
      - 2023
    * - Authors

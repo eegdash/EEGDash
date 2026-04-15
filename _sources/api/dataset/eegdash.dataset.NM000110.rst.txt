@@ -179,6 +179,12 @@ Dataset Information
      - ``NM000110``
    * - Title
      - CHB-MIT
+   * - Author (year)
+     - ``Connolly2010``
+   * - Canonical
+     - ``CHBMIT``, ``CHB_MIT``
+   * - Importable as
+     - ``NM000110``, ``Connolly2010``, ``CHBMIT``, ``CHB_MIT``
    * - Year
      - 2010
    * - Authors
@@ -232,15 +238,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 23 (306), 28 (259), 38 (39), 22 (36), 24 (30), 29 (14), 25, 31
-      - Sampling rate (Hz): 256.0
+      - Sampling rate (Hz): 256
       - Duration (hours): 982.9345334201388
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Epilepsy
-      - Modality: Resting State
-      - Type: Clinical/Intervention
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

@@ -113,6 +113,12 @@ Dataset Information
      - ``DS005095``
    * - Title
      - STERNBERG DIFFICULT
+   * - Author (year)
+     - ``Zhozhikashvili2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005095``, ``Zhozhikashvili2024``
    * - Year
      - 2024
    * - Authors

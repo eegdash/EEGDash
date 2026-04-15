@@ -219,6 +219,12 @@ Dataset Information
      - ``NM000191``
    * - Title
      - BigP3BCI Study F — 6x6 multi-paradigm, 3 sessions (10 healthy subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_F``
+   * - Canonical
+     - ``BigP3BCI_StudyF``, ``BigP3BCI_F``
+   * - Importable as
+     - ``NM000191``, ``Mainsah2025_BigP3BCI_F``, ``BigP3BCI_StudyF``, ``BigP3BCI_F``
    * - Year
      - 2019
    * - Authors

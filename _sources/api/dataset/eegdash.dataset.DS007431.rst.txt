@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007431``
    * - Title
      - Diffuse predictions stabilize and reshape neural code during memory encoding
+   * - Author (year)
+     - ``Ataseven2026``
+   * - Canonical
+     - ``Ataseven2024``
+   * - Importable as
+     - ``DS007431``, ``Ataseven2026``, ``Ataseven2024``
    * - Year
      - 2026
    * - Authors

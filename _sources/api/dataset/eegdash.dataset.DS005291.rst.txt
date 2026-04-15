@@ -111,6 +111,12 @@ Dataset Information
      - ``DS005291``
    * - Title
      - 65 By ANT
+   * - Author (year)
+     - ``Xiangyue2024_65_ANT``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005291``, ``Xiangyue2024_65_ANT``
    * - Year
      - 2024
    * - Authors

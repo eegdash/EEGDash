@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003694``
    * - Title
      - MEGMEM
+   * - Author (year)
+     - ``Griffiths2021``
+   * - Canonical
+     - ``MEGMEM``
+   * - Importable as
+     - ``DS003694``, ``Griffiths2021``, ``MEGMEM``
    * - Year
      - 2021
    * - Authors

@@ -224,6 +224,12 @@ Dataset Information
      - ``NM000201``
    * - Title
      - ERP paradigm of the Mobile BCI dataset
+   * - Author (year)
+     - ``Lee2021_ERP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000201``, ``Lee2021_ERP``
    * - Year
      - 2019
    * - Authors

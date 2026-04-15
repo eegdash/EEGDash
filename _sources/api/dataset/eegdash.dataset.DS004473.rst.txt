@@ -108,6 +108,12 @@ Dataset Information
      - ``DS004473``
    * - Title
      - sEEG Forced Two-Choice Task
+   * - Author (year)
+     - ``Rockhill2023``
+   * - Canonical
+     - ``Rockhill2022``
+   * - Importable as
+     - ``DS004473``, ``Rockhill2023``, ``Rockhill2022``
    * - Year
      - 2023
    * - Authors

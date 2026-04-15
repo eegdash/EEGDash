@@ -1501,6 +1501,12 @@ Dataset Information
      - ``DS007221``
    * - Title
      - Cross-Environment Multi-Paradigm Motor Imagery EEG Dataset
+   * - Author (year)
+     - ``Xinwei2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007221``, ``Xinwei2026``
    * - Year
      - 2026
    * - Authors

@@ -171,6 +171,12 @@ Dataset Information
      - ``NM000113``
    * - Title
      - 2020 BCI competition, track 3
+   * - Author (year)
+     - ``Lee2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000113``, ``Lee2020``
    * - Year
      - 20
    * - Authors
@@ -224,15 +230,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 64
-      - Sampling rate (Hz): 256.0
+      - Sampling rate (Hz): 256
       - Duration (hours): 5.175732421875
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
+      - Pathology: Not specified
       - Modality: —
-      - Type: Motor
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

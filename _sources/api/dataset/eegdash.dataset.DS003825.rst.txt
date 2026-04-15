@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003825``
    * - Title
      - Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
+   * - Author (year)
+     - ``Grootswagers2021``
+   * - Canonical
+     - ``THINGS``, ``THINGS_EEG``
+   * - Importable as
+     - ``DS003825``, ``Grootswagers2021``, ``THINGS``, ``THINGS_EEG``
    * - Year
      - 2021
    * - Authors

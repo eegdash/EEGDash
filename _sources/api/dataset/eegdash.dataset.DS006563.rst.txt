@@ -125,6 +125,12 @@ Dataset Information
      - ``DS006563``
    * - Title
      - Dimension-based attention modulates early visual processing
+   * - Author (year)
+     - ``Gramann2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006563``, ``Gramann2025``
    * - Year
      - 2025
    * - Authors

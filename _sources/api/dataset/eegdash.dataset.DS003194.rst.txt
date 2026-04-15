@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003194``
    * - Title
      - Neuroepo multisession
+   * - Author (year)
+     - ``Vega2020_Neuroepo``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003194``, ``Vega2020_Neuroepo``
    * - Year
      - 2020
    * - Authors

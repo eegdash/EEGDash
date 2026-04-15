@@ -211,6 +211,12 @@ Dataset Information
      - ``DS006554``
    * - Title
      - Social Observation EEG raw data
+   * - Author (year)
+     - ``Su2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006554``, ``Su2025``
    * - Year
      - 2025
    * - Authors

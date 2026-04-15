@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004855``
    * - Title
      - FT
+   * - Author (year)
+     - ``Johnson2023_FT``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004855``, ``Johnson2023_FT``
    * - Year
      - 2023
    * - Authors

@@ -276,6 +276,12 @@ Dataset Information
      - ``NM000236``
    * - Title
      - Dataset of an EEG-based BCI experiment in Virtual Reality using P300
+   * - Author (year)
+     - ``Cattan2019_P300``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000236``, ``Cattan2019_P300``
    * - Year
      - 2019
    * - Authors

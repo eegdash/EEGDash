@@ -130,6 +130,12 @@ Dataset Information
      - ``DS006126``
    * - Title
      - TDCS Modulation of Visual Cortex in Motor Imagery
+   * - Author (year)
+     - ``Mensah2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006126``, ``Mensah2025``
    * - Year
      - 2025
    * - Authors

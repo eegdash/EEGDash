@@ -223,6 +223,12 @@ Dataset Information
      - ``DS006861``
    * - Title
      - Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals
+   * - Author (year)
+     - ``Maka2025_Targeted``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006861``, ``Maka2025_Targeted``
    * - Year
      - 2025
    * - Authors

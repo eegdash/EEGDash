@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004483``
    * - Title
      - ABSeqMEG
+   * - Author (year)
+     - ``Planton2023``
+   * - Canonical
+     - ``ABSeqMEG``
+   * - Importable as
+     - ``DS004483``, ``Planton2023``, ``ABSeqMEG``
    * - Year
      - 2023
    * - Authors

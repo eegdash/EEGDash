@@ -106,6 +106,12 @@ Dataset Information
      - ``DS003710``
    * - Title
      - APPLESEED Example Dataset
+   * - Author (year)
+     - ``Williams2021``
+   * - Canonical
+     - ``APPLESEED``
+   * - Importable as
+     - ``DS003710``, ``Williams2021``, ``APPLESEED``
    * - Year
      - 2021
    * - Authors

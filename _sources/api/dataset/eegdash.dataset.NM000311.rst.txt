@@ -306,6 +306,12 @@ Dataset Information
      - ``NM000311``
    * - Title
      - Multimodal upper-limb MI/ME EEG (Jeong et al. 2020)
+   * - Author (year)
+     - ``Jeong2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000311``, ``Jeong2020``
    * - Year
      - 2020
    * - Authors

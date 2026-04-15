@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007420``
    * - Title
      - A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task
+   * - Author (year)
+     - ``Gao2026_Light_Weight_Multi``
+   * - Canonical
+     - ``Gao2024``
+   * - Importable as
+     - ``DS007420``, ``Gao2026_Light_Weight_Multi``, ``Gao2024``
    * - Year
      - 2026
    * - Authors

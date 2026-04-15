@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007554``
    * - Title
      - Multimodal dataset from the CMx7-MM Experiment
+   * - Author (year)
+     - ``Ajra2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007554``, ``Ajra2026``
    * - Year
      - 2026
    * - Authors

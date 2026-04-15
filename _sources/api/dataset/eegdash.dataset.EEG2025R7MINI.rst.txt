@@ -227,6 +227,12 @@ Dataset Information
      - ``EEG2025R7MINI``
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 7 (BDF Converted)
+   * - Author (year)
+     - ``Shirazi2024_R7_bdf_mini``
+   * - Canonical
+     - ``HBN_r7_bdf_mini``
+   * - Importable as
+     - ``EEG2025R7MINI``, ``Shirazi2024_R7_bdf_mini``, ``HBN_r7_bdf_mini``
    * - Year
      - 2024
    * - Authors

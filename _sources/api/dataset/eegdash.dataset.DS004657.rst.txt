@@ -114,6 +114,12 @@ Dataset Information
      - ``DS004657``
    * - Title
      - Driving with Autonomous Aids
+   * - Author (year)
+     - ``Metcalfe2023_Driving``
+   * - Canonical
+     - ``TX20``
+   * - Importable as
+     - ``DS004657``, ``Metcalfe2023_Driving``, ``TX20``
    * - Year
      - 2023
    * - Authors

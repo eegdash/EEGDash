@@ -109,6 +109,12 @@ Dataset Information
      - ``DS004577``
    * - Title
      - Dataset containing resting EEG for a sample of 103 normal infants in the first year of life
+   * - Author (year)
+     - ``Unit2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004577``, ``Unit2023``
    * - Year
      - 2023
    * - Authors

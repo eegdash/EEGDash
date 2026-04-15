@@ -105,6 +105,12 @@ Dataset Information
      - ``DS005662``
    * - Title
      - A comprehensive EEG dataset for investigating visual touch perception
+   * - Author (year)
+     - ``Smit2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005662``, ``Smit2024``
    * - Year
      - 2024
    * - Authors

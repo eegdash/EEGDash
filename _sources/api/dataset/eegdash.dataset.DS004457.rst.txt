@@ -122,6 +122,12 @@ Dataset Information
      - ``DS004457``
    * - Title
      - Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex
+   * - Author (year)
+     - ``Huang2023``
+   * - Canonical
+     - ``Huang2022``
+   * - Importable as
+     - ``DS004457``, ``Huang2023``, ``Huang2022``
    * - Year
      - 2023
    * - Authors

@@ -149,6 +149,12 @@ Dataset Information
      - ``DS004642``
    * - Title
      - Intraoperative recordings of medianus stimulation with low and high impedance ECoG
+   * - Author (year)
+     - ``Dimakopoulos2023_Intraoperative``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004642``, ``Dimakopoulos2023_Intraoperative``
    * - Year
      - 2023
    * - Authors

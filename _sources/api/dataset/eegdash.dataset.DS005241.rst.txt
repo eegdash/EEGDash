@@ -109,6 +109,12 @@ Dataset Information
      - ``DS005241``
    * - Title
      - NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis
+   * - Author (year)
+     - ``Rodriguez2024``
+   * - Canonical
+     - ``NeuroMorph``, ``neuromorph``
+   * - Importable as
+     - ``DS005241``, ``Rodriguez2024``, ``NeuroMorph``, ``neuromorph``
    * - Year
      - 2024
    * - Authors

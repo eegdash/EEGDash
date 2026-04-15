@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 61` :bdg-secondary-line:`Recordings: 1357` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -103,6 +103,12 @@ Dataset Information
      - ``DS005083``
    * - Title
      - Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy
+   * - Author (year)
+     - ``Yang2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005083``, ``Yang2024``
    * - Year
      - —
    * - Authors
@@ -155,7 +161,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 105 (2), 114 (2), 150, 102, 99, 62, 98, 148, 166, 138, 124, 129, 61, 117, 83, 230, 144, 95, 100, 134, 132, 112, 73, 123, 93, 152, 65, 103
       - Sampling rate (Hz): Varies
       - Duration (hours): Not calculated
 
@@ -169,7 +175,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
+      - Size on disk: 281.7 KB
       - File count: 1357
       - Format: BIDS
 

@@ -467,6 +467,12 @@ Dataset Information
      - ``NM000162``
    * - Title
      - BNCI 2025-001 Motor Kinematics Reaching dataset
+   * - Author (year)
+     - ``Srisrisawang2025``
+   * - Canonical
+     - ``BNCI2025``
+   * - Importable as
+     - ``NM000162``, ``Srisrisawang2025``, ``BNCI2025``
    * - Year
      - 2024
    * - Authors

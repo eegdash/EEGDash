@@ -120,6 +120,12 @@ Dataset Information
      - ``DS005363``
    * - Title
      - Object recognition in healthy aging (ORHA) - EEG
+   * - Author (year)
+     - ``Haupt2024_Object``
+   * - Canonical
+     - ``ORHA``
+   * - Importable as
+     - ``DS005363``, ``Haupt2024_Object``, ``ORHA``
    * - Year
      - 2024
    * - Authors

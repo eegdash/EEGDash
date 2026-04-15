@@ -184,6 +184,12 @@ Dataset Information
      - ``DS006866``
    * - Title
      - Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals
+   * - Author (year)
+     - ``Maka2025_Discrepancy``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006866``, ``Maka2025_Discrepancy``
    * - Year
      - 2025
    * - Authors

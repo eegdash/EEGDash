@@ -123,6 +123,12 @@ Dataset Information
      - ``DS004977``
    * - Title
      - CARLA: Adjusted common average referencing for cortico-cortical evoked potential data
+   * - Author (year)
+     - ``Huang2024``
+   * - Canonical
+     - ``CARLA``
+   * - Importable as
+     - ``DS004977``, ``Huang2024``, ``CARLA``
    * - Year
      - 2024
    * - Authors

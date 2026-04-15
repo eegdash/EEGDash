@@ -290,6 +290,12 @@ Dataset Information
      - ``NM000342``
    * - Title
      - CastillosCVEP40
+   * - Author (year)
+     - ``Castillos2023_CastillosCVEP40``
+   * - Canonical
+     - ``CastillosCVEP40``
+   * - Importable as
+     - ``NM000342``, ``Castillos2023_CastillosCVEP40``, ``CastillosCVEP40``
    * - Year
      - 2023
    * - Authors

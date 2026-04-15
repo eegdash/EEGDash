@@ -266,6 +266,12 @@ Dataset Information
      - ``NM000206``
    * - Title
      - Neuroergonomic 2021 dataset
+   * - Author (year)
+     - ``Hinss2021_Neuroergonomic``
+   * - Canonical
+     - ``Hinss2021``
+   * - Importable as
+     - ``NM000206``, ``Hinss2021_Neuroergonomic``, ``Hinss2021``
    * - Year
      - 2023
    * - Authors

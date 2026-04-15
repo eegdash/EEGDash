@@ -128,6 +128,12 @@ Dataset Information
      - ``DS004902``
    * - Title
      - A Resting-state EEG Dataset for Sleep Deprivation
+   * - Author (year)
+     - ``Xiang2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004902``, ``Xiang2023``
    * - Year
      - 2023
    * - Authors

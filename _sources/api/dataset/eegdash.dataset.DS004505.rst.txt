@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004505``
    * - Title
      - Real World Table Tennis
+   * - Author (year)
+     - ``Studnicki2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004505``, ``Studnicki2023``
    * - Year
      - 2023
    * - Authors

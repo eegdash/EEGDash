@@ -171,6 +171,12 @@ Dataset Information
      - ``DS005688``
    * - Title
      - visStim
+   * - Author (year)
+     - ``Tan2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005688``, ``Tan2024``
    * - Year
      - 2024
    * - Authors

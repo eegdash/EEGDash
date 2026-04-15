@@ -320,6 +320,12 @@ Dataset Information
      - ``NM000121``
    * - Title
      - Oikonomou2016 – SSVEP MAMEM 3 dataset
+   * - Author (year)
+     - ``Oikonomou2016_MAMEM3``
+   * - Canonical
+     - ``MAMEM3``, ``SSVEP_MAMEM3``
+   * - Importable as
+     - ``NM000121``, ``Oikonomou2016_MAMEM3``, ``MAMEM3``, ``SSVEP_MAMEM3``
    * - Year
      - 2016
    * - Authors

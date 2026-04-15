@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004853``
    * - Title
      - TX17
+   * - Author (year)
+     - ``Johnson2023_TX17``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004853``, ``Johnson2023_TX17``
    * - Year
      - 2023
    * - Authors

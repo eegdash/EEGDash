@@ -155,6 +155,12 @@ Dataset Information
      - ``DS003421``
    * - Title
      - HD-EEGtask(Dataset 2)
+   * - Author (year)
+     - ``Mheich2020_HD_EEGtask``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003421``, ``Mheich2020_HD_EEGtask``
    * - Year
      - 2020
    * - Authors

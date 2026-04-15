@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005473``
    * - Title
      - 29 By BP
+   * - Author (year)
+     - ``Xiangyue2024_29_BP``
+   * - Canonical
+     - ``Zhao2024``
+   * - Importable as
+     - ``DS005473``, ``Xiangyue2024_29_BP``, ``Zhao2024``
    * - Year
      - 2024
    * - Authors

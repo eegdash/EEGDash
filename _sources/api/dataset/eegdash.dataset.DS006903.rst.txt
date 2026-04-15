@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006903``
    * - Title
      - ball_squeeze_2025
+   * - Author (year)
+     - ``here2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006903``, ``here2025``
    * - Year
      - 2025
    * - Authors

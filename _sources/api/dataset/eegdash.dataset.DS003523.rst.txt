@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003523``
    * - Title
      - EEG: Visual Working Memory in Acute TBI
+   * - Author (year)
+     - ``Cavanagh2021_Visual_Working``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003523``, ``Cavanagh2021_Visual_Working``
    * - Year
      - 2021
    * - Authors

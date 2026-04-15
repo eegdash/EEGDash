@@ -108,6 +108,12 @@ Dataset Information
      - ``DS007119``
    * - Title
      - iEEG_comprehensive_HFA_model_part3
+   * - Author (year)
+     - ``Hatano2025_part3``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007119``, ``Hatano2025_part3``
    * - Year
      - 2025
    * - Authors

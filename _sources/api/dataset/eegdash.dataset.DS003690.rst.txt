@@ -111,6 +111,12 @@ Dataset Information
      - ``DS003690``
    * - Title
      - EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks
+   * - Author (year)
+     - ``Ribeiro2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003690``, ``Ribeiro2021``
    * - Year
      - 2021
    * - Authors

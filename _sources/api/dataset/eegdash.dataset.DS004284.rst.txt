@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004284``
    * - Title
      - eeg-neuroforecasting
+   * - Author (year)
+     - ``Veillette2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004284``, ``Veillette2022``
    * - Year
      - 2022
    * - Authors

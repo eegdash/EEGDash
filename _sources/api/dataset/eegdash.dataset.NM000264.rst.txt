@@ -274,6 +274,12 @@ Dataset Information
      - ``NM000264``
    * - Title
      - BrainInvaders2013a
+   * - Author (year)
+     - ``BrainInvaders2013``
+   * - Canonical
+     - ``BrainInvaders2013a``, ``BI2013a``
+   * - Importable as
+     - ``NM000264``, ``BrainInvaders2013``, ``BrainInvaders2013a``, ``BI2013a``
    * - Year
      - 2019
    * - Authors

@@ -111,6 +111,12 @@ Dataset Information
      - ``DS003838``
    * - Title
      - EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest
+   * - Author (year)
+     - ``Pavlov2021_pupillometry``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003838``, ``Pavlov2021_pupillometry``
    * - Year
      - 2021
    * - Authors

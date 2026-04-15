@@ -246,6 +246,12 @@ Dataset Information
      - ``NM000341``
    * - Title
      - Cattan2019-PHMD
+   * - Author (year)
+     - ``Cattan2019_PHMD``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000341``, ``Cattan2019_PHMD``
    * - Year
      - 2019
    * - Authors

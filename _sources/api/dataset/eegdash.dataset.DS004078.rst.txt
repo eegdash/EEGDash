@@ -155,6 +155,12 @@ Dataset Information
      - ``DS004078``
    * - Title
      - A synchronized multimodal neuroimaging dataset to study brain language processing
+   * - Author (year)
+     - ``Wang2022_StudyBRAIN``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004078``, ``Wang2022_StudyBRAIN``
    * - Year
      - 2022
    * - Authors

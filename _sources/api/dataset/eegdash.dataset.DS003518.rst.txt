@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003518``
    * - Title
      - EEG: Simon Conflict w/ Reinforcement + Cabergoline Challenge
+   * - Author (year)
+     - ``Cavanagh2021_Simon_Conflict``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003518``, ``Cavanagh2021_Simon_Conflict``
    * - Year
      - 2021
    * - Authors

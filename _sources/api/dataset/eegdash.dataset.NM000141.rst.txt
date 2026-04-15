@@ -272,6 +272,12 @@ Dataset Information
      - ``NM000141``
    * - Title
      - Motor execution dataset from Wairagkar et al 2018
+   * - Author (year)
+     - ``Wairagkar2018``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000141``, ``Wairagkar2018``
    * - Year
      - 2018
    * - Authors

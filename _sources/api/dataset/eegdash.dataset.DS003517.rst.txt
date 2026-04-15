@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003517``
    * - Title
      - EEG: Continuous gameplay of an 8-bit style video game
+   * - Author (year)
+     - ``Cavanagh2021_Continuous``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003517``, ``Cavanagh2021_Continuous``
    * - Year
      - 2021
    * - Authors

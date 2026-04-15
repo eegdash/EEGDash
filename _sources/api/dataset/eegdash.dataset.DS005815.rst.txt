@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005815``
    * - Title
      - A Human EEG Dataset for Multisensory Perception and Mental Imagery
+   * - Author (year)
+     - ``Chang2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005815``, ``Chang2025``
    * - Year
      - 2025
    * - Authors

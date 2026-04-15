@@ -206,6 +206,12 @@ Dataset Information
      - ``NM000240``
    * - Title
      - Checkerboard m-sequence-based c-VEP dataset from
+   * - Author (year)
+     - ``FernandezRodriguez2025``
+   * - Canonical
+     - ``FernandezRodriguez2023``
+   * - Importable as
+     - ``NM000240``, ``FernandezRodriguez2025``, ``FernandezRodriguez2023``
    * - Year
      - 2025
    * - Authors

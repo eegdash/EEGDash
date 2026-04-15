@@ -259,6 +259,12 @@ Dataset Information
      - ``NM000143``
    * - Title
      - BNCI2003_IVa Motor Imagery dataset
+   * - Author (year)
+     - ``BNCI2003``
+   * - Canonical
+     - ``BCICIII_IVa``, ``BCICompIII_IVa``, ``BNCI2003_IVa``
+   * - Importable as
+     - ``NM000143``, ``BNCI2003``, ``BCICIII_IVa``, ``BCICompIII_IVa``, ``BNCI2003_IVa``
    * - Year
      - 2019
    * - Authors

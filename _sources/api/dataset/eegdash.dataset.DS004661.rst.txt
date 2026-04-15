@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004661``
    * - Title
      - ANDI
+   * - Author (year)
+     - ``Johnson2023_ANDI``
+   * - Canonical
+     - ``ANDI``
+   * - Importable as
+     - ``DS004661``, ``Johnson2023_ANDI``, ``ANDI``
    * - Year
      - 2023
    * - Authors

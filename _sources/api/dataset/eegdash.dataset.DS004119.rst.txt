@@ -206,6 +206,12 @@ Dataset Information
      - ``DS004119``
    * - Title
      - BCIT Basic Guard Duty
+   * - Author (year)
+     - ``Touryan2022_BCIT_Basic``
+   * - Canonical
+     - ``BCIT``
+   * - Importable as
+     - ``DS004119``, ``Touryan2022_BCIT_Basic``, ``BCIT``
    * - Year
      - 2022
    * - Authors

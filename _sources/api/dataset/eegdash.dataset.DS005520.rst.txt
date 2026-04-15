@@ -130,6 +130,12 @@ Dataset Information
      - ``DS005520``
    * - Title
      - Research data supporting 'EEG recording during playing MOBA game'
+   * - Author (year)
+     - ``Li2024_Research_supporting_playing``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005520``, ``Li2024_Research_supporting_playing``
    * - Year
      - 2024
    * - Authors

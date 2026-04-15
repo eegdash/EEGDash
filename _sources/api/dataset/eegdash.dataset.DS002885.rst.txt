@@ -109,6 +109,12 @@ Dataset Information
      - ``DS002885``
    * - Title
      - DBS Phantom Recordings
+   * - Author (year)
+     - ``Kandemir2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002885``, ``Kandemir2020``
    * - Year
      - 2020
    * - Authors

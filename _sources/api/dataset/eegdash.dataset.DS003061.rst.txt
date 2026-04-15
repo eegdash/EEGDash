@@ -104,6 +104,12 @@ Dataset Information
      - ``DS003061``
    * - Title
      - EEG data from an auditory oddball task
+   * - Author (year)
+     - ``Delorme2020_auditory_oddball``
+   * - Canonical
+     - ``Delorme``
+   * - Importable as
+     - ``DS003061``, ``Delorme2020_auditory_oddball``, ``Delorme``
    * - Year
      - 2020
    * - Authors

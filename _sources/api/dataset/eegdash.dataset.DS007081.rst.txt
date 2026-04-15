@@ -108,6 +108,12 @@ Dataset Information
      - ``DS007081``
    * - Title
      - Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load
+   * - Author (year)
+     - ``Ylmaz2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007081``, ``Ylmaz2025``
    * - Year
      - 2025
    * - Authors

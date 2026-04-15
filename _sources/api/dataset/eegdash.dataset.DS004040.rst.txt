@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004040``
    * - Title
      - Trance channeling EEG study
+   * - Author (year)
+     - ``Cannard2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004040``, ``Cannard2022``
    * - Year
      - 2022
    * - Authors

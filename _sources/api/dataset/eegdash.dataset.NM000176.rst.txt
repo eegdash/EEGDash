@@ -218,6 +218,12 @@ Dataset Information
      - ``NM000176``
    * - Title
      - BigP3BCI Study K — 9x8 adaptive/checkerboard, 2 sessions (5 healthy subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI``
+   * - Canonical
+     - ``BigP3BCI_StudyK``, ``BigP3BCI_K``
+   * - Importable as
+     - ``NM000176``, ``Mainsah2025_BigP3BCI``, ``BigP3BCI_StudyK``, ``BigP3BCI_K``
    * - Year
      - 2019
    * - Authors

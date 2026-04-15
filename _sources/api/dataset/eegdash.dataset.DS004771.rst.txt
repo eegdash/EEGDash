@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004771``
    * - Title
      - EEG/ERP data from a Python Reading Task
+   * - Author (year)
+     - ``Kuo2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004771``, ``Kuo2023``
    * - Year
      - 2023
    * - Authors

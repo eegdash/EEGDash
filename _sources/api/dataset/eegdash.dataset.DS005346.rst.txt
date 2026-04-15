@@ -126,6 +126,12 @@ Dataset Information
      - ``DS005346``
    * - Title
      - Naturalistic fMRI and MEG recordings during viewing of a reality TV show
+   * - Author (year)
+     - ``Li2024_Naturalistic_fMRI_viewing``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005346``, ``Li2024_Naturalistic_fMRI_viewing``
    * - Year
      - 2024
    * - Authors

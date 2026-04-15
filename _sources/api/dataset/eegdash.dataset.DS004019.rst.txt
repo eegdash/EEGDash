@@ -125,6 +125,12 @@ Dataset Information
      - ``DS004019``
    * - Title
      - Effect of obesity on arithmetic processing in preteens with high and low math skills. An event-related potentials study
+   * - Author (year)
+     - ``AlatorreCruz2022_Effect``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004019``, ``AlatorreCruz2022_Effect``
    * - Year
      - 2022
    * - Authors

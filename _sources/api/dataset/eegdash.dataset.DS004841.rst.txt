@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004841``
    * - Title
      - TX14
+   * - Author (year)
+     - ``Larkin2023_TX14``
+   * - Canonical
+     - ``TX14``
+   * - Importable as
+     - ``DS004841``, ``Larkin2023_TX14``, ``TX14``
    * - Year
      - 2023
    * - Authors

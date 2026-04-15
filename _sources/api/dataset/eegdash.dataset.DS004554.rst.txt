@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004554``
    * - Title
      - Forced Picture Naming Task
+   * - Author (year)
+     - ``Volpert2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004554``, ``Volpert2023``
    * - Year
      - 2023
    * - Authors

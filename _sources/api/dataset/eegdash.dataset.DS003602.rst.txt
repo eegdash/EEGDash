@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003602``
    * - Title
      - Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms
+   * - Author (year)
+     - ``Korucuoglu2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003602``, ``Korucuoglu2021``
    * - Year
      - 2021
    * - Authors

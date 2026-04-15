@@ -240,6 +240,12 @@ Dataset Information
      - ``NM000211``
    * - Title
      - RSVP ERP dataset for authentication from Zhang et al 2025
+   * - Author (year)
+     - ``Zhang2025_RSVP``
+   * - Canonical
+     - ``Zhang2025``
+   * - Importable as
+     - ``NM000211``, ``Zhang2025_RSVP``, ``Zhang2025``
    * - Year
      - 2025
    * - Authors

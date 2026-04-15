@@ -301,6 +301,12 @@ Dataset Information
      - ``NM000190``
    * - Title
      - BNCI 2015-012 PASS2D P300 dataset
+   * - Author (year)
+     - ``Hohne2015``
+   * - Canonical
+     - ``BNCI2015``
+   * - Importable as
+     - ``NM000190``, ``Hohne2015``, ``BNCI2015``
    * - Year
      - 2011
    * - Authors

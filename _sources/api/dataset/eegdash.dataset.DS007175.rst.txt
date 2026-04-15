@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007175``
    * - Title
      - FFR-active-listening
+   * - Author (year)
+     - ``DS7175_FFR_ActiveListening``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007175``, ``DS7175_FFR_ActiveListening``
    * - Year
      - 2026
    * - Authors

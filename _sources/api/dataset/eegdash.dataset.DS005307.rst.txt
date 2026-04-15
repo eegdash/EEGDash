@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005307``
    * - Title
      - Laser-evoked potentials in the human spinal cord and cortex
+   * - Author (year)
+     - ``Nierula2024``
+   * - Canonical
+     - ``Nierula2019``
+   * - Importable as
+     - ``DS005307``, ``Nierula2024``, ``Nierula2019``
    * - Year
      - 2024
    * - Authors

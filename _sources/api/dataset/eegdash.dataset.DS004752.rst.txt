@@ -147,6 +147,12 @@ Dataset Information
      - ``DS004752``
    * - Title
      - Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task
+   * - Author (year)
+     - ``Dimakopoulos2023_intracranial``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004752``, ``Dimakopoulos2023_intracranial``
    * - Year
      - 2023
    * - Authors

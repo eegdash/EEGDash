@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 23` :bdg-secondary-line:`Recordings: 201` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -181,6 +181,12 @@ Dataset Information
      - ``DS006253``
    * - Title
      - MetaRDK
+   * - Author (year)
+     - ``Goueytes2024``
+   * - Canonical
+     - ``MetaRDK``
+   * - Importable as
+     - ``DS006253``, ``Goueytes2024``, ``MetaRDK``
    * - Year
      - —
    * - Authors
@@ -233,7 +239,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 122 (13), 185 (2), 120, 143, 156, 186, 201, 132
       - Sampling rate (Hz): Varies
       - Duration (hours): Not calculated
 
@@ -247,7 +253,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
+      - Size on disk: 656.2 KB
       - File count: 201
       - Format: BIDS
 

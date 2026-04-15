@@ -215,6 +215,12 @@ Dataset Information
      - ``NM000340``
    * - Title
      - Mainsah2025-J
+   * - Author (year)
+     - ``Mainsah2025_J``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000340``, ``Mainsah2025_J``
    * - Year
      - 2019
    * - Authors

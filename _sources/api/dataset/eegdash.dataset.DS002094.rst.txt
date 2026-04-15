@@ -99,6 +99,12 @@ Dataset Information
      - ``DS002094``
    * - Title
      - Single-pulse open-loop TMS-EEG dataset
+   * - Author (year)
+     - ``DS2094_Single_pulse``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002094``, ``DS2094_Single_pulse``
    * - Year
      - 2019
    * - Authors

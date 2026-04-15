@@ -289,6 +289,12 @@ Dataset Information
      - ``NM000160``
    * - Title
      - Multi-joint upper-limb MI dataset from Yi et al. 2025
+   * - Author (year)
+     - ``Yi2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000160``, ``Yi2025``
    * - Year
      - 2025
    * - Authors

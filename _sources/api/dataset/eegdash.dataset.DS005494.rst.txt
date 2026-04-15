@@ -130,6 +130,12 @@ Dataset Information
      - ``DS005494``
    * - Title
      - Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval
+   * - Author (year)
+     - ``Herrema2024_Cued``
+   * - Canonical
+     - ``Herrema2024``
+   * - Importable as
+     - ``DS005494``, ``Herrema2024_Cued``, ``Herrema2024``
    * - Year
      - 2024
    * - Authors

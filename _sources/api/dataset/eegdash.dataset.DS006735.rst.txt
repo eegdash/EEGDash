@@ -150,6 +150,12 @@ Dataset Information
      - ``DS006735``
    * - Title
      - Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding
+   * - Author (year)
+     - ``Shan2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006735``, ``Shan2025``
    * - Year
      - 2025
    * - Authors

@@ -120,6 +120,12 @@ Dataset Information
      - ``DS004151``
    * - Title
      - Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study
+   * - Author (year)
+     - ``AlatorreCruz2022_Effect_obesity``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004151``, ``AlatorreCruz2022_Effect_obesity``
    * - Year
      - 2022
    * - Authors

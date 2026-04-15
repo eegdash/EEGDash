@@ -254,6 +254,12 @@ Dataset Information
      - ``DS004940``
    * - Title
      - Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.
+   * - Author (year)
+     - ``Toffolo2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004940``, ``Toffolo2024``
    * - Year
      - 2024
    * - Authors

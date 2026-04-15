@@ -104,6 +104,12 @@ Dataset Information
      - ``DS005410``
    * - Title
      - Semantic_conditioning
+   * - Author (year)
+     - ``Pavlov2024_Semantic_conditioning``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005410``, ``Pavlov2024_Semantic_conditioning``
    * - Year
      - 2024
    * - Authors

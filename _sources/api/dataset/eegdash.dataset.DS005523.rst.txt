@@ -157,6 +157,12 @@ Dataset Information
      - ``DS005523``
    * - Title
      - Spatial Memory of Object Locations with Open-Loop Stimulation at Encoding
+   * - Author (year)
+     - ``Herrema2024_Spatial_Memory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005523``, ``Herrema2024_Spatial_Memory``
    * - Year
      - 2024
    * - Authors

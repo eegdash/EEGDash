@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004022``
    * - Title
      - Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
+   * - Author (year)
+     - ``Lee2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004022``, ``Lee2022``
    * - Year
      - 2022
    * - Authors

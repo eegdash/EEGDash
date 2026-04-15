@@ -207,6 +207,12 @@ Dataset Information
      - ``DS005340``
    * - Title
      - Fundamental frequency predominantly drives talker differences in auditory brainstem responses to continuous speech
+   * - Author (year)
+     - ``Polonenko2024_Fundamental``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005340``, ``Polonenko2024_Fundamental``
    * - Year
      - 2024
    * - Authors

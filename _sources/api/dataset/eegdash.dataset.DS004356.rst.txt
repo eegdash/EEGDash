@@ -158,6 +158,12 @@ Dataset Information
      - ``DS004356``
    * - Title
      - Subcortical responses to music and speech are alike while cortical responses diverge
+   * - Author (year)
+     - ``Shan2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004356``, ``Shan2022``
    * - Year
      - 2022
    * - Authors

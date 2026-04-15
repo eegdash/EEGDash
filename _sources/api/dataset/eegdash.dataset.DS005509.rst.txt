@@ -227,6 +227,12 @@ Dataset Information
      - ``DS005509``
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 5
+   * - Author (year)
+     - ``Shirazi2024_R5``
+   * - Canonical
+     - ``HBN_r5``
+   * - Importable as
+     - ``DS005509``, ``Shirazi2024_R5``, ``HBN_r5``
    * - Year
      - 2024
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005274``
    * - Title
      - UV_EEG
+   * - Author (year)
+     - ``Ito2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005274``, ``Ito2024``
    * - Year
      - 2024
    * - Authors

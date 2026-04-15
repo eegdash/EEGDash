@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004588``
    * - Title
      - Neuma
+   * - Author (year)
+     - ``Georgiadis2023``
+   * - Canonical
+     - ``Neuma``
+   * - Importable as
+     - ``DS004588``, ``Georgiadis2023``, ``Neuma``
    * - Year
      - 2023
    * - Authors

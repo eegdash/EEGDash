@@ -112,6 +112,12 @@ Dataset Information
      - ``DS005403``
    * - Title
      - Delayed Auditory Feedback EEG/EGG
+   * - Author (year)
+     - ``Veillette2024``
+   * - Canonical
+     - ``Veillette2019``
+   * - Importable as
+     - ``DS005403``, ``Veillette2024``, ``Veillette2019``
    * - Year
      - 2024
    * - Authors

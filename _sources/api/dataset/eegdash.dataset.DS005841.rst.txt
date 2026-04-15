@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 48` :bdg-secondary-line:`Recordings: 288` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-success:`Metadata: Complete (90%)`
+:bdg-success:`Metadata: Complete (100%)`
 
 Quickstart
 ----------
@@ -126,6 +126,12 @@ Dataset Information
      - ``DS005841``
    * - Title
      - EEG Experiment measuring ERPs in VR
+   * - Author (year)
+     - ``Karakashevska2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005841``, ``Karakashevska2025``
    * - Year
      - 2025
    * - Authors
@@ -178,8 +184,8 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
-      - Sampling rate (Hz): 512.0
+      - Channels: 73
+      - Sampling rate (Hz): 512
       - Duration (hours): 21.566111111111116
 
    .. grid-item-card:: Tags

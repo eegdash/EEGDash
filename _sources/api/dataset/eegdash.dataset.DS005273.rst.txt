@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005273``
    * - Title
      - Neural representation of consciously seen and unseen information
+   * - Author (year)
+     - ``Esteban2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005273``, ``Esteban2024``
    * - Year
      - 2024
    * - Authors

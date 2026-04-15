@@ -131,6 +131,12 @@ Dataset Information
      - ``DS004993``
    * - Title
      - WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS
+   * - Author (year)
+     - ``Hamilton2024``
+   * - Canonical
+     - ``WIRED_ICM``
+   * - Importable as
+     - ``DS004993``, ``Hamilton2024``, ``WIRED_ICM``
    * - Year
      - 2024
    * - Authors

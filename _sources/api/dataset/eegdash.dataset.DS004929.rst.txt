@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004929``
    * - Title
      - BallSqueezingHD
+   * - Author (year)
+     - ``Gao2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004929``, ``Gao2024``
    * - Year
      - 2024
    * - Authors

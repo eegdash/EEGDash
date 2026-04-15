@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005420``
    * - Title
      - Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
+   * - Author (year)
+     - ``Gama2024``
+   * - Canonical
+     - ``Gama2019``
+   * - Importable as
+     - ``DS005420``, ``Gama2024``, ``Gama2019``
    * - Year
      - 2024
    * - Authors

@@ -187,6 +187,12 @@ Dataset Information
      - ``DS004117``
    * - Title
      - Sternberg Working Memory
+   * - Author (year)
+     - ``Onton2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004117``, ``Onton2022``
    * - Year
      - 2022
    * - Authors

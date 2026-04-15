@@ -375,6 +375,12 @@ Dataset Information
      - ``NM000118``
    * - Title
      - Nakanishi2015 – SSVEP Nakanishi 2015 dataset
+   * - Author (year)
+     - ``Nakanishi2015``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000118``, ``Nakanishi2015``
    * - Year
      - 2019
    * - Authors

@@ -125,6 +125,12 @@ Dataset Information
      - ``DS006593``
    * - Title
      - cBCI Matrix Multimodal Dataset
+   * - Author (year)
+     - ``Celik2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006593``, ``Celik2025``
    * - Year
      - 2025
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005776``
    * - Title
      - Electrical_Thermal_FingerTapping_2015
+   * - Author (year)
+     - ``Yucel2025_Electrical``
+   * - Canonical
+     - ``Yucel2015``
+   * - Importable as
+     - ``DS005776``, ``Yucel2025_Electrical``, ``Yucel2015``
    * - Year
      - 2025
    * - Authors

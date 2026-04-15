@@ -122,6 +122,12 @@ Dataset Information
      - ``DS003645``
    * - Title
      - Face processing MEEG dataset with HED annotation
+   * - Author (year)
+     - ``Wakeman2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003645``, ``Wakeman2021``
    * - Year
      - 2021
    * - Authors

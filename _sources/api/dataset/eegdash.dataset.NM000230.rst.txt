@@ -244,6 +244,12 @@ Dataset Information
      - ``NM000230``
    * - Title
      - Lower-limb MI dataset for knee pain patients from Zuo et al. 2025
+   * - Author (year)
+     - ``Zuo2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000230``, ``Zuo2025``
    * - Year
      - 2025
    * - Authors

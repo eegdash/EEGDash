@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=b9813beb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=448230d6" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
@@ -569,16 +569,19 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_valid_freq_band</span></code>(fs, n[, f_min, f_max])</p></td>
 <td><p>Validate and return frequency boundaries based on Nyquist and resolution.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_freq_bands</span></code>(f, x, bands[, reduce_func])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocessor_as_feature</span></code>(*x)</p></td>
+<td><p>A pass-through feature, returning its preprocessor output as is.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_freq_bands</span></code>(f, x, bands[, reduce_func])</p></td>
 <td><p>Reduce spectral data into discrete frequency bands by aggregating bins.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectral_default_kwargs</span></code>(kwargs, metadata)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectral_default_kwargs</span></code>(kwargs, metadata)</p></td>
 <td><p>Sets default parameters for spectral preprocecssors.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code>(f, *x[, f_min, f_max])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_freq_band</span></code>(f, *x[, f_min, f_max])</p></td>
 <td><p>Slice frequency vector and associated data arrays to a specific range.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_kwargs</span></code>(func)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral_kwargs</span></code>(func)</p></td>
 <td><p>A decorator for functions receiving spectral-like parameters.</p></td>
 </tr>
 </tbody>
@@ -587,7 +590,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L173-L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">get_valid_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L198-L242"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Validate and return frequency boundaries based on Nyquist and resolution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -622,7 +625,26 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L274-L332"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">preprocessor_as_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L37-L57"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>A pass-through feature, returning its preprocessor output as is.</p>
+<p>Use if the preprocessor is a feature by itself, and it should also be treated as a
+feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*x</strong> (<em>tuple</em>) – Any preprocessor output.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>*x</strong> – The input (as is).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">reduce_freq_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">sum&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L299-L357"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reduce spectral data into discrete frequency bands by aggregating bins.</p>
 <p>This function identifies the frequency indices belonging to specific
 bands and applies a reduction function (like sum or mean) to collapse
@@ -671,7 +693,7 @@ available frequency vector <cite>f</cite>.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">set_spectral_default_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L35-L91"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">set_spectral_default_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L60-L116"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sets default parameters for spectral preprocecssors.</p>
 <ul class="simple">
 <li><p>Set the default frequency limits to the bandpass frequencies (if available).</p></li>
@@ -704,7 +726,7 @@ available frequency vector <cite>f</cite>.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L220-L271"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">slice_freq_band</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L245-L296"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Slice frequency vector and associated data arrays to a specific range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -749,7 +771,7 @@ The last dimension of each array must match the length of <cite>f</cite>.</p></l
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">spectral_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L94-L170"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.utils.</span></span><span class="sig-name descname"><span class="pre">spectral_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/utils.py#L119-L195"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>A decorator for functions receiving spectral-like parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

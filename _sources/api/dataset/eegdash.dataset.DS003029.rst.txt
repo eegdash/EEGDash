@@ -190,6 +190,12 @@ Dataset Information
      - ``DS003029``
    * - Title
      - Epilepsy-iEEG-Multicenter-Dataset
+   * - Author (year)
+     - ``Li2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003029``, ``Li2020``
    * - Year
      - 2020
    * - Authors

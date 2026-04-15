@@ -106,6 +106,12 @@ Dataset Information
      - ``DS003039``
    * - Title
      - free walking study
+   * - Author (year)
+     - ``Jacobsen2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003039``, ``Jacobsen2020``
    * - Year
      - 2020
    * - Authors

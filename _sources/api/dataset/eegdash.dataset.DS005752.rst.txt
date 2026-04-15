@@ -316,6 +316,12 @@ Dataset Information
      - ``DS005752``
    * - Title
      - The NIMH Healthy Research Volunteer Dataset
+   * - Author (year)
+     - ``Nugent2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005752``, ``Nugent2024``
    * - Year
      - 2024
    * - Authors

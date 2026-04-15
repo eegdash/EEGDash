@@ -131,6 +131,12 @@ Dataset Information
      - ``DS004011``
    * - Title
      - The nature of neural object representations during dynamic occlusion
+   * - Author (year)
+     - ``Teichmann2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004011``, ``Teichmann2022``
    * - Year
      - 2022
    * - Authors

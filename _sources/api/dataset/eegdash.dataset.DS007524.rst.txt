@@ -201,6 +201,12 @@ Dataset Information
      - ``DS007524``
    * - Title
      - LittlePrince_MEG_French_Read_Pallier2025
+   * - Author (year)
+     - ``Pallier2025``
+   * - Canonical
+     - ``LittlePrince``
+   * - Importable as
+     - ``DS007524``, ``Pallier2025``, ``LittlePrince``
    * - Year
      - 2026
    * - Authors

@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004995``
    * - Title
      - The Time-Course of Food Representation in the Human Brain
+   * - Author (year)
+     - ``Moerel2024``
+   * - Canonical
+     - ``Moerel2023``
+   * - Importable as
+     - ``DS004995``, ``Moerel2024``, ``Moerel2023``
    * - Year
      - 2024
    * - Authors

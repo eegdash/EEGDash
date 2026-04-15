@@ -108,6 +108,12 @@ Dataset Information
      - ``DS004917``
    * - Title
      - Probability Decision-making Task with ambiguity
+   * - Author (year)
+     - ``FigueroaVargas2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004917``, ``FigueroaVargas2024``
    * - Year
      - 2024
    * - Authors

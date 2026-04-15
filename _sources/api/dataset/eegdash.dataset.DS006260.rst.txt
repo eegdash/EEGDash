@@ -298,6 +298,12 @@ Dataset Information
      - ``DS006260``
    * - Title
      - Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology
+   * - Author (year)
+     - ``CoronaGonzalez2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006260``, ``CoronaGonzalez2025``
    * - Year
      - 2025
    * - Authors

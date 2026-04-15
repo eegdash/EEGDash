@@ -104,6 +104,12 @@ Dataset Information
      - ``DS005872``
    * - Title
      - EEGEyeNet Dataset
+   * - Author (year)
+     - ``Plomecka2025``
+   * - Canonical
+     - ``EEGEyeNet``
+   * - Importable as
+     - ``DS005872``, ``Plomecka2025``, ``EEGEyeNet``
    * - Year
      - 2025
    * - Authors

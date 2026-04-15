@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004330``
    * - Title
      - The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG)
+   * - Author (year)
+     - ``Singer2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004330``, ``Singer2022``
    * - Year
      - 2022
    * - Authors

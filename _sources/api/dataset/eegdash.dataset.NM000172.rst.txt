@@ -289,6 +289,12 @@ Dataset Information
      - ``NM000172``
    * - Title
      - High-gamma dataset described in Schirrmeister et al. 2017
+   * - Author (year)
+     - ``Schirrmeister2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000172``, ``Schirrmeister2017``
    * - Year
      - 2017
    * - Authors

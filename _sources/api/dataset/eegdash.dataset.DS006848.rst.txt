@@ -129,6 +129,12 @@ Dataset Information
      - ``DS006848``
    * - Title
      - AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits
+   * - Author (year)
+     - ``Kosachenko2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006848``, ``Kosachenko2025``
    * - Year
      - 2025
    * - Authors

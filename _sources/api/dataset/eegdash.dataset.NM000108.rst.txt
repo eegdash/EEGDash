@@ -173,6 +173,12 @@ Dataset Information
      - ``NM000108``
    * - Title
      - HySER: High-Density Surface Electromyogram Recordings
+   * - Author (year)
+     - ``Jiang2021``
+   * - Canonical
+     - ``HySER``, ``Hyser``
+   * - Importable as
+     - ``NM000108``, ``Jiang2021``, ``HySER``, ``Hyser``
    * - Year
      - 20
    * - Authors
@@ -232,9 +238,9 @@ Technical Details
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Motor
-      - Type: Motor
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

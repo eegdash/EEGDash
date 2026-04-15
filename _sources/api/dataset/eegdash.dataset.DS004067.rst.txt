@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004067``
    * - Title
      - Moral conviction and metacognitive ability shape multiple stages of information processing
+   * - Author (year)
+     - ``Yoder2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004067``, ``Yoder2022``
    * - Year
      - 2022
    * - Authors

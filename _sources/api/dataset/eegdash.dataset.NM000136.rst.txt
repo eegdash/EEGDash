@@ -225,6 +225,12 @@ Dataset Information
      - ``NM000136``
    * - Title
      - GuttmannFlury2025-P300
+   * - Author (year)
+     - ``GuttmannFlury2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000136``, ``GuttmannFlury2025``
    * - Year
      - 2025
    * - Authors

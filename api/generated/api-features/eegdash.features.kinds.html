@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=b9813beb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=448230d6" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
   
@@ -583,19 +583,20 @@ logic to map raw arrays to named features.</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}&lt;&gt;{}'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L134-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">BivariateFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_pair_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L139-L182"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></p>
 <p>Feature kind for operations on pairs of channels.</p>
 <p>Designed for undirected relationship measures between two signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>channel_pair_format</strong> (<em>str</em><em>, </em><em>default=&quot;{}&lt;&gt;{}&quot;</em>) – A format string used to create feature names from pairs of
-channel names.</p>
+<dd class="field-odd"><p><strong>channel_pair_format</strong> (<em>str</em>) – A format string used to create feature names from pairs of
+channel names. Default is “{}&lt;&gt;{}” for undirected bivariate features
+or “{}-&gt;{}” for directed bivariate features.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L151-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L157-L182"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate feature names for each unique pair of channels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -614,7 +615,7 @@ channel names.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L22-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">MultivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L27-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Logic wrapper for features that operate on one or more EEG channels.</p>
 <p>This class defines the logic for mapping raw numerical results into
@@ -626,7 +627,7 @@ values with specific channels or channel groupings.</p>
 specific naming conventions for the extracted features.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L93-L108"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L98-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate feature-specific names based on input channels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -646,13 +647,13 @@ Returns an empty list in the base implementation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L111-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.features.kinds.</span></span><span class="sig-name descname"><span class="pre">UnivariateFeature</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L116-L136"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultivariateFeature</span></code></p>
 <p>Feature kind for operations applied to each channel independently.</p>
 <p>Used when a single feature value is produced per channel.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L117-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">feature_channel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/kinds.py#L122-L136"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Return the channel names themselves as feature names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

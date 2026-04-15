@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006171``
    * - Title
      - EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)
+   * - Author (year)
+     - ``Melcon2025``
+   * - Canonical
+     - ``Melcon2024``
+   * - Importable as
+     - ``DS006171``, ``Melcon2025``, ``Melcon2024``
    * - Year
      - 2025
    * - Authors

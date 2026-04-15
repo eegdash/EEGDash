@@ -120,6 +120,12 @@ Dataset Information
      - ``DS003670``
    * - Title
      - Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS
+   * - Author (year)
+     - ``Gebodh2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003670``, ``Gebodh2021``
    * - Year
      - 2021
    * - Authors

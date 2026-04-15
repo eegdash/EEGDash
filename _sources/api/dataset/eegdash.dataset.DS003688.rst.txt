@@ -106,6 +106,12 @@ Dataset Information
      - ``DS003688``
    * - Title
      - Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film
+   * - Author (year)
+     - ``Berezutskaya2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003688``, ``Berezutskaya2021``
    * - Year
      - 2021
    * - Authors

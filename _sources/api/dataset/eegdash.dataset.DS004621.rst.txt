@@ -114,6 +114,12 @@ Dataset Information
      - ``DS004621``
    * - Title
      - The Nencki-Symfonia EEG/ERP dataset
+   * - Author (year)
+     - ``Patrycja2023_Nencki``
+   * - Canonical
+     - ``NenckiSymfonia``
+   * - Importable as
+     - ``DS004621``, ``Patrycja2023_Nencki``, ``NenckiSymfonia``
    * - Year
      - 2023
    * - Authors

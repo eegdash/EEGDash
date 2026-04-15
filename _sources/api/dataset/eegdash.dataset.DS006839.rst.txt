@@ -126,6 +126,12 @@ Dataset Information
      - ``DS006839``
    * - Title
      - EEG recordings during sham neurofeedback in virtual reality
+   * - Author (year)
+     - ``Gonzales2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006839``, ``Gonzales2025``
    * - Year
      - 2025
    * - Authors

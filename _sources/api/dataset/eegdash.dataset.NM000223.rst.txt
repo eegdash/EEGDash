@@ -228,6 +228,12 @@ Dataset Information
      - ``NM000223``
    * - Title
      - Electric light control experiment (15 subjects, 4 classes, 31 EEG ch)
+   * - Author (year)
+     - ``Lee2024_Electric_light_control``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000223``, ``Lee2024_Electric_light_control``
    * - Year
      - 2019
    * - Authors

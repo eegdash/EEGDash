@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004398``
    * - Title
      - planmemreplay
+   * - Author (year)
+     - ``Wimmer2023``
+   * - Canonical
+     - ``Wimmer2024``
+   * - Importable as
+     - ``DS004398``, ``Wimmer2023``, ``Wimmer2024``
    * - Year
      - 2023
    * - Authors

@@ -313,6 +313,12 @@ Dataset Information
      - ``NM000152``
    * - Title
      - Upper-limb elbow-centered motor imagery dataset (10 classes)
+   * - Author (year)
+     - ``Zhang2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000152``, ``Zhang2017``
    * - Year
      - 2019
    * - Authors

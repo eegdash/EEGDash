@@ -231,6 +231,12 @@ Dataset Information
      - ``DS002336``
    * - Title
      - A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1
+   * - Author (year)
+     - ``Lioi2019_multi``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002336``, ``Lioi2019_multi``
    * - Year
      - 2019
    * - Authors

@@ -155,6 +155,12 @@ Dataset Information
      - ``DS005522``
    * - Title
      - Spatial Navigation Memory of Object Locations
+   * - Author (year)
+     - ``Herrema2024_Spatial``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005522``, ``Herrema2024_Spatial``
    * - Year
      - 2024
    * - Authors

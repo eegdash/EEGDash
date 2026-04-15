@@ -115,6 +115,12 @@ Dataset Information
      - ``DS005960``
    * - Title
      - General Info: inst-comp-eeg
+   * - Author (year)
+     - ``Pena2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005960``, ``Pena2025``
    * - Year
      - 2025
    * - Authors

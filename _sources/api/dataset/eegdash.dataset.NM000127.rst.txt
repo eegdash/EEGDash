@@ -600,6 +600,12 @@ Dataset Information
      - ``NM000127``
    * - Title
      - Kim2025 – 40-class beta-range SSVEP speller dataset
+   * - Author (year)
+     - ``Kim2025_SSVEP``
+   * - Canonical
+     - ``Kim2025``
+   * - Importable as
+     - ``NM000127``, ``Kim2025_SSVEP``, ``Kim2025``
    * - Year
      - 2019
    * - Authors

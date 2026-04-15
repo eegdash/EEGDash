@@ -173,6 +173,12 @@ Dataset Information
      - ``DS005628``
    * - Title
      - Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site
+   * - Author (year)
+     - ``RosadoAiza2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005628``, ``RosadoAiza2024``
    * - Year
      - 2024
    * - Authors

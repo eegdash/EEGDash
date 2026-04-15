@@ -155,6 +155,12 @@ Dataset Information
      - ``DS005810``
    * - Title
      - NOD-MEG
+   * - Author (year)
+     - ``Zhang2025_MEG``
+   * - Canonical
+     - ``NOD_MEG``
+   * - Importable as
+     - ``DS005810``, ``Zhang2025_MEG``, ``NOD_MEG``
    * - Year
      - 2025
    * - Authors

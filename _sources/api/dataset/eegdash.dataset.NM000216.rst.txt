@@ -272,6 +272,12 @@ Dataset Information
      - ``NM000216``
    * - Title
      - P300 dataset BI2015a from a "Brain Invaders" experiment
+   * - Author (year)
+     - ``Korczowski2015_P300``
+   * - Canonical
+     - ``BrainInvaders2015a``, ``BI2015a``
+   * - Importable as
+     - ``NM000216``, ``Korczowski2015_P300``, ``BrainInvaders2015a``, ``BI2015a``
    * - Year
      - 2019
    * - Authors

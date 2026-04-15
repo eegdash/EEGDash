@@ -266,6 +266,12 @@ Dataset Information
      - ``NM000168``
    * - Title
      - BNCI 2015-013 Error-Related Potentials dataset
+   * - Author (year)
+     - ``Chavarriaga2015``
+   * - Canonical
+     - ``Chavarriaga2010``
+   * - Importable as
+     - ``NM000168``, ``Chavarriaga2015``, ``Chavarriaga2010``
    * - Year
      - 2010
    * - Authors

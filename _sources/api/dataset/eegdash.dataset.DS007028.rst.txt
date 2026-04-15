@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007028``
    * - Title
      - Auditory Cortex Macaque Monkey DISC Data
+   * - Author (year)
+     - ``Kajikawa2025``
+   * - Canonical
+     - ``Kajikawa2000``
+   * - Importable as
+     - ``DS007028``, ``Kajikawa2025``, ``Kajikawa2000``
    * - Year
      - 2025
    * - Authors

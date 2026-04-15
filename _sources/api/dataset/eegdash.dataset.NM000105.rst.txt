@@ -403,6 +403,12 @@ Dataset Information
      - ``NM000105``
    * - Title
      - FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography
+   * - Author (year)
+     - ``Kaifosh2025``
+   * - Canonical
+     - ``FRL_DiscreteGestures``
+   * - Importable as
+     - ``NM000105``, ``Kaifosh2025``, ``FRL_DiscreteGestures``
    * - Year
      - 2019
    * - Authors
@@ -456,15 +462,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 16
-      - Sampling rate (Hz): 2000.0
+      - Sampling rate (Hz): 2000
       - Duration (hours): 63.93759180555556
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Motor
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

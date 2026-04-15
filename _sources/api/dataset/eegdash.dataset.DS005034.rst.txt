@@ -103,6 +103,12 @@ Dataset Information
      - ``DS005034``
    * - Title
      - The effect of theta tACS on working memory
+   * - Author (year)
+     - ``Pavlov2024_effect_theta_tACS``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005034``, ``Pavlov2024_effect_theta_tACS``
    * - Year
      - 2024
    * - Authors

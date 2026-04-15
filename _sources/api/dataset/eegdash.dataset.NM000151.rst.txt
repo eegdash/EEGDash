@@ -266,6 +266,12 @@ Dataset Information
      - ``NM000151``
    * - Title
      - Motor imagery dataset for three imaginary states of the same upper extremity
+   * - Author (year)
+     - ``Tavakolan2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000151``, ``Tavakolan2017``
    * - Year
      - 2019
    * - Authors

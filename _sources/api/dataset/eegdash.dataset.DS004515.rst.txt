@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004515``
    * - Title
      - EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants
+   * - Author (year)
+     - ``Singh2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004515``, ``Singh2023``
    * - Year
      - 2023
    * - Authors

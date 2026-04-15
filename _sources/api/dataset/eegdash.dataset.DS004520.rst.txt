@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004520``
    * - Title
      - Changes in behavioral priority influence the accessibility of working memory content - Experiment 2
+   * - Author (year)
+     - ``Ester2023_Changes``
+   * - Canonical
+     - ``Ester2024_E2``
+   * - Importable as
+     - ``DS004520``, ``Ester2023_Changes``, ``Ester2024_E2``
    * - Year
      - 2023
    * - Authors

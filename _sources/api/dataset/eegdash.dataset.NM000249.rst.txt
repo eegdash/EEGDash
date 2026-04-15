@@ -312,6 +312,12 @@ Dataset Information
      - ``NM000249``
    * - Title
      - BNCI 2022-001 EEG Correlates of Difficulty Level dataset
+   * - Author (year)
+     - ``Jao2022``
+   * - Canonical
+     - ``Jao2020``
+   * - Importable as
+     - ``NM000249``, ``Jao2022``, ``Jao2020``
    * - Year
      - 2021
    * - Authors

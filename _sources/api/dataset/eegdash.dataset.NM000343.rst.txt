@@ -263,6 +263,12 @@ Dataset Information
      - ``NM000343``
    * - Title
      - Hinss2021
+   * - Author (year)
+     - ``Hinss2021``
+   * - Canonical
+     - ``Hinss2021_v2``
+   * - Importable as
+     - ``NM000343``, ``Hinss2021``, ``Hinss2021_v2``
    * - Year
      - 2023
    * - Authors

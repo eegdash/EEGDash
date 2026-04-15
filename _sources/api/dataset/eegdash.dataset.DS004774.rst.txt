@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004774``
    * - Title
      - Automatic Evoked Response Detection (ER-Detect) dataset
+   * - Author (year)
+     - ``Boom2023``
+   * - Canonical
+     - ``ERDetect``, ``ER_Detect``
+   * - Importable as
+     - ``DS004774``, ``Boom2023``, ``ERDetect``, ``ER_Detect``
    * - Year
      - 2023
    * - Authors

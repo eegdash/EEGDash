@@ -119,6 +119,12 @@ Dataset Information
      - ``DS003708``
    * - Title
      - Basis profile curve identification to understand electrical stimulation effects in human brain networks
+   * - Author (year)
+     - ``Hermes2021``
+   * - Canonical
+     - ``Miller2021``
+   * - Importable as
+     - ``DS003708``, ``Hermes2021``, ``Miller2021``
    * - Year
      - 2021
    * - Authors

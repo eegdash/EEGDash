@@ -246,6 +246,12 @@ Dataset Information
      - ``DS004460``
    * - Title
      - EEG and motion capture data set for a full-body/joystick rotation task
+   * - Author (year)
+     - ``Gramann2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004460``, ``Gramann2023``
    * - Year
      - 2023
    * - Authors

@@ -204,6 +204,12 @@ Dataset Information
      - ``DS003702``
    * - Title
      - Social Memory cuing
+   * - Author (year)
+     - ``Gregory2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003702``, ``Gregory2021``
    * - Year
      - 2021
    * - Authors

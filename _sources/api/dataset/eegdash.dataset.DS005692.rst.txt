@@ -109,6 +109,12 @@ Dataset Information
      - ``DS005692``
    * - Title
      - SpinalExpect_NonInvasive
+   * - Author (year)
+     - ``Stenner2024_SpinalExpect_NonInvasive``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005692``, ``Stenner2024_SpinalExpect_NonInvasive``
    * - Year
      - 2024
    * - Authors

@@ -152,6 +152,12 @@ Dataset Information
      - ``DS005953``
    * - Title
      - iEEG_visual
+   * - Author (year)
+     - ``Winawer2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005953``, ``Winawer2025``
    * - Year
      - 2025
    * - Authors

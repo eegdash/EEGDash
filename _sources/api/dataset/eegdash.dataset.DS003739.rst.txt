@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003739``
    * - Title
      - Perturbed beam-walking task
+   * - Author (year)
+     - ``Peterson2021_Perturbed_beam_walking``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003739``, ``Peterson2021_Perturbed_beam_walking``
    * - Year
      - 2021
    * - Authors

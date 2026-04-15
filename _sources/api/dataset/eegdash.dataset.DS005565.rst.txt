@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005565``
    * - Title
      - Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers
+   * - Author (year)
+     - ``Lee2024_StudyWITH``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005565``, ``Lee2024_StudyWITH``
    * - Year
      - 2024
    * - Authors

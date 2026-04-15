@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004024``
    * - Title
      - TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL)
+   * - Author (year)
+     - ``Pavon2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004024``, ``Pavon2022``
    * - Year
      - 2022
    * - Authors

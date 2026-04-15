@@ -318,6 +318,12 @@ Dataset Information
      - ``NM000144``
    * - Title
      - BNCI 2015-004 Mental tasks dataset
+   * - Author (year)
+     - ``Scherer2015``
+   * - Canonical
+     - ``BNCI2015``
+   * - Importable as
+     - ``NM000144``, ``Scherer2015``, ``BNCI2015``
    * - Year
      - 2017
    * - Authors

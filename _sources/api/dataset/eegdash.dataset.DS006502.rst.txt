@@ -186,6 +186,12 @@ Dataset Information
      - ``DS006502``
    * - Title
      - Skill learning and consolidation in healthy humans
+   * - Author (year)
+     - ``Bonstrup2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006502``, ``Bonstrup2025``
    * - Year
      - 2025
    * - Authors

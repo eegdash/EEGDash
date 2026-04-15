@@ -185,6 +185,12 @@ Dataset Information
      - ``DS003633``
    * - Title
      - ForrestGump-MEG
+   * - Author (year)
+     - ``Liu2021``
+   * - Canonical
+     - ``ForrestGump_MEG``
+   * - Importable as
+     - ``DS003633``, ``Liu2021``, ``ForrestGump_MEG``
    * - Year
      - 2021
    * - Authors

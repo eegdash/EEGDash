@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003987``
    * - Title
      - EEG: Amphetamine trials 5CCPT and Probabilistic Learning
+   * - Author (year)
+     - ``Cavanagh2022_Amphetamine_trials_5``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003987``, ``Cavanagh2022_Amphetamine_trials_5``
    * - Year
      - 2022
    * - Authors

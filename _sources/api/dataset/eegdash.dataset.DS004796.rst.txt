@@ -163,6 +163,12 @@ Dataset Information
      - ``DS004796``
    * - Title
      - A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroimaging (PEARL-Neuro) Database
+   * - Author (year)
+     - ``Patrycja2023_Polish``
+   * - Canonical
+     - ``PEARLNeuro``
+   * - Importable as
+     - ``DS004796``, ``Patrycja2023_Polish``, ``PEARLNeuro``
    * - Year
      - 2023
    * - Authors

@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004883``
    * - Title
      - Registerd Report of ERN During Three Versions of a Flanker Task
+   * - Author (year)
+     - ``Clayson2023_Registerd``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004883``, ``Clayson2023_Registerd``
    * - Year
      - 2023
    * - Authors

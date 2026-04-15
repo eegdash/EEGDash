@@ -103,6 +103,12 @@ Dataset Information
      - ``DS005087``
    * - Title
      - rapid-hemifield-object-eeg
+   * - Author (year)
+     - ``Robinson2024_rapid``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005087``, ``Robinson2024_rapid``
    * - Year
      - 2024
    * - Authors

@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 28` :bdg-secondary-line:`Recordings: 1245` :bdg-success-line:`License: —` :bdg-warning-line:`Source: nemar`
 
-:bdg-secondary:`Metadata: Limited (40%)`
+:bdg-warning:`Metadata: Partial (60%)`
 
 Quickstart
 ----------
@@ -99,6 +99,12 @@ Dataset Information
      - ``NM000271``
    * - Title
      - chang2025 - NEMAR Dataset
+   * - Author (year)
+     - ``Chang2025_2``
+   * - Canonical
+     - ``Chang2025``
+   * - Importable as
+     - ``NM000271``, ``Chang2025_2``, ``Chang2025``
    * - Year
      - —
    * - Authors
@@ -138,8 +144,8 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
-      - Sampling rate (Hz): Varies
+      - Channels: 59
+      - Sampling rate (Hz): 1000
       - Duration (hours): 5.824969444444444
 
    .. grid-item-card:: Tags

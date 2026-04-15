@@ -124,6 +124,12 @@ Dataset Information
      - ``DS007162``
    * - Title
      - Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG)
+   * - Author (year)
+     - ``DS7162_VisualRecognition``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007162``, ``DS7162_VisualRecognition``
    * - Year
      - 2026
    * - Authors

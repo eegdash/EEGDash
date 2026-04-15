@@ -104,6 +104,12 @@ Dataset Information
      - ``DS005079``
    * - Title
      - The Effects of Directed Therapeutic Intent on Live and Damaged Cells
+   * - Author (year)
+     - ``Cohen2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005079``, ``Cohen2024``
    * - Year
      - 2024
    * - Authors

@@ -110,6 +110,12 @@ Dataset Information
      - ``DS007358``
    * - Title
      - A subset of large-scale EEG dataset (India + Tanzania)
+   * - Author (year)
+     - ``Vianney2026``
+   * - Canonical
+     - ``Vianney2025``
+   * - Importable as
+     - ``DS007358``, ``Vianney2026``, ``Vianney2025``
    * - Year
      - 2026
    * - Authors

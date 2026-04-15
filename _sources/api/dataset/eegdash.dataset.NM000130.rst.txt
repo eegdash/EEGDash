@@ -312,6 +312,12 @@ Dataset Information
      - ``NM000130``
    * - Title
      - Liu2022 – eldBETA SSVEP benchmark dataset for elderly population
+   * - Author (year)
+     - ``Liu2022``
+   * - Canonical
+     - ``EldBETA``, ``eldBETA``, ``Liu2022EldBETA``
+   * - Importable as
+     - ``NM000130``, ``Liu2022``, ``EldBETA``, ``eldBETA``, ``Liu2022EldBETA``
    * - Year
      - 2019
    * - Authors

@@ -176,6 +176,12 @@ Dataset Information
      - ``DS004121``
    * - Title
      - BCIT Mind Wandering
+   * - Author (year)
+     - ``Touryan2022_BCIT_Mind``
+   * - Canonical
+     - ``BCITMindWandering``
+   * - Importable as
+     - ``DS004121``, ``Touryan2022_BCIT_Mind``, ``BCITMindWandering``
    * - Year
      - 2022
    * - Authors

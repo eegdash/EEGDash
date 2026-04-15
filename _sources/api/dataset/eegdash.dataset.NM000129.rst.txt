@@ -600,6 +600,12 @@ Dataset Information
      - ``NM000129``
    * - Title
      - Liu2020 – BETA SSVEP benchmark dataset
+   * - Author (year)
+     - ``Liu2020``
+   * - Canonical
+     - ``BetaSSVEP``, ``BETA_SSVEP``, ``BETA``
+   * - Importable as
+     - ``NM000129``, ``Liu2020``, ``BetaSSVEP``, ``BETA_SSVEP``, ``BETA``
    * - Year
      - 2019
    * - Authors

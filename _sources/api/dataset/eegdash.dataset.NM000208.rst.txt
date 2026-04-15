@@ -228,6 +228,12 @@ Dataset Information
      - ``NM000208``
    * - Title
      - Door lock control experiment (15 subjects, 4 classes, 31 EEG ch)
+   * - Author (year)
+     - ``Lee2024_Door_lock_control``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000208``, ``Lee2024_Door_lock_control``
    * - Year
      - 2019
    * - Authors

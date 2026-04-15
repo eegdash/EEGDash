@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003655``
    * - Title
      - VerbalWorkingMemory
+   * - Author (year)
+     - ``Pavlov2021_VerbalWorkingMemory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003655``, ``Pavlov2021_VerbalWorkingMemory``
    * - Year
      - 2021
    * - Authors

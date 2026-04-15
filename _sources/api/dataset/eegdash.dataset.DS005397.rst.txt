@@ -105,6 +105,12 @@ Dataset Information
      - ``DS005397``
    * - Title
      - Affordances of stairs
+   * - Author (year)
+     - ``Hilton2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005397``, ``Hilton2024``
    * - Year
      - 2024
    * - Authors

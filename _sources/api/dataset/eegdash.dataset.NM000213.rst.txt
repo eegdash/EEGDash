@@ -228,6 +228,12 @@ Dataset Information
      - ``NM000213``
    * - Title
      - Television control experiment (30 subjects, 4 classes, 31 EEG ch)
+   * - Author (year)
+     - ``Lee2024_Television_control_30``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000213``, ``Lee2024_Television_control_30``
    * - Year
      - 2019
    * - Authors

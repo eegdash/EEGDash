@@ -107,6 +107,12 @@ Dataset Information
      - ``DS001787``
    * - Title
      - EEG meditation study
+   * - Author (year)
+     - ``Delorme2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS001787``, ``Delorme2019``
    * - Year
      - 2019
    * - Authors

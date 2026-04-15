@@ -114,6 +114,12 @@ Dataset Information
      - ``DS002712``
    * - Title
      - Numbers and Letters
+   * - Author (year)
+     - ``Aurtenetxe2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002712``, ``Aurtenetxe2020``
    * - Year
      - 2020
    * - Authors

@@ -188,6 +188,12 @@ Dataset Information
      - ``DS003922``
    * - Title
      - Multisensory Correlation Detector
+   * - Author (year)
+     - ``Lerousseau2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003922``, ``Lerousseau2021``
    * - Year
      - 2021
    * - Authors

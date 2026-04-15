@@ -218,6 +218,12 @@ Dataset Information
      - ``NM000186``
    * - Title
      - BigP3BCI Study E — 6x6 checkerboard (8 healthy subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_E``
+   * - Canonical
+     - ``BigP3BCI_StudyE``, ``BigP3BCI_E``
+   * - Importable as
+     - ``NM000186``, ``Mainsah2025_BigP3BCI_E``, ``BigP3BCI_StudyE``, ``BigP3BCI_E``
    * - Year
      - 2019
    * - Authors

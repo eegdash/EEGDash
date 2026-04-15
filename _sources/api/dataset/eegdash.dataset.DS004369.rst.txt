@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004369``
    * - Title
      - Blink-Pause-Relation (Competing Speaker Paradigm)
+   * - Author (year)
+     - ``Holtze2022_Blink``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004369``, ``Holtze2022_Blink``
    * - Year
      - 2022
    * - Authors

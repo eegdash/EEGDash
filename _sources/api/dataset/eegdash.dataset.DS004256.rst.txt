@@ -127,6 +127,12 @@ Dataset Information
      - ``DS004256``
    * - Title
      - Encoding of Sound Source Elevation in Human Cortex
+   * - Author (year)
+     - ``Bialas2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004256``, ``Bialas2022``
    * - Year
      - 2022
    * - Authors

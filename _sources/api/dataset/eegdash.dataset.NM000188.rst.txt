@@ -295,6 +295,12 @@ Dataset Information
      - ``NM000188``
    * - Title
      - BNCI 2014-009 P300 dataset
+   * - Author (year)
+     - ``Arico2014``
+   * - Canonical
+     - ``BNCI2014_009_P300``
+   * - Importable as
+     - ``NM000188``, ``Arico2014``, ``BNCI2014_009_P300``
    * - Year
      - 2013
    * - Authors

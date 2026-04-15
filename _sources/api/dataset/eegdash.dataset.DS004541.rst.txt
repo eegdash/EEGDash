@@ -110,6 +110,12 @@ Dataset Information
      - ``DS004541``
    * - Title
      - Multimodal EEG-fNIRS data from patients undergoing general anesthesia
+   * - Author (year)
+     - ``Ferron2023``
+   * - Canonical
+     - ``Ferron2019``
+   * - Importable as
+     - ``DS004541``, ``Ferron2023``, ``Ferron2019``
    * - Year
      - 2023
    * - Authors

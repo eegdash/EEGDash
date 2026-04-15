@@ -105,6 +105,12 @@ Dataset Information
      - ``DS005065``
    * - Title
      - Heuristics in risky decision-making relate to preferential representation of information MEG data
+   * - Author (year)
+     - ``Russek2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005065``, ``Russek2024``
    * - Year
      - 2024
    * - Authors

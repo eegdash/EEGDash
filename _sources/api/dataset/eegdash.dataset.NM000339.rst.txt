@@ -294,6 +294,12 @@ Dataset Information
      - ``NM000339``
    * - Title
      - Stieger2021
+   * - Author (year)
+     - ``Stieger2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000339``, ``Stieger2021``
    * - Year
      - 2021
    * - Authors

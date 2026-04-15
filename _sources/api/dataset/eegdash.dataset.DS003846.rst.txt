@@ -203,6 +203,12 @@ Dataset Information
      - ``DS003846``
    * - Title
      - Prediction Error
+   * - Author (year)
+     - ``Gehrke2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003846``, ``Gehrke2021``
    * - Year
      - 2021
    * - Authors

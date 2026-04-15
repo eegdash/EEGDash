@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003474``
    * - Title
      - EEG: Probabilistic Selection and Depression
+   * - Author (year)
+     - ``Cavanagh2021_Probabilistic``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003474``, ``Cavanagh2021_Probabilistic``
    * - Year
      - 2021
    * - Authors

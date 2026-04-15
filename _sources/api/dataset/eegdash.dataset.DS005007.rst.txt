@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005007``
    * - Title
      - Auditory naming task with questions that begin or end with a wh-interrogative
+   * - Author (year)
+     - ``Kitazawa2024``
+   * - Canonical
+     - ``Kitazawa2025``
+   * - Importable as
+     - ``DS005007``, ``Kitazawa2024``, ``Kitazawa2025``
    * - Year
      - 2024
    * - Authors

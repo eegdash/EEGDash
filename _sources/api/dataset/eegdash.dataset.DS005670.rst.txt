@@ -114,6 +114,12 @@ Dataset Information
      - ``DS005670``
    * - Title
      - SEEG Resting State Recording
+   * - Author (year)
+     - ``Xu2024_SEEG_Resting_State``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005670``, ``Xu2024_SEEG_Resting_State``
    * - Year
      - 2024
    * - Authors

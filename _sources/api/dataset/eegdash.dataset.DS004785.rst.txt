@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004785``
    * - Title
      - EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance
+   * - Author (year)
+     - ``Boebinger2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004785``, ``Boebinger2023``
    * - Year
      - 2023
    * - Authors

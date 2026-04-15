@@ -1,6 +1,9 @@
-.. title:: Dataset landscape
 
-.. rubric:: Dataset landscape
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Dataset landscape: subjects × records × duration</h3>
+   </header>
 
 .. raw:: html
 

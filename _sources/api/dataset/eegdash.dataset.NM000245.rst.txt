@@ -282,6 +282,12 @@ Dataset Information
      - ``NM000245``
    * - Title
      - Motor Imagery dataset from Cho et al 2017
+   * - Author (year)
+     - ``Cho2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000245``, ``Cho2017``
    * - Year
      - 2019
    * - Authors

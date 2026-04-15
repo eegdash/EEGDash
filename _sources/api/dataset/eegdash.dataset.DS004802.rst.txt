@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004802``
    * - Title
      - Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness
+   * - Author (year)
+     - ``Bathelt2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004802``, ``Bathelt2023``
    * - Year
      - 2023
    * - Authors

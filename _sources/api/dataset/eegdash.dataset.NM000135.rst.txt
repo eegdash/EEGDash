@@ -300,6 +300,12 @@ Dataset Information
      - ``NM000135``
    * - Title
      - BNCI 2014-004 Motor Imagery dataset
+   * - Author (year)
+     - ``Leeb2014``
+   * - Canonical
+     - ``BNCI2014004``
+   * - Importable as
+     - ``NM000135``, ``Leeb2014``, ``BNCI2014004``
    * - Year
      - 2019
    * - Authors

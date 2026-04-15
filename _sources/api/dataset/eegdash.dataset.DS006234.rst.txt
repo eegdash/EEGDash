@@ -108,6 +108,12 @@ Dataset Information
      - ``DS006234``
    * - Title
      - Auditory naming
+   * - Author (year)
+     - ``Kochi2025_Auditory_naming``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006234``, ``Kochi2025_Auditory_naming``
    * - Year
      - 2025
    * - Authors

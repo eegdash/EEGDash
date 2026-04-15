@@ -271,6 +271,12 @@ Dataset Information
      - ``DS004718``
    * - Title
      - Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers
+   * - Author (year)
+     - ``Momenian2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004718``, ``Momenian2023``
    * - Year
      - 2023
    * - Authors

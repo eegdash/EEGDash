@@ -243,6 +243,12 @@ Dataset Information
      - ``NM000142``
    * - Title
      - Ear-EEG motor execution dataset from Wu et al 2020
+   * - Author (year)
+     - ``Wu2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000142``, ``Wu2020``
    * - Year
      - 2020
    * - Authors

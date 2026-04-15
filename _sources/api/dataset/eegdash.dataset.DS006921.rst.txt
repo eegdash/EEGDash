@@ -119,6 +119,12 @@ Dataset Information
      - ``DS006921``
    * - Title
      - High Density Resting State EEG of Phantom Limb Pain and Controls
+   * - Author (year)
+     - ``Ramne2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006921``, ``Ramne2025``
    * - Year
      - 2025
    * - Authors

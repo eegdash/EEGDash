@@ -161,6 +161,12 @@ Dataset Information
      - ``DS005946``
    * - Title
      - ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)
+   * - Author (year)
+     - ``Frau2025``
+   * - Canonical
+     - ``PROMENADE``
+   * - Importable as
+     - ``DS005946``, ``Frau2025``, ``PROMENADE``
    * - Year
      - 2025
    * - Authors

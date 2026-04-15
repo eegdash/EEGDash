@@ -106,6 +106,12 @@ Dataset Information
      - ``DS006902``
    * - Title
      - Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy
+   * - Author (year)
+     - ``Geisler2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006902``, ``Geisler2025``
    * - Year
      - 2025
    * - Authors

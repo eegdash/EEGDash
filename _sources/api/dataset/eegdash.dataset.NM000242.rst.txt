@@ -298,6 +298,12 @@ Dataset Information
      - ``NM000242``
    * - Title
      - Visual imagery EEG dataset from Gao et al 2026
+   * - Author (year)
+     - ``Gao2026_Visual_imagery_et``
+   * - Canonical
+     - ``Gao2026``
+   * - Importable as
+     - ``NM000242``, ``Gao2026_Visual_imagery_et``, ``Gao2026``
    * - Year
      - 2026
    * - Authors

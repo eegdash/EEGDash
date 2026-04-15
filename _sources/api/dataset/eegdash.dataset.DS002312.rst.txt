@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002312``
    * - Title
      - OcularLDT
+   * - Author (year)
+     - ``Brooks2019``
+   * - Canonical
+     - ``OcularLDT``, ``ocular_ldt``
+   * - Importable as
+     - ``DS002312``, ``Brooks2019``, ``OcularLDT``, ``ocular_ldt``
    * - Year
      - 2019
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003570``
    * - Title
      - EEG: Improvisation and Musical Structures
+   * - Author (year)
+     - ``Goldman2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003570``, ``Goldman2021``
    * - Year
      - 2021
    * - Authors

@@ -106,6 +106,12 @@ Dataset Information
      - ``DS006840``
    * - Title
      - IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset
+   * - Author (year)
+     - ``Cai2025``
+   * - Canonical
+     - ``IACKD``
+   * - Importable as
+     - ``DS006840``, ``Cai2025``, ``IACKD``
    * - Year
      - 2025
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005089``
    * - Title
      - Proactive selective attention across competition contexts
+   * - Author (year)
+     - ``AguadoLopez2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005089``, ``AguadoLopez2024``
    * - Year
      - 2024
    * - Authors

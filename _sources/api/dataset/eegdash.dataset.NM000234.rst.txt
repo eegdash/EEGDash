@@ -291,6 +291,12 @@ Dataset Information
      - ``NM000234``
    * - Title
      - BNCI 2015-009 AMUSE (Auditory Multi-class Spatial ERP) dataset
+   * - Author (year)
+     - ``Schreuder2015_ERP``
+   * - Canonical
+     - ``BNCI2015_ERP``
+   * - Importable as
+     - ``NM000234``, ``Schreuder2015_ERP``, ``BNCI2015_ERP``
    * - Year
      - 2011
    * - Authors

@@ -115,6 +115,12 @@ Dataset Information
      - ``DS002578``
    * - Title
      - Visual Oddball Task (256 channels)
+   * - Author (year)
+     - ``Delorme2020_Visual_Oddball_256``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002578``, ``Delorme2020_Visual_Oddball_256``
    * - Year
      - 2020
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002001``
    * - Title
      - Rivalry_Tagging
+   * - Author (year)
+     - ``Mendola2019``
+   * - Canonical
+     - ``Mendola2020``
+   * - Importable as
+     - ``DS002001``, ``Mendola2019``, ``Mendola2020``
    * - Year
      - 2019
    * - Authors
@@ -155,7 +161,7 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: Varies
-      - Sampling rate (Hz): 2400.0
+      - Sampling rate (Hz): 2400
       - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags

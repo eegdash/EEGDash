@@ -204,6 +204,12 @@ Dataset Information
      - ``DS005408``
    * - Title
      - The effect of speech masking on the subcortical response to speech
+   * - Author (year)
+     - ``Polonenko2024_effect_speech``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005408``, ``Polonenko2024_effect_speech``
    * - Year
      - 2024
    * - Authors

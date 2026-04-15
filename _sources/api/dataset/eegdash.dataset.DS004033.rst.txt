@@ -117,6 +117,12 @@ Dataset Information
      - ``DS004033``
    * - Title
      - Electrode walking study
+   * - Author (year)
+     - ``Scanlon2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004033``, ``Scanlon2022``
    * - Year
      - 2022
    * - Authors

@@ -119,6 +119,12 @@ Dataset Information
      - ``DS006465``
    * - Title
      - 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech
+   * - Author (year)
+     - ``Ma2025``
+   * - Canonical
+     - ``CPSEED_3M``, ``CPSEED``
+   * - Importable as
+     - ``DS006465``, ``Ma2025``, ``CPSEED_3M``, ``CPSEED``
    * - Year
      - 2025
    * - Authors

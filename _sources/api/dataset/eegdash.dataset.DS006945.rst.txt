@@ -242,6 +242,12 @@ Dataset Information
      - ``DS006945``
    * - Title
      - Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles)
+   * - Author (year)
+     - ``Sarkar2025_T1_Weighted_Structural``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006945``, ``Sarkar2025_T1_Weighted_Structural``
    * - Year
      - 2025
    * - Authors

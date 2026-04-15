@@ -129,6 +129,12 @@ Dataset Information
      - ``DS003848``
    * - Title
      - Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG
+   * - Author (year)
+     - ``Blooijs2021``
+   * - Canonical
+     - ``RESPect_longterm``
+   * - Importable as
+     - ``DS003848``, ``Blooijs2021``, ``RESPect_longterm``
    * - Year
      - 2021
    * - Authors

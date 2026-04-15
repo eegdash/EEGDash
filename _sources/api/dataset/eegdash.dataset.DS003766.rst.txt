@@ -129,6 +129,12 @@ Dataset Information
      - ``DS003766``
    * - Title
      - A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking
+   * - Author (year)
+     - ``Chen2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003766``, ``Chen2021``
    * - Year
      - 2021
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003509``
    * - Title
      - EEG: Simon Conflict in Parkinson's
+   * - Author (year)
+     - ``Cavanagh2021_Simon``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003509``, ``Cavanagh2021_Simon``
    * - Year
      - 2021
    * - Authors

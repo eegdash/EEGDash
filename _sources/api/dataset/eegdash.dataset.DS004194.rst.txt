@@ -198,6 +198,12 @@ Dataset Information
      - ``DS004194``
    * - Title
      - Visual ECoG dataset
+   * - Author (year)
+     - ``Groen2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004194``, ``Groen2022``
    * - Year
      - 2022
    * - Authors

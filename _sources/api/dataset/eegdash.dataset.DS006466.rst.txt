@@ -169,6 +169,12 @@ Dataset Information
      - ``DS006466``
    * - Title
      - HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data
+   * - Author (year)
+     - ``Kim2025_HeartBEAM_Older_Adult``
+   * - Canonical
+     - ``HeartBEAM``
+   * - Importable as
+     - ``DS006466``, ``Kim2025_HeartBEAM_Older_Adult``, ``HeartBEAM``
    * - Year
      - 2025
    * - Authors

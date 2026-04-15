@@ -176,6 +176,12 @@ Dataset Information
      - ``DS007181``
    * - Title
      - Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia
+   * - Author (year)
+     - ``Li2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007181``, ``Li2026``
    * - Year
      - 2026
    * - Authors

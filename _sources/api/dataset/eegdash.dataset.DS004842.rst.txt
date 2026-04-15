@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004842``
    * - Title
      - TX15
+   * - Author (year)
+     - ``Larkin2023_TX15``
+   * - Canonical
+     - ``TX15``
+   * - Importable as
+     - ``DS004842``, ``Larkin2023_TX15``, ``TX15``
    * - Year
      - 2023
    * - Authors

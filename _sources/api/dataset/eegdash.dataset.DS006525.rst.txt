@@ -108,6 +108,12 @@ Dataset Information
      - ``DS006525``
    * - Title
      - Resting EEG
+   * - Author (year)
+     - ``Neuroimaging2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006525``, ``Neuroimaging2025``
    * - Year
      - 2025
    * - Authors

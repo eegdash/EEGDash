@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005262``
    * - Title
      - ArEEG: Arabic Inner Speech EEG dataset
+   * - Author (year)
+     - ``Metwalli2024``
+   * - Canonical
+     - ``ArEEG``
+   * - Importable as
+     - ``DS005262``, ``Metwalli2024``, ``ArEEG``
    * - Year
      - 2024
    * - Authors

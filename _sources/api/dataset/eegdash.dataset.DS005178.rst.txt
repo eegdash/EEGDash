@@ -119,6 +119,12 @@ Dataset Information
      - ``DS005178``
    * - Title
      - Ear-EEG Sleep Monitoring 2023 (EESM23)
+   * - Author (year)
+     - ``Tabar2024``
+   * - Canonical
+     - ``EESM23``
+   * - Importable as
+     - ``DS005178``, ``Tabar2024``, ``EESM23``
    * - Year
      - 2024
    * - Authors

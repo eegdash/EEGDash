@@ -131,6 +131,12 @@ Dataset Information
      - ``DS006033``
    * - Title
      - Synchronous EEG and fMRI dataset on inner speech
+   * - Author (year)
+     - ``Liwicki2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006033``, ``Liwicki2025``
    * - Year
      - 2025
    * - Authors

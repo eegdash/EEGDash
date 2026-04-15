@@ -271,6 +271,12 @@ Dataset Information
      - ``NM000145``
    * - Title
      - Munich Motor Imagery dataset
+   * - Author (year)
+     - ``GrosseWentrup2009``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000145``, ``GrosseWentrup2009``
    * - Year
      - 2009
    * - Authors

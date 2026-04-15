@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004551``
    * - Title
      - iEEG on children during slow wave sleep
+   * - Author (year)
+     - ``Sakakura2023_children_slow_wave``
+   * - Canonical
+     - ``Sakakura2025``
+   * - Importable as
+     - ``DS004551``, ``Sakakura2023_children_slow_wave``, ``Sakakura2025``
    * - Year
      - 2023
    * - Authors

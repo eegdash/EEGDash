@@ -116,6 +116,12 @@ Dataset Information
      - ``DS006519``
    * - Title
      - Dataset of intracranial EEG during cortical stimulations evoking negative motor responses
+   * - Author (year)
+     - ``Barborica2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006519``, ``Barborica2025``
    * - Year
      - 2025
    * - Authors

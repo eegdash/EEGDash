@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004367``
    * - Title
      - Meta-rdk: Raw EEG data
+   * - Author (year)
+     - ``Rouy2022_Meta``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004367``, ``Rouy2022_Meta``
    * - Year
      - 2022
    * - Authors

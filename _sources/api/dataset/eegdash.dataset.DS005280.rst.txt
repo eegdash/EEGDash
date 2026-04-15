@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005280``
    * - Title
      - 223 By BP
+   * - Author (year)
+     - ``Xiangyue2024_223_BP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005280``, ``Xiangyue2024_223_BP``
    * - Year
      - 2024
    * - Authors

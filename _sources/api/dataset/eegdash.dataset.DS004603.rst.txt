@@ -109,6 +109,12 @@ Dataset Information
      - ``DS004603``
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm
+   * - Author (year)
+     - ``Lowe2023``
+   * - Canonical
+     - ``VisualContextTrajectory``
+   * - Importable as
+     - ``DS004603``, ``Lowe2023``, ``VisualContextTrajectory``
    * - Year
      - 2023
    * - Authors

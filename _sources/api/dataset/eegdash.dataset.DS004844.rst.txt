@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004844``
    * - Title
      - T22
+   * - Author (year)
+     - ``Metcalfe2023_T22``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004844``, ``Metcalfe2023_T22``
    * - Year
      - 2023
    * - Authors

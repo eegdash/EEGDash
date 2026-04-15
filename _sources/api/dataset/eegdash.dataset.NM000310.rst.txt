@@ -245,6 +245,12 @@ Dataset Information
      - ``NM000310``
    * - Title
      - GuttmannFlury2025-SSVEP
+   * - Author (year)
+     - ``GuttmannFlury2025_SSVEP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000310``, ``GuttmannFlury2025_SSVEP``
    * - Year
      - 2025
    * - Authors

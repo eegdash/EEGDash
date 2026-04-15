@@ -103,6 +103,12 @@ Dataset Information
      - ``DS006817``
    * - Title
      - Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
+   * - Author (year)
+     - ``Lowe2025``
+   * - Canonical
+     - ``VisualContextTrajectory_v2``
+   * - Importable as
+     - ``DS006817``, ``Lowe2025``, ``VisualContextTrajectory_v2``
    * - Year
      - 2025
    * - Authors

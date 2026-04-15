@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004368``
    * - Title
      - Meta-rdk: Preprocessed EEG data
+   * - Author (year)
+     - ``Rouy2022_Meta_rdk``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004368``, ``Rouy2022_Meta_rdk``
    * - Year
      - 2022
    * - Authors

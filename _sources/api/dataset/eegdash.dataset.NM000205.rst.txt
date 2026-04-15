@@ -242,6 +242,12 @@ Dataset Information
      - ``NM000205``
    * - Title
      - RSVP collaborative BCI dataset from Zheng et al 2020
+   * - Author (year)
+     - ``Zheng2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000205``, ``Zheng2020``
    * - Year
      - 2020
    * - Authors

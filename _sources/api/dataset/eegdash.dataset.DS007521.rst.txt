@@ -106,6 +106,12 @@ Dataset Information
      - ``DS007521``
    * - Title
      - The effect of hunger and state preferences on the neural processing of food images
+   * - Author (year)
+     - ``Moerel2026``
+   * - Canonical
+     - ``Moerel2025``
+   * - Importable as
+     - ``DS007521``, ``Moerel2026``, ``Moerel2025``
    * - Year
      - 2026
    * - Authors

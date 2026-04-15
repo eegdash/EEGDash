@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004448``
    * - Title
      - The BMI-HDEEG dataset 4
+   * - Author (year)
+     - ``Iwama2023_D4``
+   * - Canonical
+     - ``BMI_HDEEG_D4``
+   * - Importable as
+     - ``DS004448``, ``Iwama2023_D4``, ``BMI_HDEEG_D4``
    * - Year
      - 2023
    * - Authors

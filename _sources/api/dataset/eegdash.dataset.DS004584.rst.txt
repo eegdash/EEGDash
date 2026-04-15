@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004584``
    * - Title
      - Rest eyes open
+   * - Author (year)
+     - ``Singh2023_Rest_eyes``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004584``, ``Singh2023_Rest_eyes``
    * - Year
      - 2023
    * - Authors

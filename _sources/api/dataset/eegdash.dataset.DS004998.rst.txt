@@ -110,6 +110,12 @@ Dataset Information
      - ``DS004998``
    * - Title
      - Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.
+   * - Author (year)
+     - ``Rassoulou2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004998``, ``Rassoulou2024``
    * - Year
      - 2024
    * - Authors

@@ -148,6 +148,12 @@ Dataset Information
      - ``DS006695``
    * - Title
      - Validation of Sleep Staging with Forehead EEG Patch
+   * - Author (year)
+     - ``Onton2025``
+   * - Canonical
+     - ``Onton2024``
+   * - Importable as
+     - ``DS006695``, ``Onton2025``, ``Onton2024``
    * - Year
      - 2025
    * - Authors

@@ -266,6 +266,12 @@ Dataset Information
      - ``NM000123``
    * - Title
      - Kalunga2016 – SSVEP Exo dataset
+   * - Author (year)
+     - ``Kalunga2016``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000123``, ``Kalunga2016``
    * - Year
      - 2019
    * - Authors

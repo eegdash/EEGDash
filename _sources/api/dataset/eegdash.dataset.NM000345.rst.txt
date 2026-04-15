@@ -291,6 +291,12 @@ Dataset Information
      - ``NM000345``
    * - Title
      - CastillosBurstVEP40
+   * - Author (year)
+     - ``Castillos2023_CastillosBurstVEP40``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000345``, ``Castillos2023_CastillosBurstVEP40``
    * - Year
      - 2023
    * - Authors

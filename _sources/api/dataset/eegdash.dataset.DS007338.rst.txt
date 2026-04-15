@@ -109,6 +109,12 @@ Dataset Information
      - ``DS007338``
    * - Title
      - EEGEyeNet Dataset
+   * - Author (year)
+     - ``Plomecka2026``
+   * - Canonical
+     - ``EEGEyeNet_v2``, ``EEGEYENET``
+   * - Importable as
+     - ``DS007338``, ``Plomecka2026``, ``EEGEyeNet_v2``, ``EEGEYENET``
    * - Year
      - 2026
    * - Authors

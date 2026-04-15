@@ -166,6 +166,12 @@ Dataset Information
      - ``DS004123``
    * - Title
      - BCIT Traffic Complexity
+   * - Author (year)
+     - ``Touryan2022_BCIT_Traffic``
+   * - Canonical
+     - ``BCIT_Traffic_Complexity``
+   * - Importable as
+     - ``DS004123``, ``Touryan2022_BCIT_Traffic``, ``BCIT_Traffic_Complexity``
    * - Year
      - 2022
    * - Authors

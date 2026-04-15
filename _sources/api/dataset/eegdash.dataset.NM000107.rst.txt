@@ -260,6 +260,12 @@ Dataset Information
      - ``NM000107``
    * - Title
      - FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography
+   * - Author (year)
+     - ``Kaifosh2025_107``
+   * - Canonical
+     - ``FRL_WristControl``
+   * - Importable as
+     - ``NM000107``, ``Kaifosh2025_107``, ``FRL_WristControl``
    * - Year
      - 2025
    * - Authors
@@ -313,15 +319,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 16
-      - Sampling rate (Hz): 2000.0
+      - Sampling rate (Hz): 2000
       - Duration (hours): 77.18355888888888
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Motor
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

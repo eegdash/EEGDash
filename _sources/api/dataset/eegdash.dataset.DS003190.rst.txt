@@ -116,6 +116,12 @@ Dataset Information
      - ``DS003190``
    * - Title
      - Assesment of the visual stimuli properties in P300 paradigm
+   * - Author (year)
+     - ``MendozaMontoya2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003190``, ``MendozaMontoya2020``
    * - Year
      - 2020
    * - Authors

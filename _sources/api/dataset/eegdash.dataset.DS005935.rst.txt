@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005935``
    * - Title
      - Mirror Neuron Study
+   * - Author (year)
+     - ``Li2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005935``, ``Li2025``
    * - Year
      - 2025
    * - Authors

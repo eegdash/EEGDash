@@ -111,6 +111,12 @@ Dataset Information
      - ``DS004477``
    * - Title
      - PES - Pandemic Emergency Scenario
+   * - Author (year)
+     - ``Papastylianou2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004477``, ``Papastylianou2023``
    * - Year
      - 2023
    * - Authors

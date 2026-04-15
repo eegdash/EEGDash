@@ -122,6 +122,12 @@ Dataset Information
      - ``DS003800``
    * - Title
      - Auditory Gamma Entrainment
+   * - Author (year)
+     - ``Lahijanian2021_Auditory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003800``, ``Lahijanian2021_Auditory``
    * - Year
      - 2021
    * - Authors

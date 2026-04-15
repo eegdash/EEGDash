@@ -192,6 +192,12 @@ Dataset Information
      - ``DS002550``
    * - Title
      - Differential brain mechanisms of selection and maintenance of information during working memory (MEG data)
+   * - Author (year)
+     - ``Quentin2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002550``, ``Quentin2020``
    * - Year
      - 2020
    * - Authors

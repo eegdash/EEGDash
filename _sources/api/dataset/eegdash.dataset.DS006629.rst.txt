@@ -108,6 +108,12 @@ Dataset Information
      - ``DS006629``
    * - Title
      - SINGSING
+   * - Author (year)
+     - ``Chanoine2025``
+   * - Canonical
+     - ``SINGSING``
+   * - Importable as
+     - ``DS006629``, ``Chanoine2025``, ``SINGSING``
    * - Year
      - 2025
    * - Authors

@@ -120,6 +120,12 @@ Dataset Information
      - ``DS005411``
    * - Title
      - Free Recall of Word Lists with Repeated Items
+   * - Author (year)
+     - ``Herrema2024_Free``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005411``, ``Herrema2024_Free``
    * - Year
      - 2024
    * - Authors

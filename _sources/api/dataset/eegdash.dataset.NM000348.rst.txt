@@ -246,6 +246,12 @@ Dataset Information
      - ``NM000348``
    * - Title
      - Yang2025
+   * - Author (year)
+     - ``Yang2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000348``, ``Yang2025``
    * - Year
      - 2025
    * - Authors

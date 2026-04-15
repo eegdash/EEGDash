@@ -151,6 +151,12 @@ Dataset Information
      - ``DS006018``
    * - Title
      - Cognitive Electrophysiology in Socioeconomic Context in Adulthood: An EEG dataset
+   * - Author (year)
+     - ``Isbell2025_Adulthood``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006018``, ``Isbell2025_Adulthood``
    * - Year
      - 2025
    * - Authors

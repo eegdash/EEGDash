@@ -295,6 +295,12 @@ Dataset Information
      - ``NM000243``
    * - Title
      - BNCI 2016-002 Emergency Braking during Simulated Driving dataset
+   * - Author (year)
+     - ``Haufe2016``
+   * - Canonical
+     - ``BNCI2016``, ``BNCI2016002``
+   * - Importable as
+     - ``NM000243``, ``Haufe2016``, ``BNCI2016``, ``BNCI2016002``
    * - Year
      - 2011
    * - Authors

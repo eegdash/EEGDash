@@ -265,6 +265,12 @@ Dataset Information
      - ``NM000323``
    * - Title
      - Lee2019-ERP
+   * - Author (year)
+     - ``Lee2019_ERP``
+   * - Canonical
+     - ``OpenBMI_ERP``, ``OpenBMI_P300``
+   * - Importable as
+     - ``NM000323``, ``Lee2019_ERP``, ``OpenBMI_ERP``, ``OpenBMI_P300``
    * - Year
      - 2019
    * - Authors

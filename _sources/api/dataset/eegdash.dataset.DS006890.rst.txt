@@ -165,6 +165,12 @@ Dataset Information
      - ``DS006890``
    * - Title
      - Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata
+   * - Author (year)
+     - ``Yang2025_Longitudinal``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006890``, ``Yang2025_Longitudinal``
    * - Year
      - 2025
    * - Authors

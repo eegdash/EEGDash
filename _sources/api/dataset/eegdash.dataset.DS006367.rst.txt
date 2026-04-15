@@ -115,6 +115,12 @@ Dataset Information
      - ``DS006367``
    * - Title
      - Memory Reactivation Levels Remain Unaffected by Anticipated Interference
+   * - Author (year)
+     - ``DS6367_Memory_Reactivation``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006367``, ``DS6367_Memory_Reactivation``
    * - Year
      - 2025
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006107``
    * - Title
      - iEEG_Neural_spatial_volatility
+   * - Author (year)
+     - ``Kuroda2025``
+   * - Canonical
+     - ``Kuroda2024``
+   * - Importable as
+     - ``DS006107``, ``Kuroda2025``, ``Kuroda2024``
    * - Year
      - 2025
    * - Authors

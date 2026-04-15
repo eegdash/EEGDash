@@ -190,6 +190,12 @@ Dataset Information
      - ``DS007609``
    * - Title
      - Resting-State EEG and Trait Anxiety
+   * - Author (year)
+     - ``Shalamberidze2026``
+   * - Canonical
+     - ``Shalamberidze2025``
+   * - Importable as
+     - ``DS007609``, ``Shalamberidze2026``, ``Shalamberidze2025``
    * - Year
      - 2026
    * - Authors

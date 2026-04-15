@@ -121,6 +121,12 @@ Dataset Information
      - ``DS005169``
    * - Title
      - Dataset of intracranial EEG during cortical stimulation evoking visual effects
+   * - Author (year)
+     - ``Barborica2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005169``, ``Barborica2024``
    * - Year
      - 2024
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004598``
    * - Title
      - LFP during linear track in 6-month old TgF344-AD rats
+   * - Author (year)
+     - ``Faraz2023``
+   * - Canonical
+     - ``Moradi2024``
+   * - Importable as
+     - ``DS004598``, ``Faraz2023``, ``Moradi2024``
    * - Year
      - 2023
    * - Authors

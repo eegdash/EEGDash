@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006545``
    * - Title
      - Reliability-Dubois2024
+   * - Author (year)
+     - ``ReliabilityDubois2024``
+   * - Canonical
+     - ``Dubois2024``
+   * - Importable as
+     - ``DS006545``, ``ReliabilityDubois2024``, ``Dubois2024``
    * - Year
      - 2025
    * - Authors

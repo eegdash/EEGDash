@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005342``
    * - Title
      - EEG data offline and online during motor imagery for standing and sitting
+   * - Author (year)
+     - ``TrianaGuzman2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005342``, ``TrianaGuzman2024``
    * - Year
      - 2024
    * - Authors

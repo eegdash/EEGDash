@@ -126,6 +126,12 @@ Dataset Information
      - ``DS004517``
    * - Title
      - EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task
+   * - Author (year)
+     - ``Rybar2023_semantic``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004517``, ``Rybar2023_semantic``
    * - Year
      - 2023
    * - Authors

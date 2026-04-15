@@ -108,6 +108,12 @@ Dataset Information
      - ``DS003574``
    * - Title
      - Reward biases spontaneous neural reactivation during sleep
+   * - Author (year)
+     - ``Sterpenich2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003574``, ``Sterpenich2021``
    * - Year
      - 2021
    * - Authors

@@ -112,6 +112,12 @@ Dataset Information
      - ``DS003505``
    * - Title
      - VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes
+   * - Author (year)
+     - ``Pascucci2021``
+   * - Canonical
+     - ``VEPCON``
+   * - Importable as
+     - ``DS003505``, ``Pascucci2021``, ``VEPCON``
    * - Year
      - 2021
    * - Authors

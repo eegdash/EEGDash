@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002218``
    * - Title
      - Auditory and Visual Rhythm Omission EEG
+   * - Author (year)
+     - ``Comstock2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002218``, ``Comstock2019``
    * - Year
      - 2019
    * - Authors

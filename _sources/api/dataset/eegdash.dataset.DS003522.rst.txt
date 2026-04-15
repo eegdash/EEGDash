@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003522``
    * - Title
      - EEG: Three-Stim Auditory Oddball and Rest in Acute and Chronic TBI
+   * - Author (year)
+     - ``Cavanagh2021_Three_Stim``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003522``, ``Cavanagh2021_Three_Stim``
    * - Year
      - 2021
    * - Authors

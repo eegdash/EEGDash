@@ -298,6 +298,12 @@ Dataset Information
      - ``NM000212``
    * - Title
      - BNCI 2015-007 Motion VEP (mVEP) Speller dataset
+   * - Author (year)
+     - ``Schaeff2015``
+   * - Canonical
+     - ``BNCI2015``
+   * - Importable as
+     - ``NM000212``, ``Schaeff2015``, ``BNCI2015``
    * - Year
      - 2012
    * - Authors

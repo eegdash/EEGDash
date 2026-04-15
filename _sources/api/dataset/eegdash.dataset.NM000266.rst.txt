@@ -269,6 +269,12 @@ Dataset Information
      - ``NM000266``
    * - Title
      - Sosulski2019
+   * - Author (year)
+     - ``Sosulski2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000266``, ``Sosulski2019``
    * - Year
      - 2019
    * - Authors

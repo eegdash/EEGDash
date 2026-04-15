@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004357``
    * - Title
      - Features-EEG
+   * - Author (year)
+     - ``Grootswagers2022_EEG``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004357``, ``Grootswagers2022_EEG``
    * - Year
      - 2022
    * - Authors

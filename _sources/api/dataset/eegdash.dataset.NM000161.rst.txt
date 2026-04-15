@@ -385,6 +385,12 @@ Dataset Information
      - ``NM000161``
    * - Title
      - BNCI 2024-001 Handwritten Character Classification dataset
+   * - Author (year)
+     - ``Crell2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000161``, ``Crell2024``
    * - Year
      - 2024
    * - Authors

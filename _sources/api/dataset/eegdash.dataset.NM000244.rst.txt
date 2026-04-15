@@ -277,6 +277,12 @@ Dataset Information
      - ``NM000244``
    * - Title
      - P300 dataset BI2014a from a "Brain Invaders" experiment
+   * - Author (year)
+     - ``Korczowski2014_P300_BI2014a``
+   * - Canonical
+     - ``BrainInvaders2014a``, ``BI2014a``
+   * - Importable as
+     - ``NM000244``, ``Korczowski2014_P300_BI2014a``, ``BrainInvaders2014a``, ``BI2014a``
    * - Year
      - 2019
    * - Authors

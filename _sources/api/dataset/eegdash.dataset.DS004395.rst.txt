@@ -115,6 +115,12 @@ Dataset Information
      - ``DS004395``
    * - Title
      - Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
+   * - Author (year)
+     - ``Kahana2023``
+   * - Canonical
+     - ``PEERS``
+   * - Importable as
+     - ``DS004395``, ``Kahana2023``, ``PEERS``
    * - Year
      - 2023
    * - Authors

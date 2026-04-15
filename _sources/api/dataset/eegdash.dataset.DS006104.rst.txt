@@ -162,6 +162,12 @@ Dataset Information
      - ``DS006104``
    * - Title
      - EEG dataset for speech decoding
+   * - Author (year)
+     - ``Moreira2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006104``, ``Moreira2025``
    * - Year
      - 2025
    * - Authors

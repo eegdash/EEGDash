@@ -111,6 +111,12 @@ Dataset Information
      - ``DS006576``
    * - Title
      - The role of REM sleep in neural differentiation of memories in the hippocampus
+   * - Author (year)
+     - ``McDevitt2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006576``, ``McDevitt2025``
    * - Year
      - 2025
    * - Authors

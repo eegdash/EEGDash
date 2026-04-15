@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004278``
    * - Title
      - Sustained Neural Representations of Personally Familiar People and Places During Cued Recall
+   * - Author (year)
+     - ``Kidder2022``
+   * - Canonical
+     - ``Kidder2024``
+   * - Importable as
+     - ``DS004278``, ``Kidder2022``, ``Kidder2024``
    * - Year
      - 2022
    * - Authors

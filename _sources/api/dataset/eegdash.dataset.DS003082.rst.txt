@@ -187,6 +187,12 @@ Dataset Information
      - ``DS003082``
    * - Title
      - Auditory Cortex Mapping Dataset
+   * - Author (year)
+     - ``Cote2020``
+   * - Canonical
+     - ``Cote2015``
+   * - Importable as
+     - ``DS003082``, ``Cote2020``, ``Cote2015``
    * - Year
      - 2020
    * - Authors

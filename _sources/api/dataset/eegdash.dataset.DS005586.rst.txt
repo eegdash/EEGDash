@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005586``
    * - Title
      - Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes
+   * - Author (year)
+     - ``Baykan2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005586``, ``Baykan2024``
    * - Year
      - 2024
    * - Authors

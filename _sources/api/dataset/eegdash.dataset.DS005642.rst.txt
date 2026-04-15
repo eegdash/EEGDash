@@ -111,6 +111,12 @@ Dataset Information
      - ``DS005642``
    * - Title
      - illusory-face-eeg
+   * - Author (year)
+     - ``Robinson2024_illusory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005642``, ``Robinson2024_illusory``
    * - Year
      - 2024
    * - Authors

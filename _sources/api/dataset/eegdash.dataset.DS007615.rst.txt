@@ -183,6 +183,12 @@ Dataset Information
      - ``DS007615``
    * - Title
      - LDAEP and resting-state EEG in healthy women
+   * - Author (year)
+     - ``Normannseth2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007615``, ``Normannseth2026``
    * - Year
      - 2026
    * - Authors

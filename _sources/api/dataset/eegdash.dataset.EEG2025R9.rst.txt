@@ -227,6 +227,12 @@ Dataset Information
      - ``EEG2025R9``
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 9 (BDF Converted)
+   * - Author (year)
+     - ``Shirazi2024_R9_bdf``
+   * - Canonical
+     - ``HBN_r9_bdf``
+   * - Importable as
+     - ``EEG2025R9``, ``Shirazi2024_R9_bdf``, ``HBN_r9_bdf``
    * - Year
      - 2024
    * - Authors
@@ -293,7 +299,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
+      - Size on disk: 37.0 GB
       - File count: 2885
       - Format: BIDS
 

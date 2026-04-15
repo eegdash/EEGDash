@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004745``
    * - Title
      - 8-Channel SSVEP EEG Dataset with Artifact Trials
+   * - Author (year)
+     - ``Kumaravel2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004745``, ``Kumaravel2023``
    * - Year
      - 2023
    * - Authors

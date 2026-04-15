@@ -245,6 +245,12 @@ Dataset Information
      - ``NM000134``
    * - Title
      - Alljoined-1.6M
+   * - Author (year)
+     - ``Xu2025``
+   * - Canonical
+     - ``Alljoined16M``, ``Alljoined_16M``, ``Alljoined1p6M``
+   * - Importable as
+     - ``NM000134``, ``Xu2025``, ``Alljoined16M``, ``Alljoined_16M``, ``Alljoined1p6M``
    * - Year
      - 2025
    * - Authors
@@ -298,15 +304,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 32
-      - Sampling rate (Hz): 256.0
+      - Sampling rate (Hz): 256
       - Duration (hours): 129.4950119357639
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Perception
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

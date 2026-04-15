@@ -120,6 +120,12 @@ Dataset Information
      - ``DS004388``
    * - Title
      - Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation
+   * - Author (year)
+     - ``Nierula2023_Somatosensory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004388``, ``Nierula2023_Somatosensory``
    * - Year
      - 2023
    * - Authors

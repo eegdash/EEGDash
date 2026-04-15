@@ -203,6 +203,12 @@ Dataset Information
      - ``DS000246``
    * - Title
      - MEG-BIDS Brainstorm data sample
+   * - Author (year)
+     - ``Bock2018``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS000246``, ``Bock2018``
    * - Year
      - 2018
    * - Authors

@@ -286,6 +286,12 @@ Dataset Information
      - ``NM000207``
    * - Title
      - Class for Kojima2024B dataset management. P300 dataset
+   * - Author (year)
+     - ``Kojima2024B_P300``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000207``, ``Kojima2024B_P300``
    * - Year
      - 2024
    * - Authors

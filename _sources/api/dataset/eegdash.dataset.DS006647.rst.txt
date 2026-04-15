@@ -130,6 +130,12 @@ Dataset Information
      - ``DS006647``
    * - Title
      - Poetry Assessment EEG Dataset 2
+   * - Author (year)
+     - ``Chaudhuri2025_D2``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006647``, ``Chaudhuri2025_D2``
    * - Year
      - 2025
    * - Authors

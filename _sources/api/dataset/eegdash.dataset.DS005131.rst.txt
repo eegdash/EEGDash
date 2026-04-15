@@ -116,6 +116,12 @@ Dataset Information
      - ``DS005131``
    * - Title
      - Evoked responses to elevated sounds
+   * - Author (year)
+     - ``Bialas2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005131``, ``Bialas2024``
    * - Year
      - 2024
    * - Authors

@@ -147,6 +147,12 @@ Dataset Information
      - ``DS005429``
    * - Title
      - Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm)
+   * - Author (year)
+     - ``Rutiku2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005429``, ``Rutiku2024``
    * - Year
      - 2024
    * - Authors

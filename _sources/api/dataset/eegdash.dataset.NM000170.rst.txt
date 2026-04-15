@@ -291,6 +291,12 @@ Dataset Information
      - ``NM000170``
    * - Title
      - BNCI 2025-002 Continuous 2D Trajectory Decoding dataset
+   * - Author (year)
+     - ``Pulferer2025``
+   * - Canonical
+     - ``BNCI2025``
+   * - Importable as
+     - ``NM000170``, ``Pulferer2025``, ``BNCI2025``
    * - Year
      - 2022
    * - Authors

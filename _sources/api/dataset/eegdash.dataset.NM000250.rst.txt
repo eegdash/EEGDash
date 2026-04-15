@@ -301,6 +301,12 @@ Dataset Information
      - ``NM000250``
    * - Title
      - Class for Dreyer2023 dataset management. MI dataset
+   * - Author (year)
+     - ``Dreyer2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000250``, ``Dreyer2023``
    * - Year
      - 2021
    * - Authors

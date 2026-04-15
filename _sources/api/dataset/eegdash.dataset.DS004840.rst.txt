@@ -171,6 +171,12 @@ Dataset Information
      - ``DS004840``
    * - Title
      - Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.
+   * - Author (year)
+     - ``CordobaSilva2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004840``, ``CordobaSilva2023``
    * - Year
      - 2023
    * - Authors

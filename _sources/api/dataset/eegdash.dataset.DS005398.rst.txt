@@ -112,6 +112,12 @@ Dataset Information
      - ``DS005398``
    * - Title
      - Open iEEG Dataset (Pediatric iEEG, Wayne State University and UCLA)
+   * - Author (year)
+     - ``Zhang2024_Open_Pediatric_Wayne``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005398``, ``Zhang2024_Open_Pediatric_Wayne``
    * - Year
      - 2024
    * - Authors

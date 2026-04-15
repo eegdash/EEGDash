@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006914``
    * - Title
      - Visual Naming EC
+   * - Author (year)
+     - ``Kochi2025_Visual_Naming_EC``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006914``, ``Kochi2025_Visual_Naming_EC``
    * - Year
      - 2025
    * - Authors

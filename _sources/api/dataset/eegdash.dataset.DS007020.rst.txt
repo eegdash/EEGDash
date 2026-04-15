@@ -151,6 +151,12 @@ Dataset Information
      - ``DS007020``
    * - Title
      - EEG Mortality Dataset in Parkinson's Disease
+   * - Author (year)
+     - ``Jamshidi2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007020``, ``Jamshidi2025``
    * - Year
      - 2025
    * - Authors

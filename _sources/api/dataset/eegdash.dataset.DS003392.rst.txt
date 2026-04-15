@@ -160,6 +160,12 @@ Dataset Information
      - ``DS003392``
    * - Title
      - NeuroSpin hMT+ Localizer DATA (MEG & aMRI)
+   * - Author (year)
+     - ``Zilber2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003392``, ``Zilber2020``
    * - Year
      - 2020
    * - Authors

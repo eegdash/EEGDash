@@ -128,6 +128,12 @@ Dataset Information
      - ``NM000103``
    * - Title
      - Healthy Brain Network EEG - Not for Commercial Use
+   * - Author (year)
+     - ``Shirazi2017``
+   * - Canonical
+     - ``HealthyBrainNetwork``, ``HBN_EEG_NC``, ``HBN_NoCommercial``
+   * - Importable as
+     - ``NM000103``, ``Shirazi2017``, ``HealthyBrainNetwork``, ``HBN_EEG_NC``, ``HBN_NoCommercial``
    * - Year
      - 20
    * - Authors
@@ -181,15 +187,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 129
-      - Sampling rate (Hz): 500.0
+      - Sampling rate (Hz): 500
       - Duration (hours): 285.0150427777777
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Development
-      - Modality: Multisensory
-      - Type: Clinical/Intervention
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

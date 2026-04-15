@@ -290,6 +290,12 @@ Dataset Information
      - ``NM000219``
    * - Title
      - BNCI 2020-002 Attention Shift (Covert Spatial Attention) dataset
+   * - Author (year)
+     - ``Reichert2020``
+   * - Canonical
+     - ``BNCI2020``, ``BNCI2020_002_AttentionShift``, ``BNCI2020_002_CovertSpatialAttention``
+   * - Importable as
+     - ``NM000219``, ``Reichert2020``, ``BNCI2020``, ``BNCI2020_002_AttentionShift``, ``BNCI2020_002_CovertSpatialAttention``
    * - Year
      - 2020
    * - Authors

@@ -129,6 +129,12 @@ Dataset Information
      - ``DS004152``
    * - Title
      - Drum Trainer
+   * - Author (year)
+     - ``Hassall2022_Drum``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004152``, ``Hassall2022_Drum``
    * - Year
      - 2022
    * - Authors

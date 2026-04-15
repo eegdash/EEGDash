@@ -1,4 +1,3 @@
-.. title:: Subject Distribution Bubble Plot
 
 .. rubric:: Subject Distribution Bubble Plot
 

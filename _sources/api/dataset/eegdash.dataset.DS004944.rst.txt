@@ -198,6 +198,12 @@ Dataset Information
      - ``DS004944``
    * - Title
      - Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding
+   * - Author (year)
+     - ``Costa2024``
+   * - Canonical
+     - ``BCI2000_intraop``
+   * - Importable as
+     - ``DS004944``, ``Costa2024``, ``BCI2000_intraop``
    * - Year
      - 2024
    * - Authors

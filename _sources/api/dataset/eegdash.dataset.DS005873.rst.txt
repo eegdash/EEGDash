@@ -152,6 +152,12 @@ Dataset Information
      - ``DS005873``
    * - Title
      - SeizeIT2
+   * - Author (year)
+     - ``Bhagubai2025``
+   * - Canonical
+     - ``SeizeIT2``
+   * - Importable as
+     - ``DS005873``, ``Bhagubai2025``, ``SeizeIT2``
    * - Year
      - 2025
    * - Authors

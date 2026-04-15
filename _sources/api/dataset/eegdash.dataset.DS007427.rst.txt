@@ -105,6 +105,12 @@ Dataset Information
      - ``DS007427``
    * - Title
      - Comprehensive methodology for sample enrichment in EEG biomarker studies for Alzheimer’s risk classification
+   * - Author (year)
+     - ``Isaza2026_Comprehensive``
+   * - Canonical
+     - ``HenaoIsaza2026``
+   * - Importable as
+     - ``DS007427``, ``Isaza2026_Comprehensive``, ``HenaoIsaza2026``
    * - Year
      - 2026
    * - Authors

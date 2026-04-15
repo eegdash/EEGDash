@@ -249,6 +249,12 @@ Dataset Information
      - ``NM000246``
    * - Title
      - Multi-day MI-BCI dataset (WBCIC-SHU) from Yang et al 2025
+   * - Author (year)
+     - ``Yang2025_Multi``
+   * - Canonical
+     - ``WBCIC_SHU``, ``WBCICSHU``
+   * - Importable as
+     - ``NM000246``, ``Yang2025_Multi``, ``WBCIC_SHU``, ``WBCICSHU``
    * - Year
      - 2025
    * - Authors

@@ -252,6 +252,12 @@ Dataset Information
      - ``NM000148``
    * - Title
      - Motor imagery BCI dataset with pupillometry augmentation
+   * - Author (year)
+     - ``Rozado2015``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000148``, ``Rozado2015``
    * - Year
      - 2019
    * - Authors

@@ -121,6 +121,12 @@ Dataset Information
      - ``DS005489``
    * - Title
      - Free Recall with Open-Loop Stimulation at Encoding
+   * - Author (year)
+     - ``Herrema2024_Free_Recall``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005489``, ``Herrema2024_Free_Recall``
    * - Year
      - 2024
    * - Authors

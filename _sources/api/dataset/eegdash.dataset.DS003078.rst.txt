@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: ieeg` :bdg-secondary-line:`Subjects: 6` :bdg-secondary-line:`Recordings: 72` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -105,6 +105,12 @@ Dataset Information
      - ``DS003078``
    * - Title
      - PROBE iEEG
+   * - Author (year)
+     - ``DOMENECH2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003078``, ``DOMENECH2020``
    * - Year
      - 2020
    * - Authors
@@ -157,7 +163,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 130
       - Sampling rate (Hz): Varies
       - Duration (hours): Not calculated
 

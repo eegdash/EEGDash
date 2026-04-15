@@ -104,6 +104,12 @@ Dataset Information
      - ``DS005356``
    * - Title
      - MEG: Major Depression & Probabilistic Learning Task
+   * - Author (year)
+     - ``DS5356_MajorDepression``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005356``, ``DS5356_MajorDepression``
    * - Year
      - 2024
    * - Authors

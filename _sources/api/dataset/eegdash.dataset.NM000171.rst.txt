@@ -279,6 +279,12 @@ Dataset Information
      - ``NM000171``
    * - Title
      - BNCI 2014-002 Motor Imagery dataset
+   * - Author (year)
+     - ``Steyrl2014``
+   * - Canonical
+     - ``BNCI2014002``
+   * - Importable as
+     - ``NM000171``, ``Steyrl2014``, ``BNCI2014002``
    * - Year
      - 2015
    * - Authors

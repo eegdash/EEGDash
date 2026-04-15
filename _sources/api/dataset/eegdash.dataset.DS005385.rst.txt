@@ -216,6 +216,12 @@ Dataset Information
      - ``DS005385``
    * - Title
      - Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up
+   * - Author (year)
+     - ``Wascher2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005385``, ``Wascher2024``
    * - Year
      - 2024
    * - Authors

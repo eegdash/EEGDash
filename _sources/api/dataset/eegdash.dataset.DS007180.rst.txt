@@ -105,6 +105,12 @@ Dataset Information
      - ``DS007180``
    * - Title
      - Exo-EEG Experiment
+   * - Author (year)
+     - ``FuentesGuerra2026``
+   * - Canonical
+     - ``FuentesGuerra2024``
+   * - Importable as
+     - ``DS007180``, ``FuentesGuerra2026``, ``FuentesGuerra2024``
    * - Year
      - 2026
    * - Authors

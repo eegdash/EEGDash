@@ -153,6 +153,12 @@ Dataset Information
      - ``DS003498``
    * - Title
      - interictal iEEG during slow-wave sleep with HFO markings
+   * - Author (year)
+     - ``Fedele2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003498``, ``Fedele2021``
    * - Year
      - 2021
    * - Authors

@@ -176,6 +176,12 @@ Dataset Information
      - ``NM000109``
    * - Title
      - EEG During Mental Arithmetic Tasks
+   * - Author (year)
+     - ``Zyma2019``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000109``, ``Zyma2019``
    * - Year
      - 2000
    * - Authors
@@ -229,15 +235,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 21
-      - Sampling rate (Hz): 500.0
+      - Sampling rate (Hz): 500
       - Duration (hours): 2.40996
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Attention
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

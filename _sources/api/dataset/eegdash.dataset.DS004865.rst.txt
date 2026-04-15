@@ -119,6 +119,12 @@ Dataset Information
      - ``DS004865``
    * - Title
      - pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study
+   * - Author (year)
+     - ``Herrema2023_pyFR_Delayed_Free``
+   * - Canonical
+     - ``pyFR``
+   * - Importable as
+     - ``DS004865``, ``Herrema2023_pyFR_Delayed_Free``, ``pyFR``
    * - Year
      - 2023
    * - Authors

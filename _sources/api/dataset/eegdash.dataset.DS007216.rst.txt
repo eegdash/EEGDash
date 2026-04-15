@@ -169,6 +169,12 @@ Dataset Information
      - ``DS007216``
    * - Title
      - A multi-session simultaneous EEG-fMRI dataset with online experience sampling
+   * - Author (year)
+     - ``Kucyi2026``
+   * - Canonical
+     - ``Kucyi2024``
+   * - Importable as
+     - ``DS007216``, ``Kucyi2026``, ``Kucyi2024``
    * - Year
      - 2026
    * - Authors

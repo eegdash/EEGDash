@@ -218,6 +218,12 @@ Dataset Information
      - ``NM000197``
    * - Title
      - BigP3BCI Study M — 9x8 adaptive/checkerboard (21 ALS subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_M``
+   * - Canonical
+     - ``BigP3BCI_StudyM``, ``BigP3BCI_M``
+   * - Importable as
+     - ``NM000197``, ``Mainsah2025_BigP3BCI_M``, ``BigP3BCI_StudyM``, ``BigP3BCI_M``
    * - Year
      - 2019
    * - Authors

@@ -129,6 +129,12 @@ Dataset Information
      - ``DS005557``
    * - Title
      - Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)
+   * - Author (year)
+     - ``Herrema2024_Classifier``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005557``, ``Herrema2024_Classifier``
    * - Year
      - 2024
    * - Authors

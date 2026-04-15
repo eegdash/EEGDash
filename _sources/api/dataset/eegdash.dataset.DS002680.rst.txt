@@ -103,6 +103,12 @@ Dataset Information
      - ``DS002680``
    * - Title
      - Go-nogo categorization and detection task
+   * - Author (year)
+     - ``Delorme2020_Go_nogo_categorization``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002680``, ``Delorme2020_Go_nogo_categorization``
    * - Year
      - 2020
    * - Authors

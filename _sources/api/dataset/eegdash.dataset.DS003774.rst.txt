@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003774``
    * - Title
      - Music Listening- Genre EEG dataset (MUSIN-G)
+   * - Author (year)
+     - ``Miyapuram2021``
+   * - Canonical
+     - ``MUSING``
+   * - Importable as
+     - ``DS003774``, ``Miyapuram2021``, ``MUSING``
    * - Year
      - 2021
    * - Authors

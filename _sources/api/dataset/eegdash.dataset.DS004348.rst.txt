@@ -120,6 +120,12 @@ Dataset Information
      - ``DS004348``
    * - Title
      - Ear-EEG Sleep Monitoring 2017 (EESM17)
+   * - Author (year)
+     - ``Mikkelsen2022``
+   * - Canonical
+     - ``EESM17``
+   * - Importable as
+     - ``DS004348``, ``Mikkelsen2022``, ``EESM17``
    * - Year
      - 2022
    * - Authors

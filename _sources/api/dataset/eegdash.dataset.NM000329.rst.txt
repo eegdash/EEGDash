@@ -273,6 +273,12 @@ Dataset Information
      - ``NM000329``
    * - Title
      - Brandl2020
+   * - Author (year)
+     - ``Brandl2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000329``, ``Brandl2020``
    * - Year
      - 2020
    * - Authors

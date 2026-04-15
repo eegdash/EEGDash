@@ -261,6 +261,12 @@ Dataset Information
      - ``NM000122``
    * - Title
      - Chen2017 – Single-flicker online SSVEP BCI dataset
+   * - Author (year)
+     - ``Chen2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000122``, ``Chen2017``
    * - Year
      - 2019
    * - Authors

@@ -114,6 +114,12 @@ Dataset Information
      - ``DS006370``
    * - Title
      - Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset
+   * - Author (year)
+     - ``DS6370_Memory_Reactivation``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006370``, ``DS6370_Memory_Reactivation``
    * - Year
      - 2025
    * - Authors

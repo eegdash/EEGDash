@@ -117,6 +117,12 @@ Dataset Information
      - ``DS003947``
    * - Title
      - EEG: First Episode Psychosis vs. Control Resting Task 2
+   * - Author (year)
+     - ``Salisbury2021_First_Episode``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003947``, ``Salisbury2021_First_Episode``
    * - Year
      - 2021
    * - Authors

@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004200``
    * - Title
      - Temporal Scaling
+   * - Author (year)
+     - ``Hassall2022_Temporal``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004200``, ``Hassall2022_Temporal``
    * - Year
      - 2022
    * - Authors

@@ -114,6 +114,12 @@ Dataset Information
      - ``DS004276``
    * - Title
      - Auditory single word recognition in MEG
+   * - Author (year)
+     - ``Gaston2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004276``, ``Gaston2022``
    * - Year
      - 2022
    * - Authors

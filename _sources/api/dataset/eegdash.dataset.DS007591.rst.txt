@@ -151,6 +151,12 @@ Dataset Information
      - ``DS007591``
    * - Title
      - Delineating neural contributions to EEG-based speech decoding
+   * - Author (year)
+     - ``Sato2026_Delineating``
+   * - Canonical
+     - ``Sato2025``
+   * - Importable as
+     - ``DS007591``, ``Sato2026_Delineating``, ``Sato2025``
    * - Year
      - 2026
    * - Authors

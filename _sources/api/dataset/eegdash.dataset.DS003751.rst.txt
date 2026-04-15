@@ -124,6 +124,12 @@ Dataset Information
      - ``DS003751``
    * - Title
      - Dataset on Emotion with Naturalistic Stimuli (DENS)
+   * - Author (year)
+     - ``Mishra2021``
+   * - Canonical
+     - ``DENS``
+   * - Importable as
+     - ``DS003751``, ``Mishra2021``, ``DENS``
    * - Year
      - 2021
    * - Authors

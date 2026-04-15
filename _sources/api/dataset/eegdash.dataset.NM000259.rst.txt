@@ -221,6 +221,12 @@ Dataset Information
      - ``NM000259``
    * - Title
      - Speier2017
+   * - Author (year)
+     - ``Speier2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000259``, ``Speier2017``
    * - Year
      - 2017
    * - Authors

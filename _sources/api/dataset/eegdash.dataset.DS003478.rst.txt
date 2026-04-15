@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003478``
    * - Title
      - EEG: Depression rest
+   * - Author (year)
+     - ``Cavanagh2021_Depression``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003478``, ``Cavanagh2021_Depression``
    * - Year
      - 2021
    * - Authors

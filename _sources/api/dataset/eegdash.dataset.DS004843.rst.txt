@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004843``
    * - Title
      - T16
+   * - Author (year)
+     - ``Johnson2023_T16``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004843``, ``Johnson2023_T16``
    * - Year
      - 2023
    * - Authors

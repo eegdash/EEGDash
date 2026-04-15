@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004295``
    * - Title
      - Reward gain and punishment avoidance reversal learning
+   * - Author (year)
+     - ``Stolz2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004295``, ``Stolz2022``
    * - Year
      - 2022
    * - Authors

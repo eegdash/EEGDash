@@ -149,6 +149,12 @@ Dataset Information
      - ``DS003885``
    * - Title
      - Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1
+   * - Author (year)
+     - ``Shatek2021_E1``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003885``, ``Shatek2021_E1``
    * - Year
      - 2021
    * - Authors

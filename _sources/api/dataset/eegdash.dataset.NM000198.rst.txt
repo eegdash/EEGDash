@@ -281,6 +281,12 @@ Dataset Information
      - ``NM000198``
    * - Title
      - BNCI 2015-008 Center Speller P300 dataset
+   * - Author (year)
+     - ``Treder2015_P300``
+   * - Canonical
+     - ``BNCI2015_P300``, ``BNCI2015_008_P300``, ``BNCI2015_008_CenterSpeller``
+   * - Importable as
+     - ``NM000198``, ``Treder2015_P300``, ``BNCI2015_P300``, ``BNCI2015_008_P300``, ``BNCI2015_008_CenterSpeller``
    * - Year
      - 2011
    * - Authors

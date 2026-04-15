@@ -112,6 +112,12 @@ Dataset Information
      - ``DS003352``
    * - Title
      - 1 - Light Pink Spiral
+   * - Author (year)
+     - ``Hermann2020``
+   * - Canonical
+     - ``Hermann2021``
+   * - Importable as
+     - ``DS003352``, ``Hermann2020``, ``Hermann2021``
    * - Year
      - 2020
    * - Authors

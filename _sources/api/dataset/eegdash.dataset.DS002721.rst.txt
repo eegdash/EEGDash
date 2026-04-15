@@ -169,6 +169,12 @@ Dataset Information
      - ``DS002721``
    * - Title
      - An EEG dataset recorded during affective music listening
+   * - Author (year)
+     - ``Daly2020_recorded_affective``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002721``, ``Daly2020_recorded_affective``
    * - Year
      - 2020
    * - Authors

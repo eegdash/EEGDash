@@ -161,6 +161,12 @@ Dataset Information
      - ``DS006437``
    * - Title
      - LIGHT Hypnotherapy
+   * - Author (year)
+     - ``DS6437_LIGHT_Hypnotherapy``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006437``, ``DS6437_LIGHT_Hypnotherapy``
    * - Year
      - 2025
    * - Authors

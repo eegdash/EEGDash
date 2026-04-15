@@ -227,6 +227,12 @@ Dataset Information
      - ``DS005512``
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 8
+   * - Author (year)
+     - ``Shirazi2024_R8``
+   * - Canonical
+     - ``HBN_r8``
+   * - Importable as
+     - ``DS005512``, ``Shirazi2024_R8``, ``HBN_r8``
    * - Year
      - 2024
    * - Authors

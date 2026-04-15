@@ -108,6 +108,12 @@ Dataset Information
      - ``DS004574``
    * - Title
      - Cross-modal Oddball Task.
+   * - Author (year)
+     - ``Singh2023_Cross_modal``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004574``, ``Singh2023_Cross_modal``
    * - Year
      - 2023
    * - Authors

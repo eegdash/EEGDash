@@ -106,6 +106,12 @@ Dataset Information
      - ``DS006801``
    * - Title
      - Resting-state EEG before and after different study methods
+   * - Author (year)
+     - ``Alves2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006801``, ``Alves2025``
    * - Year
      - 2025
    * - Authors

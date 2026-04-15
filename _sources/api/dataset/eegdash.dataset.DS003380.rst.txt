@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 1` :bdg-secondary-line:`Recordings: 5` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -113,6 +113,12 @@ Dataset Information
      - ``DS003380``
    * - Title
      - Corticothalamic communication under analgesia, sedation and gradual ischemia: a multimodal model of controlled gradual cerebral ischemia in pig
+   * - Author (year)
+     - ``Frasch2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003380``, ``Frasch2020``
    * - Year
      - 2020
    * - Authors
@@ -165,7 +171,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 16
       - Sampling rate (Hz): Varies
       - Duration (hours): 0.0894444444444444
 

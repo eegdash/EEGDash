@@ -112,6 +112,12 @@ Dataset Information
      - ``DS004579``
    * - Title
      - Interval Timing Task
+   * - Author (year)
+     - ``Singh2023_Interval_Timing``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004579``, ``Singh2023_Interval_Timing``
    * - Year
      - 2023
    * - Authors

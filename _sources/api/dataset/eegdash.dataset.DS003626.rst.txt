@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 10` :bdg-secondary-line:`Recordings: 30` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 6.0`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -112,6 +112,12 @@ Dataset Information
      - ``DS003626``
    * - Title
      - Inner Speech
+   * - Author (year)
+     - ``Nieto2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003626``, ``Nieto2021``
    * - Year
      - 2021
    * - Authors
@@ -164,7 +170,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 137
       - Sampling rate (Hz): Varies
       - Duration (hours): 12.951944444444443
 

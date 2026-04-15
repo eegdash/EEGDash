@@ -235,6 +235,12 @@ Dataset Information
      - ``NM000221``
    * - Title
      - Alphawaves dataset
+   * - Author (year)
+     - ``Cattan2017``
+   * - Canonical
+     - ``Alphawaves``, ``Rodrigues2017``, ``AlphaWaves``
+   * - Importable as
+     - ``NM000221``, ``Cattan2017``, ``Alphawaves``, ``Rodrigues2017``, ``AlphaWaves``
    * - Year
      - 2018
    * - Authors

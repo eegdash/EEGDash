@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004447``
    * - Title
      - The BMI-HDEEG dataset 3
+   * - Author (year)
+     - ``Iwama2023_D3``
+   * - Canonical
+     - ``BMI_HDEEG_D3``
+   * - Importable as
+     - ``DS004447``, ``Iwama2023_D3``, ``BMI_HDEEG_D3``
    * - Year
      - 2023
    * - Authors

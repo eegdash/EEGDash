@@ -297,6 +297,12 @@ Dataset Information
      - ``NM000194``
    * - Title
      - BNCI 2015-010 RSVP P300 dataset
+   * - Author (year)
+     - ``Acqualagna2015``
+   * - Canonical
+     - ``BNCI2015``
+   * - Importable as
+     - ``NM000194``, ``Acqualagna2015``, ``BNCI2015``
    * - Year
      - 2013
    * - Authors

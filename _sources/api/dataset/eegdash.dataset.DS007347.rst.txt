@@ -211,6 +211,12 @@ Dataset Information
      - ``DS007347``
    * - Title
      - Sterotactic Focused Ultrasound Mesencephalotomy for the Treatment of Head and Neck Cancer Pain
+   * - Author (year)
+     - ``Elias2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007347``, ``Elias2026``
    * - Year
      - 2026
    * - Authors

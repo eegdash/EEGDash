@@ -110,6 +110,12 @@ Dataset Information
      - ``DS005931``
    * - Title
      - Visuomotor_task
+   * - Author (year)
+     - ``Ueda2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005931``, ``Ueda2025``
    * - Year
      - 2025
    * - Authors

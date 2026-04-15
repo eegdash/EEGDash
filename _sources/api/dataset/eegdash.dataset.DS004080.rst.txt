@@ -160,6 +160,12 @@ Dataset Information
      - ``DS004080``
    * - Title
      - CCEP ECoG dataset across age 4-51
+   * - Author (year)
+     - ``Blooijs2023_CCEP_ECoG``
+   * - Canonical
+     - ``RESPect_CCEP``
+   * - Importable as
+     - ``DS004080``, ``Blooijs2023_CCEP_ECoG``, ``RESPect_CCEP``
    * - Year
      - 2022
    * - Authors

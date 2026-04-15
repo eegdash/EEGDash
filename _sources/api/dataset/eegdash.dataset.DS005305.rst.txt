@@ -366,6 +366,12 @@ Dataset Information
      - ``DS005305``
    * - Title
      - EEG Resting-state Microstates Correlates of Executive Functions
+   * - Author (year)
+     - ``Quentin2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005305``, ``Quentin2024``
    * - Year
      - 2024
    * - Authors

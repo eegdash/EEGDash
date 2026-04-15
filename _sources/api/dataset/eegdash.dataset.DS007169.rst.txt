@@ -158,6 +158,12 @@ Dataset Information
      - ``DS007169``
    * - Title
      - Multimodal Cognitive Workload n-back Task, 4 Difficulties
+   * - Author (year)
+     - ``Barras2026_Multimodal``
+   * - Canonical
+     - ``Barras2021``
+   * - Importable as
+     - ``DS007169``, ``Barras2026_Multimodal``, ``Barras2021``
    * - Year
      - 2026
    * - Authors

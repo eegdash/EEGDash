@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005289``
    * - Title
      - 39 By BP
+   * - Author (year)
+     - ``Xiangyue2024_39_BP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005289``, ``Xiangyue2024_39_BP``
    * - Year
      - 2024
    * - Authors

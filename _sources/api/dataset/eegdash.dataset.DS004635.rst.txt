@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004635``
    * - Title
      - Gaffrey Lab Infant Microstates Reliability
+   * - Author (year)
+     - ``Bagdasarov2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004635``, ``Bagdasarov2023``
    * - Year
      - 2023
    * - Authors

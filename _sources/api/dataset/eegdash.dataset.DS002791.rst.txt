@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002791``
    * - Title
      - DataSet1
+   * - Author (year)
+     - ``Mheich2020_DataSet1``
+   * - Canonical
+     - ``Mheich2020``
+   * - Importable as
+     - ``DS002791``, ``Mheich2020_DataSet1``, ``Mheich2020``
    * - Year
      - 2020
    * - Authors

@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003682``
    * - Title
      - Model-based aversive learning in humans is supported by preferential task state reactivation
+   * - Author (year)
+     - ``Wise2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003682``, ``Wise2021``
    * - Year
      - 2021
    * - Authors

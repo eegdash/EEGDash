@@ -148,6 +148,12 @@ Dataset Information
      - ``DS004166``
    * - Title
      - Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial
+   * - Author (year)
+     - ``Li2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004166``, ``Li2022``
    * - Year
      - 2022
    * - Authors

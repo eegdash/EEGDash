@@ -193,6 +193,12 @@ Dataset Information
      - ``NM000112``
    * - Title
      - FACED - Finer-grained Affective Computing EEG Dataset
+   * - Author (year)
+     - ``Liu2024_112``
+   * - Canonical
+     - ``FACED``
+   * - Importable as
+     - ``NM000112``, ``Liu2024_112``, ``FACED``
    * - Year
      - 2023
    * - Authors
@@ -246,15 +252,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 32
-      - Sampling rate (Hz): 1000.0 (68), 250.0 (55)
+      - Sampling rate (Hz): 1000 (68), 250 (55)
       - Duration (hours): 155.28158666666664
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Affect
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

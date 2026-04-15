@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004859``
    * - Title
      - iEEG on children during Stroop task
+   * - Author (year)
+     - ``Sakakura2023_children_Stroop``
+   * - Canonical
+     - ``Sakakura2024``
+   * - Importable as
+     - ``DS004859``, ``Sakakura2023_children_Stroop``, ``Sakakura2024``
    * - Year
      - 2023
    * - Authors

@@ -152,6 +152,12 @@ Dataset Information
      - ``DS002718``
    * - Title
      - Face processing EEG dataset for EEGLAB
+   * - Author (year)
+     - ``Wakeman2020``
+   * - Canonical
+     - ``Wakeman2015``, ``WakemanHenson_EEG_MEG``
+   * - Importable as
+     - ``DS002718``, ``Wakeman2020``, ``Wakeman2015``, ``WakemanHenson_EEG_MEG``
    * - Year
      - 2020
    * - Authors

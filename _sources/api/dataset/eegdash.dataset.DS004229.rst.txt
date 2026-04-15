@@ -113,6 +113,12 @@ Dataset Information
      - ``DS004229``
    * - Title
      - amnoise
+   * - Author (year)
+     - ``Mittag2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004229``, ``Mittag2022``
    * - Year
      - 2022
    * - Authors

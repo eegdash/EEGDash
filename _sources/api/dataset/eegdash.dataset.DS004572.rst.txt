@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004572``
    * - Title
      - The effects of sham hypnosis techniques
+   * - Author (year)
+     - ``Kekecs2023``
+   * - Canonical
+     - ``Kekecs2024``
+   * - Importable as
+     - ``DS004572``, ``Kekecs2023``, ``Kekecs2024``
    * - Year
      - 2023
    * - Authors

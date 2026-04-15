@@ -124,6 +124,12 @@ Dataset Information
      - ``DS006392``
    * - Title
      - HED schema library for SCORE annotations example
+   * - Author (year)
+     - ``Attia2025``
+   * - Canonical
+     - ``Hermes2024``
+   * - Importable as
+     - ``DS006392``, ``Attia2025``, ``Hermes2024``
    * - Year
      - 2025
    * - Authors

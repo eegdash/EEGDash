@@ -125,6 +125,12 @@ Dataset Information
      - ``DS000248``
    * - Title
      - MNE-Sample-Data
+   * - Author (year)
+     - ``Gramfort2018``
+   * - Canonical
+     - ``MNE_Sample_Data``
+   * - Importable as
+     - ``DS000248``, ``Gramfort2018``, ``MNE_Sample_Data``
    * - Year
      - 2018
    * - Authors

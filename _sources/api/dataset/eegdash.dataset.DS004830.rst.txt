@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004830``
    * - Title
      - Spatial Attention Decoding using fNIRS During Complex Scene Analysis
+   * - Author (year)
+     - ``Ning2023``
+   * - Canonical
+     - ``Ning2024``
+   * - Importable as
+     - ``DS004830``, ``Ning2023``, ``Ning2024``
    * - Year
      - 2023
    * - Authors

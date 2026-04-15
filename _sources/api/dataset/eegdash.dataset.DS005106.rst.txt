@@ -115,6 +115,12 @@ Dataset Information
      - ``DS005106``
    * - Title
      - 200 Objects Infants EEG
+   * - Author (year)
+     - ``Grootswagers2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005106``, ``Grootswagers2024``
    * - Year
      - 2024
    * - Authors

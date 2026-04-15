@@ -111,6 +111,12 @@ Dataset Information
      - ``DS004770``
    * - Title
      - iEEG on children during gameplay
+   * - Author (year)
+     - ``Ueda2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004770``, ``Ueda2023``
    * - Year
      - 2023
    * - Authors

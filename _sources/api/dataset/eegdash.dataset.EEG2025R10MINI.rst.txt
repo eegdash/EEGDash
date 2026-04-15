@@ -225,6 +225,12 @@ Dataset Information
      - ``EEG2025R10MINI``
    * - Title
      - Healthy Brain Network (HBN) EEG - Release 10 (BDF Converted)
+   * - Author (year)
+     - ``Shirazi2025_R10_bdf_mini``
+   * - Canonical
+     - ``HBN_r10_bdf_mini``
+   * - Importable as
+     - ``EEG2025R10MINI``, ``Shirazi2025_R10_bdf_mini``, ``HBN_r10_bdf_mini``
    * - Year
      - 2025
    * - Authors
@@ -278,7 +284,7 @@ Technical Details
    .. grid-item-card:: Files & format
       :class-card: sd-border-1
 
-      - Size on disk: —
+      - Size on disk: 2.8 GB
       - File count: 220
       - Format: BIDS
 

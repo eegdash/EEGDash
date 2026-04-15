@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007353``
    * - Title
      - HAD-MEEG
+   * - Author (year)
+     - ``Zhang2026``
+   * - Canonical
+     - ``HAD_MEEG``, ``HADMEEG``
+   * - Importable as
+     - ``DS007353``, ``Zhang2026``, ``HAD_MEEG``, ``HADMEEG``
    * - Year
      - 2026
    * - Authors

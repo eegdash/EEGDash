@@ -163,6 +163,12 @@ Dataset Information
      - ``DS004514``
    * - Title
      - Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools
+   * - Author (year)
+     - ``Rybar2023_Simultaneous``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004514``, ``Rybar2023_Simultaneous``
    * - Year
      - 2023
    * - Authors

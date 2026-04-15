@@ -117,6 +117,12 @@ Dataset Information
      - ``DS004350``
    * - Title
      - Executive Functionning Study for Assessing the Effect of Neurofeedback
+   * - Author (year)
+     - ``Delorme2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004350``, ``Delorme2022``
    * - Year
      - 2022
    * - Authors

@@ -131,6 +131,12 @@ Dataset Information
      - ``DS005558``
    * - Title
      - Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier)
+   * - Author (year)
+     - ``Herrema2024_Categorized_Free``
+   * - Canonical
+     - ``catFR_closed_loop``
+   * - Importable as
+     - ``DS005558``, ``Herrema2024_Categorized_Free``, ``catFR_closed_loop``
    * - Year
      - 2024
    * - Authors

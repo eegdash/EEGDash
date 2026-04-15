@@ -300,6 +300,12 @@ Dataset Information
      - ``NM000192``
    * - Title
      - BNCI 2015-006 Music BCI dataset
+   * - Author (year)
+     - ``Treder2015_BNCI_006_Music``
+   * - Canonical
+     - ``BNCI2015_BNCI_006_Music``, ``BNCI_2015_006_Music``, ``BNCI2015_006_MusicBCI``
+   * - Importable as
+     - ``NM000192``, ``Treder2015_BNCI_006_Music``, ``BNCI2015_BNCI_006_Music``, ``BNCI_2015_006_Music``, ``BNCI2015_006_MusicBCI``
    * - Year
      - 2014
    * - Authors

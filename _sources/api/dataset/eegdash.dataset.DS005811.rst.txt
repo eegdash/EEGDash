@@ -155,6 +155,12 @@ Dataset Information
      - ``DS005811``
    * - Title
      - NOD-EEG
+   * - Author (year)
+     - ``Zhang2025_EEG``
+   * - Canonical
+     - ``NOD_EEG``
+   * - Importable as
+     - ``DS005811``, ``Zhang2025_EEG``, ``NOD_EEG``
    * - Year
      - 2025
    * - Authors

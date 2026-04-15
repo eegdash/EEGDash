@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005114``
    * - Title
      - EEG: DPX Cog Ctl Task in Acute Mild TBI
+   * - Author (year)
+     - ``Cavanagh2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005114``, ``Cavanagh2024``
    * - Year
      - 2024
    * - Authors

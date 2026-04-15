@@ -234,6 +234,12 @@ Dataset Information
      - ``DS006979``
    * - Title
      - Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study
+   * - Author (year)
+     - ``Ramzaoui2025``
+   * - Canonical
+     - ``Ramzaoui2024``
+   * - Importable as
+     - ``DS006979``, ``Ramzaoui2025``, ``Ramzaoui2024``
    * - Year
      - 2025
    * - Authors

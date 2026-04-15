@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003810``
    * - Title
      - Motor Imagery vs Rest - Low-Cost EEG System
+   * - Author (year)
+     - ``Peterson2021_Motor_Imagery_vs``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003810``, ``Peterson2021_Motor_Imagery_vs``
    * - Year
      - 2021
    * - Authors

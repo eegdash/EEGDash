@@ -119,6 +119,12 @@ Dataset Information
      - ``DS005059``
    * - Title
      - Paired Associates Learning: Memory for Word Pairs in Cued Recall
+   * - Author (year)
+     - ``Herrema2024_Paired``
+   * - Canonical
+     - ``PAL``
+   * - Importable as
+     - ``DS005059``, ``Herrema2024_Paired``, ``PAL``
    * - Year
      - 2024
    * - Authors

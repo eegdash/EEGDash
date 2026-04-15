@@ -116,6 +116,12 @@ Dataset Information
      - ``DS004837``
    * - Title
      - Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis
+   * - Author (year)
+     - ``LopezCaballero2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004837``, ``LopezCaballero2023``
    * - Year
      - 2023
    * - Authors
@@ -169,7 +175,7 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: Varies
-      - Sampling rate (Hz): 3000.0 (98), 1000.0 (8)
+      - Sampling rate (Hz): 3000 (98), 1000 (8)
       - Duration (hours): Not calculated
 
    .. grid-item-card:: Tags

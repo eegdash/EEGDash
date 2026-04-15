@@ -211,6 +211,12 @@ Dataset Information
      - ``DS006850``
    * - Title
      - Urban Appraisal: Physiological Recording during Rating of Different Urban Environments
+   * - Author (year)
+     - ``Zaehme2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006850``, ``Zaehme2025``
    * - Year
      - 2025
    * - Authors

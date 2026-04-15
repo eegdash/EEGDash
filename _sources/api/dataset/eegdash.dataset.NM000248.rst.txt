@@ -219,6 +219,12 @@ Dataset Information
      - ``NM000248``
    * - Title
      - BigP3BCI Study L — 6x6 multi-paradigm (11 ALS subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_L``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000248``, ``Mainsah2025_BigP3BCI_L``
    * - Year
      - 2019
    * - Authors

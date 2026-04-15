@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005189``
    * - Title
      - Search Superiority Recollection Familiarity
+   * - Author (year)
+     - ``Helbing2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005189``, ``Helbing2024``
    * - Year
      - 2024
    * - Authors

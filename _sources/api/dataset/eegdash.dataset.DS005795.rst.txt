@@ -113,6 +113,12 @@ Dataset Information
      - ``DS005795``
    * - Title
      - MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data)
+   * - Author (year)
+     - ``Stadler2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005795``, ``Stadler2025``
    * - Year
      - 2025
    * - Authors

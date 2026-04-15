@@ -108,6 +108,12 @@ Dataset Information
      - ``DS004580``
    * - Title
      - Simon-conflict Task.
+   * - Author (year)
+     - ``Singh2023_Simon_conflict``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004580``, ``Singh2023_Simon_conflict``
    * - Year
      - 2023
    * - Authors

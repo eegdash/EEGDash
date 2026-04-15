@@ -156,6 +156,12 @@ Dataset Information
      - ``NM000115``
    * - Title
      - Zhou2016
+   * - Author (year)
+     - ``Zhou2016``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000115``, ``Zhou2016``
    * - Year
      - 2016
    * - Authors
@@ -209,15 +215,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 14
-      - Sampling rate (Hz): 250.0
+      - Sampling rate (Hz): 250
       - Duration (hours): 6.268284444444444
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Motor
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

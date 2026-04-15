@@ -161,6 +161,12 @@ Dataset Information
      - ``DS005345``
    * - Title
      - Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset
+   * - Author (year)
+     - ``Ma2024``
+   * - Canonical
+     - ``LPP``
+   * - Importable as
+     - ``DS005345``, ``Ma2024``, ``LPP``
    * - Year
      - 2024
    * - Authors

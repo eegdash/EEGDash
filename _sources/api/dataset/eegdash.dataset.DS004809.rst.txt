@@ -120,6 +120,12 @@ Dataset Information
      - ``DS004809``
    * - Title
      - Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories
+   * - Author (year)
+     - ``Herrema2023_Categorized_Free_Recall``
+   * - Canonical
+     - ``catFR_Categorized_Free_Recall``, ``CatFR``
+   * - Importable as
+     - ``DS004809``, ``Herrema2023_Categorized_Free_Recall``, ``catFR_Categorized_Free_Recall``, ``CatFR``
    * - Year
      - 2023
    * - Authors

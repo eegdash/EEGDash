@@ -518,6 +518,12 @@ Dataset Information
      - ``NM000124``
    * - Title
      - Han2024 – SSVEP fatigue dataset with two frequency paradigms
+   * - Author (year)
+     - ``Han2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000124``, ``Han2024``
    * - Year
      - 2019
    * - Authors

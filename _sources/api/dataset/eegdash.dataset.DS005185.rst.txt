@@ -122,6 +122,12 @@ Dataset Information
      - ``DS005185``
    * - Title
      - Ear-EEG Sleep Monitoring 2019 (EESM19)
+   * - Author (year)
+     - ``Mikkelsen2024_Ear_Sleep_Monitoring``
+   * - Canonical
+     - ``EESM19``
+   * - Importable as
+     - ``DS005185``, ``Mikkelsen2024_Ear_Sleep_Monitoring``, ``EESM19``
    * - Year
      - 2024
    * - Authors

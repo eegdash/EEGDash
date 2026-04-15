@@ -591,6 +591,12 @@ Dataset Information
      - ``NM000128``
    * - Title
      - Dong2023 – 59-subject 40-class SSVEP dataset
+   * - Author (year)
+     - ``Dong2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000128``, ``Dong2023``
    * - Year
      - 2019
    * - Authors

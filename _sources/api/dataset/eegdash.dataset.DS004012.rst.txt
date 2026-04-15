@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004012``
    * - Title
      - BRAR_NQ
+   * - Author (year)
+     - ``Rani2022``
+   * - Canonical
+     - ``Rani2019``
+   * - Importable as
+     - ``DS004012``, ``Rani2022``, ``Rani2019``
    * - Year
      - 2022
    * - Authors

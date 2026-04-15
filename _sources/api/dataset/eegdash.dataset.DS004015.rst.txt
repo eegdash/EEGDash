@@ -116,6 +116,12 @@ Dataset Information
      - ``DS004015``
    * - Title
      - Attended speaker paradigm (cEEGrid data)
+   * - Author (year)
+     - ``Holtze2022_Attended``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004015``, ``Holtze2022_Attended``
    * - Year
      - 2022
    * - Authors

@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003516``
    * - Title
      - EEG: Attended Speaker Paradigm (Own Name in Ignored Stream)
+   * - Author (year)
+     - ``Holtze2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003516``, ``Holtze2021``
    * - Year
      - 2021
    * - Authors

@@ -103,6 +103,12 @@ Dataset Information
      - ``DS007056``
    * - Title
      - PURSUE P300 Visual Oddball
+   * - Author (year)
+     - ``Couperus2025_P300``
+   * - Canonical
+     - ``Couperus2021_P300``
+   * - Importable as
+     - ``DS007056``, ``Couperus2025_P300``, ``Couperus2021_P300``
    * - Year
      - 2025
    * - Authors

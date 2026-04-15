@@ -123,6 +123,12 @@ Dataset Information
      - ``DS005491``
    * - Title
      - Categorized Free Recall with Open-Loop Stimulation at Encoding
+   * - Author (year)
+     - ``Herrema2024_Categorized``
+   * - Canonical
+     - ``catFR_open_loop``, ``RAM_catFR``, ``catFR_stim``
+   * - Importable as
+     - ``DS005491``, ``Herrema2024_Categorized``, ``catFR_open_loop``, ``RAM_catFR``, ``catFR_stim``
    * - Year
      - 2024
    * - Authors

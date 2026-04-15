@@ -298,6 +298,12 @@ Dataset Information
      - ``NM000163``
    * - Title
      - c-VEP and Burst-VEP dataset from Castillos et al. (2023)
+   * - Author (year)
+     - ``Castillos2023_VEP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000163``, ``Castillos2023_VEP``
    * - Year
      - 2023
    * - Authors

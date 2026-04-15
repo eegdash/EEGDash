@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005486``
    * - Title
      - PREDICT
+   * - Author (year)
+     - ``Chowdhury2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005486``, ``Chowdhury2024``
    * - Year
      - 2024
    * - Authors

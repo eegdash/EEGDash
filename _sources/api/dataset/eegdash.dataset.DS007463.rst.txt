@@ -105,6 +105,12 @@ Dataset Information
      - ``DS007463``
    * - Title
      - Very-High-Density Diffuse Optical Tomography System Validation Dataset
+   * - Author (year)
+     - ``Fogarty2026_Very``
+   * - Canonical
+     - ``Fogarty2025``
+   * - Importable as
+     - ``DS007463``, ``Fogarty2026_Very``, ``Fogarty2025``
    * - Year
      - 2026
    * - Authors

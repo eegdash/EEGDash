@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 11` :bdg-secondary-line:`Recordings: 105` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 0.0`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -105,6 +105,12 @@ Dataset Information
      - ``DS005028``
    * - Title
      - Comparing P300 Flashing paradigms in online typing with language models
+   * - Author (year)
+     - ``Chandravadia2024``
+   * - Canonical
+     - ``Chandravadia2022``
+   * - Importable as
+     - ``DS005028``, ``Chandravadia2024``, ``Chandravadia2022``
    * - Year
      - 2024
    * - Authors
@@ -157,7 +163,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 32
       - Sampling rate (Hz): Varies
       - Duration (hours): 0.0291666666666666
 

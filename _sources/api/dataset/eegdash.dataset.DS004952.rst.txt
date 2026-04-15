@@ -239,6 +239,12 @@ Dataset Information
      - ``DS004952``
    * - Title
      - ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding
+   * - Author (year)
+     - ``Mou2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004952``, ``Mou2024``
    * - Year
      - 2024
    * - Authors

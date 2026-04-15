@@ -113,6 +113,12 @@ Dataset Information
      - ``DS004017``
    * - Title
      - Embodied Learning for Literacy EEG
+   * - Author (year)
+     - ``Damsgaard2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004017``, ``Damsgaard2022``
    * - Year
      - 2022
    * - Authors

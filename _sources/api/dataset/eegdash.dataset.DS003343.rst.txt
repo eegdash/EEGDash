@@ -112,6 +112,12 @@ Dataset Information
      - ``DS003343``
    * - Title
      - Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG
+   * - Author (year)
+     - ``Schneider2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003343``, ``Schneider2020``
    * - Year
      - 2020
    * - Authors

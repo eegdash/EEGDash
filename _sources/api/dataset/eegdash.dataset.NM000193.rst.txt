@@ -291,6 +291,12 @@ Dataset Information
      - ``NM000193``
    * - Title
      - Class for Kojima2024A dataset management. P300 dataset
+   * - Author (year)
+     - ``Kojima2024A_P300``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000193``, ``Kojima2024A_P300``
    * - Year
      - 2024
    * - Authors

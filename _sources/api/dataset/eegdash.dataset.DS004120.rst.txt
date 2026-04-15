@@ -187,6 +187,12 @@ Dataset Information
      - ``DS004120``
    * - Title
      - BCIT Baseline Driving
+   * - Author (year)
+     - ``Touryan2022_BCIT_Baseline``
+   * - Canonical
+     - ``BCITBaselineDriving``
+   * - Importable as
+     - ``DS004120``, ``Touryan2022_BCIT_Baseline``, ``BCITBaselineDriving``
    * - Year
      - 2022
    * - Authors

@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003506``
    * - Title
      - EEG: Reinforcement Learning in Parkinson's
+   * - Author (year)
+     - ``Cavanagh2021_Reinforcement``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003506``, ``Cavanagh2021_Reinforcement``
    * - Year
      - 2021
    * - Authors

@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005963``
    * - Title
      - FRESH Motor Dataset
+   * - Author (year)
+     - ``Mesquita2025``
+   * - Canonical
+     - ``Mesquita2019``
+   * - Importable as
+     - ``DS005963``, ``Mesquita2025``, ``Mesquita2019``
    * - Year
      - 2025
    * - Authors

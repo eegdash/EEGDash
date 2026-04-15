@@ -109,6 +109,12 @@ Dataset Information
      - ``DS005107``
    * - Title
      - FACE-DEC
+   * - Author (year)
+     - ``Xu2024_DEC``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005107``, ``Xu2024_DEC``
    * - Year
      - 2024
    * - Authors

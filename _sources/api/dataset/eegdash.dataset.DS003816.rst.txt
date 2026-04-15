@@ -103,6 +103,12 @@ Dataset Information
      - ``DS003816``
    * - Title
      - The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect
+   * - Author (year)
+     - ``Sun2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003816``, ``Sun2024``
    * - Year
      - —
    * - Authors

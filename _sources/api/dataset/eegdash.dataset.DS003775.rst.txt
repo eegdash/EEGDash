@@ -196,6 +196,12 @@ Dataset Information
      - ``DS003775``
    * - Title
      - SRM Resting-state EEG
+   * - Author (year)
+     - ``HatlestadHall2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003775``, ``HatlestadHall2021``
    * - Year
      - 2021
    * - Authors

@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004408``
    * - Title
      - EEG responses to continuous naturalistic speech
+   * - Author (year)
+     - ``Liberto2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004408``, ``Liberto2023``
    * - Year
      - 2023
    * - Authors

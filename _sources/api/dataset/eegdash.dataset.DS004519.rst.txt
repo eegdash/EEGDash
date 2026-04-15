@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004519``
    * - Title
      - Internal selective attention is delayed by competition between endogenous and exogenous factors
+   * - Author (year)
+     - ``Ester2023_Internal``
+   * - Canonical
+     - ``Ester2022``
+   * - Importable as
+     - ``DS004519``, ``Ester2023_Internal``, ``Ester2022``
    * - Year
      - 2023
    * - Authors

@@ -290,6 +290,12 @@ Dataset Information
      - ``NM000239``
    * - Title
      - P-ary m-sequence-based c-VEP dataset from Martínez-Cagigal et al. (2023)
+   * - Author (year)
+     - ``MartinezCagigal2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000239``, ``MartinezCagigal2023``
    * - Year
      - 2023
    * - Authors

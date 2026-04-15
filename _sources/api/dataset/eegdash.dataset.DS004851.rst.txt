@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004851``
    * - Title
      - HID
+   * - Author (year)
+     - ``Johnson2023_HID``
+   * - Canonical
+     - ``HID``
+   * - Importable as
+     - ``DS004851``, ``Johnson2023_HID``, ``HID``
    * - Year
      - 2023
    * - Authors

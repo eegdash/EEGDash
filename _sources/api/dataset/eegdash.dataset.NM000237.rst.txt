@@ -270,6 +270,12 @@ Dataset Information
      - ``NM000237``
    * - Title
      - 7-day motor imagery BCI EEG dataset from Zhou et al 2021
+   * - Author (year)
+     - ``Zhou2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000237``, ``Zhou2021``
    * - Year
      - 2021
    * - Authors

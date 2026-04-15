@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004043``
    * - Title
      - The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes
+   * - Author (year)
+     - ``Moerel2022_time``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004043``, ``Moerel2022_time``
    * - Year
      - 2022
    * - Authors

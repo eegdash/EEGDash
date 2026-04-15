@@ -118,6 +118,12 @@ Dataset Information
      - ``DS007052``
    * - Title
      - PURSUE N400 Word Processing
+   * - Author (year)
+     - ``Couperus2025_N400``
+   * - Canonical
+     - ``Couperus2021_N400``
+   * - Importable as
+     - ``DS007052``, ``Couperus2025_N400``, ``Couperus2021_N400``
    * - Year
      - 2025
    * - Authors

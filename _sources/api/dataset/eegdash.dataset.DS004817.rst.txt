@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004817``
    * - Title
      - EEG-attention-rsvp-exp2
+   * - Author (year)
+     - ``Grootswagers2023_E2``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004817``, ``Grootswagers2023_E2``
    * - Year
      - 2023
    * - Authors

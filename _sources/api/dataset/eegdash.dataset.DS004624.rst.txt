@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004624``
    * - Title
      - Intracranial recordings using BCI2000 and the CorTec BrainInterchange
+   * - Author (year)
+     - ``Mivalt2025``
+   * - Canonical
+     - ``Mivalt2024``, ``BCI2000_Intracranial``
+   * - Importable as
+     - ``DS004624``, ``Mivalt2025``, ``Mivalt2024``, ``BCI2000_Intracranial``
    * - Year
      - 2023
    * - Authors

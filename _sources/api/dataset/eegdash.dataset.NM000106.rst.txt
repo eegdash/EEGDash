@@ -249,6 +249,12 @@ Dataset Information
      - ``NM000106``
    * - Title
      - FRL Handwriting: Handwriting Decoding from Surface Electromyography
+   * - Author (year)
+     - ``Kaifosh2025_106``
+   * - Canonical
+     - ``FRL_Handwriting``
+   * - Importable as
+     - ``NM000106``, ``Kaifosh2025_106``, ``FRL_Handwriting``
    * - Year
      - 2025
    * - Authors
@@ -302,15 +308,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 16
-      - Sampling rate (Hz): 2000.0
+      - Sampling rate (Hz): 2000
       - Duration (hours): 140.70160930555554
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Motor
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

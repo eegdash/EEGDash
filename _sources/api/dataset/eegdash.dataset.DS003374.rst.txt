@@ -161,6 +161,12 @@ Dataset Information
      - ``DS003374``
    * - Title
      - Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation
+   * - Author (year)
+     - ``Fedele2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003374``, ``Fedele2020``
    * - Year
      - 2020
    * - Authors

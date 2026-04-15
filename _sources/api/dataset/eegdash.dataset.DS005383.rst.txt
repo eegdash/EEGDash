@@ -160,6 +160,12 @@ Dataset Information
      - ``DS005383``
    * - Title
      - TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments
+   * - Author (year)
+     - ``Bai2024``
+   * - Canonical
+     - ``TMNRED``
+   * - Importable as
+     - ``DS005383``, ``Bai2024``, ``TMNRED``
    * - Year
      - 2024
    * - Authors

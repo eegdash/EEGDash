@@ -257,6 +257,12 @@ Dataset Information
      - ``NM000137``
    * - Title
      - Classical motor imagery dataset with left hand, right hand, and rest
+   * - Author (year)
+     - ``Kaya2018``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000137``, ``Kaya2018``
    * - Year
      - 2019
    * - Authors

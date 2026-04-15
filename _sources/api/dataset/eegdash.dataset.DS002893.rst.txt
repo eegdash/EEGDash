@@ -167,6 +167,12 @@ Dataset Information
      - ``DS002893``
    * - Title
      - Auditory-Visual Shift Study
+   * - Author (year)
+     - ``Westerfield2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002893``, ``Westerfield2022``
    * - Year
      - 2020
    * - Authors

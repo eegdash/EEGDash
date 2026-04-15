@@ -126,6 +126,12 @@ Dataset Information
      - ``DS006366``
    * - Title
      - Mouse Sleep Staging Validation dataset (MSSV)
+   * - Author (year)
+     - ``Rose2025``
+   * - Canonical
+     - ``MSSV``
+   * - Importable as
+     - ``DS006366``, ``Rose2025``, ``MSSV``
    * - Year
      - 2025
    * - Authors

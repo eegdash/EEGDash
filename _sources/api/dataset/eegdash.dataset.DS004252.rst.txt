@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004252``
    * - Title
      - Rotation-tolerant representations elucidate the time course of high-level object processing
+   * - Author (year)
+     - ``Moerel2022_Rotation``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004252``, ``Moerel2022_Rotation``
    * - Year
      - 2022
    * - Authors

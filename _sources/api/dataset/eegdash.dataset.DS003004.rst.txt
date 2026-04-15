@@ -106,6 +106,12 @@ Dataset Information
      - ``DS003004``
    * - Title
      - Imagined Emotion Study
+   * - Author (year)
+     - ``Onton2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003004``, ``Onton2020``
    * - Year
      - 2020
    * - Authors

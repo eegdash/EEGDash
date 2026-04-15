@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004819``
    * - Title
      - Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain
+   * - Author (year)
+     - ``Lee2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004819``, ``Lee2023``
    * - Year
      - 2023
    * - Authors

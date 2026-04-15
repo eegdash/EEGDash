@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005672``
    * - Title
      - PerceiveImagine
+   * - Author (year)
+     - ``Zhiyuan2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005672``, ``Zhiyuan2024``
    * - Year
      - 2024
    * - Authors

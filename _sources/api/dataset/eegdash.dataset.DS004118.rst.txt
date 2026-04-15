@@ -181,6 +181,12 @@ Dataset Information
      - ``DS004118``
    * - Title
      - BCIT Calibration Driving
+   * - Author (year)
+     - ``Touryan2022_BCIT_Calibration``
+   * - Canonical
+     - ``Touryan1999``
+   * - Importable as
+     - ``DS004118``, ``Touryan2022_BCIT_Calibration``, ``Touryan1999``
    * - Year
      - 2022
    * - Authors

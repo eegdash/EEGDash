@@ -130,6 +130,12 @@ Dataset Information
      - ``DS004582``
    * - Title
      - FakeFaceEmo_data
+   * - Author (year)
+     - ``Makowski2023_FakeFaceEmo``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004582``, ``Makowski2023_FakeFaceEmo``
    * - Year
      - 2023
    * - Authors

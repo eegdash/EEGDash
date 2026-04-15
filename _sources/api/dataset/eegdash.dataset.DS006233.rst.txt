@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006233``
    * - Title
      - Picture naming
+   * - Author (year)
+     - ``Kochi2025_Picture_naming``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006233``, ``Kochi2025_Picture_naming``
    * - Year
      - 2025
    * - Authors

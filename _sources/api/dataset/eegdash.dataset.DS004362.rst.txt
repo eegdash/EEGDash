@@ -160,6 +160,12 @@ Dataset Information
      - ``DS004362``
    * - Title
      - EEG Motor Movement/Imagery Dataset
+   * - Author (year)
+     - ``Schalk2022``
+   * - Canonical
+     - ``PhysionetMI``, ``EEGMotorMovementImagery``
+   * - Importable as
+     - ``DS004362``, ``Schalk2022``, ``PhysionetMI``, ``EEGMotorMovementImagery``
    * - Year
      - 2022
    * - Authors

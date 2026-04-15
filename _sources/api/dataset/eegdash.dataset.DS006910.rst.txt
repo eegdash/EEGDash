@@ -108,6 +108,12 @@ Dataset Information
      - ``DS006910``
    * - Title
      - Auditory Naming EC
+   * - Author (year)
+     - ``Kochi2025_Auditory_Naming_EC``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006910``, ``Kochi2025_Auditory_Naming_EC``
    * - Year
      - 2025
    * - Authors

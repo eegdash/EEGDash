@@ -107,6 +107,12 @@ Dataset Information
      - ``DS007445``
    * - Title
      - Thalamocortical ictal iEEG dataset
+   * - Author (year)
+     - ``Panchavati2026``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007445``, ``Panchavati2026``
    * - Year
      - 2026
    * - Authors

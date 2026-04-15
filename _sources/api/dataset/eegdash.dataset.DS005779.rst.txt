@@ -105,6 +105,12 @@ Dataset Information
      - ``DS005779``
    * - Title
      - Real-time personalized brain state-dependent TMS in healthy adults
+   * - Author (year)
+     - ``Khatri2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005779``, ``Khatri2025``
    * - Year
      - 2025
    * - Authors

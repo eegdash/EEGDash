@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006269``
    * - Title
      - Tethered EEG Recordings in Syngap1 rats
+   * - Author (year)
+     - ``Pritchard2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006269``, ``Pritchard2025``
    * - Year
      - 2025
    * - Authors

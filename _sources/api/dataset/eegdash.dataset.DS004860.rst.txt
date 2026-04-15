@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004860``
    * - Title
      - Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study
+   * - Author (year)
+     - ``Schwartz2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004860``, ``Schwartz2023``
    * - Year
      - 2023
    * - Authors

@@ -158,6 +158,12 @@ Dataset Information
      - ``DS007176``
    * - Title
      - Longitudinal EEG Test-Retest Reliability in Healthy Individuals
+   * - Author (year)
+     - ``Isaza2026_Longitudinal``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007176``, ``Isaza2026_Longitudinal``
    * - Year
      - 2026
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007322``
    * - Title
      - Personalized smartphone notifications bias auditory salience across processing stages
+   * - Author (year)
+     - ``Mishra2026``
+   * - Canonical
+     - ``Mishra2024``
+   * - Importable as
+     - ``DS007322``, ``Mishra2026``, ``Mishra2024``
    * - Year
      - 2026
    * - Authors

@@ -202,6 +202,12 @@ Dataset Information
      - ``DS006434``
    * - Title
      - The auditory brainstem response to natural speech is not affected by selective attention
+   * - Author (year)
+     - ``Stoll2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006434``, ``Stoll2025``
    * - Year
      - 2025
    * - Authors

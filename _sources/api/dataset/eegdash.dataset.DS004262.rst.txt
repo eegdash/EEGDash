@@ -122,6 +122,12 @@ Dataset Information
      - ``DS004262``
    * - Title
      - Continuous Feedback Processing
+   * - Author (year)
+     - ``Hassall2022_Continuous``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004262``, ``Hassall2022_Continuous``
    * - Year
      - 2022
    * - Authors

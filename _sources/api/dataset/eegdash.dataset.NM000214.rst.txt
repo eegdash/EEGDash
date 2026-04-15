@@ -281,6 +281,12 @@ Dataset Information
      - ``NM000214``
    * - Title
      - c-VEP dataset from Thielen et al. (2021)
+   * - Author (year)
+     - ``Thielen2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000214``, ``Thielen2021``
    * - Year
      - 2021
    * - Authors

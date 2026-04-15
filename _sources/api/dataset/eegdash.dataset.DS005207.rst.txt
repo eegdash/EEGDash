@@ -117,6 +117,12 @@ Dataset Information
      - ``DS005207``
    * - Title
      - Surrey cEEGrid sleep data set
+   * - Author (year)
+     - ``Mikkelsen2024_Surrey_cEEGrid_sleep``
+   * - Canonical
+     - ``Surrey_cEEGrid_sleep``
+   * - Importable as
+     - ``DS005207``, ``Mikkelsen2024_Surrey_cEEGrid_sleep``, ``Surrey_cEEGrid_sleep``
    * - Year
      - 2024
    * - Authors

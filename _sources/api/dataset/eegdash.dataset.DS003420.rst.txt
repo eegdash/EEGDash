@@ -153,6 +153,12 @@ Dataset Information
      - ``DS003420``
    * - Title
      - HD-EEGtask(Dataset 1)
+   * - Author (year)
+     - ``Mheich2020_HD``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003420``, ``Mheich2020_HD``
    * - Year
      - 2020
    * - Authors

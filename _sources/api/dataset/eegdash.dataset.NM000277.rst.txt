@@ -215,6 +215,12 @@ Dataset Information
      - ``NM000277``
    * - Title
      - Mainsah2025-G
+   * - Author (year)
+     - ``Mainsah2025_G``
+   * - Canonical
+     - ``BigP3BCI_G``, ``BigP3BCI_StudyG``
+   * - Importable as
+     - ``NM000277``, ``Mainsah2025_G``, ``BigP3BCI_G``, ``BigP3BCI_StudyG``
    * - Year
      - 2019
    * - Authors

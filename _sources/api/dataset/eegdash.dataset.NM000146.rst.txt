@@ -314,6 +314,12 @@ Dataset Information
      - ``NM000146``
    * - Title
      - Motor Imagery dataset from Weibo et al 2014
+   * - Author (year)
+     - ``Yi2014``
+   * - Canonical
+     - ``Weibo2014``
+   * - Importable as
+     - ``NM000146``, ``Yi2014``, ``Weibo2014``
    * - Year
      - 2014
    * - Authors

@@ -273,6 +273,12 @@ Dataset Information
      - ``DS007471``
    * - Title
      - Joint agency EEG dataset
+   * - Author (year)
+     - ``Zhou2026``
+   * - Canonical
+     - ``Zhou2024``
+   * - Importable as
+     - ``DS007471``, ``Zhou2026``, ``Zhou2024``
    * - Year
      - 2026
    * - Authors

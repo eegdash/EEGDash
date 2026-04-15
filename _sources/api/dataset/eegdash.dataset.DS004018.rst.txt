@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004018``
    * - Title
      - EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz
+   * - Author (year)
+     - ``Grootswagers2022_RSVP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004018``, ``Grootswagers2022_RSVP``
    * - Year
      - 2022
    * - Authors

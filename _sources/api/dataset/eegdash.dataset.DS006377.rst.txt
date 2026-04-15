@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006377``
    * - Title
      - InclusionStudy
+   * - Author (year)
+     - ``Yucel2025_InclusionStudy``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006377``, ``Yucel2025_InclusionStudy``
    * - Year
      - 2025
    * - Authors

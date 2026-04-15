@@ -302,6 +302,12 @@ Dataset Information
      - ``NM000120``
    * - Title
      - Oikonomou2016 – SSVEP MAMEM 2 dataset
+   * - Author (year)
+     - ``Oikonomou2016_MAMEM2``
+   * - Canonical
+     - ``MAMEM2``, ``SSVEPMAMEM2``, ``MAMEM2_SSVEP``
+   * - Importable as
+     - ``NM000120``, ``Oikonomou2016_MAMEM2``, ``MAMEM2``, ``SSVEPMAMEM2``, ``MAMEM2_SSVEP``
    * - Year
      - 2016
    * - Authors

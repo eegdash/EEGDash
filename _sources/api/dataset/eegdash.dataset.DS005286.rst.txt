@@ -111,6 +111,12 @@ Dataset Information
      - ``DS005286``
    * - Title
      - 30 By ANT
+   * - Author (year)
+     - ``Xiangyue2024_30_ANT``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005286``, ``Xiangyue2024_30_ANT``
    * - Year
      - 2024
    * - Authors

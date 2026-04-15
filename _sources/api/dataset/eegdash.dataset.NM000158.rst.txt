@@ -302,6 +302,12 @@ Dataset Information
      - ``NM000158``
    * - Title
      - Dataset [1]_ from the study on motor imagery [2]_
+   * - Author (year)
+     - ``Liu2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000158``, ``Liu2024``
    * - Year
      - 2022
    * - Authors

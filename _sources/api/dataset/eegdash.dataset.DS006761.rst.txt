@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006761``
    * - Title
      - Neural decoding of competitive decision-making in Rock-Paper-Scissors
+   * - Author (year)
+     - ``Moerel2025_Neural``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006761``, ``Moerel2025_Neural``
    * - Year
      - 2025
    * - Authors

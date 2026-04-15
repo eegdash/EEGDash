@@ -107,6 +107,12 @@ Dataset Information
      - ``DS003458``
    * - Title
      - EEG: Three armed bandit gambling task
+   * - Author (year)
+     - ``Cavanagh2021_Three``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003458``, ``Cavanagh2021_Three``
    * - Year
      - 2021
    * - Authors

@@ -244,6 +244,12 @@ Dataset Information
      - ``NM000125``
    * - Title
      - Lee2021 – SSVEP paradigm of the Mobile BCI dataset
+   * - Author (year)
+     - ``Lee2021_SSVEP``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000125``, ``Lee2021_SSVEP``
    * - Year
      - 2019
    * - Authors

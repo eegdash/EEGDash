@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 5` :bdg-secondary-line:`Recordings: 225` :bdg-success-line:`License: CC0` :bdg-warning-line:`Source: openneuro` :bdg-info-line:`Citations: 1.0`
 
-:bdg-primary:`Metadata: Good (80%)`
+:bdg-success:`Metadata: Complete (90%)`
 
 Quickstart
 ----------
@@ -216,6 +216,12 @@ Dataset Information
      - ``DS005170``
    * - Title
      - Chisco
+   * - Author (year)
+     - ``Zhang2024_Chisco``
+   * - Canonical
+     - ``Chisco``
+   * - Importable as
+     - ``DS005170``, ``Zhang2024_Chisco``, ``Chisco``
    * - Year
      - 2024
    * - Authors
@@ -268,7 +274,7 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
+      - Channels: 134
       - Sampling rate (Hz): Varies
       - Duration (hours): 104.28733333333334
 

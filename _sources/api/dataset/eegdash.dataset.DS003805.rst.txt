@@ -121,6 +121,12 @@ Dataset Information
      - ``DS003805``
    * - Title
      - Multisensory Gamma Entrainment
+   * - Author (year)
+     - ``Lahijanian2021_Multisensory``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003805``, ``Lahijanian2021_Multisensory``
    * - Year
      - 2021
    * - Authors

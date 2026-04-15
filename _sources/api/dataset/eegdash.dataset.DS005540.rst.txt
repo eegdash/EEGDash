@@ -453,6 +453,12 @@ Dataset Information
      - ``DS005540``
    * - Title
      - EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding
+   * - Author (year)
+     - ``Xin2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005540``, ``Xin2024``
    * - Year
      - 2024
    * - Authors

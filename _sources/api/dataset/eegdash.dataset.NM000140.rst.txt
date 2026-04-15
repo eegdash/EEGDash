@@ -276,6 +276,12 @@ Dataset Information
      - ``NM000140``
    * - Title
      - BNCI 2015-001 Motor Imagery dataset
+   * - Author (year)
+     - ``Faller2015``
+   * - Canonical
+     - ``BNCI2015``, ``BNCI2015001``
+   * - Importable as
+     - ``NM000140``, ``Faller2015``, ``BNCI2015``, ``BNCI2015001``
    * - Year
      - 2012
    * - Authors

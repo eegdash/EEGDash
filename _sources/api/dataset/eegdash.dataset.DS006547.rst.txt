@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006547``
    * - Title
      - Visual EEG Study (BrainVision → BIDS)
+   * - Author (year)
+     - ``Ghaffari2025``
+   * - Canonical
+     - ``Ghaffari2024``
+   * - Importable as
+     - ``DS006547``, ``Ghaffari2025``, ``Ghaffari2024``
    * - Year
      - 2025
    * - Authors

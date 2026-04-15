@@ -106,6 +106,12 @@ Dataset Information
      - ``DS002761``
    * - Title
      - memoryreplay
+   * - Author (year)
+     - ``Wimmer2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002761``, ``Wimmer2020``
    * - Year
      - 2020
    * - Authors

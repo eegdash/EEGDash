@@ -242,6 +242,12 @@ Dataset Information
      - ``NM000131``
    * - Title
      - Wang2021 – Combined SSVEP dataset with single stimulus location for two inputs
+   * - Author (year)
+     - ``Wang2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000131``, ``Wang2021``
    * - Year
      - 2019
    * - Authors

@@ -112,6 +112,12 @@ Dataset Information
      - ``DS004324``
    * - Title
      - ToonFaces
+   * - Author (year)
+     - ``Chacon2022``
+   * - Canonical
+     - ``ToonFaces``
+   * - Importable as
+     - ``DS004324``, ``Chacon2022``, ``ToonFaces``
    * - Year
      - 2022
    * - Authors

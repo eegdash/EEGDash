@@ -114,6 +114,12 @@ Dataset Information
      - ``DS004306``
    * - Title
      - EEG Semantic Imagination and Perception Dataset
+   * - Author (year)
+     - ``Wilson2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004306``, ``Wilson2022``
    * - Year
      - 2022
    * - Authors

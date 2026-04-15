@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006802``
    * - Title
      - Collaborative rule learning promotes interbrain information alignment
+   * - Author (year)
+     - ``Moerel2025_Collaborative``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006802``, ``Moerel2025_Collaborative``
    * - Year
      - 2025
    * - Authors

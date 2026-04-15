@@ -102,6 +102,12 @@ Dataset Information
      - ``DS007406``
    * - Title
      - EEG dataset on consumer responses to extreme versus traditional marketing videos
+   * - Author (year)
+     - ``Edit2026``
+   * - Canonical
+     - ``Edit2024``
+   * - Importable as
+     - ``DS007406``, ``Edit2026``, ``Edit2024``
    * - Year
      - 2026
    * - Authors

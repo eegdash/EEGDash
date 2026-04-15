@@ -224,6 +224,12 @@ Dataset Information
      - ``DS007523``
    * - Title
      - LPP MEG Listen
+   * - Author (year)
+     - ``Bel2026``
+   * - Canonical
+     - ``Dascoli2025``
+   * - Importable as
+     - ``DS007523``, ``Bel2026``, ``Dascoli2025``
    * - Year
      - 2026
    * - Authors

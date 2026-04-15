@@ -111,6 +111,12 @@ Dataset Information
      - ``DS006720``
    * - Title
      - Alpha power indexes working memory load for durations
+   * - Author (year)
+     - ``Herbst2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006720``, ``Herbst2025``
    * - Year
      - 2025
    * - Authors

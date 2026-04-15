@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004980``
    * - Title
      - EEG data set for a architectural affordances task
+   * - Author (year)
+     - ``Wang2024_architectural_affordances``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004980``, ``Wang2024_architectural_affordances``
    * - Year
      - 2024
    * - Authors

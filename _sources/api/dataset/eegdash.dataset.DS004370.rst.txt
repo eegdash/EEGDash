@@ -158,6 +158,12 @@ Dataset Information
      - ``DS004370``
    * - Title
      - PRIOS
+   * - Author (year)
+     - ``Blooijs2022_PRIOS``
+   * - Canonical
+     - ``PRIOS``
+   * - Importable as
+     - ``DS004370``, ``Blooijs2022_PRIOS``, ``PRIOS``
    * - Year
      - 2022
    * - Authors

@@ -234,6 +234,12 @@ Dataset Information
      - ``NM000227``
    * - Title
      - Eye-BCI Motor Execution dataset from Guttmann-Flury et al 2025
+   * - Author (year)
+     - ``GuttmannFlury2025_Eye``
+   * - Canonical
+     - ``GuttmannFlury2025_ME``
+   * - Importable as
+     - ``NM000227``, ``GuttmannFlury2025_Eye``, ``GuttmannFlury2025_ME``
    * - Year
      - 2019
    * - Authors

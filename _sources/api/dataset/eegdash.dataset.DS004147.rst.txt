@@ -107,6 +107,12 @@ Dataset Information
      - ``DS004147``
    * - Title
      - Average Task Value
+   * - Author (year)
+     - ``Hassall2022_Average``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004147``, ``Hassall2022_Average``
    * - Year
      - 2022
    * - Authors

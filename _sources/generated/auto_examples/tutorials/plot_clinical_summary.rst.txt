@@ -83,7 +83,7 @@ to demonstrate the visualization capabilities with the latest categorized metada
 
  .. code-block:: none
 
-    Fetched 719 datasets from API.
+    Fetched 736 datasets from API.
 
 
 
@@ -229,7 +229,7 @@ Data Cleaning
 
  .. code-block:: none
 
-    Plotting 693 studies.
+    Plotting 706 studies.
     Subject Types: <ArrowStringArray>
     ['Healthy']
     Length: 1, dtype: str
@@ -289,7 +289,7 @@ Plotting
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.869 seconds)
+   **Total running time of the script:** (0 minutes 1.718 seconds)
 
 
 .. _sphx_glr_download_generated_auto_examples_tutorials_plot_clinical_summary.py:

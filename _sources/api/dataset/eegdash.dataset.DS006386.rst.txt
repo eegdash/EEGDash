@@ -106,6 +106,12 @@ Dataset Information
      - ``DS006386``
    * - Title
      - PhysioMotion_Artifact
+   * - Author (year)
+     - ``Yu2025``
+   * - Canonical
+     - ``Yu2019``
+   * - Importable as
+     - ``DS006386``, ``Yu2025``, ``Yu2019``
    * - Year
      - 2025
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006159``
    * - Title
      - Implicit Learning EEG (BioSemi)
+   * - Author (year)
+     - ``LeganesFonteneau2025``
+   * - Canonical
+     - ``LeganesFonteneau2024``
+   * - Importable as
+     - ``DS006159``, ``LeganesFonteneau2025``, ``LeganesFonteneau2024``
    * - Year
      - 2025
    * - Authors

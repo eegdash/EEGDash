@@ -329,6 +329,12 @@ Dataset Information
      - ``NM000173``
    * - Title
      - Motor Imagery ataset from Ofner et al 2017
+   * - Author (year)
+     - ``Ofner2017``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000173``, ``Ofner2017``
    * - Year
      - 2019
    * - Authors

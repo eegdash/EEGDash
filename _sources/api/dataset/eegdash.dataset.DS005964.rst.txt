@@ -106,6 +106,12 @@ Dataset Information
      - ``DS005964``
    * - Title
      - FRESH Audio Dataset
+   * - Author (year)
+     - ``Luke2025``
+   * - Canonical
+     - ``Luke2019``
+   * - Importable as
+     - ``DS005964``, ``Luke2025``, ``Luke2019``
    * - Year
      - 2025
    * - Authors

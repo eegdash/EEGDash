@@ -106,6 +106,12 @@ Dataset Information
      - ``DS007095``
    * - Title
      - RNS_Epilepsy-iBIDS
+   * - Author (year)
+     - ``Feng2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007095``, ``Feng2025``
    * - Year
      - 2025
    * - Authors

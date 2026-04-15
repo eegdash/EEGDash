@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002908``
    * - Title
      - Human MEG recordings during sequential conflict task
+   * - Author (year)
+     - ``Bogacz2020``
+   * - Canonical
+     - ``Bogacz2024``
+   * - Importable as
+     - ``DS002908``, ``Bogacz2020``, ``Bogacz2024``
    * - Year
      - 2020
    * - Authors

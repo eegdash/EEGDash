@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004852``
    * - Title
      - InsurgentCivilian
+   * - Author (year)
+     - ``Johnson2023_InsurgentCivilian``
+   * - Canonical
+     - ``Johnson2025``
+   * - Importable as
+     - ``DS004852``, ``Johnson2023_InsurgentCivilian``, ``Johnson2025``
    * - Year
      - 2023
    * - Authors

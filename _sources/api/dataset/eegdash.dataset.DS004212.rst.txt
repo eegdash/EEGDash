@@ -121,6 +121,12 @@ Dataset Information
      - ``DS004212``
    * - Title
      - THINGS-MEG
+   * - Author (year)
+     - ``Hebart2022``
+   * - Canonical
+     - ``THINGS_MEG``, ``THINGSMEG``
+   * - Importable as
+     - ``DS004212``, ``Hebart2022``, ``THINGS_MEG``, ``THINGSMEG``
    * - Year
      - 2022
    * - Authors

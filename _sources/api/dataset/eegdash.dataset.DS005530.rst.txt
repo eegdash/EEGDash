@@ -161,6 +161,12 @@ Dataset Information
      - ``DS005530``
    * - Title
      - Depotentiation of emotional reactivity using TMR during REM sleep
+   * - Author (year)
+     - ``Greco2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005530``, ``Greco2024``
    * - Year
      - 2024
    * - Authors

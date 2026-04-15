@@ -169,6 +169,12 @@ Dataset Information
      - ``DS006480``
    * - Title
      - Young Adult Resting State and Auditory Oddball Task EEG Data
+   * - Author (year)
+     - ``Kim2025_Young_Adult_Resting``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006480``, ``Kim2025_Young_Adult_Resting``
    * - Year
      - 2025
    * - Authors

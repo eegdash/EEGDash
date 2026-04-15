@@ -147,6 +147,12 @@ Dataset Information
      - ``DS007006``
    * - Title
      - VR-Compassion Cultivation Training
+   * - Author (year)
+     - ``Wu2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007006``, ``Wu2025``
    * - Year
      - 2025
    * - Authors

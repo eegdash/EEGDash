@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006317``
    * - Title
      - Chisco-2.0
+   * - Author (year)
+     - ``Zhang2025_Chisco_2_0``
+   * - Canonical
+     - ``Chisco2_0``, ``Chisco20``, ``CHISCO20``
+   * - Importable as
+     - ``DS006317``, ``Zhang2025_Chisco_2_0``, ``Chisco2_0``, ``Chisco20``, ``CHISCO20``
    * - Year
      - 2025
    * - Authors

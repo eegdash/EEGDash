@@ -232,6 +232,12 @@ Dataset Information
      - ``NM000265``
    * - Title
      - GuttmannFlury2025-MI
+   * - Author (year)
+     - ``GuttmannFlury2025_MI``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000265``, ``GuttmannFlury2025_MI``
    * - Year
      - 2025
    * - Authors

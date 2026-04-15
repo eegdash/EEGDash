@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004660``
    * - Title
      - TNO
+   * - Author (year)
+     - ``Johnson2023_TNO``
+   * - Canonical
+     - ``TNO``
+   * - Importable as
+     - ``DS004660``, ``Johnson2023_TNO``, ``TNO``
    * - Year
      - 2023
    * - Authors

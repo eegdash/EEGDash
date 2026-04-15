@@ -277,6 +277,12 @@ Dataset Information
      - ``NM000217``
    * - Title
      - P300 dataset BI2015b from a "Brain Invaders" experiment
+   * - Author (year)
+     - ``Korczowski2015_P300_BI2015b``
+   * - Canonical
+     - ``BrainInvaders2015b``, ``BI2015b``
+   * - Importable as
+     - ``NM000217``, ``Korczowski2015_P300_BI2015b``, ``BrainInvaders2015b``, ``BI2015b``
    * - Year
      - 2019
    * - Authors

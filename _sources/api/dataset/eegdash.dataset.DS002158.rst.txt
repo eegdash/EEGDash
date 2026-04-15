@@ -113,6 +113,12 @@ Dataset Information
      - ``DS002158``
    * - Title
      - Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging
+   * - Author (year)
+     - ``Pereira2019_Disentangling``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002158``, ``Pereira2019_Disentangling``
    * - Year
      - 2019
    * - Authors

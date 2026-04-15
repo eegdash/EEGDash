@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004854``
    * - Title
      - TX18
+   * - Author (year)
+     - ``Johnson2023_TX18``
+   * - Canonical
+     - ``TX18``
+   * - Importable as
+     - ``DS004854``, ``Johnson2023_TX18``, ``TX18``
    * - Year
      - 2023
    * - Authors

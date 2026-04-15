@@ -107,6 +107,12 @@ Dataset Information
      - ``DS006446``
    * - Title
      - Cueing the future to reduce temporal discounting
+   * - Author (year)
+     - ``Kinley2025``
+   * - Canonical
+     - ``Kinley2019``
+   * - Importable as
+     - ``DS006446``, ``Kinley2025``, ``Kinley2019``
    * - Year
      - 2025
    * - Authors

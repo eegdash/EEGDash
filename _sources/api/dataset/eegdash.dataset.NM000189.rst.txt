@@ -312,6 +312,12 @@ Dataset Information
      - ``NM000189``
    * - Title
      - BNCI 2015-003 P300 dataset
+   * - Author (year)
+     - ``Schreuder2015_P300``
+   * - Canonical
+     - ``BNCI2015_P300``, ``BNCI2015_003_P300``, ``BNCI2015_003_AMUSE``
+   * - Importable as
+     - ``NM000189``, ``Schreuder2015_P300``, ``BNCI2015_P300``, ``BNCI2015_003_P300``, ``BNCI2015_003_AMUSE``
    * - Year
      - 2011
    * - Authors

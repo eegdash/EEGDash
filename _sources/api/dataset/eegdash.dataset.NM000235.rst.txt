@@ -235,6 +235,12 @@ Dataset Information
      - ``NM000235``
    * - Title
      - Eye-BCI multimodal MI/ME dataset from Guttmann-Flury et al 2025
+   * - Author (year)
+     - ``GuttmannFlury2025_Eye_BCI``
+   * - Canonical
+     - ``GuttmannFlury2025_MIME``
+   * - Importable as
+     - ``NM000235``, ``GuttmannFlury2025_Eye_BCI``, ``GuttmannFlury2025_MIME``
    * - Year
      - 2025
    * - Authors

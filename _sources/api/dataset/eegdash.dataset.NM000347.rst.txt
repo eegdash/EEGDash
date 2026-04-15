@@ -246,6 +246,12 @@ Dataset Information
      - ``NM000347``
    * - Title
      - HefmiIch2025
+   * - Author (year)
+     - ``HefmiIch2025``
+   * - Canonical
+     - ``HEFMI_ICH``, ``HEFMIICH``
+   * - Importable as
+     - ``NM000347``, ``HefmiIch2025``, ``HEFMI_ICH``, ``HEFMIICH``
    * - Year
      - 2025
    * - Authors

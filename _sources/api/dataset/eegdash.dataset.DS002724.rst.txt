@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002724``
    * - Title
      - A dataset recorded during development of an affective brain-computer music interface: training sessions
+   * - Author (year)
+     - ``Daly2020_sessions``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002724``, ``Daly2020_sessions``
    * - Year
      - 2020
    * - Authors

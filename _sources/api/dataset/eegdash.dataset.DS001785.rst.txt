@@ -110,6 +110,12 @@ Dataset Information
      - ``DS001785``
    * - Title
      - Evidence accumulation relates to perceptual consciousness and monitoring
+   * - Author (year)
+     - ``Pereira2019_Evidence``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS001785``, ``Pereira2019_Evidence``
    * - Year
      - 2019
    * - Authors

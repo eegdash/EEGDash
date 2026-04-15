@@ -285,6 +285,12 @@ Dataset Information
      - ``NM000199``
    * - Title
      - Learning from label proportions for a visual matrix speller (ERP)
+   * - Author (year)
+     - ``Hubner2017``
+   * - Canonical
+     - ``Huebner2017``
+   * - Importable as
+     - ``NM000199``, ``Hubner2017``, ``Huebner2017``
    * - Year
      - 2017
    * - Authors

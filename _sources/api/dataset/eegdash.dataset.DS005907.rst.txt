@@ -102,6 +102,12 @@ Dataset Information
      - ``DS005907``
    * - Title
      - EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls
+   * - Author (year)
+     - ``Campbell2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005907``, ``Campbell2025``
    * - Year
      - 2025
    * - Authors

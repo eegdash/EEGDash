@@ -189,6 +189,12 @@ Dataset Information
      - ``NM000132``
    * - Title
      - ERP CORE
+   * - Author (year)
+     - ``Kappenman2021``
+   * - Canonical
+     - ``ERPCORE``, ``ERP_CORE``
+   * - Importable as
+     - ``NM000132``, ``Kappenman2021``, ``ERPCORE``, ``ERP_CORE``
    * - Year
      - 2004
    * - Authors
@@ -242,15 +248,15 @@ Technical Details
       :class-card: sd-border-1 highlight-secondary
 
       - Channels: 33
-      - Sampling rate (Hz): 1024.0
+      - Sampling rate (Hz): 1024
       - Duration (hours): 37.74583333333333
 
    .. grid-item-card:: Tags
       :class-card: sd-border-1 highlight-tertiary
 
-      - Pathology: Healthy
-      - Modality: Visual
-      - Type: Other
+      - Pathology: Not specified
+      - Modality: —
+      - Type: —
 
    .. grid-item-card:: Files & format
       :class-card: sd-border-1

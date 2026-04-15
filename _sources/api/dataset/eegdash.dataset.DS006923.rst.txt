@@ -379,6 +379,12 @@ Dataset Information
      - ``DS006923``
    * - Title
      - Dataset of Electroencephalograms of Juvenile Offenders
+   * - Author (year)
+     - ``Polo2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006923``, ``Polo2025``
    * - Year
      - 2025
    * - Authors

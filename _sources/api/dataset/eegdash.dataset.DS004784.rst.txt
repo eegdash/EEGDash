@@ -115,6 +115,12 @@ Dataset Information
      - ``DS004784``
    * - Title
      - Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts
+   * - Author (year)
+     - ``Downey2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004784``, ``Downey2023``
    * - Year
      - 2023
    * - Authors

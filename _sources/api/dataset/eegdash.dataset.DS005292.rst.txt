@@ -107,6 +107,12 @@ Dataset Information
      - ``DS005292``
    * - Title
      - 142 by Biosemi
+   * - Author (year)
+     - ``Xiangyue2024_142_Biosemi``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005292``, ``Xiangyue2024_142_Biosemi``
    * - Year
      - 2024
    * - Authors

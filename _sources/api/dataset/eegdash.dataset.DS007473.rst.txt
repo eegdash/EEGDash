@@ -105,6 +105,12 @@ Dataset Information
      - ``DS007473``
    * - Title
      - High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset
+   * - Author (year)
+     - ``Fogarty2026_High``
+   * - Canonical
+     - ``Tripathy2024``
+   * - Importable as
+     - ``DS007473``, ``Fogarty2026_High``, ``Tripathy2024``
    * - Year
      - 2026
    * - Authors

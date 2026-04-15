@@ -104,6 +104,12 @@ Dataset Information
      - ``DS003969``
    * - Title
      - Meditation vs thinking task
+   * - Author (year)
+     - ``Delorme2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003969``, ``Delorme2021``
    * - Year
      - 2021
    * - Authors

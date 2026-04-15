@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003753``
    * - Title
      - EEG: Probabilistic Learning with Affective Feedback: Exp #2
+   * - Author (year)
+     - ``Brown2021_Probabilistic``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003753``, ``Brown2021_Probabilistic``
    * - Year
      - 2021
    * - Authors

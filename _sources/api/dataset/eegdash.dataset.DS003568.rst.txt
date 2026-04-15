@@ -107,6 +107,12 @@ Dataset Information
      - ``DS003568``
    * - Title
      - Mood induction in MDD and healthy adolescents
+   * - Author (year)
+     - ``Liuzzi2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003568``, ``Liuzzi2021``
    * - Year
      - 2021
    * - Authors

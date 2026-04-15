@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003519``
    * - Title
      - EEG: Visual Working Memory + Cabergoline Challenge
+   * - Author (year)
+     - ``Cavanagh2021_Visual``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003519``, ``Cavanagh2021_Visual``
    * - Year
      - 2021
    * - Authors

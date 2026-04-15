@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006222``
    * - Title
      - MultisensoryFlickerHealthyYoungAdults_AllSubjectsRawData
+   * - Author (year)
+     - ``Attokaren2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006222``, ``Attokaren2025``
    * - Year
      - 2025
    * - Authors

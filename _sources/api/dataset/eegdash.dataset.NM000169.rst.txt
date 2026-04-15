@@ -287,6 +287,12 @@ Dataset Information
      - ``NM000169``
    * - Title
      - BNCI 2014-008 P300 dataset (ALS patients)
+   * - Author (year)
+     - ``Riccio2014``
+   * - Canonical
+     - ``BNCI2014008``
+   * - Importable as
+     - ``NM000169``, ``Riccio2014``, ``BNCI2014008``
    * - Year
      - 2013
    * - Authors

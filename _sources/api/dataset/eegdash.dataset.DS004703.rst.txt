@@ -116,6 +116,12 @@ Dataset Information
      - ``DS004703``
    * - Title
      - sEEG Passive listening to natural speech
+   * - Author (year)
+     - ``Mai2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004703``, ``Mai2023``
    * - Year
      - 2023
    * - Authors

@@ -105,6 +105,12 @@ Dataset Information
      - ``DS004000``
    * - Title
      - Fribourg Ultimatum Game in Schizophrenia Study
+   * - Author (year)
+     - ``Padee2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004000``, ``Padee2022``
    * - Year
      - 2022
    * - Authors

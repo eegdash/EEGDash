@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004561``
    * - Title
      - Illusion of Agency over Electrically-Actuated Movements
+   * - Author (year)
+     - ``Veillette2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004561``, ``Veillette2023``
    * - Year
      - 2023
    * - Authors

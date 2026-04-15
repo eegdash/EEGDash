@@ -118,6 +118,12 @@ Dataset Information
      - ``DS004789``
    * - Title
      - Delayed Free Recall of Word Lists
+   * - Author (year)
+     - ``Herrema2023_Delayed_Free_Recall``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004789``, ``Herrema2023_Delayed_Free_Recall``
    * - Year
      - 2023
    * - Authors

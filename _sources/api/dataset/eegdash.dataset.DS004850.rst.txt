@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004850``
    * - Title
      - ODE
+   * - Author (year)
+     - ``Johnson2023_ODE``
+   * - Canonical
+     - ``Johnson2024``
+   * - Importable as
+     - ``DS004850``, ``Johnson2023_ODE``, ``Johnson2024``
    * - Year
      - 2023
    * - Authors

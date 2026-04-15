@@ -108,6 +108,12 @@ Dataset Information
      - ``DS005545``
    * - Title
      - Auditory naming
+   * - Author (year)
+     - ``Kanno2024``
+   * - Canonical
+     - ``Kanno2025``
+   * - Importable as
+     - ``DS005545``, ``Kanno2024``, ``Kanno2025``
    * - Year
      - 2024
    * - Authors

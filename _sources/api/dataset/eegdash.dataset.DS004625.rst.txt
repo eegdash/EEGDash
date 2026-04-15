@@ -104,6 +104,12 @@ Dataset Information
      - ``DS004625``
    * - Title
      - Mind in Motion Young Adults Walking Over Uneven Terrain
+   * - Author (year)
+     - ``Liu2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004625``, ``Liu2023``
    * - Year
      - 2023
    * - Authors

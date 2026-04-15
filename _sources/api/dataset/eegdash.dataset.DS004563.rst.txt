@@ -106,6 +106,12 @@ Dataset Information
      - ``DS004563``
    * - Title
      - Vicarious touch: overlapping neural patterns between seeing and feeling touch
+   * - Author (year)
+     - ``Smit2023``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004563``, ``Smit2023``
    * - Year
      - 2023
    * - Authors

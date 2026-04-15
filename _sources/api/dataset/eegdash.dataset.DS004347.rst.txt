@@ -103,6 +103,12 @@ Dataset Information
      - ``DS004347``
    * - Title
      - Symmetry perception and affective responses: a combined EEG/EMG study
+   * - Author (year)
+     - ``Makin2022``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004347``, ``Makin2022``
    * - Year
      - 2022
    * - Authors

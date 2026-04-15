@@ -311,6 +311,12 @@ Dataset Information
      - ``NM000268``
    * - Title
      - Shin2017B
+   * - Author (year)
+     - ``Shin2017_Shin2017B``
+   * - Canonical
+     - ``Shin2017B``
+   * - Importable as
+     - ``NM000268``, ``Shin2017_Shin2017B``, ``Shin2017B``
    * - Year
      - 2019
    * - Authors

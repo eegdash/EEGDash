@@ -123,6 +123,12 @@ Dataset Information
      - ``DS007315``
    * - Title
      - tACS for Patients with Post-Stroke Anomia
+   * - Author (year)
+     - ``Martzoukou2026_tACS_Patients``
+   * - Canonical
+     - ``Martzoukou2024_Post_A``
+   * - Importable as
+     - ``DS007315``, ``Martzoukou2026_tACS_Patients``, ``Martzoukou2024_Post_A``
    * - Year
      - 2026
    * - Authors

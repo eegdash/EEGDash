@@ -103,6 +103,12 @@ Dataset Information
      - ``DS006768``
    * - Title
      - Multiple Object Monitoring (EEG)
+   * - Author (year)
+     - ``Lowe2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006768``, ``Lowe2025``
    * - Year
      - 2025
    * - Authors

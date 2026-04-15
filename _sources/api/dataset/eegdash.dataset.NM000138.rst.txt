@@ -275,6 +275,12 @@ Dataset Information
      - ``NM000138``
    * - Title
      - Alex Motor Imagery dataset
+   * - Author (year)
+     - ``Barachant2012``
+   * - Canonical
+     - ``AlexMI``, ``AlexMotorImagery``, ``AlexandreMotorImagery``
+   * - Importable as
+     - ``NM000138``, ``Barachant2012``, ``AlexMI``, ``AlexMotorImagery``, ``AlexandreMotorImagery``
    * - Year
      - 2019
    * - Authors

@@ -242,6 +242,12 @@ Dataset Information
      - ``NM000210``
    * - Title
      - BCIAUT-P300 dataset for autism from Simoes et al 2020
+   * - Author (year)
+     - ``Simoes2020``
+   * - Canonical
+     - ``BCIAUTP300``, ``BCIAUT_P300``, ``BCIAUT``
+   * - Importable as
+     - ``NM000210``, ``Simoes2020``, ``BCIAUTP300``, ``BCIAUT_P300``, ``BCIAUT``
    * - Year
      - 2020
    * - Authors

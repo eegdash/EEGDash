@@ -103,6 +103,12 @@ Dataset Information
      - ``DS006040``
    * - Title
      - Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI
+   * - Author (year)
+     - ``Cha2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006040``, ``Cha2025``
    * - Year
      - 2025
    * - Authors

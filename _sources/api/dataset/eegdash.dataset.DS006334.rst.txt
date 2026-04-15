@@ -115,6 +115,12 @@ Dataset Information
      - ``DS006334``
    * - Title
      - Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories
+   * - Author (year)
+     - ``Biau2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006334``, ``Biau2025``
    * - Year
      - 2025
    * - Authors

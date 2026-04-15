@@ -204,6 +204,12 @@ Dataset Information
      - ``DS004106``
    * - Title
      - BCIT Advanced Guard Duty
+   * - Author (year)
+     - ``Touryan2022``
+   * - Canonical
+     - ``BCITAdvancedGuardDuty``
+   * - Importable as
+     - ``DS004106``, ``Touryan2022``, ``BCITAdvancedGuardDuty``
    * - Year
      - 2022
    * - Authors

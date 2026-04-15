@@ -129,6 +129,12 @@ Dataset Information
      - ``DS007454``
    * - Title
      - A common neural mechanism underlies experiences of passage of time
+   * - Author (year)
+     - ``DS7454_TimePerception``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS007454``, ``DS7454_TimePerception``
    * - Year
      - 2026
    * - Authors

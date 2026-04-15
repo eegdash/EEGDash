@@ -112,6 +112,12 @@ Dataset Information
      - ``DS004100``
    * - Title
      - HUP iEEG Epilepsy Dataset
+   * - Author (year)
+     - ``Bernabei2022``
+   * - Canonical
+     - ``HUPiEEG``
+   * - Importable as
+     - ``DS004100``, ``Bernabei2022``, ``HUPiEEG``
    * - Year
      - 2022
    * - Authors

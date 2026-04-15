@@ -228,6 +228,12 @@ Dataset Information
      - ``NM000204``
    * - Title
      - Bluetooth speaker experiment (14 subjects, 6 classes, 31 EEG ch)
+   * - Author (year)
+     - ``Lee2024_Bluetooth_speaker_14``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``NM000204``, ``Lee2024_Bluetooth_speaker_14``
    * - Year
      - 2019
    * - Authors

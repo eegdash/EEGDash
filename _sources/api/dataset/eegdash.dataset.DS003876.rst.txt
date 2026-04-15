@@ -152,6 +152,12 @@ Dataset Information
      - ``DS003876``
    * - Title
      - Epilepsy-iEEG-Interictal-Multicenter-Dataset
+   * - Author (year)
+     - ``Gunnarsdottir2021``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS003876``, ``Gunnarsdottir2021``
    * - Year
      - 2021
    * - Authors

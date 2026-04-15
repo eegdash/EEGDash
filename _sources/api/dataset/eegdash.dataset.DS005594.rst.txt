@@ -117,6 +117,12 @@ Dataset Information
      - ``DS005594``
    * - Title
      - Alphabetic Decision Task (Arial Light Font)
+   * - Author (year)
+     - ``Taylor2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS005594``, ``Taylor2024``
    * - Year
      - 2024
    * - Authors

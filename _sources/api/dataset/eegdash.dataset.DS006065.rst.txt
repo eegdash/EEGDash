@@ -161,6 +161,12 @@ Dataset Information
      - ``DS006065``
    * - Title
      - TSS_iEEG
+   * - Author (year)
+     - ``Kragel2025``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006065``, ``Kragel2025``
    * - Year
      - 2025
    * - Authors

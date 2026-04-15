@@ -123,6 +123,12 @@ Dataset Information
      - ``DS004264``
    * - Title
      - Steer the Ship
+   * - Author (year)
+     - ``Hassall2022_Steer``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004264``, ``Hassall2022_Steer``
    * - Year
      - 2022
    * - Authors

@@ -17,7 +17,7 @@ Access recordings and metadata through EEGDash.
 
 :bdg-primary-line:`Modality: eeg` :bdg-secondary-line:`Subjects: 22` :bdg-secondary-line:`Recordings: 1022` :bdg-success-line:`License: —` :bdg-warning-line:`Source: nemar`
 
-:bdg-secondary:`Metadata: Limited (40%)`
+:bdg-warning:`Metadata: Partial (60%)`
 
 Quickstart
 ----------
@@ -99,6 +99,12 @@ Dataset Information
      - ``NM000272``
    * - Title
      - romani-bf2025-erp - NEMAR Dataset
+   * - Author (year)
+     - ``Romani2025_BF_ERP``
+   * - Canonical
+     - ``Romani2025_erp``
+   * - Importable as
+     - ``NM000272``, ``Romani2025_BF_ERP``, ``Romani2025_erp``
    * - Year
      - —
    * - Authors
@@ -138,8 +144,8 @@ Technical Details
    .. grid-item-card:: Channels & sampling rate
       :class-card: sd-border-1 highlight-secondary
 
-      - Channels: Varies
-      - Sampling rate (Hz): Varies
+      - Channels: 8
+      - Sampling rate (Hz): 250
       - Duration (hours): 6.2782
 
    .. grid-item-card:: Tags

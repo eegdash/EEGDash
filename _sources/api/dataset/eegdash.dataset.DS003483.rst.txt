@@ -102,6 +102,12 @@ Dataset Information
      - ``DS003483``
    * - Title
      - Logical reasoning study
+   * - Author (year)
+     - ``Cognitive2021``
+   * - Canonical
+     - ``Maestu2021``
+   * - Importable as
+     - ``DS003483``, ``Cognitive2021``, ``Maestu2021``
    * - Year
      - 2021
    * - Authors

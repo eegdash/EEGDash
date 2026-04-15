@@ -219,6 +219,12 @@ Dataset Information
      - ``NM000187``
    * - Title
      - BigP3BCI Study N — 9x8 dry/wet electrode comparison (8 ALS subjects)
+   * - Author (year)
+     - ``Mainsah2025_BigP3BCI_N``
+   * - Canonical
+     - ``BigP3BCI_StudyN``
+   * - Importable as
+     - ``NM000187``, ``Mainsah2025_BigP3BCI_N``, ``BigP3BCI_StudyN``
    * - Year
      - 2019
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS002814``
    * - Title
      - A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans
+   * - Author (year)
+     - ``Ebrahiminia2020``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS002814``, ``Ebrahiminia2020``
    * - Year
      - 2020
    * - Authors

@@ -102,6 +102,12 @@ Dataset Information
      - ``DS004942``
    * - Title
      - SpatialMemory
+   * - Author (year)
+     - ``Kieffaber2024``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS004942``, ``Kieffaber2024``
    * - Year
      - 2024
    * - Authors

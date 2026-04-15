@@ -147,6 +147,12 @@ Dataset Information
      - ``DS003844``
    * - Title
      - Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG
+   * - Author (year)
+     - ``Zweiphenning2021``
+   * - Canonical
+     - ``RESPect_intraop``
+   * - Importable as
+     - ``DS003844``, ``Zweiphenning2021``, ``RESPect_intraop``
    * - Year
      - 2021
    * - Authors

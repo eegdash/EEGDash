@@ -102,6 +102,12 @@ Dataset Information
      - ``DS006460``
    * - Title
      - High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025
+   * - Author (year)
+     - ``Anderson2025_HD``
+   * - Canonical
+     - —
+   * - Importable as
+     - ``DS006460``, ``Anderson2025_HD``
    * - Year
      - 2025
    * - Authors

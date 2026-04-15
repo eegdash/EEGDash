@@ -120,6 +120,12 @@ Dataset Information
      - ``DS004951``
    * - Title
      - Braille letters - EEG
+   * - Author (year)
+     - ``Haupt2024_Braille``
+   * - Canonical
+     - ``Haupt2025``
+   * - Importable as
+     - ``DS004951``, ``Haupt2024_Braille``, ``Haupt2025``
    * - Year
      - 2024
    * - Authors

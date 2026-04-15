@@ -1403,9 +1403,9 @@ html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dataTables_fil
 }
 
 /* Total row — editorial closure. Strong upper rule, display serif on
-   the summary label. Row starts life in <tbody> but JS moves it to
-   <tfoot> at runtime so it survives filtering; the CSS targets both. */
-.dataset-summary-page table.dataTable tbody tr:last-child td,
+   the summary label. The row is moved into <tfoot> by the init JS; we
+   target <tfoot> exclusively so the legitimate last <tbody> row (just
+   another dataset) keeps the regular row styling. */
 .dataset-summary-page table.dataTable tfoot tr td {
   border-top: 2px solid var(--pst-color-text-base);
   font-weight: 700;
@@ -1414,7 +1414,6 @@ html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dataTables_fil
   padding-top: 0.8rem !important;
   padding-bottom: 0.8rem !important;
 }
-.dataset-summary-page table.dataTable tbody tr:last-child td:first-child,
 .dataset-summary-page table.dataTable tfoot tr td:first-child {
   font-family: var(--eegdash-display);
   font-style: italic;
@@ -1537,7 +1536,7 @@ html[data-theme="dark"].dataset-summary-page .eegdash-fig-title h3 {
     color: inherit !important;
   }
   /* Total row: keep its top rule prominent on paper. */
-  .dataset-summary-page #datasets-table tbody tr:last-child td {
+  .dataset-summary-page #datasets-table tfoot tr td {
     border-top: 2px solid #000 !important;
     background: transparent !important;
   }

@@ -804,7 +804,7 @@ def _style_clinical(figure, y_title):
 def export_clinical(registry: dict, out_dir: Path) -> None:
     """Export clinical breakdown as two-panel figures.
 
-    EEG dominates (500+ studies) while other modalities have <70 each,
+    EEG dominates (700+ studies) while other modalities have <70 each,
     making a single-panel chart unreadable. We export:
       - clinical_studies_eeg.pdf / clinical_subjects_eeg.pdf   (Panel a)
       - clinical_studies_noneeg.pdf / clinical_subjects_noneeg.pdf (Panel b)

@@ -20,7 +20,11 @@ from typing import Dict
 import numpy as np
 
 from .base_utils import get_underlying_func
-from .output_types import AsInputOutputType, BasePreprocessorOutputType
+from .output_types import (
+    AsInputOutputType,
+    BasePreprocessorOutputType,
+    SignalOutputType,
+)
 from .trainable import TrainableFeature
 
 __all__ = [
@@ -173,9 +177,13 @@ class FeatureExtractor(TrainableFeature):
         self._is_trainable = self._check_is_trainable(feature_extractors)
         super().__init__()
 
-        # bypassing FeaturePredecessor to avoid circular import
-        if not hasattr(self, "parent_extractor_type"):
-            self.parent_extractor_type = [None]
+        # bypassing feature_predecessor to avoid circular import
+        if self.preprocessor is not None:
+            f = get_underlying_func(self.preprocessor)
+            if hasattr(f, "parent_extractor_type"):
+                self.parent_extractor_type = f.parent_extractor_type
+        elif not hasattr(self, "parent_extractor_type"):
+            self.parent_extractor_type = [SignalOutputType]
 
         self.features_kwargs = dict()
         if preprocessor is not None and isinstance(preprocessor, partial):
@@ -212,7 +220,7 @@ class FeatureExtractor(TrainableFeature):
         """
         if parent_type is None:
             preprocessor = (
-                None
+                SignalOutputType
                 if self.preprocessor is None
                 else get_underlying_func(self.preprocessor)
             )
@@ -229,7 +237,7 @@ class FeatureExtractor(TrainableFeature):
             if fe is not None and isinstance(f, AsInputOutputType):
                 fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
                 continue
-            pe_type = getattr(f, "parent_extractor_type", [None])
+            pe_type = getattr(f, "parent_extractor_type", [SignalOutputType])
             if parent_type in pe_type:
                 continue
             is_valid_by_output_type = False

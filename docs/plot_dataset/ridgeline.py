@@ -140,7 +140,7 @@ def _build_ridgeline_traces(
             )
         )
 
-        # Scatter points
+        # Scatter points — smaller markers for dense categories
         jitter = rng.uniform(0.02, amplitude * 0.5, size=len(values))
         median_val = float(median_participants.get(label, np.nan))
         custom_data = np.column_stack(
@@ -148,13 +148,16 @@ def _build_ridgeline_traces(
         ).tolist()
         x_scatter = values.tolist()
         y_scatter = (np.full_like(values, baseline) + jitter).tolist()
+        n_pts = len(values)
+        dot_size = 5 if n_pts > 50 else 7
+        dot_opacity = 0.4 if n_pts > 50 else 0.6
         traces.append(
             go.Scatter(
                 x=x_scatter,
                 y=y_scatter,
                 mode="markers",
                 name=label,
-                marker=dict(color=color, size=8, opacity=0.6),
+                marker=dict(color=color, size=dot_size, opacity=dot_opacity),
                 customdata=custom_data,
                 hovertemplate="<b><a href='%{customdata[1]}' target='_parent'>%{customdata[0]}</a></b><br>#Participants: %{x}<br><i>Click to view dataset details</i><extra></extra>",
                 showlegend=False,

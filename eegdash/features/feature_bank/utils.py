@@ -12,11 +12,13 @@ from collections.abc import Callable
 
 import numpy as np
 
-from ..decorators import wraps
+from ..decorators import preprocessor_output_type, wraps
+from ..output_types import AsInputOutputType
 
 __all__ = [
     "DEFAULT_FREQ_BANDS",
     "get_valid_freq_band",
+    "preprocessor_as_feature",
     "reduce_freq_bands",
     "set_spectral_default_kwargs",
     "slice_freq_band",
@@ -30,6 +32,29 @@ DEFAULT_FREQ_BANDS = {
     "alpha": (8, 12),
     "beta": (12, 30),
 }
+
+
+@preprocessor_output_type(AsInputOutputType)
+def preprocessor_as_feature(*x):
+    """A pass-through feature, returning its preprocessor output as is.
+
+    Use if the preprocessor is a feature by itself, and it should also be treated as a
+    feature.
+
+    Parameters
+    ----------
+    *x: tuple
+        Any preprocessor output.
+
+    Returns
+    -------
+    *x: tuple
+        The input (as is).
+
+    """
+    if len(x) == 1:
+        return x[0]
+    return x
 
 
 def set_spectral_default_kwargs(kwargs, metadata):

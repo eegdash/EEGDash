@@ -63,6 +63,7 @@ from .spectral import (
     spectral_root_total_power,
     spectral_slope,
 )
+from .utils import preprocessor_as_feature
 
 __all__ = [
     # Complexity
@@ -118,4 +119,6 @@ __all__ = [
     "spectral_hjorth_activity",
     "spectral_hjorth_mobility",
     "spectral_hjorth_complexity",
+    # Utils
+    "preprocessor_as_feature",
 ]

@@ -160,6 +160,7 @@ def pick_channel_pairs_preprocessor(
             ]
         )
     )
+    pick_pairs = [(min(i, j), max(i, j)) for i, j in pick_pairs]
     assert not set(pick_pairs) - set(_metadata["ch_pair_iterator"].pairs)
     pick_idx = [_metadata["ch_pair_iterator"].pairs.index(p) for p in pick_pairs]
     x_it, y_it = _metadata["ch_pair_iterator"].get_pair_iterators()
@@ -172,5 +173,7 @@ def pick_channel_pairs_preprocessor(
         y[i] = x[i].take(list(set(x_it[pick_idx])), axis=c_axis)
     for i in y_index:
         y[i] = x[i].take(list(set(y_it[pick_idx])), axis=c_axis)
-    _metadata["ch_pair_iterator"] = BivariateIterator(pick_pairs)
+    _metadata["ch_pair_iterator"] = BivariateIterator(
+        pick_pairs, directed=_metadata["ch_pair_iterator"].directed
+    )
     return *y, _metadata

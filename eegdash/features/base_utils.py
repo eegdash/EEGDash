@@ -68,6 +68,7 @@ class BivariateIterator:
     """
 
     def __init__(self, pairs: Iterable[Tuple[int, int]] | int, directed=False):
+        self.directed = directed
         if isinstance(pairs, int):
             if not directed:
                 pairs = list(zip(*np.triu_indices(pairs, 1)))
@@ -75,7 +76,9 @@ class BivariateIterator:
                 pairs = list(zip(*np.triu_indices(pairs, 1))) + list(
                     zip(*np.tril_indices(pairs, -1))
                 )
-        self.pairs = list(pairs)
+        if not directed:
+            pairs = [(min(i, j), max(i, j)) for i, j in pairs]
+        self.pairs = list(set(pairs))
 
     def get_pair_iterators(self) -> tuple[np.ndarray, np.ndarray]:
         r"""Get indices for pairs of channels.

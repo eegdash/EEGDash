@@ -1,8 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
-:og:description: Install EEGDash via pip or from source. Python 3.10+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
+:og:description: Install EEGDash via pip or from source. Python 3.11+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
 
 .. meta::
-   :description: Install EEGDash via pip or from source. Python 3.10+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
+   :description: Install EEGDash via pip or from source. Python 3.11+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
 
 .. _installation:
 
@@ -10,7 +10,7 @@
 Installation
 ================
 
-EEGDash is written in Python 3, specifically for version 3.10 or above.
+EEGDash is written in Python 3, specifically for version 3.11 or above.
 
 The package is distributed via Python package index (`PyPI <eegdash-pypi_>`_), and you can access the
 source code via `Github <eegdash-github_>`_ repository.

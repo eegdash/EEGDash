@@ -683,12 +683,12 @@ corresponding to their respective event markers).</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[04/16/26 08:54:00] WARNING  File not found on S3, skipping:   downloader.py:146
+[04/16/26 10:40:11] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/16/26 08:54:01] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 10:40:12] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -807,8 +807,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.36it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.36it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.38it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.38it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -834,9 +834,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr style="text-align: right;">
       <th></th>
       <th>i_dataset</th>
+      <th>i_start_in_trial</th>
       <th>i_stop_in_trial</th>
       <th>i_window_in_trial</th>
-      <th>i_start_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -920,9 +920,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>0</th>
       <td>0</td>
+      <td>8092</td>
       <td>8348</td>
       <td>0</td>
-      <td>8092</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -1004,9 +1004,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>1</th>
       <td>0</td>
+      <td>8348</td>
       <td>8604</td>
       <td>0</td>
-      <td>8348</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -1088,9 +1088,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>2</th>
       <td>0</td>
+      <td>8604</td>
       <td>8860</td>
       <td>0</td>
-      <td>8604</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -1172,9 +1172,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>3</th>
       <td>0</td>
+      <td>8860</td>
       <td>9116</td>
       <td>0</td>
-      <td>8860</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -1256,9 +1256,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>4</th>
       <td>0</td>
+      <td>9116</td>
       <td>9372</td>
       <td>0</td>
-      <td>9116</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -1424,9 +1424,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>65</th>
       <td>0</td>
+      <td>43163</td>
       <td>43419</td>
       <td>0</td>
-      <td>43163</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1508,9 +1508,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>66</th>
       <td>0</td>
+      <td>43419</td>
       <td>43675</td>
       <td>0</td>
-      <td>43419</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1592,9 +1592,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>67</th>
       <td>0</td>
+      <td>43675</td>
       <td>43931</td>
       <td>0</td>
-      <td>43675</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1676,9 +1676,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>68</th>
       <td>0</td>
+      <td>43931</td>
       <td>44187</td>
       <td>0</td>
-      <td>43931</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1760,9 +1760,9 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
     <tr>
       <th>69</th>
       <td>0</td>
+      <td>44187</td>
       <td>44443</td>
       <td>0</td>
-      <td>44187</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -1854,7 +1854,7 @@ Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  
 <div class="sphx-glr-script-out highlight-pytb notranslate"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/examples/core/tutorial_feature_extractor_open_close_eye.py&quot;</span>, line <span class="m">239</span>, in <span class="n">&lt;module&gt;</span>
 <span class="w">    </span><span class="n">features_ds</span><span class="o">.</span><span class="n">zscore</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
-  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/eegdash/features/datasets.py&quot;</span>, line <span class="m">922</span>, in <span class="n">zscore</span>
+  File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/eegdash/features/datasets.py&quot;</span>, line <span class="m">924</span>, in <span class="n">zscore</span>
 <span class="w">    </span><span class="n">ds</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numeric_columns</span><span class="p">()]</span> <span class="o">=</span> <span class="p">(</span>
 <span class="w">    </span><span class="pm">~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
   File <span class="nb">&quot;/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/pandas/core/indexing.py&quot;</span>, line <span class="m">938</span>, in <span class="n">__setitem__</span>
@@ -2083,7 +2083,7 @@ calculates test accuracy by comparing outputs with actual labels.</p></li>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;gain&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.760 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.152 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />

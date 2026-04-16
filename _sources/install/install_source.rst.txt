@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Install EEGDash from source for development or testing unreleased features. Includes contributor setup instructions.
+
+.. meta::
+   :description: Install EEGDash from source for development or testing unreleased features. Includes contributor setup instructions.
 
 .. _install_source:
 

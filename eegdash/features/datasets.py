@@ -22,6 +22,7 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
+from safetensors.numpy import save_file as _save_safetensors
 
 from braindecode.datasets.base import (
     BaseConcatDataset,
@@ -451,12 +452,12 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
             path/
                 0/
-                    0-feat.parquet
+                    0-feat.safetensors
                     metadata_df.pkl
                     description.json
                     ...
                 1/
-                    1-feat.parquet
+                    1-feat.safetensors
                     ...
 
         Parameters
@@ -488,7 +489,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         -----
         Each subdirectory contains:
 
-        - ``*-feat.parquet`` — feature DataFrame for that dataset.
+        - ``*-feat.safetensors`` — feature DataFrame for that dataset.
         - ``metadata_df.pkl`` — corresponding metadata.
         - ``description.json`` — dataset-level metadata.
         - ``raw_info.pkl`` — recording information (optional).
@@ -535,7 +536,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
     @staticmethod
     def _save_features(sub_dir: str, ds: FeaturesDataset, i_ds: int, offset: int):
-        r"""Save the feature DataFrame to a Parquet file.
+        r"""Save the feature DataFrame to a safetensors file.
 
         Parameters
         ----------
@@ -549,9 +550,10 @@ class FeaturesConcatDataset(BaseConcatDataset):
             An integer offset used for file naming.
 
         """
-        parquet_file_name = f"{i_ds + offset}-feat.parquet"
-        parquet_file_path = os.path.join(sub_dir, parquet_file_name)
-        ds.features.to_parquet(parquet_file_path)
+        st_file_name = f"{i_ds + offset}-feat.safetensors"
+        st_file_path = os.path.join(sub_dir, st_file_name)
+        tensors = {col: ds.features[col].values for col in ds.features.columns}
+        _save_safetensors(tensors, st_file_path)
 
     @staticmethod
     def _save_metadata(sub_dir: str, ds: FeaturesDataset):

@@ -1,3 +1,8 @@
+:og:description: EEGDash Feature API — univariate, bivariate, and spectral feature extractors for EEG signal analysis with numba-accelerated computation.
+
+.. meta::
+   :description: EEGDash Feature API — univariate, bivariate, and spectral feature extractors for EEG signal analysis with numba-accelerated computation.
+
 Feature API
 ===========
 

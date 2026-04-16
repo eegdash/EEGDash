@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Install EEGDash from PyPI with pip. Python 3.11+ required. Includes optional extras for features, docs, and development.
+
+.. meta::
+   :description: Install EEGDash from PyPI with pip. Python 3.11+ required. Includes optional extras for features, docs, and development.
 
 .. _install_pip:
 

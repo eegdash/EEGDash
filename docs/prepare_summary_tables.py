@@ -526,13 +526,27 @@ def get_dataset_url(name: str) -> str | None:
     return _get_dataset_url(name)
 
 
-def wrap_dataset_name(name: str) -> str:
-    """Wrap dataset name with link to documentation."""
+def wrap_dataset_name(name: str, modality: str = "", n_subjects: int = 0) -> str:
+    """Wrap dataset name with link to documentation.
+
+    If *modality* or *n_subjects* are available, a ``title`` attribute is
+    added so hovering the link shows a tooltip like
+    ``"ABSeqMEG — EEG dataset, 20 subjects"``.
+    """
     name = name.strip()
     url = get_dataset_url(name)
     if not url:
         return name.upper()
-    return f'<a href="{url}">{name.upper()}</a>'
+    parts = []
+    if modality:
+        parts.append(f"{modality} dataset")
+    if n_subjects and n_subjects > 0:
+        parts.append(f"{n_subjects} subjects")
+    title_attr = ""
+    if parts:
+        tooltip = f"{name.upper()} — {', '.join(parts)}"
+        title_attr = f' title="{tooltip}"'
+    return f'<a href="{url}"{title_attr}>{name.upper()}</a>'
 
 
 def _strip_unknown(value: object) -> object:
@@ -566,7 +580,14 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
     excluded = {"test", "ds003380"}
     df = df[~df["dataset"].str.lower().isin(excluded)].copy()
 
-    df["dataset"] = df["dataset"].apply(wrap_dataset_name)
+    df["dataset"] = df.apply(
+        lambda r: wrap_dataset_name(
+            r["dataset"],
+            modality=str(r.get("record_modality", "")).strip(),
+            n_subjects=int(r["n_subjects"]) if pd.notna(r.get("n_subjects")) else 0,
+        ),
+        axis=1,
+    )
 
     # Ensure required columns exist
     for col, default in [

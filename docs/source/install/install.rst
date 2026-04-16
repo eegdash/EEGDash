@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Install EEGDash via pip or from source. Python 3.10+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
+
+.. meta::
+   :description: Install EEGDash via pip or from source. Python 3.10+ required. Works on Linux, macOS, and Windows for EEG/MEG dataset access and analysis.
 
 .. _installation:
 

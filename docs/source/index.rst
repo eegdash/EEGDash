@@ -1,23 +1,11 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Discover standardized metadata, run reproducible pipelines, and export model-ready features in minutes.
 
-.. title:: EEGDash - Data-sharing interface for M/EEG and related (fNIRS, EMG)
+.. title:: Search 700+ EEG/MEG datasets — BIDS-first
 
-.. raw:: html
-
-    <style type="text/css">
-    /* Visually hide H1 but keep for metadata */
-    h1 {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      padding: 0 !important;
-      margin: -1px !important;
-      overflow: hidden !important;
-      clip: rect(0, 0, 0, 0) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-    }
-    </style>
+.. meta::
+   :description: Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Discover standardized metadata, run reproducible pipelines, and export model-ready features in minutes.
+   :keywords: EEG, MEG, dataset, BIDS, neuroscience, fNIRS, EMG, iEEG, OpenNeuro, NeMAR, machine learning
 
 .. container:: hf-hero
 
@@ -28,9 +16,9 @@
       .. grid-item::
          :class: hf-hero-copy hf-reveal hf-delay-1
 
-         .. rst-class:: hf-hero-title
+         .. raw:: html
 
-            Search and use 700+ EEG/MEG datasets - BIDS-first.
+            <h1 class="hf-hero-title">Search and use 700+ EEG/MEG datasets — BIDS-first.</h1>
 
          .. rst-class:: hf-hero-lede
 

@@ -97,6 +97,7 @@ docs = [
   "sphinx-autobuild",
   "sphinx-copybutton",
   "sphinx-sitemap",
+  "sphinxext-opengraph",
   "numpydoc",
   "memory_profiler",
   "ipython",

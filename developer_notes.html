@@ -7,6 +7,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Developer Notes" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/developer_notes.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="This guide is for project maintainers and contributors who need to work on the EEGDash package, manage the data ingestion pipeline, or administer supporting services. Package Overview: EEGDash ( ee..." />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="This guide is for project maintainers and contributors who need to work on the EEGDash package, manage the data ingestion pipeline, or administer supporting services. Package Overview: EEGDash ( ee..." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
 
     <title>Developer Notes &#8212; EEG Dash</title>
   
@@ -38,10 +48,6 @@
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=448230d6" />
     <link rel="stylesheet" type="text/css" href="_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=b44e0256" />
@@ -60,31 +66,25 @@
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'developer_notes';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
-    <script src="_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="_static/js/datatables-init.js?v=0986bc1f"></script>
-    <script src="_static/js/hero-search.js?v=e355ff47"></script>
-    <script src="_static/js/search-as-you-type.js?v=8e93d0f7"></script>
+    <script defer="defer" src="_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script defer="defer" src="_static/js/search-as-you-type.js?v=8e93d0f7"></script>
     <link rel="canonical" href="https://eegdash.org/developer_notes.html" />
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="pyFR" href="api/dataset/eegdash.dataset.pyFR.html" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="prev" title="pyFR: EEG dataset" href="api/dataset/eegdash.dataset.pyFR.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.6" />
+
   
-    
-    <script src="_static/searchtools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script src="searchindex.js"></script>
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
   
+
+  
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -275,18 +275,6 @@
           
           
           
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
           <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
             <span class="sr-only">Discord</span></a>
         </li>
@@ -422,18 +410,6 @@
           
           <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
             <span class="sr-only">PyPI</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
         </li>
         <li class="nav-item">
           
@@ -936,7 +912,7 @@ make<span class="w"> </span>html<span class="w">         </span><span class="c1"
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pyFR</p>
+        <p class="prev-next-title">pyFR: EEG dataset</p>
       </div>
     </a>
 </div>

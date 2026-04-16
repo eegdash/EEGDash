@@ -7,6 +7,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Eyes Open vs. Closed Classification" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/hpc/tutorial_eoec.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="EEGDash example for eyes open vs. closed classification. CHANGES: - Uses the EEGDash API (no local OpenNeuro mirror required) - Multi-subject run: auto-discover subjects from API and use ~10 valid ..." />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="EEGDash example for eyes open vs. closed classification. CHANGES: - Uses the EEGDash API (no local OpenNeuro mirror required) - Multi-subject run: auto-discover subjects from API and use ~10 valid ..." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
 
     <title>Eyes Open vs. Closed Classification &#8212; EEG Dash</title>
   
@@ -38,10 +48,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=448230d6" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
@@ -60,32 +66,26 @@
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/hpc/tutorial_eoec';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
-    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
-    <script src="../../../_static/js/hero-search.js?v=e355ff47"></script>
-    <script src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/hpc/tutorial_eoec.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="API Reference" href="../../../api/api.html" />
     <link rel="prev" title="Working Offline with EEGDash" href="../eeg2025/tutorial_eegdash_offline.html" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.6" />
+
   
-    
-    <script src="../../../_static/searchtools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
-    <script src="../../../searchindex.js"></script>
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
   
+
+  
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -276,18 +276,6 @@
           
           
           
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
           <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
             <span class="sr-only">Discord</span></a>
         </li>
@@ -308,10 +296,6 @@
     </div>
   
 
-  
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
   
 </div>
 
@@ -423,18 +407,6 @@
           
           <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
             <span class="sr-only">PyPI</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
         </li>
         <li class="nav-item">
           
@@ -604,23 +576,23 @@ Discovered subjects (first 20): [&#39;NDARAC589YMB&#39;, &#39;NDARAC853CR6&#39;,
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 28.0B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.76B/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 18.0B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 6.30B/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 24.2B/s]
-[04/15/26 13:37:49] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
+[04/16/26 09:04:39] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAC589YMB/eeg/sub-NDARAC589YMB_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.02B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.02B/s]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.15s/B]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.16s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:37:50] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:04:42] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -668,23 +640,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 23.9B/s]
+Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 6.35B/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.3B/s]
+Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.4B/s]
-[04/15/26 13:37:51] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.3B/s]
+[04/16/26 09:04:45] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAC853CR6/eeg/sub-NDARAC853CR6_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.07s/B]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.08s/B]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.08s/B]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.08s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:37:53] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:04:48] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -732,23 +704,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.3B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.8B/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.1B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.1B/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.2B/s]
-[04/15/26 13:37:54] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.7B/s]
+[04/16/26 09:04:50] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAE710YWG/eeg/sub-NDARAE710YWG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.40B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.40B/s]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.02s/B]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.02s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:37:55] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:04:53] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -796,23 +768,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.0B/s]
+Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.00B/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.3B/s]
+Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.6B/s]
-[04/15/26 13:37:57] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.9B/s]
+[04/16/26 09:04:55] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAH239PGG/eeg/sub-NDARAH239PGG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.00B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.00s/B]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.05s/B]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.05s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:37:58] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:04:58] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -860,23 +832,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.5B/s]
+Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.2B/s]
+Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.9B/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.4B/s]
-[04/15/26 13:37:59] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.3B/s]
+[04/16/26 09:05:01] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAL897CYV/eeg/sub-NDARAL897CYV_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.06s/B]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.06s/B]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.02s/B]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.02s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:38:01] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:04] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -924,23 +896,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 37.4B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.4B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.09B/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.5B/s]
-[04/15/26 13:38:02] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.76B/s]
+[04/16/26 09:05:06] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAN160GUF/eeg/sub-NDARAN160GUF_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.23B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.23B/s]
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.21s/B]
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.21s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:38:03] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:09] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -988,23 +960,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.6B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 8.80B/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 31.9B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.5B/s]
-[04/15/26 13:38:05] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 11.2B/s]
+[04/16/26 09:05:12] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAP049KXJ/eeg/sub-NDARAP049KXJ_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.44B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.44B/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.39s/B]
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:01&lt;00:00, 1.39s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:38:06] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:14] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -1052,23 +1024,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.2B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 40.3B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 29.8B/s]
-[04/15/26 13:38:08] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.7B/s]
+[04/16/26 09:05:17] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAP457WB5/eeg/sub-NDARAP457WB5_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.42B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.41B/s]
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.38s/B]
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.38s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:38:09] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:20] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -1116,23 +1088,23 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 35.7B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 9.85B/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.9B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.6B/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 34.0B/s]
-[04/15/26 13:38:10] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.2B/s]
+[04/16/26 09:05:23] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAU939WUK/eeg/sub-NDARAU939WUK_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.26B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.26B/s]
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.24s/B]
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.24s/B]
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/15/26 13:38:11] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:26] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -1180,23 +1152,24 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.7B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.90B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 4.90B/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_events.tsv:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 33.7B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 7.26B/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.json:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 36.5B/s]
-[04/15/26 13:38:13] WARNING  File not found on S3, skipping:   downloader.py:146
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 10.5B/s]
+[04/16/26 09:05:28] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARAW216PM7/eeg/sub-NDARAW216PM7_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.set:   0%|          | 0.00/1.00 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.01B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:00&lt;00:00, 1.00B/s]
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.30s/B]
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 1.00/1.00 [00:02&lt;00:00, 2.30s/B]
 Used Annotations descriptions: [np.str_(&#39;break cnt&#39;), np.str_(&#39;dot_no1_OFF&#39;), np.str_(&#39;dot_no1_ON&#39;), np.str_(&#39;dot_no2_OFF&#39;), np.str_(&#39;dot_no2_ON&#39;), np.str_(&#39;dot_no3_OFF&#39;), np.str_(&#39;dot_no3_ON&#39;), np.str_(&#39;dot_no4_OFF&#39;), np.str_(&#39;dot_no4_ON&#39;), np.str_(&#39;dot_no5_OFF&#39;), np.str_(&#39;dot_no5_ON&#39;), np.str_(&#39;dot_no6_OFF&#39;), np.str_(&#39;dot_no6_ON&#39;), np.str_(&#39;dot_no7_OFF&#39;), np.str_(&#39;dot_no7_ON&#39;), np.str_(&#39;dot_no8_OFF&#39;), np.str_(&#39;dot_no8_ON&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;learningBlock_1&#39;), np.str_(&#39;resting_start&#39;), np.str_(&#39;seqLearning_start&#39;)]
-[04/15/26 13:38:14] INFO     Original events found with ids: preprocessing.py:66
+[04/16/26 09:05:32] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;break cnt&#39;): 1,
                              np.str_(&#39;dot_no1_OFF&#39;): 2,
                              np.str_(&#39;dot_no1_ON&#39;): 3,
@@ -1698,7 +1671,7 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, Train accuracy: </span><span class="si">{</span><span class="n">train_acc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, Test accuracy: </span><span class="si">{</span><span class="n">test_acc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 32.973 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 0.326 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-hpc-tutorial-eoec-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/hpc/tutorial_eoec.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo3.svg" style="width: 150px;" />
@@ -1751,37 +1724,6 @@ Epoch 5, Train accuracy: 0.77, Test accuracy: 0.56
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-
-  
-  <div class="tocsection editthispage">
-    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/generated/auto_examples/hpc/tutorial_eoec.rst">
-      <i class="fa-solid fa-pencil"></i>
-      
-      
-        
-          Edit on GitHub
-        
-      
-    </a>
-  </div>
-</div>
-
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../../_sources/generated/auto_examples/hpc/tutorial_eoec.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
-</div>
-
-</div></div>
               
             
           </div>

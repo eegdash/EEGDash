@@ -8,6 +8,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="true" name="html_theme.sidebar_secondary.remove" />
+<meta property="og:title" content="Challenge 2: Predicting the p-factor from EEG" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_2.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Open In Colab Preliminary notes Before we begin, I just want to make a deal with you, ok? This is a community competition with a strong open-source foundation. When I say open-source, I mean volunt..." />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Open In Colab Preliminary notes Before we begin, I just want to make a deal with you, ok? This is a community competition with a strong open-source foundation. When I say open-source, I mean volunt..." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
 
     <title>Challenge 2: Predicting the p-factor from EEG &#8212; EEG Dash</title>
   
@@ -39,10 +49,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=448230d6" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b44e0256" />
@@ -61,32 +67,26 @@
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/eeg2025/tutorial_challenge_2';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
-    <script src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
-    <script src="../../../_static/js/datatables-init.js?v=0986bc1f"></script>
-    <script src="../../../_static/js/hero-search.js?v=e355ff47"></script>
-    <script src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../_static/js/tag-palette.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../_static/js/search-as-you-type.js?v=8e93d0f7"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_2.html" />
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Working Offline with EEGDash" href="tutorial_eegdash_offline.html" />
     <link rel="prev" title="Challenge 1: Cross-Task Transfer Learning!" href="tutorial_challenge_1.html" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.6" />
+
   
-    
-    <script src="../../../_static/searchtools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
-    <script src="../../../searchindex.js"></script>
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
   
+
+  
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -277,18 +277,6 @@
           
           
           
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
           <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
             <span class="sr-only">Discord</span></a>
         </li>
@@ -309,10 +297,6 @@
     </div>
   
 
-  
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
   
 </div>
 
@@ -424,18 +408,6 @@
           
           <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
             <span class="sr-only">PyPI</span></a>
-        </li>
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://eegdash.org/EEGDash" title="Docs (Stable)" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Docs (Stable)</span></a>
         </li>
         <li class="nav-item">
           
@@ -1059,75 +1031,75 @@ Forward/backward pass size (MB): 16.65
 Params size (MB): 0.22
 Estimated Total Size (MB): 16.97
 ================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.6689050197601318
-Epoch 0 - step 1, loss: 0.7030974626541138
-Epoch 0 - step 2, loss: 0.635160505771637
-Epoch 0 - step 3, loss: 0.6792960166931152
-Epoch 0 - step 4, loss: 0.6452341079711914
-Epoch 0 - step 5, loss: 0.6127191781997681
-Epoch 0 - step 6, loss: 0.6788229942321777
-Epoch 0 - step 7, loss: 0.6764429807662964
-Epoch 0 - step 8, loss: 0.6018173098564148
-Epoch 0 - step 9, loss: 0.5794633626937866
-Epoch 0 - step 10, loss: 0.6701595187187195
-Epoch 0 - step 11, loss: 0.5824503898620605
-Epoch 0 - step 12, loss: 0.5381027460098267
-Epoch 0 - step 13, loss: 0.6585367321968079
-Epoch 0 - step 14, loss: 0.6541531682014465
-Epoch 0 - step 15, loss: 0.6128267645835876
-Epoch 0 - step 16, loss: 0.7127889394760132
-Epoch 0 - step 17, loss: 0.6510931849479675
-Epoch 0 - step 18, loss: 0.6469824910163879
-Epoch 0 - step 19, loss: 0.6769328117370605
-Epoch 0 - step 20, loss: 0.6250396966934204
-Epoch 0 - step 21, loss: 0.6282017230987549
-Epoch 0 - step 22, loss: 0.6060091257095337
-Epoch 0 - step 23, loss: 0.7011882662773132
-Epoch 0 - step 24, loss: 0.7320883274078369
-Epoch 0 - step 25, loss: 0.6770734786987305
-Epoch 0 - step 26, loss: 0.5886565446853638
-Epoch 0 - step 27, loss: 0.7025474905967712
-Epoch 0 - step 28, loss: 0.6848787665367126
-Epoch 0 - step 29, loss: 0.7122588157653809
-Epoch 0 - step 30, loss: 0.6788054704666138
-Epoch 0 - step 31, loss: 0.7025529146194458
-Epoch 0 - step 32, loss: 0.733487069606781
-Epoch 0 - step 33, loss: 0.6383136510848999
-Epoch 0 - step 34, loss: 0.6200101375579834
-Epoch 0 - step 35, loss: 0.6491650342941284
-Epoch 0 - step 36, loss: 0.6325159668922424
-Epoch 0 - step 37, loss: 0.6782872080802917
-Epoch 0 - step 38, loss: 0.6581968665122986
-Epoch 0 - step 39, loss: 0.5728318691253662
-Epoch 0 - step 40, loss: 0.6922698616981506
-Epoch 0 - step 41, loss: 0.6234757900238037
-Epoch 0 - step 42, loss: 0.6607932448387146
-Epoch 0 - step 43, loss: 0.7350994944572449
-Epoch 0 - step 44, loss: 0.6742160320281982
-Epoch 0 - step 45, loss: 0.5480965375900269
-Epoch 0 - step 46, loss: 0.7027604579925537
-Epoch 0 - step 47, loss: 0.6018892526626587
-Epoch 0 - step 48, loss: 0.6947406530380249
-Epoch 0 - step 49, loss: 0.5976979732513428
-Epoch 0 - step 50, loss: 0.6967582702636719
-Epoch 0 - step 51, loss: 0.6787515878677368
-Epoch 0 - step 52, loss: 0.5933613181114197
-Epoch 0 - step 53, loss: 0.6230853796005249
-Epoch 0 - step 54, loss: 0.6394173502922058
-Epoch 0 - step 55, loss: 0.6312074661254883
-Epoch 0 - step 56, loss: 0.6810081005096436
-Epoch 0 - step 57, loss: 0.655302882194519
-Epoch 0 - step 58, loss: 0.647222101688385
-Epoch 0 - step 59, loss: 0.6443407535552979
-Epoch 0 - step 60, loss: 0.571027398109436
-Epoch 0 - step 61, loss: 0.6291350722312927
-Epoch 0 - step 62, loss: 0.6360335350036621
-Epoch 0 - step 63, loss: 0.6767050623893738
-Epoch 0 - step 64, loss: 0.5349782109260559
+Epoch 0 - step 0, loss: 0.6595102548599243
+Epoch 0 - step 1, loss: 0.6852243542671204
+Epoch 0 - step 2, loss: 0.6157675981521606
+Epoch 0 - step 3, loss: 0.6837813854217529
+Epoch 0 - step 4, loss: 0.6273059248924255
+Epoch 0 - step 5, loss: 0.6112489104270935
+Epoch 0 - step 6, loss: 0.6706140637397766
+Epoch 0 - step 7, loss: 0.6724717617034912
+Epoch 0 - step 8, loss: 0.5923201441764832
+Epoch 0 - step 9, loss: 0.5817894339561462
+Epoch 0 - step 10, loss: 0.66285240650177
+Epoch 0 - step 11, loss: 0.6003061532974243
+Epoch 0 - step 12, loss: 0.5460988879203796
+Epoch 0 - step 13, loss: 0.659344494342804
+Epoch 0 - step 14, loss: 0.6603589057922363
+Epoch 0 - step 15, loss: 0.62630695104599
+Epoch 0 - step 16, loss: 0.705104410648346
+Epoch 0 - step 17, loss: 0.644750714302063
+Epoch 0 - step 18, loss: 0.6469939947128296
+Epoch 0 - step 19, loss: 0.6899573802947998
+Epoch 0 - step 20, loss: 0.6246553659439087
+Epoch 0 - step 21, loss: 0.6209437847137451
+Epoch 0 - step 22, loss: 0.6213167309761047
+Epoch 0 - step 23, loss: 0.6941438913345337
+Epoch 0 - step 24, loss: 0.7457129955291748
+Epoch 0 - step 25, loss: 0.6947797536849976
+Epoch 0 - step 26, loss: 0.5986620187759399
+Epoch 0 - step 27, loss: 0.691387951374054
+Epoch 0 - step 28, loss: 0.6766198873519897
+Epoch 0 - step 29, loss: 0.699390709400177
+Epoch 0 - step 30, loss: 0.6885965466499329
+Epoch 0 - step 31, loss: 0.6948871612548828
+Epoch 0 - step 32, loss: 0.7450875639915466
+Epoch 0 - step 33, loss: 0.6357862949371338
+Epoch 0 - step 34, loss: 0.6302712559700012
+Epoch 0 - step 35, loss: 0.650855302810669
+Epoch 0 - step 36, loss: 0.6541792750358582
+Epoch 0 - step 37, loss: 0.6642729043960571
+Epoch 0 - step 38, loss: 0.6543867588043213
+Epoch 0 - step 39, loss: 0.5796289443969727
+Epoch 0 - step 40, loss: 0.6912276744842529
+Epoch 0 - step 41, loss: 0.6301917433738708
+Epoch 0 - step 42, loss: 0.6589073538780212
+Epoch 0 - step 43, loss: 0.745667576789856
+Epoch 0 - step 44, loss: 0.6700310111045837
+Epoch 0 - step 45, loss: 0.5434455275535583
+Epoch 0 - step 46, loss: 0.7162162065505981
+Epoch 0 - step 47, loss: 0.6084006428718567
+Epoch 0 - step 48, loss: 0.7004634737968445
+Epoch 0 - step 49, loss: 0.6013221740722656
+Epoch 0 - step 50, loss: 0.6982015371322632
+Epoch 0 - step 51, loss: 0.6942934393882751
+Epoch 0 - step 52, loss: 0.587628185749054
+Epoch 0 - step 53, loss: 0.6257687211036682
+Epoch 0 - step 54, loss: 0.6554971933364868
+Epoch 0 - step 55, loss: 0.6242427229881287
+Epoch 0 - step 56, loss: 0.6644169092178345
+Epoch 0 - step 57, loss: 0.6595700979232788
+Epoch 0 - step 58, loss: 0.6291913986206055
+Epoch 0 - step 59, loss: 0.6671919226646423
+Epoch 0 - step 60, loss: 0.5710630416870117
+Epoch 0 - step 61, loss: 0.6310305595397949
+Epoch 0 - step 62, loss: 0.6269324421882629
+Epoch 0 - step 63, loss: 0.6741854548454285
+Epoch 0 - step 64, loss: 0.461608350276947
 Model saved as &#39;weights_challenge_2.pt&#39;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 32.660 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (6 minutes 37.163 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_2.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo2.svg" style="width: 150px;" />
@@ -1180,37 +1152,6 @@ Model saved as &#39;weights_challenge_2.pt&#39;
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-
-  
-  <div class="tocsection editthispage">
-    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/generated/auto_examples/eeg2025/tutorial_challenge_2.rst">
-      <i class="fa-solid fa-pencil"></i>
-      
-      
-        
-          Edit on GitHub
-        
-      
-    </a>
-  </div>
-</div>
-
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../../_sources/generated/auto_examples/eeg2025/tutorial_challenge_2.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
-</div>
-
-</div></div>
               
             
           </div>

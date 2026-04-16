@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
+
+.. meta::
+   :description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
 
 .. currentmodule:: eegdash.api
 

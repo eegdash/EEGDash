@@ -2156,9 +2156,7 @@ def _format_dataset_meta_section(
 
     og_description_field = f":og:description: {description}"
     meta_directive = (
-        ".. meta::\n"
-        f"   :description: {description}\n"
-        f"   :keywords: {keywords}"
+        f".. meta::\n   :description: {description}\n   :keywords: {keywords}"
     )
     return og_description_field, meta_directive
 
@@ -2172,9 +2170,7 @@ def _format_dataset_jsonld_section(
     JSON-LD spec — Google Dataset Search reads either head or body).
     """
     dataset_upper = str(context.get("dataset_upper", "")).strip() or class_name
-    title = _collapse_whitespace(
-        _clean_value(context.get("title")) or dataset_upper
-    )
+    title = _collapse_whitespace(_clean_value(context.get("title")) or dataset_upper)
     doi_clean = _normalize_doi(_clean_value(context.get("doi")))
     authors = [a for a in (context.get("authors") or []) if a]
     license_text = _clean_value(context.get("license"))
@@ -2184,9 +2180,7 @@ def _format_dataset_jsonld_section(
     openneuro_url = str(context.get("openneuro_url", "")).strip()
     nemar_url = str(context.get("nemar_url", "")).strip()
 
-    page_url = (
-        f"https://eegdash.org/api/dataset/eegdash.dataset.{class_name}.html"
-    )
+    page_url = f"https://eegdash.org/api/dataset/eegdash.dataset.{class_name}.html"
 
     # Skip the leading title when it duplicates `dataset_upper` — the
     # trailing "...as ``class_name``..." already names the dataset, and
@@ -2257,11 +2251,7 @@ def _format_dataset_jsonld_section(
     # inside `<script>` per the HTML spec.
     payload = payload.replace("</", "<\\/")
 
-    return (
-        ".. raw:: html\n"
-        "\n"
-        f'   <script type="application/ld+json">{payload}</script>'
-    )
+    return f'.. raw:: html\n\n   <script type="application/ld+json">{payload}</script>'
 
 
 def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None:

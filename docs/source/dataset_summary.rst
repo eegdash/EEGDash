@@ -1,6 +1,10 @@
 :hide_sidebar: true
 :html_theme.sidebar_secondary.remove: true
 :html_theme.sidebar_primary.remove: true
+:og:description: Browse and filter 700+ BIDS-first EEG/MEG datasets by modality, task, subjects, and licence. Includes OpenNeuro, NeMAR, and HBN sources.
+
+.. meta::
+   :description: Browse and filter 700+ BIDS-first EEG/MEG datasets by modality, task, subjects, and licence. Includes OpenNeuro, NeMAR, and HBN sources.
 
 .. _data_summary:
 

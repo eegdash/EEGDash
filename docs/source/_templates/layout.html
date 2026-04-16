@@ -1,7 +1,53 @@
 {% extends "!layout.html" %}
 
+{#
+  Theme-coupling notice
+  ---------------------
+  This template overrides ``extrahead`` from pydata-sphinx-theme **without**
+  calling ``{{ super() }}``, to remove a duplicate ``<meta name="viewport">``
+  the theme emits on top of Sphinx's own. The tradeoff: any new essential
+  tags a future theme release adds to its ``extrahead`` block will be
+  silently lost.
+
+  If you upgrade pydata-sphinx-theme (currently pinned at 0.16.1 in
+  ``pyproject.toml``), re-audit the upstream ``extrahead`` block — see
+  ``<theme-path>/pydata_sphinx_theme/theme/pydata_sphinx_theme/layout.html``.
+  Anything new and load-bearing there should be mirrored here.
+#}
+
+{# Override the pydata-sphinx-theme extrahead block to avoid emitting a
+   duplicate `<meta name="viewport">` — the Sphinx base layout already
+   emits one. We keep the docsearch/docbuild tags the theme relies on. #}
 {% block extrahead %}
-  {{ super() }}
+  <meta name="docsearch:language" content="{{ language }}"/>
+  <meta name="docsearch:version" content="{{ version }}" />
+  {%- if last_updated %}
+  <meta name="docbuild:last-update" content="{{ last_updated | e }}"/>
+  {%- endif %}
+
+  {# Preconnect to the third-party CDNs we load on interactive pages.
+     Cheap on pages that don't use them, material on the ones that do. #}
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+  {# JSON-LD structured data (Organization on homepage, Dataset on
+     dataset pages). Populated from conf.py via html-page-context. #}
+  {%- if jsonld %}
+  <script type="application/ld+json">{{ jsonld | safe }}</script>
+  {%- endif %}
+
+  {# Page-specific script gating. Previously jQuery + the full DataTables
+     stack + fuse.js + the hero-search bundle were loaded on every page
+     (~260 KB transferred, plus a CDN fan-out of 3 hosts). Now they only
+     load on the pages that actually use them. The DataTables stack used
+     by dataset_summary is inlined by `prepare_summary_tables.py` into
+     the table include, so we don't need to re-emit it here. #}
+  {%- if pagename == "index" %}
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+  <script defer src="{{ pathto('_static/js/hero-search.js', 1) }}"></script>
+  {%- endif %}
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

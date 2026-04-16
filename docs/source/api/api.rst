@@ -1,5 +1,9 @@
 :html_theme.sidebar_primary.remove: true
 :html_theme.sidebar_secondary.remove: true
+:og:description: Complete API reference for the EEGDash Python library — dataset access, feature extraction, BIDS integration, and cloud storage modules.
+
+.. meta::
+   :description: Complete API reference for the EEGDash Python library — dataset access, feature extraction, BIDS integration, and cloud storage modules.
 
 .. _api:
 

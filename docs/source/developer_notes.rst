@@ -1,3 +1,8 @@
+:og:description: Developer guide for EEGDash — package architecture, data ingestion pipeline, testing, and contributor workflows.
+
+.. meta::
+   :description: Developer guide for EEGDash — package architecture, data ingestion pipeline, testing, and contributor workflows.
+
 .. _developer_notes:
 
 Developer Notes

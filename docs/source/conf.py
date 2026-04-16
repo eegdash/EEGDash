@@ -57,7 +57,6 @@ extensions = [
     "sphinx_sitemap",
     "sphinxext.opengraph",
     "sphinx_copybutton",
-    "sphinx.ext.graphviz",
     "sphinx_time_estimation",
 ]
 
@@ -2629,7 +2628,7 @@ _HOMEPAGE_JSONLD = {
     "name": "EEG Dash",
     "alternateName": "EEGDash",
     "url": "https://eegdash.org/",
-    "logo": "https://eegdash.org/_static/eegdash_long.svg",
+    "logo": "https://eegdash.org/_static/eegdash_social_card.png",
     "description": (
         "Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG "
         "datasets for reproducible neuroscience research."
@@ -2644,14 +2643,33 @@ _SOFTWARE_JSONLD = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "EEG Dash",
-    "applicationCategory": "DeveloperApplication",
+    "applicationCategory": "ScienceApplication",
     "operatingSystem": "Cross-platform",
     "url": "https://eegdash.org/",
+    "softwareVersion": eegdash.__version__,
+    "codeRepository": "https://github.com/sccn/EEG-Dash-Data",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
     "description": (
         "Python library and catalog for discovering, standardizing, and "
         "analyzing 700+ BIDS-first EEG/MEG datasets."
     ),
     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+}
+
+_WEBSITE_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://eegdash.org/dataset_summary.html?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+    },
 }
 
 
@@ -2691,7 +2709,7 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
             'content="https://eegdash.org/"',
         )
         context["jsonld"] = json.dumps(
-            [_HOMEPAGE_JSONLD, _SOFTWARE_JSONLD],
+            [_HOMEPAGE_JSONLD, _SOFTWARE_JSONLD, _WEBSITE_JSONLD],
             ensure_ascii=False,
             separators=(",", ":"),
         )

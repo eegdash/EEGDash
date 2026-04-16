@@ -2055,18 +2055,28 @@ def _format_api_section(class_name: str) -> str:
     )
 
 
-def _format_see_also_section(dataset_id: str) -> str:
+def _format_see_also_section(
+    dataset_id: str,
+    class_name: str = "",
+    related: Sequence[str] = (),
+) -> str:
     dataset_lower = dataset_id.lower()
     nemar_url = f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_lower}"
     openneuro_url = f"https://openneuro.org/datasets/{dataset_lower}"
-    return "\n".join(
-        [
-            "* :class:`eegdash.dataset.EEGDashDataset`",
-            "* :mod:`eegdash.dataset`",
-            f"* `OpenNeuro dataset page <{openneuro_url}>`__",
-            f"* `NeMAR dataset page <{nemar_url}>`__",
-        ]
-    )
+    lines = [
+        "* :class:`eegdash.dataset.EEGDashDataset`",
+        "* :mod:`eegdash.dataset`",
+        f"* `OpenNeuro dataset page <{openneuro_url}>`__",
+        f"* `NeMAR dataset page <{nemar_url}>`__",
+    ]
+    # Cross-link up to 5 related datasets (same modality) to improve
+    # internal link density across the 1,114 dataset pages.
+    for rel_name in related[:5]:
+        if rel_name != class_name:
+            lines.append(
+                f"* :doc:`eegdash.dataset.{rel_name} <eegdash.dataset.{rel_name}>`"
+            )
+    return "\n".join(lines)
 
 
 def _format_feedback_section(dataset_id: str, title: str) -> str:
@@ -2267,11 +2277,24 @@ def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None
 
 
 def _process_dataset_item(
-    name: str, dataset_dir: Path, row: Mapping[str, str] | None, srcdir: Path
+    name: str,
+    dataset_dir: Path,
+    row: Mapping[str, str] | None,
+    srcdir: Path,
+    related: Sequence[str] = (),
 ) -> Path:
-    # Use simplified title: just the dataset ID (e.g., "DS001787")
-    title = name  # Dataset class name is already uppercase ID like DS001787
     context = _build_dataset_context(name, row)
+
+    # Build a descriptive page title for better SERP snippets:
+    #   "ABSeqMEG: EEG dataset, 20 subjects"  instead of bare  "ABSeqMEG"
+    modality = _clean_value(context.get("modality")) or "EEG"
+    n_sub = _clean_value(context.get("n_subjects"))
+    title_parts = [name]
+    suffix_parts = [f"{modality} dataset"]
+    if n_sub and n_sub not in ("—", "0"):
+        suffix_parts.append(f"{n_sub} subjects")
+    title_parts.append(", ".join(suffix_parts))
+    title = ": ".join(title_parts)
     dataset_id = str(context.get("dataset_id", ""))
     dataset_title = str(context.get("title", ""))
     og_description_field, meta_section = _format_dataset_meta_section(context)
@@ -2288,7 +2311,7 @@ def _process_dataset_item(
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
         api_section=_format_api_section(name),
-        see_also_section=_format_see_also_section(dataset_id),
+        see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
     )
     # Keep the file name with full prefix for URL stability
@@ -2368,13 +2391,41 @@ def _generate_dataset_docs(app) -> None:
     if _write_if_changed(primary_path, primary_content):
         LOGGER.info("[dataset-docs] Updated %s", primary_path.relative_to(app.srcdir))
 
+    # Build a modality index so each dataset page can cross-link to related
+    # datasets (same recording modality). Read-only after construction, so
+    # thread-safe for the parallel generator below.
+    datasets_by_modality: dict[str, list[str]] = defaultdict(list)
+    for name in dataset_names:
+        row = dataset_rows.get(name) or {}
+        mod = _clean_value(row.get("record_modality")) or _clean_value(
+            row.get("modality of exp")
+        )
+        if mod:
+            datasets_by_modality[mod.lower()].append(name)
+
+    def _related_for(name: str) -> list[str]:
+        """Return up to 6 sibling datasets sharing the same modality."""
+        row = dataset_rows.get(name) or {}
+        mod = _clean_value(row.get("record_modality")) or _clean_value(
+            row.get("modality of exp")
+        )
+        if not mod:
+            return []
+        siblings = datasets_by_modality.get(mod.lower(), [])
+        return [s for s in siblings if s != name][:6]
+
     generated_paths: set[Path] = set()
     srcdir = Path(app.srcdir)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         futures = {
             executor.submit(
-                _process_dataset_item, name, dataset_dir, dataset_rows.get(name), srcdir
+                _process_dataset_item,
+                name,
+                dataset_dir,
+                dataset_rows.get(name),
+                srcdir,
+                _related_for(name),
             ): name
             for name in dataset_names
         }
@@ -2645,6 +2696,42 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
             separators=(",", ":"),
         )
 
+    # BreadcrumbList JSON-LD on dataset pages. The visual breadcrumb nav
+    # already exists (pydata-sphinx-theme's `<nav aria-label="Breadcrumb">`),
+    # but without structured data Google can't use it for rich results.
+    _ds_prefix = "api/dataset/eegdash.dataset."
+    if pagename.startswith(_ds_prefix) and pagename != "api/dataset/eegdash.dataset":
+        ds_name = pagename[len(_ds_prefix) :]
+        breadcrumb = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://eegdash.org/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Datasets",
+                    "item": "https://eegdash.org/api/dataset/api_dataset.html",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": ds_name,
+                },
+            ],
+        }
+        # Dataset JSON-LD (the `Dataset` schema) is already embedded in the
+        # RST page body. BreadcrumbList goes in <head> via layout.html's
+        # `{% if jsonld %}` block.
+        context["jsonld"] = json.dumps(
+            breadcrumb, ensure_ascii=False, separators=(",", ":")
+        )
+
     description = _AUTO_PAGE_DESCRIPTIONS.get(pagename)
     if description:
         # Escape attribute-unsafe chars (`"`, `<`, `&`) before interpolating
@@ -2690,7 +2777,14 @@ sitemap_excludes = [
     "sg_execution_times.html",
     "sg_api_usage.html",
     "*/sg_execution_times.html",
+    # Sphinx-gallery example pages are code demos, not search-intent content.
+    # Excluding them focuses crawl budget on the 1,114 dataset pages.
+    "generated/auto_examples/index.html",
+    "generated/auto_examples/*.html",
 ]
+
+# Emit <lastmod> per URL so crawlers can prioritise recently updated pages.
+sitemap_show_lastmod = True
 
 # Copy button configuration: strip common interactive prompts when copying
 copybutton_prompt_text = r">>> |\\$ |# "

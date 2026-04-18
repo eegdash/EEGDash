@@ -10,7 +10,7 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
-.PHONY: help clean apidoc html html-noplot html-fast
+.PHONY: help clean apidoc html html-noplot html-fast markdown
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -38,6 +38,17 @@ html-fast: apidoc
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+
+# Markdown sibling build. Run *after* `make html` — we re-use the already
+# generated apidoc/summary tables and only build the markdown tree, then
+# mirror .md files into the html output and emit `llms-full.txt`. Gallery
+# execution is disabled here: the markdown corpus is for LLM/agent
+# consumption, and re-running the examples would double the build time
+# with no textual gain.
+markdown:
+	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M markdown "$(SOURCEDIR)" "$(BUILDDIR)" \
+		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O) || true
+	@python build_markdown_assets.py --source "$(BUILDDIR)/markdown" --target "$(BUILDDIR)/html"
 
 # Custom clean target to remove generated API docs and build files
 clean:

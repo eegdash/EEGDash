@@ -1,11 +1,11 @@
 :html_theme.sidebar_secondary.remove: true
-:og:description: Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Discover standardized metadata, run reproducible pipelines, and export model-ready features in minutes.
+:og:description: EEGDash is a Python library for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Load, preprocess, and train PyTorch models with MNE-Python and braindecode in minutes.
 
-.. title:: Search 700+ EEG/MEG datasets — BIDS-first
+.. title:: EEGDash — Python library for 700+ EEG/MEG datasets
 
 .. meta::
-   :description: Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Discover standardized metadata, run reproducible pipelines, and export model-ready features in minutes.
-   :keywords: EEG, MEG, dataset, BIDS, neuroscience, fNIRS, EMG, iEEG, OpenNeuro, NeMAR, machine learning
+   :description: EEGDash is a Python library for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Load, preprocess, and train PyTorch models with MNE-Python and braindecode in minutes.
+   :keywords: EEGDash, EEG, MEG, dataset, Python library, BIDS, neuroscience, PyTorch, MNE-Python, braindecode, fNIRS, EMG, iEEG, OpenNeuro, NEMAR, machine learning, deep learning
 
 .. container:: hf-hero
 
@@ -18,12 +18,13 @@
 
          .. raw:: html
 
-            <h1 class="hf-hero-title">Search and use 700+ EEG/MEG datasets — BIDS-first.</h1>
+            <h1 class="hf-hero-title">EEGDash — the Python library for 700+ BIDS-first EEG/MEG datasets.</h1>
 
          .. rst-class:: hf-hero-lede
 
-            Discover standardized metadata, run reproducible pipelines, and export
-            model-ready features in minutes.
+            Install with ``pip install eegdash``, then load, preprocess, and train
+            PyTorch models on open EEG/MEG data in minutes. Works hand-in-hand with
+            MNE-Python and braindecode.
 
          .. raw:: html
 

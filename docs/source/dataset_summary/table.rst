@@ -40,4 +40,4 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
    </figcaption>
    </figure>
 
-Pathology, modality, and dataset type now surface as consistent color-coded tags so you can scan the table at a glance.
+Pathology, modality, and dataset type appear as color-coded tags, so the table is quick to scan.

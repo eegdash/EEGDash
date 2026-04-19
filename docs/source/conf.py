@@ -420,16 +420,17 @@ DATASET_INDEX_TEMPLATE = """{notice}.. _api/dataset/api_dataset:
 Datasets API
 =======================
 
-The :mod:`eegdash.dataset` package exposes dynamically registered dataset
-classes. See :doc:`eegdash.dataset` for the module-level API, including
-:class:`~eegdash.dataset.EEGChallengeDataset` and helper utilities.
+The :mod:`eegdash.dataset` package exposes dataset classes that are
+registered dynamically at import time. See :doc:`eegdash.dataset` for the
+module-level API, including :class:`~eegdash.dataset.EEGChallengeDataset`
+and helper utilities.
 
-Dataset Overview
-----------------
+What's in the registry
+----------------------
 
-EEGDash currently exposes **{dataset_count} OpenNeuro EEG datasets** that are
-registered dynamically from mongo database. The table below summarises
-the distribution by experimental type as tracked in the summary file.
+EEGDash exposes **700+ OpenNeuro EEG datasets**, registered dynamically
+from MongoDB. The table below summarises the breakdown by experimental
+type ({dataset_count} datasets in this build).
 
 Base Dataset API
 ----------------

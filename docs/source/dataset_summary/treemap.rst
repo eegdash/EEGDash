@@ -2,7 +2,7 @@
 .. raw:: html
 
    <header class="eegdash-fig-title">
-     <h3>Dataset landscape treemap</h3>
+     <h3>Dataset treemap</h3>
    </header>
 
 .. raw:: html

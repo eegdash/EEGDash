@@ -46,7 +46,7 @@
 Datasets Catalog
 ================
 
-To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
+EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by collaborating labs. It preserves publicly funded research data and exposes it in a form that machine learning and deep learning workflows can use directly.
 
 
 .. grid:: 1 2 2 4
@@ -118,7 +118,7 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
          .. include:: dataset_summary/growth.rst
 
-      .. tab-item:: Dataset Landscape
+      .. tab-item:: Dataset Map
 
          .. include:: dataset_summary/bubble.rst
 
@@ -128,9 +128,9 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
 .. only:: not html
 
-   The catalog is best browsed interactively at
+   Browse the catalog interactively at
    `eegdash.org/dataset_summary.html <https://eegdash.org/dataset_summary.html>`__.
-   The same catalog is available programmatically in Python::
+   The same data is available programmatically in Python::
 
        from eegdash import EEGDashDataset
 
@@ -144,4 +144,4 @@ To leverage recent and ongoing advancements in large-scale computational methods
    (see the ``/docs`` Swagger UI and the
    `api catalog </.well-known/api-catalog>`__).
 
-The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
+The archive is still in :bdg-danger:`beta testing` mode, so be kind.

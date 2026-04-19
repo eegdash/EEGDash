@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove: true
 :og:description: EEGDash is a Python library for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Load, preprocess, and train PyTorch models with MNE-Python and braindecode in minutes.
 
-.. title:: EEGDash — Python library for 700+ EEG/MEG datasets
+.. title:: EEGDash: Python library for 700+ EEG/MEG datasets
 
 .. meta::
    :description: EEGDash is a Python library for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets. Load, preprocess, and train PyTorch models with MNE-Python and braindecode in minutes.
@@ -18,7 +18,7 @@
 
          .. raw:: html
 
-            <h1 class="hf-hero-title">EEGDash — the Python library for 700+ BIDS-first EEG/MEG datasets.</h1>
+            <h1 class="hf-hero-title">EEGDash: the Python library for 700+ BIDS-first EEG/MEG datasets.</h1>
 
          .. rst-class:: hf-hero-lede
 

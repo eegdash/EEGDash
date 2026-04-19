@@ -935,7 +935,7 @@ def _capture_moabb(html_path: Path, out_dir: Path) -> None:
     document.querySelectorAll('*').forEach(el => { try { var cs = getComputedStyle(el); if (cs.fontFamily.includes('system-ui') || cs.fontFamily.includes('Inter')) el.style.fontFamily = 'Helvetica, Arial, sans-serif'; } catch(e) {} });
     var b = document.createElement('div');
     b.style.cssText = 'position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:9999;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#374151;letter-spacing:0.5px;background:rgba(255,255,255,0.92);padding:6px 24px;border-radius:4px;border:1px solid rgba(0,108,163,0.15)';
-    b.innerHTML = '<span style="color:#006CA3;font-weight:700">719</span> datasets \\u00B7 <span style="color:#006CA3;font-weight:700">35,008</span> subjects \\u00B7 <span style="color:#006CA3;font-weight:700">65,175</span> hours \\u00B7 <span style="color:#006CA3;font-weight:700">5</span> modalities';
+    b.innerHTML = '<span style="color:#006CA3;font-weight:700">700+</span> datasets \\u00B7 <span style="color:#006CA3;font-weight:700">35,000+</span> subjects \\u00B7 <span style="color:#006CA3;font-weight:700">65,000+</span> hours \\u00B7 <span style="color:#006CA3;font-weight:700">5</span> modalities';
     document.body.appendChild(b);
 }""")
 

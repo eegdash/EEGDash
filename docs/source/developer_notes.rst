@@ -14,8 +14,8 @@ EEGDash package, manage the data ingestion pipeline, or administer supporting se
 Package Overview
 ----------------
 
-EEGDash (``eegdash``) provides a unified interface for accessing large-scale EEG datasets
-from multiple sources. The package architecture consists of:
+EEGDash (``eegdash``) is a single Python interface for EEG datasets spread across
+multiple public archives. The package breaks down as:
 
 **Core Modules**
 
@@ -224,7 +224,7 @@ The pipeline consists of 4 steps:
    # Available scripts: openneuro.py, nemar.py, eegmanylabs.py,
    #                    figshare.py, zenodo.py, osf.py, scidb.py, datarn.py
 
-**Step 2: Clone** - Smart clone without downloading raw data:
+**Step 2: Clone** - Shallow clone without downloading raw data:
 
 .. code-block:: bash
 

@@ -2183,6 +2183,59 @@ def _format_dataset_meta_section(
     return og_description_field, meta_directive
 
 
+_LICENSE_URL_MAP: dict[str, str] = {
+    # Keyed on the uppercased license string we receive from the dataset
+    # registry. Mapping is intentionally narrow — anything not listed
+    # falls back to the raw text (still valid per Google, just rendered
+    # with a warning). See
+    # https://developers.google.com/search/docs/appearance/structured-data/dataset
+    "CC0": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC BY": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-SA": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-NC": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-NC-SA": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "ODC-BY": "https://opendatacommons.org/licenses/by/1-0/",
+    "ODC-BY 1.0": "https://opendatacommons.org/licenses/by/1-0/",
+    "ODBL": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "ODC-ODBL": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "PDDL": "https://opendatacommons.org/licenses/pddl/1-0/",
+    "BSD-3-CLAUSE": "https://opensource.org/licenses/BSD-3-Clause",
+    "MIT": "https://opensource.org/licenses/MIT",
+    "APACHE-2.0": "https://www.apache.org/licenses/LICENSE-2.0",
+    "PUBLIC DOMAIN": "https://creativecommons.org/publicdomain/mark/1.0/",
+}
+
+
+def _license_text_to_url(text: str) -> str | None:
+    """Map a free-form license string to a canonical URL if we can.
+
+    Google's Rich Results validator prefers license URLs over names.
+    We normalise by stripping whitespace and uppercasing; everything
+    we can't match falls through so the caller keeps the raw text.
+    """
+    if not text:
+        return None
+    key = re.sub(r"\s+", " ", text.strip()).upper()
+    return _LICENSE_URL_MAP.get(key)
+
+
 def _format_dataset_jsonld_section(
     class_name: str, context: Mapping[str, object]
 ) -> str:
@@ -2258,10 +2311,13 @@ def _format_dataset_jsonld_section(
         jsonld["creator"] = [{"@type": "Person", "name": a} for a in authors]
 
     if license_text:
-        jsonld["license"] = license_text
+        jsonld["license"] = _license_text_to_url(license_text) or license_text
 
+    # schema.org/Dataset expects `datePublished` as an ISO 8601 date.
+    # Google's Rich Results validator emits a warning for bare years
+    # like "2024". Pin to January 1st when we only have a year.
     if year and re.fullmatch(r"\d{4}", year):
-        jsonld["datePublished"] = year
+        jsonld["datePublished"] = f"{year}-01-01"
 
     payload = json.dumps(jsonld, ensure_ascii=False, separators=(",", ":"))
     # HTML-parser safety: the only byte sequence that can terminate a
@@ -2935,6 +2991,9 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
 
     description = _AUTO_PAGE_DESCRIPTIONS.get(pagename)
     if description:
+        # Cap before HTML-escaping so the visible budget is what the
+        # scanner counts.
+        description = _cap_meta_description(description)
         # Escape attribute-unsafe chars (`"`, `<`, `&`) before interpolating
         # into the HTML. Current descriptions are trusted constants, but any
         # future addition containing a quote or ampersand would otherwise
@@ -2955,13 +3014,39 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
     if _page_still_lacks_description(context):
         synth = _synthesize_description(pagename)
         if synth:
-            escaped = html.escape(synth, quote=True)
+            escaped = html.escape(_cap_meta_description(synth), quote=True)
             tag = (
                 f'<meta name="description" content="{escaped}" />'
                 f'<meta property="og:description" content="{escaped}" />'
             )
             existing = context.get("metatags") or ""
             context["metatags"] = existing + tag
+
+    # Dataset-summary chart fragments (`dataset_summary/table`,
+    # `.../treemap`, etc.) are partial `.. include::` sources; Sphinx
+    # builds them as standalone pages as a side-effect but they render
+    # the same chart twice when someone lands on them directly. Tag
+    # them `noindex` so search engines don't show them as orphan hits.
+    if pagename.startswith("dataset_summary/") and pagename != "dataset_summary":
+        existing = context.get("metatags") or ""
+        if 'name="robots"' not in existing:
+            context["metatags"] = (
+                existing + '<meta name="robots" content="noindex,follow" />'
+            )
+
+
+def _cap_meta_description(text: str, limit: int = 160) -> str:
+    """Trim a meta description to at most ``limit`` characters on a word
+    boundary, appending an ellipsis. Google displays ~155-160 chars in
+    the SERP and Ahrefs flags anything longer as "too long"; anything
+    under 50 is flagged "too short" (we don't pad, caller is
+    responsible for generating enough content).
+    """
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) <= limit:
+        return text
+    trimmed = text[: limit - 1].rsplit(" ", 1)[0]
+    return trimmed.rstrip(",. ") + "…"
 
 
 def _page_still_lacks_description(context) -> bool:
@@ -3034,11 +3119,19 @@ sitemap_excludes = [
     "sg_execution_times.html",
     "sg_api_usage.html",
     "*/sg_execution_times.html",
-    # Sphinx-gallery example pages are code demos, not search-intent content.
-    # Excluding them focuses crawl budget on the 1,114 dataset pages.
-    "generated/auto_examples/index.html",
-    "generated/auto_examples/*.html",
+    # Dataset-summary chart fragments (`dataset_summary/table.html`,
+    # `.../treemap.html`, etc.). These are `.. include::` sources that
+    # Sphinx builds as their own pages as a side-effect; the useful
+    # rendered output is `dataset_summary.html`. Keeping them in the
+    # sitemap would dilute crawl budget and Ahrefs was flagging them as
+    # orphan pages. Paired with a noindex meta tag below so external
+    # backlinks don't bring them into the search index anyway.
+    "dataset_summary/*.html",
 ]
+# Sphinx-gallery tutorial pages stay in the sitemap — they're narrative,
+# keyword-rich content that matches our library-discoverability goal;
+# excluding them was the source of Ahrefs' "indexable page not in
+# sitemap" warning on `generated/auto_examples/hpc/tutorial_eoec.html`.
 
 # Emit <lastmod> per URL so crawlers can prioritise recently updated pages.
 sitemap_show_lastmod = True

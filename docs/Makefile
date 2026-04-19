@@ -10,7 +10,7 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
-.PHONY: help clean apidoc html html-noplot html-fast markdown
+.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -21,20 +21,26 @@ apidoc:
 	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
 		python -m sphinx.ext.apidoc -f -e -T -o "$(APIDIR)/dataset" "../$(PKG)" "../$(PKG)/features"
 
+# Regenerate $(SOURCEDIR)/_extra/llms.txt from the current source tree.
+# Runs after `apidoc` so the per-dataset pages that drive the sitemap
+# coverage metric are already materialised.
+llms-txt: apidoc
+	@python generate_llms_txt.py --source "$(SOURCEDIR)" --output "$(SOURCEDIR)/_extra/llms.txt"
+
 
 # Standard build runs examples
-html: apidoc
+html: apidoc llms-txt
 	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-html-noplot: apidoc
+html-noplot: apidoc llms-txt
 	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
 # Very fast build: limit datasets to 5
-html-fast: apidoc
+html-fast: apidoc llms-txt
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)

@@ -4,16 +4,18 @@
 # itself to be used for AI model training. Individual datasets linked
 # from this catalog are governed by their own upstream licenses.
 # See https://eegdash.org for project details.
+#
+# Content-Signals policy (search=yes, ai-input=yes, ai-train=no) —
+# currently kept as a comment because Lighthouse's robots.txt validator
+# does not yet recognise the Cloudflare Content-Signal directive and
+# flags it as an "unknown directive", dragging the PSI SEO score.
+# Reinstate as a live directive once Lighthouse ships the parser update,
+# or move in front of a reverse proxy (see docs/deploy/cloudflare-proxy)
+# that can emit a Content-Signal HTTP response header instead.
+#   Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 User-agent: *
 Allow: /
-
-# Content Signals (https://blog.cloudflare.com/content-signals/)
-# Declare how automated clients may use our content.
-#   search=yes    — indexing and display in search results is allowed
-#   ai-input=yes  — use as grounding/context for AI answers is allowed
-#   ai-train=no   — use for AI model training is not authorized
-Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 # Point crawlers to the generated sitemap
 Sitemap: https://eegdash.org/sitemap.xml

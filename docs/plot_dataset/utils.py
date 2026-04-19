@@ -154,13 +154,20 @@ def human_readable_size(num_bytes: int | float | None) -> str:
 
 
 def get_dataset_url(name: str) -> str:
-    """Generate dataset URL for plots (relative to dataset summary page)."""
+    """Return a root-relative dataset URL for plots and tables.
+
+    Leading slash is load-bearing: without it, anchors inside the
+    catalog resolve against whatever document URL the page is loaded
+    from, and any trailing-slash variant (``/dataset_summary/``) sends
+    crawlers to ``/dataset_summary/api/dataset/…`` → 404. Ahrefs
+    accumulated ~1,100 such broken URLs before we fixed this.
+    """
     if name is None or (isinstance(name, float) and pd.isna(name)):
         return ""
     text = str(name).strip()
     if not text:
         return ""
-    return f"api/dataset/eegdash.dataset.{text.upper()}.html"
+    return f"/api/dataset/eegdash.dataset.{text.upper()}.html"
 
 
 def ensure_directory(path: str | Path) -> Path:

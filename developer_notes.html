@@ -553,8 +553,8 @@
 EEGDash package, manage the data ingestion pipeline, or administer supporting services.</p>
 <section id="package-overview">
 <h2>Package Overview<a class="headerlink" href="#package-overview" title="Link to this heading">#</a></h2>
-<p>EEGDash (<code class="docutils literal notranslate"><span class="pre">eegdash</span></code>) provides a unified interface for accessing large-scale EEG datasets
-from multiple sources. The package architecture consists of:</p>
+<p>EEGDash (<code class="docutils literal notranslate"><span class="pre">eegdash</span></code>) is a single Python interface for EEG datasets spread across
+multiple public archives. The package breaks down as:</p>
 <p><strong>Core Modules</strong></p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
@@ -767,7 +767,7 @@ python<span class="w"> </span>scripts/ingestions/1_fetch_sources/openneuro.py<sp
 <span class="c1">#                    figshare.py, zenodo.py, osf.py, scidb.py, datarn.py</span>
 </pre></div>
 </div>
-<p><strong>Step 2: Clone</strong> - Smart clone without downloading raw data:</p>
+<p><strong>Step 2: Clone</strong> - Shallow clone without downloading raw data:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone all datasets from consolidated files</span>
 python<span class="w"> </span>scripts/ingestions/2_clone.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--input<span class="w"> </span>consolidated<span class="w"> </span><span class="se">\</span>

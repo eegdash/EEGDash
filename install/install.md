@@ -2,12 +2,12 @@
 
 # Installation
 
-EEGDash is written in Python 3, specifically for version 3.11 or above.
+EEGDash requires Python 3.11 or higher.
 
-The package is distributed via Python package index ([PyPI](https://pypi.org/project/eegdash)), and you can access the
-source code via [Github](https://github.com/eegdash/eegdash) repository.
+The package is on [PyPI](https://pypi.org/project/eegdash), and the source lives on
+[GitHub](https://github.com/eegdash/eegdash).
 
-There are different ways to install EEGDash, depending on your needs:
+Two install paths, depending on what you need:
 
 Install via `pip`
 
@@ -27,8 +27,8 @@ For Advanced Users
 
 ![Terminal Window](https://mne.tools/stable/_images/mne_installer_console.png)
 
-**Already familiar with Python?**
-Follow our setup instructions for building from Github and start to contribute!
+For Python users who want the development version.
+Follow the setup instructions for building from GitHub.
 
 [From Source Code](install_source.md#install-source)
 

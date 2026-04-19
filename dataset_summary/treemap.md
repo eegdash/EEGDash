@@ -1,5 +1,5 @@
 <header class="eegdash-fig-title">
-  <h3>Dataset landscape treemap</h3>
+  <h3>Dataset treemap</h3>
 </header><figure class="eegdash-figure" style="margin: 0 0 1.25rem 0;">
 <style>
 #dataset-treemap-plot {

@@ -537,13 +537,13 @@
                   
   <section id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
-<p>This guide provides a comprehensive overview of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library, focusing on its core data access object, <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.</p>
+<p>This guide walks through the <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> library and its main data access object, <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. You will see how to find, access, and manage EEG data for research and analysis.</p>
 <section id="the-eegdash-object">
 <h2>The EEGDash Object<a class="headerlink" href="#the-eegdash-object" title="Link to this heading">#</a></h2>
-<p>While <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main tool for loading data for machine learning, the <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code> object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main tool for loading data for machine learning. For direct access to the metadata database, use the lower-level <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code> object. It is the right choice for exploring what is available, running ad-hoc queries, or managing records.</p>
 <section id="initializing-eegdash">
 <h3>Initializing EEGDash<a class="headerlink" href="#initializing-eegdash" title="Link to this heading">#</a></h3>
-<p>You can create a client to connect to the public database like this:</p>
+<p>Create a client that connects to the public database:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDash</span>
 
 <span class="c1"># Connect to the public database</span>
@@ -553,7 +553,7 @@
 </section>
 <section id="finding-records">
 <h3>Finding Records<a class="headerlink" href="#finding-records" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">find()</span></code> method allows you to query the database for records matching specific criteria. You can pass keyword arguments for simple filters or a full MongoDB query dictionary for more advanced searches.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">find()</span></code> to query the database for records matching specific criteria. Pass keyword arguments for simple filters, or a full MongoDB query dictionary for more advanced searches.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find records for a specific dataset and subject</span>
 <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;ds002718&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;012&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span><span class="si">}</span><span class="s2"> records.&quot;</span><span class="p">)</span>
@@ -567,25 +567,25 @@
 </section>
 <section id="eegdash-vs-eegdashdataset">
 <h3>EEGDash vs. EEGDashDataset<a class="headerlink" href="#eegdash-vs-eegdashdataset" title="Link to this heading">#</a></h3>
-<p>It’s important to understand the distinction between these two objects:</p>
+<p>These two objects do different jobs:</p>
 <ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code>: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code>: query and manage metadata. Returns a list of dictionaries, one per record.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>: load EEG data for analysis or machine learning. Returns a PyTorch-compatible dataset where each item can load the underlying EEG signal.</p></li>
 </ul>
-<p>In general, you will use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for most of your data loading needs.</p>
+<p>For most data loading work, use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>.</p>
 </section>
 </section>
 <section id="the-eegdashdataset-object">
 <h2>The EEGDashDataset Object<a class="headerlink" href="#the-eegdashdataset-object" title="Link to this heading">#</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the primary entry point for working with EEG recordings in <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code>. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is the main entry point for working with EEG recordings in <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code>. It is a high-level interface that queries the metadata database and loads matching EEG data, either from a remote source or from a local cache.</p>
 <section id="initializing-eegdashdataset">
 <h3>Initializing EEGDashDataset<a class="headerlink" href="#initializing-eegdashdataset" title="Link to this heading">#</a></h3>
-<p>To get started, you need to create an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. The two most important parameters are <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p>
+<p>Create an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. The two main parameters are <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>: This is the local directory where <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> will store downloaded data.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code>: The identifier of the dataset you want to work with (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;ds002718&quot;</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>: local directory where <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> stores downloaded data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code>: identifier of the dataset (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;ds002718&quot;</span></code>).</p></li>
 </ul>
-<p>Here’s a basic example of how to initialize the dataset:</p>
+<p>A basic example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
 
 <span class="c1"># Initialize the dataset for ds002718</span>
@@ -597,15 +597,15 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> recordings in the dataset.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will create a dataset object containing all recordings from <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>. The data files will be downloaded to the <code class="docutils literal notranslate"><span class="pre">./eeg_data/ds002718/</span></code> directory when accessed.</p>
+<p>The resulting object holds every recording in <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>. Files are downloaded to <code class="docutils literal notranslate"><span class="pre">./eeg_data/ds002718/</span></code> on first access.</p>
 </section>
 </section>
 <section id="querying-for-specific-data">
 <h2>Querying for Specific Data<a class="headerlink" href="#querying-for-specific-data" title="Link to this heading">#</a></h2>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> lets you select a subset of recordings by task, subject, session, or run.</p>
 <section id="filtering-by-task">
 <h3>Filtering by Task<a class="headerlink" href="#filtering-by-task" title="Link to this heading">#</a></h3>
-<p>You can easily select recordings associated with a specific experimental task. For example, to get all resting-state recordings:</p>
+<p>You can select recordings tied to a specific experimental task. For example, to get all resting-state recordings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter by a single task</span>
 <span class="n">resting_state_dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./eeg_data&quot;</span><span class="p">,</span>
@@ -619,7 +619,7 @@
 </section>
 <section id="filtering-by-subject">
 <h3>Filtering by Subject<a class="headerlink" href="#filtering-by-subject" title="Link to this heading">#</a></h3>
-<p>You can also filter the data to get recordings from one or more subjects.</p>
+<p>Filter by one or more subjects:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter by a single subject</span>
 <span class="n">subject_dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./eeg_data&quot;</span><span class="p">,</span>
@@ -642,7 +642,7 @@
 </section>
 <section id="combining-filters">
 <h3>Combining Filters<a class="headerlink" href="#combining-filters" title="Link to this heading">#</a></h3>
-<p>You can combine multiple filters to create more specific queries. For instance, to get the resting-state recordings for a specific set of subjects:</p>
+<p>Combine filters for narrower queries. For example, to get resting-state recordings from a specific set of subjects:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Combine subject and task filters</span>
 <span class="n">combined_filter_dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./eeg_data&quot;</span><span class="p">,</span>
@@ -657,7 +657,7 @@
 </section>
 <section id="advanced-querying-with-mongodb-syntax">
 <h3>Advanced Querying with MongoDB Syntax<a class="headerlink" href="#advanced-querying-with-mongodb-syntax" title="Link to this heading">#</a></h3>
-<p>For more complex queries, you can pass a MongoDB-style query dictionary directly using the <code class="docutils literal notranslate"><span class="pre">query</span></code> parameter. This allows for advanced filtering, such as using operators like <code class="docutils literal notranslate"><span class="pre">$in</span></code>.</p>
+<p>For more complex queries, pass a MongoDB-style query dictionary directly to the <code class="docutils literal notranslate"><span class="pre">query</span></code> parameter. Operators such as <code class="docutils literal notranslate"><span class="pre">$in</span></code> work here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use a MongoDB-style query</span>
 <span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">,</span>
@@ -673,9 +673,9 @@
 </section>
 <section id="working-with-local-data-offline-mode">
 <h2>Working with Local Data (Offline Mode)<a class="headerlink" href="#working-with-local-data-offline-mode" title="Link to this heading">#</a></h2>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> also supports working with local data that you have already downloaded or manage separately. By setting <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, you can instruct <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> to use local BIDS-compliant data instead of accessing the database or remote storage.</p>
-<p>To use this feature, your data must be organized in a BIDS-like structure within your <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>. For example, if your <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> is <code class="docutils literal notranslate"><span class="pre">./eeg_data</span></code> and your dataset is <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, the files should be located at <code class="docutils literal notranslate"><span class="pre">./eeg_data/ds002718/</span></code>.</p>
-<p>Here is how to use <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> in offline mode:</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> also works with local data you have already downloaded or manage yourself. Pass <code class="docutils literal notranslate"><span class="pre">download=False</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> reads BIDS-compliant files from disk instead of hitting the database or remote storage.</p>
+<p>The data must follow a BIDS-like layout inside your <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>. If <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> is <code class="docutils literal notranslate"><span class="pre">./eeg_data</span></code> and the dataset is <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, the files belong under <code class="docutils literal notranslate"><span class="pre">./eeg_data/ds002718/</span></code>.</p>
+<p>Offline mode in practice:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize in offline mode</span>
 <span class="n">local_dataset</span> <span class="o">=</span> <span class="n">EEGDashDataset</span><span class="p">(</span>
     <span class="n">cache_dir</span><span class="o">=</span><span class="s2">&quot;./eeg_data&quot;</span><span class="p">,</span>
@@ -686,11 +686,11 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">local_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> local recordings.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>When <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">download=False</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> scans <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> for EEG files and builds the dataset from the local file system. Use this for offline environments, air-gapped machines, or your own curated datasets.</p>
 </section>
 <section id="accessing-data-from-the-dataset">
 <h2>Accessing Data from the Dataset<a class="headerlink" href="#accessing-data-from-the-dataset" title="Link to this heading">#</a></h2>
-<p>Once you have your <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> object, you can access individual recordings as if it were a list. Each item in the dataset is an <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code> object, which contains the metadata and methods to load the actual EEG data.</p>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> object behaves like a list: index into it to access individual recordings. Each item is an <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashBaseDataset</span></code> that carries the metadata and loads the EEG data on demand.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="c1"># Get the first recording</span>
     <span class="n">recording</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -698,26 +698,23 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded recording for subject: </span><span class="si">{</span><span class="n">recording</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This provides a powerful and flexible way to integrate <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see <a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a>.</p>
+<p>This is how <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> plugs into a data analysis pipeline, whether the data is remote or local. For contributor resources, see <a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a>.</p>
 </section>
 <section id="api-configuration">
 <h2>API Configuration<a class="headerlink" href="#api-configuration" title="Link to this heading">#</a></h2>
 <p>By default, <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash</span></code> connects to the public REST API at <code class="docutils literal notranslate"><span class="pre">https://data.eegdash.org</span></code>.
-You can customize this behavior using environment variables:</p>
+Override it through environment variables:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Override the default API URL (e.g., for testing)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">EEGDASH_API_URL</span><span class="o">=</span><span class="s2">&quot;https://data.eegdash.org&quot;</span>
 
-<span class="c1"># For admin write operations (required for dataset ingestion)</span>
+<span class="c1"># Admin write operations (required for dataset ingestion)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">EEGDASH_API_TOKEN</span><span class="o">=</span><span class="s2">&quot;your-admin-token&quot;</span>
 </pre></div>
 </div>
-<p>The API provides the following features:</p>
-<ul class="simple">
-<li><p><strong>Rate Limiting</strong>: Public endpoints are limited to 100 requests/minute per IP</p></li>
-<li><p><strong>Health Checks</strong>: Service status available at <code class="docutils literal notranslate"><span class="pre">/health</span></code></p></li>
-<li><p><strong>Request Tracing</strong>: All responses include <code class="docutils literal notranslate"><span class="pre">X-Request-ID</span></code> for debugging</p></li>
-</ul>
-<p>For more details about the API architecture, see <a class="reference internal" href="api/api_core.html"><span class="doc">API Core</span></a>.</p>
+<p>Public endpoints are rate-limited to 100 requests per minute per IP. Service
+status is available at <code class="docutils literal notranslate"><span class="pre">/health</span></code>, and every response carries an
+<code class="docutils literal notranslate"><span class="pre">X-Request-ID</span></code> header you can use for debugging.</p>
+<p>For more on the API architecture, see <a class="reference internal" href="api/api_core.html"><span class="doc">API Core</span></a>.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="developer_notes.html"><span class="doc">Developer Notes</span></a> captures contributor workflows for the core package.</p>

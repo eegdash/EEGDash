@@ -2,18 +2,16 @@
 
 # Installing from PyPI
 
-EEGDash can be installed via pip from [PyPI](https://pypi.org/project/eegdash).
-
-#### NOTE
-We recommend the most updated version of pip to install from PyPI.
-
-Below are the installation commands for the most common use cases.
+Install EEGDash from [PyPI](https://pypi.org/project/eegdash) with pip:
 
 ```shell
 pip install eegdash
 ```
 
-This will install the eegdash package and its dependencies.
+This pulls in the `eegdash` package and its dependencies.
+
+#### NOTE
+Use a recent `pip`. Older versions may resolve dependencies poorly.
 
 <!-- This (-*- rst -*-) format file contains commonly used link targets
 and name substitutions.  It may be included in many files,

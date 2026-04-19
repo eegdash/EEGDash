@@ -1,4 +1,4 @@
-<h1 class="hf-hero-title">EEGDash — the Python library for 700+ BIDS-first EEG/MEG datasets.</h1>
+<h1 class="hf-hero-title">EEGDash: the Python library for 700+ BIDS-first EEG/MEG datasets.</h1>
 
 Install with `pip install eegdash`, then load, preprocess, and train
 PyTorch models on open EEG/MEG data in minutes. Works hand-in-hand with

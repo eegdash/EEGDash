@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:00.784** total execution time for 11 files **from generated/auto_examples/tutorials**:
+**00:00.863** total execution time for 11 files **from generated/auto_examples/tutorials**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,8 +19,8 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                                     | Time      |   Mem (MB) |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [EEGDash API Tutorial](tutorial_api.md#sphx-glr-generated-auto-examples-tutorials-tutorial-api-py) (`tutorial_api.py`)                                                                                      | 00:00.437 |          0 |
-| [Transfer Learning with EEGDash](tutorial_transfer_learning.md#sphx-glr-generated-auto-examples-tutorials-tutorial-transfer-learning-py) (`tutorial_transfer_learning.py`)                                  | 00:00.345 |          0 |
+| [EEGDash API Tutorial](tutorial_api.md#sphx-glr-generated-auto-examples-tutorials-tutorial-api-py) (`tutorial_api.py`)                                                                                      | 00:00.543 |          0 |
+| [Transfer Learning with EEGDash](tutorial_transfer_learning.md#sphx-glr-generated-auto-examples-tutorials-tutorial-transfer-learning-py) (`tutorial_transfer_learning.py`)                                  | 00:00.318 |          0 |
 | [Clinical Dataset Summary](plot_clinical_summary.md#sphx-glr-generated-auto-examples-tutorials-plot-clinical-summary-py) (`plot_clinical_summary.py`)                                                       | 00:00.002 |          0 |
 | [Age Prediction from EEG](noplot_tutorial_age_prediction.md#sphx-glr-generated-auto-examples-tutorials-noplot-tutorial-age-prediction-py) (`noplot_tutorial_age_prediction.py`)                             | 00:00.000 |          0 |
 | [Oddball Classification](noplot_tutorial_audi_oddball.md#sphx-glr-generated-auto-examples-tutorials-noplot-tutorial-audi-oddball-py) (`noplot_tutorial_audi_oddball.py`)                                    | 00:00.000 |          0 |

@@ -411,8 +411,13 @@ def generate_search_index(df_raw: pd.DataFrame) -> None:
             "modality": modality_tags,
             "type": type_tags,
             "recordModality": record_modality,
-            # URL for dataset detail page
-            "url": f"api/dataset/eegdash.dataset.{dataset_id.upper()}.html",
+            # URL for dataset detail page. Root-relative so the link
+            # resolves correctly regardless of the document URL variant
+            # (e.g. "/dataset_summary/" vs "/dataset_summary.html") —
+            # without the leading slash, crawlers and share cards that
+            # load the page under a trailing-slash URL would resolve it
+            # to /dataset_summary/api/dataset/… (1,100+ Ahrefs 404s).
+            "url": f"/api/dataset/eegdash.dataset.{dataset_id.upper()}.html",
         }
         search_index.append(entry)
 

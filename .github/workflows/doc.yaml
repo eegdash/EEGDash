@@ -212,3 +212,31 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html
           cname: eegdash.org
+
+      - name: Ping IndexNow (Bing + Yandex + friends)
+        # IndexNow tells participating search engines about every deploy
+        # in one POST instead of waiting for their next crawl cycle. Key
+        # lives at /<key>.txt on the site (not a secret — it's a
+        # domain-ownership proof file). See indexnow.org/documentation.
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        continue-on-error: true
+        env:
+          INDEXNOW_KEY: 6695f94a811ae3c117e343909bc5e6f8
+        run: |
+          if [ ! -f ./docs/_build/html/sitemap.xml ]; then
+            echo "sitemap.xml missing; skipping IndexNow ping"
+            exit 0
+          fi
+          urls=$(python3 <<'PY'
+          import json, xml.etree.ElementTree as ET
+          ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          root = ET.parse('./docs/_build/html/sitemap.xml').getroot()
+          locs = [u.text.strip() for u in root.findall('s:url/s:loc', ns) if u.text]
+          print(json.dumps(locs[:10000]))
+          PY
+          )
+          payload=$(printf '{"host":"eegdash.org","key":"%s","keyLocation":"https://eegdash.org/%s.txt","urlList":%s}' \
+            "$INDEXNOW_KEY" "$INDEXNOW_KEY" "$urls")
+          curl -sS -X POST https://api.indexnow.org/indexnow \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "$payload" -o /dev/null -w "IndexNow HTTP %{http_code}\n"

@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap");
+/* Google Fonts are loaded via `<link rel="preload" as="style" onload="…">`
+   in docs/source/_templates/layout.html so the stylesheet fetch happens
+   in parallel with CSS parsing instead of blocking it. Keeping the
+   @import here would re-introduce the blocking chain PSI flagged. */
 
 /* --------------------------------------------------------------------------
    1. Global Variable & Typography Overrides
@@ -2979,10 +2982,29 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
 /* --------------------------------------------------------------------------
    16. Homepage Motion
    -------------------------------------------------------------------------- */
+
+/* Isolate layout recomputation inside each revealed block so the
+   animation can't push other content down. `contain: layout` scopes
+   the browser's layout pass to this subtree, which is what kills the
+   Cumulative Layout Shift penalty PageSpeed flagged. */
 body[data-page="index"] .hf-reveal {
   opacity: 0;
   transform: translateY(12px);
   animation: hf-fade-up 0.8s ease forwards;
+  will-change: opacity, transform;
+  contain: layout;
+}
+
+/* Pre-reserve min-heights so the grid items don't collapse to zero
+   before their content paints. Matches the typical rendered height of
+   each block so visual layout is stable from FCP onwards. */
+body[data-page="index"] .hf-hero-copy { min-height: 460px; }
+body[data-page="index"] .hf-hero-panel { min-height: 380px; }
+body[data-page="index"] .hf-stat-card { min-height: 160px; }
+
+@media (max-width: 768px) {
+  body[data-page="index"] .hf-hero-copy { min-height: 520px; }
+  body[data-page="index"] .hf-hero-panel { min-height: 340px; }
 }
 
 body[data-page="index"] .hf-delay-1 {

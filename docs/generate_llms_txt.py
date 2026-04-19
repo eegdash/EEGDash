@@ -21,7 +21,6 @@ by Sphinx (`html_extra_path = ["_extra"]` copies it to the build root).
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 from typing import Iterable
 
@@ -106,7 +105,10 @@ def _discover_api_pages(source: Path) -> list[tuple[str, str]]:
     pages: list[tuple[str, str]] = []
     core = source / "api" / "generated" / "api-core"
     features = source / "api" / "generated" / "api-features"
-    for folder, url_prefix in ((core, "api/generated/api-core"), (features, "api/generated/api-features")):
+    for folder, url_prefix in (
+        (core, "api/generated/api-core"),
+        (features, "api/generated/api-features"),
+    ):
         if not folder.is_dir():
             continue
         for rst in sorted(folder.glob("*.rst")):
@@ -124,7 +126,7 @@ def _discover_dataset_pages(source: Path) -> list[tuple[str, str]]:
     entries: list[tuple[str, str]] = []
     for rst in sorted(folder.glob(f"{prefix}*.rst")):
         stem = rst.stem  # e.g. eegdash.dataset.DS001234
-        ds_id = stem[len(prefix):]
+        ds_id = stem[len(prefix) :]
         if not ds_id:
             continue
         url = f"api/dataset/{stem}.html"
@@ -158,9 +160,7 @@ def build(source: Path, output: Path, site_url: str = SITE_URL) -> int:
     api_pages = _discover_api_pages(source)
     dataset_pages = _discover_dataset_pages(source)
 
-    api_section = _render_section(
-        "API reference pages (per-module)", api_pages
-    )
+    api_section = _render_section("API reference pages (per-module)", api_pages)
 
     dataset_header = (
         f"## Dataset pages (N={len(dataset_pages)})\n\n"
@@ -170,7 +170,9 @@ def build(source: Path, output: Path, site_url: str = SITE_URL) -> int:
         f"<{site_url}/dataset_summary.html>; the list below is what "
         f"sitemap / agent crawlers should enumerate.\n\n"
     )
-    dataset_body_lines = [f"- [{ds_id}]({site_url}/{url})" for ds_id, url in dataset_pages]
+    dataset_body_lines = [
+        f"- [{ds_id}]({site_url}/{url})" for ds_id, url in dataset_pages
+    ]
     dataset_full = dataset_header + "\n".join(dataset_body_lines) + "\n"
 
     head = curated + "\n" + api_section + "\n"

@@ -158,24 +158,28 @@ html_theme_options = {
     "external_links": [
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
+    # Local SVG icons instead of FontAwesome. Pydata-sphinx-theme only
+    # loads fontawesome.js (~540 KiB) when at least one icon_links entry
+    # has type="fontawesome"; switching to local SVGs removes that
+    # dependency from every page load.
     "icon_links": [
         {
             "name": "GitHub",
             "url": "https://github.com/eegdash/EEGDash",
-            "icon": "fa-brands fa-github",
-            "type": "fontawesome",
+            "icon": "_static/icons/github.svg",
+            "type": "local",
         },
         {
             "name": "PyPI",
             "url": "https://pypi.org/project/eegdash/",
-            "icon": "fa-solid fa-box",
-            "type": "fontawesome",
+            "icon": "_static/icons/pypi.svg",
+            "type": "local",
         },
         {
             "name": "Discord",
             "url": "https://discord.gg/8jd7nVKwsc",
-            "icon": "fa-brands fa-discord",
-            "type": "fontawesome",
+            "icon": "_static/icons/discord.svg",
+            "type": "local",
         },
     ],
 }
@@ -2942,6 +2946,62 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
         )
         existing = context.get("metatags") or ""
         context["metatags"] = existing + tag
+
+    # Backstop meta descriptions for the auto-generated reference pages
+    # (per-dataset, per-module). These pages don't carry a `.. meta::`
+    # directive, so without this hook Ahrefs flags 70+ pages as
+    # "description too short". The templates match the page family, so
+    # every generated page ships a unique, keyword-appropriate blurb.
+    if _page_still_lacks_description(context):
+        synth = _synthesize_description(pagename)
+        if synth:
+            escaped = html.escape(synth, quote=True)
+            tag = (
+                f'<meta name="description" content="{escaped}" />'
+                f'<meta property="og:description" content="{escaped}" />'
+            )
+            existing = context.get("metatags") or ""
+            context["metatags"] = existing + tag
+
+
+def _page_still_lacks_description(context) -> bool:
+    """True if neither a `.. meta::` description nor an auto-page hook
+    has produced a `<meta name="description" …>` tag for this page.
+    """
+    current = context.get("metatags") or ""
+    return 'name="description"' not in current
+
+
+def _synthesize_description(pagename: str) -> str | None:
+    """Generate a short, keyword-appropriate description for Sphinx
+    auto-generated pages (per-dataset, per-module API reference).
+    Returns ``None`` if no template matches — the page already has one.
+    """
+    ds_prefix = "api/dataset/eegdash.dataset."
+    if pagename.startswith(ds_prefix) and pagename != ds_prefix.rstrip("."):
+        ds_id = pagename[len(ds_prefix) :].upper()
+        return (
+            f"{ds_id} — BIDS-first EEG/MEG dataset accessible via the "
+            f"EEGDash Python library. Load in a single line of code with "
+            f"MNE-Python and braindecode. Full metadata, channels, and "
+            f"citation on this page."
+        )
+    # Per-module API reference under api/generated/api-core/* or api-features/*
+    if pagename.startswith("api/generated/api-core/"):
+        module = pagename.rsplit("/", 1)[-1]
+        return (
+            f"EEGDash Python API reference for `{module}` — classes, "
+            f"functions, and schemas used to load BIDS-first EEG/MEG "
+            f"datasets, preprocess them, and feed them to PyTorch."
+        )
+    if pagename.startswith("api/generated/api-features/"):
+        module = pagename.rsplit("/", 1)[-1]
+        return (
+            f"EEGDash feature-extraction API reference for `{module}` — "
+            f"spectral, connectivity, complexity, and spatial feature "
+            f"extractors for EEG/MEG machine-learning pipelines."
+        )
+    return None
 
 
 def setup(app):

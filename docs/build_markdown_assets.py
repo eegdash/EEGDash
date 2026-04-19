@@ -45,32 +45,36 @@ def copy_siblings(markdown_root: Path, html_root: Path) -> int:
     return copied
 
 
+def _llms_full_sort_key(rel_posix: str) -> tuple[int, str]:
+    """Deterministic page order for llms-full.txt.
+
+    Narrative docs come first, then API reference, then the long
+    sphinx-gallery output, so LLMs read the high-value content before
+    they hit context limits.
+    """
+    if rel_posix == "index.md":
+        return (0, rel_posix)
+    if rel_posix.startswith("install/"):
+        return (1, rel_posix)
+    if rel_posix.startswith("user_guide"):
+        return (2, rel_posix)
+    if rel_posix == "dataset_summary.md":
+        return (3, rel_posix)
+    if rel_posix.startswith("api/"):
+        return (5, rel_posix)
+    if rel_posix.startswith("generated/"):
+        return (6, rel_posix)
+    return (4, rel_posix)
+
+
 def build_llms_full(markdown_root: Path, output_path: Path) -> int:
     """Concatenate all markdown files into a single llms-full.txt."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Sort so the output is deterministic across builds.
-    md_files = sorted(markdown_root.rglob("*.md"))
-
-    # Deterministic page order that keeps narrative docs together and
-    # pushes the long auto-generated API / dataset pages to the end.
-    def sort_key(path: Path) -> tuple[int, str]:
-        rel = path.relative_to(markdown_root).as_posix()
-        if rel == "index.md":
-            return (0, rel)
-        if rel.startswith("install/"):
-            return (1, rel)
-        if rel.startswith("user_guide"):
-            return (2, rel)
-        if rel == "dataset_summary.md":
-            return (3, rel)
-        if rel.startswith("api/"):
-            return (5, rel)
-        if rel.startswith("generated/"):
-            return (6, rel)
-        return (4, rel)
-
-    md_files.sort(key=sort_key)
+    md_files = sorted(
+        markdown_root.rglob("*.md"),
+        key=lambda p: _llms_full_sort_key(p.relative_to(markdown_root).as_posix()),
+    )
 
     with output_path.open("w", encoding="utf-8") as out:
         out.write("# EEGDash — full markdown corpus\n\n")

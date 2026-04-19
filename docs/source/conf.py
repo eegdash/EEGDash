@@ -2883,9 +2883,7 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
     # eegdash is the canonical way to start using the library.
     howto = _INSTALL_HOWTO.get(pagename)
     if howto is not None:
-        context["jsonld"] = json.dumps(
-            howto, ensure_ascii=False, separators=(",", ":")
-        )
+        context["jsonld"] = json.dumps(howto, ensure_ascii=False, separators=(",", ":"))
 
     # TechArticle JSON-LD on the narrative docs. Signals "this is reference
     # content, not marketing" to search engines and LLM retrievers.

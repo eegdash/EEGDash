@@ -39,7 +39,7 @@ html-fast: apidoc
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
 
-# Markdown sibling build. Run *after* `make html` — we re-use the already
+# Markdown sibling build. Run *after* `make html` — we reuse the already
 # generated apidoc/summary tables and only build the markdown tree, then
 # mirror .md files into the html output and emit `llms-full.txt`. Gallery
 # execution is disabled here: the markdown corpus is for LLM/agent

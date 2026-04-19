@@ -10,4 +10,3 @@ Contact: https://github.com/eegdash/EEGDash/security/advisories/new
 Expires: 2027-04-18T00:00:00.000Z
 Preferred-Languages: en, fr, pt
 Canonical: https://eegdash.org/.well-known/security.txt
-Policy: https://github.com/eegdash/EEGDash/blob/main/SECURITY.md

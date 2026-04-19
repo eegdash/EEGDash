@@ -9,7 +9,7 @@
 Installing from sources
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to test features under development or contribute to the library, or if you want to test the new tools that have been tested in EEGDash and not released yet, this is the right tutorial for you!
+This page covers installing EEGDash from source, which is what you want for contributing or for trying features that have not yet been released.
 
 For an overview of contributor workflows and project internals, see :doc:`Developer Notes </developer_notes>`.
 
@@ -27,13 +27,13 @@ Install preview version from PyPI
 
    pip install --pre eegdash
 
-You should will install the version of `eegdash` that is currently under development at main branch, which may not be stable. 
+This installs the in-development version of `eegdash` from the main branch, which may not be stable.
 
 
 Install directly from repository from GitHub
 --------------------------------------------
 
-Let's suppose that you want to install EEGDash from the source. The first thing you should do is clone the EEGDash repository to your computer and enter inside the repository.
+Clone the EEGDash repository and change into it:
 
 .. code-block:: shell
 
@@ -44,8 +44,7 @@ You should now be in the root directory of the EEGDash repository.
 Installing EEGDash from the source with pip
 -------------------------------------------
 
-If you want to only install EEGDash from source once and not do any development
-work, then the recommended way to build and install is to use ``pip``
+For a one-off install from source, without doing any development, use ``pip``:
 
 For the latest development version, directly from GitHub:
 

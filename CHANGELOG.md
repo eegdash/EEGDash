@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional recording-info parameter for feature extractors (#284, #285)
 - `on_error` parameter to skip bad records during data loading (#276)
 - CTF direct reader for `.ds` directories (#279)
-- Robust BrainVision handling with auto-repair and metadata generation (#236)
+- BrainVision handling with auto-repair and metadata generation (#236)
 - Enhanced documentation search with autocomplete and live search (#238)
 - fNIRS metadata extraction support (#238)
 - EDF/BDF metadata extraction via MNE
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified color palette across plots and CSS tags
 
 ### Fixed
-- Robust data loading across 522 EEG datasets (#282)
+- Reliable data loading across 522 EEG datasets (#282)
 - Git-annex key path resolution to BIDS names for S3 downloads (#280)
 - BIDS TSV whitespace-padded `n/a` values (#278)
 - BIDS coordinate system validation and extended non-numeric run fallback (#277)
@@ -53,8 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrupt data, bad timestamps, and invalid BIDS entity handling (#260)
 - Directory-based format recursive download support (#253)
 - Dynamic `cumulative_sizes` and accurate `nchans` computation (#243)
-- Robust BIDSPath entity extraction for git-annex datasets (#245)
-- Robust subject/participant TSV fallback (#248)
+- BIDSPath entity extraction for git-annex datasets (#245)
+- Subject/participant TSV fallback handling (#248)
 - Signal filter preprocessor bug (#288)
 - Anonymous hyperlinks in docstrings to avoid duplicate target warnings
 - MNE/Dataset compatibility with retry handlers for multiple failing datasets (#271)
@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `braindecode` dependency to `>=1.4.0`
 
 ### Documentation
-- Comprehensive docstrings for Features module (#281, #287)
+- Full docstrings for Features module (#281, #287)
 - Dataset documentation with tags, feedback section, and visualization updates (#235)
 - P3 oddball tutorial updates (#192)
 - Improved dataset page layout and README parser
@@ -115,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Time estimation feature for tutorials
 - User guide documentation for EEGDash
 - Warning system for nonexistent query conditions
-- Comprehensive API documentation
+- Full API documentation
 
 ### Fixed
 - Python 3.10 compatibility issues with type annotations
@@ -134,12 +134,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleaned up legacy code and removed dead code
 
 ### Performance
-- Significant speedup in offline dataset loading
-- Optimized feature extraction with better vectorization
-- Improved S3 download retry logic with exponential backoff
+- 2x speedup in offline dataset loading
+- Vectorized feature extraction
+- S3 download retry logic with exponential backoff
 
 ### Documentation
-- Added comprehensive user guide
+- Added user guide
 - Improved API documentation structure
 - Added tutorial time estimates
 - Updated logo and visual assets
@@ -196,7 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 - Initial documentation deployment to GitHub Pages
-- Added comprehensive examples
+- Added end-to-end examples
 - Created tutorial notebooks for common tasks
 
 ## [0.2.0] - 2025-xx-xx

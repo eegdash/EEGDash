@@ -10,7 +10,7 @@
 User Guide
 ==========
 
-This guide provides a comprehensive overview of the :mod:`eegdash` library, focusing on its core data access object, :class:`~eegdash.api.EEGDashDataset`. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.
+This guide walks through the :mod:`eegdash` library and its main data access object, :class:`~eegdash.api.EEGDashDataset`. You will see how to find, access, and manage EEG data for research and analysis.
 
 The EEGDash Object
 ------------------
@@ -48,27 +48,27 @@ The ``find()`` method allows you to query the database for records matching spec
 EEGDash vs. EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's important to understand the distinction between these two objects:
+These two objects do different jobs:
 
--   :class:`~eegdash.api.EEGDash`: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.
--   :class:`~eegdash.api.EEGDashDataset`: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.
+-   :class:`~eegdash.api.EEGDash`: query and manage metadata. Returns a list of dictionaries, one per record.
+-   :class:`~eegdash.api.EEGDashDataset`: load EEG data for analysis or machine learning. Returns a PyTorch-compatible dataset where each item can load the underlying EEG signal.
 
-In general, you will use :class:`~eegdash.api.EEGDashDataset` for most of your data loading needs.
+For most data loading work, use :class:`~eegdash.api.EEGDashDataset`.
 
 The EEGDashDataset Object
 -------------------------
 
-The :class:`~eegdash.api.EEGDashDataset` is the primary entry point for working with EEG recordings in :mod:`eegdash`. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.
+:class:`~eegdash.api.EEGDashDataset` is the main entry point for working with EEG recordings in :mod:`eegdash`. It is a high-level interface that queries the metadata database and loads matching EEG data, either from a remote source or from a local cache.
 
 Initializing EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To get started, you need to create an instance of :class:`~eegdash.api.EEGDashDataset`. The two most important parameters are ``cache_dir`` and ``dataset``.
+Create an instance of :class:`~eegdash.api.EEGDashDataset`. The two main parameters are ``cache_dir`` and ``dataset``.
 
-- ``cache_dir``: This is the local directory where ``eegdash`` will store downloaded data.
-- ``dataset``: The identifier of the dataset you want to work with (e.g., ``"ds002718"``).
+- ``cache_dir``: local directory where ``eegdash`` stores downloaded data.
+- ``dataset``: identifier of the dataset (e.g., ``"ds002718"``).
 
-Here's a basic example of how to initialize the dataset:
+A basic example:
 
 .. code-block:: python
 
@@ -87,12 +87,12 @@ This will create a dataset object containing all recordings from ``ds002718``. T
 Querying for Specific Data
 --------------------------
 
-:class:`~eegdash.api.EEGDashDataset` offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.
+:class:`~eegdash.api.EEGDashDataset` lets you select a subset of recordings by task, subject, session, or run.
 
 Filtering by Task
 ~~~~~~~~~~~~~~~~~
 
-You can easily select recordings associated with a specific experimental task. For example, to get all resting-state recordings:
+You can select recordings tied to a specific experimental task. For example, to get all resting-state recordings:
 
 .. code-block:: python
 
@@ -201,7 +201,7 @@ Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access i
         
         print(f"Loaded recording for subject: {recording.description['subject']}")
 
-This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
+This is how ``eegdash`` plugs into a data analysis pipeline, whether the data is remote or local. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
 
 
 API Configuration

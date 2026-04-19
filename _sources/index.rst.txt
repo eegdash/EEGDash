@@ -44,9 +44,9 @@
               </div>
               <div class="hf-search-suggest">
                 <span class="hf-suggest-label">Suggested:</span>
-                <a class="hf-suggest-link" data-query="ds004504" href="api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
-                <a class="hf-suggest-link" data-query="ds000117" href="api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
-                <a class="hf-suggest-link" data-query="nm000107" href="api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
+                <a class="hf-suggest-link" data-query="ds004504" href="/api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
+                <a class="hf-suggest-link" data-query="ds000117" href="/api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
+                <a class="hf-suggest-link" data-query="nm000107" href="/api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
               </div>
             </form>
 
@@ -121,34 +121,50 @@
    .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
       :alt: Test Status
       :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
+      :width: 90
+      :height: 20
 
    .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
       :alt: Doc Status
       :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
+      :width: 90
+      :height: 20
 
    .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
       :alt: PyPI
       :target: https://pypi.org/project/eegdash/
+      :width: 120
+      :height: 20
 
    .. image:: https://img.shields.io/pypi/pyversions/eegdash?style=flat-square
       :alt: Python Versions
       :target: https://pypi.org/project/eegdash/
+      :width: 140
+      :height: 20
 
    .. image:: https://pepy.tech/badge/eegdash
       :alt: Downloads
       :target: https://pepy.tech/project/eegdash
+      :width: 120
+      :height: 20
 
    .. image:: https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg
       :alt: Code Coverage
       :target: https://codecov.io/gh/eegdash/EEGDash
+      :width: 120
+      :height: 20
 
    .. image:: https://img.shields.io/pypi/l/eegdash?style=flat-square
       :alt: License
       :target: https://github.com/eegdash/EEGDash/blob/main/LICENSE
+      :width: 120
+      :height: 20
 
    .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
       :alt: GitHub Stars
       :target: https://github.com/eegdash/EEGDash
+      :width: 120
+      :height: 20
 
 
 .. grid:: 1 2 4 4
@@ -246,24 +262,28 @@
          .. image:: _static/logos/ucsd_white.svg
             :alt: UCSD
             :class: can-zoom only-dark
-            :width: 260px
+            :width: 260
+            :height: 80
 
          .. image:: _static/logos/ucsd_dark.svg
             :alt: UCSD
             :class: can-zoom only-light
-            :width: 260px
+            :width: 260
+            :height: 80
 
       .. container:: logo-item
 
          .. image:: _static/logos/bgu_dark.svg
             :alt: Ben-Gurion University of the Negev (BGU)
             :class: can-zoom only-dark
-            :width: 260px
+            :width: 260
+            :height: 80
 
          .. image:: _static/logos/bgu_white.svg
             :alt: Ben-Gurion University of the Negev (BGU)
             :class: can-zoom only-light
-            :width: 260px
+            :width: 260
+            :height: 80
 
    .. rst-class:: hf-callout-funders
 
@@ -274,6 +294,8 @@
       .. image:: _static/logos/nsf_logo.png
          :alt: National Science Foundation (NSF)
          :class: hf-supporter-logo
+         :width: 100
+         :height: 100
 
       .. rst-class:: hf-supporter-text
 

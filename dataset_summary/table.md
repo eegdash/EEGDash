@@ -100,7 +100,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
   </thead>
   <tbody>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R1.html" title="EEG2025R1 — eeg dataset, 136 subjects">EEG2025R1</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R1.html" title="EEG2025R1 — eeg dataset, 136 subjects">EEG2025R1</a></td>
       <td>Shirazi2024_R1_bdf</td>
       <td>HBN_r1_bdf</td>
       <td>nemar</td>
@@ -117,7 +117,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.6 GB — larger than 62% of datasets" aria-label="20.6 GB — larger than 62% of datasets"><span class="sparkbar-label">20.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R10.html" title="EEG2025R10 — eeg dataset, 533 subjects">EEG2025R10</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R10.html" title="EEG2025R10 — eeg dataset, 533 subjects">EEG2025R10</a></td>
       <td>Shirazi2025_R10_bdf</td>
       <td>HBN_r10_bdf</td>
       <td>nemar</td>
@@ -134,7 +134,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.2%;" title="32.1 GB — larger than 70% of datasets" aria-label="32.1 GB — larger than 70% of datasets"><span class="sparkbar-label">32.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R10MINI.html" title="EEG2025R10MINI — eeg dataset, 20 subjects">EEG2025R10MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R10MINI.html" title="EEG2025R10MINI — eeg dataset, 20 subjects">EEG2025R10MINI</a></td>
       <td>Shirazi2025_R10_bdf_mini</td>
       <td>HBN_r10_bdf_mini</td>
       <td>nemar</td>
@@ -151,7 +151,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.0%;" title="2.8 GB — larger than 27% of datasets" aria-label="2.8 GB — larger than 27% of datasets"><span class="sparkbar-label">2.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R11.html" title="EEG2025R11 — eeg dataset, 430 subjects">EEG2025R11</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R11.html" title="EEG2025R11 — eeg dataset, 430 subjects">EEG2025R11</a></td>
       <td>Shirazi2025_R11_bdf</td>
       <td>HBN_r11_bdf</td>
       <td>nemar</td>
@@ -168,7 +168,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.2%;" title="43.8 GB — larger than 76% of datasets" aria-label="43.8 GB — larger than 76% of datasets"><span class="sparkbar-label">43.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R11MINI.html" title="EEG2025R11MINI — eeg dataset, 20 subjects">EEG2025R11MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R11MINI.html" title="EEG2025R11MINI — eeg dataset, 20 subjects">EEG2025R11MINI</a></td>
       <td>Shirazi2025_R11_bdf_mini</td>
       <td>HBN_r11_bdf_mini</td>
       <td>nemar</td>
@@ -185,7 +185,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.1%;" title="2.8 GB — larger than 28% of datasets" aria-label="2.8 GB — larger than 28% of datasets"><span class="sparkbar-label">2.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R1MINI.html" title="EEG2025R1MINI — eeg dataset, 20 subjects">EEG2025R1MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R1MINI.html" title="EEG2025R1MINI — eeg dataset, 20 subjects">EEG2025R1MINI</a></td>
       <td>Shirazi2024_R1_bdf_mini</td>
       <td>HBN_r1_bdf_mini</td>
       <td>nemar</td>
@@ -202,7 +202,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.9%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R2.html" title="EEG2025R2 — eeg dataset, 150 subjects">EEG2025R2</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R2.html" title="EEG2025R2 — eeg dataset, 150 subjects">EEG2025R2</a></td>
       <td>Shirazi2024_R2_bdf</td>
       <td>HBN_r2_bdf</td>
       <td>nemar</td>
@@ -219,7 +219,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.4 GB — larger than 64% of datasets" aria-label="22.4 GB — larger than 64% of datasets"><span class="sparkbar-label">22.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R2MINI.html" title="EEG2025R2MINI — eeg dataset, 20 subjects">EEG2025R2MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R2MINI.html" title="EEG2025R2MINI — eeg dataset, 20 subjects">EEG2025R2MINI</a></td>
       <td>Shirazi2024_R2_bdf_mini</td>
       <td>HBN_r2_bdf_mini</td>
       <td>nemar</td>
@@ -236,7 +236,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.1%;" title="3.8 GB — larger than 32% of datasets" aria-label="3.8 GB — larger than 32% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R3.html" title="EEG2025R3 — eeg dataset, 184 subjects">EEG2025R3</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R3.html" title="EEG2025R3 — eeg dataset, 184 subjects">EEG2025R3</a></td>
       <td>Shirazi2024_R3_bdf</td>
       <td>HBN_r3_bdf</td>
       <td>nemar</td>
@@ -253,7 +253,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.9 GB — larger than 68% of datasets" aria-label="27.9 GB — larger than 68% of datasets"><span class="sparkbar-label">27.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R3MINI.html" title="EEG2025R3MINI — eeg dataset, 20 subjects">EEG2025R3MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R3MINI.html" title="EEG2025R3MINI — eeg dataset, 20 subjects">EEG2025R3MINI</a></td>
       <td>Shirazi2024_R3_bdf_mini</td>
       <td>HBN_r3_bdf_mini</td>
       <td>nemar</td>
@@ -270,7 +270,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.9%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R4.html" title="EEG2025R4 — eeg dataset, 324 subjects">EEG2025R4</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R4.html" title="EEG2025R4 — eeg dataset, 324 subjects">EEG2025R4</a></td>
       <td>Shirazi2024_R4_bdf</td>
       <td>HBN_r4_bdf</td>
       <td>nemar</td>
@@ -287,7 +287,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.4%;" title="46.0 GB — larger than 77% of datasets" aria-label="46.0 GB — larger than 77% of datasets"><span class="sparkbar-label">46.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R4MINI.html" title="EEG2025R4MINI — eeg dataset, 20 subjects">EEG2025R4MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R4MINI.html" title="EEG2025R4MINI — eeg dataset, 20 subjects">EEG2025R4MINI</a></td>
       <td>Shirazi2024_R4_bdf_mini</td>
       <td>HBN_r4_bdf_mini</td>
       <td>nemar</td>
@@ -304,7 +304,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.6%;" title="3.3 GB — larger than 30% of datasets" aria-label="3.3 GB — larger than 30% of datasets"><span class="sparkbar-label">3.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R5.html" title="EEG2025R5 — eeg dataset, 330 subjects">EEG2025R5</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R5.html" title="EEG2025R5 — eeg dataset, 330 subjects">EEG2025R5</a></td>
       <td>Shirazi2024_R5_bdf</td>
       <td>HBN_r5_bdf</td>
       <td>nemar</td>
@@ -321,7 +321,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.8 GB — larger than 77% of datasets" aria-label="44.8 GB — larger than 77% of datasets"><span class="sparkbar-label">44.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R5MINI.html" title="EEG2025R5MINI — eeg dataset, 20 subjects">EEG2025R5MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R5MINI.html" title="EEG2025R5MINI — eeg dataset, 20 subjects">EEG2025R5MINI</a></td>
       <td>Shirazi2024_R5_bdf_mini</td>
       <td>HBN_r5_bdf_mini</td>
       <td>nemar</td>
@@ -338,7 +338,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.5%;" title="3.2 GB — larger than 29% of datasets" aria-label="3.2 GB — larger than 29% of datasets"><span class="sparkbar-label">3.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R6.html" title="EEG2025R6 — eeg dataset, 135 subjects">EEG2025R6</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R6.html" title="EEG2025R6 — eeg dataset, 135 subjects">EEG2025R6</a></td>
       <td>Shirazi2024_R6_bdf</td>
       <td>HBN_r6_bdf</td>
       <td>nemar</td>
@@ -355,7 +355,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.2 GB — larger than 60% of datasets" aria-label="18.2 GB — larger than 60% of datasets"><span class="sparkbar-label">18.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R6MINI.html" title="EEG2025R6MINI — eeg dataset, 20 subjects">EEG2025R6MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R6MINI.html" title="EEG2025R6MINI — eeg dataset, 20 subjects">EEG2025R6MINI</a></td>
       <td>Shirazi2024_R6_bdf_mini</td>
       <td>HBN_r6_bdf_mini</td>
       <td>nemar</td>
@@ -372,7 +372,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R7.html" title="EEG2025R7 — eeg dataset, 381 subjects">EEG2025R7</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R7.html" title="EEG2025R7 — eeg dataset, 381 subjects">EEG2025R7</a></td>
       <td>Shirazi2024_R7_bdf</td>
       <td>HBN_r7_bdf</td>
       <td>nemar</td>
@@ -389,7 +389,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R7MINI.html" title="EEG2025R7MINI — eeg dataset, 20 subjects">EEG2025R7MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R7MINI.html" title="EEG2025R7MINI — eeg dataset, 20 subjects">EEG2025R7MINI</a></td>
       <td>Shirazi2024_R7_bdf_mini</td>
       <td>HBN_r7_bdf_mini</td>
       <td>nemar</td>
@@ -406,7 +406,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R8.html" title="EEG2025R8 — eeg dataset, 257 subjects">EEG2025R8</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R8.html" title="EEG2025R8 — eeg dataset, 257 subjects">EEG2025R8</a></td>
       <td>Shirazi2024_R8_bdf</td>
       <td>HBN_r8_bdf</td>
       <td>nemar</td>
@@ -423,7 +423,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.1%;" title="31.4 GB — larger than 70% of datasets" aria-label="31.4 GB — larger than 70% of datasets"><span class="sparkbar-label">31.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R8MINI.html" title="EEG2025R8MINI — eeg dataset, 20 subjects">EEG2025R8MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R8MINI.html" title="EEG2025R8MINI — eeg dataset, 20 subjects">EEG2025R8MINI</a></td>
       <td>Shirazi2024_R8_bdf_mini</td>
       <td>HBN_r8_bdf_mini</td>
       <td>nemar</td>
@@ -440,7 +440,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.5%;" title="3.2 GB — larger than 29% of datasets" aria-label="3.2 GB — larger than 29% of datasets"><span class="sparkbar-label">3.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R9.html" title="EEG2025R9 — eeg dataset, 295 subjects">EEG2025R9</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R9.html" title="EEG2025R9 — eeg dataset, 295 subjects">EEG2025R9</a></td>
       <td>Shirazi2024_R9_bdf</td>
       <td>HBN_r9_bdf</td>
       <td>nemar</td>
@@ -457,7 +457,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.6%;" title="37.0 GB — larger than 72% of datasets" aria-label="37.0 GB — larger than 72% of datasets"><span class="sparkbar-label">37.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.EEG2025R9MINI.html" title="EEG2025R9MINI — eeg dataset, 20 subjects">EEG2025R9MINI</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.EEG2025R9MINI.html" title="EEG2025R9MINI — eeg dataset, 20 subjects">EEG2025R9MINI</a></td>
       <td>Shirazi2024_R9_bdf_mini</td>
       <td>HBN_r9_bdf_mini</td>
       <td>nemar</td>
@@ -474,7 +474,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.3%;" title="3.0 GB — larger than 28% of datasets" aria-label="3.0 GB — larger than 28% of datasets"><span class="sparkbar-label">3.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS000117.html" title="DS000117 — meg dataset, 17 subjects">DS000117</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS000117.html" title="DS000117 — meg dataset, 17 subjects">DS000117</a></td>
       <td>Wakeman2018</td>
       <td>Wakeman2015, WakemanHenson</td>
       <td>openneuro</td>
@@ -491,7 +491,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.5%;" title="87.6 GB — larger than 86% of datasets" aria-label="87.6 GB — larger than 86% of datasets"><span class="sparkbar-label">87.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS000246.html" title="DS000246 — meg dataset, 2 subjects">DS000246</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS000246.html" title="DS000246 — meg dataset, 2 subjects">DS000246</a></td>
       <td>Bock2018</td>
       <td></td>
       <td>openneuro</td>
@@ -508,7 +508,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 26% of datasets" aria-label="2.3 GB — larger than 26% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS000247.html" title="DS000247 — meg dataset, 6 subjects">DS000247</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS000247.html" title="DS000247 — meg dataset, 6 subjects">DS000247</a></td>
       <td>Niso2018</td>
       <td>OMEGA</td>
       <td>openneuro</td>
@@ -525,7 +525,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.4%;" title="10.3 GB — larger than 49% of datasets" aria-label="10.3 GB — larger than 49% of datasets"><span class="sparkbar-label">10.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS000248.html" title="DS000248 — meg dataset, 2 subjects">DS000248</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS000248.html" title="DS000248 — meg dataset, 2 subjects">DS000248</a></td>
       <td>Gramfort2018</td>
       <td>MNE_Sample_Data</td>
       <td>openneuro</td>
@@ -542,7 +542,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.7%;" title="177.6 MB — larger than 6% of datasets" aria-label="177.6 MB — larger than 6% of datasets"><span class="sparkbar-label">177.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS001785.html" title="DS001785 — eeg dataset, 18 subjects">DS001785</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS001785.html" title="DS001785 — eeg dataset, 18 subjects">DS001785</a></td>
       <td>Pereira2019_Evidence</td>
       <td></td>
       <td>openneuro</td>
@@ -559,7 +559,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.3%;" title="24.9 GB — larger than 66% of datasets" aria-label="24.9 GB — larger than 66% of datasets"><span class="sparkbar-label">24.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS001787.html" title="DS001787 — eeg dataset, 24 subjects">DS001787</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS001787.html" title="DS001787 — eeg dataset, 24 subjects">DS001787</a></td>
       <td>Delorme2019</td>
       <td></td>
       <td>openneuro</td>
@@ -576,7 +576,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.4%;" title="5.7 GB — larger than 37% of datasets" aria-label="5.7 GB — larger than 37% of datasets"><span class="sparkbar-label">5.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS001810.html" title="DS001810 — eeg dataset, 47 subjects">DS001810</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS001810.html" title="DS001810 — eeg dataset, 47 subjects">DS001810</a></td>
       <td>Reteig2019</td>
       <td></td>
       <td>openneuro</td>
@@ -593,7 +593,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.4%;" title="45.7 GB — larger than 77% of datasets" aria-label="45.7 GB — larger than 77% of datasets"><span class="sparkbar-label">45.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS001849.html" title="DS001849 — eeg dataset, 20 subjects">DS001849</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS001849.html" title="DS001849 — eeg dataset, 20 subjects">DS001849</a></td>
       <td>Freedberg2019</td>
       <td></td>
       <td>openneuro</td>
@@ -610,7 +610,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.5 GB — larger than 76% of datasets" aria-label="44.5 GB — larger than 76% of datasets"><span class="sparkbar-label">44.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS001971.html" title="DS001971 — eeg dataset, 20 subjects">DS001971</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS001971.html" title="DS001971 — eeg dataset, 20 subjects">DS001971</a></td>
       <td>Wagner2019</td>
       <td></td>
       <td>openneuro</td>
@@ -627,7 +627,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.2%;" title="32.0 GB — larger than 70% of datasets" aria-label="32.0 GB — larger than 70% of datasets"><span class="sparkbar-label">32.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002001.html" title="DS002001 — meg dataset, 11 subjects">DS002001</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002001.html" title="DS002001 — meg dataset, 11 subjects">DS002001</a></td>
       <td>Mendola2019</td>
       <td>Mendola2020</td>
       <td>openneuro</td>
@@ -644,7 +644,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.3%;" title="81.7 GB — larger than 86% of datasets" aria-label="81.7 GB — larger than 86% of datasets"><span class="sparkbar-label">81.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002034.html" title="DS002034 — eeg dataset, 14 subjects">DS002034</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002034.html" title="DS002034 — eeg dataset, 14 subjects">DS002034</a></td>
       <td>Schneider2019</td>
       <td></td>
       <td>openneuro</td>
@@ -661,7 +661,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.1 GB — larger than 48% of datasets" aria-label="10.1 GB — larger than 48% of datasets"><span class="sparkbar-label">10.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002094.html" title="DS002094 — eeg dataset, 20 subjects">DS002094</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002094.html" title="DS002094 — eeg dataset, 20 subjects">DS002094</a></td>
       <td>DS2094_Single_pulse</td>
       <td></td>
       <td>openneuro</td>
@@ -678,7 +678,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="39.4 GB — larger than 73% of datasets" aria-label="39.4 GB — larger than 73% of datasets"><span class="sparkbar-label">39.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002158.html" title="DS002158 — eeg dataset, 20 subjects">DS002158</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002158.html" title="DS002158 — eeg dataset, 20 subjects">DS002158</a></td>
       <td>Pereira2019_Disentangling</td>
       <td></td>
       <td>openneuro</td>
@@ -695,7 +695,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="76.5 GB — larger than 85% of datasets" aria-label="76.5 GB — larger than 85% of datasets"><span class="sparkbar-label">76.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002181.html" title="DS002181 — eeg dataset, 226 subjects">DS002181</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002181.html" title="DS002181 — eeg dataset, 226 subjects">DS002181</a></td>
       <td>Xie2019</td>
       <td></td>
       <td>openneuro</td>
@@ -712,7 +712,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.2%;" title="150.9 MB — larger than 5% of datasets" aria-label="150.9 MB — larger than 5% of datasets"><span class="sparkbar-label">150.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002218.html" title="DS002218 — eeg dataset, 18 subjects">DS002218</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002218.html" title="DS002218 — eeg dataset, 18 subjects">DS002218</a></td>
       <td>Comstock2019</td>
       <td></td>
       <td>openneuro</td>
@@ -729,7 +729,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.8%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002312.html" title="DS002312 — meg dataset, 19 subjects">DS002312</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002312.html" title="DS002312 — meg dataset, 19 subjects">DS002312</a></td>
       <td>Brooks2019</td>
       <td>OcularLDT, ocular_ldt</td>
       <td>openneuro</td>
@@ -746,7 +746,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.1 GB — larger than 71% of datasets" aria-label="34.1 GB — larger than 71% of datasets"><span class="sparkbar-label">34.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002336.html" title="DS002336 — eeg dataset, 10 subjects">DS002336</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002336.html" title="DS002336 — eeg dataset, 10 subjects">DS002336</a></td>
       <td>Lioi2019_multi</td>
       <td></td>
       <td>openneuro</td>
@@ -763,7 +763,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.0%;" title="16.8 GB — larger than 58% of datasets" aria-label="16.8 GB — larger than 58% of datasets"><span class="sparkbar-label">16.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002338.html" title="DS002338 — eeg dataset, 17 subjects">DS002338</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002338.html" title="DS002338 — eeg dataset, 17 subjects">DS002338</a></td>
       <td>Lioi2019_multi_modal</td>
       <td></td>
       <td>openneuro</td>
@@ -780,7 +780,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.2%;" title="24.2 GB — larger than 66% of datasets" aria-label="24.2 GB — larger than 66% of datasets"><span class="sparkbar-label">24.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002550.html" title="DS002550 — meg dataset, 22 subjects">DS002550</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002550.html" title="DS002550 — meg dataset, 22 subjects">DS002550</a></td>
       <td>Quentin2020</td>
       <td></td>
       <td>openneuro</td>
@@ -797,7 +797,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.7%;" title="167.5 GB — larger than 94% of datasets" aria-label="167.5 GB — larger than 94% of datasets"><span class="sparkbar-label">167.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002578.html" title="DS002578 — eeg dataset, 2 subjects">DS002578</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002578.html" title="DS002578 — eeg dataset, 2 subjects">DS002578</a></td>
       <td>Delorme2020_Visual_Oddball_256</td>
       <td></td>
       <td>openneuro</td>
@@ -814,7 +814,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.5%;" title="1.3 GB — larger than 21% of datasets" aria-label="1.3 GB — larger than 21% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002680.html" title="DS002680 — eeg dataset, 14 subjects">DS002680</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002680.html" title="DS002680 — eeg dataset, 14 subjects">DS002680</a></td>
       <td>Delorme2020_Go_nogo_categorization</td>
       <td></td>
       <td>openneuro</td>
@@ -831,7 +831,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.0%;" title="9.2 GB — larger than 46% of datasets" aria-label="9.2 GB — larger than 46% of datasets"><span class="sparkbar-label">9.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002691.html" title="DS002691 — eeg dataset, 20 subjects">DS002691</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002691.html" title="DS002691 — eeg dataset, 20 subjects">DS002691</a></td>
       <td>Delorme2020_Internal_attention</td>
       <td></td>
       <td>openneuro</td>
@@ -848,7 +848,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.6%;" title="776.7 MB — larger than 15% of datasets" aria-label="776.7 MB — larger than 15% of datasets"><span class="sparkbar-label">776.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002712.html" title="DS002712 — meg dataset, 25 subjects">DS002712</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002712.html" title="DS002712 — meg dataset, 25 subjects">DS002712</a></td>
       <td>Aurtenetxe2020</td>
       <td></td>
       <td>openneuro</td>
@@ -865,7 +865,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="101.8 GB — larger than 88% of datasets" aria-label="101.8 GB — larger than 88% of datasets"><span class="sparkbar-label">101.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002718.html" title="DS002718 — eeg dataset, 18 subjects">DS002718</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002718.html" title="DS002718 — eeg dataset, 18 subjects">DS002718</a></td>
       <td>Wakeman2020</td>
       <td>Wakeman2015, WakemanHenson_EEG_MEG</td>
       <td>openneuro</td>
@@ -882,7 +882,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.5%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002720.html" title="DS002720 — eeg dataset, 18 subjects">DS002720</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002720.html" title="DS002720 — eeg dataset, 18 subjects">DS002720</a></td>
       <td>Daly2020_recorded</td>
       <td></td>
       <td>openneuro</td>
@@ -899,7 +899,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.5%;" title="2.4 GB — larger than 26% of datasets" aria-label="2.4 GB — larger than 26% of datasets"><span class="sparkbar-label">2.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002721.html" title="DS002721 — eeg dataset, 31 subjects">DS002721</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002721.html" title="DS002721 — eeg dataset, 31 subjects">DS002721</a></td>
       <td>Daly2020_recorded_affective</td>
       <td></td>
       <td>openneuro</td>
@@ -916,7 +916,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.6%;" title="3.4 GB — larger than 30% of datasets" aria-label="3.4 GB — larger than 30% of datasets"><span class="sparkbar-label">3.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002722.html" title="DS002722 — eeg dataset, 19 subjects">DS002722</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002722.html" title="DS002722 — eeg dataset, 19 subjects">DS002722</a></td>
       <td>Daly2020_recorded_development</td>
       <td></td>
       <td>openneuro</td>
@@ -933,7 +933,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 38% of datasets" aria-label="6.1 GB — larger than 38% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002723.html" title="DS002723 — eeg dataset, 8 subjects">DS002723</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002723.html" title="DS002723 — eeg dataset, 8 subjects">DS002723</a></td>
       <td>Daly2020_session</td>
       <td></td>
       <td>openneuro</td>
@@ -950,7 +950,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.8%;" title="2.6 GB — larger than 27% of datasets" aria-label="2.6 GB — larger than 27% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002724.html" title="DS002724 — eeg dataset, 10 subjects">DS002724</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002724.html" title="DS002724 — eeg dataset, 10 subjects">DS002724</a></td>
       <td>Daly2020_sessions</td>
       <td></td>
       <td>openneuro</td>
@@ -967,7 +967,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 44% of datasets" aria-label="8.5 GB — larger than 44% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002725.html" title="DS002725 — eeg dataset, 21 subjects">DS002725</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002725.html" title="DS002725 — eeg dataset, 21 subjects">DS002725</a></td>
       <td>Daly2020_joint</td>
       <td></td>
       <td>openneuro</td>
@@ -984,7 +984,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.3 GB — larger than 56% of datasets" aria-label="15.3 GB — larger than 56% of datasets"><span class="sparkbar-label">15.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002761.html" title="DS002761 — meg dataset, 25 subjects">DS002761</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002761.html" title="DS002761 — meg dataset, 25 subjects">DS002761</a></td>
       <td>Wimmer2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1001,7 +1001,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:48.1%;" title="1.7 MB — larger than 0% of datasets" aria-label="1.7 MB — larger than 0% of datasets"><span class="sparkbar-label">1.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002778.html" title="DS002778 — eeg dataset, 31 subjects">DS002778</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002778.html" title="DS002778 — eeg dataset, 31 subjects">DS002778</a></td>
       <td>Rockhill2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1018,7 +1018,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.5%;" title="545.0 MB — larger than 12% of datasets" aria-label="545.0 MB — larger than 12% of datasets"><span class="sparkbar-label">545.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002791.html" title="DS002791 — eeg dataset, 23 subjects">DS002791</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002791.html" title="DS002791 — eeg dataset, 23 subjects">DS002791</a></td>
       <td>Mheich2020_DataSet1</td>
       <td>Mheich2020</td>
       <td>openneuro</td>
@@ -1035,7 +1035,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.5%;" title="47.1 GB — larger than 78% of datasets" aria-label="47.1 GB — larger than 78% of datasets"><span class="sparkbar-label">47.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002799.html" title="DS002799 — ieeg dataset, 27 subjects">DS002799</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002799.html" title="DS002799 — ieeg dataset, 27 subjects">DS002799</a></td>
       <td>Thompson2024</td>
       <td></td>
       <td>openneuro</td>
@@ -1052,7 +1052,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.6 GB — larger than 61% of datasets" aria-label="18.6 GB — larger than 61% of datasets"><span class="sparkbar-label">18.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002814.html" title="DS002814 — eeg dataset, 21 subjects">DS002814</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002814.html" title="DS002814 — eeg dataset, 21 subjects">DS002814</a></td>
       <td>Ebrahiminia2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1069,7 +1069,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.7 GB — larger than 68% of datasets" aria-label="27.7 GB — larger than 68% of datasets"><span class="sparkbar-label">27.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002833.html" title="DS002833 — eeg dataset, 20 subjects">DS002833</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002833.html" title="DS002833 — eeg dataset, 20 subjects">DS002833</a></td>
       <td>Mheich2020_DataSet2</td>
       <td>Mheich2024</td>
       <td>openneuro</td>
@@ -1086,7 +1086,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="39.8 GB — larger than 74% of datasets" aria-label="39.8 GB — larger than 74% of datasets"><span class="sparkbar-label">39.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002885.html" title="DS002885 — meg dataset, 2 subjects">DS002885</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002885.html" title="DS002885 — meg dataset, 2 subjects">DS002885</a></td>
       <td>Kandemir2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1103,7 +1103,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.6%;" title="20.1 GB — larger than 61% of datasets" aria-label="20.1 GB — larger than 61% of datasets"><span class="sparkbar-label">20.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002893.html" title="DS002893 — eeg dataset, 49 subjects">DS002893</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002893.html" title="DS002893 — eeg dataset, 49 subjects">DS002893</a></td>
       <td>Westerfield2022</td>
       <td></td>
       <td>openneuro</td>
@@ -1120,7 +1120,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.7 GB — larger than 42% of datasets" aria-label="7.7 GB — larger than 42% of datasets"><span class="sparkbar-label">7.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS002908.html" title="DS002908 — meg dataset, 13 subjects">DS002908</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS002908.html" title="DS002908 — meg dataset, 13 subjects">DS002908</a></td>
       <td>Bogacz2020</td>
       <td>Bogacz2024</td>
       <td>openneuro</td>
@@ -1137,7 +1137,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.3%;" title="59.8 GB — larger than 81% of datasets" aria-label="59.8 GB — larger than 81% of datasets"><span class="sparkbar-label">59.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003004.html" title="DS003004 — eeg dataset, 34 subjects">DS003004</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003004.html" title="DS003004 — eeg dataset, 34 subjects">DS003004</a></td>
       <td>Onton2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1154,7 +1154,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.6%;" title="36.0 GB — larger than 72% of datasets" aria-label="36.0 GB — larger than 72% of datasets"><span class="sparkbar-label">36.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003029.html" title="DS003029 — ieeg dataset, 35 subjects">DS003029</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003029.html" title="DS003029 — ieeg dataset, 35 subjects">DS003029</a></td>
       <td>Li2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1171,7 +1171,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.4%;" title="10.3 GB — larger than 49% of datasets" aria-label="10.3 GB — larger than 49% of datasets"><span class="sparkbar-label">10.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003039.html" title="DS003039 — eeg dataset, 19 subjects">DS003039</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003039.html" title="DS003039 — eeg dataset, 19 subjects">DS003039</a></td>
       <td>Jacobsen2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1188,7 +1188,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 43% of datasets" aria-label="7.8 GB — larger than 43% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003061.html" title="DS003061 — eeg dataset, 13 subjects">DS003061</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003061.html" title="DS003061 — eeg dataset, 13 subjects">DS003061</a></td>
       <td>Delorme2020_auditory_oddball</td>
       <td>Delorme</td>
       <td>openneuro</td>
@@ -1205,7 +1205,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 25% of datasets" aria-label="2.3 GB — larger than 25% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003078.html" title="DS003078 — ieeg dataset, 6 subjects">DS003078</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003078.html" title="DS003078 — ieeg dataset, 6 subjects">DS003078</a></td>
       <td>DOMENECH2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1222,7 +1222,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 50% of datasets" aria-label="11.0 GB — larger than 50% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003082.html" title="DS003082 — meg dataset, 2 subjects">DS003082</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003082.html" title="DS003082 — meg dataset, 2 subjects">DS003082</a></td>
       <td>Cote2020</td>
       <td>Cote2015</td>
       <td>openneuro</td>
@@ -1239,7 +1239,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.2%;" title="13.2 GB — larger than 53% of datasets" aria-label="13.2 GB — larger than 53% of datasets"><span class="sparkbar-label">13.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003104.html" title="DS003104 — meg dataset, 1 subjects">DS003104</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003104.html" title="DS003104 — meg dataset, 1 subjects">DS003104</a></td>
       <td>Parkkonen2020</td>
       <td>MNESomato, Somato, MNESomatoData</td>
       <td>openneuro</td>
@@ -1256,7 +1256,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.8%;" title="333.7 MB — larger than 8% of datasets" aria-label="333.7 MB — larger than 8% of datasets"><span class="sparkbar-label">333.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003190.html" title="DS003190 — eeg dataset, 19 subjects">DS003190</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003190.html" title="DS003190 — eeg dataset, 19 subjects">DS003190</a></td>
       <td>MendozaMontoya2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1273,7 +1273,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.6%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003194.html" title="DS003194 — eeg dataset, 15 subjects">DS003194</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003194.html" title="DS003194 — eeg dataset, 15 subjects">DS003194</a></td>
       <td>Vega2020_Neuroepo</td>
       <td></td>
       <td>openneuro</td>
@@ -1290,7 +1290,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.9%;" title="189.1 MB — larger than 6% of datasets" aria-label="189.1 MB — larger than 6% of datasets"><span class="sparkbar-label">189.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003195.html" title="DS003195 — eeg dataset, 10 subjects">DS003195</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003195.html" title="DS003195 — eeg dataset, 10 subjects">DS003195</a></td>
       <td>Vega2020_Placebo</td>
       <td></td>
       <td>openneuro</td>
@@ -1307,7 +1307,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:62.4%;" title="121.1 MB — larger than 4% of datasets" aria-label="121.1 MB — larger than 4% of datasets"><span class="sparkbar-label">121.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003343.html" title="DS003343 — eeg dataset, 20 subjects">DS003343</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003343.html" title="DS003343 — eeg dataset, 20 subjects">DS003343</a></td>
       <td>Schneider2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1324,7 +1324,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.1%;" title="663.4 MB — larger than 14% of datasets" aria-label="663.4 MB — larger than 14% of datasets"><span class="sparkbar-label">663.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003352.html" title="DS003352 — meg dataset, 18 subjects">DS003352</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003352.html" title="DS003352 — meg dataset, 18 subjects">DS003352</a></td>
       <td>Hermann2020</td>
       <td>Hermann2021</td>
       <td>openneuro</td>
@@ -1341,7 +1341,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.5%;" title="214.3 GB — larger than 95% of datasets" aria-label="214.3 GB — larger than 95% of datasets"><span class="sparkbar-label">214.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003374.html" title="DS003374 — ieeg dataset, 9 subjects">DS003374</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003374.html" title="DS003374 — ieeg dataset, 9 subjects">DS003374</a></td>
       <td>Fedele2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1358,7 +1358,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.5%;" title="167.3 MB — larger than 6% of datasets" aria-label="167.3 MB — larger than 6% of datasets"><span class="sparkbar-label">167.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003392.html" title="DS003392 — meg dataset, 12 subjects">DS003392</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003392.html" title="DS003392 — meg dataset, 12 subjects">DS003392</a></td>
       <td>Zilber2020</td>
       <td></td>
       <td>openneuro</td>
@@ -1375,7 +1375,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.1 GB — larger than 48% of datasets" aria-label="10.1 GB — larger than 48% of datasets"><span class="sparkbar-label">10.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003420.html" title="DS003420 — eeg dataset, 23 subjects">DS003420</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003420.html" title="DS003420 — eeg dataset, 23 subjects">DS003420</a></td>
       <td>Mheich2020_HD</td>
       <td></td>
       <td>openneuro</td>
@@ -1392,7 +1392,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.5%;" title="47.1 GB — larger than 78% of datasets" aria-label="47.1 GB — larger than 78% of datasets"><span class="sparkbar-label">47.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003421.html" title="DS003421 — eeg dataset, 20 subjects">DS003421</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003421.html" title="DS003421 — eeg dataset, 20 subjects">DS003421</a></td>
       <td>Mheich2020_HD_EEGtask</td>
       <td></td>
       <td>openneuro</td>
@@ -1409,7 +1409,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="39.6 GB — larger than 74% of datasets" aria-label="39.6 GB — larger than 74% of datasets"><span class="sparkbar-label">39.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003458.html" title="DS003458 — eeg dataset, 23 subjects">DS003458</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003458.html" title="DS003458 — eeg dataset, 23 subjects">DS003458</a></td>
       <td>Cavanagh2021_Three</td>
       <td></td>
       <td>openneuro</td>
@@ -1426,7 +1426,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.8%;" title="4.7 GB — larger than 35% of datasets" aria-label="4.7 GB — larger than 35% of datasets"><span class="sparkbar-label">4.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003474.html" title="DS003474 — eeg dataset, 122 subjects">DS003474</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003474.html" title="DS003474 — eeg dataset, 122 subjects">DS003474</a></td>
       <td>Cavanagh2021_Probabilistic</td>
       <td></td>
       <td>openneuro</td>
@@ -1443,7 +1443,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.0%;" title="16.6 GB — larger than 58% of datasets" aria-label="16.6 GB — larger than 58% of datasets"><span class="sparkbar-label">16.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003478.html" title="DS003478 — eeg dataset, 122 subjects">DS003478</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003478.html" title="DS003478 — eeg dataset, 122 subjects">DS003478</a></td>
       <td>Cavanagh2021_Depression</td>
       <td></td>
       <td>openneuro</td>
@@ -1460,7 +1460,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 50% of datasets" aria-label="10.6 GB — larger than 50% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003483.html" title="DS003483 — meg dataset, 21 subjects">DS003483</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003483.html" title="DS003483 — meg dataset, 21 subjects">DS003483</a></td>
       <td>Cognitive2021</td>
       <td>Maestu2021</td>
       <td>openneuro</td>
@@ -1477,7 +1477,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.3%;" title="24.5 GB — larger than 66% of datasets" aria-label="24.5 GB — larger than 66% of datasets"><span class="sparkbar-label">24.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003490.html" title="DS003490 — eeg dataset, 50 subjects">DS003490</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003490.html" title="DS003490 — eeg dataset, 50 subjects">DS003490</a></td>
       <td>Cavanagh2021_3</td>
       <td></td>
       <td>openneuro</td>
@@ -1494,7 +1494,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.5%;" title="5.8 GB — larger than 38% of datasets" aria-label="5.8 GB — larger than 38% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003498.html" title="DS003498 — ieeg dataset, 20 subjects">DS003498</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003498.html" title="DS003498 — ieeg dataset, 20 subjects">DS003498</a></td>
       <td>Fedele2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1511,7 +1511,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.7 GB — larger than 77% of datasets" aria-label="44.7 GB — larger than 77% of datasets"><span class="sparkbar-label">44.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003505.html" title="DS003505 — eeg dataset, 19 subjects">DS003505</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003505.html" title="DS003505 — eeg dataset, 19 subjects">DS003505</a></td>
       <td>Pascucci2021</td>
       <td>VEPCON</td>
       <td>openneuro</td>
@@ -1528,7 +1528,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.8%;" title="29.0 GB — larger than 69% of datasets" aria-label="29.0 GB — larger than 69% of datasets"><span class="sparkbar-label">29.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003506.html" title="DS003506 — eeg dataset, 56 subjects">DS003506</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003506.html" title="DS003506 — eeg dataset, 56 subjects">DS003506</a></td>
       <td>Cavanagh2021_Reinforcement</td>
       <td></td>
       <td>openneuro</td>
@@ -1545,7 +1545,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.2 GB — larger than 57% of datasets" aria-label="16.2 GB — larger than 57% of datasets"><span class="sparkbar-label">16.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003509.html" title="DS003509 — eeg dataset, 56 subjects">DS003509</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003509.html" title="DS003509 — eeg dataset, 56 subjects">DS003509</a></td>
       <td>Cavanagh2021_Simon</td>
       <td></td>
       <td>openneuro</td>
@@ -1562,7 +1562,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.3 GB — larger than 64% of datasets" aria-label="22.3 GB — larger than 64% of datasets"><span class="sparkbar-label">22.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003516.html" title="DS003516 — eeg dataset, 25 subjects">DS003516</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003516.html" title="DS003516 — eeg dataset, 25 subjects">DS003516</a></td>
       <td>Holtze2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1579,7 +1579,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 41% of datasets" aria-label="7.6 GB — larger than 41% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003517.html" title="DS003517 — eeg dataset, 17 subjects">DS003517</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003517.html" title="DS003517 — eeg dataset, 17 subjects">DS003517</a></td>
       <td>Cavanagh2021_Continuous</td>
       <td></td>
       <td>openneuro</td>
@@ -1596,7 +1596,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.5%;" title="5.8 GB — larger than 38% of datasets" aria-label="5.8 GB — larger than 38% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003518.html" title="DS003518 — eeg dataset, 110 subjects">DS003518</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003518.html" title="DS003518 — eeg dataset, 110 subjects">DS003518</a></td>
       <td>Cavanagh2021_Simon_Conflict</td>
       <td></td>
       <td>openneuro</td>
@@ -1613,7 +1613,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="39.5 GB — larger than 74% of datasets" aria-label="39.5 GB — larger than 74% of datasets"><span class="sparkbar-label">39.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003519.html" title="DS003519 — eeg dataset, 27 subjects">DS003519</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003519.html" title="DS003519 — eeg dataset, 27 subjects">DS003519</a></td>
       <td>Cavanagh2021_Visual</td>
       <td></td>
       <td>openneuro</td>
@@ -1630,7 +1630,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 45% of datasets" aria-label="9.0 GB — larger than 45% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003522.html" title="DS003522 — eeg dataset, 96 subjects">DS003522</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003522.html" title="DS003522 — eeg dataset, 96 subjects">DS003522</a></td>
       <td>Cavanagh2021_Three_Stim</td>
       <td></td>
       <td>openneuro</td>
@@ -1647,7 +1647,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.4%;" title="25.4 GB — larger than 67% of datasets" aria-label="25.4 GB — larger than 67% of datasets"><span class="sparkbar-label">25.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003523.html" title="DS003523 — eeg dataset, 91 subjects">DS003523</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003523.html" title="DS003523 — eeg dataset, 91 subjects">DS003523</a></td>
       <td>Cavanagh2021_Visual_Working</td>
       <td></td>
       <td>openneuro</td>
@@ -1664,7 +1664,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.7%;" title="37.5 GB — larger than 73% of datasets" aria-label="37.5 GB — larger than 73% of datasets"><span class="sparkbar-label">37.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003555.html" title="DS003555 — eeg dataset, 30 subjects">DS003555</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003555.html" title="DS003555 — eeg dataset, 30 subjects">DS003555</a></td>
       <td>Cserpan2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1681,7 +1681,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.6%;" title="15.1 GB — larger than 55% of datasets" aria-label="15.1 GB — larger than 55% of datasets"><span class="sparkbar-label">15.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003568.html" title="DS003568 — meg dataset, 51 subjects">DS003568</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003568.html" title="DS003568 — meg dataset, 51 subjects">DS003568</a></td>
       <td>Liuzzi2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1698,7 +1698,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.7%;" title="123.4 GB — larger than 91% of datasets" aria-label="123.4 GB — larger than 91% of datasets"><span class="sparkbar-label">123.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003570.html" title="DS003570 — eeg dataset, 40 subjects">DS003570</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003570.html" title="DS003570 — eeg dataset, 40 subjects">DS003570</a></td>
       <td>Goldman2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1715,7 +1715,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.5%;" title="47.6 GB — larger than 78% of datasets" aria-label="47.6 GB — larger than 78% of datasets"><span class="sparkbar-label">47.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003574.html" title="DS003574 — eeg dataset, 18 subjects">DS003574</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003574.html" title="DS003574 — eeg dataset, 18 subjects">DS003574</a></td>
       <td>Sterpenich2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1732,7 +1732,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.2%;" title="18.0 GB — larger than 60% of datasets" aria-label="18.0 GB — larger than 60% of datasets"><span class="sparkbar-label">18.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003602.html" title="DS003602 — eeg dataset, 118 subjects">DS003602</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003602.html" title="DS003602 — eeg dataset, 118 subjects">DS003602</a></td>
       <td>Korucuoglu2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1749,7 +1749,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.9%;" title="73.2 GB — larger than 84% of datasets" aria-label="73.2 GB — larger than 84% of datasets"><span class="sparkbar-label">73.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003620.html" title="DS003620 — eeg dataset, 44 subjects">DS003620</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003620.html" title="DS003620 — eeg dataset, 44 subjects">DS003620</a></td>
       <td>Liebherr2021</td>
       <td>Runabout</td>
       <td>openneuro</td>
@@ -1766,7 +1766,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.0 GB — larger than 58% of datasets" aria-label="17.0 GB — larger than 58% of datasets"><span class="sparkbar-label">17.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003626.html" title="DS003626 — eeg dataset, 10 subjects">DS003626</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003626.html" title="DS003626 — eeg dataset, 10 subjects">DS003626</a></td>
       <td>Nieto2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1783,7 +1783,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.3 GB — larger than 60% of datasets" aria-label="18.3 GB — larger than 60% of datasets"><span class="sparkbar-label">18.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003633.html" title="DS003633 — meg dataset, 12 subjects">DS003633</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003633.html" title="DS003633 — meg dataset, 12 subjects">DS003633</a></td>
       <td>Liu2021</td>
       <td>ForrestGump_MEG</td>
       <td>openneuro</td>
@@ -1800,7 +1800,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.9%;" title="73.5 GB — larger than 84% of datasets" aria-label="73.5 GB — larger than 84% of datasets"><span class="sparkbar-label">73.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003638.html" title="DS003638 — eeg dataset, 57 subjects">DS003638</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003638.html" title="DS003638 — eeg dataset, 57 subjects">DS003638</a></td>
       <td>Cavanagh2021_Electrophysiological</td>
       <td></td>
       <td>openneuro</td>
@@ -1817,7 +1817,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.3 GB — larger than 56% of datasets" aria-label="15.3 GB — larger than 56% of datasets"><span class="sparkbar-label">15.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003645.html" title="DS003645 — eeg, meg dataset, 19 subjects">DS003645</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003645.html" title="DS003645 — eeg, meg dataset, 19 subjects">DS003645</a></td>
       <td>Wakeman2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1834,7 +1834,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.2%;" title="106.3 GB — larger than 89% of datasets" aria-label="106.3 GB — larger than 89% of datasets"><span class="sparkbar-label">106.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003655.html" title="DS003655 — eeg dataset, 156 subjects">DS003655</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003655.html" title="DS003655 — eeg dataset, 156 subjects">DS003655</a></td>
       <td>Pavlov2021_VerbalWorkingMemory</td>
       <td></td>
       <td>openneuro</td>
@@ -1851,7 +1851,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.6%;" title="20.3 GB — larger than 62% of datasets" aria-label="20.3 GB — larger than 62% of datasets"><span class="sparkbar-label">20.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003670.html" title="DS003670 — eeg dataset, 25 subjects">DS003670</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003670.html" title="DS003670 — eeg dataset, 25 subjects">DS003670</a></td>
       <td>Gebodh2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1868,7 +1868,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.9%;" title="72.2 GB — larger than 84% of datasets" aria-label="72.2 GB — larger than 84% of datasets"><span class="sparkbar-label">72.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003682.html" title="DS003682 — meg dataset, 28 subjects">DS003682</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003682.html" title="DS003682 — meg dataset, 28 subjects">DS003682</a></td>
       <td>Wise2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1885,7 +1885,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.5%;" title="211.6 GB — larger than 95% of datasets" aria-label="211.6 GB — larger than 95% of datasets"><span class="sparkbar-label">211.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003688.html" title="DS003688 — ieeg dataset, 51 subjects">DS003688</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003688.html" title="DS003688 — ieeg dataset, 51 subjects">DS003688</a></td>
       <td>Berezutskaya2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1902,7 +1902,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.2 GB — larger than 55% of datasets" aria-label="15.2 GB — larger than 55% of datasets"><span class="sparkbar-label">15.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003690.html" title="DS003690 — eeg dataset, 75 subjects">DS003690</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003690.html" title="DS003690 — eeg dataset, 75 subjects">DS003690</a></td>
       <td>Ribeiro2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1919,7 +1919,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.8%;" title="21.5 GB — larger than 63% of datasets" aria-label="21.5 GB — larger than 63% of datasets"><span class="sparkbar-label">21.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003694.html" title="DS003694 — meg dataset, 28 subjects">DS003694</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003694.html" title="DS003694 — meg dataset, 28 subjects">DS003694</a></td>
       <td>Griffiths2021</td>
       <td>MEGMEM</td>
       <td>openneuro</td>
@@ -1936,7 +1936,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.6%;" title="218.5 GB — larger than 96% of datasets" aria-label="218.5 GB — larger than 96% of datasets"><span class="sparkbar-label">218.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003702.html" title="DS003702 — eeg dataset, 47 subjects">DS003702</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003702.html" title="DS003702 — eeg dataset, 47 subjects">DS003702</a></td>
       <td>Gregory2021</td>
       <td></td>
       <td>openneuro</td>
@@ -1953,7 +1953,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.5 GB — larger than 59% of datasets" aria-label="17.5 GB — larger than 59% of datasets"><span class="sparkbar-label">17.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003703.html" title="DS003703 — meg dataset, 34 subjects">DS003703</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003703.html" title="DS003703 — meg dataset, 34 subjects">DS003703</a></td>
       <td>Kalenkovich2021</td>
       <td>Kalenkovich2019</td>
       <td>openneuro</td>
@@ -1970,7 +1970,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.7%;" title="92.3 GB — larger than 87% of datasets" aria-label="92.3 GB — larger than 87% of datasets"><span class="sparkbar-label">92.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003708.html" title="DS003708 — ieeg dataset, 1 subjects">DS003708</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003708.html" title="DS003708 — ieeg dataset, 1 subjects">DS003708</a></td>
       <td>Hermes2021</td>
       <td>Miller2021</td>
       <td>openneuro</td>
@@ -1987,7 +1987,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.9%;" title="620.1 MB — larger than 13% of datasets" aria-label="620.1 MB — larger than 13% of datasets"><span class="sparkbar-label">620.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003710.html" title="DS003710 — eeg dataset, 13 subjects">DS003710</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003710.html" title="DS003710 — eeg dataset, 13 subjects">DS003710</a></td>
       <td>Williams2021</td>
       <td>APPLESEED</td>
       <td>openneuro</td>
@@ -2004,7 +2004,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 48% of datasets" aria-label="10.2 GB — larger than 48% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003739.html" title="DS003739 — eeg dataset, 30 subjects">DS003739</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003739.html" title="DS003739 — eeg dataset, 30 subjects">DS003739</a></td>
       <td>Peterson2021_Perturbed_beam_walking</td>
       <td></td>
       <td>openneuro</td>
@@ -2021,7 +2021,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 50% of datasets" aria-label="10.9 GB — larger than 50% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003751.html" title="DS003751 — eeg dataset, 38 subjects">DS003751</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003751.html" title="DS003751 — eeg dataset, 38 subjects">DS003751</a></td>
       <td>Mishra2021</td>
       <td>DENS</td>
       <td>openneuro</td>
@@ -2038,7 +2038,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.8%;" title="4.7 GB — larger than 34% of datasets" aria-label="4.7 GB — larger than 34% of datasets"><span class="sparkbar-label">4.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003753.html" title="DS003753 — eeg dataset, 25 subjects">DS003753</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003753.html" title="DS003753 — eeg dataset, 25 subjects">DS003753</a></td>
       <td>Brown2021_Probabilistic</td>
       <td></td>
       <td>openneuro</td>
@@ -2055,7 +2055,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.7%;" title="4.6 GB — larger than 34% of datasets" aria-label="4.6 GB — larger than 34% of datasets"><span class="sparkbar-label">4.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003766.html" title="DS003766 — eeg dataset, 31 subjects">DS003766</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003766.html" title="DS003766 — eeg dataset, 31 subjects">DS003766</a></td>
       <td>Chen2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2072,7 +2072,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.8%;" title="71.3 GB — larger than 84% of datasets" aria-label="71.3 GB — larger than 84% of datasets"><span class="sparkbar-label">71.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003768.html" title="DS003768 — eeg dataset, 33 subjects">DS003768</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003768.html" title="DS003768 — eeg dataset, 33 subjects">DS003768</a></td>
       <td>Gu2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2089,7 +2089,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.5%;" title="86.6 GB — larger than 86% of datasets" aria-label="86.6 GB — larger than 86% of datasets"><span class="sparkbar-label">86.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003774.html" title="DS003774 — eeg dataset, 20 subjects">DS003774</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003774.html" title="DS003774 — eeg dataset, 20 subjects">DS003774</a></td>
       <td>Miyapuram2021</td>
       <td>MUSING</td>
       <td>openneuro</td>
@@ -2106,7 +2106,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.1 GB — larger than 48% of datasets" aria-label="10.1 GB — larger than 48% of datasets"><span class="sparkbar-label">10.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003775.html" title="DS003775 — eeg dataset, 111 subjects">DS003775</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003775.html" title="DS003775 — eeg dataset, 111 subjects">DS003775</a></td>
       <td>HatlestadHall2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2123,7 +2123,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.6%;" title="4.5 GB — larger than 34% of datasets" aria-label="4.5 GB — larger than 34% of datasets"><span class="sparkbar-label">4.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003800.html" title="DS003800 — eeg dataset, 13 subjects">DS003800</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003800.html" title="DS003800 — eeg dataset, 13 subjects">DS003800</a></td>
       <td>Lahijanian2021_Auditory</td>
       <td></td>
       <td>openneuro</td>
@@ -2140,7 +2140,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.9%;" title="189.3 MB — larger than 6% of datasets" aria-label="189.3 MB — larger than 6% of datasets"><span class="sparkbar-label">189.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003801.html" title="DS003801 — eeg dataset, 20 subjects">DS003801</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003801.html" title="DS003801 — eeg dataset, 20 subjects">DS003801</a></td>
       <td>Straetmans2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2157,7 +2157,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.0%;" title="1.1 GB — larger than 19% of datasets" aria-label="1.1 GB — larger than 19% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003805.html" title="DS003805 — eeg dataset, 1 subjects">DS003805</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003805.html" title="DS003805 — eeg dataset, 1 subjects">DS003805</a></td>
       <td>Lahijanian2021_Multisensory</td>
       <td></td>
       <td>openneuro</td>
@@ -2174,7 +2174,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:53.7%;" title="8.8 MB — larger than 1% of datasets" aria-label="8.8 MB — larger than 1% of datasets"><span class="sparkbar-label">8.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003810.html" title="DS003810 — eeg dataset, 10 subjects">DS003810</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003810.html" title="DS003810 — eeg dataset, 10 subjects">DS003810</a></td>
       <td>Peterson2021_Motor_Imagery_vs</td>
       <td></td>
       <td>openneuro</td>
@@ -2191,7 +2191,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.5%;" title="69.0 MB — larger than 2% of datasets" aria-label="69.0 MB — larger than 2% of datasets"><span class="sparkbar-label">69.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003816.html" title="DS003816 — eeg dataset, 48 subjects">DS003816</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003816.html" title="DS003816 — eeg dataset, 48 subjects">DS003816</a></td>
       <td>Sun2024</td>
       <td></td>
       <td>openneuro</td>
@@ -2208,7 +2208,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.9%;" title="54.0 GB — larger than 80% of datasets" aria-label="54.0 GB — larger than 80% of datasets"><span class="sparkbar-label">54.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003822.html" title="DS003822 — eeg dataset, 25 subjects">DS003822</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003822.html" title="DS003822 — eeg dataset, 25 subjects">DS003822</a></td>
       <td>Brown2021_Probabilistic_Learning</td>
       <td></td>
       <td>openneuro</td>
@@ -2225,7 +2225,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.5%;" title="5.8 GB — larger than 38% of datasets" aria-label="5.8 GB — larger than 38% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003825.html" title="DS003825 — eeg dataset, 50 subjects">DS003825</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003825.html" title="DS003825 — eeg dataset, 50 subjects">DS003825</a></td>
       <td>Grootswagers2021</td>
       <td>THINGS, THINGS_EEG</td>
       <td>openneuro</td>
@@ -2242,7 +2242,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.0%;" title="41.2 GB — larger than 74% of datasets" aria-label="41.2 GB — larger than 74% of datasets"><span class="sparkbar-label">41.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003838.html" title="DS003838 — eeg dataset, 65 subjects">DS003838</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003838.html" title="DS003838 — eeg dataset, 65 subjects">DS003838</a></td>
       <td>Pavlov2021_pupillometry</td>
       <td></td>
       <td>openneuro</td>
@@ -2259,7 +2259,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="100.2 GB — larger than 88% of datasets" aria-label="100.2 GB — larger than 88% of datasets"><span class="sparkbar-label">100.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003844.html" title="DS003844 — ieeg dataset, 6 subjects">DS003844</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003844.html" title="DS003844 — ieeg dataset, 6 subjects">DS003844</a></td>
       <td>Zweiphenning2021</td>
       <td>RESPect_intraop</td>
       <td>openneuro</td>
@@ -2276,7 +2276,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.8%;" title="2.6 GB — larger than 27% of datasets" aria-label="2.6 GB — larger than 27% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003846.html" title="DS003846 — eeg dataset, 19 subjects">DS003846</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003846.html" title="DS003846 — eeg dataset, 19 subjects">DS003846</a></td>
       <td>Gehrke2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2293,7 +2293,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.2%;" title="9.8 GB — larger than 47% of datasets" aria-label="9.8 GB — larger than 47% of datasets"><span class="sparkbar-label">9.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003848.html" title="DS003848 — ieeg dataset, 6 subjects">DS003848</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003848.html" title="DS003848 — ieeg dataset, 6 subjects">DS003848</a></td>
       <td>Blooijs2021</td>
       <td>RESPect_longterm</td>
       <td>openneuro</td>
@@ -2310,7 +2310,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.5%;" title="65.0 GB — larger than 83% of datasets" aria-label="65.0 GB — larger than 83% of datasets"><span class="sparkbar-label">65.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003876.html" title="DS003876 — ieeg dataset, 39 subjects">DS003876</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003876.html" title="DS003876 — ieeg dataset, 39 subjects">DS003876</a></td>
       <td>Gunnarsdottir2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2327,7 +2327,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.0%;" title="5.0 GB — larger than 35% of datasets" aria-label="5.0 GB — larger than 35% of datasets"><span class="sparkbar-label">5.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003885.html" title="DS003885 — eeg dataset, 24 subjects">DS003885</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003885.html" title="DS003885 — eeg dataset, 24 subjects">DS003885</a></td>
       <td>Shatek2021_E1</td>
       <td></td>
       <td>openneuro</td>
@@ -2344,7 +2344,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.4%;" title="46.1 GB — larger than 78% of datasets" aria-label="46.1 GB — larger than 78% of datasets"><span class="sparkbar-label">46.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003887.html" title="DS003887 — eeg dataset, 24 subjects">DS003887</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003887.html" title="DS003887 — eeg dataset, 24 subjects">DS003887</a></td>
       <td>Shatek2021_E2</td>
       <td></td>
       <td>openneuro</td>
@@ -2361,7 +2361,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.4%;" title="45.7 GB — larger than 77% of datasets" aria-label="45.7 GB — larger than 77% of datasets"><span class="sparkbar-label">45.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003922.html" title="DS003922 — meg dataset, 14 subjects">DS003922</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003922.html" title="DS003922 — meg dataset, 14 subjects">DS003922</a></td>
       <td>Lerousseau2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2378,7 +2378,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.0%;" title="75.7 GB — larger than 85% of datasets" aria-label="75.7 GB — larger than 85% of datasets"><span class="sparkbar-label">75.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003944.html" title="DS003944 — eeg dataset, 82 subjects">DS003944</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003944.html" title="DS003944 — eeg dataset, 82 subjects">DS003944</a></td>
       <td>Salisbury2021_First</td>
       <td></td>
       <td>openneuro</td>
@@ -2395,7 +2395,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.2 GB — larger than 39% of datasets" aria-label="6.2 GB — larger than 39% of datasets"><span class="sparkbar-label">6.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003947.html" title="DS003947 — eeg dataset, 61 subjects">DS003947</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003947.html" title="DS003947 — eeg dataset, 61 subjects">DS003947</a></td>
       <td>Salisbury2021_First_Episode</td>
       <td></td>
       <td>openneuro</td>
@@ -2412,7 +2412,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.0%;" title="12.5 GB — larger than 53% of datasets" aria-label="12.5 GB — larger than 53% of datasets"><span class="sparkbar-label">12.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003969.html" title="DS003969 — eeg dataset, 98 subjects">DS003969</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003969.html" title="DS003969 — eeg dataset, 98 subjects">DS003969</a></td>
       <td>Delorme2021</td>
       <td></td>
       <td>openneuro</td>
@@ -2429,7 +2429,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.9%;" title="54.5 GB — larger than 80% of datasets" aria-label="54.5 GB — larger than 80% of datasets"><span class="sparkbar-label">54.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS003987.html" title="DS003987 — eeg dataset, 23 subjects">DS003987</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS003987.html" title="DS003987 — eeg dataset, 23 subjects">DS003987</a></td>
       <td>Cavanagh2022_Amphetamine_trials_5</td>
       <td></td>
       <td>openneuro</td>
@@ -2446,7 +2446,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.4%;" title="25.6 GB — larger than 67% of datasets" aria-label="25.6 GB — larger than 67% of datasets"><span class="sparkbar-label">25.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004000.html" title="DS004000 — eeg dataset, 43 subjects">DS004000</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004000.html" title="DS004000 — eeg dataset, 43 subjects">DS004000</a></td>
       <td>Padee2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2463,7 +2463,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.5 GB — larger than 64% of datasets" aria-label="22.5 GB — larger than 64% of datasets"><span class="sparkbar-label">22.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004010.html" title="DS004010 — eeg dataset, 24 subjects">DS004010</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004010.html" title="DS004010 — eeg dataset, 24 subjects">DS004010</a></td>
       <td>Waschke2022</td>
       <td>MAVIS</td>
       <td>openneuro</td>
@@ -2480,7 +2480,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.1%;" title="23.1 GB — larger than 65% of datasets" aria-label="23.1 GB — larger than 65% of datasets"><span class="sparkbar-label">23.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004011.html" title="DS004011 — meg dataset, 22 subjects">DS004011</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004011.html" title="DS004011 — meg dataset, 22 subjects">DS004011</a></td>
       <td>Teichmann2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2497,7 +2497,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.3%;" title="198.1 GB — larger than 94% of datasets" aria-label="198.1 GB — larger than 94% of datasets"><span class="sparkbar-label">198.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004012.html" title="DS004012 — meg dataset, 30 subjects">DS004012</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004012.html" title="DS004012 — meg dataset, 30 subjects">DS004012</a></td>
       <td>Rani2022</td>
       <td>Rani2019</td>
       <td>openneuro</td>
@@ -2514,7 +2514,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.2%;" title="78.3 GB — larger than 86% of datasets" aria-label="78.3 GB — larger than 86% of datasets"><span class="sparkbar-label">78.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004015.html" title="DS004015 — eeg dataset, 36 subjects">DS004015</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004015.html" title="DS004015 — eeg dataset, 36 subjects">DS004015</a></td>
       <td>Holtze2022_Attended</td>
       <td></td>
       <td>openneuro</td>
@@ -2531,7 +2531,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.0 GB — larger than 38% of datasets" aria-label="6.0 GB — larger than 38% of datasets"><span class="sparkbar-label">6.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004017.html" title="DS004017 — eeg dataset, 21 subjects">DS004017</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004017.html" title="DS004017 — eeg dataset, 21 subjects">DS004017</a></td>
       <td>Damsgaard2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2548,7 +2548,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.9 GB — larger than 63% of datasets" aria-label="20.9 GB — larger than 63% of datasets"><span class="sparkbar-label">20.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004018.html" title="DS004018 — eeg dataset, 16 subjects">DS004018</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004018.html" title="DS004018 — eeg dataset, 16 subjects">DS004018</a></td>
       <td>Grootswagers2022_RSVP</td>
       <td></td>
       <td>openneuro</td>
@@ -2565,7 +2565,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 49% of datasets" aria-label="10.6 GB — larger than 49% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004019.html" title="DS004019 — eeg dataset, 62 subjects">DS004019</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004019.html" title="DS004019 — eeg dataset, 62 subjects">DS004019</a></td>
       <td>AlatorreCruz2022_Effect</td>
       <td></td>
       <td>openneuro</td>
@@ -2582,7 +2582,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.3 GB — larger than 58% of datasets" aria-label="17.3 GB — larger than 58% of datasets"><span class="sparkbar-label">17.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004022.html" title="DS004022 — eeg dataset, 7 subjects">DS004022</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004022.html" title="DS004022 — eeg dataset, 7 subjects">DS004022</a></td>
       <td>Lee2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2599,7 +2599,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.9%;" title="616.6 MB — larger than 13% of datasets" aria-label="616.6 MB — larger than 13% of datasets"><span class="sparkbar-label">616.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004024.html" title="DS004024 — eeg dataset, 13 subjects">DS004024</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004024.html" title="DS004024 — eeg dataset, 13 subjects">DS004024</a></td>
       <td>Pavon2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2616,7 +2616,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:92.7%;" title="1021.2 GB — larger than 100% of datasets" aria-label="1021.2 GB — larger than 100% of datasets"><span class="sparkbar-label">1021.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004033.html" title="DS004033 — eeg dataset, 18 subjects">DS004033</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004033.html" title="DS004033 — eeg dataset, 18 subjects">DS004033</a></td>
       <td>Scanlon2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2633,7 +2633,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.6%;" title="19.8 GB — larger than 61% of datasets" aria-label="19.8 GB — larger than 61% of datasets"><span class="sparkbar-label">19.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004040.html" title="DS004040 — eeg dataset, 13 subjects">DS004040</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004040.html" title="DS004040 — eeg dataset, 13 subjects">DS004040</a></td>
       <td>Cannard2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2650,7 +2650,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.8%;" title="11.6 GB — larger than 51% of datasets" aria-label="11.6 GB — larger than 51% of datasets"><span class="sparkbar-label">11.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004043.html" title="DS004043 — eeg dataset, 20 subjects">DS004043</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004043.html" title="DS004043 — eeg dataset, 20 subjects">DS004043</a></td>
       <td>Moerel2022_time</td>
       <td></td>
       <td>openneuro</td>
@@ -2667,7 +2667,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.4 GB — larger than 56% of datasets" aria-label="15.4 GB — larger than 56% of datasets"><span class="sparkbar-label">15.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004067.html" title="DS004067 — eeg dataset, 80 subjects">DS004067</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004067.html" title="DS004067 — eeg dataset, 80 subjects">DS004067</a></td>
       <td>Yoder2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2684,7 +2684,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="100.8 GB — larger than 88% of datasets" aria-label="100.8 GB — larger than 88% of datasets"><span class="sparkbar-label">100.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004075.html" title="DS004075 — eeg dataset, 29 subjects">DS004075</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004075.html" title="DS004075 — eeg dataset, 29 subjects">DS004075</a></td>
       <td>Boncz2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2701,7 +2701,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.3%;" title="7.4 GB — larger than 41% of datasets" aria-label="7.4 GB — larger than 41% of datasets"><span class="sparkbar-label">7.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004078.html" title="DS004078 — meg dataset, 12 subjects">DS004078</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004078.html" title="DS004078 — meg dataset, 12 subjects">DS004078</a></td>
       <td>Wang2022_StudyBRAIN</td>
       <td></td>
       <td>openneuro</td>
@@ -2718,7 +2718,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:91.1%;" title="631.1 GB — larger than 99% of datasets" aria-label="631.1 GB — larger than 99% of datasets"><span class="sparkbar-label">631.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004080.html" title="DS004080 — ieeg dataset, 74 subjects">DS004080</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004080.html" title="DS004080 — ieeg dataset, 74 subjects">DS004080</a></td>
       <td>Blooijs2023_CCEP_ECoG</td>
       <td>RESPect_CCEP</td>
       <td>openneuro</td>
@@ -2735,7 +2735,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.3%;" title="269.1 GB — larger than 97% of datasets" aria-label="269.1 GB — larger than 97% of datasets"><span class="sparkbar-label">269.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004100.html" title="DS004100 — ieeg dataset, 57 subjects">DS004100</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004100.html" title="DS004100 — ieeg dataset, 57 subjects">DS004100</a></td>
       <td>Bernabei2022</td>
       <td>HUPiEEG</td>
       <td>openneuro</td>
@@ -2752,7 +2752,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.2%;" title="13.2 GB — larger than 53% of datasets" aria-label="13.2 GB — larger than 53% of datasets"><span class="sparkbar-label">13.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004105.html" title="DS004105 — eeg dataset, 17 subjects">DS004105</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004105.html" title="DS004105 — eeg dataset, 17 subjects">DS004105</a></td>
       <td>Garcia2022</td>
       <td>BCIT_Auditory_Cueing</td>
       <td>openneuro</td>
@@ -2769,7 +2769,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.4 GB — larger than 62% of datasets" aria-label="20.4 GB — larger than 62% of datasets"><span class="sparkbar-label">20.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004106.html" title="DS004106 — eeg dataset, 27 subjects">DS004106</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004106.html" title="DS004106 — eeg dataset, 27 subjects">DS004106</a></td>
       <td>Touryan2022</td>
       <td>BCITAdvancedGuardDuty</td>
       <td>openneuro</td>
@@ -2786,7 +2786,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.7%;" title="67.6 GB — larger than 83% of datasets" aria-label="67.6 GB — larger than 83% of datasets"><span class="sparkbar-label">67.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004107.html" title="DS004107 — meg dataset, 9 subjects">DS004107</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004107.html" title="DS004107 — meg dataset, 9 subjects">DS004107</a></td>
       <td>Weisend2022</td>
       <td>Weisend2007</td>
       <td>openneuro</td>
@@ -2803,7 +2803,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="77.2 GB — larger than 85% of datasets" aria-label="77.2 GB — larger than 85% of datasets"><span class="sparkbar-label">77.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004117.html" title="DS004117 — eeg dataset, 23 subjects">DS004117</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004117.html" title="DS004117 — eeg dataset, 23 subjects">DS004117</a></td>
       <td>Onton2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2820,7 +2820,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.4%;" title="5.8 GB — larger than 37% of datasets" aria-label="5.8 GB — larger than 37% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004118.html" title="DS004118 — eeg dataset, 156 subjects">DS004118</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004118.html" title="DS004118 — eeg dataset, 156 subjects">DS004118</a></td>
       <td>Touryan2022_BCIT_Calibration</td>
       <td>Touryan1999</td>
       <td>openneuro</td>
@@ -2837,7 +2837,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.7%;" title="124.3 GB — larger than 91% of datasets" aria-label="124.3 GB — larger than 91% of datasets"><span class="sparkbar-label">124.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004119.html" title="DS004119 — eeg dataset, 21 subjects">DS004119</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004119.html" title="DS004119 — eeg dataset, 21 subjects">DS004119</a></td>
       <td>Touryan2022_BCIT_Basic</td>
       <td>BCIT</td>
       <td>openneuro</td>
@@ -2854,7 +2854,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.0%;" title="55.1 GB — larger than 80% of datasets" aria-label="55.1 GB — larger than 80% of datasets"><span class="sparkbar-label">55.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004120.html" title="DS004120 — eeg dataset, 109 subjects">DS004120</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004120.html" title="DS004120 — eeg dataset, 109 subjects">DS004120</a></td>
       <td>Touryan2022_BCIT_Baseline</td>
       <td>BCITBaselineDriving</td>
       <td>openneuro</td>
@@ -2871,7 +2871,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.7%;" title="302.5 GB — larger than 98% of datasets" aria-label="302.5 GB — larger than 98% of datasets"><span class="sparkbar-label">302.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004121.html" title="DS004121 — eeg dataset, 21 subjects">DS004121</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004121.html" title="DS004121 — eeg dataset, 21 subjects">DS004121</a></td>
       <td>Touryan2022_BCIT_Mind</td>
       <td>BCITMindWandering</td>
       <td>openneuro</td>
@@ -2888,7 +2888,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.2%;" title="23.9 GB — larger than 65% of datasets" aria-label="23.9 GB — larger than 65% of datasets"><span class="sparkbar-label">23.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004122.html" title="DS004122 — eeg dataset, 32 subjects">DS004122</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004122.html" title="DS004122 — eeg dataset, 32 subjects">DS004122</a></td>
       <td>Touryan2022_BCIT_Speed</td>
       <td></td>
       <td>openneuro</td>
@@ -2905,7 +2905,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.6%;" title="36.2 GB — larger than 72% of datasets" aria-label="36.2 GB — larger than 72% of datasets"><span class="sparkbar-label">36.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004123.html" title="DS004123 — eeg dataset, 29 subjects">DS004123</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004123.html" title="DS004123 — eeg dataset, 29 subjects">DS004123</a></td>
       <td>Touryan2022_BCIT_Traffic</td>
       <td>BCIT_Traffic_Complexity</td>
       <td>openneuro</td>
@@ -2922,7 +2922,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.5 GB — larger than 59% of datasets" aria-label="17.5 GB — larger than 59% of datasets"><span class="sparkbar-label">17.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004127.html" title="DS004127 — ieeg dataset, 8 subjects">DS004127</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004127.html" title="DS004127 — ieeg dataset, 8 subjects">DS004127</a></td>
       <td>Abrego2022</td>
       <td></td>
       <td>openneuro</td>
@@ -2939,7 +2939,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.1%;" title="187.5 GB — larger than 94% of datasets" aria-label="187.5 GB — larger than 94% of datasets"><span class="sparkbar-label">187.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004147.html" title="DS004147 — eeg dataset, 12 subjects">DS004147</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004147.html" title="DS004147 — eeg dataset, 12 subjects">DS004147</a></td>
       <td>Hassall2022_Average</td>
       <td></td>
       <td>openneuro</td>
@@ -2956,7 +2956,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.2%;" title="4.0 GB — larger than 32% of datasets" aria-label="4.0 GB — larger than 32% of datasets"><span class="sparkbar-label">4.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004148.html" title="DS004148 — eeg dataset, 60 subjects">DS004148</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004148.html" title="DS004148 — eeg dataset, 60 subjects">DS004148</a></td>
       <td>Wang2022_test_retest_resting</td>
       <td></td>
       <td>openneuro</td>
@@ -2973,7 +2973,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.0%;" title="30.7 GB — larger than 69% of datasets" aria-label="30.7 GB — larger than 69% of datasets"><span class="sparkbar-label">30.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004151.html" title="DS004151 — eeg dataset, 57 subjects">DS004151</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004151.html" title="DS004151 — eeg dataset, 57 subjects">DS004151</a></td>
       <td>AlatorreCruz2022_Effect_obesity</td>
       <td></td>
       <td>openneuro</td>
@@ -2990,7 +2990,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.1%;" title="23.1 GB — larger than 65% of datasets" aria-label="23.1 GB — larger than 65% of datasets"><span class="sparkbar-label">23.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004152.html" title="DS004152 — eeg dataset, 21 subjects">DS004152</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004152.html" title="DS004152 — eeg dataset, 21 subjects">DS004152</a></td>
       <td>Hassall2022_Drum</td>
       <td></td>
       <td>openneuro</td>
@@ -3007,7 +3007,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.8%;" title="4.8 GB — larger than 35% of datasets" aria-label="4.8 GB — larger than 35% of datasets"><span class="sparkbar-label">4.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004166.html" title="DS004166 — eeg dataset, 71 subjects">DS004166</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004166.html" title="DS004166 — eeg dataset, 71 subjects">DS004166</a></td>
       <td>Li2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3024,7 +3024,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="77.4 GB — larger than 86% of datasets" aria-label="77.4 GB — larger than 86% of datasets"><span class="sparkbar-label">77.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004194.html" title="DS004194 — ieeg dataset, 14 subjects">DS004194</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004194.html" title="DS004194 — ieeg dataset, 14 subjects">DS004194</a></td>
       <td>Groen2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3041,7 +3041,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.5%;" title="7.8 GB — larger than 43% of datasets" aria-label="7.8 GB — larger than 43% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004196.html" title="DS004196 — eeg dataset, 4 subjects">DS004196</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004196.html" title="DS004196 — eeg dataset, 4 subjects">DS004196</a></td>
       <td>Liwicki2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3058,7 +3058,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.0%;" title="9.3 GB — larger than 46% of datasets" aria-label="9.3 GB — larger than 46% of datasets"><span class="sparkbar-label">9.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004200.html" title="DS004200 — eeg dataset, 20 subjects">DS004200</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004200.html" title="DS004200 — eeg dataset, 20 subjects">DS004200</a></td>
       <td>Hassall2022_Temporal</td>
       <td></td>
       <td>openneuro</td>
@@ -3075,7 +3075,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 40% of datasets" aria-label="7.2 GB — larger than 40% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004212.html" title="DS004212 — meg dataset, 5 subjects">DS004212</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004212.html" title="DS004212 — meg dataset, 5 subjects">DS004212</a></td>
       <td>Hebart2022</td>
       <td>THINGS_MEG, THINGSMEG</td>
       <td>openneuro</td>
@@ -3092,7 +3092,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.9%;" title="237.7 GB — larger than 96% of datasets" aria-label="237.7 GB — larger than 96% of datasets"><span class="sparkbar-label">237.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004229.html" title="DS004229 — meg dataset, 2 subjects">DS004229</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004229.html" title="DS004229 — meg dataset, 2 subjects">DS004229</a></td>
       <td>Mittag2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3109,7 +3109,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.5%;" title="1.8 GB — larger than 23% of datasets" aria-label="1.8 GB — larger than 23% of datasets"><span class="sparkbar-label">1.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004252.html" title="DS004252 — eeg dataset, 1 subjects">DS004252</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004252.html" title="DS004252 — eeg dataset, 1 subjects">DS004252</a></td>
       <td>Moerel2022_Rotation</td>
       <td></td>
       <td>openneuro</td>
@@ -3126,7 +3126,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.4%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004256.html" title="DS004256 — eeg dataset, 53 subjects">DS004256</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004256.html" title="DS004256 — eeg dataset, 53 subjects">DS004256</a></td>
       <td>Bialas2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3143,7 +3143,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.2 GB — larger than 60% of datasets" aria-label="18.2 GB — larger than 60% of datasets"><span class="sparkbar-label">18.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004262.html" title="DS004262 — eeg dataset, 21 subjects">DS004262</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004262.html" title="DS004262 — eeg dataset, 21 subjects">DS004262</a></td>
       <td>Hassall2022_Continuous</td>
       <td></td>
       <td>openneuro</td>
@@ -3160,7 +3160,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.7%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004264.html" title="DS004264 — eeg dataset, 21 subjects">DS004264</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004264.html" title="DS004264 — eeg dataset, 21 subjects">DS004264</a></td>
       <td>Hassall2022_Steer</td>
       <td></td>
       <td>openneuro</td>
@@ -3177,7 +3177,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.6%;" title="3.3 GB — larger than 30% of datasets" aria-label="3.3 GB — larger than 30% of datasets"><span class="sparkbar-label">3.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004276.html" title="DS004276 — meg dataset, 19 subjects">DS004276</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004276.html" title="DS004276 — meg dataset, 19 subjects">DS004276</a></td>
       <td>Gaston2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3194,7 +3194,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.8%;" title="11.6 GB — larger than 51% of datasets" aria-label="11.6 GB — larger than 51% of datasets"><span class="sparkbar-label">11.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004278.html" title="DS004278 — meg dataset, 30 subjects">DS004278</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004278.html" title="DS004278 — meg dataset, 30 subjects">DS004278</a></td>
       <td>Kidder2022</td>
       <td>Kidder2024</td>
       <td>openneuro</td>
@@ -3211,7 +3211,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="76.7 GB — larger than 85% of datasets" aria-label="76.7 GB — larger than 85% of datasets"><span class="sparkbar-label">76.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004279.html" title="DS004279 — eeg dataset, 56 subjects">DS004279</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004279.html" title="DS004279 — eeg dataset, 56 subjects">DS004279</a></td>
       <td>Araya2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3228,7 +3228,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.4%;" title="25.2 GB — larger than 67% of datasets" aria-label="25.2 GB — larger than 67% of datasets"><span class="sparkbar-label">25.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004284.html" title="DS004284 — eeg dataset, 18 subjects">DS004284</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004284.html" title="DS004284 — eeg dataset, 18 subjects">DS004284</a></td>
       <td>Veillette2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3245,7 +3245,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.4 GB — larger than 57% of datasets" aria-label="16.4 GB — larger than 57% of datasets"><span class="sparkbar-label">16.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004295.html" title="DS004295 — eeg dataset, 26 subjects">DS004295</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004295.html" title="DS004295 — eeg dataset, 26 subjects">DS004295</a></td>
       <td>Stolz2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3262,7 +3262,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.1%;" title="31.5 GB — larger than 70% of datasets" aria-label="31.5 GB — larger than 70% of datasets"><span class="sparkbar-label">31.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004306.html" title="DS004306 — eeg dataset, 12 subjects">DS004306</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004306.html" title="DS004306 — eeg dataset, 12 subjects">DS004306</a></td>
       <td>Wilson2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3279,7 +3279,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.1%;" title="654.9 MB — larger than 14% of datasets" aria-label="654.9 MB — larger than 14% of datasets"><span class="sparkbar-label">654.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004315.html" title="DS004315 — eeg dataset, 50 subjects">DS004315</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004315.html" title="DS004315 — eeg dataset, 50 subjects">DS004315</a></td>
       <td>Cavanagh2022_E1</td>
       <td></td>
       <td>openneuro</td>
@@ -3296,7 +3296,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.2%;" title="9.8 GB — larger than 47% of datasets" aria-label="9.8 GB — larger than 47% of datasets"><span class="sparkbar-label">9.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004317.html" title="DS004317 — eeg dataset, 50 subjects">DS004317</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004317.html" title="DS004317 — eeg dataset, 50 subjects">DS004317</a></td>
       <td>Cavanagh2022_E2</td>
       <td></td>
       <td>openneuro</td>
@@ -3313,7 +3313,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.3 GB — larger than 60% of datasets" aria-label="18.3 GB — larger than 60% of datasets"><span class="sparkbar-label">18.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004324.html" title="DS004324 — eeg dataset, 26 subjects">DS004324</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004324.html" title="DS004324 — eeg dataset, 26 subjects">DS004324</a></td>
       <td>Chacon2022</td>
       <td>ToonFaces</td>
       <td>openneuro</td>
@@ -3330,7 +3330,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.6%;" title="2.5 GB — larger than 26% of datasets" aria-label="2.5 GB — larger than 26% of datasets"><span class="sparkbar-label">2.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004330.html" title="DS004330 — meg dataset, 30 subjects">DS004330</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004330.html" title="DS004330 — meg dataset, 30 subjects">DS004330</a></td>
       <td>Singer2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3347,7 +3347,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.4%;" title="153.7 GB — larger than 92% of datasets" aria-label="153.7 GB — larger than 92% of datasets"><span class="sparkbar-label">153.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004346.html" title="DS004346 — meg dataset, 1 subjects">DS004346</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004346.html" title="DS004346 — meg dataset, 1 subjects">DS004346</a></td>
       <td>Ferrante2022</td>
       <td>FLUX</td>
       <td>openneuro</td>
@@ -3364,7 +3364,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.8%;" title="3.6 GB — larger than 31% of datasets" aria-label="3.6 GB — larger than 31% of datasets"><span class="sparkbar-label">3.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004347.html" title="DS004347 — eeg dataset, 24 subjects">DS004347</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004347.html" title="DS004347 — eeg dataset, 24 subjects">DS004347</a></td>
       <td>Makin2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3381,7 +3381,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.5%;" title="2.4 GB — larger than 26% of datasets" aria-label="2.4 GB — larger than 26% of datasets"><span class="sparkbar-label">2.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004348.html" title="DS004348 — eeg dataset, 9 subjects">DS004348</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004348.html" title="DS004348 — eeg dataset, 9 subjects">DS004348</a></td>
       <td>Mikkelsen2022</td>
       <td>EESM17</td>
       <td>openneuro</td>
@@ -3398,7 +3398,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.2 GB — larger than 44% of datasets" aria-label="8.2 GB — larger than 44% of datasets"><span class="sparkbar-label">8.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004350.html" title="DS004350 — eeg dataset, 24 subjects">DS004350</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004350.html" title="DS004350 — eeg dataset, 24 subjects">DS004350</a></td>
       <td>Delorme2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3415,7 +3415,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004356.html" title="DS004356 — eeg dataset, 22 subjects">DS004356</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004356.html" title="DS004356 — eeg dataset, 22 subjects">DS004356</a></td>
       <td>Shan2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3432,7 +3432,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.5%;" title="213.1 GB — larger than 95% of datasets" aria-label="213.1 GB — larger than 95% of datasets"><span class="sparkbar-label">213.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004357.html" title="DS004357 — eeg dataset, 16 subjects">DS004357</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004357.html" title="DS004357 — eeg dataset, 16 subjects">DS004357</a></td>
       <td>Grootswagers2022_EEG</td>
       <td></td>
       <td>openneuro</td>
@@ -3449,7 +3449,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.5%;" title="19.3 GB — larger than 61% of datasets" aria-label="19.3 GB — larger than 61% of datasets"><span class="sparkbar-label">19.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004362.html" title="DS004362 — eeg dataset, 109 subjects">DS004362</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004362.html" title="DS004362 — eeg dataset, 109 subjects">DS004362</a></td>
       <td>Schalk2022</td>
       <td>PhysionetMI, EEGMotorMovementImagery</td>
       <td>openneuro</td>
@@ -3466,7 +3466,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 42% of datasets" aria-label="7.8 GB — larger than 42% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004367.html" title="DS004367 — eeg dataset, 40 subjects">DS004367</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004367.html" title="DS004367 — eeg dataset, 40 subjects">DS004367</a></td>
       <td>Rouy2022_Meta</td>
       <td></td>
       <td>openneuro</td>
@@ -3483,7 +3483,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="28.0 GB — larger than 69% of datasets" aria-label="28.0 GB — larger than 69% of datasets"><span class="sparkbar-label">28.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004368.html" title="DS004368 — eeg dataset, 39 subjects">DS004368</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004368.html" title="DS004368 — eeg dataset, 39 subjects">DS004368</a></td>
       <td>Rouy2022_Meta_rdk</td>
       <td></td>
       <td>openneuro</td>
@@ -3500,7 +3500,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.5%;" title="997.1 MB — larger than 17% of datasets" aria-label="997.1 MB — larger than 17% of datasets"><span class="sparkbar-label">997.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004369.html" title="DS004369 — eeg dataset, 41 subjects">DS004369</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004369.html" title="DS004369 — eeg dataset, 41 subjects">DS004369</a></td>
       <td>Holtze2022_Blink</td>
       <td></td>
       <td>openneuro</td>
@@ -3517,7 +3517,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.9%;" title="2.0 GB — larger than 25% of datasets" aria-label="2.0 GB — larger than 25% of datasets"><span class="sparkbar-label">2.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004370.html" title="DS004370 — ieeg dataset, 7 subjects">DS004370</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004370.html" title="DS004370 — ieeg dataset, 7 subjects">DS004370</a></td>
       <td>Blooijs2022_PRIOS</td>
       <td>PRIOS</td>
       <td>openneuro</td>
@@ -3534,7 +3534,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.6 GB — larger than 68% of datasets" aria-label="27.6 GB — larger than 68% of datasets"><span class="sparkbar-label">27.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004381.html" title="DS004381 — eeg dataset, 18 subjects">DS004381</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004381.html" title="DS004381 — eeg dataset, 18 subjects">DS004381</a></td>
       <td>Selmin2022</td>
       <td></td>
       <td>openneuro</td>
@@ -3551,7 +3551,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.7 GB — larger than 42% of datasets" aria-label="7.7 GB — larger than 42% of datasets"><span class="sparkbar-label">7.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004388.html" title="DS004388 — eeg dataset, 40 subjects">DS004388</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004388.html" title="DS004388 — eeg dataset, 40 subjects">DS004388</a></td>
       <td>Nierula2023_Somatosensory</td>
       <td></td>
       <td>openneuro</td>
@@ -3568,7 +3568,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:91.4%;" title="682.5 GB — larger than 99% of datasets" aria-label="682.5 GB — larger than 99% of datasets"><span class="sparkbar-label">682.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004389.html" title="DS004389 — eeg dataset, 26 subjects">DS004389</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004389.html" title="DS004389 — eeg dataset, 26 subjects">DS004389</a></td>
       <td>Nierula2023_Somatosensory_evoked</td>
       <td></td>
       <td>openneuro</td>
@@ -3585,7 +3585,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:89.4%;" title="376.5 GB — larger than 98% of datasets" aria-label="376.5 GB — larger than 98% of datasets"><span class="sparkbar-label">376.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004395.html" title="DS004395 — eeg dataset, 364 subjects">DS004395</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004395.html" title="DS004395 — eeg dataset, 364 subjects">DS004395</a></td>
       <td>Kahana2023</td>
       <td>PEERS</td>
       <td>openneuro</td>
@@ -3602,7 +3602,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:100%;" title="8.7 TB — larger than 100% of datasets" aria-label="8.7 TB — larger than 100% of datasets"><span class="sparkbar-label">8.7 TB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004398.html" title="DS004398 — meg dataset, 1 subjects">DS004398</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004398.html" title="DS004398 — meg dataset, 1 subjects">DS004398</a></td>
       <td>Wimmer2023</td>
       <td>Wimmer2024</td>
       <td>openneuro</td>
@@ -3619,7 +3619,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.4%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004408.html" title="DS004408 — eeg dataset, 19 subjects">DS004408</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004408.html" title="DS004408 — eeg dataset, 19 subjects">DS004408</a></td>
       <td>Liberto2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3636,7 +3636,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.4%;" title="18.7 GB — larger than 61% of datasets" aria-label="18.7 GB — larger than 61% of datasets"><span class="sparkbar-label">18.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004444.html" title="DS004444 — eeg dataset, 30 subjects">DS004444</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004444.html" title="DS004444 — eeg dataset, 30 subjects">DS004444</a></td>
       <td>Iwama2023_D1</td>
       <td>BMI_HDEEG_D1</td>
       <td>openneuro</td>
@@ -3653,7 +3653,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.6%;" title="48.6 GB — larger than 79% of datasets" aria-label="48.6 GB — larger than 79% of datasets"><span class="sparkbar-label">48.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004446.html" title="DS004446 — eeg dataset, 30 subjects">DS004446</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004446.html" title="DS004446 — eeg dataset, 30 subjects">DS004446</a></td>
       <td>Iwama2023_D2</td>
       <td>BMI_HDEEG_D2</td>
       <td>openneuro</td>
@@ -3670,7 +3670,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.9%;" title="29.2 GB — larger than 69% of datasets" aria-label="29.2 GB — larger than 69% of datasets"><span class="sparkbar-label">29.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004447.html" title="DS004447 — eeg dataset, 22 subjects">DS004447</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004447.html" title="DS004447 — eeg dataset, 22 subjects">DS004447</a></td>
       <td>Iwama2023_D3</td>
       <td>BMI_HDEEG_D3</td>
       <td>openneuro</td>
@@ -3687,7 +3687,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.7 GB — larger than 62% of datasets" aria-label="20.7 GB — larger than 62% of datasets"><span class="sparkbar-label">20.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004448.html" title="DS004448 — eeg dataset, 56 subjects">DS004448</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004448.html" title="DS004448 — eeg dataset, 56 subjects">DS004448</a></td>
       <td>Iwama2023_D4</td>
       <td>BMI_HDEEG_D4</td>
       <td>openneuro</td>
@@ -3704,7 +3704,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.8%;" title="38.2 GB — larger than 73% of datasets" aria-label="38.2 GB — larger than 73% of datasets"><span class="sparkbar-label">38.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004457.html" title="DS004457 — ieeg dataset, 5 subjects">DS004457</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004457.html" title="DS004457 — ieeg dataset, 5 subjects">DS004457</a></td>
       <td>Huang2023</td>
       <td>Huang2022</td>
       <td>openneuro</td>
@@ -3721,7 +3721,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 50% of datasets" aria-label="10.9 GB — larger than 50% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004460.html" title="DS004460 — eeg dataset, 20 subjects">DS004460</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004460.html" title="DS004460 — eeg dataset, 20 subjects">DS004460</a></td>
       <td>Gramann2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3738,7 +3738,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.2%;" title="59.1 GB — larger than 81% of datasets" aria-label="59.1 GB — larger than 81% of datasets"><span class="sparkbar-label">59.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004473.html" title="DS004473 — ieeg dataset, 8 subjects">DS004473</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004473.html" title="DS004473 — ieeg dataset, 8 subjects">DS004473</a></td>
       <td>Rockhill2023</td>
       <td>Rockhill2022</td>
       <td>openneuro</td>
@@ -3755,7 +3755,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.7%;" title="6.3 GB — larger than 39% of datasets" aria-label="6.3 GB — larger than 39% of datasets"><span class="sparkbar-label">6.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004475.html" title="DS004475 — eeg dataset, 30 subjects">DS004475</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004475.html" title="DS004475 — eeg dataset, 30 subjects">DS004475</a></td>
       <td>Jacobsen2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3772,7 +3772,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.6%;" title="48.5 GB — larger than 79% of datasets" aria-label="48.5 GB — larger than 79% of datasets"><span class="sparkbar-label">48.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004477.html" title="DS004477 — eeg dataset, 9 subjects">DS004477</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004477.html" title="DS004477 — eeg dataset, 9 subjects">DS004477</a></td>
       <td>Papastylianou2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3789,7 +3789,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.3 GB — larger than 64% of datasets" aria-label="22.3 GB — larger than 64% of datasets"><span class="sparkbar-label">22.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004483.html" title="DS004483 — meg dataset, 19 subjects">DS004483</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004483.html" title="DS004483 — meg dataset, 19 subjects">DS004483</a></td>
       <td>Planton2023</td>
       <td>ABSeqMEG</td>
       <td>openneuro</td>
@@ -3806,7 +3806,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.1%;" title="23.4 GB — larger than 65% of datasets" aria-label="23.4 GB — larger than 65% of datasets"><span class="sparkbar-label">23.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004502.html" title="DS004502 — eeg dataset, 48 subjects">DS004502</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004502.html" title="DS004502 — eeg dataset, 48 subjects">DS004502</a></td>
       <td>Penalver2023</td>
       <td>Penalver2024</td>
       <td>openneuro</td>
@@ -3823,7 +3823,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.2%;" title="59.4 GB — larger than 81% of datasets" aria-label="59.4 GB — larger than 81% of datasets"><span class="sparkbar-label">59.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004504.html" title="DS004504 — eeg dataset, 88 subjects">DS004504</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004504.html" title="DS004504 — eeg dataset, 88 subjects">DS004504</a></td>
       <td>Miltiadous2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3840,7 +3840,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.8%;" title="2.6 GB — larger than 27% of datasets" aria-label="2.6 GB — larger than 27% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004505.html" title="DS004505 — eeg dataset, 25 subjects">DS004505</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004505.html" title="DS004505 — eeg dataset, 25 subjects">DS004505</a></td>
       <td>Studnicki2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3857,7 +3857,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.6 GB — larger than 71% of datasets" aria-label="34.6 GB — larger than 71% of datasets"><span class="sparkbar-label">34.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004511.html" title="DS004511 — eeg dataset, 45 subjects">DS004511</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004511.html" title="DS004511 — eeg dataset, 45 subjects">DS004511</a></td>
       <td>Makowski2023_Deception</td>
       <td></td>
       <td>openneuro</td>
@@ -3874,7 +3874,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.3%;" title="202.3 GB — larger than 95% of datasets" aria-label="202.3 GB — larger than 95% of datasets"><span class="sparkbar-label">202.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004514.html" title="DS004514 — eeg, fnirs dataset, 12 subjects">DS004514</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004514.html" title="DS004514 — eeg, fnirs dataset, 12 subjects">DS004514</a></td>
       <td>Rybar2023_Simultaneous</td>
       <td></td>
       <td>openneuro</td>
@@ -3891,7 +3891,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.2%;" title="24.1 GB — larger than 66% of datasets" aria-label="24.1 GB — larger than 66% of datasets"><span class="sparkbar-label">24.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004515.html" title="DS004515 — eeg dataset, 54 subjects">DS004515</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004515.html" title="DS004515 — eeg dataset, 54 subjects">DS004515</a></td>
       <td>Singh2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3908,7 +3908,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.1%;" title="9.5 GB — larger than 47% of datasets" aria-label="9.5 GB — larger than 47% of datasets"><span class="sparkbar-label">9.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004517.html" title="DS004517 — eeg dataset, 7 subjects">DS004517</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004517.html" title="DS004517 — eeg dataset, 7 subjects">DS004517</a></td>
       <td>Rybar2023_semantic</td>
       <td></td>
       <td>openneuro</td>
@@ -3925,7 +3925,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.1%;" title="12.7 GB — larger than 53% of datasets" aria-label="12.7 GB — larger than 53% of datasets"><span class="sparkbar-label">12.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004519.html" title="DS004519 — eeg dataset, 40 subjects">DS004519</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004519.html" title="DS004519 — eeg dataset, 40 subjects">DS004519</a></td>
       <td>Ester2023_Internal</td>
       <td>Ester2022</td>
       <td>openneuro</td>
@@ -3942,7 +3942,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.0%;" title="12.6 GB — larger than 53% of datasets" aria-label="12.6 GB — larger than 53% of datasets"><span class="sparkbar-label">12.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004520.html" title="DS004520 — eeg dataset, 33 subjects">DS004520</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004520.html" title="DS004520 — eeg dataset, 33 subjects">DS004520</a></td>
       <td>Ester2023_Changes</td>
       <td>Ester2024_E2</td>
       <td>openneuro</td>
@@ -3959,7 +3959,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.4%;" title="10.4 GB — larger than 49% of datasets" aria-label="10.4 GB — larger than 49% of datasets"><span class="sparkbar-label">10.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004521.html" title="DS004521 — eeg dataset, 34 subjects">DS004521</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004521.html" title="DS004521 — eeg dataset, 34 subjects">DS004521</a></td>
       <td>Ester2023_Changes_behavioral</td>
       <td>Ester2024_E1</td>
       <td>openneuro</td>
@@ -3976,7 +3976,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.5%;" title="10.7 GB — larger than 50% of datasets" aria-label="10.7 GB — larger than 50% of datasets"><span class="sparkbar-label">10.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004532.html" title="DS004532 — eeg dataset, 110 subjects">DS004532</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004532.html" title="DS004532 — eeg dataset, 110 subjects">DS004532</a></td>
       <td>Cavanagh2023</td>
       <td></td>
       <td>openneuro</td>
@@ -3993,7 +3993,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.9%;" title="21.8 GB — larger than 63% of datasets" aria-label="21.8 GB — larger than 63% of datasets"><span class="sparkbar-label">21.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004541.html" title="DS004541 — eeg, fnirs dataset, 8 subjects">DS004541</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004541.html" title="DS004541 — eeg, fnirs dataset, 8 subjects">DS004541</a></td>
       <td>Ferron2023</td>
       <td>Ferron2019</td>
       <td>openneuro</td>
@@ -4010,7 +4010,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.1%;" title="2.9 GB — larger than 28% of datasets" aria-label="2.9 GB — larger than 28% of datasets"><span class="sparkbar-label">2.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004551.html" title="DS004551 — ieeg dataset, 114 subjects">DS004551</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004551.html" title="DS004551 — ieeg dataset, 114 subjects">DS004551</a></td>
       <td>Sakakura2023_children_slow_wave</td>
       <td>Sakakura2025</td>
       <td>openneuro</td>
@@ -4027,7 +4027,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.7%;" title="68.9 GB — larger than 83% of datasets" aria-label="68.9 GB — larger than 83% of datasets"><span class="sparkbar-label">68.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004554.html" title="DS004554 — eeg dataset, 16 subjects">DS004554</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004554.html" title="DS004554 — eeg dataset, 16 subjects">DS004554</a></td>
       <td>Volpert2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4044,7 +4044,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.8%;" title="8.8 GB — larger than 45% of datasets" aria-label="8.8 GB — larger than 45% of datasets"><span class="sparkbar-label">8.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004561.html" title="DS004561 — eeg dataset, 23 subjects">DS004561</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004561.html" title="DS004561 — eeg dataset, 23 subjects">DS004561</a></td>
       <td>Veillette2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4061,7 +4061,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.9%;" title="97.7 GB — larger than 87% of datasets" aria-label="97.7 GB — larger than 87% of datasets"><span class="sparkbar-label">97.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004563.html" title="DS004563 — eeg dataset, 40 subjects">DS004563</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004563.html" title="DS004563 — eeg dataset, 40 subjects">DS004563</a></td>
       <td>Smit2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4078,7 +4078,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="100.9 GB — larger than 88% of datasets" aria-label="100.9 GB — larger than 88% of datasets"><span class="sparkbar-label">100.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004572.html" title="DS004572 — eeg dataset, 52 subjects">DS004572</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004572.html" title="DS004572 — eeg dataset, 52 subjects">DS004572</a></td>
       <td>Kekecs2023</td>
       <td>Kekecs2024</td>
       <td>openneuro</td>
@@ -4095,7 +4095,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.2%;" title="43.6 GB — larger than 75% of datasets" aria-label="43.6 GB — larger than 75% of datasets"><span class="sparkbar-label">43.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004574.html" title="DS004574 — eeg dataset, 146 subjects">DS004574</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004574.html" title="DS004574 — eeg dataset, 146 subjects">DS004574</a></td>
       <td>Singh2023_Cross_modal</td>
       <td></td>
       <td>openneuro</td>
@@ -4112,7 +4112,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.3%;" title="13.5 GB — larger than 53% of datasets" aria-label="13.5 GB — larger than 53% of datasets"><span class="sparkbar-label">13.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004577.html" title="DS004577 — eeg dataset, 103 subjects">DS004577</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004577.html" title="DS004577 — eeg dataset, 103 subjects">DS004577</a></td>
       <td>Unit2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4129,7 +4129,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.1%;" title="652.7 MB — larger than 14% of datasets" aria-label="652.7 MB — larger than 14% of datasets"><span class="sparkbar-label">652.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004579.html" title="DS004579 — eeg dataset, 139 subjects">DS004579</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004579.html" title="DS004579 — eeg dataset, 139 subjects">DS004579</a></td>
       <td>Singh2023_Interval_Timing</td>
       <td></td>
       <td>openneuro</td>
@@ -4146,7 +4146,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.2%;" title="24.1 GB — larger than 65% of datasets" aria-label="24.1 GB — larger than 65% of datasets"><span class="sparkbar-label">24.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004580.html" title="DS004580 — eeg dataset, 147 subjects">DS004580</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004580.html" title="DS004580 — eeg dataset, 147 subjects">DS004580</a></td>
       <td>Singh2023_Simon_conflict</td>
       <td></td>
       <td>openneuro</td>
@@ -4163,7 +4163,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.8%;" title="15.8 GB — larger than 57% of datasets" aria-label="15.8 GB — larger than 57% of datasets"><span class="sparkbar-label">15.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004582.html" title="DS004582 — eeg dataset, 73 subjects">DS004582</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004582.html" title="DS004582 — eeg dataset, 73 subjects">DS004582</a></td>
       <td>Makowski2023_FakeFaceEmo</td>
       <td></td>
       <td>openneuro</td>
@@ -4180,7 +4180,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.6%;" title="294.2 GB — larger than 98% of datasets" aria-label="294.2 GB — larger than 98% of datasets"><span class="sparkbar-label">294.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004584.html" title="DS004584 — eeg dataset, 149 subjects">DS004584</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004584.html" title="DS004584 — eeg dataset, 149 subjects">DS004584</a></td>
       <td>Singh2023_Rest_eyes</td>
       <td></td>
       <td>openneuro</td>
@@ -4197,7 +4197,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.1%;" title="2.9 GB — larger than 28% of datasets" aria-label="2.9 GB — larger than 28% of datasets"><span class="sparkbar-label">2.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004587.html" title="DS004587 — eeg dataset, 103 subjects">DS004587</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004587.html" title="DS004587 — eeg dataset, 103 subjects">DS004587</a></td>
       <td>Makowski2023_IllusionGameEEG</td>
       <td></td>
       <td>openneuro</td>
@@ -4214,7 +4214,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.6%;" title="219.3 GB — larger than 96% of datasets" aria-label="219.3 GB — larger than 96% of datasets"><span class="sparkbar-label">219.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004588.html" title="DS004588 — eeg dataset, 42 subjects">DS004588</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004588.html" title="DS004588 — eeg dataset, 42 subjects">DS004588</a></td>
       <td>Georgiadis2023</td>
       <td>Neuma</td>
       <td>openneuro</td>
@@ -4231,7 +4231,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.4%;" title="534.1 MB — larger than 11% of datasets" aria-label="534.1 MB — larger than 11% of datasets"><span class="sparkbar-label">534.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004595.html" title="DS004595 — eeg dataset, 53 subjects">DS004595</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004595.html" title="DS004595 — eeg dataset, 53 subjects">DS004595</a></td>
       <td>Campbell2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4248,7 +4248,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 42% of datasets" aria-label="7.8 GB — larger than 42% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004598.html" title="DS004598 — eeg dataset, 9 subjects">DS004598</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004598.html" title="DS004598 — eeg dataset, 9 subjects">DS004598</a></td>
       <td>Faraz2023</td>
       <td>Moradi2024</td>
       <td>openneuro</td>
@@ -4265,7 +4265,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="9.9 GB — larger than 47% of datasets" aria-label="9.9 GB — larger than 47% of datasets"><span class="sparkbar-label">9.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004602.html" title="DS004602 — eeg dataset, 182 subjects">DS004602</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004602.html" title="DS004602 — eeg dataset, 182 subjects">DS004602</a></td>
       <td>Clayson2023_Registered</td>
       <td></td>
       <td>openneuro</td>
@@ -4282,7 +4282,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.0%;" title="73.9 GB — larger than 85% of datasets" aria-label="73.9 GB — larger than 85% of datasets"><span class="sparkbar-label">73.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004603.html" title="DS004603 — eeg dataset, 37 subjects">DS004603</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004603.html" title="DS004603 — eeg dataset, 37 subjects">DS004603</a></td>
       <td>Lowe2023</td>
       <td>VisualContextTrajectory</td>
       <td>openneuro</td>
@@ -4299,7 +4299,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.6%;" title="27.4 GB — larger than 68% of datasets" aria-label="27.4 GB — larger than 68% of datasets"><span class="sparkbar-label">27.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004621.html" title="DS004621 — eeg dataset, 42 subjects">DS004621</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004621.html" title="DS004621 — eeg dataset, 42 subjects">DS004621</a></td>
       <td>Patrycja2023_Nencki</td>
       <td>NenckiSymfonia</td>
       <td>openneuro</td>
@@ -4316,7 +4316,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="77.4 GB — larger than 86% of datasets" aria-label="77.4 GB — larger than 86% of datasets"><span class="sparkbar-label">77.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004624.html" title="DS004624 — ieeg dataset, 3 subjects">DS004624</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004624.html" title="DS004624 — ieeg dataset, 3 subjects">DS004624</a></td>
       <td>Mivalt2025</td>
       <td>Mivalt2024, BCI2000_Intracranial</td>
       <td>openneuro</td>
@@ -4333,7 +4333,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.5%;" title="19.3 GB — larger than 61% of datasets" aria-label="19.3 GB — larger than 61% of datasets"><span class="sparkbar-label">19.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004625.html" title="DS004625 — eeg dataset, 32 subjects">DS004625</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004625.html" title="DS004625 — eeg dataset, 32 subjects">DS004625</a></td>
       <td>Liu2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4350,7 +4350,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.4%;" title="62.5 GB — larger than 82% of datasets" aria-label="62.5 GB — larger than 82% of datasets"><span class="sparkbar-label">62.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004626.html" title="DS004626 — eeg dataset, 52 subjects">DS004626</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004626.html" title="DS004626 — eeg dataset, 52 subjects">DS004626</a></td>
       <td>Maka2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4367,7 +4367,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.6%;" title="19.9 GB — larger than 61% of datasets" aria-label="19.9 GB — larger than 61% of datasets"><span class="sparkbar-label">19.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004635.html" title="DS004635 — eeg dataset, 48 subjects">DS004635</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004635.html" title="DS004635 — eeg dataset, 48 subjects">DS004635</a></td>
       <td>Bagdasarov2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4384,7 +4384,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.5%;" title="26.1 GB — larger than 67% of datasets" aria-label="26.1 GB — larger than 67% of datasets"><span class="sparkbar-label">26.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004642.html" title="DS004642 — ieeg dataset, 10 subjects">DS004642</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004642.html" title="DS004642 — ieeg dataset, 10 subjects">DS004642</a></td>
       <td>Dimakopoulos2023_Intraoperative</td>
       <td></td>
       <td>openneuro</td>
@@ -4401,7 +4401,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004657.html" title="DS004657 — eeg dataset, 24 subjects">DS004657</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004657.html" title="DS004657 — eeg dataset, 24 subjects">DS004657</a></td>
       <td>Metcalfe2023_Driving</td>
       <td>TX20</td>
       <td>openneuro</td>
@@ -4418,7 +4418,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.2%;" title="43.1 GB — larger than 75% of datasets" aria-label="43.1 GB — larger than 75% of datasets"><span class="sparkbar-label">43.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004660.html" title="DS004660 — eeg dataset, 21 subjects">DS004660</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004660.html" title="DS004660 — eeg dataset, 21 subjects">DS004660</a></td>
       <td>Johnson2023_TNO</td>
       <td>TNO</td>
       <td>openneuro</td>
@@ -4435,7 +4435,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 40% of datasets" aria-label="7.2 GB — larger than 40% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004661.html" title="DS004661 — eeg dataset, 17 subjects">DS004661</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004661.html" title="DS004661 — eeg dataset, 17 subjects">DS004661</a></td>
       <td>Johnson2023_ANDI</td>
       <td>ANDI</td>
       <td>openneuro</td>
@@ -4452,7 +4452,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.7%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004696.html" title="DS004696 — ieeg dataset, 8 subjects">DS004696</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004696.html" title="DS004696 — ieeg dataset, 8 subjects">DS004696</a></td>
       <td>Valencia2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4469,7 +4469,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.4%;" title="14.2 GB — larger than 54% of datasets" aria-label="14.2 GB — larger than 54% of datasets"><span class="sparkbar-label">14.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004703.html" title="DS004703 — ieeg dataset, 10 subjects">DS004703</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004703.html" title="DS004703 — ieeg dataset, 10 subjects">DS004703</a></td>
       <td>Mai2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4486,7 +4486,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 52% of datasets" aria-label="12.4 GB — larger than 52% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004706.html" title="DS004706 — eeg dataset, 34 subjects">DS004706</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004706.html" title="DS004706 — eeg dataset, 34 subjects">DS004706</a></td>
       <td>Rudoler2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4503,7 +4503,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:93.6%;" title="1.3 TB — larger than 100% of datasets" aria-label="1.3 TB — larger than 100% of datasets"><span class="sparkbar-label">1.3 TB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004718.html" title="DS004718 — eeg dataset, 51 subjects">DS004718</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004718.html" title="DS004718 — eeg dataset, 51 subjects">DS004718</a></td>
       <td>Momenian2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4520,7 +4520,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.7%;" title="37.0 GB — larger than 72% of datasets" aria-label="37.0 GB — larger than 72% of datasets"><span class="sparkbar-label">37.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004738.html" title="DS004738 — meg dataset, 4 subjects">DS004738</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004738.html" title="DS004738 — meg dataset, 4 subjects">DS004738</a></td>
       <td>Bahners2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4537,7 +4537,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 39% of datasets" aria-label="6.1 GB — larger than 39% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004745.html" title="DS004745 — eeg dataset, 6 subjects">DS004745</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004745.html" title="DS004745 — eeg dataset, 6 subjects">DS004745</a></td>
       <td>Kumaravel2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4554,7 +4554,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:64.7%;" title="242.1 MB — larger than 7% of datasets" aria-label="242.1 MB — larger than 7% of datasets"><span class="sparkbar-label">242.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004752.html" title="DS004752 — eeg, ieeg dataset, 15 subjects">DS004752</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004752.html" title="DS004752 — eeg, ieeg dataset, 15 subjects">DS004752</a></td>
       <td>Dimakopoulos2023_intracranial</td>
       <td></td>
       <td>openneuro</td>
@@ -4571,7 +4571,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 49% of datasets" aria-label="10.2 GB — larger than 49% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004770.html" title="DS004770 — ieeg dataset, 10 subjects">DS004770</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004770.html" title="DS004770 — ieeg dataset, 10 subjects">DS004770</a></td>
       <td>Ueda2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4588,7 +4588,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.8%;" title="8.7 GB — larger than 45% of datasets" aria-label="8.7 GB — larger than 45% of datasets"><span class="sparkbar-label">8.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004771.html" title="DS004771 — eeg dataset, 61 subjects">DS004771</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004771.html" title="DS004771 — eeg dataset, 61 subjects">DS004771</a></td>
       <td>Kuo2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4605,7 +4605,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.6%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004774.html" title="DS004774 — ieeg dataset, 14 subjects">DS004774</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004774.html" title="DS004774 — ieeg dataset, 14 subjects">DS004774</a></td>
       <td>Boom2023</td>
       <td>ERDetect, ER_Detect</td>
       <td>openneuro</td>
@@ -4622,7 +4622,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.3%;" title="24.8 GB — larger than 66% of datasets" aria-label="24.8 GB — larger than 66% of datasets"><span class="sparkbar-label">24.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004784.html" title="DS004784 — eeg dataset, 1 subjects">DS004784</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004784.html" title="DS004784 — eeg dataset, 1 subjects">DS004784</a></td>
       <td>Downey2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4639,7 +4639,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.6%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004785.html" title="DS004785 — eeg dataset, 17 subjects">DS004785</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004785.html" title="DS004785 — eeg dataset, 17 subjects">DS004785</a></td>
       <td>Boebinger2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4656,7 +4656,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.0%;" title="351.2 MB — larger than 8% of datasets" aria-label="351.2 MB — larger than 8% of datasets"><span class="sparkbar-label">351.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004789.html" title="DS004789 — ieeg dataset, 273 subjects">DS004789</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004789.html" title="DS004789 — ieeg dataset, 273 subjects">DS004789</a></td>
       <td>Herrema2023_Delayed_Free_Recall</td>
       <td></td>
       <td>openneuro</td>
@@ -4673,7 +4673,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:90.8%;" title="576.3 GB — larger than 99% of datasets" aria-label="576.3 GB — larger than 99% of datasets"><span class="sparkbar-label">576.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004796.html" title="DS004796 — eeg dataset, 79 subjects">DS004796</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004796.html" title="DS004796 — eeg dataset, 79 subjects">DS004796</a></td>
       <td>Patrycja2023_Polish</td>
       <td>PEARLNeuro</td>
       <td>openneuro</td>
@@ -4690,7 +4690,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.9%;" title="240.2 GB — larger than 97% of datasets" aria-label="240.2 GB — larger than 97% of datasets"><span class="sparkbar-label">240.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004802.html" title="DS004802 — eeg dataset, 39 subjects">DS004802</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004802.html" title="DS004802 — eeg dataset, 39 subjects">DS004802</a></td>
       <td>Bathelt2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4707,7 +4707,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.1 GB — larger than 48% of datasets" aria-label="10.1 GB — larger than 48% of datasets"><span class="sparkbar-label">10.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004809.html" title="DS004809 — ieeg dataset, 252 subjects">DS004809</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004809.html" title="DS004809 — ieeg dataset, 252 subjects">DS004809</a></td>
       <td>Herrema2023_Categorized_Free_Recall</td>
       <td>catFR_Categorized_Free_Recall, CatFR</td>
       <td>openneuro</td>
@@ -4724,7 +4724,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:90.2%;" title="477.2 GB — larger than 99% of datasets" aria-label="477.2 GB — larger than 99% of datasets"><span class="sparkbar-label">477.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004816.html" title="DS004816 — eeg dataset, 20 subjects">DS004816</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004816.html" title="DS004816 — eeg dataset, 20 subjects">DS004816</a></td>
       <td>Grootswagers2023_E1</td>
       <td></td>
       <td>openneuro</td>
@@ -4741,7 +4741,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.9%;" title="9.1 GB — larger than 46% of datasets" aria-label="9.1 GB — larger than 46% of datasets"><span class="sparkbar-label">9.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004817.html" title="DS004817 — eeg dataset, 20 subjects">DS004817</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004817.html" title="DS004817 — eeg dataset, 20 subjects">DS004817</a></td>
       <td>Grootswagers2023_E2</td>
       <td></td>
       <td>openneuro</td>
@@ -4758,7 +4758,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.1 GB — larger than 48% of datasets" aria-label="10.1 GB — larger than 48% of datasets"><span class="sparkbar-label">10.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004819.html" title="DS004819 — ieeg dataset, 1 subjects">DS004819</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004819.html" title="DS004819 — ieeg dataset, 1 subjects">DS004819</a></td>
       <td>Lee2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4775,7 +4775,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.2%;" title="688.7 MB — larger than 14% of datasets" aria-label="688.7 MB — larger than 14% of datasets"><span class="sparkbar-label">688.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004830.html" title="DS004830 — fnirs dataset, 12 subjects">DS004830</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004830.html" title="DS004830 — fnirs dataset, 12 subjects">DS004830</a></td>
       <td>Ning2023</td>
       <td>Ning2024</td>
       <td>openneuro</td>
@@ -4792,7 +4792,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.3%;" title="1.2 GB — larger than 20% of datasets" aria-label="1.2 GB — larger than 20% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004837.html" title="DS004837 — meg dataset, 60 subjects">DS004837</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004837.html" title="DS004837 — meg dataset, 60 subjects">DS004837</a></td>
       <td>LopezCaballero2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4809,7 +4809,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.6%;" title="119.9 GB — larger than 91% of datasets" aria-label="119.9 GB — larger than 91% of datasets"><span class="sparkbar-label">119.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004840.html" title="DS004840 — eeg dataset, 9 subjects">DS004840</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004840.html" title="DS004840 — eeg dataset, 9 subjects">DS004840</a></td>
       <td>CordobaSilva2023</td>
       <td></td>
       <td>openneuro</td>
@@ -4826,7 +4826,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.8%;" title="599.5 MB — larger than 13% of datasets" aria-label="599.5 MB — larger than 13% of datasets"><span class="sparkbar-label">599.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004841.html" title="DS004841 — eeg dataset, 20 subjects">DS004841</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004841.html" title="DS004841 — eeg dataset, 20 subjects">DS004841</a></td>
       <td>Larkin2023_TX14</td>
       <td>TX14</td>
       <td>openneuro</td>
@@ -4843,7 +4843,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 40% of datasets" aria-label="7.3 GB — larger than 40% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004842.html" title="DS004842 — eeg dataset, 14 subjects">DS004842</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004842.html" title="DS004842 — eeg dataset, 14 subjects">DS004842</a></td>
       <td>Larkin2023_TX15</td>
       <td>TX15</td>
       <td>openneuro</td>
@@ -4860,7 +4860,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.1%;" title="5.2 GB — larger than 36% of datasets" aria-label="5.2 GB — larger than 36% of datasets"><span class="sparkbar-label">5.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004843.html" title="DS004843 — eeg dataset, 14 subjects">DS004843</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004843.html" title="DS004843 — eeg dataset, 14 subjects">DS004843</a></td>
       <td>Johnson2023_T16</td>
       <td></td>
       <td>openneuro</td>
@@ -4877,7 +4877,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.7 GB — larger than 42% of datasets" aria-label="7.7 GB — larger than 42% of datasets"><span class="sparkbar-label">7.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004844.html" title="DS004844 — eeg dataset, 17 subjects">DS004844</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004844.html" title="DS004844 — eeg dataset, 17 subjects">DS004844</a></td>
       <td>Metcalfe2023_T22</td>
       <td></td>
       <td>openneuro</td>
@@ -4894,7 +4894,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.3 GB — larger than 64% of datasets" aria-label="22.3 GB — larger than 64% of datasets"><span class="sparkbar-label">22.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004849.html" title="DS004849 — eeg dataset, 1 subjects">DS004849</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004849.html" title="DS004849 — eeg dataset, 1 subjects">DS004849</a></td>
       <td>Johnson2023_STRONG</td>
       <td>STRONG</td>
       <td>openneuro</td>
@@ -4911,7 +4911,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004850.html" title="DS004850 — eeg dataset, 1 subjects">DS004850</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004850.html" title="DS004850 — eeg dataset, 1 subjects">DS004850</a></td>
       <td>Johnson2023_ODE</td>
       <td>Johnson2024</td>
       <td>openneuro</td>
@@ -4928,7 +4928,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004851.html" title="DS004851 — eeg dataset, 66 subjects">DS004851</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004851.html" title="DS004851 — eeg dataset, 66 subjects">DS004851</a></td>
       <td>Johnson2023_HID</td>
       <td>HID</td>
       <td>openneuro</td>
@@ -4945,7 +4945,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.0%;" title="55.9 GB — larger than 80% of datasets" aria-label="55.9 GB — larger than 80% of datasets"><span class="sparkbar-label">55.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004852.html" title="DS004852 — eeg dataset, 1 subjects">DS004852</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004852.html" title="DS004852 — eeg dataset, 1 subjects">DS004852</a></td>
       <td>Johnson2023_InsurgentCivilian</td>
       <td>Johnson2025</td>
       <td>openneuro</td>
@@ -4962,7 +4962,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004853.html" title="DS004853 — eeg dataset, 1 subjects">DS004853</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004853.html" title="DS004853 — eeg dataset, 1 subjects">DS004853</a></td>
       <td>Johnson2023_TX17</td>
       <td></td>
       <td>openneuro</td>
@@ -4979,7 +4979,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004854.html" title="DS004854 — eeg dataset, 1 subjects">DS004854</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004854.html" title="DS004854 — eeg dataset, 1 subjects">DS004854</a></td>
       <td>Johnson2023_TX18</td>
       <td>TX18</td>
       <td>openneuro</td>
@@ -4996,7 +4996,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004855.html" title="DS004855 — eeg dataset, 1 subjects">DS004855</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004855.html" title="DS004855 — eeg dataset, 1 subjects">DS004855</a></td>
       <td>Johnson2023_FT</td>
       <td></td>
       <td>openneuro</td>
@@ -5013,7 +5013,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="79.2 MB — larger than 3% of datasets" aria-label="79.2 MB — larger than 3% of datasets"><span class="sparkbar-label">79.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004859.html" title="DS004859 — ieeg dataset, 7 subjects">DS004859</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004859.html" title="DS004859 — ieeg dataset, 7 subjects">DS004859</a></td>
       <td>Sakakura2023_children_Stroop</td>
       <td>Sakakura2024</td>
       <td>openneuro</td>
@@ -5030,7 +5030,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 25% of datasets" aria-label="2.3 GB — larger than 25% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004860.html" title="DS004860 — eeg dataset, 31 subjects">DS004860</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004860.html" title="DS004860 — eeg dataset, 31 subjects">DS004860</a></td>
       <td>Schwartz2023</td>
       <td></td>
       <td>openneuro</td>
@@ -5047,7 +5047,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.0%;" title="3.8 GB — larger than 31% of datasets" aria-label="3.8 GB — larger than 31% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004865.html" title="DS004865 — ieeg dataset, 42 subjects">DS004865</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004865.html" title="DS004865 — ieeg dataset, 42 subjects">DS004865</a></td>
       <td>Herrema2023_pyFR_Delayed_Free</td>
       <td>pyFR</td>
       <td>openneuro</td>
@@ -5064,7 +5064,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.9%;" title="97.8 GB — larger than 88% of datasets" aria-label="97.8 GB — larger than 88% of datasets"><span class="sparkbar-label">97.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004883.html" title="DS004883 — eeg dataset, 172 subjects">DS004883</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004883.html" title="DS004883 — eeg dataset, 172 subjects">DS004883</a></td>
       <td>Clayson2023_Registerd</td>
       <td></td>
       <td>openneuro</td>
@@ -5081,7 +5081,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.7%;" title="122.8 GB — larger than 91% of datasets" aria-label="122.8 GB — larger than 91% of datasets"><span class="sparkbar-label">122.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004902.html" title="DS004902 — eeg dataset, 71 subjects">DS004902</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004902.html" title="DS004902 — eeg dataset, 71 subjects">DS004902</a></td>
       <td>Xiang2023</td>
       <td></td>
       <td>openneuro</td>
@@ -5098,7 +5098,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.3 GB — larger than 44% of datasets" aria-label="8.3 GB — larger than 44% of datasets"><span class="sparkbar-label">8.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004917.html" title="DS004917 — eeg dataset, 24 subjects">DS004917</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004917.html" title="DS004917 — eeg dataset, 24 subjects">DS004917</a></td>
       <td>FigueroaVargas2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5115,7 +5115,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.7%;" title="37.5 GB — larger than 72% of datasets" aria-label="37.5 GB — larger than 72% of datasets"><span class="sparkbar-label">37.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004929.html" title="DS004929 — fnirs dataset, 12 subjects">DS004929</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004929.html" title="DS004929 — fnirs dataset, 12 subjects">DS004929</a></td>
       <td>Gao2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5132,7 +5132,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.5%;" title="302.4 MB — larger than 7% of datasets" aria-label="302.4 MB — larger than 7% of datasets"><span class="sparkbar-label">302.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004940.html" title="DS004940 — eeg dataset, 22 subjects">DS004940</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004940.html" title="DS004940 — eeg dataset, 22 subjects">DS004940</a></td>
       <td>Toffolo2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5149,7 +5149,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.5%;" title="118.5 GB — larger than 91% of datasets" aria-label="118.5 GB — larger than 91% of datasets"><span class="sparkbar-label">118.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004942.html" title="DS004942 — eeg dataset, 62 subjects">DS004942</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004942.html" title="DS004942 — eeg dataset, 62 subjects">DS004942</a></td>
       <td>Kieffaber2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5166,7 +5166,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.3%;" title="25.1 GB — larger than 67% of datasets" aria-label="25.1 GB — larger than 67% of datasets"><span class="sparkbar-label">25.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004944.html" title="DS004944 — ieeg dataset, 22 subjects">DS004944</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004944.html" title="DS004944 — ieeg dataset, 22 subjects">DS004944</a></td>
       <td>Costa2024</td>
       <td>BCI2000_intraop</td>
       <td>openneuro</td>
@@ -5183,7 +5183,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.8%;" title="451.1 MB — larger than 10% of datasets" aria-label="451.1 MB — larger than 10% of datasets"><span class="sparkbar-label">451.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004951.html" title="DS004951 — eeg dataset, 11 subjects">DS004951</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004951.html" title="DS004951 — eeg dataset, 11 subjects">DS004951</a></td>
       <td>Haupt2024_Braille</td>
       <td>Haupt2025</td>
       <td>openneuro</td>
@@ -5200,7 +5200,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.9%;" title="22.0 GB — larger than 63% of datasets" aria-label="22.0 GB — larger than 63% of datasets"><span class="sparkbar-label">22.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004952.html" title="DS004952 — eeg dataset, 10 subjects">DS004952</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004952.html" title="DS004952 — eeg dataset, 10 subjects">DS004952</a></td>
       <td>Mou2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5217,7 +5217,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.4%;" title="207.1 GB — larger than 95% of datasets" aria-label="207.1 GB — larger than 95% of datasets"><span class="sparkbar-label">207.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004973.html" title="DS004973 — fnirs dataset, 20 subjects">DS004973</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004973.html" title="DS004973 — fnirs dataset, 20 subjects">DS004973</a></td>
       <td>Zhang2024_driving_risk_cognition</td>
       <td></td>
       <td>openneuro</td>
@@ -5234,7 +5234,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.4%;" title="2.3 GB — larger than 26% of datasets" aria-label="2.3 GB — larger than 26% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004977.html" title="DS004977 — ieeg dataset, 4 subjects">DS004977</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004977.html" title="DS004977 — ieeg dataset, 4 subjects">DS004977</a></td>
       <td>Huang2024</td>
       <td>CARLA</td>
       <td>openneuro</td>
@@ -5251,7 +5251,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.9%;" title="1.5 GB — larger than 22% of datasets" aria-label="1.5 GB — larger than 22% of datasets"><span class="sparkbar-label">1.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004980.html" title="DS004980 — eeg dataset, 17 subjects">DS004980</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004980.html" title="DS004980 — eeg dataset, 17 subjects">DS004980</a></td>
       <td>Wang2024_architectural_affordances</td>
       <td></td>
       <td>openneuro</td>
@@ -5268,7 +5268,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.8%;" title="15.8 GB — larger than 56% of datasets" aria-label="15.8 GB — larger than 56% of datasets"><span class="sparkbar-label">15.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004993.html" title="DS004993 — ieeg dataset, 3 subjects">DS004993</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004993.html" title="DS004993 — ieeg dataset, 3 subjects">DS004993</a></td>
       <td>Hamilton2024</td>
       <td>WIRED_ICM</td>
       <td>openneuro</td>
@@ -5285,7 +5285,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.5%;" title="305.1 MB — larger than 7% of datasets" aria-label="305.1 MB — larger than 7% of datasets"><span class="sparkbar-label">305.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004995.html" title="DS004995 — eeg dataset, 20 subjects">DS004995</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004995.html" title="DS004995 — eeg dataset, 20 subjects">DS004995</a></td>
       <td>Moerel2024</td>
       <td>Moerel2023</td>
       <td>openneuro</td>
@@ -5302,7 +5302,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.6 GB — larger than 68% of datasets" aria-label="27.6 GB — larger than 68% of datasets"><span class="sparkbar-label">27.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS004998.html" title="DS004998 — meg dataset, 20 subjects">DS004998</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004998.html" title="DS004998 — meg dataset, 20 subjects">DS004998</a></td>
       <td>Rassoulou2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5319,7 +5319,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.6%;" title="161.8 GB — larger than 93% of datasets" aria-label="161.8 GB — larger than 93% of datasets"><span class="sparkbar-label">161.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005007.html" title="DS005007 — ieeg dataset, 40 subjects">DS005007</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005007.html" title="DS005007 — ieeg dataset, 40 subjects">DS005007</a></td>
       <td>Kitazawa2024</td>
       <td>Kitazawa2025</td>
       <td>openneuro</td>
@@ -5336,7 +5336,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.3 GB — larger than 44% of datasets" aria-label="8.3 GB — larger than 44% of datasets"><span class="sparkbar-label">8.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005021.html" title="DS005021 — eeg dataset, 36 subjects">DS005021</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005021.html" title="DS005021 — eeg dataset, 36 subjects">DS005021</a></td>
       <td>Williams2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5353,7 +5353,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.5%;" title="47.5 GB — larger than 78% of datasets" aria-label="47.5 GB — larger than 78% of datasets"><span class="sparkbar-label">47.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005028.html" title="DS005028 — eeg dataset, 11 subjects">DS005028</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005028.html" title="DS005028 — eeg dataset, 11 subjects">DS005028</a></td>
       <td>Chandravadia2024</td>
       <td>Chandravadia2022</td>
       <td>openneuro</td>
@@ -5370,7 +5370,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.6%;" title="422.1 MB — larger than 10% of datasets" aria-label="422.1 MB — larger than 10% of datasets"><span class="sparkbar-label">422.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005034.html" title="DS005034 — eeg dataset, 25 subjects">DS005034</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005034.html" title="DS005034 — eeg dataset, 25 subjects">DS005034</a></td>
       <td>Pavlov2024_effect_theta_tACS</td>
       <td></td>
       <td>openneuro</td>
@@ -5387,7 +5387,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.3%;" title="61.4 GB — larger than 82% of datasets" aria-label="61.4 GB — larger than 82% of datasets"><span class="sparkbar-label">61.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005048.html" title="DS005048 — eeg dataset, 35 subjects">DS005048</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005048.html" title="DS005048 — eeg dataset, 35 subjects">DS005048</a></td>
       <td>Lahijanian2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5404,7 +5404,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.0%;" title="355.9 MB — larger than 9% of datasets" aria-label="355.9 MB — larger than 9% of datasets"><span class="sparkbar-label">355.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005059.html" title="DS005059 — ieeg dataset, 69 subjects">DS005059</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005059.html" title="DS005059 — ieeg dataset, 69 subjects">DS005059</a></td>
       <td>Herrema2024_Paired</td>
       <td>PAL</td>
       <td>openneuro</td>
@@ -5421,7 +5421,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.7%;" title="167.3 GB — larger than 93% of datasets" aria-label="167.3 GB — larger than 93% of datasets"><span class="sparkbar-label">167.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005065.html" title="DS005065 — meg dataset, 21 subjects">DS005065</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005065.html" title="DS005065 — meg dataset, 21 subjects">DS005065</a></td>
       <td>Russek2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5438,7 +5438,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:89.8%;" title="425.8 GB — larger than 98% of datasets" aria-label="425.8 GB — larger than 98% of datasets"><span class="sparkbar-label">425.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005079.html" title="DS005079 — eeg dataset, 1 subjects">DS005079</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005079.html" title="DS005079 — eeg dataset, 1 subjects">DS005079</a></td>
       <td>Cohen2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5455,7 +5455,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.3%;" title="1.7 GB — larger than 23% of datasets" aria-label="1.7 GB — larger than 23% of datasets"><span class="sparkbar-label">1.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005083.html" title="DS005083 — ieeg dataset, 61 subjects">DS005083</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005083.html" title="DS005083 — ieeg dataset, 61 subjects">DS005083</a></td>
       <td>Yang2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5472,7 +5472,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:42.1%;" title="281 KB — larger than 0% of datasets" aria-label="281 KB — larger than 0% of datasets"><span class="sparkbar-label">281 KB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005087.html" title="DS005087 — eeg dataset, 20 subjects">DS005087</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005087.html" title="DS005087 — eeg dataset, 20 subjects">DS005087</a></td>
       <td>Robinson2024_rapid</td>
       <td></td>
       <td>openneuro</td>
@@ -5489,7 +5489,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="12.2 GB — larger than 52% of datasets" aria-label="12.2 GB — larger than 52% of datasets"><span class="sparkbar-label">12.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005089.html" title="DS005089 — eeg dataset, 36 subjects">DS005089</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005089.html" title="DS005089 — eeg dataset, 36 subjects">DS005089</a></td>
       <td>AguadoLopez2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5506,7 +5506,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.7%;" title="68.0 GB — larger than 83% of datasets" aria-label="68.0 GB — larger than 83% of datasets"><span class="sparkbar-label">68.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005095.html" title="DS005095 — eeg dataset, 48 subjects">DS005095</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005095.html" title="DS005095 — eeg dataset, 48 subjects">DS005095</a></td>
       <td>Zhozhikashvili2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5523,7 +5523,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 54% of datasets" aria-label="14.3 GB — larger than 54% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005106.html" title="DS005106 — eeg dataset, 42 subjects">DS005106</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005106.html" title="DS005106 — eeg dataset, 42 subjects">DS005106</a></td>
       <td>Grootswagers2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5540,7 +5540,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.3%;" title="1.2 GB — larger than 20% of datasets" aria-label="1.2 GB — larger than 20% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005107.html" title="DS005107 — meg dataset, 21 subjects">DS005107</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005107.html" title="DS005107 — meg dataset, 21 subjects">DS005107</a></td>
       <td>Xu2024_DEC</td>
       <td></td>
       <td>openneuro</td>
@@ -5557,7 +5557,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.6 GB — larger than 68% of datasets" aria-label="27.6 GB — larger than 68% of datasets"><span class="sparkbar-label">27.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005114.html" title="DS005114 — eeg dataset, 91 subjects">DS005114</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005114.html" title="DS005114 — eeg dataset, 91 subjects">DS005114</a></td>
       <td>Cavanagh2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5574,7 +5574,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.0%;" title="55.9 GB — larger than 80% of datasets" aria-label="55.9 GB — larger than 80% of datasets"><span class="sparkbar-label">55.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005121.html" title="DS005121 — eeg dataset, 34 subjects">DS005121</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005121.html" title="DS005121 — eeg dataset, 34 subjects">DS005121</a></td>
       <td>Siefert2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5591,7 +5591,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 46% of datasets" aria-label="9.0 GB — larger than 46% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005131.html" title="DS005131 — eeg dataset, 58 subjects">DS005131</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005131.html" title="DS005131 — eeg dataset, 58 subjects">DS005131</a></td>
       <td>Bialas2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5608,7 +5608,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.3 GB — larger than 64% of datasets" aria-label="22.3 GB — larger than 64% of datasets"><span class="sparkbar-label">22.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005169.html" title="DS005169 — ieeg dataset, 20 subjects">DS005169</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005169.html" title="DS005169 — ieeg dataset, 20 subjects">DS005169</a></td>
       <td>Barborica2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5625,7 +5625,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.2%;" title="4.0 GB — larger than 32% of datasets" aria-label="4.0 GB — larger than 32% of datasets"><span class="sparkbar-label">4.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005170.html" title="DS005170 — eeg dataset, 5 subjects">DS005170</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005170.html" title="DS005170 — eeg dataset, 5 subjects">DS005170</a></td>
       <td>Zhang2024_Chisco</td>
       <td>Chisco</td>
       <td>openneuro</td>
@@ -5642,7 +5642,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.6%;" title="90.7 GB — larger than 87% of datasets" aria-label="90.7 GB — larger than 87% of datasets"><span class="sparkbar-label">90.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005178.html" title="DS005178 — eeg dataset, 10 subjects">DS005178</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005178.html" title="DS005178 — eeg dataset, 10 subjects">DS005178</a></td>
       <td>Tabar2024</td>
       <td>EESM23</td>
       <td>openneuro</td>
@@ -5659,7 +5659,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.4%;" title="25.7 GB — larger than 67% of datasets" aria-label="25.7 GB — larger than 67% of datasets"><span class="sparkbar-label">25.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005185.html" title="DS005185 — eeg dataset, 20 subjects">DS005185</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005185.html" title="DS005185 — eeg dataset, 20 subjects">DS005185</a></td>
       <td>Mikkelsen2024_Ear_Sleep_Monitoring</td>
       <td>EESM19</td>
       <td>openneuro</td>
@@ -5676,7 +5676,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.3%;" title="267.6 GB — larger than 97% of datasets" aria-label="267.6 GB — larger than 97% of datasets"><span class="sparkbar-label">267.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005189.html" title="DS005189 — eeg dataset, 30 subjects">DS005189</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005189.html" title="DS005189 — eeg dataset, 30 subjects">DS005189</a></td>
       <td>Helbing2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5693,7 +5693,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.1 GB — larger than 57% of datasets" aria-label="16.1 GB — larger than 57% of datasets"><span class="sparkbar-label">16.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005207.html" title="DS005207 — eeg dataset, 20 subjects">DS005207</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005207.html" title="DS005207 — eeg dataset, 20 subjects">DS005207</a></td>
       <td>Mikkelsen2024_Surrey_cEEGrid_sleep</td>
       <td>Surrey_cEEGrid_sleep</td>
       <td>openneuro</td>
@@ -5710,7 +5710,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.8%;" title="28.5 GB — larger than 69% of datasets" aria-label="28.5 GB — larger than 69% of datasets"><span class="sparkbar-label">28.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005241.html" title="DS005241 — meg dataset, 24 subjects">DS005241</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005241.html" title="DS005241 — meg dataset, 24 subjects">DS005241</a></td>
       <td>Rodriguez2024</td>
       <td>NeuroMorph, neuromorph</td>
       <td>openneuro</td>
@@ -5727,7 +5727,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.1%;" title="140.5 GB — larger than 92% of datasets" aria-label="140.5 GB — larger than 92% of datasets"><span class="sparkbar-label">140.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005261.html" title="DS005261 — meg dataset, 17 subjects">DS005261</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005261.html" title="DS005261 — meg dataset, 17 subjects">DS005261</a></td>
       <td>Todorovic2024</td>
       <td>Todorovic2023</td>
       <td>openneuro</td>
@@ -5744,7 +5744,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.0%;" title="137.2 GB — larger than 92% of datasets" aria-label="137.2 GB — larger than 92% of datasets"><span class="sparkbar-label">137.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005262.html" title="DS005262 — eeg dataset, 12 subjects">DS005262</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005262.html" title="DS005262 — eeg dataset, 12 subjects">DS005262</a></td>
       <td>Metwalli2024</td>
       <td>ArEEG</td>
       <td>openneuro</td>
@@ -5761,7 +5761,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.2%;" title="688.8 MB — larger than 15% of datasets" aria-label="688.8 MB — larger than 15% of datasets"><span class="sparkbar-label">688.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005273.html" title="DS005273 — eeg dataset, 33 subjects">DS005273</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005273.html" title="DS005273 — eeg dataset, 33 subjects">DS005273</a></td>
       <td>Esteban2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5778,7 +5778,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.4 GB — larger than 76% of datasets" aria-label="44.4 GB — larger than 76% of datasets"><span class="sparkbar-label">44.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005274.html" title="DS005274 — eeg dataset, 22 subjects">DS005274</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005274.html" title="DS005274 — eeg dataset, 22 subjects">DS005274</a></td>
       <td>Ito2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5795,7 +5795,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.7%;" title="71.9 MB — larger than 2% of datasets" aria-label="71.9 MB — larger than 2% of datasets"><span class="sparkbar-label">71.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005279.html" title="DS005279 — meg dataset, 30 subjects">DS005279</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005279.html" title="DS005279 — meg dataset, 30 subjects">DS005279</a></td>
       <td>Wei2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5812,7 +5812,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.2%;" title="58.9 GB — larger than 81% of datasets" aria-label="58.9 GB — larger than 81% of datasets"><span class="sparkbar-label">58.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005280.html" title="DS005280 — eeg dataset, 223 subjects">DS005280</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005280.html" title="DS005280 — eeg dataset, 223 subjects">DS005280</a></td>
       <td>Xiangyue2024_223_BP</td>
       <td></td>
       <td>openneuro</td>
@@ -5829,7 +5829,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.1%;" title="42.4 GB — larger than 75% of datasets" aria-label="42.4 GB — larger than 75% of datasets"><span class="sparkbar-label">42.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005284.html" title="DS005284 — eeg dataset, 26 subjects">DS005284</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005284.html" title="DS005284 — eeg dataset, 26 subjects">DS005284</a></td>
       <td>Xiangyue2024_26_Biosemi</td>
       <td></td>
       <td>openneuro</td>
@@ -5846,7 +5846,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.3%;" title="1.7 GB — larger than 23% of datasets" aria-label="1.7 GB — larger than 23% of datasets"><span class="sparkbar-label">1.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005285.html" title="DS005285 — eeg dataset, 29 subjects">DS005285</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005285.html" title="DS005285 — eeg dataset, 29 subjects">DS005285</a></td>
       <td>Xiangyue2024_29_ANT</td>
       <td></td>
       <td>openneuro</td>
@@ -5863,7 +5863,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.8%;" title="11.8 GB — larger than 51% of datasets" aria-label="11.8 GB — larger than 51% of datasets"><span class="sparkbar-label">11.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005286.html" title="DS005286 — eeg dataset, 30 subjects">DS005286</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005286.html" title="DS005286 — eeg dataset, 30 subjects">DS005286</a></td>
       <td>Xiangyue2024_30_ANT</td>
       <td></td>
       <td>openneuro</td>
@@ -5880,7 +5880,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.0%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005289.html" title="DS005289 — eeg dataset, 39 subjects">DS005289</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005289.html" title="DS005289 — eeg dataset, 39 subjects">DS005289</a></td>
       <td>Xiangyue2024_39_BP</td>
       <td></td>
       <td>openneuro</td>
@@ -5897,7 +5897,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.1%;" title="7.1 GB — larger than 40% of datasets" aria-label="7.1 GB — larger than 40% of datasets"><span class="sparkbar-label">7.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005291.html" title="DS005291 — eeg dataset, 65 subjects">DS005291</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005291.html" title="DS005291 — eeg dataset, 65 subjects">DS005291</a></td>
       <td>Xiangyue2024_65_ANT</td>
       <td></td>
       <td>openneuro</td>
@@ -5914,7 +5914,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.5 GB — larger than 62% of datasets" aria-label="20.5 GB — larger than 62% of datasets"><span class="sparkbar-label">20.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005292.html" title="DS005292 — eeg dataset, 142 subjects">DS005292</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005292.html" title="DS005292 — eeg dataset, 142 subjects">DS005292</a></td>
       <td>Xiangyue2024_142_Biosemi</td>
       <td></td>
       <td>openneuro</td>
@@ -5931,7 +5931,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.7%;" title="50.9 GB — larger than 79% of datasets" aria-label="50.9 GB — larger than 79% of datasets"><span class="sparkbar-label">50.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005293.html" title="DS005293 — eeg dataset, 95 subjects">DS005293</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005293.html" title="DS005293 — eeg dataset, 95 subjects">DS005293</a></td>
       <td>Xiangyue2024_95_BP</td>
       <td></td>
       <td>openneuro</td>
@@ -5948,7 +5948,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.9%;" title="98.9 GB — larger than 88% of datasets" aria-label="98.9 GB — larger than 88% of datasets"><span class="sparkbar-label">98.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005296.html" title="DS005296 — eeg dataset, 62 subjects">DS005296</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005296.html" title="DS005296 — eeg dataset, 62 subjects">DS005296</a></td>
       <td>Emmorey2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5965,7 +5965,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 44% of datasets" aria-label="8.5 GB — larger than 44% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005305.html" title="DS005305 — eeg dataset, 165 subjects">DS005305</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005305.html" title="DS005305 — eeg dataset, 165 subjects">DS005305</a></td>
       <td>Quentin2024</td>
       <td></td>
       <td>openneuro</td>
@@ -5982,7 +5982,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.8%;" title="6.4 GB — larger than 39% of datasets" aria-label="6.4 GB — larger than 39% of datasets"><span class="sparkbar-label">6.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005307.html" title="DS005307 — eeg dataset, 7 subjects">DS005307</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005307.html" title="DS005307 — eeg dataset, 7 subjects">DS005307</a></td>
       <td>Nierula2024</td>
       <td>Nierula2019</td>
       <td>openneuro</td>
@@ -5999,7 +5999,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.1 GB — larger than 60% of datasets" aria-label="18.1 GB — larger than 60% of datasets"><span class="sparkbar-label">18.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005340.html" title="DS005340 — eeg dataset, 15 subjects">DS005340</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005340.html" title="DS005340 — eeg dataset, 15 subjects">DS005340</a></td>
       <td>Polonenko2024_Fundamental</td>
       <td></td>
       <td>openneuro</td>
@@ -6016,7 +6016,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.1%;" title="9.5 GB — larger than 47% of datasets" aria-label="9.5 GB — larger than 47% of datasets"><span class="sparkbar-label">9.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005342.html" title="DS005342 — eeg dataset, 32 subjects">DS005342</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005342.html" title="DS005342 — eeg dataset, 32 subjects">DS005342</a></td>
       <td>TrianaGuzman2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6033,7 +6033,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.9%;" title="2.0 GB — larger than 24% of datasets" aria-label="2.0 GB — larger than 24% of datasets"><span class="sparkbar-label">2.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005343.html" title="DS005343 — eeg dataset, 43 subjects">DS005343</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005343.html" title="DS005343 — eeg dataset, 43 subjects">DS005343</a></td>
       <td>Bagdasarov2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6050,7 +6050,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.7 GB — larger than 65% of datasets" aria-label="22.7 GB — larger than 65% of datasets"><span class="sparkbar-label">22.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005345.html" title="DS005345 — eeg dataset, 26 subjects">DS005345</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005345.html" title="DS005345 — eeg dataset, 26 subjects">DS005345</a></td>
       <td>Ma2024</td>
       <td>LPP</td>
       <td>openneuro</td>
@@ -6067,7 +6067,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.6%;" title="162.5 GB — larger than 93% of datasets" aria-label="162.5 GB — larger than 93% of datasets"><span class="sparkbar-label">162.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005346.html" title="DS005346 — meg dataset, 30 subjects">DS005346</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005346.html" title="DS005346 — meg dataset, 30 subjects">DS005346</a></td>
       <td>Li2024_Naturalistic_fMRI_viewing</td>
       <td></td>
       <td>openneuro</td>
@@ -6084,7 +6084,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.8%;" title="38.9 GB — larger than 73% of datasets" aria-label="38.9 GB — larger than 73% of datasets"><span class="sparkbar-label">38.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005356.html" title="DS005356 — meg dataset, 85 subjects">DS005356</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005356.html" title="DS005356 — meg dataset, 85 subjects">DS005356</a></td>
       <td>DS5356_MajorDepression</td>
       <td></td>
       <td>openneuro</td>
@@ -6101,7 +6101,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.6%;" title="161.6 GB — larger than 93% of datasets" aria-label="161.6 GB — larger than 93% of datasets"><span class="sparkbar-label">161.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005363.html" title="DS005363 — eeg dataset, 43 subjects">DS005363</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005363.html" title="DS005363 — eeg dataset, 43 subjects">DS005363</a></td>
       <td>Haupt2024_Object</td>
       <td>ORHA</td>
       <td>openneuro</td>
@@ -6118,7 +6118,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.2%;" title="17.7 GB — larger than 59% of datasets" aria-label="17.7 GB — larger than 59% of datasets"><span class="sparkbar-label">17.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005383.html" title="DS005383 — eeg dataset, 30 subjects">DS005383</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005383.html" title="DS005383 — eeg dataset, 30 subjects">DS005383</a></td>
       <td>Bai2024</td>
       <td>TMNRED</td>
       <td>openneuro</td>
@@ -6135,7 +6135,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.1%;" title="358.2 MB — larger than 9% of datasets" aria-label="358.2 MB — larger than 9% of datasets"><span class="sparkbar-label">358.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005385.html" title="DS005385 — eeg dataset, 608 subjects">DS005385</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005385.html" title="DS005385 — eeg dataset, 608 subjects">DS005385</a></td>
       <td>Wascher2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6152,7 +6152,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.0%;" title="74.1 GB — larger than 85% of datasets" aria-label="74.1 GB — larger than 85% of datasets"><span class="sparkbar-label">74.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005397.html" title="DS005397 — eeg dataset, 26 subjects">DS005397</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005397.html" title="DS005397 — eeg dataset, 26 subjects">DS005397</a></td>
       <td>Hilton2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6169,7 +6169,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="12.0 GB — larger than 52% of datasets" aria-label="12.0 GB — larger than 52% of datasets"><span class="sparkbar-label">12.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005398.html" title="DS005398 — ieeg dataset, 185 subjects">DS005398</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005398.html" title="DS005398 — ieeg dataset, 185 subjects">DS005398</a></td>
       <td>Zhang2024_Open_Pediatric_Wayne</td>
       <td></td>
       <td>openneuro</td>
@@ -6186,7 +6186,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="102.2 GB — larger than 89% of datasets" aria-label="102.2 GB — larger than 89% of datasets"><span class="sparkbar-label">102.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005403.html" title="DS005403 — eeg dataset, 32 subjects">DS005403</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005403.html" title="DS005403 — eeg dataset, 32 subjects">DS005403</a></td>
       <td>Veillette2024</td>
       <td>Veillette2019</td>
       <td>openneuro</td>
@@ -6203,7 +6203,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.5%;" title="118.5 GB — larger than 90% of datasets" aria-label="118.5 GB — larger than 90% of datasets"><span class="sparkbar-label">118.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005406.html" title="DS005406 — eeg dataset, 29 subjects">DS005406</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005406.html" title="DS005406 — eeg dataset, 29 subjects">DS005406</a></td>
       <td>Formica2024</td>
       <td>Formica2025</td>
       <td>openneuro</td>
@@ -6220,7 +6220,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.2%;" title="13.3 GB — larger than 53% of datasets" aria-label="13.3 GB — larger than 53% of datasets"><span class="sparkbar-label">13.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005407.html" title="DS005407 — eeg dataset, 25 subjects">DS005407</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005407.html" title="DS005407 — eeg dataset, 25 subjects">DS005407</a></td>
       <td>Polonenko2024_effect</td>
       <td></td>
       <td>openneuro</td>
@@ -6237,7 +6237,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.7%;" title="37.8 GB — larger than 73% of datasets" aria-label="37.8 GB — larger than 73% of datasets"><span class="sparkbar-label">37.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005408.html" title="DS005408 — eeg dataset, 25 subjects">DS005408</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005408.html" title="DS005408 — eeg dataset, 25 subjects">DS005408</a></td>
       <td>Polonenko2024_effect_speech</td>
       <td></td>
       <td>openneuro</td>
@@ -6254,7 +6254,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.3 GB — larger than 56% of datasets" aria-label="15.3 GB — larger than 56% of datasets"><span class="sparkbar-label">15.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005410.html" title="DS005410 — eeg dataset, 81 subjects">DS005410</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005410.html" title="DS005410 — eeg dataset, 81 subjects">DS005410</a></td>
       <td>Pavlov2024_Semantic_conditioning</td>
       <td></td>
       <td>openneuro</td>
@@ -6271,7 +6271,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.5%;" title="19.8 GB — larger than 61% of datasets" aria-label="19.8 GB — larger than 61% of datasets"><span class="sparkbar-label">19.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005411.html" title="DS005411 — ieeg dataset, 47 subjects">DS005411</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005411.html" title="DS005411 — ieeg dataset, 47 subjects">DS005411</a></td>
       <td>Herrema2024_Free</td>
       <td></td>
       <td>openneuro</td>
@@ -6288,7 +6288,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.5%;" title="157.4 GB — larger than 93% of datasets" aria-label="157.4 GB — larger than 93% of datasets"><span class="sparkbar-label">157.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005415.html" title="DS005415 — ieeg dataset, 13 subjects">DS005415</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005415.html" title="DS005415 — ieeg dataset, 13 subjects">DS005415</a></td>
       <td>Rockhill2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6305,7 +6305,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.3%;" title="7.5 GB — larger than 41% of datasets" aria-label="7.5 GB — larger than 41% of datasets"><span class="sparkbar-label">7.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005416.html" title="DS005416 — eeg dataset, 23 subjects">DS005416</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005416.html" title="DS005416 — eeg dataset, 23 subjects">DS005416</a></td>
       <td>Wu2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6322,7 +6322,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.8%;" title="21.3 GB — larger than 63% of datasets" aria-label="21.3 GB — larger than 63% of datasets"><span class="sparkbar-label">21.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005420.html" title="DS005420 — eeg dataset, 37 subjects">DS005420</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005420.html" title="DS005420 — eeg dataset, 37 subjects">DS005420</a></td>
       <td>Gama2024</td>
       <td>Gama2019</td>
       <td>openneuro</td>
@@ -6339,7 +6339,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.2%;" title="372.1 MB — larger than 9% of datasets" aria-label="372.1 MB — larger than 9% of datasets"><span class="sparkbar-label">372.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005429.html" title="DS005429 — eeg dataset, 15 subjects">DS005429</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005429.html" title="DS005429 — eeg dataset, 15 subjects">DS005429</a></td>
       <td>Rutiku2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6356,7 +6356,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.5 GB — larger than 58% of datasets" aria-label="16.5 GB — larger than 58% of datasets"><span class="sparkbar-label">16.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005448.html" title="DS005448 — ieeg dataset, 13 subjects">DS005448</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005448.html" title="DS005448 — ieeg dataset, 13 subjects">DS005448</a></td>
       <td>Jelsma2024</td>
       <td>STReEF</td>
       <td>openneuro</td>
@@ -6373,7 +6373,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.7 GB — larger than 76% of datasets" aria-label="44.7 GB — larger than 76% of datasets"><span class="sparkbar-label">44.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005473.html" title="DS005473 — eeg dataset, 29 subjects">DS005473</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005473.html" title="DS005473 — eeg dataset, 29 subjects">DS005473</a></td>
       <td>Xiangyue2024_29_BP</td>
       <td>Zhao2024</td>
       <td>openneuro</td>
@@ -6390,7 +6390,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.7%;" title="6.2 GB — larger than 39% of datasets" aria-label="6.2 GB — larger than 39% of datasets"><span class="sparkbar-label">6.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005486.html" title="DS005486 — eeg dataset, 159 subjects">DS005486</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005486.html" title="DS005486 — eeg dataset, 159 subjects">DS005486</a></td>
       <td>Chowdhury2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6407,7 +6407,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:89.4%;" title="371.0 GB — larger than 98% of datasets" aria-label="371.0 GB — larger than 98% of datasets"><span class="sparkbar-label">371.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005489.html" title="DS005489 — ieeg dataset, 37 subjects">DS005489</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005489.html" title="DS005489 — ieeg dataset, 37 subjects">DS005489</a></td>
       <td>Herrema2024_Free_Recall</td>
       <td></td>
       <td>openneuro</td>
@@ -6424,7 +6424,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.5%;" title="64.9 GB — larger than 83% of datasets" aria-label="64.9 GB — larger than 83% of datasets"><span class="sparkbar-label">64.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005491.html" title="DS005491 — ieeg dataset, 19 subjects">DS005491</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005491.html" title="DS005491 — ieeg dataset, 19 subjects">DS005491</a></td>
       <td>Herrema2024_Categorized</td>
       <td>catFR_open_loop, RAM_catFR, catFR_stim</td>
       <td>openneuro</td>
@@ -6441,7 +6441,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.5 GB — larger than 65% of datasets" aria-label="22.5 GB — larger than 65% of datasets"><span class="sparkbar-label">22.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005494.html" title="DS005494 — ieeg dataset, 20 subjects">DS005494</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005494.html" title="DS005494 — ieeg dataset, 20 subjects">DS005494</a></td>
       <td>Herrema2024_Cued</td>
       <td>Herrema2024</td>
       <td>openneuro</td>
@@ -6458,7 +6458,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.5%;" title="26.3 GB — larger than 67% of datasets" aria-label="26.3 GB — larger than 67% of datasets"><span class="sparkbar-label">26.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005505.html" title="DS005505 — eeg dataset, 136 subjects">DS005505</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005505.html" title="DS005505 — eeg dataset, 136 subjects">DS005505</a></td>
       <td>Shirazi2024_R1</td>
       <td>HBN_r1</td>
       <td>openneuro</td>
@@ -6475,7 +6475,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.1%;" title="103.1 GB — larger than 89% of datasets" aria-label="103.1 GB — larger than 89% of datasets"><span class="sparkbar-label">103.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005506.html" title="DS005506 — eeg dataset, 150 subjects">DS005506</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005506.html" title="DS005506 — eeg dataset, 150 subjects">DS005506</a></td>
       <td>Shirazi2024_R2</td>
       <td>HBN_r2</td>
       <td>openneuro</td>
@@ -6492,7 +6492,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.3%;" title="111.9 GB — larger than 90% of datasets" aria-label="111.9 GB — larger than 90% of datasets"><span class="sparkbar-label">111.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005507.html" title="DS005507 — eeg dataset, 184 subjects">DS005507</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005507.html" title="DS005507 — eeg dataset, 184 subjects">DS005507</a></td>
       <td>Shirazi2024_R3</td>
       <td>HBN_r3</td>
       <td>openneuro</td>
@@ -6509,7 +6509,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.1%;" title="139.4 GB — larger than 92% of datasets" aria-label="139.4 GB — larger than 92% of datasets"><span class="sparkbar-label">139.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005508.html" title="DS005508 — eeg dataset, 324 subjects">DS005508</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005508.html" title="DS005508 — eeg dataset, 324 subjects">DS005508</a></td>
       <td>Shirazi2024_R4</td>
       <td>HBN_r4</td>
       <td>openneuro</td>
@@ -6526,7 +6526,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.8%;" title="229.8 GB — larger than 96% of datasets" aria-label="229.8 GB — larger than 96% of datasets"><span class="sparkbar-label">229.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005509.html" title="DS005509 — eeg dataset, 330 subjects">DS005509</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005509.html" title="DS005509 — eeg dataset, 330 subjects">DS005509</a></td>
       <td>Shirazi2024_R5</td>
       <td>HBN_r5</td>
       <td>openneuro</td>
@@ -6543,7 +6543,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.7%;" title="224.2 GB — larger than 96% of datasets" aria-label="224.2 GB — larger than 96% of datasets"><span class="sparkbar-label">224.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005510.html" title="DS005510 — eeg dataset, 135 subjects">DS005510</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005510.html" title="DS005510 — eeg dataset, 135 subjects">DS005510</a></td>
       <td>Shirazi2024_R6</td>
       <td>HBN_r6</td>
       <td>openneuro</td>
@@ -6560,7 +6560,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.7%;" title="90.8 GB — larger than 87% of datasets" aria-label="90.8 GB — larger than 87% of datasets"><span class="sparkbar-label">90.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005512.html" title="DS005512 — eeg dataset, 257 subjects">DS005512</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005512.html" title="DS005512 — eeg dataset, 257 subjects">DS005512</a></td>
       <td>Shirazi2024_R8</td>
       <td>HBN_r8</td>
       <td>openneuro</td>
@@ -6577,7 +6577,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.5%;" title="157.2 GB — larger than 92% of datasets" aria-label="157.2 GB — larger than 92% of datasets"><span class="sparkbar-label">157.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005514.html" title="DS005514 — eeg dataset, 295 subjects">DS005514</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005514.html" title="DS005514 — eeg dataset, 295 subjects">DS005514</a></td>
       <td>Shirazi2024_R9</td>
       <td>HBN_r9</td>
       <td>openneuro</td>
@@ -6594,7 +6594,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.0%;" title="185.0 GB — larger than 94% of datasets" aria-label="185.0 GB — larger than 94% of datasets"><span class="sparkbar-label">185.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005515.html" title="DS005515 — eeg dataset, 533 subjects">DS005515</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005515.html" title="DS005515 — eeg dataset, 533 subjects">DS005515</a></td>
       <td>Shirazi2024_R10</td>
       <td>HBN_r10</td>
       <td>openneuro</td>
@@ -6611,7 +6611,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.6%;" title="160.5 GB — larger than 93% of datasets" aria-label="160.5 GB — larger than 93% of datasets"><span class="sparkbar-label">160.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005516.html" title="DS005516 — eeg dataset, 430 subjects">DS005516</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005516.html" title="DS005516 — eeg dataset, 430 subjects">DS005516</a></td>
       <td>Shirazi2024_R11</td>
       <td>HBN_r11</td>
       <td>openneuro</td>
@@ -6628,7 +6628,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.6%;" title="219.2 GB — larger than 96% of datasets" aria-label="219.2 GB — larger than 96% of datasets"><span class="sparkbar-label">219.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005520.html" title="DS005520 — eeg dataset, 23 subjects">DS005520</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005520.html" title="DS005520 — eeg dataset, 23 subjects">DS005520</a></td>
       <td>Li2024_Research_supporting_playing</td>
       <td></td>
       <td>openneuro</td>
@@ -6645,7 +6645,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.2%;" title="43.9 GB — larger than 76% of datasets" aria-label="43.9 GB — larger than 76% of datasets"><span class="sparkbar-label">43.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005522.html" title="DS005522 — ieeg dataset, 55 subjects">DS005522</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005522.html" title="DS005522 — ieeg dataset, 55 subjects">DS005522</a></td>
       <td>Herrema2024_Spatial</td>
       <td></td>
       <td>openneuro</td>
@@ -6662,7 +6662,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.2%;" title="107.5 GB — larger than 90% of datasets" aria-label="107.5 GB — larger than 90% of datasets"><span class="sparkbar-label">107.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005523.html" title="DS005523 — ieeg dataset, 21 subjects">DS005523</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005523.html" title="DS005523 — ieeg dataset, 21 subjects">DS005523</a></td>
       <td>Herrema2024_Spatial_Memory</td>
       <td></td>
       <td>openneuro</td>
@@ -6679,7 +6679,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.8%;" title="69.7 GB — larger than 84% of datasets" aria-label="69.7 GB — larger than 84% of datasets"><span class="sparkbar-label">69.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005530.html" title="DS005530 — eeg dataset, 17 subjects">DS005530</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005530.html" title="DS005530 — eeg dataset, 17 subjects">DS005530</a></td>
       <td>Greco2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6696,7 +6696,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 39% of datasets" aria-label="6.5 GB — larger than 39% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005540.html" title="DS005540 — eeg dataset, 59 subjects">DS005540</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005540.html" title="DS005540 — eeg dataset, 59 subjects">DS005540</a></td>
       <td>Xin2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6713,7 +6713,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.5%;" title="47.3 GB — larger than 78% of datasets" aria-label="47.3 GB — larger than 78% of datasets"><span class="sparkbar-label">47.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005545.html" title="DS005545 — ieeg dataset, 106 subjects">DS005545</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005545.html" title="DS005545 — ieeg dataset, 106 subjects">DS005545</a></td>
       <td>Kanno2024</td>
       <td>Kanno2025</td>
       <td>openneuro</td>
@@ -6730,7 +6730,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="40.0 GB — larger than 74% of datasets" aria-label="40.0 GB — larger than 74% of datasets"><span class="sparkbar-label">40.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005555.html" title="DS005555 — eeg dataset, 128 subjects">DS005555</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005555.html" title="DS005555 — eeg dataset, 128 subjects">DS005555</a></td>
       <td>LopezLarraz2024</td>
       <td>BOAS</td>
       <td>openneuro</td>
@@ -6747,7 +6747,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.3%;" title="33.5 GB — larger than 71% of datasets" aria-label="33.5 GB — larger than 71% of datasets"><span class="sparkbar-label">33.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005557.html" title="DS005557 — ieeg dataset, 16 subjects">DS005557</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005557.html" title="DS005557 — ieeg dataset, 16 subjects">DS005557</a></td>
       <td>Herrema2024_Classifier</td>
       <td></td>
       <td>openneuro</td>
@@ -6764,7 +6764,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.7 GB — larger than 72% of datasets" aria-label="34.7 GB — larger than 72% of datasets"><span class="sparkbar-label">34.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005558.html" title="DS005558 — ieeg dataset, 7 subjects">DS005558</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005558.html" title="DS005558 — ieeg dataset, 7 subjects">DS005558</a></td>
       <td>Herrema2024_Categorized_Free</td>
       <td>catFR_closed_loop</td>
       <td>openneuro</td>
@@ -6781,7 +6781,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="12.2 GB — larger than 52% of datasets" aria-label="12.2 GB — larger than 52% of datasets"><span class="sparkbar-label">12.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005565.html" title="DS005565 — eeg dataset, 24 subjects">DS005565</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005565.html" title="DS005565 — eeg dataset, 24 subjects">DS005565</a></td>
       <td>Lee2024_StudyWITH</td>
       <td></td>
       <td>openneuro</td>
@@ -6798,7 +6798,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.8%;" title="2.6 GB — larger than 27% of datasets" aria-label="2.6 GB — larger than 27% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005571.html" title="DS005571 — eeg dataset, 24 subjects">DS005571</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005571.html" title="DS005571 — eeg dataset, 24 subjects">DS005571</a></td>
       <td>MartinezMolina2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6815,7 +6815,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.4%;" title="63.3 GB — larger than 82% of datasets" aria-label="63.3 GB — larger than 82% of datasets"><span class="sparkbar-label">63.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005574.html" title="DS005574 — ieeg dataset, 9 subjects">DS005574</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005574.html" title="DS005574 — ieeg dataset, 9 subjects">DS005574</a></td>
       <td>Zada2024</td>
       <td>Podcast</td>
       <td>openneuro</td>
@@ -6832,7 +6832,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.5%;" title="3.2 GB — larger than 29% of datasets" aria-label="3.2 GB — larger than 29% of datasets"><span class="sparkbar-label">3.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005586.html" title="DS005586 — eeg dataset, 23 subjects">DS005586</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005586.html" title="DS005586 — eeg dataset, 23 subjects">DS005586</a></td>
       <td>Baykan2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6849,7 +6849,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.8%;" title="28.3 GB — larger than 69% of datasets" aria-label="28.3 GB — larger than 69% of datasets"><span class="sparkbar-label">28.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005594.html" title="DS005594 — eeg dataset, 16 subjects">DS005594</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005594.html" title="DS005594 — eeg dataset, 16 subjects">DS005594</a></td>
       <td>Taylor2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6866,7 +6866,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 50% of datasets" aria-label="10.9 GB — larger than 50% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005620.html" title="DS005620 — eeg dataset, 21 subjects">DS005620</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005620.html" title="DS005620 — eeg dataset, 21 subjects">DS005620</a></td>
       <td>Bajwa2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6883,7 +6883,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="77.3 GB — larger than 85% of datasets" aria-label="77.3 GB — larger than 85% of datasets"><span class="sparkbar-label">77.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005624.html" title="DS005624 — ieeg dataset, 24 subjects">DS005624</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005624.html" title="DS005624 — ieeg dataset, 24 subjects">DS005624</a></td>
       <td>DS5624_ColorChangeDetection</td>
       <td></td>
       <td>openneuro</td>
@@ -6900,7 +6900,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.3%;" title="13.8 GB — larger than 54% of datasets" aria-label="13.8 GB — larger than 54% of datasets"><span class="sparkbar-label">13.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005628.html" title="DS005628 — eeg dataset, 102 subjects">DS005628</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005628.html" title="DS005628 — eeg dataset, 102 subjects">DS005628</a></td>
       <td>RosadoAiza2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6917,7 +6917,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.0%;" title="633.7 MB — larger than 13% of datasets" aria-label="633.7 MB — larger than 13% of datasets"><span class="sparkbar-label">633.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005642.html" title="DS005642 — eeg dataset, 21 subjects">DS005642</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005642.html" title="DS005642 — eeg dataset, 21 subjects">DS005642</a></td>
       <td>Robinson2024_illusory</td>
       <td></td>
       <td>openneuro</td>
@@ -6934,7 +6934,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.4%;" title="13.8 GB — larger than 54% of datasets" aria-label="13.8 GB — larger than 54% of datasets"><span class="sparkbar-label">13.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005648.html" title="DS005648 — eeg dataset, 21 subjects">DS005648</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005648.html" title="DS005648 — eeg dataset, 21 subjects">DS005648</a></td>
       <td>Kidder2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6951,7 +6951,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.5 GB — larger than 56% of datasets" aria-label="15.5 GB — larger than 56% of datasets"><span class="sparkbar-label">15.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005662.html" title="DS005662 — eeg dataset, 80 subjects">DS005662</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005662.html" title="DS005662 — eeg dataset, 80 subjects">DS005662</a></td>
       <td>Smit2024</td>
       <td></td>
       <td>openneuro</td>
@@ -6968,7 +6968,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.2%;" title="107.8 GB — larger than 90% of datasets" aria-label="107.8 GB — larger than 90% of datasets"><span class="sparkbar-label">107.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005670.html" title="DS005670 — ieeg dataset, 2 subjects">DS005670</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005670.html" title="DS005670 — ieeg dataset, 2 subjects">DS005670</a></td>
       <td>Xu2024_SEEG_Resting_State</td>
       <td></td>
       <td>openneuro</td>
@@ -6985,7 +6985,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.3%;" title="708.8 MB — larger than 15% of datasets" aria-label="708.8 MB — larger than 15% of datasets"><span class="sparkbar-label">708.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005672.html" title="DS005672 — eeg dataset, 3 subjects">DS005672</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005672.html" title="DS005672 — eeg dataset, 3 subjects">DS005672</a></td>
       <td>Zhiyuan2024</td>
       <td></td>
       <td>openneuro</td>
@@ -7002,7 +7002,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.4%;" title="4.2 GB — larger than 33% of datasets" aria-label="4.2 GB — larger than 33% of datasets"><span class="sparkbar-label">4.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005688.html" title="DS005688 — eeg dataset, 20 subjects">DS005688</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005688.html" title="DS005688 — eeg dataset, 20 subjects">DS005688</a></td>
       <td>Tan2024</td>
       <td></td>
       <td>openneuro</td>
@@ -7019,7 +7019,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.7%;" title="8.4 GB — larger than 44% of datasets" aria-label="8.4 GB — larger than 44% of datasets"><span class="sparkbar-label">8.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005691.html" title="DS005691 — ieeg dataset, 8 subjects">DS005691</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005691.html" title="DS005691 — ieeg dataset, 8 subjects">DS005691</a></td>
       <td>Stenner2024_SpinalExpect</td>
       <td></td>
       <td>openneuro</td>
@@ -7036,7 +7036,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.4%;" title="723.0 MB — larger than 15% of datasets" aria-label="723.0 MB — larger than 15% of datasets"><span class="sparkbar-label">723.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005692.html" title="DS005692 — eeg dataset, 30 subjects">DS005692</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005692.html" title="DS005692 — eeg dataset, 30 subjects">DS005692</a></td>
       <td>Stenner2024_SpinalExpect_NonInvasive</td>
       <td></td>
       <td>openneuro</td>
@@ -7053,7 +7053,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.7%;" title="92.8 GB — larger than 87% of datasets" aria-label="92.8 GB — larger than 87% of datasets"><span class="sparkbar-label">92.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005697.html" title="DS005697 — eeg dataset, 51 subjects">DS005697</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005697.html" title="DS005697 — eeg dataset, 51 subjects">DS005697</a></td>
       <td>Li2024_PerceiveImagine</td>
       <td>PerceiveImagine</td>
       <td>openneuro</td>
@@ -7070,7 +7070,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.6%;" title="66.6 GB — larger than 83% of datasets" aria-label="66.6 GB — larger than 83% of datasets"><span class="sparkbar-label">66.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005752.html" title="DS005752 — meg dataset, 123 subjects">DS005752</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005752.html" title="DS005752 — meg dataset, 123 subjects">DS005752</a></td>
       <td>Nugent2024</td>
       <td></td>
       <td>openneuro</td>
@@ -7087,7 +7087,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:91.3%;" title="662.7 GB — larger than 99% of datasets" aria-label="662.7 GB — larger than 99% of datasets"><span class="sparkbar-label">662.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005776.html" title="DS005776 — fnirs dataset, 11 subjects">DS005776</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005776.html" title="DS005776 — fnirs dataset, 11 subjects">DS005776</a></td>
       <td>Yucel2025_Electrical</td>
       <td>Yucel2015</td>
       <td>openneuro</td>
@@ -7104,7 +7104,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005777.html" title="DS005777 — fnirs dataset, 14 subjects">DS005777</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005777.html" title="DS005777 — fnirs dataset, 14 subjects">DS005777</a></td>
       <td>Peng2025</td>
       <td>Peng2018</td>
       <td>openneuro</td>
@@ -7121,7 +7121,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.0%;" title="864.8 MB — larger than 16% of datasets" aria-label="864.8 MB — larger than 16% of datasets"><span class="sparkbar-label">864.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005779.html" title="DS005779 — eeg dataset, 19 subjects">DS005779</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005779.html" title="DS005779 — eeg dataset, 19 subjects">DS005779</a></td>
       <td>Khatri2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7138,7 +7138,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.6%;" title="88.7 GB — larger than 87% of datasets" aria-label="88.7 GB — larger than 87% of datasets"><span class="sparkbar-label">88.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005795.html" title="DS005795 — eeg dataset, 34 subjects">DS005795</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005795.html" title="DS005795 — eeg dataset, 34 subjects">DS005795</a></td>
       <td>Stadler2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7155,7 +7155,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.8%;" title="6.4 GB — larger than 39% of datasets" aria-label="6.4 GB — larger than 39% of datasets"><span class="sparkbar-label">6.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005810.html" title="DS005810 — meg dataset, 31 subjects">DS005810</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005810.html" title="DS005810 — meg dataset, 31 subjects">DS005810</a></td>
       <td>Zhang2025_MEG</td>
       <td>NOD_MEG</td>
       <td>openneuro</td>
@@ -7172,7 +7172,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.9%;" title="178.6 GB — larger than 94% of datasets" aria-label="178.6 GB — larger than 94% of datasets"><span class="sparkbar-label">178.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005811.html" title="DS005811 — eeg dataset, 19 subjects">DS005811</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005811.html" title="DS005811 — eeg dataset, 19 subjects">DS005811</a></td>
       <td>Zhang2025_EEG</td>
       <td>NOD_EEG</td>
       <td>openneuro</td>
@@ -7189,7 +7189,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.2 GB — larger than 57% of datasets" aria-label="16.2 GB — larger than 57% of datasets"><span class="sparkbar-label">16.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005815.html" title="DS005815 — eeg dataset, 20 subjects">DS005815</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005815.html" title="DS005815 — eeg dataset, 20 subjects">DS005815</a></td>
       <td>Chang2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7206,7 +7206,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.6 GB — larger than 42% of datasets" aria-label="7.6 GB — larger than 42% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005841.html" title="DS005841 — eeg dataset, 48 subjects">DS005841</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005841.html" title="DS005841 — eeg dataset, 48 subjects">DS005841</a></td>
       <td>Karakashevska2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7223,7 +7223,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 41% of datasets" aria-label="7.3 GB — larger than 41% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005857.html" title="DS005857 — eeg dataset, 29 subjects">DS005857</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005857.html" title="DS005857 — eeg dataset, 29 subjects">DS005857</a></td>
       <td>Broitman2025</td>
       <td>Broitman2019</td>
       <td>openneuro</td>
@@ -7240,7 +7240,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.5%;" title="284.4 GB — larger than 97% of datasets" aria-label="284.4 GB — larger than 97% of datasets"><span class="sparkbar-label">284.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005863.html" title="DS005863 — eeg dataset, 127 subjects">DS005863</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005863.html" title="DS005863 — eeg dataset, 127 subjects">DS005863</a></td>
       <td>Isbell2025_Cognitive</td>
       <td></td>
       <td>openneuro</td>
@@ -7257,7 +7257,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 49% of datasets" aria-label="10.6 GB — larger than 49% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005866.html" title="DS005866 — eeg dataset, 60 subjects">DS005866</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005866.html" title="DS005866 — eeg dataset, 60 subjects">DS005866</a></td>
       <td>TerhuneCotter2025_NEAR</td>
       <td>Flankers_NEAR</td>
       <td>openneuro</td>
@@ -7274,7 +7274,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.8%;" title="3.6 GB — larger than 31% of datasets" aria-label="3.6 GB — larger than 31% of datasets"><span class="sparkbar-label">3.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005868.html" title="DS005868 — eeg dataset, 48 subjects">DS005868</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005868.html" title="DS005868 — eeg dataset, 48 subjects">DS005868</a></td>
       <td>TerhuneCotter2025_FAR</td>
       <td>Flankers_FAR</td>
       <td>openneuro</td>
@@ -7291,7 +7291,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.2%;" title="2.9 GB — larger than 28% of datasets" aria-label="2.9 GB — larger than 28% of datasets"><span class="sparkbar-label">2.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005872.html" title="DS005872 — eeg dataset, 1 subjects">DS005872</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005872.html" title="DS005872 — eeg dataset, 1 subjects">DS005872</a></td>
       <td>Plomecka2025</td>
       <td>EEGEyeNet</td>
       <td>openneuro</td>
@@ -7308,7 +7308,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:58.7%;" title="39.9 MB — larger than 1% of datasets" aria-label="39.9 MB — larger than 1% of datasets"><span class="sparkbar-label">39.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005873.html" title="DS005873 — eeg, emg dataset, 125 subjects">DS005873</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005873.html" title="DS005873 — eeg, emg dataset, 125 subjects">DS005873</a></td>
       <td>Bhagubai2025</td>
       <td>SeizeIT2</td>
       <td>openneuro</td>
@@ -7325,7 +7325,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.4 GB — larger than 76% of datasets" aria-label="44.4 GB — larger than 76% of datasets"><span class="sparkbar-label">44.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005876.html" title="DS005876 — eeg dataset, 29 subjects">DS005876</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005876.html" title="DS005876 — eeg dataset, 29 subjects">DS005876</a></td>
       <td>Girard2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7342,7 +7342,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.1%;" title="7.1 GB — larger than 40% of datasets" aria-label="7.1 GB — larger than 40% of datasets"><span class="sparkbar-label">7.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005907.html" title="DS005907 — eeg dataset, 53 subjects">DS005907</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005907.html" title="DS005907 — eeg dataset, 53 subjects">DS005907</a></td>
       <td>Campbell2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7359,7 +7359,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.4%;" title="5.6 GB — larger than 37% of datasets" aria-label="5.6 GB — larger than 37% of datasets"><span class="sparkbar-label">5.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005929.html" title="DS005929 — fnirs dataset, 7 subjects">DS005929</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005929.html" title="DS005929 — fnirs dataset, 7 subjects">DS005929</a></td>
       <td>MotionYucel2014</td>
       <td>Yucel2014, Motion_Yucel2014</td>
       <td>openneuro</td>
@@ -7376,7 +7376,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.5%;" title="68.5 MB — larger than 2% of datasets" aria-label="68.5 MB — larger than 2% of datasets"><span class="sparkbar-label">68.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005930.html" title="DS005930 — fnirs dataset, 12 subjects">DS005930</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005930.html" title="DS005930 — fnirs dataset, 12 subjects">DS005930</a></td>
       <td>Gao2023</td>
       <td></td>
       <td>openneuro</td>
@@ -7393,7 +7393,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.5%;" title="304.2 MB — larger than 7% of datasets" aria-label="304.2 MB — larger than 7% of datasets"><span class="sparkbar-label">304.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005931.html" title="DS005931 — ieeg dataset, 8 subjects">DS005931</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005931.html" title="DS005931 — ieeg dataset, 8 subjects">DS005931</a></td>
       <td>Ueda2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7410,7 +7410,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.8%;" title="817.7 MB — larger than 16% of datasets" aria-label="817.7 MB — larger than 16% of datasets"><span class="sparkbar-label">817.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005932.html" title="DS005932 — eeg dataset, 29 subjects">DS005932</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005932.html" title="DS005932 — eeg dataset, 29 subjects">DS005932</a></td>
       <td>Holcomb2025</td>
       <td>PWIe</td>
       <td>openneuro</td>
@@ -7427,7 +7427,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 25% of datasets" aria-label="2.3 GB — larger than 25% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005935.html" title="DS005935 — fnirs dataset, 21 subjects">DS005935</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005935.html" title="DS005935 — fnirs dataset, 21 subjects">DS005935</a></td>
       <td>Li2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7444,7 +7444,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.5%;" title="738.6 MB — larger than 15% of datasets" aria-label="738.6 MB — larger than 15% of datasets"><span class="sparkbar-label">738.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005946.html" title="DS005946 — eeg dataset, 39 subjects">DS005946</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005946.html" title="DS005946 — eeg dataset, 39 subjects">DS005946</a></td>
       <td>Frau2025</td>
       <td>PROMENADE</td>
       <td>openneuro</td>
@@ -7461,7 +7461,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.6%;" title="14.8 GB — larger than 55% of datasets" aria-label="14.8 GB — larger than 55% of datasets"><span class="sparkbar-label">14.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005953.html" title="DS005953 — ieeg dataset, 2 subjects">DS005953</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005953.html" title="DS005953 — ieeg dataset, 2 subjects">DS005953</a></td>
       <td>Winawer2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7478,7 +7478,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.7%;" title="577.3 MB — larger than 12% of datasets" aria-label="577.3 MB — larger than 12% of datasets"><span class="sparkbar-label">577.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005960.html" title="DS005960 — eeg dataset, 41 subjects">DS005960</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005960.html" title="DS005960 — eeg dataset, 41 subjects">DS005960</a></td>
       <td>Pena2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7495,7 +7495,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.1%;" title="57.7 GB — larger than 80% of datasets" aria-label="57.7 GB — larger than 80% of datasets"><span class="sparkbar-label">57.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005963.html" title="DS005963 — fnirs dataset, 10 subjects">DS005963</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005963.html" title="DS005963 — fnirs dataset, 10 subjects">DS005963</a></td>
       <td>Mesquita2025</td>
       <td>Mesquita2019</td>
       <td>openneuro</td>
@@ -7512,7 +7512,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:64.6%;" title="233.4 MB — larger than 7% of datasets" aria-label="233.4 MB — larger than 7% of datasets"><span class="sparkbar-label">233.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS005964.html" title="DS005964 — fnirs dataset, 17 subjects">DS005964</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS005964.html" title="DS005964 — fnirs dataset, 17 subjects">DS005964</a></td>
       <td>Luke2025</td>
       <td>Luke2019</td>
       <td>openneuro</td>
@@ -7529,7 +7529,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.2%;" title="62.4 MB — larger than 2% of datasets" aria-label="62.4 MB — larger than 2% of datasets"><span class="sparkbar-label">62.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006012.html" title="DS006012 — meg dataset, 21 subjects">DS006012</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006012.html" title="DS006012 — meg dataset, 21 subjects">DS006012</a></td>
       <td>SableMeyer2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7546,7 +7546,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.8%;" title="71.1 GB — larger than 84% of datasets" aria-label="71.1 GB — larger than 84% of datasets"><span class="sparkbar-label">71.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006018.html" title="DS006018 — eeg dataset, 127 subjects">DS006018</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006018.html" title="DS006018 — eeg dataset, 127 subjects">DS006018</a></td>
       <td>Isbell2025_Adulthood</td>
       <td></td>
       <td>openneuro</td>
@@ -7563,7 +7563,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 50% of datasets" aria-label="10.6 GB — larger than 50% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006033.html" title="DS006033 — eeg dataset, 3 subjects">DS006033</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006033.html" title="DS006033 — eeg dataset, 3 subjects">DS006033</a></td>
       <td>Liwicki2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7580,7 +7580,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.7%;" title="15.3 GB — larger than 56% of datasets" aria-label="15.3 GB — larger than 56% of datasets"><span class="sparkbar-label">15.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006035.html" title="DS006035 — meg dataset, 5 subjects">DS006035</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006035.html" title="DS006035 — meg dataset, 5 subjects">DS006035</a></td>
       <td>Lin2025</td>
       <td>Lin2019</td>
       <td>openneuro</td>
@@ -7597,7 +7597,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.3%;" title="3.1 GB — larger than 28% of datasets" aria-label="3.1 GB — larger than 28% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006036.html" title="DS006036 — eeg dataset, 88 subjects">DS006036</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006036.html" title="DS006036 — eeg dataset, 88 subjects">DS006036</a></td>
       <td>Ntetska2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7614,7 +7614,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006040.html" title="DS006040 — eeg dataset, 28 subjects">DS006040</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006040.html" title="DS006040 — eeg dataset, 28 subjects">DS006040</a></td>
       <td>Cha2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7631,7 +7631,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.8%;" title="172.5 GB — larger than 94% of datasets" aria-label="172.5 GB — larger than 94% of datasets"><span class="sparkbar-label">172.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006065.html" title="DS006065 — ieeg dataset, 7 subjects">DS006065</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006065.html" title="DS006065 — ieeg dataset, 7 subjects">DS006065</a></td>
       <td>Kragel2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7648,7 +7648,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.1%;" title="9.6 GB — larger than 47% of datasets" aria-label="9.6 GB — larger than 47% of datasets"><span class="sparkbar-label">9.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006095.html" title="DS006095 — eeg dataset, 71 subjects">DS006095</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006095.html" title="DS006095 — eeg dataset, 71 subjects">DS006095</a></td>
       <td>Liu2025_Mind_Motion_Older</td>
       <td></td>
       <td>openneuro</td>
@@ -7665,7 +7665,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.8%;" title="129.8 GB — larger than 91% of datasets" aria-label="129.8 GB — larger than 91% of datasets"><span class="sparkbar-label">129.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006104.html" title="DS006104 — eeg dataset, 24 subjects">DS006104</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006104.html" title="DS006104 — eeg dataset, 24 subjects">DS006104</a></td>
       <td>Moreira2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7682,7 +7682,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.1%;" title="43.0 GB — larger than 75% of datasets" aria-label="43.0 GB — larger than 75% of datasets"><span class="sparkbar-label">43.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006107.html" title="DS006107 — ieeg dataset, 166 subjects">DS006107</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006107.html" title="DS006107 — ieeg dataset, 166 subjects">DS006107</a></td>
       <td>Kuroda2025</td>
       <td>Kuroda2024</td>
       <td>openneuro</td>
@@ -7699,7 +7699,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="11.9 GB — larger than 51% of datasets" aria-label="11.9 GB — larger than 51% of datasets"><span class="sparkbar-label">11.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006126.html" title="DS006126 — eeg dataset, 5 subjects">DS006126</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006126.html" title="DS006126 — eeg dataset, 5 subjects">DS006126</a></td>
       <td>Mensah2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7716,7 +7716,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.8%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006136.html" title="DS006136 — ieeg dataset, 13 subjects">DS006136</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006136.html" title="DS006136 — ieeg dataset, 13 subjects">DS006136</a></td>
       <td>Omelyusik2025</td>
       <td>Omelyusik2026</td>
       <td>openneuro</td>
@@ -7733,7 +7733,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.3%;" title="285.9 MB — larger than 7% of datasets" aria-label="285.9 MB — larger than 7% of datasets"><span class="sparkbar-label">285.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006142.html" title="DS006142 — eeg dataset, 27 subjects">DS006142</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006142.html" title="DS006142 — eeg dataset, 27 subjects">DS006142</a></td>
       <td>MatranFernandez2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7750,7 +7750,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.2%;" title="24.3 GB — larger than 66% of datasets" aria-label="24.3 GB — larger than 66% of datasets"><span class="sparkbar-label">24.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006159.html" title="DS006159 — eeg dataset, 61 subjects">DS006159</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006159.html" title="DS006159 — eeg dataset, 61 subjects">DS006159</a></td>
       <td>LeganesFonteneau2025</td>
       <td>LeganesFonteneau2024</td>
       <td>openneuro</td>
@@ -7767,7 +7767,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 54% of datasets" aria-label="14.3 GB — larger than 54% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006171.html" title="DS006171 — eeg dataset, 36 subjects">DS006171</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006171.html" title="DS006171 — eeg dataset, 36 subjects">DS006171</a></td>
       <td>Melcon2025</td>
       <td>Melcon2024</td>
       <td>openneuro</td>
@@ -7784,7 +7784,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.7%;" title="67.8 GB — larger than 83% of datasets" aria-label="67.8 GB — larger than 83% of datasets"><span class="sparkbar-label">67.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006222.html" title="DS006222 — eeg dataset, 69 subjects">DS006222</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006222.html" title="DS006222 — eeg dataset, 69 subjects">DS006222</a></td>
       <td>Attokaren2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7801,7 +7801,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.6%;" title="14.7 GB — larger than 55% of datasets" aria-label="14.7 GB — larger than 55% of datasets"><span class="sparkbar-label">14.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006233.html" title="DS006233 — ieeg dataset, 108 subjects">DS006233</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006233.html" title="DS006233 — ieeg dataset, 108 subjects">DS006233</a></td>
       <td>Kochi2025_Picture_naming</td>
       <td></td>
       <td>openneuro</td>
@@ -7818,7 +7818,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.3 GB — larger than 58% of datasets" aria-label="17.3 GB — larger than 58% of datasets"><span class="sparkbar-label">17.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006234.html" title="DS006234 — ieeg dataset, 119 subjects">DS006234</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006234.html" title="DS006234 — ieeg dataset, 119 subjects">DS006234</a></td>
       <td>Kochi2025_Auditory_naming</td>
       <td></td>
       <td>openneuro</td>
@@ -7835,7 +7835,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.2%;" title="43.9 GB — larger than 76% of datasets" aria-label="43.9 GB — larger than 76% of datasets"><span class="sparkbar-label">43.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006253.html" title="DS006253 — ieeg dataset, 23 subjects">DS006253</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006253.html" title="DS006253 — ieeg dataset, 23 subjects">DS006253</a></td>
       <td>Goueytes2024</td>
       <td>MetaRDK</td>
       <td>openneuro</td>
@@ -7852,7 +7852,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:44.9%;" title="656 KB — larger than 0% of datasets" aria-label="656 KB — larger than 0% of datasets"><span class="sparkbar-label">656 KB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006260.html" title="DS006260 — eeg dataset, 76 subjects">DS006260</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006260.html" title="DS006260 — eeg dataset, 76 subjects">DS006260</a></td>
       <td>CoronaGonzalez2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7869,7 +7869,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.9%;" title="2.7 GB — larger than 27% of datasets" aria-label="2.7 GB — larger than 27% of datasets"><span class="sparkbar-label">2.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006269.html" title="DS006269 — eeg dataset, 24 subjects">DS006269</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006269.html" title="DS006269 — eeg dataset, 24 subjects">DS006269</a></td>
       <td>Pritchard2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7886,7 +7886,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.2%;" title="106.7 GB — larger than 89% of datasets" aria-label="106.7 GB — larger than 89% of datasets"><span class="sparkbar-label">106.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006317.html" title="DS006317 — eeg dataset, 2 subjects">DS006317</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006317.html" title="DS006317 — eeg dataset, 2 subjects">DS006317</a></td>
       <td>Zhang2025_Chisco_2_0</td>
       <td>Chisco2_0, Chisco20, CHISCO20</td>
       <td>openneuro</td>
@@ -7903,7 +7903,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.8%;" title="52.9 GB — larger than 80% of datasets" aria-label="52.9 GB — larger than 80% of datasets"><span class="sparkbar-label">52.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006334.html" title="DS006334 — meg dataset, 30 subjects">DS006334</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006334.html" title="DS006334 — meg dataset, 30 subjects">DS006334</a></td>
       <td>Biau2025</td>
       <td></td>
       <td>openneuro</td>
@@ -7920,7 +7920,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.7%;" title="166.2 GB — larger than 93% of datasets" aria-label="166.2 GB — larger than 93% of datasets"><span class="sparkbar-label">166.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006366.html" title="DS006366 — eeg dataset, 92 subjects">DS006366</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006366.html" title="DS006366 — eeg dataset, 92 subjects">DS006366</a></td>
       <td>Rose2025</td>
       <td>MSSV</td>
       <td>openneuro</td>
@@ -7937,7 +7937,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 38% of datasets" aria-label="6.1 GB — larger than 38% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006367.html" title="DS006367 — eeg dataset, 52 subjects">DS006367</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006367.html" title="DS006367 — eeg dataset, 52 subjects">DS006367</a></td>
       <td>DS6367_Memory_Reactivation</td>
       <td></td>
       <td>openneuro</td>
@@ -7954,7 +7954,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.7%;" title="27.8 GB — larger than 68% of datasets" aria-label="27.8 GB — larger than 68% of datasets"><span class="sparkbar-label">27.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006370.html" title="DS006370 — eeg dataset, 56 subjects">DS006370</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006370.html" title="DS006370 — eeg dataset, 56 subjects">DS006370</a></td>
       <td>DS6370_Memory_Reactivation</td>
       <td></td>
       <td>openneuro</td>
@@ -7971,7 +7971,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.9%;" title="40.1 GB — larger than 74% of datasets" aria-label="40.1 GB — larger than 74% of datasets"><span class="sparkbar-label">40.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006374.html" title="DS006374 — eeg dataset, 36 subjects">DS006374</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006374.html" title="DS006374 — eeg dataset, 36 subjects">DS006374</a></td>
       <td>Pohle2025</td>
       <td>Pohle2019</td>
       <td>openneuro</td>
@@ -7988,7 +7988,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.1%;" title="31.1 GB — larger than 70% of datasets" aria-label="31.1 GB — larger than 70% of datasets"><span class="sparkbar-label">31.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006377.html" title="DS006377 — fnirs dataset, 115 subjects">DS006377</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006377.html" title="DS006377 — fnirs dataset, 115 subjects">DS006377</a></td>
       <td>Yucel2025_InclusionStudy</td>
       <td></td>
       <td>openneuro</td>
@@ -8005,7 +8005,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.6%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006386.html" title="DS006386 — eeg dataset, 30 subjects">DS006386</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006386.html" title="DS006386 — eeg dataset, 30 subjects">DS006386</a></td>
       <td>Yu2025</td>
       <td>Yu2019</td>
       <td>openneuro</td>
@@ -8022,7 +8022,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.1%;" title="23.0 GB — larger than 65% of datasets" aria-label="23.0 GB — larger than 65% of datasets"><span class="sparkbar-label">23.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006392.html" title="DS006392 — ieeg dataset, 1 subjects">DS006392</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006392.html" title="DS006392 — ieeg dataset, 1 subjects">DS006392</a></td>
       <td>Attia2025</td>
       <td>Hermes2024</td>
       <td>openneuro</td>
@@ -8039,7 +8039,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:58.0%;" title="32.0 MB — larger than 1% of datasets" aria-label="32.0 MB — larger than 1% of datasets"><span class="sparkbar-label">32.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006394.html" title="DS006394 — eeg dataset, 33 subjects">DS006394</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006394.html" title="DS006394 — eeg dataset, 33 subjects">DS006394</a></td>
       <td>Leong2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8056,7 +8056,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.4%;" title="534.8 MB — larger than 11% of datasets" aria-label="534.8 MB — larger than 11% of datasets"><span class="sparkbar-label">534.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006434.html" title="DS006434 — eeg dataset, 66 subjects">DS006434</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006434.html" title="DS006434 — eeg dataset, 66 subjects">DS006434</a></td>
       <td>Stoll2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8073,7 +8073,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.1%;" title="103.0 GB — larger than 89% of datasets" aria-label="103.0 GB — larger than 89% of datasets"><span class="sparkbar-label">103.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006437.html" title="DS006437 — eeg dataset, 9 subjects">DS006437</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006437.html" title="DS006437 — eeg dataset, 9 subjects">DS006437</a></td>
       <td>DS6437_LIGHT_Hypnotherapy</td>
       <td></td>
       <td>openneuro</td>
@@ -8090,7 +8090,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.5%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006446.html" title="DS006446 — eeg dataset, 29 subjects">DS006446</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006446.html" title="DS006446 — eeg dataset, 29 subjects">DS006446</a></td>
       <td>Kinley2025</td>
       <td>Kinley2019</td>
       <td>openneuro</td>
@@ -8107,7 +8107,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.1 GB — larger than 57% of datasets" aria-label="16.1 GB — larger than 57% of datasets"><span class="sparkbar-label">16.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006459.html" title="DS006459 — fnirs dataset, 17 subjects">DS006459</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006459.html" title="DS006459 — fnirs dataset, 17 subjects">DS006459</a></td>
       <td>Anderson2025_Sparse</td>
       <td></td>
       <td>openneuro</td>
@@ -8124,7 +8124,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.5%;" title="168.8 MB — larger than 6% of datasets" aria-label="168.8 MB — larger than 6% of datasets"><span class="sparkbar-label">168.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006460.html" title="DS006460 — fnirs dataset, 17 subjects">DS006460</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006460.html" title="DS006460 — fnirs dataset, 17 subjects">DS006460</a></td>
       <td>Anderson2025_HD</td>
       <td></td>
       <td>openneuro</td>
@@ -8141,7 +8141,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.9%;" title="459.7 MB — larger than 10% of datasets" aria-label="459.7 MB — larger than 10% of datasets"><span class="sparkbar-label">459.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006465.html" title="DS006465 — eeg dataset, 20 subjects">DS006465</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006465.html" title="DS006465 — eeg dataset, 20 subjects">DS006465</a></td>
       <td>Ma2025</td>
       <td>CPSEED_3M, CPSEED</td>
       <td>openneuro</td>
@@ -8158,7 +8158,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.2 GB — larger than 43% of datasets" aria-label="8.2 GB — larger than 43% of datasets"><span class="sparkbar-label">8.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006466.html" title="DS006466 — eeg dataset, 66 subjects">DS006466</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006466.html" title="DS006466 — eeg dataset, 66 subjects">DS006466</a></td>
       <td>Kim2025_HeartBEAM_Older_Adult</td>
       <td>HeartBEAM</td>
       <td>openneuro</td>
@@ -8175,7 +8175,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.5%;" title="117.5 GB — larger than 90% of datasets" aria-label="117.5 GB — larger than 90% of datasets"><span class="sparkbar-label">117.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006468.html" title="DS006468 — meg dataset, 24 subjects">DS006468</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006468.html" title="DS006468 — meg dataset, 24 subjects">DS006468</a></td>
       <td>Habersetzer2025</td>
       <td>MEG_SCANS</td>
       <td>openneuro</td>
@@ -8192,7 +8192,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.0%;" title="101.2 GB — larger than 88% of datasets" aria-label="101.2 GB — larger than 88% of datasets"><span class="sparkbar-label">101.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006480.html" title="DS006480 — eeg dataset, 68 subjects">DS006480</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006480.html" title="DS006480 — eeg dataset, 68 subjects">DS006480</a></td>
       <td>Kim2025_Young_Adult_Resting</td>
       <td></td>
       <td>openneuro</td>
@@ -8209,7 +8209,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.5%;" title="64.1 GB — larger than 82% of datasets" aria-label="64.1 GB — larger than 82% of datasets"><span class="sparkbar-label">64.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006502.html" title="DS006502 — meg dataset, 31 subjects">DS006502</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006502.html" title="DS006502 — meg dataset, 31 subjects">DS006502</a></td>
       <td>Bonstrup2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8226,7 +8226,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.8%;" title="95.8 GB — larger than 87% of datasets" aria-label="95.8 GB — larger than 87% of datasets"><span class="sparkbar-label">95.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006519.html" title="DS006519 — ieeg dataset, 21 subjects">DS006519</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006519.html" title="DS006519 — ieeg dataset, 21 subjects">DS006519</a></td>
       <td>Barborica2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8243,7 +8243,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006525.html" title="DS006525 — eeg dataset, 34 subjects">DS006525</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006525.html" title="DS006525 — eeg dataset, 34 subjects">DS006525</a></td>
       <td>Neuroimaging2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8260,7 +8260,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.2%;" title="3.0 GB — larger than 28% of datasets" aria-label="3.0 GB — larger than 28% of datasets"><span class="sparkbar-label">3.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006545.html" title="DS006545 — fnirs dataset, 49 subjects">DS006545</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006545.html" title="DS006545 — fnirs dataset, 49 subjects">DS006545</a></td>
       <td>ReliabilityDubois2024</td>
       <td>Dubois2024</td>
       <td>openneuro</td>
@@ -8277,7 +8277,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.4%;" title="46.7 GB — larger than 78% of datasets" aria-label="46.7 GB — larger than 78% of datasets"><span class="sparkbar-label">46.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006547.html" title="DS006547 — eeg dataset, 31 subjects">DS006547</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006547.html" title="DS006547 — eeg dataset, 31 subjects">DS006547</a></td>
       <td>Ghaffari2025</td>
       <td>Ghaffari2024</td>
       <td>openneuro</td>
@@ -8294,7 +8294,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.2%;" title="17.6 GB — larger than 59% of datasets" aria-label="17.6 GB — larger than 59% of datasets"><span class="sparkbar-label">17.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006554.html" title="DS006554 — eeg dataset, 47 subjects">DS006554</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006554.html" title="DS006554 — eeg dataset, 47 subjects">DS006554</a></td>
       <td>Su2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8311,7 +8311,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="12.1 GB — larger than 52% of datasets" aria-label="12.1 GB — larger than 52% of datasets"><span class="sparkbar-label">12.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006563.html" title="DS006563 — eeg dataset, 12 subjects">DS006563</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006563.html" title="DS006563 — eeg dataset, 12 subjects">DS006563</a></td>
       <td>Gramann2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8328,7 +8328,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.3%;" title="5.6 GB — larger than 37% of datasets" aria-label="5.6 GB — larger than 37% of datasets"><span class="sparkbar-label">5.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006576.html" title="DS006576 — eeg dataset, 57 subjects">DS006576</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006576.html" title="DS006576 — eeg dataset, 57 subjects">DS006576</a></td>
       <td>McDevitt2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8345,7 +8345,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:90.7%;" title="553.9 GB — larger than 99% of datasets" aria-label="553.9 GB — larger than 99% of datasets"><span class="sparkbar-label">553.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006593.html" title="DS006593 — eeg dataset, 21 subjects">DS006593</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006593.html" title="DS006593 — eeg dataset, 21 subjects">DS006593</a></td>
       <td>Celik2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8362,7 +8362,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.8%;" title="441.9 MB — larger than 10% of datasets" aria-label="441.9 MB — larger than 10% of datasets"><span class="sparkbar-label">441.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006629.html" title="DS006629 — meg dataset, 19 subjects">DS006629</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006629.html" title="DS006629 — meg dataset, 19 subjects">DS006629</a></td>
       <td>Chanoine2025</td>
       <td>SINGSING</td>
       <td>openneuro</td>
@@ -8379,7 +8379,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.7%;" title="11.2 GB — larger than 51% of datasets" aria-label="11.2 GB — larger than 51% of datasets"><span class="sparkbar-label">11.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006647.html" title="DS006647 — eeg dataset, 4 subjects">DS006647</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006647.html" title="DS006647 — eeg dataset, 4 subjects">DS006647</a></td>
       <td>Chaudhuri2025_D2</td>
       <td></td>
       <td>openneuro</td>
@@ -8396,7 +8396,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.4%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006648.html" title="DS006648 — eeg dataset, 47 subjects">DS006648</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006648.html" title="DS006648 — eeg dataset, 47 subjects">DS006648</a></td>
       <td>Chaudhuri2025_D1</td>
       <td></td>
       <td>openneuro</td>
@@ -8413,7 +8413,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="45.4 GB — larger than 77% of datasets" aria-label="45.4 GB — larger than 77% of datasets"><span class="sparkbar-label">45.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006673.html" title="DS006673 — fnirs dataset, 17 subjects">DS006673</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006673.html" title="DS006673 — fnirs dataset, 17 subjects">DS006673</a></td>
       <td>Carlton2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8430,7 +8430,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 42% of datasets" aria-label="7.8 GB — larger than 42% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006695.html" title="DS006695 — eeg dataset, 19 subjects">DS006695</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006695.html" title="DS006695 — eeg dataset, 19 subjects">DS006695</a></td>
       <td>Onton2025</td>
       <td>Onton2024</td>
       <td>openneuro</td>
@@ -8447,7 +8447,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006720.html" title="DS006720 — meg dataset, 24 subjects">DS006720</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006720.html" title="DS006720 — meg dataset, 24 subjects">DS006720</a></td>
       <td>Herbst2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8464,7 +8464,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.0%;" title="136.5 GB — larger than 92% of datasets" aria-label="136.5 GB — larger than 92% of datasets"><span class="sparkbar-label">136.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006735.html" title="DS006735 — eeg dataset, 27 subjects">DS006735</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006735.html" title="DS006735 — eeg dataset, 27 subjects">DS006735</a></td>
       <td>Shan2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8481,7 +8481,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.9%;" title="175.9 GB — larger than 94% of datasets" aria-label="175.9 GB — larger than 94% of datasets"><span class="sparkbar-label">175.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006761.html" title="DS006761 — eeg dataset, 31 subjects">DS006761</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006761.html" title="DS006761 — eeg dataset, 31 subjects">DS006761</a></td>
       <td>Moerel2025_Neural</td>
       <td></td>
       <td>openneuro</td>
@@ -8498,7 +8498,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.1%;" title="78.0 GB — larger than 86% of datasets" aria-label="78.0 GB — larger than 86% of datasets"><span class="sparkbar-label">78.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006768.html" title="DS006768 — eeg dataset, 30 subjects">DS006768</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006768.html" title="DS006768 — eeg dataset, 30 subjects">DS006768</a></td>
       <td>Lowe2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8515,7 +8515,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 39% of datasets" aria-label="6.5 GB — larger than 39% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006801.html" title="DS006801 — eeg dataset, 21 subjects">DS006801</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006801.html" title="DS006801 — eeg dataset, 21 subjects">DS006801</a></td>
       <td>Alves2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8532,7 +8532,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.5%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006802.html" title="DS006802 — eeg dataset, 24 subjects">DS006802</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006802.html" title="DS006802 — eeg dataset, 24 subjects">DS006802</a></td>
       <td>Moerel2025_Collaborative</td>
       <td></td>
       <td>openneuro</td>
@@ -8549,7 +8549,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.4%;" title="62.2 GB — larger than 82% of datasets" aria-label="62.2 GB — larger than 82% of datasets"><span class="sparkbar-label">62.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006803.html" title="DS006803 — eeg dataset, 63 subjects">DS006803</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006803.html" title="DS006803 — eeg dataset, 63 subjects">DS006803</a></td>
       <td>PechCanul2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8566,7 +8566,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.7%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006817.html" title="DS006817 — eeg dataset, 34 subjects">DS006817</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006817.html" title="DS006817 — eeg dataset, 34 subjects">DS006817</a></td>
       <td>Lowe2025</td>
       <td>VisualContextTrajectory_v2</td>
       <td>openneuro</td>
@@ -8583,7 +8583,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.2%;" title="9.7 GB — larger than 47% of datasets" aria-label="9.7 GB — larger than 47% of datasets"><span class="sparkbar-label">9.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006839.html" title="DS006839 — eeg dataset, 36 subjects">DS006839</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006839.html" title="DS006839 — eeg dataset, 36 subjects">DS006839</a></td>
       <td>Gonzales2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8600,7 +8600,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.4%;" title="10.4 GB — larger than 49% of datasets" aria-label="10.4 GB — larger than 49% of datasets"><span class="sparkbar-label">10.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006840.html" title="DS006840 — eeg dataset, 15 subjects">DS006840</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006840.html" title="DS006840 — eeg dataset, 15 subjects">DS006840</a></td>
       <td>Cai2025</td>
       <td>IACKD</td>
       <td>openneuro</td>
@@ -8617,7 +8617,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.6%;" title="6.0 GB — larger than 38% of datasets" aria-label="6.0 GB — larger than 38% of datasets"><span class="sparkbar-label">6.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006848.html" title="DS006848 — eeg dataset, 30 subjects">DS006848</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006848.html" title="DS006848 — eeg dataset, 30 subjects">DS006848</a></td>
       <td>Kosachenko2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8634,7 +8634,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.0%;" title="41.4 GB — larger than 75% of datasets" aria-label="41.4 GB — larger than 75% of datasets"><span class="sparkbar-label">41.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006850.html" title="DS006850 — eeg dataset, 63 subjects">DS006850</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006850.html" title="DS006850 — eeg dataset, 63 subjects">DS006850</a></td>
       <td>Zaehme2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8651,7 +8651,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.7 GB — larger than 72% of datasets" aria-label="34.7 GB — larger than 72% of datasets"><span class="sparkbar-label">34.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006861.html" title="DS006861 — eeg dataset, 120 subjects">DS006861</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006861.html" title="DS006861 — eeg dataset, 120 subjects">DS006861</a></td>
       <td>Maka2025_Targeted</td>
       <td></td>
       <td>openneuro</td>
@@ -8668,7 +8668,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.8%;" title="52.1 GB — larger than 79% of datasets" aria-label="52.1 GB — larger than 79% of datasets"><span class="sparkbar-label">52.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006866.html" title="DS006866 — eeg dataset, 148 subjects">DS006866</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006866.html" title="DS006866 — eeg dataset, 148 subjects">DS006866</a></td>
       <td>Maka2025_Discrepancy</td>
       <td></td>
       <td>openneuro</td>
@@ -8685,7 +8685,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.5%;" title="116.2 GB — larger than 90% of datasets" aria-label="116.2 GB — larger than 90% of datasets"><span class="sparkbar-label">116.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006890.html" title="DS006890 — ieeg dataset, 2 subjects">DS006890</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006890.html" title="DS006890 — ieeg dataset, 2 subjects">DS006890</a></td>
       <td>Yang2025_Longitudinal</td>
       <td></td>
       <td>openneuro</td>
@@ -8702,7 +8702,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.0%;" title="41.2 GB — larger than 74% of datasets" aria-label="41.2 GB — larger than 74% of datasets"><span class="sparkbar-label">41.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006902.html" title="DS006902 — fnirs dataset, 42 subjects">DS006902</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006902.html" title="DS006902 — fnirs dataset, 42 subjects">DS006902</a></td>
       <td>Geisler2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8719,7 +8719,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.3%;" title="5.5 GB — larger than 37% of datasets" aria-label="5.5 GB — larger than 37% of datasets"><span class="sparkbar-label">5.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006903.html" title="DS006903 — fnirs dataset, 17 subjects">DS006903</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006903.html" title="DS006903 — fnirs dataset, 17 subjects">DS006903</a></td>
       <td>here2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8736,7 +8736,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 36% of datasets" aria-label="5.4 GB — larger than 36% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006910.html" title="DS006910 — ieeg dataset, 121 subjects">DS006910</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006910.html" title="DS006910 — ieeg dataset, 121 subjects">DS006910</a></td>
       <td>Kochi2025_Auditory_Naming_EC</td>
       <td></td>
       <td>openneuro</td>
@@ -8753,7 +8753,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="44.6 GB — larger than 76% of datasets" aria-label="44.6 GB — larger than 76% of datasets"><span class="sparkbar-label">44.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006914.html" title="DS006914 — ieeg dataset, 110 subjects">DS006914</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006914.html" title="DS006914 — ieeg dataset, 110 subjects">DS006914</a></td>
       <td>Kochi2025_Visual_Naming_EC</td>
       <td></td>
       <td>openneuro</td>
@@ -8770,7 +8770,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.2%;" title="17.5 GB — larger than 59% of datasets" aria-label="17.5 GB — larger than 59% of datasets"><span class="sparkbar-label">17.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006921.html" title="DS006921 — eeg dataset, 38 subjects">DS006921</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006921.html" title="DS006921 — eeg dataset, 38 subjects">DS006921</a></td>
       <td>Ramne2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8787,7 +8787,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.5%;" title="64.4 GB — larger than 83% of datasets" aria-label="64.4 GB — larger than 83% of datasets"><span class="sparkbar-label">64.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006923.html" title="DS006923 — eeg dataset, 140 subjects">DS006923</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006923.html" title="DS006923 — eeg dataset, 140 subjects">DS006923</a></td>
       <td>Polo2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8804,7 +8804,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006940.html" title="DS006940 — eeg dataset, 7 subjects">DS006940</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006940.html" title="DS006940 — eeg dataset, 7 subjects">DS006940</a></td>
       <td>Sarkar2025_StudyOF</td>
       <td></td>
       <td>openneuro</td>
@@ -8821,7 +8821,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.9%;" title="3.6 GB — larger than 31% of datasets" aria-label="3.6 GB — larger than 31% of datasets"><span class="sparkbar-label">3.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006945.html" title="DS006945 — eeg dataset, 5 subjects">DS006945</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006945.html" title="DS006945 — eeg dataset, 5 subjects">DS006945</a></td>
       <td>Sarkar2025_T1_Weighted_Structural</td>
       <td></td>
       <td>openneuro</td>
@@ -8838,7 +8838,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 36% of datasets" aria-label="5.4 GB — larger than 36% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006963.html" title="DS006963 — eeg dataset, 32 subjects">DS006963</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006963.html" title="DS006963 — eeg dataset, 32 subjects">DS006963</a></td>
       <td>Ozdemir2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8855,7 +8855,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.8%;" title="52.8 GB — larger than 79% of datasets" aria-label="52.8 GB — larger than 79% of datasets"><span class="sparkbar-label">52.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS006979.html" title="DS006979 — eeg dataset, 53 subjects">DS006979</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006979.html" title="DS006979 — eeg dataset, 53 subjects">DS006979</a></td>
       <td>Ramzaoui2025</td>
       <td>Ramzaoui2024</td>
       <td>openneuro</td>
@@ -8872,7 +8872,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.8%;" title="38.5 GB — larger than 73% of datasets" aria-label="38.5 GB — larger than 73% of datasets"><span class="sparkbar-label">38.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007006.html" title="DS007006 — eeg dataset, 10 subjects">DS007006</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007006.html" title="DS007006 — eeg dataset, 10 subjects">DS007006</a></td>
       <td>Wu2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8889,7 +8889,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.2%;" title="918.7 MB — larger than 16% of datasets" aria-label="918.7 MB — larger than 16% of datasets"><span class="sparkbar-label">918.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007020.html" title="DS007020 — eeg dataset, 94 subjects">DS007020</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007020.html" title="DS007020 — eeg dataset, 94 subjects">DS007020</a></td>
       <td>Jamshidi2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8906,7 +8906,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.4%;" title="1.7 GB — larger than 23% of datasets" aria-label="1.7 GB — larger than 23% of datasets"><span class="sparkbar-label">1.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007028.html" title="DS007028 — eeg dataset, 3 subjects">DS007028</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007028.html" title="DS007028 — eeg dataset, 3 subjects">DS007028</a></td>
       <td>Kajikawa2025</td>
       <td>Kajikawa2000</td>
       <td>openneuro</td>
@@ -8923,7 +8923,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.4%;" title="13.9 GB — larger than 54% of datasets" aria-label="13.9 GB — larger than 54% of datasets"><span class="sparkbar-label">13.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007052.html" title="DS007052 — eeg dataset, 288 subjects">DS007052</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007052.html" title="DS007052 — eeg dataset, 288 subjects">DS007052</a></td>
       <td>Couperus2025_N400</td>
       <td>Couperus2021_N400</td>
       <td>openneuro</td>
@@ -8940,7 +8940,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 45% of datasets" aria-label="9.0 GB — larger than 45% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007056.html" title="DS007056 — eeg dataset, 286 subjects">DS007056</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007056.html" title="DS007056 — eeg dataset, 286 subjects">DS007056</a></td>
       <td>Couperus2025_P300</td>
       <td>Couperus2021_P300</td>
       <td>openneuro</td>
@@ -8957,7 +8957,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.5%;" title="7.8 GB — larger than 43% of datasets" aria-label="7.8 GB — larger than 43% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007069.html" title="DS007069 — eeg dataset, 281 subjects">DS007069</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007069.html" title="DS007069 — eeg dataset, 281 subjects">DS007069</a></td>
       <td>Couperus2025_MMN</td>
       <td>Couperus2021_MMN</td>
       <td>openneuro</td>
@@ -8974,7 +8974,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 52% of datasets" aria-label="12.4 GB — larger than 52% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007081.html" title="DS007081 — eeg dataset, 41 subjects">DS007081</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007081.html" title="DS007081 — eeg dataset, 41 subjects">DS007081</a></td>
       <td>Ylmaz2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8991,7 +8991,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.7%;" title="11.3 GB — larger than 51% of datasets" aria-label="11.3 GB — larger than 51% of datasets"><span class="sparkbar-label">11.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007095.html" title="DS007095 — ieeg dataset, 8 subjects">DS007095</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007095.html" title="DS007095 — ieeg dataset, 8 subjects">DS007095</a></td>
       <td>Feng2025</td>
       <td></td>
       <td>openneuro</td>
@@ -9008,7 +9008,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.2%;" title="497.8 MB — larger than 11% of datasets" aria-label="497.8 MB — larger than 11% of datasets"><span class="sparkbar-label">497.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007096.html" title="DS007096 — eeg dataset, 292 subjects">DS007096</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007096.html" title="DS007096 — eeg dataset, 292 subjects">DS007096</a></td>
       <td>Couperus2025_PURSUE_N170_Face</td>
       <td>Couperus2017</td>
       <td>openneuro</td>
@@ -9025,7 +9025,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.8%;" title="11.6 GB — larger than 51% of datasets" aria-label="11.6 GB — larger than 51% of datasets"><span class="sparkbar-label">11.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007118.html" title="DS007118 — ieeg dataset, 65 subjects">DS007118</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007118.html" title="DS007118 — ieeg dataset, 65 subjects">DS007118</a></td>
       <td>Hatano2025_part1</td>
       <td>Hatano</td>
       <td>openneuro</td>
@@ -9042,7 +9042,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.3%;" title="33.8 GB — larger than 71% of datasets" aria-label="33.8 GB — larger than 71% of datasets"><span class="sparkbar-label">33.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007119.html" title="DS007119 — ieeg dataset, 103 subjects">DS007119</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007119.html" title="DS007119 — ieeg dataset, 103 subjects">DS007119</a></td>
       <td>Hatano2025_part3</td>
       <td></td>
       <td>openneuro</td>
@@ -9059,7 +9059,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.2%;" title="32.6 GB — larger than 71% of datasets" aria-label="32.6 GB — larger than 71% of datasets"><span class="sparkbar-label">32.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007120.html" title="DS007120 — ieeg dataset, 65 subjects">DS007120</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007120.html" title="DS007120 — ieeg dataset, 65 subjects">DS007120</a></td>
       <td>Hatano2025_part2</td>
       <td></td>
       <td>openneuro</td>
@@ -9076,7 +9076,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.3%;" title="33.0 GB — larger than 71% of datasets" aria-label="33.0 GB — larger than 71% of datasets"><span class="sparkbar-label">33.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007137.html" title="DS007137 — eeg dataset, 294 subjects">DS007137</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007137.html" title="DS007137 — eeg dataset, 294 subjects">DS007137</a></td>
       <td>Couperus2025_N2PC</td>
       <td>Couperus2021_N2pc</td>
       <td>openneuro</td>
@@ -9093,7 +9093,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.9%;" title="12.2 GB — larger than 52% of datasets" aria-label="12.2 GB — larger than 52% of datasets"><span class="sparkbar-label">12.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007139.html" title="DS007139 — eeg dataset, 292 subjects">DS007139</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007139.html" title="DS007139 — eeg dataset, 292 subjects">DS007139</a></td>
       <td>Couperus2025_LRP</td>
       <td>Couperus2021_LRP</td>
       <td>openneuro</td>
@@ -9110,7 +9110,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.5%;" title="14.5 GB — larger than 55% of datasets" aria-label="14.5 GB — larger than 55% of datasets"><span class="sparkbar-label">14.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007162.html" title="DS007162 — eeg dataset, 34 subjects">DS007162</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007162.html" title="DS007162 — eeg dataset, 34 subjects">DS007162</a></td>
       <td>DS7162_VisualRecognition</td>
       <td></td>
       <td>openneuro</td>
@@ -9127,7 +9127,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.3%;" title="60.9 GB — larger than 81% of datasets" aria-label="60.9 GB — larger than 81% of datasets"><span class="sparkbar-label">60.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007169.html" title="DS007169 — eeg dataset, 18 subjects">DS007169</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007169.html" title="DS007169 — eeg dataset, 18 subjects">DS007169</a></td>
       <td>Barras2026_Multimodal</td>
       <td>Barras2021</td>
       <td>openneuro</td>
@@ -9144,7 +9144,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.6%;" title="421.7 MB — larger than 10% of datasets" aria-label="421.7 MB — larger than 10% of datasets"><span class="sparkbar-label">421.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007172.html" title="DS007172 — eeg dataset, 100 subjects">DS007172</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007172.html" title="DS007172 — eeg dataset, 100 subjects">DS007172</a></td>
       <td>Reinke2026</td>
       <td>EEGAsymmetries</td>
       <td>openneuro</td>
@@ -9161,7 +9161,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 50% of datasets" aria-label="11.0 GB — larger than 50% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007175.html" title="DS007175 — eeg dataset, 41 subjects">DS007175</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007175.html" title="DS007175 — eeg dataset, 41 subjects">DS007175</a></td>
       <td>DS7175_FFR_ActiveListening</td>
       <td></td>
       <td>openneuro</td>
@@ -9178,7 +9178,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.3%;" title="200.4 GB — larger than 95% of datasets" aria-label="200.4 GB — larger than 95% of datasets"><span class="sparkbar-label">200.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007176.html" title="DS007176 — eeg dataset, 45 subjects">DS007176</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007176.html" title="DS007176 — eeg dataset, 45 subjects">DS007176</a></td>
       <td>Isaza2026_Longitudinal</td>
       <td></td>
       <td>openneuro</td>
@@ -9195,7 +9195,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.8%;" title="21.1 GB — larger than 63% of datasets" aria-label="21.1 GB — larger than 63% of datasets"><span class="sparkbar-label">21.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007180.html" title="DS007180 — eeg dataset, 25 subjects">DS007180</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007180.html" title="DS007180 — eeg dataset, 25 subjects">DS007180</a></td>
       <td>FuentesGuerra2026</td>
       <td>FuentesGuerra2024</td>
       <td>openneuro</td>
@@ -9212,7 +9212,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.6%;" title="14.7 GB — larger than 55% of datasets" aria-label="14.7 GB — larger than 55% of datasets"><span class="sparkbar-label">14.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007181.html" title="DS007181 — eeg dataset, 59 subjects">DS007181</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007181.html" title="DS007181 — eeg dataset, 59 subjects">DS007181</a></td>
       <td>Li2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9229,7 +9229,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.2%;" title="59.2 GB — larger than 81% of datasets" aria-label="59.2 GB — larger than 81% of datasets"><span class="sparkbar-label">59.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007216.html" title="DS007216 — eeg dataset, 24 subjects">DS007216</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007216.html" title="DS007216 — eeg dataset, 24 subjects">DS007216</a></td>
       <td>Kucyi2026</td>
       <td>Kucyi2024</td>
       <td>openneuro</td>
@@ -9246,7 +9246,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.1%;" title="104.7 GB — larger than 89% of datasets" aria-label="104.7 GB — larger than 89% of datasets"><span class="sparkbar-label">104.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007221.html" title="DS007221 — eeg dataset, 84 subjects">DS007221</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007221.html" title="DS007221 — eeg dataset, 84 subjects">DS007221</a></td>
       <td>Xinwei2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9263,7 +9263,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.7%;" title="124.8 GB — larger than 91% of datasets" aria-label="124.8 GB — larger than 91% of datasets"><span class="sparkbar-label">124.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007262.html" title="DS007262 — eeg dataset, 18 subjects">DS007262</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007262.html" title="DS007262 — eeg dataset, 18 subjects">DS007262</a></td>
       <td>Barras2026_Cognitive</td>
       <td>Barras2025</td>
       <td>openneuro</td>
@@ -9280,7 +9280,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.2%;" title="378.9 MB — larger than 9% of datasets" aria-label="378.9 MB — larger than 9% of datasets"><span class="sparkbar-label">378.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007314.html" title="DS007314 — eeg dataset, 2 subjects">DS007314</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007314.html" title="DS007314 — eeg dataset, 2 subjects">DS007314</a></td>
       <td>Martzoukou2026_tACS</td>
       <td>Martzoukou2024_Post</td>
       <td>openneuro</td>
@@ -9297,7 +9297,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.8%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007315.html" title="DS007315 — eeg dataset, 2 subjects">DS007315</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007315.html" title="DS007315 — eeg dataset, 2 subjects">DS007315</a></td>
       <td>Martzoukou2026_tACS_Patients</td>
       <td>Martzoukou2024_Post_A</td>
       <td>openneuro</td>
@@ -9314,7 +9314,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.8%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007322.html" title="DS007322 — eeg dataset, 57 subjects">DS007322</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007322.html" title="DS007322 — eeg dataset, 57 subjects">DS007322</a></td>
       <td>Mishra2026</td>
       <td>Mishra2024</td>
       <td>openneuro</td>
@@ -9331,7 +9331,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.1%;" title="42.5 GB — larger than 75% of datasets" aria-label="42.5 GB — larger than 75% of datasets"><span class="sparkbar-label">42.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007338.html" title="DS007338 — eeg dataset, 1 subjects">DS007338</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007338.html" title="DS007338 — eeg dataset, 1 subjects">DS007338</a></td>
       <td>Plomecka2026</td>
       <td>EEGEyeNet_v2, EEGEYENET</td>
       <td>openneuro</td>
@@ -9348,7 +9348,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:58.7%;" title="39.9 MB — larger than 1% of datasets" aria-label="39.9 MB — larger than 1% of datasets"><span class="sparkbar-label">39.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007347.html" title="DS007347 — eeg dataset, 5 subjects">DS007347</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007347.html" title="DS007347 — eeg dataset, 5 subjects">DS007347</a></td>
       <td>Elias2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9365,7 +9365,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.2%;" title="1.6 GB — larger than 22% of datasets" aria-label="1.6 GB — larger than 22% of datasets"><span class="sparkbar-label">1.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007353.html" title="DS007353 — eeg, meg dataset, 32 subjects">DS007353</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007353.html" title="DS007353 — eeg, meg dataset, 32 subjects">DS007353</a></td>
       <td>Zhang2026</td>
       <td>HAD_MEEG, HADMEEG</td>
       <td>openneuro</td>
@@ -9382,7 +9382,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.0%;" title="180.6 GB — larger than 94% of datasets" aria-label="180.6 GB — larger than 94% of datasets"><span class="sparkbar-label">180.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007358.html" title="DS007358 — eeg dataset, 2000 subjects">DS007358</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007358.html" title="DS007358 — eeg dataset, 2000 subjects">DS007358</a></td>
       <td>Vianney2026</td>
       <td>Vianney2025</td>
       <td>openneuro</td>
@@ -9399,7 +9399,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.9%;" title="16.1 GB — larger than 57% of datasets" aria-label="16.1 GB — larger than 57% of datasets"><span class="sparkbar-label">16.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007406.html" title="DS007406 — eeg dataset, 10 subjects">DS007406</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007406.html" title="DS007406 — eeg dataset, 10 subjects">DS007406</a></td>
       <td>Edit2026</td>
       <td>Edit2024</td>
       <td>openneuro</td>
@@ -9416,7 +9416,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:57.2%;" title="25.8 MB — larger than 1% of datasets" aria-label="25.8 MB — larger than 1% of datasets"><span class="sparkbar-label">25.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007420.html" title="DS007420 — fnirs dataset, 12 subjects">DS007420</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007420.html" title="DS007420 — fnirs dataset, 12 subjects">DS007420</a></td>
       <td>Gao2026_Light_Weight_Multi</td>
       <td>Gao2024</td>
       <td>openneuro</td>
@@ -9433,7 +9433,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.6%;" title="560.7 MB — larger than 12% of datasets" aria-label="560.7 MB — larger than 12% of datasets"><span class="sparkbar-label">560.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007427.html" title="DS007427 — eeg dataset, 44 subjects">DS007427</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007427.html" title="DS007427 — eeg dataset, 44 subjects">DS007427</a></td>
       <td>Isaza2026_Comprehensive</td>
       <td>HenaoIsaza2026</td>
       <td>openneuro</td>
@@ -9450,7 +9450,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.4%;" title="3.1 GB — larger than 29% of datasets" aria-label="3.1 GB — larger than 29% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007431.html" title="DS007431 — eeg dataset, 47 subjects">DS007431</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007431.html" title="DS007431 — eeg dataset, 47 subjects">DS007431</a></td>
       <td>Ataseven2026</td>
       <td>Ataseven2024</td>
       <td>openneuro</td>
@@ -9467,7 +9467,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:86.2%;" title="144.6 GB — larger than 92% of datasets" aria-label="144.6 GB — larger than 92% of datasets"><span class="sparkbar-label">144.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007445.html" title="DS007445 — ieeg dataset, 19 subjects">DS007445</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007445.html" title="DS007445 — ieeg dataset, 19 subjects">DS007445</a></td>
       <td>Panchavati2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9484,7 +9484,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.7%;" title="50.5 GB — larger than 79% of datasets" aria-label="50.5 GB — larger than 79% of datasets"><span class="sparkbar-label">50.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007454.html" title="DS007454 — eeg dataset, 42 subjects">DS007454</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007454.html" title="DS007454 — eeg dataset, 42 subjects">DS007454</a></td>
       <td>DS7454_TimePerception</td>
       <td></td>
       <td>openneuro</td>
@@ -9501,7 +9501,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.9%;" title="29.6 GB — larger than 69% of datasets" aria-label="29.6 GB — larger than 69% of datasets"><span class="sparkbar-label">29.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007463.html" title="DS007463 — fnirs dataset, 8 subjects">DS007463</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007463.html" title="DS007463 — fnirs dataset, 8 subjects">DS007463</a></td>
       <td>Fogarty2026_Very</td>
       <td>Fogarty2025</td>
       <td>openneuro</td>
@@ -9518,7 +9518,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.7%;" title="69.3 GB — larger than 84% of datasets" aria-label="69.3 GB — larger than 84% of datasets"><span class="sparkbar-label">69.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007471.html" title="DS007471 — eeg dataset, 31 subjects">DS007471</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007471.html" title="DS007471 — eeg dataset, 31 subjects">DS007471</a></td>
       <td>Zhou2026</td>
       <td>Zhou2024</td>
       <td>openneuro</td>
@@ -9535,7 +9535,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007473.html" title="DS007473 — fnirs dataset, 5 subjects">DS007473</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007473.html" title="DS007473 — fnirs dataset, 5 subjects">DS007473</a></td>
       <td>Fogarty2026_High</td>
       <td>Tripathy2024</td>
       <td>openneuro</td>
@@ -9552,7 +9552,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.6%;" title="36.3 GB — larger than 72% of datasets" aria-label="36.3 GB — larger than 72% of datasets"><span class="sparkbar-label">36.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007477.html" title="DS007477 — fnirs dataset, 18 subjects">DS007477</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007477.html" title="DS007477 — fnirs dataset, 18 subjects">DS007477</a></td>
       <td>Niu2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9569,7 +9569,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:30.6%;" title="9 KB — larger than 0% of datasets" aria-label="9 KB — larger than 0% of datasets"><span class="sparkbar-label">9 KB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007521.html" title="DS007521 — eeg dataset, 23 subjects">DS007521</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007521.html" title="DS007521 — eeg dataset, 23 subjects">DS007521</a></td>
       <td>Moerel2026</td>
       <td>Moerel2025</td>
       <td>openneuro</td>
@@ -9586,7 +9586,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.8%;" title="29.0 GB — larger than 69% of datasets" aria-label="29.0 GB — larger than 69% of datasets"><span class="sparkbar-label">29.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007523.html" title="DS007523 — meg dataset, 58 subjects">DS007523</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007523.html" title="DS007523 — meg dataset, 58 subjects">DS007523</a></td>
       <td>Bel2026</td>
       <td>Dascoli2025</td>
       <td>openneuro</td>
@@ -9603,7 +9603,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:90.0%;" title="444.8 GB — larger than 99% of datasets" aria-label="444.8 GB — larger than 99% of datasets"><span class="sparkbar-label">444.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007524.html" title="DS007524 — meg dataset, 50 subjects">DS007524</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007524.html" title="DS007524 — meg dataset, 50 subjects">DS007524</a></td>
       <td>Pallier2025</td>
       <td>LittlePrince</td>
       <td>openneuro</td>
@@ -9620,7 +9620,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.6%;" title="298.6 GB — larger than 98% of datasets" aria-label="298.6 GB — larger than 98% of datasets"><span class="sparkbar-label">298.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007526.html" title="DS007526 — eeg dataset, 144 subjects">DS007526</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007526.html" title="DS007526 — eeg dataset, 144 subjects">DS007526</a></td>
       <td>Katzir2026</td>
       <td>PD_EEG, PDEEG</td>
       <td>openneuro</td>
@@ -9637,7 +9637,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.4%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007554.html" title="DS007554 — eeg, fnirs dataset, 30 subjects">DS007554</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007554.html" title="DS007554 — eeg, fnirs dataset, 30 subjects">DS007554</a></td>
       <td>Ajra2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9654,7 +9654,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.4%;" title="4.2 GB — larger than 32% of datasets" aria-label="4.2 GB — larger than 32% of datasets"><span class="sparkbar-label">4.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007558.html" title="DS007558 — eeg dataset, 67 subjects">DS007558</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007558.html" title="DS007558 — eeg dataset, 67 subjects">DS007558</a></td>
       <td>Qi2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9671,7 +9671,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.2%;" title="686.4 MB — larger than 14% of datasets" aria-label="686.4 MB — larger than 14% of datasets"><span class="sparkbar-label">686.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007591.html" title="DS007591 — eeg dataset, 3 subjects">DS007591</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007591.html" title="DS007591 — eeg dataset, 3 subjects">DS007591</a></td>
       <td>Sato2026_Delineating</td>
       <td>Sato2025</td>
       <td>openneuro</td>
@@ -9688,7 +9688,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.2%;" title="1.6 GB — larger than 22% of datasets" aria-label="1.6 GB — larger than 22% of datasets"><span class="sparkbar-label">1.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007602.html" title="DS007602 — eeg dataset, 3 subjects">DS007602</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007602.html" title="DS007602 — eeg dataset, 3 subjects">DS007602</a></td>
       <td>Sato2026_Speech</td>
       <td>Sato2024</td>
       <td>openneuro</td>
@@ -9705,7 +9705,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.6%;" title="49.6 GB — larger than 79% of datasets" aria-label="49.6 GB — larger than 79% of datasets"><span class="sparkbar-label">49.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007609.html" title="DS007609 — eeg dataset, 51 subjects">DS007609</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007609.html" title="DS007609 — eeg dataset, 51 subjects">DS007609</a></td>
       <td>Shalamberidze2026</td>
       <td>Shalamberidze2025</td>
       <td>openneuro</td>
@@ -9722,7 +9722,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.1%;" title="7.0 GB — larger than 40% of datasets" aria-label="7.0 GB — larger than 40% of datasets"><span class="sparkbar-label">7.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.DS007615.html" title="DS007615 — eeg dataset, 69 subjects">DS007615</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS007615.html" title="DS007615 — eeg dataset, 69 subjects">DS007615</a></td>
       <td>Normannseth2026</td>
       <td></td>
       <td>openneuro</td>
@@ -9739,7 +9739,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.6 GB — larger than 71% of datasets" aria-label="34.6 GB — larger than 71% of datasets"><span class="sparkbar-label">34.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000103.html" title="NM000103 — eeg dataset, 447 subjects">NM000103</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000103.html" title="NM000103 — eeg dataset, 447 subjects">NM000103</a></td>
       <td>Shirazi2017</td>
       <td>HealthyBrainNetwork, HBN_EEG_NC, HBN_NoCommercial</td>
       <td>nemar</td>
@@ -9756,7 +9756,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.0%;" title="250.3 GB — larger than 97% of datasets" aria-label="250.3 GB — larger than 97% of datasets"><span class="sparkbar-label">250.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000104.html" title="NM000104 — emg dataset, 108 subjects">NM000104</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000104.html" title="NM000104 — emg dataset, 108 subjects">NM000104</a></td>
       <td>Sivakumar2024</td>
       <td>emg2qwerty</td>
       <td>nemar</td>
@@ -9773,7 +9773,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.7%;" title="223.3 GB — larger than 96% of datasets" aria-label="223.3 GB — larger than 96% of datasets"><span class="sparkbar-label">223.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000105.html" title="NM000105 — emg dataset, 100 subjects">NM000105</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000105.html" title="NM000105 — emg dataset, 100 subjects">NM000105</a></td>
       <td>Kaifosh2025</td>
       <td>FRL_DiscreteGestures</td>
       <td>nemar</td>
@@ -9790,7 +9790,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.7%;" title="20.6 GB — larger than 62% of datasets" aria-label="20.6 GB — larger than 62% of datasets"><span class="sparkbar-label">20.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000106.html" title="NM000106 — emg dataset, 100 subjects">NM000106</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000106.html" title="NM000106 — emg dataset, 100 subjects">NM000106</a></td>
       <td>Kaifosh2025_106</td>
       <td>FRL_Handwriting</td>
       <td>nemar</td>
@@ -9807,7 +9807,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.3%;" title="45.3 GB — larger than 77% of datasets" aria-label="45.3 GB — larger than 77% of datasets"><span class="sparkbar-label">45.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000107.html" title="NM000107 — emg dataset, 100 subjects">NM000107</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000107.html" title="NM000107 — emg dataset, 100 subjects">NM000107</a></td>
       <td>Kaifosh2025_107</td>
       <td>FRL_WristControl</td>
       <td>nemar</td>
@@ -9824,7 +9824,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.3%;" title="24.9 GB — larger than 66% of datasets" aria-label="24.9 GB — larger than 66% of datasets"><span class="sparkbar-label">24.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000108.html" title="NM000108 — emg dataset, 20 subjects">NM000108</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000108.html" title="NM000108 — emg dataset, 20 subjects">NM000108</a></td>
       <td>Jiang2021</td>
       <td>HySER, Hyser</td>
       <td>nemar</td>
@@ -9841,7 +9841,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.2%;" title="108.2 GB — larger than 90% of datasets" aria-label="108.2 GB — larger than 90% of datasets"><span class="sparkbar-label">108.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000109.html" title="NM000109 — eeg dataset, 36 subjects">NM000109</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000109.html" title="NM000109 — eeg dataset, 36 subjects">NM000109</a></td>
       <td>Zyma2019</td>
       <td></td>
       <td>nemar</td>
@@ -9858,7 +9858,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.6%;" title="174.5 MB — larger than 6% of datasets" aria-label="174.5 MB — larger than 6% of datasets"><span class="sparkbar-label">174.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000110.html" title="NM000110 — eeg dataset, 24 subjects">NM000110</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000110.html" title="NM000110 — eeg dataset, 24 subjects">NM000110</a></td>
       <td>Connolly2010</td>
       <td>CHBMIT, CHB_MIT</td>
       <td>nemar</td>
@@ -9875,7 +9875,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.1%;" title="42.6 GB — larger than 75% of datasets" aria-label="42.6 GB — larger than 75% of datasets"><span class="sparkbar-label">42.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000112.html" title="NM000112 — eeg dataset, 123 subjects">NM000112</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000112.html" title="NM000112 — eeg dataset, 123 subjects">NM000112</a></td>
       <td>Liu2024_112</td>
       <td>FACED</td>
       <td>nemar</td>
@@ -9892,7 +9892,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.1%;" title="31.4 GB — larger than 70% of datasets" aria-label="31.4 GB — larger than 70% of datasets"><span class="sparkbar-label">31.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000113.html" title="NM000113 — eeg dataset, 15 subjects">NM000113</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000113.html" title="NM000113 — eeg dataset, 15 subjects">NM000113</a></td>
       <td>Lee2020</td>
       <td></td>
       <td>nemar</td>
@@ -9909,7 +9909,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.7%;" title="585.2 MB — larger than 12% of datasets" aria-label="585.2 MB — larger than 12% of datasets"><span class="sparkbar-label">585.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000114.html" title="NM000114 — eeg dataset, 64 subjects">NM000114</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000114.html" title="NM000114 — eeg dataset, 64 subjects">NM000114</a></td>
       <td>Mumtaz2017</td>
       <td></td>
       <td>nemar</td>
@@ -9926,7 +9926,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.8%;" title="812.8 MB — larger than 16% of datasets" aria-label="812.8 MB — larger than 16% of datasets"><span class="sparkbar-label">812.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000115.html" title="NM000115 — eeg dataset, 4 subjects">NM000115</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000115.html" title="NM000115 — eeg dataset, 4 subjects">NM000115</a></td>
       <td>Zhou2016</td>
       <td></td>
       <td>nemar</td>
@@ -9943,7 +9943,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.2%;" title="152.1 MB — larger than 5% of datasets" aria-label="152.1 MB — larger than 5% of datasets"><span class="sparkbar-label">152.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000118.html" title="NM000118 — eeg dataset, 9 subjects">NM000118</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000118.html" title="NM000118 — eeg dataset, 9 subjects">NM000118</a></td>
       <td>Nakanishi2015</td>
       <td></td>
       <td>nemar</td>
@@ -9960,7 +9960,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.4%;" title="65.4 MB — larger than 2% of datasets" aria-label="65.4 MB — larger than 2% of datasets"><span class="sparkbar-label">65.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000119.html" title="NM000119 — eeg dataset, 11 subjects">NM000119</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000119.html" title="NM000119 — eeg dataset, 11 subjects">NM000119</a></td>
       <td>Oikonomou2016_MAMEM1</td>
       <td>Oikonomou2016</td>
       <td>nemar</td>
@@ -9977,7 +9977,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 36% of datasets" aria-label="5.4 GB — larger than 36% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000120.html" title="NM000120 — eeg dataset, 11 subjects">NM000120</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000120.html" title="NM000120 — eeg dataset, 11 subjects">NM000120</a></td>
       <td>Oikonomou2016_MAMEM2</td>
       <td>MAMEM2, SSVEPMAMEM2, MAMEM2_SSVEP</td>
       <td>nemar</td>
@@ -9994,7 +9994,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.5%;" title="4.4 GB — larger than 34% of datasets" aria-label="4.4 GB — larger than 34% of datasets"><span class="sparkbar-label">4.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000121.html" title="NM000121 — eeg dataset, 11 subjects">NM000121</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000121.html" title="NM000121 — eeg dataset, 11 subjects">NM000121</a></td>
       <td>Oikonomou2016_MAMEM3</td>
       <td>MAMEM3, SSVEP_MAMEM3</td>
       <td>nemar</td>
@@ -10011,7 +10011,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:62.4%;" title="120.2 MB — larger than 4% of datasets" aria-label="120.2 MB — larger than 4% of datasets"><span class="sparkbar-label">120.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000122.html" title="NM000122 — eeg dataset, 12 subjects">NM000122</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000122.html" title="NM000122 — eeg dataset, 12 subjects">NM000122</a></td>
       <td>Chen2017</td>
       <td></td>
       <td>nemar</td>
@@ -10028,7 +10028,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.5%;" title="741.9 MB — larger than 15% of datasets" aria-label="741.9 MB — larger than 15% of datasets"><span class="sparkbar-label">741.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000123.html" title="NM000123 — eeg dataset, 12 subjects">NM000123</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000123.html" title="NM000123 — eeg dataset, 12 subjects">NM000123</a></td>
       <td>Kalunga2016</td>
       <td></td>
       <td>nemar</td>
@@ -10045,7 +10045,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.0%;" title="78.2 MB — larger than 3% of datasets" aria-label="78.2 MB — larger than 3% of datasets"><span class="sparkbar-label">78.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000124.html" title="NM000124 — eeg dataset, 24 subjects">NM000124</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000124.html" title="NM000124 — eeg dataset, 24 subjects">NM000124</a></td>
       <td>Han2024</td>
       <td></td>
       <td>nemar</td>
@@ -10062,7 +10062,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.0 GB — larger than 58% of datasets" aria-label="17.0 GB — larger than 58% of datasets"><span class="sparkbar-label">17.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000125.html" title="NM000125 — eeg dataset, 23 subjects">NM000125</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000125.html" title="NM000125 — eeg dataset, 23 subjects">NM000125</a></td>
       <td>Lee2021_SSVEP</td>
       <td></td>
       <td>nemar</td>
@@ -10079,7 +10079,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.5%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000126.html" title="NM000126 — eeg dataset, 34 subjects">NM000126</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000126.html" title="NM000126 — eeg dataset, 34 subjects">NM000126</a></td>
       <td>Wang2016</td>
       <td></td>
       <td>nemar</td>
@@ -10096,7 +10096,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.4%;" title="3.1 GB — larger than 29% of datasets" aria-label="3.1 GB — larger than 29% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000127.html" title="NM000127 — eeg dataset, 40 subjects">NM000127</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000127.html" title="NM000127 — eeg dataset, 40 subjects">NM000127</a></td>
       <td>Kim2025_SSVEP</td>
       <td>Kim2025</td>
       <td>nemar</td>
@@ -10113,7 +10113,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000128.html" title="NM000128 — eeg dataset, 59 subjects">NM000128</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000128.html" title="NM000128 — eeg dataset, 59 subjects">NM000128</a></td>
       <td>Dong2023</td>
       <td></td>
       <td>nemar</td>
@@ -10130,7 +10130,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.4%;" title="397.1 MB — larger than 9% of datasets" aria-label="397.1 MB — larger than 9% of datasets"><span class="sparkbar-label">397.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000129.html" title="NM000129 — eeg dataset, 70 subjects">NM000129</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000129.html" title="NM000129 — eeg dataset, 70 subjects">NM000129</a></td>
       <td>Liu2020</td>
       <td>BetaSSVEP, BETA_SSVEP, BETA</td>
       <td>nemar</td>
@@ -10147,7 +10147,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.0%;" title="2.8 GB — larger than 27% of datasets" aria-label="2.8 GB — larger than 27% of datasets"><span class="sparkbar-label">2.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000130.html" title="NM000130 — eeg dataset, 100 subjects">NM000130</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000130.html" title="NM000130 — eeg dataset, 100 subjects">NM000130</a></td>
       <td>Liu2022</td>
       <td>EldBETA, eldBETA, Liu2022EldBETA</td>
       <td>nemar</td>
@@ -10164,7 +10164,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.4 GB — larger than 59% of datasets" aria-label="17.4 GB — larger than 59% of datasets"><span class="sparkbar-label">17.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000131.html" title="NM000131 — eeg dataset, 8 subjects">NM000131</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000131.html" title="NM000131 — eeg dataset, 8 subjects">NM000131</a></td>
       <td>Wang2021</td>
       <td></td>
       <td>nemar</td>
@@ -10181,7 +10181,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.7%;" title="2.6 GB — larger than 26% of datasets" aria-label="2.6 GB — larger than 26% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000132.html" title="NM000132 — eeg dataset, 40 subjects">NM000132</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000132.html" title="NM000132 — eeg dataset, 40 subjects">NM000132</a></td>
       <td>Kappenman2021</td>
       <td>ERPCORE, ERP_CORE</td>
       <td>nemar</td>
@@ -10198,7 +10198,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.1%;" title="17.5 GB — larger than 59% of datasets" aria-label="17.5 GB — larger than 59% of datasets"><span class="sparkbar-label">17.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000133.html" title="NM000133 — eeg dataset, 8 subjects">NM000133</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000133.html" title="NM000133 — eeg dataset, 8 subjects">NM000133</a></td>
       <td>Xu2024</td>
       <td>Alljoined1, Alljoined</td>
       <td>nemar</td>
@@ -10215,7 +10215,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 41% of datasets" aria-label="7.6 GB — larger than 41% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000134.html" title="NM000134 — eeg dataset, 20 subjects">NM000134</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000134.html" title="NM000134 — eeg dataset, 20 subjects">NM000134</a></td>
       <td>Xu2025</td>
       <td>Alljoined16M, Alljoined_16M, Alljoined1p6M</td>
       <td>nemar</td>
@@ -10232,7 +10232,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.2 GB — larger than 44% of datasets" aria-label="8.2 GB — larger than 44% of datasets"><span class="sparkbar-label">8.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000135.html" title="NM000135 — eeg dataset, 1 subjects">NM000135</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000135.html" title="NM000135 — eeg dataset, 1 subjects">NM000135</a></td>
       <td>Leeb2014</td>
       <td>BNCI2014004</td>
       <td>nemar</td>
@@ -10249,7 +10249,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:56.8%;" title="22.6 MB — larger than 1% of datasets" aria-label="22.6 MB — larger than 1% of datasets"><span class="sparkbar-label">22.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000136.html" title="NM000136 — eeg dataset, 31 subjects">NM000136</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000136.html" title="NM000136 — eeg dataset, 31 subjects">NM000136</a></td>
       <td>GuttmannFlury2025</td>
       <td></td>
       <td>nemar</td>
@@ -10266,7 +10266,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 41% of datasets" aria-label="7.3 GB — larger than 41% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000137.html" title="NM000137 — eeg dataset, 7 subjects">NM000137</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000137.html" title="NM000137 — eeg dataset, 7 subjects">NM000137</a></td>
       <td>Kaya2018</td>
       <td></td>
       <td>nemar</td>
@@ -10283,7 +10283,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.9%;" title="623.4 MB — larger than 13% of datasets" aria-label="623.4 MB — larger than 13% of datasets"><span class="sparkbar-label">623.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000138.html" title="NM000138 — eeg dataset, 8 subjects">NM000138</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000138.html" title="NM000138 — eeg dataset, 8 subjects">NM000138</a></td>
       <td>Barachant2012</td>
       <td>AlexMI, AlexMotorImagery, AlexandreMotorImagery</td>
       <td>nemar</td>
@@ -10300,7 +10300,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.8%;" title="99.7 MB — larger than 4% of datasets" aria-label="99.7 MB — larger than 4% of datasets"><span class="sparkbar-label">99.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000139.html" title="NM000139 — eeg dataset, 9 subjects">NM000139</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000139.html" title="NM000139 — eeg dataset, 9 subjects">NM000139</a></td>
       <td>Tangermann2014</td>
       <td>BNCI2014001, BCICIV1, BCICompIV1</td>
       <td>nemar</td>
@@ -10317,7 +10317,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.2%;" title="672.8 MB — larger than 14% of datasets" aria-label="672.8 MB — larger than 14% of datasets"><span class="sparkbar-label">672.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000140.html" title="NM000140 — eeg dataset, 12 subjects">NM000140</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000140.html" title="NM000140 — eeg dataset, 12 subjects">NM000140</a></td>
       <td>Faller2015</td>
       <td>BNCI2015, BNCI2015001</td>
       <td>nemar</td>
@@ -10334,7 +10334,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.0%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000141.html" title="NM000141 — eeg dataset, 14 subjects">NM000141</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000141.html" title="NM000141 — eeg dataset, 14 subjects">NM000141</a></td>
       <td>Wairagkar2018</td>
       <td></td>
       <td>nemar</td>
@@ -10351,7 +10351,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.6%;" title="571.7 MB — larger than 12% of datasets" aria-label="571.7 MB — larger than 12% of datasets"><span class="sparkbar-label">571.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000142.html" title="NM000142 — eeg dataset, 6 subjects">NM000142</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000142.html" title="NM000142 — eeg dataset, 6 subjects">NM000142</a></td>
       <td>Wu2020</td>
       <td></td>
       <td>nemar</td>
@@ -10368,7 +10368,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.9%;" title="4.9 GB — larger than 35% of datasets" aria-label="4.9 GB — larger than 35% of datasets"><span class="sparkbar-label">4.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000143.html" title="NM000143 — eeg dataset, 5 subjects">NM000143</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000143.html" title="NM000143 — eeg dataset, 5 subjects">NM000143</a></td>
       <td>BNCI2003</td>
       <td>BCICIII_IVa, BCICompIII_IVa, BNCI2003_IVa</td>
       <td>nemar</td>
@@ -10385,7 +10385,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.1%;" title="492.7 MB — larger than 11% of datasets" aria-label="492.7 MB — larger than 11% of datasets"><span class="sparkbar-label">492.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000144.html" title="NM000144 — eeg dataset, 9 subjects">NM000144</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000144.html" title="NM000144 — eeg dataset, 9 subjects">NM000144</a></td>
       <td>Scherer2015</td>
       <td>BNCI2015</td>
       <td>nemar</td>
@@ -10402,7 +10402,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.8%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000145.html" title="NM000145 — eeg dataset, 10 subjects">NM000145</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000145.html" title="NM000145 — eeg dataset, 10 subjects">NM000145</a></td>
       <td>GrosseWentrup2009</td>
       <td></td>
       <td>nemar</td>
@@ -10419,7 +10419,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 36% of datasets" aria-label="5.4 GB — larger than 36% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000146.html" title="NM000146 — eeg dataset, 10 subjects">NM000146</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000146.html" title="NM000146 — eeg dataset, 10 subjects">NM000146</a></td>
       <td>Yi2014</td>
       <td>Weibo2014</td>
       <td>nemar</td>
@@ -10436,7 +10436,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.1%;" title="1.6 GB — larger than 22% of datasets" aria-label="1.6 GB — larger than 22% of datasets"><span class="sparkbar-label">1.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000147.html" title="NM000147 — eeg dataset, 22 subjects">NM000147</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000147.html" title="NM000147 — eeg dataset, 22 subjects">NM000147</a></td>
       <td>RomaniBF2025</td>
       <td>Romani2025</td>
       <td>nemar</td>
@@ -10453,7 +10453,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:62.8%;" title="134.3 MB — larger than 4% of datasets" aria-label="134.3 MB — larger than 4% of datasets"><span class="sparkbar-label">134.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000148.html" title="NM000148 — eeg dataset, 30 subjects">NM000148</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000148.html" title="NM000148 — eeg dataset, 30 subjects">NM000148</a></td>
       <td>Rozado2015</td>
       <td></td>
       <td>nemar</td>
@@ -10470,7 +10470,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.4%;" title="975.3 MB — larger than 16% of datasets" aria-label="975.3 MB — larger than 16% of datasets"><span class="sparkbar-label">975.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000149.html" title="NM000149 — eeg dataset, 10 subjects">NM000149</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000149.html" title="NM000149 — eeg dataset, 10 subjects">NM000149</a></td>
       <td>Ofner2019</td>
       <td></td>
       <td>nemar</td>
@@ -10487,7 +10487,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000150.html" title="NM000150 — eeg dataset">NM000150</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000150.html" title="NM000150 — eeg dataset">NM000150</a></td>
       <td>Liu2025_NEMAR</td>
       <td></td>
       <td>nemar</td>
@@ -10504,7 +10504,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000151.html" title="NM000151 — eeg dataset, 12 subjects">NM000151</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000151.html" title="NM000151 — eeg dataset, 12 subjects">NM000151</a></td>
       <td>Tavakolan2017</td>
       <td></td>
       <td>nemar</td>
@@ -10521,7 +10521,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.5%;" title="3.2 GB — larger than 29% of datasets" aria-label="3.2 GB — larger than 29% of datasets"><span class="sparkbar-label">3.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000152.html" title="NM000152 — eeg dataset, 12 subjects">NM000152</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000152.html" title="NM000152 — eeg dataset, 12 subjects">NM000152</a></td>
       <td>Zhang2017</td>
       <td></td>
       <td>nemar</td>
@@ -10538,7 +10538,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.2%;" title="1.6 GB — larger than 22% of datasets" aria-label="1.6 GB — larger than 22% of datasets"><span class="sparkbar-label">1.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000155.html" title="NM000155 — emg dataset, 6 subjects">NM000155</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000155.html" title="NM000155 — emg dataset, 6 subjects">NM000155</a></td>
       <td>Caillet2023</td>
       <td></td>
       <td>nemar</td>
@@ -10555,7 +10555,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.8%;" title="448.3 MB — larger than 10% of datasets" aria-label="448.3 MB — larger than 10% of datasets"><span class="sparkbar-label">448.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000157.html" title="NM000157 — eeg dataset, 19 subjects">NM000157</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000157.html" title="NM000157 — eeg dataset, 19 subjects">NM000157</a></td>
       <td>Mainsah2025</td>
       <td></td>
       <td>nemar</td>
@@ -10572,7 +10572,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000158.html" title="NM000158 — eeg dataset, 50 subjects">NM000158</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000158.html" title="NM000158 — eeg dataset, 50 subjects">NM000158</a></td>
       <td>Liu2024</td>
       <td></td>
       <td>nemar</td>
@@ -10589,7 +10589,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.2%;" title="673.7 MB — larger than 14% of datasets" aria-label="673.7 MB — larger than 14% of datasets"><span class="sparkbar-label">673.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000159.html" title="NM000159 — emg dataset, 16 subjects">NM000159</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000159.html" title="NM000159 — emg dataset, 16 subjects">NM000159</a></td>
       <td>Avrillon2024</td>
       <td></td>
       <td>nemar</td>
@@ -10606,7 +10606,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.3%;" title="5.5 GB — larger than 37% of datasets" aria-label="5.5 GB — larger than 37% of datasets"><span class="sparkbar-label">5.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000160.html" title="NM000160 — eeg dataset, 18 subjects">NM000160</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000160.html" title="NM000160 — eeg dataset, 18 subjects">NM000160</a></td>
       <td>Yi2025</td>
       <td></td>
       <td>nemar</td>
@@ -10623,7 +10623,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.6%;" title="20.3 GB — larger than 62% of datasets" aria-label="20.3 GB — larger than 62% of datasets"><span class="sparkbar-label">20.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000161.html" title="NM000161 — eeg dataset, 20 subjects">NM000161</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000161.html" title="NM000161 — eeg dataset, 20 subjects">NM000161</a></td>
       <td>Crell2024</td>
       <td></td>
       <td>nemar</td>
@@ -10640,7 +10640,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 48% of datasets" aria-label="10.2 GB — larger than 48% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000162.html" title="NM000162 — eeg dataset, 20 subjects">NM000162</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000162.html" title="NM000162 — eeg dataset, 20 subjects">NM000162</a></td>
       <td>Srisrisawang2025</td>
       <td>BNCI2025</td>
       <td>nemar</td>
@@ -10657,7 +10657,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.6%;" title="15.0 GB — larger than 55% of datasets" aria-label="15.0 GB — larger than 55% of datasets"><span class="sparkbar-label">15.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000163.html" title="NM000163 — eeg dataset, 12 subjects">NM000163</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000163.html" title="NM000163 — eeg dataset, 12 subjects">NM000163</a></td>
       <td>Castillos2023_VEP</td>
       <td></td>
       <td>nemar</td>
@@ -10674,7 +10674,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.4%;" title="160.1 MB — larger than 5% of datasets" aria-label="160.1 MB — larger than 5% of datasets"><span class="sparkbar-label">160.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000165.html" title="NM000165 — emg dataset, 1 subjects">NM000165</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000165.html" title="NM000165 — emg dataset, 1 subjects">NM000165</a></td>
       <td>Grison2025</td>
       <td></td>
       <td>nemar</td>
@@ -10691,7 +10691,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.6%;" title="1.3 GB — larger than 21% of datasets" aria-label="1.3 GB — larger than 21% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000166.html" title="NM000166 — eeg dataset, 95 subjects">NM000166</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000166.html" title="NM000166 — eeg dataset, 95 subjects">NM000166</a></td>
       <td>Huang2018</td>
       <td></td>
       <td>nemar</td>
@@ -10708,7 +10708,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.8%;" title="21.6 GB — larger than 63% of datasets" aria-label="21.6 GB — larger than 63% of datasets"><span class="sparkbar-label">21.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000167.html" title="NM000167 — eeg dataset, 25 subjects">NM000167</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000167.html" title="NM000167 — eeg dataset, 25 subjects">NM000167</a></td>
       <td>Ma2020</td>
       <td></td>
       <td>nemar</td>
@@ -10725,7 +10725,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.4 GB — larger than 64% of datasets" aria-label="22.4 GB — larger than 64% of datasets"><span class="sparkbar-label">22.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000168.html" title="NM000168 — eeg dataset, 6 subjects">NM000168</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000168.html" title="NM000168 — eeg dataset, 6 subjects">NM000168</a></td>
       <td>Chavarriaga2015</td>
       <td>Chavarriaga2010</td>
       <td>nemar</td>
@@ -10742,7 +10742,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.9%;" title="2.0 GB — larger than 24% of datasets" aria-label="2.0 GB — larger than 24% of datasets"><span class="sparkbar-label">2.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000169.html" title="NM000169 — eeg dataset, 8 subjects">NM000169</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000169.html" title="NM000169 — eeg dataset, 8 subjects">NM000169</a></td>
       <td>Riccio2014</td>
       <td>BNCI2014008</td>
       <td>nemar</td>
@@ -10759,7 +10759,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.9%;" title="75.9 MB — larger than 2% of datasets" aria-label="75.9 MB — larger than 2% of datasets"><span class="sparkbar-label">75.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000170.html" title="NM000170 — eeg dataset, 10 subjects">NM000170</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000170.html" title="NM000170 — eeg dataset, 10 subjects">NM000170</a></td>
       <td>Pulferer2025</td>
       <td>BNCI2025</td>
       <td>nemar</td>
@@ -10776,7 +10776,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.7%;" title="3.4 GB — larger than 30% of datasets" aria-label="3.4 GB — larger than 30% of datasets"><span class="sparkbar-label">3.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000171.html" title="NM000171 — eeg dataset, 14 subjects">NM000171</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000171.html" title="NM000171 — eeg dataset, 14 subjects">NM000171</a></td>
       <td>Steyrl2014</td>
       <td>BNCI2014002</td>
       <td>nemar</td>
@@ -10793,7 +10793,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.5%;" title="554.3 MB — larger than 12% of datasets" aria-label="554.3 MB — larger than 12% of datasets"><span class="sparkbar-label">554.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000172.html" title="NM000172 — eeg dataset, 14 subjects">NM000172</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000172.html" title="NM000172 — eeg dataset, 14 subjects">NM000172</a></td>
       <td>Schirrmeister2017</td>
       <td></td>
       <td>nemar</td>
@@ -10810,7 +10810,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.5 GB — larger than 60% of datasets" aria-label="18.5 GB — larger than 60% of datasets"><span class="sparkbar-label">18.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000173.html" title="NM000173 — eeg dataset, 15 subjects">NM000173</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000173.html" title="NM000173 — eeg dataset, 15 subjects">NM000173</a></td>
       <td>Ofner2017</td>
       <td></td>
       <td>nemar</td>
@@ -10827,7 +10827,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 45% of datasets" aria-label="8.5 GB — larger than 45% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000175.html" title="NM000175 — fnirs dataset, 5 subjects">NM000175</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000175.html" title="NM000175 — fnirs dataset, 5 subjects">NM000175</a></td>
       <td>Luke2024</td>
       <td></td>
       <td>nemar</td>
@@ -10844,7 +10844,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:59.3%;" title="47.5 MB — larger than 2% of datasets" aria-label="47.5 MB — larger than 2% of datasets"><span class="sparkbar-label">47.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000176.html" title="NM000176 — eeg dataset, 5 subjects">NM000176</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000176.html" title="NM000176 — eeg dataset, 5 subjects">NM000176</a></td>
       <td>Mainsah2025_BigP3BCI</td>
       <td>BigP3BCI_StudyK, BigP3BCI_K</td>
       <td>nemar</td>
@@ -10861,7 +10861,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.5%;" title="168.3 MB — larger than 6% of datasets" aria-label="168.3 MB — larger than 6% of datasets"><span class="sparkbar-label">168.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000179.html" title="NM000179 — eeg dataset, 215 subjects">NM000179</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000179.html" title="NM000179 — eeg dataset, 215 subjects">NM000179</a></td>
       <td>Babayan2018</td>
       <td>LEMON</td>
       <td>nemar</td>
@@ -10878,7 +10878,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.8%;" title="126.9 GB — larger than 91% of datasets" aria-label="126.9 GB — larger than 91% of datasets"><span class="sparkbar-label">126.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000180.html" title="NM000180 — eeg dataset, 45 subjects">NM000180</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000180.html" title="NM000180 — eeg dataset, 45 subjects">NM000180</a></td>
       <td>Brennan2019</td>
       <td></td>
       <td>nemar</td>
@@ -10895,7 +10895,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.0%;" title="3.8 GB — larger than 32% of datasets" aria-label="3.8 GB — larger than 32% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000181.html" title="NM000181 — eeg dataset, 2417 subjects">NM000181</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000181.html" title="NM000181 — eeg dataset, 2417 subjects">NM000181</a></td>
       <td>Khan2019</td>
       <td></td>
       <td>nemar</td>
@@ -10912,7 +10912,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.3%;" title="13.8 GB — larger than 54% of datasets" aria-label="13.8 GB — larger than 54% of datasets"><span class="sparkbar-label">13.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000185.html" title="NM000185 — eeg dataset, 100 subjects">NM000185</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000185.html" title="NM000185 — eeg dataset, 100 subjects">NM000185</a></td>
       <td>Kemp2000</td>
       <td>SleepEDF, SleepEDFExpanded</td>
       <td>nemar</td>
@@ -10929,7 +10929,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000186.html" title="NM000186 — eeg dataset, 8 subjects">NM000186</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000186.html" title="NM000186 — eeg dataset, 8 subjects">NM000186</a></td>
       <td>Mainsah2025_BigP3BCI_E</td>
       <td>BigP3BCI_StudyE, BigP3BCI_E</td>
       <td>nemar</td>
@@ -10946,7 +10946,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.9%;" title="104.7 MB — larger than 4% of datasets" aria-label="104.7 MB — larger than 4% of datasets"><span class="sparkbar-label">104.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000187.html" title="NM000187 — eeg dataset, 8 subjects">NM000187</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000187.html" title="NM000187 — eeg dataset, 8 subjects">NM000187</a></td>
       <td>Mainsah2025_BigP3BCI_N</td>
       <td>BigP3BCI_StudyN</td>
       <td>nemar</td>
@@ -10963,7 +10963,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.0%;" title="353.2 MB — larger than 8% of datasets" aria-label="353.2 MB — larger than 8% of datasets"><span class="sparkbar-label">353.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000188.html" title="NM000188 — eeg dataset, 10 subjects">NM000188</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000188.html" title="NM000188 — eeg dataset, 10 subjects">NM000188</a></td>
       <td>Arico2014</td>
       <td>BNCI2014_009_P300</td>
       <td>nemar</td>
@@ -10980,7 +10980,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:60.6%;" title="70.9 MB — larger than 2% of datasets" aria-label="70.9 MB — larger than 2% of datasets"><span class="sparkbar-label">70.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000189.html" title="NM000189 — eeg dataset, 10 subjects">NM000189</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000189.html" title="NM000189 — eeg dataset, 10 subjects">NM000189</a></td>
       <td>Schreuder2015_P300</td>
       <td>BNCI2015_P300, BNCI2015_003_P300, BNCI2015_003_AMUSE</td>
       <td>nemar</td>
@@ -10997,7 +10997,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:56.7%;" title="21.8 MB — larger than 1% of datasets" aria-label="21.8 MB — larger than 1% of datasets"><span class="sparkbar-label">21.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000190.html" title="NM000190 — eeg dataset, 10 subjects">NM000190</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000190.html" title="NM000190 — eeg dataset, 10 subjects">NM000190</a></td>
       <td>Hohne2015</td>
       <td>BNCI2015</td>
       <td>nemar</td>
@@ -11014,7 +11014,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.1%;" title="2.2 GB — larger than 25% of datasets" aria-label="2.2 GB — larger than 25% of datasets"><span class="sparkbar-label">2.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000191.html" title="NM000191 — eeg dataset, 10 subjects">NM000191</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000191.html" title="NM000191 — eeg dataset, 10 subjects">NM000191</a></td>
       <td>Mainsah2025_BigP3BCI_F</td>
       <td>BigP3BCI_StudyF, BigP3BCI_F</td>
       <td>nemar</td>
@@ -11031,7 +11031,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.5%;" title="551.9 MB — larger than 12% of datasets" aria-label="551.9 MB — larger than 12% of datasets"><span class="sparkbar-label">551.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000192.html" title="NM000192 — eeg dataset, 11 subjects">NM000192</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000192.html" title="NM000192 — eeg dataset, 11 subjects">NM000192</a></td>
       <td>Treder2015_BNCI_006_Music</td>
       <td>BNCI2015_BNCI_006_Music, BNCI_2015_006_Music, BNCI2015_006_MusicBCI</td>
       <td>nemar</td>
@@ -11048,7 +11048,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.5%;" title="4.4 GB — larger than 33% of datasets" aria-label="4.4 GB — larger than 33% of datasets"><span class="sparkbar-label">4.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000193.html" title="NM000193 — eeg dataset, 11 subjects">NM000193</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000193.html" title="NM000193 — eeg dataset, 11 subjects">NM000193</a></td>
       <td>Kojima2024A_P300</td>
       <td></td>
       <td>nemar</td>
@@ -11065,7 +11065,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.0%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000194.html" title="NM000194 — eeg dataset, 12 subjects">NM000194</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000194.html" title="NM000194 — eeg dataset, 12 subjects">NM000194</a></td>
       <td>Acqualagna2015</td>
       <td>BNCI2015</td>
       <td>nemar</td>
@@ -11082,7 +11082,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.0%;" title="2.1 GB — larger than 25% of datasets" aria-label="2.1 GB — larger than 25% of datasets"><span class="sparkbar-label">2.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000195.html" title="NM000195 — eeg dataset, 12 subjects">NM000195</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000195.html" title="NM000195 — eeg dataset, 12 subjects">NM000195</a></td>
       <td>Hubner2018</td>
       <td>Huebner2018</td>
       <td>nemar</td>
@@ -11099,7 +11099,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.8%;" title="4.8 GB — larger than 35% of datasets" aria-label="4.8 GB — larger than 35% of datasets"><span class="sparkbar-label">4.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000196.html" title="NM000196 — eeg dataset, 12 subjects">NM000196</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000196.html" title="NM000196 — eeg dataset, 12 subjects">NM000196</a></td>
       <td>Thielen2015</td>
       <td></td>
       <td>nemar</td>
@@ -11116,7 +11116,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000197.html" title="NM000197 — eeg dataset, 21 subjects">NM000197</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000197.html" title="NM000197 — eeg dataset, 21 subjects">NM000197</a></td>
       <td>Mainsah2025_BigP3BCI_M</td>
       <td>BigP3BCI_StudyM, BigP3BCI_M</td>
       <td>nemar</td>
@@ -11133,7 +11133,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.1%;" title="491.6 MB — larger than 11% of datasets" aria-label="491.6 MB — larger than 11% of datasets"><span class="sparkbar-label">491.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000198.html" title="NM000198 — eeg dataset, 13 subjects">NM000198</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000198.html" title="NM000198 — eeg dataset, 13 subjects">NM000198</a></td>
       <td>Treder2015_P300</td>
       <td>BNCI2015_P300, BNCI2015_008_P300, BNCI2015_008_CenterSpeller</td>
       <td>nemar</td>
@@ -11150,7 +11150,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.3%;" title="3.1 GB — larger than 29% of datasets" aria-label="3.1 GB — larger than 29% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000199.html" title="NM000199 — eeg dataset, 13 subjects">NM000199</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000199.html" title="NM000199 — eeg dataset, 13 subjects">NM000199</a></td>
       <td>Hubner2017</td>
       <td>Huebner2017</td>
       <td>nemar</td>
@@ -11167,7 +11167,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.0%;" title="5.1 GB — larger than 35% of datasets" aria-label="5.1 GB — larger than 35% of datasets"><span class="sparkbar-label">5.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000200.html" title="NM000200 — eeg dataset, 13 subjects">NM000200</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000200.html" title="NM000200 — eeg dataset, 13 subjects">NM000200</a></td>
       <td>Mainsah2025_BigP3BCI_I</td>
       <td>BigP3BCI_StudyI, BigP3BCI_I</td>
       <td>nemar</td>
@@ -11184,7 +11184,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.7%;" title="324.4 MB — larger than 8% of datasets" aria-label="324.4 MB — larger than 8% of datasets"><span class="sparkbar-label">324.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000201.html" title="NM000201 — eeg dataset, 24 subjects">NM000201</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000201.html" title="NM000201 — eeg dataset, 24 subjects">NM000201</a></td>
       <td>Lee2021_ERP</td>
       <td></td>
       <td>nemar</td>
@@ -11201,7 +11201,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.1%;" title="5.2 GB — larger than 35% of datasets" aria-label="5.2 GB — larger than 35% of datasets"><span class="sparkbar-label">5.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000204.html" title="NM000204 — eeg dataset, 14 subjects">NM000204</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000204.html" title="NM000204 — eeg dataset, 14 subjects">NM000204</a></td>
       <td>Lee2024_Bluetooth_speaker_14</td>
       <td></td>
       <td>nemar</td>
@@ -11218,7 +11218,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.7%;" title="323.0 MB — larger than 8% of datasets" aria-label="323.0 MB — larger than 8% of datasets"><span class="sparkbar-label">323.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000205.html" title="NM000205 — eeg dataset, 14 subjects">NM000205</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000205.html" title="NM000205 — eeg dataset, 14 subjects">NM000205</a></td>
       <td>Zheng2020</td>
       <td></td>
       <td>nemar</td>
@@ -11235,7 +11235,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.1%;" title="5.3 GB — larger than 36% of datasets" aria-label="5.3 GB — larger than 36% of datasets"><span class="sparkbar-label">5.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000206.html" title="NM000206 — eeg dataset, 15 subjects">NM000206</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000206.html" title="NM000206 — eeg dataset, 15 subjects">NM000206</a></td>
       <td>Hinss2021_Neuroergonomic</td>
       <td>Hinss2021</td>
       <td>nemar</td>
@@ -11252,7 +11252,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000207.html" title="NM000207 — eeg dataset, 15 subjects">NM000207</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000207.html" title="NM000207 — eeg dataset, 15 subjects">NM000207</a></td>
       <td>Kojima2024B_P300</td>
       <td></td>
       <td>nemar</td>
@@ -11269,7 +11269,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.4%;" title="13.9 GB — larger than 54% of datasets" aria-label="13.9 GB — larger than 54% of datasets"><span class="sparkbar-label">13.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000208.html" title="NM000208 — eeg dataset, 14 subjects">NM000208</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000208.html" title="NM000208 — eeg dataset, 14 subjects">NM000208</a></td>
       <td>Lee2024_Door_lock_control</td>
       <td></td>
       <td>nemar</td>
@@ -11286,7 +11286,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.8%;" title="609.6 MB — larger than 13% of datasets" aria-label="609.6 MB — larger than 13% of datasets"><span class="sparkbar-label">609.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000209.html" title="NM000209 — eeg dataset, 25 subjects">NM000209</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000209.html" title="NM000209 — eeg dataset, 25 subjects">NM000209</a></td>
       <td>Forenzo2023</td>
       <td></td>
       <td>nemar</td>
@@ -11303,7 +11303,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.9%;" title="4.9 GB — larger than 35% of datasets" aria-label="4.9 GB — larger than 35% of datasets"><span class="sparkbar-label">4.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000210.html" title="NM000210 — eeg dataset, 15 subjects">NM000210</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000210.html" title="NM000210 — eeg dataset, 15 subjects">NM000210</a></td>
       <td>Simoes2020</td>
       <td>BCIAUTP300, BCIAUT_P300, BCIAUT</td>
       <td>nemar</td>
@@ -11320,7 +11320,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.0%;" title="3.8 GB — larger than 32% of datasets" aria-label="3.8 GB — larger than 32% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000211.html" title="NM000211 — eeg dataset, 15 subjects">NM000211</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000211.html" title="NM000211 — eeg dataset, 15 subjects">NM000211</a></td>
       <td>Zhang2025_RSVP</td>
       <td>Zhang2025</td>
       <td>nemar</td>
@@ -11337,7 +11337,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.8%;" title="8.7 GB — larger than 45% of datasets" aria-label="8.7 GB — larger than 45% of datasets"><span class="sparkbar-label">8.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000212.html" title="NM000212 — eeg dataset, 16 subjects">NM000212</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000212.html" title="NM000212 — eeg dataset, 16 subjects">NM000212</a></td>
       <td>Schaeff2015</td>
       <td>BNCI2015</td>
       <td>nemar</td>
@@ -11354,7 +11354,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.4%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000213.html" title="NM000213 — eeg dataset, 30 subjects">NM000213</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000213.html" title="NM000213 — eeg dataset, 30 subjects">NM000213</a></td>
       <td>Lee2024_Television_control_30</td>
       <td></td>
       <td>nemar</td>
@@ -11371,7 +11371,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.7%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000214.html" title="NM000214 — eeg dataset, 30 subjects">NM000214</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000214.html" title="NM000214 — eeg dataset, 30 subjects">NM000214</a></td>
       <td>Thielen2021</td>
       <td></td>
       <td>nemar</td>
@@ -11388,7 +11388,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.9%;" title="1.5 GB — larger than 22% of datasets" aria-label="1.5 GB — larger than 22% of datasets"><span class="sparkbar-label">1.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000215.html" title="NM000215 — eeg dataset, 38 subjects">NM000215</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000215.html" title="NM000215 — eeg dataset, 38 subjects">NM000215</a></td>
       <td>Korczowski2014_P300</td>
       <td>BrainInvaders2014b, BI2014b, BrainInvadersBI2014b</td>
       <td>nemar</td>
@@ -11405,7 +11405,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.4%;" title="401.8 MB — larger than 9% of datasets" aria-label="401.8 MB — larger than 9% of datasets"><span class="sparkbar-label">401.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000216.html" title="NM000216 — eeg dataset, 43 subjects">NM000216</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000216.html" title="NM000216 — eeg dataset, 43 subjects">NM000216</a></td>
       <td>Korczowski2015_P300</td>
       <td>BrainInvaders2015a, BI2015a</td>
       <td>nemar</td>
@@ -11422,7 +11422,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.8%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000217.html" title="NM000217 — eeg dataset, 44 subjects">NM000217</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000217.html" title="NM000217 — eeg dataset, 44 subjects">NM000217</a></td>
       <td>Korczowski2015_P300_BI2015b</td>
       <td>BrainInvaders2015b, BI2015b</td>
       <td>nemar</td>
@@ -11439,7 +11439,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.5%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000218.html" title="NM000218 — eeg dataset, 16 subjects">NM000218</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000218.html" title="NM000218 — eeg dataset, 16 subjects">NM000218</a></td>
       <td>Mainsah2025_BigP3BCI_H</td>
       <td>BigP3BCI_StudyH, BigP3BCI_H</td>
       <td>nemar</td>
@@ -11456,7 +11456,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.7%;" title="326.5 MB — larger than 8% of datasets" aria-label="326.5 MB — larger than 8% of datasets"><span class="sparkbar-label">326.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000219.html" title="NM000219 — eeg dataset, 18 subjects">NM000219</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000219.html" title="NM000219 — eeg dataset, 18 subjects">NM000219</a></td>
       <td>Reichert2020</td>
       <td>BNCI2020, BNCI2020_002_AttentionShift, BNCI2020_002_CovertSpatialAttention</td>
       <td>nemar</td>
@@ -11473,7 +11473,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.6%;" title="1023.6 MB — larger than 17% of datasets" aria-label="1023.6 MB — larger than 17% of datasets"><span class="sparkbar-label">1023.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000221.html" title="NM000221 — eeg dataset, 19 subjects">NM000221</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000221.html" title="NM000221 — eeg dataset, 19 subjects">NM000221</a></td>
       <td>Cattan2017</td>
       <td>Alphawaves, Rodrigues2017, AlphaWaves</td>
       <td>nemar</td>
@@ -11490,7 +11490,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:61.1%;" title="81.7 MB — larger than 4% of datasets" aria-label="81.7 MB — larger than 4% of datasets"><span class="sparkbar-label">81.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000222.html" title="NM000222 — eeg dataset, 10 subjects">NM000222</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000222.html" title="NM000222 — eeg dataset, 10 subjects">NM000222</a></td>
       <td>Lee2024_Air_conditioner_control</td>
       <td></td>
       <td>nemar</td>
@@ -11507,7 +11507,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.5%;" title="415.3 MB — larger than 9% of datasets" aria-label="415.3 MB — larger than 9% of datasets"><span class="sparkbar-label">415.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000223.html" title="NM000223 — eeg dataset, 15 subjects">NM000223</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000223.html" title="NM000223 — eeg dataset, 15 subjects">NM000223</a></td>
       <td>Lee2024_Electric_light_control</td>
       <td></td>
       <td>nemar</td>
@@ -11524,7 +11524,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.0%;" title="632.4 MB — larger than 13% of datasets" aria-label="632.4 MB — larger than 13% of datasets"><span class="sparkbar-label">632.4 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000225.html" title="NM000225 — eeg dataset, 1983 subjects">NM000225</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000225.html" title="NM000225 — eeg dataset, 1983 subjects">NM000225</a></td>
       <td>Ghassemi2018</td>
       <td></td>
       <td>nemar</td>
@@ -11541,7 +11541,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:89.6%;" title="401.1 GB — larger than 98% of datasets" aria-label="401.1 GB — larger than 98% of datasets"><span class="sparkbar-label">401.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000226.html" title="NM000226 — eeg dataset, 4 subjects">NM000226</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000226.html" title="NM000226 — eeg dataset, 4 subjects">NM000226</a></td>
       <td>Zhou2016_226</td>
       <td>Zhou2016_NEMAR</td>
       <td>nemar</td>
@@ -11558,7 +11558,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.4%;" title="528.3 MB — larger than 11% of datasets" aria-label="528.3 MB — larger than 11% of datasets"><span class="sparkbar-label">528.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000227.html" title="NM000227 — eeg dataset, 31 subjects">NM000227</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000227.html" title="NM000227 — eeg dataset, 31 subjects">NM000227</a></td>
       <td>GuttmannFlury2025_Eye</td>
       <td>GuttmannFlury2025_ME</td>
       <td>nemar</td>
@@ -11575,7 +11575,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.8%;" title="4.7 GB — larger than 34% of datasets" aria-label="4.7 GB — larger than 34% of datasets"><span class="sparkbar-label">4.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000228.html" title="NM000228 — eeg dataset, 356 subjects">NM000228</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000228.html" title="NM000228 — eeg dataset, 356 subjects">NM000228</a></td>
       <td>Nieuwland2018</td>
       <td></td>
       <td>nemar</td>
@@ -11592,7 +11592,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.1%;" title="102.7 GB — larger than 89% of datasets" aria-label="102.7 GB — larger than 89% of datasets"><span class="sparkbar-label">102.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000229.html" title="NM000229 — eeg dataset, 29 subjects">NM000229</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000229.html" title="NM000229 — eeg dataset, 29 subjects">NM000229</a></td>
       <td>Gwilliams2023</td>
       <td>MASC_MEG, MEG_MASC</td>
       <td>nemar</td>
@@ -11609,7 +11609,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000230.html" title="NM000230 — eeg dataset, 30 subjects">NM000230</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000230.html" title="NM000230 — eeg dataset, 30 subjects">NM000230</a></td>
       <td>Zuo2025</td>
       <td></td>
       <td>nemar</td>
@@ -11626,7 +11626,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.4%;" title="5.8 GB — larger than 37% of datasets" aria-label="5.8 GB — larger than 37% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000231.html" title="NM000231 — eeg dataset, 8 subjects">NM000231</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000231.html" title="NM000231 — eeg dataset, 8 subjects">NM000231</a></td>
       <td>Hoffmann2008</td>
       <td>EPFLP300, EPFL_P300, EPFLP300Dataset</td>
       <td>nemar</td>
@@ -11643,7 +11643,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.8%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000232.html" title="NM000232 — eeg dataset, 10 subjects">NM000232</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000232.html" title="NM000232 — eeg dataset, 10 subjects">NM000232</a></td>
       <td>Gifford2019</td>
       <td></td>
       <td>nemar</td>
@@ -11660,7 +11660,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:87.4%;" title="203.9 GB — larger than 95% of datasets" aria-label="203.9 GB — larger than 95% of datasets"><span class="sparkbar-label">203.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000234.html" title="NM000234 — eeg dataset, 21 subjects">NM000234</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000234.html" title="NM000234 — eeg dataset, 21 subjects">NM000234</a></td>
       <td>Schreuder2015_ERP</td>
       <td>BNCI2015_ERP</td>
       <td>nemar</td>
@@ -11677,7 +11677,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.7%;" title="4.6 GB — larger than 34% of datasets" aria-label="4.6 GB — larger than 34% of datasets"><span class="sparkbar-label">4.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000235.html" title="NM000235 — eeg dataset, 31 subjects">NM000235</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000235.html" title="NM000235 — eeg dataset, 31 subjects">NM000235</a></td>
       <td>GuttmannFlury2025_Eye_BCI</td>
       <td>GuttmannFlury2025_MIME</td>
       <td>nemar</td>
@@ -11694,7 +11694,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.7%;" title="4.6 GB — larger than 34% of datasets" aria-label="4.6 GB — larger than 34% of datasets"><span class="sparkbar-label">4.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000236.html" title="NM000236 — eeg dataset, 21 subjects">NM000236</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000236.html" title="NM000236 — eeg dataset, 21 subjects">NM000236</a></td>
       <td>Cattan2019_P300</td>
       <td></td>
       <td>nemar</td>
@@ -11711,7 +11711,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.2%;" title="373.3 MB — larger than 9% of datasets" aria-label="373.3 MB — larger than 9% of datasets"><span class="sparkbar-label">373.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000237.html" title="NM000237 — eeg dataset, 20 subjects">NM000237</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000237.html" title="NM000237 — eeg dataset, 20 subjects">NM000237</a></td>
       <td>Zhou2021</td>
       <td></td>
       <td>nemar</td>
@@ -11728,7 +11728,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:78.8%;" title="16.0 GB — larger than 57% of datasets" aria-label="16.0 GB — larger than 57% of datasets"><span class="sparkbar-label">16.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000238.html" title="NM000238 — eeg dataset, 87 subjects">NM000238</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000238.html" title="NM000238 — eeg dataset, 87 subjects">NM000238</a></td>
       <td>Accou2024</td>
       <td></td>
       <td>nemar</td>
@@ -11745,7 +11745,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000239.html" title="NM000239 — eeg dataset, 16 subjects">NM000239</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000239.html" title="NM000239 — eeg dataset, 16 subjects">NM000239</a></td>
       <td>MartinezCagigal2023</td>
       <td></td>
       <td>nemar</td>
@@ -11762,7 +11762,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.7%;" title="783.0 MB — larger than 16% of datasets" aria-label="783.0 MB — larger than 16% of datasets"><span class="sparkbar-label">783.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000240.html" title="NM000240 — eeg dataset, 16 subjects">NM000240</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000240.html" title="NM000240 — eeg dataset, 16 subjects">NM000240</a></td>
       <td>FernandezRodriguez2025</td>
       <td>FernandezRodriguez2023</td>
       <td>nemar</td>
@@ -11779,7 +11779,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.0%;" title="637.7 MB — larger than 13% of datasets" aria-label="637.7 MB — larger than 13% of datasets"><span class="sparkbar-label">637.7 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000241.html" title="NM000241 — ieeg dataset, 2 subjects">NM000241</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000241.html" title="NM000241 — ieeg dataset, 2 subjects">NM000241</a></td>
       <td>Zhang2019</td>
       <td></td>
       <td>nemar</td>
@@ -11796,7 +11796,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 23% of datasets" aria-label="1.9 GB — larger than 23% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000242.html" title="NM000242 — eeg dataset, 22 subjects">NM000242</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000242.html" title="NM000242 — eeg dataset, 22 subjects">NM000242</a></td>
       <td>Gao2026_Visual_imagery_et</td>
       <td>Gao2026</td>
       <td>nemar</td>
@@ -11813,7 +11813,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.1%;" title="31.7 GB — larger than 70% of datasets" aria-label="31.7 GB — larger than 70% of datasets"><span class="sparkbar-label">31.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000243.html" title="NM000243 — eeg dataset, 15 subjects">NM000243</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000243.html" title="NM000243 — eeg dataset, 15 subjects">NM000243</a></td>
       <td>Haufe2016</td>
       <td>BNCI2016, BNCI2016002</td>
       <td>nemar</td>
@@ -11830,7 +11830,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:74.2%;" title="4.0 GB — larger than 32% of datasets" aria-label="4.0 GB — larger than 32% of datasets"><span class="sparkbar-label">4.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000244.html" title="NM000244 — eeg dataset, 64 subjects">NM000244</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000244.html" title="NM000244 — eeg dataset, 64 subjects">NM000244</a></td>
       <td>Korczowski2014_P300_BI2014a</td>
       <td>BrainInvaders2014a, BI2014a</td>
       <td>nemar</td>
@@ -11847,7 +11847,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000245.html" title="NM000245 — eeg dataset, 52 subjects">NM000245</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000245.html" title="NM000245 — eeg dataset, 52 subjects">NM000245</a></td>
       <td>Cho2017</td>
       <td></td>
       <td>nemar</td>
@@ -11864,7 +11864,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.0%;" title="6.7 GB — larger than 40% of datasets" aria-label="6.7 GB — larger than 40% of datasets"><span class="sparkbar-label">6.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000246.html" title="NM000246 — eeg dataset, 51 subjects">NM000246</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000246.html" title="NM000246 — eeg dataset, 51 subjects">NM000246</a></td>
       <td>Yang2025_Multi</td>
       <td>WBCIC_SHU, WBCICSHU</td>
       <td>nemar</td>
@@ -11881,7 +11881,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.2%;" title="58.4 GB — larger than 80% of datasets" aria-label="58.4 GB — larger than 80% of datasets"><span class="sparkbar-label">58.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000247.html" title="NM000247 — eeg dataset, 10 subjects">NM000247</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000247.html" title="NM000247 — eeg dataset, 10 subjects">NM000247</a></td>
       <td>Mainsah2025_BigP3BCI_S1</td>
       <td>BigP3BCI_StudyS1, BigP3BCI_S1</td>
       <td>nemar</td>
@@ -11898,7 +11898,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:67.0%;" title="477.9 MB — larger than 11% of datasets" aria-label="477.9 MB — larger than 11% of datasets"><span class="sparkbar-label">477.9 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000248.html" title="NM000248 — eeg dataset, 11 subjects">NM000248</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000248.html" title="NM000248 — eeg dataset, 11 subjects">NM000248</a></td>
       <td>Mainsah2025_BigP3BCI_L</td>
       <td></td>
       <td>nemar</td>
@@ -11915,7 +11915,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.7%;" title="780.5 MB — larger than 16% of datasets" aria-label="780.5 MB — larger than 16% of datasets"><span class="sparkbar-label">780.5 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000249.html" title="NM000249 — eeg dataset, 13 subjects">NM000249</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000249.html" title="NM000249 — eeg dataset, 13 subjects">NM000249</a></td>
       <td>Jao2022</td>
       <td>Jao2020</td>
       <td>nemar</td>
@@ -11932,7 +11932,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.2%;" title="3.0 GB — larger than 28% of datasets" aria-label="3.0 GB — larger than 28% of datasets"><span class="sparkbar-label">3.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000250.html" title="NM000250 — eeg dataset, 87 subjects">NM000250</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000250.html" title="NM000250 — eeg dataset, 87 subjects">NM000250</a></td>
       <td>Dreyer2023</td>
       <td></td>
       <td>nemar</td>
@@ -11949,7 +11949,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.9%;" title="8.8 GB — larger than 45% of datasets" aria-label="8.8 GB — larger than 45% of datasets"><span class="sparkbar-label">8.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000251.html" title="NM000251 — ieeg dataset, 1 subjects">NM000251</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000251.html" title="NM000251 — ieeg dataset, 1 subjects">NM000251</a></td>
       <td>He2025</td>
       <td></td>
       <td>nemar</td>
@@ -11966,7 +11966,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000253.html" title="NM000253 — ieeg dataset, 10 subjects">NM000253</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000253.html" title="NM000253 — ieeg dataset, 10 subjects">NM000253</a></td>
       <td>Wang2024_et_al_Brain</td>
       <td>BrainTreeBank</td>
       <td>nemar</td>
@@ -11983,7 +11983,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.1%;" title="257.3 GB — larger than 97% of datasets" aria-label="257.3 GB — larger than 97% of datasets"><span class="sparkbar-label">257.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000254.html" title="NM000254 — eeg dataset, 22 subjects">NM000254</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000254.html" title="NM000254 — eeg dataset, 22 subjects">NM000254</a></td>
       <td>Telesford2024</td>
       <td></td>
       <td>nemar</td>
@@ -12000,7 +12000,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:88.1%;" title="256.0 GB — larger than 97% of datasets" aria-label="256.0 GB — larger than 97% of datasets"><span class="sparkbar-label">256.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000255.html" title="NM000255 — eeg dataset, 30 subjects">NM000255</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000255.html" title="NM000255 — eeg dataset, 30 subjects">NM000255</a></td>
       <td>Madsen2024_E2</td>
       <td></td>
       <td>nemar</td>
@@ -12017,7 +12017,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.1%;" title="5.3 GB — larger than 36% of datasets" aria-label="5.3 GB — larger than 36% of datasets"><span class="sparkbar-label">5.3 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000256.html" title="NM000256 — eeg dataset, 29 subjects">NM000256</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000256.html" title="NM000256 — eeg dataset, 29 subjects">NM000256</a></td>
       <td>Madsen2024_E3</td>
       <td></td>
       <td>nemar</td>
@@ -12034,7 +12034,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:76.3%;" title="7.5 GB — larger than 41% of datasets" aria-label="7.5 GB — larger than 41% of datasets"><span class="sparkbar-label">7.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000259.html" title="NM000259 — eeg dataset, 10 subjects">NM000259</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000259.html" title="NM000259 — eeg dataset, 10 subjects">NM000259</a></td>
       <td>Speier2017</td>
       <td></td>
       <td>nemar</td>
@@ -12051,7 +12051,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.3%;" title="290.2 MB — larger than 7% of datasets" aria-label="290.2 MB — larger than 7% of datasets"><span class="sparkbar-label">290.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000260.html" title="NM000260 — eeg dataset, 23 subjects">NM000260</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000260.html" title="NM000260 — eeg dataset, 23 subjects">NM000260</a></td>
       <td>BrainInvaders2012</td>
       <td>BI2012, BrainInvaders</td>
       <td>nemar</td>
@@ -12068,7 +12068,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.5%;" title="164.8 MB — larger than 5% of datasets" aria-label="164.8 MB — larger than 5% of datasets"><span class="sparkbar-label">164.8 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000264.html" title="NM000264 — eeg dataset, 24 subjects">NM000264</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000264.html" title="NM000264 — eeg dataset, 24 subjects">NM000264</a></td>
       <td>BrainInvaders2013</td>
       <td>BrainInvaders2013a, BI2013a</td>
       <td>nemar</td>
@@ -12085,7 +12085,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.4%;" title="1.7 GB — larger than 23% of datasets" aria-label="1.7 GB — larger than 23% of datasets"><span class="sparkbar-label">1.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000265.html" title="NM000265 — eeg dataset, 31 subjects">NM000265</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000265.html" title="NM000265 — eeg dataset, 31 subjects">NM000265</a></td>
       <td>GuttmannFlury2025_MI</td>
       <td></td>
       <td>nemar</td>
@@ -12102,7 +12102,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:77.0%;" title="9.2 GB — larger than 46% of datasets" aria-label="9.2 GB — larger than 46% of datasets"><span class="sparkbar-label">9.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000266.html" title="NM000266 — eeg dataset, 13 subjects">NM000266</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000266.html" title="NM000266 — eeg dataset, 13 subjects">NM000266</a></td>
       <td>Sosulski2019</td>
       <td></td>
       <td>nemar</td>
@@ -12119,7 +12119,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:73.9%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000267.html" title="NM000267 — eeg dataset, 29 subjects">NM000267</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000267.html" title="NM000267 — eeg dataset, 29 subjects">NM000267</a></td>
       <td>Shin2017_Shin2017A</td>
       <td>Shin2017A</td>
       <td>nemar</td>
@@ -12136,7 +12136,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000268.html" title="NM000268 — eeg dataset, 29 subjects">NM000268</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000268.html" title="NM000268 — eeg dataset, 29 subjects">NM000268</a></td>
       <td>Shin2017_Shin2017B</td>
       <td>Shin2017B</td>
       <td>nemar</td>
@@ -12153,7 +12153,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 23% of datasets" aria-label="1.9 GB — larger than 23% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000270.html" title="NM000270 — eeg dataset, 27 subjects">NM000270</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000270.html" title="NM000270 — eeg dataset, 27 subjects">NM000270</a></td>
       <td>Liu2025</td>
       <td></td>
       <td>nemar</td>
@@ -12170,7 +12170,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000271.html" title="NM000271 — eeg dataset, 28 subjects">NM000271</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000271.html" title="NM000271 — eeg dataset, 28 subjects">NM000271</a></td>
       <td>Chang2025_2</td>
       <td>Chang2025</td>
       <td>nemar</td>
@@ -12187,7 +12187,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000272.html" title="NM000272 — eeg dataset, 22 subjects">NM000272</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000272.html" title="NM000272 — eeg dataset, 22 subjects">NM000272</a></td>
       <td>Romani2025_BF_ERP</td>
       <td>Romani2025_erp</td>
       <td>nemar</td>
@@ -12204,7 +12204,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000277.html" title="NM000277 — eeg dataset, 20 subjects">NM000277</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000277.html" title="NM000277 — eeg dataset, 20 subjects">NM000277</a></td>
       <td>Mainsah2025_G</td>
       <td>BigP3BCI_G, BigP3BCI_StudyG</td>
       <td>nemar</td>
@@ -12221,7 +12221,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:65.8%;" title="333.2 MB — larger than 8% of datasets" aria-label="333.2 MB — larger than 8% of datasets"><span class="sparkbar-label">333.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000301.html" title="NM000301 — eeg dataset, 17 subjects">NM000301</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000301.html" title="NM000301 — eeg dataset, 17 subjects">NM000301</a></td>
       <td>Mainsah2025_D</td>
       <td></td>
       <td>nemar</td>
@@ -12238,7 +12238,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:68.5%;" title="738.1 MB — larger than 15% of datasets" aria-label="738.1 MB — larger than 15% of datasets"><span class="sparkbar-label">738.1 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000303.html" title="NM000303 — eeg dataset, 18 subjects">NM000303</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000303.html" title="NM000303 — eeg dataset, 18 subjects">NM000303</a></td>
       <td>Mainsah2025_O</td>
       <td></td>
       <td>nemar</td>
@@ -12255,7 +12255,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.5%;" title="992.2 MB — larger than 17% of datasets" aria-label="992.2 MB — larger than 17% of datasets"><span class="sparkbar-label">992.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000310.html" title="NM000310 — eeg dataset, 11 subjects">NM000310</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000310.html" title="NM000310 — eeg dataset, 11 subjects">NM000310</a></td>
       <td>GuttmannFlury2025_SSVEP</td>
       <td></td>
       <td>nemar</td>
@@ -12272,7 +12272,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.0%;" title="2.1 GB — larger than 25% of datasets" aria-label="2.1 GB — larger than 25% of datasets"><span class="sparkbar-label">2.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000311.html" title="NM000311 — eeg dataset, 25 subjects">NM000311</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000311.html" title="NM000311 — eeg dataset, 25 subjects">NM000311</a></td>
       <td>Jeong2020</td>
       <td></td>
       <td>nemar</td>
@@ -12289,7 +12289,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:84.6%;" title="88.6 GB — larger than 87% of datasets" aria-label="88.6 GB — larger than 87% of datasets"><span class="sparkbar-label">88.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000313.html" title="NM000313 — eeg dataset, 24 subjects">NM000313</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000313.html" title="NM000313 — eeg dataset, 24 subjects">NM000313</a></td>
       <td>Mainsah2025_S2</td>
       <td></td>
       <td>nemar</td>
@@ -12306,7 +12306,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.9%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000321.html" title="NM000321 — eeg dataset, 36 subjects">NM000321</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000321.html" title="NM000321 — eeg dataset, 36 subjects">NM000321</a></td>
       <td>Mainsah2025_Q</td>
       <td></td>
       <td>nemar</td>
@@ -12323,7 +12323,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:69.9%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000323.html" title="NM000323 — eeg dataset, 54 subjects">NM000323</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000323.html" title="NM000323 — eeg dataset, 54 subjects">NM000323</a></td>
       <td>Lee2019_ERP</td>
       <td>OpenBMI_ERP, OpenBMI_P300</td>
       <td>nemar</td>
@@ -12340,7 +12340,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.8%;" title="38.6 GB — larger than 73% of datasets" aria-label="38.6 GB — larger than 73% of datasets"><span class="sparkbar-label">38.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000326.html" title="NM000326 — eeg dataset, 19 subjects">NM000326</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000326.html" title="NM000326 — eeg dataset, 19 subjects">NM000326</a></td>
       <td>Mainsah2025_C</td>
       <td></td>
       <td>nemar</td>
@@ -12357,7 +12357,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.3%;" title="1.2 GB — larger than 20% of datasets" aria-label="1.2 GB — larger than 20% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000329.html" title="NM000329 — eeg dataset, 16 subjects">NM000329</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000329.html" title="NM000329 — eeg dataset, 16 subjects">NM000329</a></td>
       <td>Brandl2020</td>
       <td></td>
       <td>nemar</td>
@@ -12374,7 +12374,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.4%;" title="61.6 GB — larger than 82% of datasets" aria-label="61.6 GB — larger than 82% of datasets"><span class="sparkbar-label">61.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000336.html" title="NM000336 — eeg dataset, 20 subjects">NM000336</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000336.html" title="NM000336 — eeg dataset, 20 subjects">NM000336</a></td>
       <td>Mainsah2025_R</td>
       <td></td>
       <td>nemar</td>
@@ -12391,7 +12391,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.8%;" title="2.0 GB — larger than 24% of datasets" aria-label="2.0 GB — larger than 24% of datasets"><span class="sparkbar-label">2.0 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000338.html" title="NM000338 — eeg dataset, 54 subjects">NM000338</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000338.html" title="NM000338 — eeg dataset, 54 subjects">NM000338</a></td>
       <td>Lee2019_MI</td>
       <td>OpenBMI_MI</td>
       <td>nemar</td>
@@ -12408,7 +12408,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.3%;" title="60.8 GB — larger than 81% of datasets" aria-label="60.8 GB — larger than 81% of datasets"><span class="sparkbar-label">60.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000339.html" title="NM000339 — eeg dataset, 62 subjects">NM000339</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000339.html" title="NM000339 — eeg dataset, 62 subjects">NM000339</a></td>
       <td>Stieger2021</td>
       <td></td>
       <td>nemar</td>
@@ -12425,7 +12425,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:89.4%;" title="371.5 GB — larger than 98% of datasets" aria-label="371.5 GB — larger than 98% of datasets"><span class="sparkbar-label">371.5 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000340.html" title="NM000340 — eeg dataset, 20 subjects">NM000340</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000340.html" title="NM000340 — eeg dataset, 20 subjects">NM000340</a></td>
       <td>Mainsah2025_J</td>
       <td></td>
       <td>nemar</td>
@@ -12442,7 +12442,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.7%;" title="433.6 MB — larger than 10% of datasets" aria-label="433.6 MB — larger than 10% of datasets"><span class="sparkbar-label">433.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000341.html" title="NM000341 — eeg dataset, 12 subjects">NM000341</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000341.html" title="NM000341 — eeg dataset, 12 subjects">NM000341</a></td>
       <td>Cattan2019_PHMD</td>
       <td></td>
       <td>nemar</td>
@@ -12459,7 +12459,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:64.6%;" title="231.3 MB — larger than 6% of datasets" aria-label="231.3 MB — larger than 6% of datasets"><span class="sparkbar-label">231.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000342.html" title="NM000342 — eeg dataset, 12 subjects">NM000342</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000342.html" title="NM000342 — eeg dataset, 12 subjects">NM000342</a></td>
       <td>Castillos2023_CastillosCVEP40</td>
       <td>CastillosCVEP40</td>
       <td>nemar</td>
@@ -12476,7 +12476,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.0%;" title="145.3 MB — larger than 5% of datasets" aria-label="145.3 MB — larger than 5% of datasets"><span class="sparkbar-label">145.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000343.html" title="NM000343 — eeg dataset, 15 subjects">NM000343</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000343.html" title="NM000343 — eeg dataset, 15 subjects">NM000343</a></td>
       <td>Hinss2021</td>
       <td>Hinss2021_v2</td>
       <td>nemar</td>
@@ -12493,7 +12493,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000344.html" title="NM000344 — eeg dataset, 12 subjects">NM000344</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000344.html" title="NM000344 — eeg dataset, 12 subjects">NM000344</a></td>
       <td>Castillos2023_CastillosBurstVEP100</td>
       <td></td>
       <td>nemar</td>
@@ -12510,7 +12510,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.1%;" title="150.0 MB — larger than 5% of datasets" aria-label="150.0 MB — larger than 5% of datasets"><span class="sparkbar-label">150.0 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000345.html" title="NM000345 — eeg dataset, 12 subjects">NM000345</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000345.html" title="NM000345 — eeg dataset, 12 subjects">NM000345</a></td>
       <td>Castillos2023_CastillosBurstVEP40</td>
       <td></td>
       <td>nemar</td>
@@ -12527,7 +12527,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.0%;" title="144.2 MB — larger than 4% of datasets" aria-label="144.2 MB — larger than 4% of datasets"><span class="sparkbar-label">144.2 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000346.html" title="NM000346 — eeg dataset, 12 subjects">NM000346</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000346.html" title="NM000346 — eeg dataset, 12 subjects">NM000346</a></td>
       <td>Castillos2023_CastillosCVEP100</td>
       <td></td>
       <td>nemar</td>
@@ -12544,7 +12544,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:63.2%;" title="150.6 MB — larger than 5% of datasets" aria-label="150.6 MB — larger than 5% of datasets"><span class="sparkbar-label">150.6 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000347.html" title="NM000347 — eeg dataset, 37 subjects">NM000347</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000347.html" title="NM000347 — eeg dataset, 37 subjects">NM000347</a></td>
       <td>HefmiIch2025</td>
       <td>HEFMI_ICH, HEFMIICH</td>
       <td>nemar</td>
@@ -12561,7 +12561,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:72.7%;" title="2.6 GB — larger than 26% of datasets" aria-label="2.6 GB — larger than 26% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000348.html" title="NM000348 — eeg dataset, 51 subjects">NM000348</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000348.html" title="NM000348 — eeg dataset, 51 subjects">NM000348</a></td>
       <td>Yang2025</td>
       <td></td>
       <td>nemar</td>
@@ -12578,7 +12578,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:83.4%;" title="63.4 GB — larger than 82% of datasets" aria-label="63.4 GB — larger than 82% of datasets"><span class="sparkbar-label">63.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="api/dataset/eegdash.dataset.NM000351.html" title="NM000351 — eeg dataset, 19 subjects">NM000351</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000351.html" title="NM000351 — eeg dataset, 19 subjects">NM000351</a></td>
       <td>Mainsah2025_P</td>
       <td></td>
       <td>nemar</td>

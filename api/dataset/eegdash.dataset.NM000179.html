@@ -49,7 +49,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=448230d6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=69c1df42" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
@@ -79,28 +79,68 @@
   <meta name="docsearch:version" content="0.6" />
 
   
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
   <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
   <link rel="preconnect" href="https://code.jquery.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
 
   
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eegdash.org/"},{"@type":"ListItem","position":2,"name":"Datasets","item":"https://eegdash.org/api/dataset/api_dataset.html"},{"@type":"ListItem","position":3,"name":"NM000179"}]}</script>
 
   
   <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
   <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
   <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
   <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
 
   
 
-  <!-- Google Tag Manager -->
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
   <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+      } else {
+        document.addEventListener('DOMContentLoaded', function(){
+          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        });
+      }
+    })();
   </script>
   <!-- End Google Tag Manager -->
 
@@ -260,8 +300,7 @@
           
           
           
-          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
         </li>
         <li class="nav-item">
           
@@ -272,8 +311,7 @@
           
           
           
-          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">PyPI</span></a>
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
         </li>
         <li class="nav-item">
           
@@ -284,8 +322,7 @@
           
           
           
-          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Discord</span></a>
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
         </li>
 </ul></div>
       
@@ -401,8 +438,7 @@
           
           
           
-          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
         </li>
         <li class="nav-item">
           
@@ -413,8 +449,7 @@
           
           
           
-          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">PyPI</span></a>
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
         </li>
         <li class="nav-item">
           
@@ -425,8 +460,7 @@
           
           
           
-          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Discord</span></a>
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
         </li>
 </ul></div>
         
@@ -718,7 +752,7 @@
                   
   <section id="nm000179-eeg-dataset-215-subjects">
 <h1>NM000179: eeg dataset, 215 subjects<a class="headerlink" href="#nm000179-eeg-dataset-215-subjects" title="Link to this heading">#</a></h1>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)","alternateName":"NM000179","description":"LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). eeg dataset accessible via EEGDash as ``NM000179`` with standardized BIDS metadata.","url":"https://eegdash.org/api/dataset/eegdash.dataset.NM000179.html","keywords":["eeg","BIDS","neuroscience","EEG","MEG"],"isAccessibleForFree":true,"includedInDataCatalog":{"@type":"DataCatalog","name":"EEG Dash","url":"https://eegdash.org/"},"identifier":"doi:10.1038/sdata.2018.308","sameAs":["https://doi.org/10.1038/sdata.2018.308","https://openneuro.org/datasets/nm000179","https://nemar.org/dataexplorer/detail?dataset_id=nm000179","https://nemar.org/dataexplorer/detail/nm000179"],"creator":[{"@type":"Person","name":"Anahit Babayan"},{"@type":"Person","name":"Miray Erbey"},{"@type":"Person","name":"Deniz Kumral"},{"@type":"Person","name":"Janis D. Reinelt"},{"@type":"Person","name":"Andrea M.F. Reiter"},{"@type":"Person","name":"Josefin Röbbig"},{"@type":"Person","name":"H. Lina Schaare"},{"@type":"Person","name":"Marie Uhlig"},{"@type":"Person","name":"Alfred Anwander"},{"@type":"Person","name":"Pierre-Louis Bazin"},{"@type":"Person","name":"Annette Horstmann"},{"@type":"Person","name":"Leonie Lampe"},{"@type":"Person","name":"Vadim V. Nikulin"},{"@type":"Person","name":"Hadas Okon-Singer"},{"@type":"Person","name":"Sven Preusser"},{"@type":"Person","name":"Andre Pampel"},{"@type":"Person","name":"Christiane S. Rohr"},{"@type":"Person","name":"Julia Sacher"},{"@type":"Person","name":"Angelika Thone-Otto"},{"@type":"Person","name":"Sabrina Trapp"},{"@type":"Person","name":"Till Nierhaus"},{"@type":"Person","name":"Denise Altmann"},{"@type":"Person","name":"Katrin Arelin"},{"@type":"Person","name":"Maria Blochl"},{"@type":"Person","name":"Edith Bongartz"},{"@type":"Person","name":"Patric Breig"},{"@type":"Person","name":"Elena Cesnaite"},{"@type":"Person","name":"Sufang Chen"},{"@type":"Person","name":"Roberto Cozatl"},{"@type":"Person","name":"Saskia Czerwonatis"},{"@type":"Person","name":"Gabriele Dambrauskaite"},{"@type":"Person","name":"Maria Dreyer"},{"@type":"Person","name":"Jessica Enders"},{"@type":"Person","name":"Melina Engelhardt"},{"@type":"Person","name":"Marie Michele Fischer"},{"@type":"Person","name":"Norman Forschack"},{"@type":"Person","name":"Johannes Golchert"},{"@type":"Person","name":"Laura Golz"},{"@type":"Person","name":"C. Alexandrina Guran"},{"@type":"Person","name":"Susanna Hedrich"},{"@type":"Person","name":"Nicole Hentschel"},{"@type":"Person","name":"Daria I. Hoffmann"},{"@type":"Person","name":"Julia M. Huntenburg"},{"@type":"Person","name":"Rebecca Jost"},{"@type":"Person","name":"Anna Kosatschek"},{"@type":"Person","name":"Stella Kunzendorf"},{"@type":"Person","name":"Hannah Lammers"},{"@type":"Person","name":"Mark E. Lauckner"},{"@type":"Person","name":"Keyvan Mahjoory"},{"@type":"Person","name":"Natacha Mendes"},{"@type":"Person","name":"Ramona Menger"},{"@type":"Person","name":"Enzo Morino"},{"@type":"Person","name":"Karina Nathe"},{"@type":"Person","name":"Jennifer Neubauer"},{"@type":"Person","name":"Handan Noyan"},{"@type":"Person","name":"Sabine Oligschlager"},{"@type":"Person","name":"Patricia Panczyszyn-Trzewik"},{"@type":"Person","name":"Dorothee Poehlchen"},{"@type":"Person","name":"Nadine Putzke"},{"@type":"Person","name":"Sabrina Roski"},{"@type":"Person","name":"Marie-Catherine Schaller"},{"@type":"Person","name":"Anja Schieferbein"},{"@type":"Person","name":"Benito Schlaak"},{"@type":"Person","name":"Hanna Maria Schmidt"},{"@type":"Person","name":"Robert Schmidt"},{"@type":"Person","name":"Anne Schrimpf"},{"@type":"Person","name":"Sylvia Stasch"},{"@type":"Person","name":"Maria Voss"},{"@type":"Person","name":"Anett Wiedemann"},{"@type":"Person","name":"Daniel S. Margulies"},{"@type":"Person","name":"Michael Gaebler"},{"@type":"Person","name":"Arno Villringer"}],"license":"CC BY 4.0","datePublished":"2019"}</script><p><em>LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)</em></p>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)","alternateName":"NM000179","description":"LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). eeg dataset accessible via EEGDash as ``NM000179`` with standardized BIDS metadata.","url":"https://eegdash.org/api/dataset/eegdash.dataset.NM000179.html","keywords":["eeg","BIDS","neuroscience","EEG","MEG"],"isAccessibleForFree":true,"includedInDataCatalog":{"@type":"DataCatalog","name":"EEG Dash","url":"https://eegdash.org/"},"identifier":"doi:10.1038/sdata.2018.308","sameAs":["https://doi.org/10.1038/sdata.2018.308","https://openneuro.org/datasets/nm000179","https://nemar.org/dataexplorer/detail?dataset_id=nm000179","https://nemar.org/dataexplorer/detail/nm000179"],"creator":[{"@type":"Person","name":"Anahit Babayan"},{"@type":"Person","name":"Miray Erbey"},{"@type":"Person","name":"Deniz Kumral"},{"@type":"Person","name":"Janis D. Reinelt"},{"@type":"Person","name":"Andrea M.F. Reiter"},{"@type":"Person","name":"Josefin Röbbig"},{"@type":"Person","name":"H. Lina Schaare"},{"@type":"Person","name":"Marie Uhlig"},{"@type":"Person","name":"Alfred Anwander"},{"@type":"Person","name":"Pierre-Louis Bazin"},{"@type":"Person","name":"Annette Horstmann"},{"@type":"Person","name":"Leonie Lampe"},{"@type":"Person","name":"Vadim V. Nikulin"},{"@type":"Person","name":"Hadas Okon-Singer"},{"@type":"Person","name":"Sven Preusser"},{"@type":"Person","name":"Andre Pampel"},{"@type":"Person","name":"Christiane S. Rohr"},{"@type":"Person","name":"Julia Sacher"},{"@type":"Person","name":"Angelika Thone-Otto"},{"@type":"Person","name":"Sabrina Trapp"},{"@type":"Person","name":"Till Nierhaus"},{"@type":"Person","name":"Denise Altmann"},{"@type":"Person","name":"Katrin Arelin"},{"@type":"Person","name":"Maria Blochl"},{"@type":"Person","name":"Edith Bongartz"},{"@type":"Person","name":"Patric Breig"},{"@type":"Person","name":"Elena Cesnaite"},{"@type":"Person","name":"Sufang Chen"},{"@type":"Person","name":"Roberto Cozatl"},{"@type":"Person","name":"Saskia Czerwonatis"},{"@type":"Person","name":"Gabriele Dambrauskaite"},{"@type":"Person","name":"Maria Dreyer"},{"@type":"Person","name":"Jessica Enders"},{"@type":"Person","name":"Melina Engelhardt"},{"@type":"Person","name":"Marie Michele Fischer"},{"@type":"Person","name":"Norman Forschack"},{"@type":"Person","name":"Johannes Golchert"},{"@type":"Person","name":"Laura Golz"},{"@type":"Person","name":"C. Alexandrina Guran"},{"@type":"Person","name":"Susanna Hedrich"},{"@type":"Person","name":"Nicole Hentschel"},{"@type":"Person","name":"Daria I. Hoffmann"},{"@type":"Person","name":"Julia M. Huntenburg"},{"@type":"Person","name":"Rebecca Jost"},{"@type":"Person","name":"Anna Kosatschek"},{"@type":"Person","name":"Stella Kunzendorf"},{"@type":"Person","name":"Hannah Lammers"},{"@type":"Person","name":"Mark E. Lauckner"},{"@type":"Person","name":"Keyvan Mahjoory"},{"@type":"Person","name":"Natacha Mendes"},{"@type":"Person","name":"Ramona Menger"},{"@type":"Person","name":"Enzo Morino"},{"@type":"Person","name":"Karina Nathe"},{"@type":"Person","name":"Jennifer Neubauer"},{"@type":"Person","name":"Handan Noyan"},{"@type":"Person","name":"Sabine Oligschlager"},{"@type":"Person","name":"Patricia Panczyszyn-Trzewik"},{"@type":"Person","name":"Dorothee Poehlchen"},{"@type":"Person","name":"Nadine Putzke"},{"@type":"Person","name":"Sabrina Roski"},{"@type":"Person","name":"Marie-Catherine Schaller"},{"@type":"Person","name":"Anja Schieferbein"},{"@type":"Person","name":"Benito Schlaak"},{"@type":"Person","name":"Hanna Maria Schmidt"},{"@type":"Person","name":"Robert Schmidt"},{"@type":"Person","name":"Anne Schrimpf"},{"@type":"Person","name":"Sylvia Stasch"},{"@type":"Person","name":"Maria Voss"},{"@type":"Person","name":"Anett Wiedemann"},{"@type":"Person","name":"Daniel S. Margulies"},{"@type":"Person","name":"Michael Gaebler"},{"@type":"Person","name":"Arno Villringer"}],"license":"https://creativecommons.org/licenses/by/4.0/","datePublished":"2019-01-01"}</script><p><em>LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Anahit Babayan, Miray Erbey, Deniz Kumral, Janis D. Reinelt, Andrea M.F. Reiter, Josefin Röbbig, H. Lina Schaare, Marie Uhlig, Alfred Anwander, Pierre-Louis Bazin, Annette Horstmann, Leonie Lampe, Vadim V. Nikulin, Hadas Okon-Singer, Sven Preusser, Andre Pampel, Christiane S. Rohr, Julia Sacher, Angelika Thone-Otto, Sabrina Trapp, Till Nierhaus, Denise Altmann, Katrin Arelin, Maria Blochl, Edith Bongartz, Patric Breig, Elena Cesnaite, Sufang Chen, Roberto Cozatl, Saskia Czerwonatis, Gabriele Dambrauskaite, Maria Dreyer, Jessica Enders, Melina Engelhardt, Marie Michele Fischer, Norman Forschack, Johannes Golchert, Laura Golz, C. Alexandrina Guran, Susanna Hedrich, Nicole Hentschel, Daria I. Hoffmann, Julia M. Huntenburg, Rebecca Jost, Anna Kosatschek, Stella Kunzendorf, Hannah Lammers, Mark E. Lauckner, Keyvan Mahjoory, Natacha Mendes, Ramona Menger, Enzo Morino, Karina Nathe, Jennifer Neubauer, Handan Noyan, Sabine Oligschlager, Patricia Panczyszyn-Trzewik, Dorothee Poehlchen, Nadine Putzke, Sabrina Roski, Marie-Catherine Schaller, Anja Schieferbein, Benito Schlaak, Hanna Maria Schmidt, Robert Schmidt, Anne Schrimpf, Sylvia Stasch, Maria Voss, Anett Wiedemann, Daniel S. Margulies, Michael Gaebler, Arno Villringer (2019). <em>LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)</em>. <a class="reference external" href="https://doi.org/10.1038/sdata.2018.308">10.1038/sdata.2018.308</a></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 215</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 215</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC BY 4.0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: nemar</span></p>

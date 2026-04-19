@@ -20,9 +20,9 @@ MNE-Python and braindecode.
   </div>
   <div class="hf-search-suggest">
     <span class="hf-suggest-label">Suggested:</span>
-    <a class="hf-suggest-link" data-query="ds004504" href="api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
-    <a class="hf-suggest-link" data-query="ds000117" href="api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
-    <a class="hf-suggest-link" data-query="nm000107" href="api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
+    <a class="hf-suggest-link" data-query="ds004504" href="/api/dataset/eegdash.dataset.DS004504.html">ds004504</a>
+    <a class="hf-suggest-link" data-query="ds000117" href="/api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
+    <a class="hf-suggest-link" data-query="nm000107" href="/api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
   </div>
 </form>
 

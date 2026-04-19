@@ -8,36 +8,38 @@
 
 .. _data_summary:
 
-.. raw:: html
+.. only:: html
 
-   <script>
-     document.documentElement.classList.add('dataset-summary-page');
-     // Augment sphinx-design tabs with ARIA semantics. sphinx-design renders
-     // a <input type="radio"> + <label> pattern where the input is visually
-     // hidden but still tabindex=0, and neither element gets ARIA roles.
-     // Screen readers announce the radios as unlabelled. Wire up role="tab",
-     // aria-label, aria-selected, and the containing tablist role so they're
-     // discoverable as a real tab panel.
-     window.addEventListener('DOMContentLoaded', function () {
-       document.querySelectorAll('.sd-tab-set').forEach(function (set) {
-         set.setAttribute('role', 'tablist');
-         var inputs = set.querySelectorAll('input[type="radio"]');
-         inputs.forEach(function (input) {
-           var label = set.querySelector('label[for="' + input.id + '"]');
-           if (!label) return;
-           var name = label.textContent.trim();
-           input.setAttribute('role', 'tab');
-           input.setAttribute('aria-label', name);
-           input.setAttribute('aria-selected', input.checked ? 'true' : 'false');
-           input.addEventListener('change', function () {
-             inputs.forEach(function (i) {
-               i.setAttribute('aria-selected', i.checked ? 'true' : 'false');
-             });
-           });
-         });
-       });
-     });
-   </script>
+   .. raw:: html
+
+      <script>
+        document.documentElement.classList.add('dataset-summary-page');
+        // Augment sphinx-design tabs with ARIA semantics. sphinx-design renders
+        // a <input type="radio"> + <label> pattern where the input is visually
+        // hidden but still tabindex=0, and neither element gets ARIA roles.
+        // Screen readers announce the radios as unlabelled. Wire up role="tab",
+        // aria-label, aria-selected, and the containing tablist role so they're
+        // discoverable as a real tab panel.
+        window.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('.sd-tab-set').forEach(function (set) {
+            set.setAttribute('role', 'tablist');
+            var inputs = set.querySelectorAll('input[type="radio"]');
+            inputs.forEach(function (input) {
+              var label = set.querySelector('label[for="' + input.id + '"]');
+              if (!label) return;
+              var name = label.textContent.trim();
+              input.setAttribute('role', 'tab');
+              input.setAttribute('aria-label', name);
+              input.setAttribute('aria-selected', input.checked ? 'true' : 'false');
+              input.addEventListener('change', function () {
+                inputs.forEach(function (i) {
+                  i.setAttribute('aria-selected', i.checked ? 'true' : 'false');
+                });
+              });
+            });
+          });
+        });
+      </script>
 
 .. rst-class:: dataset-summary-article
 
@@ -84,42 +86,62 @@ To leverage recent and ongoing advancements in large-scale computational methods
         **|modalities_total|**
 
 
-.. raw:: html
+.. only:: html
 
-   <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+   .. raw:: html
 
-.. tab-set::
+      <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
 
-   .. tab-item:: Dataset Table
+   .. tab-set::
 
-      .. include:: dataset_summary/table.rst
+      .. tab-item:: Dataset Table
 
-   .. tab-item:: Participant Distribution
+         .. include:: dataset_summary/table.rst
 
-      .. include:: dataset_summary/kde.rst
+      .. tab-item:: Participant Distribution
 
-   .. tab-item:: Dataset Flow
+         .. include:: dataset_summary/kde.rst
 
-      .. include:: dataset_summary/sankey.rst
+      .. tab-item:: Dataset Flow
 
-   .. tab-item:: Dataset Treemap
+         .. include:: dataset_summary/sankey.rst
 
-      .. include:: dataset_summary/treemap.rst
+      .. tab-item:: Dataset Treemap
 
-   .. tab-item:: Clinical Breakdown
+         .. include:: dataset_summary/treemap.rst
 
-      .. include:: dataset_summary/clinical.rst
+      .. tab-item:: Clinical Breakdown
 
-   .. tab-item:: Dataset Growth
+         .. include:: dataset_summary/clinical.rst
 
-      .. include:: dataset_summary/growth.rst
+      .. tab-item:: Dataset Growth
 
-   .. tab-item:: Dataset Landscape
+         .. include:: dataset_summary/growth.rst
 
-      .. include:: dataset_summary/bubble.rst
+      .. tab-item:: Dataset Landscape
 
-   .. tab-item:: Subject Distribution
+         .. include:: dataset_summary/bubble.rst
 
-      .. include:: dataset_summary/moabb.rst
+      .. tab-item:: Subject Distribution
 
-The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
+         .. include:: dataset_summary/moabb.rst
+
+.. only:: not html
+
+   The catalog is best browsed interactively at
+   `eegdash.org/dataset_summary.html <https://eegdash.org/dataset_summary.html>`__.
+   The same catalog is available programmatically in Python::
+
+       from eegdash import EEGDashDataset
+
+       # List every dataset
+       records = EEGDashDataset.list_datasets()
+
+       # Filter by task, modality, subject count, …
+       rest_datasets = EEGDashDataset.list_datasets(task="rest")
+
+   Or via the HTTP API at ``https://data.eegdash.org``
+   (see the ``/docs`` Swagger UI and the
+   `api catalog </.well-known/api-catalog>`__).
+
+The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.

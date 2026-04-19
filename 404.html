@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — EEGDash</title>
+  <meta name="description" content="The page you're looking for moved or no longer exists. Redirecting you to the closest match in the EEGDash catalog.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://eegdash.org/">
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1.5rem; color: #1e293b; line-height: 1.5; }
+    h1 { color: #006ca3; margin-top: 0; }
+    code { background: #f1f5f9; padding: .1em .3em; border-radius: .2em; }
+    a { color: #006ca3; }
+    .muted { color: #64748b; font-size: .9em; }
+  </style>
+  <script>
+    // Recover the two dominant 404 patterns Ahrefs picked up, at the
+    // 404 level — so stale backlinks auto-redirect to the live page
+    // instead of dead-ending on a generic GitHub-Pages 404.
+    (function () {
+      var p = location.pathname;
+
+      // Pattern 1: /dataset_summary/api/dataset/eegdash.dataset.DSxxx.html
+      //   (relative-href resolution bug on the catalog page — fixed at
+      //   source, but external inbound links already indexed the wrong
+      //   paths).  Rewrite to the root-relative URL.
+      var catalogBug = p.match(/^\/dataset_summary\/(api\/dataset\/eegdash\.dataset\.[A-Za-z0-9_-]+\.html)$/);
+      if (catalogBug) {
+        location.replace('/' + catalogBug[1] + location.search + location.hash);
+        return;
+      }
+
+      // Pattern 2: /api/dataset/eegdash.dataset.NMxxxxxx.html for NEMAR
+      //   datasets that were retired. Land the user on the catalog with
+      //   a pre-populated search so they can find the replacement.
+      var nemar = p.match(/^\/api\/dataset\/eegdash\.dataset\.(NM\d+)\.html$/i);
+      if (nemar) {
+        location.replace('/dataset_summary.html?search=' + encodeURIComponent(nemar[1]));
+        return;
+      }
+
+      // Pattern 3: stale Sphinx source-file links (/_sources/*.rst.txt)
+      //   that don't exist in the current build. Send to the rendered
+      //   HTML sibling if that exists, else the catalog.
+      var sourceTxt = p.match(/^\/_sources\/(.+)\.rst\.txt$/);
+      if (sourceTxt) {
+        location.replace('/' + sourceTxt[1] + '.html');
+        return;
+      }
+    })();
+  </script>
+</head>
+<body>
+  <h1>Page not found</h1>
+  <p>
+    The page at <code id="bad-path"></code> isn't available.
+  </p>
+  <noscript>
+    <p class="muted">You have JavaScript disabled, so we can't redirect you automatically.</p>
+  </noscript>
+  <p>
+    Try one of these:
+  </p>
+  <ul>
+    <li><a href="/">EEGDash home</a></li>
+    <li><a href="/dataset_summary.html">Browse the full dataset catalog</a></li>
+    <li><a href="/user_guide.html">User guide — load data in Python</a></li>
+    <li><a href="/install/install.html">Install EEGDash</a></li>
+    <li><a href="/api/api.html">API reference</a></li>
+  </ul>
+  <p class="muted">
+    If you followed a broken link from another site, please
+    <a href="https://github.com/eegdash/EEGDash/issues/new">open an issue</a>
+    so we can redirect it.
+  </p>
+  <script>
+    document.getElementById('bad-path').textContent = location.pathname + location.search;
+  </script>
+</body>
+</html>

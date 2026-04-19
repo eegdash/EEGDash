@@ -21,29 +21,28 @@ Automated clients: prefer the structured resources listed under
 - [Install from source](https://eegdash.org/install/install_source.html): developer setup.
 - [User guide](https://eegdash.org/user_guide.html): narrative walkthrough of the core workflow.
 
-## Datasets
+## Catalog
 
-- [Dataset summary](https://eegdash.org/dataset_summary.html): interactive catalog of every dataset in EEGDash with counts, modalities, tasks, and links to upstream archives.
-- [Dataset class reference](https://eegdash.org/api/dataset/eegdash.EEGDashDataset.html): the `EEGDashDataset` Python class — filters, lazy loading, BIDS metadata.
-- [Per-dataset adapters](https://eegdash.org/api/dataset/api_dataset.html): registry of dataset-specific adapters.
+- [Dataset summary](https://eegdash.org/dataset_summary.html): interactive catalog of every dataset with counts, modalities, tasks, and links to upstream archives.
 
 ## Python API
 
 - [API overview](https://eegdash.org/api/api.html): top-level entry points.
 - [Core API reference](https://eegdash.org/api/api_core.html): `eegdash.api`, schemas, downloader, HTTP client.
+- [Dataset class reference](https://eegdash.org/api/dataset/eegdash.EEGDashDataset.html): filters, lazy loading, BIDS metadata.
 - [Feature-extraction overview](https://eegdash.org/api/features_overview.html): spectral, connectivity, bivariate, and complexity features.
 - [Features API reference](https://eegdash.org/api/api_features.html): `eegdash.features` module listings.
 
 ## Tutorials and examples
 
+- [All tutorials index](https://eegdash.org/generated/auto_examples/index.html)
 - [Minimal tutorial](https://eegdash.org/generated/auto_examples/core/tutorial_minimal.html): load a dataset and train a tiny model end-to-end.
 - [Eyes-open / eyes-closed tutorial](https://eegdash.org/generated/auto_examples/core/tutorial_eoec.html): classic EEG classification.
 - [P300 transfer learning](https://eegdash.org/generated/auto_examples/core/p300_transfer_learning.html): cross-subject transfer on the P300 paradigm.
 - [Feature extraction on EOEC](https://eegdash.org/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.html): using the feature API on resting-state data.
 - [Age prediction tutorial](https://eegdash.org/generated/auto_examples/tutorials/noplot_tutorial_age_prediction.html): regression from raw EEG.
-- [p-factor regression tutorial](https://eegdash.org/generated/auto_examples/tutorials/noplot_tutorial_pfactor_regression.html): clinical outcome regression.
-- [Auditory oddball tutorial](https://eegdash.org/generated/auto_examples/tutorials/noplot_tutorial_audi_oddball.html): event-related paradigm.
-- [All tutorials index](https://eegdash.org/generated/auto_examples/index.html): full tutorial gallery.
+- [p-factor regression](https://eegdash.org/generated/auto_examples/tutorials/noplot_tutorial_pfactor_regression.html): clinical outcome regression.
+- [Auditory oddball](https://eegdash.org/generated/auto_examples/tutorials/noplot_tutorial_audi_oddball.html): event-related paradigm.
 
 ## Project info
 
@@ -52,8 +51,9 @@ Automated clients: prefer the structured resources listed under
 
 ## Machine-readable
 
-- [Agent Skills manifest](https://eegdash.org/.well-known/agent-skills/index.json): structured list of the skills EEGDash exposes (find datasets, get metadata, load BIDS records, count records, list features).
+- [Agent Skills manifest](https://eegdash.org/.well-known/agent-skills/index.json): structured skills (find datasets, get metadata, load BIDS records, count records, list features).
 - [API catalog (RFC 9727)](https://eegdash.org/.well-known/api-catalog): linkset pointing at the public EEGDash HTTP API.
+- [Full markdown corpus](https://eegdash.org/llms-full.txt): concatenation of every rendered markdown page (larger, for full-corpus retrieval).
 - [OpenAPI specification](https://data.eegdash.org/openapi.json): full OpenAPI 3.1 spec for the `data.eegdash.org` catalog API.
 - [Swagger UI](https://data.eegdash.org/docs) and [ReDoc](https://data.eegdash.org/redoc): human-readable API documentation.
 - [Sitemap](https://eegdash.org/sitemap.xml): every indexable page on this site.
@@ -61,7 +61,22 @@ Automated clients: prefer the structured resources listed under
 
 ## Optional
 
-- [JOSS paper](https://github.com/eegdash/EEGDash#citation): how to cite EEGDash.
 - [BIDS specification](https://bids-specification.readthedocs.io/): the data format EEGDash speaks natively.
 - [MNE-Python](https://mne.tools/): the numerical backbone used by `EEGDashDataset`.
 - [braindecode](https://braindecode.org/): downstream deep-learning library compatible with EEGDash outputs.
+
+## API reference pages (per-module)
+
+
+## Dataset pages (N=6)
+
+Every EEGDash dataset has a dedicated Sphinx page with its BIDS metadata, upstream citation, and load-in-Python snippet. The full interactive catalog lives at <https://eegdash.org/dataset_summary.html>; the list below is what sitemap / agent crawlers should enumerate.
+
+- [base](https://eegdash.org/api/dataset/eegdash.dataset.base.html)
+- [bids_dataset](https://eegdash.org/api/dataset/eegdash.dataset.bids_dataset.html)
+- [dataset](https://eegdash.org/api/dataset/eegdash.dataset.dataset.html)
+- [exceptions](https://eegdash.org/api/dataset/eegdash.dataset.exceptions.html)
+- [io](https://eegdash.org/api/dataset/eegdash.dataset.io.html)
+- [registry](https://eegdash.org/api/dataset/eegdash.dataset.registry.html)
+
+---

@@ -49,7 +49,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=448230d6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=69c1df42" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.css?v=7131b20f" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b44e0256" />
   
@@ -79,28 +79,68 @@
   <meta name="docsearch:version" content="0.6" />
 
   
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
   <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
   <link rel="preconnect" href="https://code.jquery.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
 
   
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eegdash.org/"},{"@type":"ListItem","position":2,"name":"Datasets","item":"https://eegdash.org/api/dataset/api_dataset.html"},{"@type":"ListItem","position":3,"name":"DS004448"}]}</script>
 
   
   <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
   <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
   <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
   <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
 
   
 
-  <!-- Google Tag Manager -->
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
   <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+      } else {
+        document.addEventListener('DOMContentLoaded', function(){
+          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        });
+      }
+    })();
   </script>
   <!-- End Google Tag Manager -->
 
@@ -260,8 +300,7 @@
           
           
           
-          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
         </li>
         <li class="nav-item">
           
@@ -272,8 +311,7 @@
           
           
           
-          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">PyPI</span></a>
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
         </li>
         <li class="nav-item">
           
@@ -284,8 +322,7 @@
           
           
           
-          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Discord</span></a>
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
         </li>
 </ul></div>
       
@@ -401,8 +438,7 @@
           
           
           
-          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
         </li>
         <li class="nav-item">
           
@@ -413,8 +449,7 @@
           
           
           
-          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-box fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">PyPI</span></a>
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
         </li>
         <li class="nav-item">
           
@@ -425,8 +460,7 @@
           
           
           
-          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">Discord</span></a>
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
         </li>
 </ul></div>
         
@@ -1074,7 +1108,7 @@
                   
   <section id="ds004448-eeg-dataset-56-subjects">
 <h1>DS004448: eeg dataset, 56 subjects<a class="headerlink" href="#ds004448-eeg-dataset-56-subjects" title="Link to this heading">#</a></h1>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"The BMI-HDEEG dataset 4","alternateName":"DS004448","description":"The BMI-HDEEG dataset 4. eeg dataset accessible via EEGDash as ``DS004448`` with standardized BIDS metadata.","url":"https://eegdash.org/api/dataset/eegdash.dataset.DS004448.html","keywords":["eeg","BIDS","neuroscience","EEG","MEG"],"isAccessibleForFree":true,"includedInDataCatalog":{"@type":"DataCatalog","name":"EEG Dash","url":"https://eegdash.org/"},"identifier":"doi:10.18112/openneuro.ds004448.v1.0.2","sameAs":["https://doi.org/10.18112/openneuro.ds004448.v1.0.2","https://openneuro.org/datasets/ds004448","https://nemar.org/dataexplorer/detail?dataset_id=ds004448"],"creator":[{"@type":"Person","name":"Seitaro Iwama"},{"@type":"Person","name":"Masumi Morishige"},{"@type":"Person","name":"Yoshikazu Takahashi"},{"@type":"Person","name":"Ryotaro Hirose"},{"@type":"Person","name":"Midori Kodama"},{"@type":"Person","name":"Junichi Ushiba"}],"license":"CC0","datePublished":"2023"}</script><p><em>The BMI-HDEEG dataset 4</em></p>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"The BMI-HDEEG dataset 4","alternateName":"DS004448","description":"The BMI-HDEEG dataset 4. eeg dataset accessible via EEGDash as ``DS004448`` with standardized BIDS metadata.","url":"https://eegdash.org/api/dataset/eegdash.dataset.DS004448.html","keywords":["eeg","BIDS","neuroscience","EEG","MEG"],"isAccessibleForFree":true,"includedInDataCatalog":{"@type":"DataCatalog","name":"EEG Dash","url":"https://eegdash.org/"},"identifier":"doi:10.18112/openneuro.ds004448.v1.0.2","sameAs":["https://doi.org/10.18112/openneuro.ds004448.v1.0.2","https://openneuro.org/datasets/ds004448","https://nemar.org/dataexplorer/detail?dataset_id=ds004448"],"creator":[{"@type":"Person","name":"Seitaro Iwama"},{"@type":"Person","name":"Masumi Morishige"},{"@type":"Person","name":"Yoshikazu Takahashi"},{"@type":"Person","name":"Ryotaro Hirose"},{"@type":"Person","name":"Midori Kodama"},{"@type":"Person","name":"Junichi Ushiba"}],"license":"https://creativecommons.org/publicdomain/zero/1.0/","datePublished":"2023-01-01"}</script><p><em>The BMI-HDEEG dataset 4</em></p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Seitaro Iwama, Masumi Morishige, Yoshikazu Takahashi, Ryotaro Hirose, Midori Kodama, Junichi Ushiba (2023). <em>The BMI-HDEEG dataset 4</em>. <a class="reference external" href="https://doi.org/10.18112/openneuro.ds004448.v1.0.2">10.18112/openneuro.ds004448.v1.0.2</a></p>
 <p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: eeg</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: 56</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: 280</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: CC0</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: openneuro</span> <span class="sd-sphinx-override sd-badge sd-outline-info sd-text-info">Citations: 1.0</span></p>

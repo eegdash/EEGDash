@@ -41,11 +41,22 @@
      markdown index (llmstxt.org), the Agent Skills manifest, and the
      RFC 9727 API catalog so they don't have to guess the well-known
      paths. Cheap to emit on every page and load-bearing for scanners
-     like buildwithfern Agent Score and orank.ai. #}
+     like buildwithfern Agent Score and orank.ai.
+
+     Emit every hint variant we've seen scanners look for — some only
+     parse `rel="llms"`, some only parse `<meta name>`, some only parse
+     `rel="alternate"` + a markdown mime-type. Redundancy is cheaper
+     than a missed detection. #}
   <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
   <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
   <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
   <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
 
   {# Page-specific script gating. Previously jQuery + the full DataTables
      stack + fuse.js + the hero-search bundle were loaded on every page
@@ -75,6 +86,24 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   {{ super() }}
+
+  {# Visible discovery anchor for scanners that only look at rendered
+     text (Fern's sampler in particular). Kept to the footer area and
+     deliberately minimal so it doesn't clutter the human UX. #}
+  <nav aria-label="Agent and LLM resources" class="eegdash-agent-nav"
+       style="margin:2rem auto 1rem;max-width:60em;padding:0 1.5rem;font-size:0.85em;color:var(--pst-color-text-muted,#64748b);text-align:center;">
+    <a href="/llms.txt" rel="llms"
+       style="color:inherit;text-decoration:underline;">llms.txt</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/llms-full.txt" rel="llms-full"
+       style="color:inherit;text-decoration:underline;">llms-full.txt</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/.well-known/agent-skills/index.json"
+       style="color:inherit;text-decoration:underline;">agent skills</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/.well-known/api-catalog"
+       style="color:inherit;text-decoration:underline;">API catalog</a>
+  </nav>
 {% endblock %}
 
 

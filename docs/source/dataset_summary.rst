@@ -128,9 +128,9 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
 .. only:: not html
 
-   The catalog is best browsed interactively at
+   Browse the catalog interactively at
    `eegdash.org/dataset_summary.html <https://eegdash.org/dataset_summary.html>`__.
-   The same catalog is available programmatically in Python::
+   The same data is available programmatically in Python::
 
        from eegdash import EEGDashDataset
 
@@ -144,4 +144,4 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
    (see the ``/docs`` Swagger UI and the
    `api catalog </.well-known/api-catalog>`__).
 
-The archive is currently still in :bdg-danger:`beta testing` mode, so be kind.
+The archive is still in :bdg-danger:`beta testing` mode, so be kind.

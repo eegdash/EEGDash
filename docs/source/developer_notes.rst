@@ -14,8 +14,8 @@ EEGDash package, manage the data ingestion pipeline, or administer supporting se
 Package Overview
 ----------------
 
-EEGDash (``eegdash``) provides a unified interface for accessing large-scale EEG datasets
-from multiple sources. The package architecture consists of:
+EEGDash (``eegdash``) is a single Python interface for EEG datasets spread across
+multiple public archives. The package breaks down as:
 
 **Core Modules**
 

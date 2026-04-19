@@ -81,7 +81,7 @@ This will automatically run code quality checks (ruff, codespell) before each co
 pytest tests/ -v
 
 # Check that you can import eegdash
-python -c "from eegdash import EEGDash; print('Setup successful!')"
+python -c "import eegdash; print(eegdash.__version__)"
 ```
 
 ## Coding Standards

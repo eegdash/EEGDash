@@ -82,7 +82,7 @@ A basic example:
 
     print(f"Found {len(dataset)} recordings in the dataset.")
 
-This will create a dataset object containing all recordings from ``ds002718``. The data files will be downloaded to the ``./eeg_data/ds002718/`` directory when accessed.
+The resulting object holds every recording in ``ds002718``. Files are downloaded to ``./eeg_data/ds002718/`` on first access.
 
 Querying for Specific Data
 --------------------------
@@ -108,7 +108,7 @@ You can select recordings tied to a specific experimental task. For example, to 
 Filtering by Subject
 ~~~~~~~~~~~~~~~~~~~~
 
-You can also filter the data to get recordings from one or more subjects.
+Filter by one or more subjects:
 
 .. code-block:: python
 

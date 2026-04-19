@@ -15,12 +15,12 @@ This guide walks through the :mod:`eegdash` library and its main data access obj
 The EEGDash Object
 ------------------
 
-While :class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning, the :class:`~eegdash.api.EEGDash` object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.
+:class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning. For direct access to the metadata database, use the lower-level :class:`~eegdash.api.EEGDash` object. It is the right choice for exploring what is available, running ad-hoc queries, or managing records.
 
 Initializing EEGDash
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can create a client to connect to the public database like this:
+Create a client that connects to the public database:
 
 .. code-block:: python
 
@@ -32,7 +32,7 @@ You can create a client to connect to the public database like this:
 Finding Records
 ~~~~~~~~~~~~~~~
 
-The ``find()`` method allows you to query the database for records matching specific criteria. You can pass keyword arguments for simple filters or a full MongoDB query dictionary for more advanced searches.
+Use ``find()`` to query the database for records matching specific criteria. Pass keyword arguments for simple filters, or a full MongoDB query dictionary for more advanced searches.
 
 .. code-block:: python
 
@@ -134,7 +134,7 @@ You can also filter the data to get recordings from one or more subjects.
 Combining Filters
 ~~~~~~~~~~~~~~~~~
 
-You can combine multiple filters to create more specific queries. For instance, to get the resting-state recordings for a specific set of subjects:
+Combine filters for narrower queries. For example, to get resting-state recordings from a specific set of subjects:
 
 .. code-block:: python
 
@@ -151,7 +151,7 @@ You can combine multiple filters to create more specific queries. For instance, 
 Advanced Querying with MongoDB Syntax
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For more complex queries, you can pass a MongoDB-style query dictionary directly using the ``query`` parameter. This allows for advanced filtering, such as using operators like ``$in``.
+For more complex queries, pass a MongoDB-style query dictionary directly to the ``query`` parameter. Operators such as ``$in`` work here.
 
 .. code-block:: python
 
@@ -169,11 +169,11 @@ For more complex queries, you can pass a MongoDB-style query dictionary directly
 Working with Local Data (Offline Mode)
 --------------------------------------
 
-:mod:`eegdash` also supports working with local data that you have already downloaded or manage separately. By setting ``download=False``, you can instruct :class:`~eegdash.api.EEGDashDataset` to use local BIDS-compliant data instead of accessing the database or remote storage.
+:mod:`eegdash` also works with local data you have already downloaded or manage yourself. Pass ``download=False`` and :class:`~eegdash.api.EEGDashDataset` reads BIDS-compliant files from disk instead of hitting the database or remote storage.
 
-To use this feature, your data must be organized in a BIDS-like structure within your ``cache_dir``. For example, if your ``cache_dir`` is ``./eeg_data`` and your dataset is ``ds002718``, the files should be located at ``./eeg_data/ds002718/``.
+The data must follow a BIDS-like layout inside your ``cache_dir``. If ``cache_dir`` is ``./eeg_data`` and the dataset is ``ds002718``, the files belong under ``./eeg_data/ds002718/``.
 
-Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
+Offline mode in practice:
 
 .. code-block:: python
 
@@ -186,12 +186,12 @@ Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
 
     print(f"Found {len(local_dataset)} local recordings.")
 
-When ``download=False``, :mod:`eegdash` will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.
+With ``download=False``, :mod:`eegdash` scans ``cache_dir`` for EEG files and builds the dataset from the local file system. Use this for offline environments, air-gapped machines, or your own curated datasets.
 
 Accessing Data from the Dataset
 -------------------------------
 
-Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access individual recordings as if it were a list. Each item in the dataset is an :class:`~eegdash.data_utils.EEGDashBaseDataset` object, which contains the metadata and methods to load the actual EEG data.
+The :class:`~eegdash.api.EEGDashDataset` object behaves like a list: index into it to access individual recordings. Each item is an :class:`~eegdash.data_utils.EEGDashBaseDataset` that carries the metadata and loads the EEG data on demand.
 
 .. code-block:: python
 
@@ -208,23 +208,21 @@ API Configuration
 -----------------
 
 By default, :mod:`eegdash` connects to the public REST API at ``https://data.eegdash.org``.
-You can customize this behavior using environment variables:
+Override it through environment variables:
 
 .. code-block:: bash
 
    # Override the default API URL (e.g., for testing)
    export EEGDASH_API_URL="https://data.eegdash.org"
-   
-   # For admin write operations (required for dataset ingestion)
+
+   # Admin write operations (required for dataset ingestion)
    export EEGDASH_API_TOKEN="your-admin-token"
 
-The API provides the following features:
+Public endpoints are rate-limited to 100 requests per minute per IP. Service
+status is available at ``/health``, and every response carries an
+``X-Request-ID`` header you can use for debugging.
 
-- **Rate Limiting**: Public endpoints are limited to 100 requests/minute per IP
-- **Health Checks**: Service status available at ``/health``
-- **Request Tracing**: All responses include ``X-Request-ID`` for debugging
-
-For more details about the API architecture, see :doc:`API Core </api/api_core>`.
+For more on the API architecture, see :doc:`API Core </api/api_core>`.
 
 
 .. seealso::

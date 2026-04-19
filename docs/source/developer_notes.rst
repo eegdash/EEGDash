@@ -224,7 +224,7 @@ The pipeline consists of 4 steps:
    # Available scripts: openneuro.py, nemar.py, eegmanylabs.py,
    #                    figshare.py, zenodo.py, osf.py, scidb.py, datarn.py
 
-**Step 2: Clone** - Smart clone without downloading raw data:
+**Step 2: Clone** - Shallow clone without downloading raw data:
 
 .. code-block:: bash
 

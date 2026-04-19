@@ -15,73 +15,62 @@ For an overview of contributor workflows and project internals, see :doc:`Develo
 
 .. note::
 
-   If you are only trying to install EEGDash, we recommend the :doc:`Installing from PyPI </install/install_pip>` section for details on that.
+   If you only want to install a released version, see :doc:`Installing from PyPI </install/install_pip>`.
 
 
-
-Install preview version from PyPI 
-----------------------------------
-
+Install a pre-release from PyPI
+-------------------------------
 
 .. code-block:: shell
 
    pip install --pre eegdash
 
-This installs the in-development version of `eegdash` from the main branch, which may not be stable.
+This installs the in-development version of ``eegdash`` from the main branch. It may not be stable.
 
 
-Install directly from repository from GitHub
---------------------------------------------
+Install directly from GitHub
+----------------------------
 
-Clone the EEGDash repository and change into it:
+Clone the repository and change into it:
 
 .. code-block:: shell
 
    git clone https://github.com/eegdash/EEGDash && cd EEGDash
 
-You should now be in the root directory of the EEGDash repository.
 
-Installing EEGDash from the source with pip
--------------------------------------------
+Install with pip
+----------------
 
-For a one-off install from source, without doing any development, use ``pip``:
-
-For the latest development version, directly from GitHub:
+For a one-off install straight from GitHub:
 
 .. code-block:: shell
 
   pip install git+https://github.com/eegdash/EEGDash.git
 
-If you have a local clone of the EEGDash git repository:
+From a local clone, install in editable mode so source edits are picked up without reinstalling:
 
 .. code-block:: shell
 
    pip install -e .
 
-This will install EEGDash in editable mode, i.e., changes to the source code could be used
-directly in python.
-
-You could also install optional dependency, like to import datasets from `test` and `docs`.
+Optional extras let you pull in test and documentation dependencies:
 
 .. code-block:: shell
 
    pip install -e .[test,docs,dev]
 
-There is also optional dependencies for unit testing and building documentation, you could install
-them if you want to contribute to EEGDash.
+Or install everything, which is what you want for contributing:
 
 .. code-block:: shell
 
    pip install -e .[all]
 
 
-Testing if your installation is working
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To verify that EEGDash is installed and running correctly, run the following command:
+Verifying the installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: shell
 
-   python -m "import eegdash; eegdash.__version__"
+   python -c "import eegdash; print(eegdash.__version__)"
 
 .. include:: /links.inc

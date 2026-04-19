@@ -25,9 +25,17 @@ EEGDash datasets are [braindecode](https://braindecode.org/stable/index.html) da
 ## EEG-Dash usage
 
 ### Install
-Use your preferred Python environment manager with Python > 3.10 to install the package.
-* To install the eegdash package, use the following command: `pip install eegdash`
-* To verify the installation, start a Python session and type: `from eegdash import EEGDash`
+Requires Python 3.10 or higher. Use whichever environment manager you prefer.
+
+```bash
+pip install eegdash
+```
+
+Verify the install in a Python session:
+
+```python
+from eegdash import EEGDash
+```
 
 See the tutorials at [eegdash.org](https://eegdash.org/) for end-to-end examples.
 

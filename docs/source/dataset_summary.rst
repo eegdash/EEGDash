@@ -1,10 +1,10 @@
 :hide_sidebar: true
 :html_theme.sidebar_secondary.remove: true
 :html_theme.sidebar_primary.remove: true
-:og:description: Browse and filter 700+ BIDS-first EEG/MEG datasets by modality, task, subjects, and licence. Includes OpenNeuro, NeMAR, and HBN sources.
+:og:description: Browse 700+ BIDS-first EEG/MEG datasets in the EEGDash Python catalog. Filter by modality, task, subjects, and licence; load any row with a single line of Python.
 
 .. meta::
-   :description: Browse and filter 700+ BIDS-first EEG/MEG datasets by modality, task, subjects, and licence. Includes OpenNeuro, NeMAR, and HBN sources.
+   :description: Browse 700+ BIDS-first EEG/MEG datasets in the EEGDash Python catalog. Filter by modality, task, subjects, and licence; load any row with a single line of Python.
 
 .. _data_summary:
 

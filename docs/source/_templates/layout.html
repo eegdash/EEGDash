@@ -37,6 +37,16 @@
   <script type="application/ld+json">{{ jsonld | safe }}</script>
   {%- endif %}
 
+  {# Agent / LLM discovery hints. Point automated clients at the curated
+     markdown index (llmstxt.org), the Agent Skills manifest, and the
+     RFC 9727 API catalog so they don't have to guess the well-known
+     paths. Cheap to emit on every page and load-bearing for scanners
+     like buildwithfern Agent Score and orank.ai. #}
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+
   {# Page-specific script gating. Previously jQuery + the full DataTables
      stack + fuse.js + the hero-search bundle were loaded on every page
      (~260 KB transferred, plus a CDN fan-out of 3 hosts). Now they only

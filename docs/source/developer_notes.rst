@@ -1,7 +1,7 @@
-:og:description: Developer guide for EEGDash — package architecture, data ingestion pipeline, testing, and contributor workflows.
+:og:description: Developer guide for EEGDash, the Python library for 700+ EEG/MEG datasets. Covers package architecture, BIDS ingestion pipeline, testing, and contributor workflows.
 
 .. meta::
-   :description: Developer guide for EEGDash — package architecture, data ingestion pipeline, testing, and contributor workflows.
+   :description: Developer guide for EEGDash, the Python library for 700+ EEG/MEG datasets. Covers package architecture, BIDS ingestion pipeline, testing, and contributor workflows.
 
 .. _developer_notes:
 

@@ -185,6 +185,15 @@ html_sidebars = {
     "dataset_summary": [],
     "api": [],
     "installation": [],
+    # sphinx-gallery pages render a large code preview; the sidebar adds
+    # ~15 KB of chrome above the fold for no navigation gain (gallery
+    # pages already have their own previous/next nav injected).
+    "generated/auto_examples/*": [],
+    "generated/auto_examples/core/*": [],
+    "generated/auto_examples/tutorials/*": [],
+    "generated/auto_examples/dev_scripts/*": [],
+    "generated/auto_examples/eeg2025/*": [],
+    "generated/auto_examples/hpc/*": [],
 }
 
 # Copy extra files (e.g., robots.txt) to the output root
@@ -2630,29 +2639,38 @@ _HOMEPAGE_JSONLD = {
     "url": "https://eegdash.org/",
     "logo": "https://eegdash.org/_static/eegdash_social_card.png",
     "description": (
-        "Open interface to 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG "
-        "datasets for reproducible neuroscience research."
+        "EEGDash is a Python library and catalog for 700+ BIDS-first EEG, "
+        "MEG, fNIRS, EMG, and iEEG datasets, providing PyTorch-ready data "
+        "access for machine learning and reproducible neuroscience research."
     ),
     "sameAs": [
         "https://github.com/eegdash/EEGDash",
         "https://pypi.org/project/eegdash/",
+        "https://registry.opendata.aws/eegdash/",
     ],
 }
 
 _SOFTWARE_JSONLD = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "EEG Dash",
+    "name": "EEGDash",
+    "alternateName": "EEG-DaSh",
     "applicationCategory": "ScienceApplication",
+    "applicationSubCategory": "DeveloperApplication",
     "operatingSystem": "Cross-platform",
     "url": "https://eegdash.org/",
     "softwareVersion": eegdash.__version__,
-    "codeRepository": "https://github.com/sccn/EEG-Dash-Data",
+    "codeRepository": "https://github.com/eegdash/EEGDash",
     "programmingLanguage": "Python",
+    "runtimePlatform": "Python 3.11+",
     "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "downloadUrl": "https://pypi.org/project/eegdash/",
+    "installUrl": "https://pypi.org/project/eegdash/",
     "description": (
-        "Python library and catalog for discovering, standardizing, and "
-        "analyzing 700+ BIDS-first EEG/MEG datasets."
+        "Python library for discovering, loading, and preprocessing 700+ "
+        "BIDS-first EEG/MEG datasets. Integrates with MNE-Python, "
+        "braindecode, and PyTorch for machine-learning workflows on "
+        "open neuroelectromagnetic data."
     ),
     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
 }
@@ -2679,6 +2697,142 @@ _AUTO_PAGE_DESCRIPTIONS: dict[str, str] = {
     "generated/auto_examples/index": (
         "EEGDash tutorials and runnable examples — dataset loading, feature "
         "extraction, transfer learning, and the EEG2025 Competition challenges."
+    ),
+}
+
+
+# schema.org/DataCatalog for the dataset catalog page. Lets Google Dataset
+# Search treat eegdash.org as an aggregator. Per-dataset Dataset JSON-LD is
+# still emitted on each /api/dataset/eegdash.dataset.*.html page, which
+# Google reaches through the sitemap; this wrapper just declares the
+# catalog identity.
+_DATACATALOG_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "DataCatalog",
+    "name": "EEGDash dataset catalog",
+    "alternateName": "EEG-DaSh catalog",
+    "url": "https://eegdash.org/dataset_summary.html",
+    "description": (
+        "Searchable catalog of 700+ BIDS-first EEG, MEG, fNIRS, EMG, and "
+        "iEEG datasets aggregated from OpenNeuro, NEMAR, Zenodo, Figshare, "
+        "SciDB, OSF, DataRN, and EEGManyLabs. Each row loads in Python via "
+        "the EEGDash library (pip install eegdash)."
+    ),
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "keywords": (
+        "EEG, MEG, iEEG, fNIRS, EMG, BIDS, neuroscience, machine learning, "
+        "Python, PyTorch, MNE-Python, braindecode, OpenNeuro, NEMAR"
+    ),
+    "provider": {
+        "@type": "Organization",
+        "name": "EEGDash",
+        "url": "https://eegdash.org/",
+    },
+    "isAccessibleForFree": True,
+    "inLanguage": "en",
+}
+
+
+# HowTo JSON-LD for install pages. Marks the install as a structured
+# procedure so Google can surface it in rich results.
+def _install_howto_jsonld(page_title: str, step_names: Sequence[str]) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": page_title,
+        "description": (
+            "Install the EEGDash Python library to load 700+ BIDS-first "
+            "EEG/MEG datasets with PyTorch."
+        ),
+        "totalTime": "PT2M",
+        "supply": [
+            {"@type": "HowToSupply", "name": "Python 3.11+"},
+            {"@type": "HowToSupply", "name": "pip or uv"},
+        ],
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": i + 1,
+                "name": name,
+            }
+            for i, name in enumerate(step_names)
+        ],
+    }
+
+
+_INSTALL_HOWTO: Mapping[str, dict] = {
+    "install/install": _install_howto_jsonld(
+        "Install EEGDash",
+        [
+            "Check Python 3.11+ is available (python --version).",
+            "Run pip install eegdash (or uv pip install eegdash).",
+            "Import the library: from eegdash import EEGDashDataset.",
+            "Load a dataset: EEGDashDataset(dataset='ds002718').",
+        ],
+    ),
+    "install/install_pip": _install_howto_jsonld(
+        "Install EEGDash with pip",
+        [
+            "Create or activate a Python 3.11+ environment.",
+            "Run pip install eegdash (upgrade pip first on older Pythons).",
+            "Verify with python -c 'import eegdash; print(eegdash.__version__)'.",
+        ],
+    ),
+    "install/install_source": _install_howto_jsonld(
+        "Install EEGDash from source",
+        [
+            "Clone https://github.com/eegdash/EEGDash.git.",
+            "Create a Python 3.11+ virtual environment.",
+            "Run pip install -e .[docs,tests] from the repository root.",
+            "Run pytest to confirm the install works.",
+        ],
+    ),
+}
+
+
+# Article JSON-LD for narrative docs. Helps search engines treat the user
+# guide and developer notes as primary reference content.
+def _article_jsonld(title: str, description: str, url: str) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": title,
+        "description": description,
+        "url": url,
+        "author": {
+            "@type": "Organization",
+            "name": "EEGDash",
+            "url": "https://eegdash.org/",
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "EEGDash",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://eegdash.org/_static/eegdash_social_card.png",
+            },
+        },
+        "inLanguage": "en",
+        "isAccessibleForFree": True,
+    }
+
+
+_ARTICLE_JSONLD: Mapping[str, dict] = {
+    "user_guide": _article_jsonld(
+        "EEGDash user guide",
+        (
+            "Narrative walkthrough of the EEGDash Python library — query "
+            "datasets, load BIDS records, and build reproducible ML pipelines."
+        ),
+        "https://eegdash.org/user_guide.html",
+    ),
+    "developer_notes": _article_jsonld(
+        "EEGDash developer notes",
+        (
+            "Architecture, BIDS ingestion pipeline, test suite, and "
+            "contributor workflows for the EEGDash Python library."
+        ),
+        "https://eegdash.org/developer_notes.html",
     ),
 }
 
@@ -2712,6 +2866,31 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
             [_HOMEPAGE_JSONLD, _SOFTWARE_JSONLD, _WEBSITE_JSONLD],
             ensure_ascii=False,
             separators=(",", ":"),
+        )
+
+    # DataCatalog JSON-LD for the dataset_summary page. Google Dataset
+    # Search uses this to recognise the page as a catalog aggregator; the
+    # per-row Dataset JSON-LD lives on individual
+    # `api/dataset/eegdash.dataset.*.html` pages and is reached via the
+    # sitemap.
+    if pagename == "dataset_summary":
+        context["jsonld"] = json.dumps(
+            _DATACATALOG_JSONLD, ensure_ascii=False, separators=(",", ":")
+        )
+
+    # HowTo JSON-LD on install pages. Eligible for Google's "How-to" rich
+    # result and reinforces to LLM-driven assistants that pip install
+    # eegdash is the canonical way to start using the library.
+    howto = _INSTALL_HOWTO.get(pagename)
+    if howto is not None:
+        context["jsonld"] = json.dumps(howto, ensure_ascii=False, separators=(",", ":"))
+
+    # TechArticle JSON-LD on the narrative docs. Signals "this is reference
+    # content, not marketing" to search engines and LLM retrievers.
+    article = _ARTICLE_JSONLD.get(pagename)
+    if article is not None:
+        context["jsonld"] = json.dumps(
+            article, ensure_ascii=False, separators=(",", ":")
         )
 
     # BreadcrumbList JSON-LD on dataset pages. The visual breadcrumb nav

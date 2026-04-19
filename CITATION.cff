@@ -1,0 +1,160 @@
+cff-version: 1.2.0
+message: >-
+  If you use EEGDash (EEG-DaSh) in your research, please cite both the
+  software entry below and the companion paper once it is available
+  (see `preferred-citation`).
+title: >-
+  EEG-DaSh: an open data, tool, and compute resource for machine
+  learning on neuroelectromagnetic data
+abstract: >-
+  EEG-DaSh (EEGDash) is an open-access Python library and catalog that
+  makes 700+ MEEG (EEG, MEG, iEEG, fNIRS, EMG) datasets immediately
+  usable for machine learning and deep learning. It aggregates
+  recordings from OpenNeuro, NEMAR, Zenodo, Figshare, SciDB, OSF,
+  DataRN, and EEGManyLabs behind a single searchable catalog and a
+  uniform EEGDashDataset interface compatible with MNE-Python,
+  braindecode, and PyTorch. EEG-DaSh addresses three bottlenecks:
+  automated BIDS repair, conversion to a PyTorch-native data format
+  for direct use in training loops, and a feature-extraction framework
+  with 44 extractors across six categories (signal, spectral,
+  connectivity, complexity, dimensionality, spatial filtering). All
+  datasets are annotated with Hierarchical Event Descriptors (HED) for
+  cross-study aggregation.
+type: software
+version: 0.6.0
+license: BSD-3-Clause
+repository-code: "https://github.com/eegdash/EEGDash"
+url: "https://eegdash.org"
+authors:
+  - family-names: Aristimunha
+    given-names: Bruno
+    email: b.aristimunha@gmail.com
+    orcid: "https://orcid.org/0000-0001-5258-2995"
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA; LISN-CNRS, Universit\u00e9 Paris-Saclay and
+      Inria, France
+  - family-names: Dotan
+    given-names: Aviv
+    email: avivdot@bgu.post.ac.il
+    orcid: "https://orcid.org/0000-0003-4515-9333"
+    affiliation: >-
+      Department of Industrial Engineering and School of Brain Sciences
+      and Cognition, Ben-Gurion University of the Negev, Israel
+  - family-names: Guetschel
+    given-names: Pierre
+    email: pierre.guetschel@donders.ru.nl
+    orcid: "https://orcid.org/0000-0002-8933-7640"
+    affiliation: "Donders Institute, Radboud University, The Netherlands"
+  - family-names: Truong
+    given-names: Dung
+    email: dt.young112@gmail.com
+    orcid: "https://orcid.org/0000-0003-4540-3551"
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA
+  - family-names: Kokate
+    given-names: Kuntal
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA
+  - family-names: Jaiswal
+    given-names: Aman
+    email: aman.jaiswal.1503@gmail.com
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA
+  - family-names: Majumdar
+    given-names: Amitrava
+    affiliation: "San Diego Supercomputer Center, UCSD, USA"
+  - family-names: Shirazi
+    given-names: Seyed Yahya
+    orcid: "https://orcid.org/0000-0001-5557-259X"
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA
+  - family-names: Shriki
+    given-names: Oren
+    email: shrikio@bgu.ac.il
+    orcid: "https://orcid.org/0000-0003-1129-4799"
+    affiliation: >-
+      Department of Industrial Engineering and School of Brain Sciences
+      and Cognition, Ben-Gurion University of the Negev, Israel
+  - family-names: Delorme
+    given-names: Arnaud
+    email: adelorme@ucsd.edu
+    orcid: "https://orcid.org/0000-0002-0799-3557"
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA; CerCo, CNRS UMR 5549, Universit\u00e9 Toulouse
+      III, France
+keywords:
+  - EEG
+  - MEG
+  - iEEG
+  - fNIRS
+  - EMG
+  - electroencephalography
+  - magnetoencephalography
+  - BIDS
+  - HED
+  - Hierarchical Event Descriptors
+  - neuroscience
+  - brain-computer interface
+  - BCI
+  - machine learning
+  - deep learning
+  - PyTorch
+  - Python
+  - MNE-Python
+  - braindecode
+  - OpenNeuro
+  - NEMAR
+  - dataset catalog
+  - reproducibility
+  - feature extraction
+identifiers:
+  - type: url
+    value: "https://pypi.org/project/eegdash/"
+    description: "EEGDash on the Python Package Index"
+  - type: url
+    value: "https://eegdash.org"
+    description: "EEGDash documentation and dataset catalog"
+preferred-citation:
+  type: article
+  title: >-
+    EEG-DaSh: an open data, tool, and compute resource for machine
+    learning on neuroelectromagnetic data
+  authors:
+    - family-names: Aristimunha
+      given-names: Bruno
+      orcid: "https://orcid.org/0000-0001-5258-2995"
+    - family-names: Dotan
+      given-names: Aviv
+      orcid: "https://orcid.org/0000-0003-4515-9333"
+    - family-names: Guetschel
+      given-names: Pierre
+      orcid: "https://orcid.org/0000-0002-8933-7640"
+    - family-names: Truong
+      given-names: Dung
+      orcid: "https://orcid.org/0000-0003-4540-3551"
+    - family-names: Kokate
+      given-names: Kuntal
+    - family-names: Jaiswal
+      given-names: Aman
+    - family-names: Majumdar
+      given-names: Amitrava
+    - family-names: Shirazi
+      given-names: Seyed Yahya
+      orcid: "https://orcid.org/0000-0001-5557-259X"
+    - family-names: Shriki
+      given-names: Oren
+      orcid: "https://orcid.org/0000-0003-1129-4799"
+    - family-names: Delorme
+      given-names: Arnaud
+      orcid: "https://orcid.org/0000-0002-0799-3557"
+  year: 2026
+  status: in-preparation
+  notes: >-
+    Manuscript in preparation; update this entry with DOI, journal,
+    volume, and page numbers once the paper is accepted.

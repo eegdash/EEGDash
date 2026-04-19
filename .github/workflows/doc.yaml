@@ -109,6 +109,15 @@ jobs:
           cd docs
           make html
 
+      - name: Build markdown siblings + llms-full.txt
+        # Fern / isitagentready scanners look for /page.md siblings and a
+        # concatenated llms-full.txt. The markdown builder is tolerant
+        # (`|| true` inside the Makefile target) so a failure on one
+        # sphinx-design-heavy page does not block the html deploy.
+        run: |
+          cd docs
+          make markdown
+
       # Upload documentation as artifact for all builds
       - name: Upload documentation artifact
         uses: actions/upload-artifact@v4

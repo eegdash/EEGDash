@@ -1,6 +1,19 @@
+# EEGDash is an open scientific dataset catalog. We welcome indexing by
+# search engines and grounding/retrieval by AI agents so researchers can
+# find and reuse EEG datasets, but we do not authorize the site content
+# itself to be used for AI model training. Individual datasets linked
+# from this catalog are governed by their own upstream licenses.
+# See https://eegdash.org for project details.
+
 User-agent: *
 Allow: /
 
+# Content Signals (https://blog.cloudflare.com/content-signals/)
+# Declare how automated clients may use our content.
+#   search=yes    — indexing and display in search results is allowed
+#   ai-input=yes  — use as grounding/context for AI answers is allowed
+#   ai-train=no   — use for AI model training is not authorized
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
 # Point crawlers to the generated sitemap
 Sitemap: https://eegdash.org/sitemap.xml
-

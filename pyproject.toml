@@ -6,13 +6,18 @@ build-backend = "setuptools.build_meta"
 dynamic = ["version"]
 name = "eegdash"
 authors = [
-  { name = "Young Truong",    email = "dt.young112@gmail.com" },
-  { name = "Arnaud Delorme",  email = "adelorme@ucsd.edu" },
-  { name = "Aviv Dotan",  email = "avivdot@bgu.post.ac.il" },
-  { name = "Oren Shriki",  email = "shrikio@bgu.ac.il" },
-  { name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}
+  { name = "Bruno Aristimunha",   email = "b.aristimunha@gmail.com" },
+  { name = "Aviv Dotan",          email = "avivdot@bgu.post.ac.il" },
+  { name = "Pierre Guetschel",    email = "pierre.guetschel@donders.ru.nl" },
+  { name = "Dung Truong",         email = "dt.young112@gmail.com" },
+  { name = "Kuntal Kokate" },
+  { name = "Aman Jaiswal",        email = "aman.jaiswal.1503@gmail.com" },
+  { name = "Amitrava Majumdar" },
+  { name = "Seyed Yahya Shirazi" },
+  { name = "Oren Shriki",         email = "shrikio@bgu.ac.il" },
+  { name = "Arnaud Delorme",      email = "adelorme@ucsd.edu" },
 ]
-description     = "A large-scale EEG dataset platform for machine learning and brain-computer interface research"
+description     = "EEG-DaSh: an open data, tool, and compute resource — a Python library and catalog for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets, ML-ready via PyTorch"
 readme          = "README.md"
 license         = "BSD-3-Clause"
 requires-python = ">=3.11"
@@ -73,9 +78,13 @@ required-environments = [
 [project.urls]
 Homepage      = "https://eegdash.org"
 Documentation = "https://eegdash.org"
-Repository    = "https://github.com/sccn/EEG-Dash-Data"
-Issues        = "https://github.com/sccn/EEG-Dash-Data/issues"
-Changelog     = "https://github.com/sccn/EEG-Dash-Data/blob/develop/CHANGELOG.md"
+Repository    = "https://github.com/eegdash/EEGDash"
+Source        = "https://github.com/eegdash/EEGDash"
+Issues        = "https://github.com/eegdash/EEGDash/issues"
+"Bug Tracker" = "https://github.com/eegdash/EEGDash/issues"
+Changelog     = "https://github.com/eegdash/EEGDash/releases"
+Discussions   = "https://github.com/eegdash/EEGDash/discussions"
+Chat          = "https://discord.gg/8jd7nVKwsc"
 
 
 [project.optional-dependencies]
@@ -101,6 +110,7 @@ docs = [
   "sphinx-copybutton",
   "sphinx-sitemap",
   "sphinxext-opengraph",
+  "sphinx-markdown-builder",
   "numpydoc",
   "lightgbm",
   "plotly",

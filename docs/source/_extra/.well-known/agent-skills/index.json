@@ -1,0 +1,71 @@
+{
+  "version": "0.2.0",
+  "publisher": {
+    "name": "EEGDash",
+    "url": "https://eegdash.org",
+    "description": "A unified catalog and Python library for finding, loading, and preprocessing publicly available EEG datasets in BIDS format."
+  },
+  "skills": [
+    {
+      "id": "find-eeg-datasets",
+      "name": "Find EEG datasets",
+      "description": "Search the EEGDash catalog for EEG/MEG/iEEG datasets by task, modality, paradigm, clinical population, age range, number of subjects, or dataset identifier. Returns dataset IDs, titles, source repository (OpenNeuro, NEMAR, Zenodo, Figshare, SciDB, OSF, DataRN, EEGManyLabs), and pointers to BIDS metadata.",
+      "inputs": [
+        {"name": "query", "type": "string", "description": "Free-text description of the datasets to find (e.g. 'resting-state EEG in older adults', 'P300 oddball', 'sleep staging')."},
+        {"name": "filters", "type": "object", "description": "Optional structured filters: task, modality, n_subjects_min, age_min, age_max, clinical_population."}
+      ],
+      "endpoints": [
+        {"method": "GET", "url": "https://data.eegdash.org/api/eegdash/records"},
+        {"method": "GET", "url": "https://data.eegdash.org/api/eegdash/datasets"}
+      ],
+      "docs": "https://eegdash.org/dataset_summary.html"
+    },
+    {
+      "id": "get-dataset-metadata",
+      "name": "Get dataset metadata",
+      "description": "Retrieve BIDS-compliant metadata for a specific EEGDash dataset: number of subjects and sessions, recording channels, sampling rate, task description, and links to the canonical source archive.",
+      "inputs": [
+        {"name": "dataset_id", "type": "string", "description": "EEGDash dataset identifier (e.g. 'ds002718', 'ds004148')."}
+      ],
+      "endpoints": [
+        {"method": "GET", "url": "https://data.eegdash.org/api/eegdash/metadata/{dataset_id}"}
+      ],
+      "docs": "https://eegdash.org/api/dataset/eegdash.EEGDashDataset.html"
+    },
+    {
+      "id": "load-bids-record",
+      "name": "Load a BIDS EEG record",
+      "description": "Stream and decode a single EEG recording from its canonical source (e.g. OpenNeuro S3) into an MNE-compatible array using the EEGDash Python client. Supports lazy loading and standard BIDS metadata resolution.",
+      "inputs": [
+        {"name": "dataset_id", "type": "string"},
+        {"name": "subject", "type": "string"},
+        {"name": "session", "type": "string", "required": false},
+        {"name": "task", "type": "string", "required": false},
+        {"name": "run", "type": "string", "required": false}
+      ],
+      "docs": "https://eegdash.org/api/dataset/eegdash.EEGDashDataset.html"
+    },
+    {
+      "id": "list-preprocessing-features",
+      "name": "List available preprocessing features",
+      "description": "Enumerate built-in preprocessing and feature-extraction utilities shipped with the EEGDash Python library (filtering, epoching, bivariate features, connectivity, spectral summaries).",
+      "docs": "https://eegdash.org/api/features_overview.html"
+    },
+    {
+      "id": "count-records",
+      "name": "Count catalog records",
+      "description": "Return the number of records in the EEGDash catalog matching an optional BIDS filter. Useful for sizing a query before downloading metadata.",
+      "inputs": [
+        {"name": "filter", "type": "object", "description": "Optional BIDS filter, e.g. {\"task\": \"rest\"}.", "required": false}
+      ],
+      "endpoints": [
+        {"method": "GET", "url": "https://data.eegdash.org/api/eegdash/count"}
+      ]
+    }
+  ],
+  "related": [
+    {"rel": "api-catalog", "href": "https://eegdash.org/.well-known/api-catalog"},
+    {"rel": "service-doc", "href": "https://data.eegdash.org/docs"},
+    {"rel": "describedby", "href": "https://data.eegdash.org/openapi.json"}
+  ]
+}

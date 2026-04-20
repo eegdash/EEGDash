@@ -166,7 +166,8 @@ def _tree_to_str(d: dict, s=None, prefix: str = ""):
         conn = "╠═ " if i < len(d) - 1 else "╚═ "
         if isinstance(v, tuple):
             v, p = v
-            out_str.append(f"{prefix}{conn}{k}: {p}")
+            if p is not None:
+                out_str.append(f"{prefix}{conn}{k}: {p}")
         else:
             p = None
         if isinstance(v, dict):

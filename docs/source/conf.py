@@ -2682,6 +2682,60 @@ def _copy_dataset_summary(app, exception) -> None:
         LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
 
 
+def _rewrite_sitemap_index(app, exception) -> None:
+    """Rewrite the homepage entry in ``sitemap.xml`` to the canonical
+    bare-host URL.
+
+    ``sphinx-sitemap`` emits ``https://eegdash.org/index.html`` for the
+    homepage because that's the page's filename. We set a
+    ``<link rel="canonical">`` override to ``https://eegdash.org/`` in
+    ``_inject_seo_context``, which creates a mismatch Ahrefs flags as
+    "Non-canonical page in sitemap". The two fixes must stay in sync —
+    so we patch the emitted sitemap here at ``build-finished`` rather
+    than fighting sphinx-sitemap's URL-construction logic.
+
+    Safe no-op on: missing sitemap, non-HTML builder, already-canonical
+    sitemap.
+    """
+    if exception is not None:
+        return
+    builder = getattr(app, "builder", None)
+    if builder is None or builder.name != "html":
+        return
+
+    sitemap_path = Path(app.outdir) / "sitemap.xml"
+    if not sitemap_path.exists():
+        return
+
+    try:
+        text = sitemap_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        LOGGER.warning("Unable to read %s: %s", sitemap_path, exc)
+        return
+
+    base = getattr(app.config, "html_baseurl", "") or ""
+    if not base.endswith("/"):
+        base += "/"
+    index_url = f"{base}index.html"
+    canonical = base
+
+    if index_url not in text:
+        return
+
+    updated = text.replace(f"<loc>{index_url}</loc>", f"<loc>{canonical}</loc>")
+    if updated == text:
+        return
+    try:
+        sitemap_path.write_text(updated, encoding="utf-8")
+        LOGGER.info(
+            "sitemap.xml: rewrote %s -> %s for canonical alignment",
+            index_url,
+            canonical,
+        )
+    except OSError as exc:
+        LOGGER.warning("Unable to write %s: %s", sitemap_path, exc)
+
+
 def _inject_counter_values(app, docname, source) -> None:
     if docname != "dataset_summary":
         return
@@ -3035,6 +3089,13 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
                 existing + '<meta name="robots" content="noindex,follow" />'
             )
 
+    # Final pass: cap every <meta name="description"> and
+    # <meta property="og:description"> content to 155 chars regardless of
+    # how it arrived in `metatags`. Dataset pages, per-module API pages,
+    # and sphinxext-opengraph-injected descriptions all flow through
+    # here, so one regex covers the full Ahrefs "too long" wave.
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
+
 
 def _cap_meta_description(text: str, limit: int = 160) -> str:
     """Trim a meta description to at most ``limit`` characters on a word
@@ -3048,6 +3109,88 @@ def _cap_meta_description(text: str, limit: int = 160) -> str:
         return text
     trimmed = text[: limit - 1].rsplit(" ", 1)[0]
     return trimmed.rstrip(",. ") + "…"
+
+
+# Cap description tags regardless of attribute ordering. docutils emits
+# `<meta content="…" name="description" />`; sphinxext-opengraph and our
+# own injector emit the `name=`/`property=` first. We use 8 narrow
+# patterns (4 orderings × 2 quote styles) so the content character class
+# can exclude only the single quote character that's actually in use —
+# a mixed class like `[^"']` breaks on apostrophes inside double quotes
+# (e.g. "Alzheimer's disease"), which is exactly how the first version
+# of this helper silently failed to cap 400+ dataset pages.
+_DESC_PATTERNS = [
+    # <meta name="description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?name="description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?name='description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … name="description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?name="description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?name='description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta property="og:description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?property="og:description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?property='og:description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … property="og:description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?property="og:description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?property='og:description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+]
+
+
+def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
+    """Cap every ``<meta name="description">`` and
+    ``<meta property="og:description">`` content value in ``metatags``.
+
+    Handles both attribute orders and both single/double quotes. HTML
+    entities are decoded before trimming so the visible budget is what
+    the SERP actually renders; we re-encode on the way back out.
+    """
+    if not metatags:
+        return metatags
+
+    def _trim(m: re.Match) -> str:
+        value = m.group("v")
+        if value is None:
+            return m.group(0)
+        decoded = html.unescape(value)
+        if len(decoded) <= limit:
+            return m.group(0)
+        capped = _cap_meta_description(decoded, limit=limit)
+        return m.group(0).replace(value, html.escape(capped, quote=True))
+
+    for pattern in _DESC_PATTERNS:
+        metatags = pattern.sub(_trim, metatags)
+    return metatags
 
 
 def _page_still_lacks_description(context) -> bool:
@@ -3101,6 +3244,10 @@ def setup(app):
     app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
     app.connect("build-finished", _copy_dataset_summary)
+    # Align sitemap homepage entry with the canonical emitted in
+    # `_inject_seo_context`. Must run after `sphinx-sitemap` writes
+    # the file; using `build-finished` is the safest hook for that.
+    app.connect("build-finished", _rewrite_sitemap_index)
     app.connect("source-read", _inject_counter_values)
     app.connect("html-page-context", _inject_seo_context)
 

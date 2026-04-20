@@ -1469,6 +1469,24 @@ def _convert_readme_to_rst(text: str) -> str:
     text = text.lstrip("\ufeff")
     # Normalize HTML line breaks to newlines
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    # Downgrade literal HTML headers so they don't collide with the
+    # page's own `<h1>`. Upstream dataset READMEs (e.g. DS004100)
+    # sometimes contain raw `<h1>HUP iEEG dataset</h1>` which Sphinx
+    # passes through verbatim and Ahrefs then flags as "Multiple H1
+    # tags". `<h2>` is the highest level that can safely sit inside the
+    # "About this dataset" section which is already H2.
+    text = re.sub(
+        r"<(/?)h1(\b[^>]*)>",
+        r"<\g<1>h3\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r"<(/?)h2(\b[^>]*)>",
+        r"<\g<1>h4\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
     # Replace leading tabs with spaces (tabs cause RST block-quote interpretation)
     text = re.sub(r"^\t+", lambda m: "  " * len(m.group(0)), text, flags=re.MULTILINE)
 
@@ -2694,6 +2712,11 @@ def _rewrite_sitemap_index(app, exception) -> None:
     so we patch the emitted sitemap here at ``build-finished`` rather
     than fighting sphinx-sitemap's URL-construction logic.
 
+    Originally shipped in #319 but silently dropped during the #318
+    rebase conflict resolution (``git checkout --theirs`` on conf.py
+    took the pre-#319 branch version). Re-adding here so the sitemap
+    emitted on each deploy stays canonical.
+
     Safe no-op on: missing sitemap, non-HTML builder, already-canonical
     sitemap.
     """
@@ -3062,39 +3085,58 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
         context["metatags"] = existing + tag
 
     # Backstop meta descriptions for the auto-generated reference pages
-    # (per-dataset, per-module). These pages don't carry a `.. meta::`
-    # directive, so without this hook Ahrefs flags 70+ pages as
-    # "description too short". The templates match the page family, so
-    # every generated page ships a unique, keyword-appropriate blurb.
-    if _page_still_lacks_description(context):
-        synth = _synthesize_description(pagename)
-        if synth:
+    # (per-dataset, per-module). These pages ship either no description
+    # at all or a very short first-paragraph excerpt that Ahrefs flags
+    # as "too short" (< 50 chars). The hook fires in BOTH cases:
+    # - no description  -> append our template
+    # - short description (<50 chars) -> replace it with our template
+    synth = _synthesize_description(pagename)
+    if synth:
+        existing = context.get("metatags") or ""
+        current = _extract_first_description(existing)
+        if current is None:
+            # No description yet: append.
             escaped = html.escape(_cap_meta_description(synth), quote=True)
             tag = (
                 f'<meta name="description" content="{escaped}" />'
                 f'<meta property="og:description" content="{escaped}" />'
             )
-            existing = context.get("metatags") or ""
             context["metatags"] = existing + tag
+        elif len(current) < _MIN_META_DESC_CHARS:
+            # Too short: swap in the synth text, preserving the surrounding
+            # `<meta>` tag shape so nothing else in the pipeline gets
+            # surprised by the edit.
+            context["metatags"] = _replace_descriptions_in_metatags(
+                existing, _cap_meta_description(synth)
+            )
 
     # Dataset-summary chart fragments (`dataset_summary/table`,
     # `.../treemap`, etc.) are partial `.. include::` sources; Sphinx
     # builds them as standalone pages as a side-effect but they render
     # the same chart twice when someone lands on them directly. Tag
     # them `noindex` so search engines don't show them as orphan hits.
-    if pagename.startswith("dataset_summary/") and pagename != "dataset_summary":
+    # Also noindex Sphinx's own utility pages that ship without a
+    # sitemap entry (genindex, search, sg_api_usage) — otherwise
+    # scanners flag them as "indexable page with missing description".
+    _NOINDEX_PAGENAMES = {"genindex", "search", "sg_api_usage"}
+    noindex_needed = pagename in _NOINDEX_PAGENAMES or (
+        pagename.startswith("dataset_summary/") and pagename != "dataset_summary"
+    )
+    if noindex_needed:
         existing = context.get("metatags") or ""
         if 'name="robots"' not in existing:
             context["metatags"] = (
                 existing + '<meta name="robots" content="noindex,follow" />'
             )
 
-    # Final pass: cap every <meta name="description"> and
-    # <meta property="og:description"> content to 155 chars regardless of
-    # how it arrived in `metatags`. Dataset pages, per-module API pages,
-    # and sphinxext-opengraph-injected descriptions all flow through
-    # here, so one regex covers the full Ahrefs "too long" wave.
-    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
+    # NOTE: description capping runs from a separate late-priority hook
+    # (``_cap_descriptions_hook`` below). Doing it here would miss any
+    # descriptions that sphinxext-opengraph adds later in the same
+    # ``html-page-context`` phase — its handler runs after ours at the
+    # default priority.
+
+
+_MIN_META_DESC_CHARS = 50  # Ahrefs' "too short" threshold
 
 
 def _cap_meta_description(text: str, limit: int = 160) -> str:
@@ -3111,15 +3153,12 @@ def _cap_meta_description(text: str, limit: int = 160) -> str:
     return trimmed.rstrip(",. ") + "…"
 
 
-# Cap description tags regardless of attribute ordering. docutils emits
-# `<meta content="…" name="description" />`; sphinxext-opengraph and our
-# own injector emit the `name=`/`property=` first. We use 8 narrow
-# patterns (4 orderings × 2 quote styles) so the content character class
-# can exclude only the single quote character that's actually in use —
-# a mixed class like `[^"']` breaks on apostrophes inside double quotes
-# (e.g. "Alzheimer's disease"), which is exactly how the first version
-# of this helper silently failed to cap 400+ dataset pages.
-_DESC_PATTERNS = [
+# 8 narrow regexes (4 attribute orderings x 2 quote styles) covering
+# every shape we've seen in the built HTML. One compound alternation
+# with `[^"']*` fails when the content carries a different quote char
+# (e.g. an apostrophe inside a double-quoted attribute — that silently
+# broke a prior cap that shipped in #315 and was fixed in #317).
+_META_DESC_PATTERNS = [
     # <meta name="description" … content="…">
     re.compile(
         r'<meta\s+(?:[^>]*?\s)?name="description"'
@@ -3167,28 +3206,54 @@ _DESC_PATTERNS = [
 ]
 
 
-def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
-    """Cap every ``<meta name="description">`` and
-    ``<meta property="og:description">`` content value in ``metatags``.
+def _extract_first_description(metatags: str) -> str | None:
+    """Return the first description content found in ``metatags``, or
+    ``None`` if no description tag is present. Used to decide whether
+    the backstop needs to fire (missing) or override (too short).
+    """
+    if not metatags:
+        return None
+    for pattern in _META_DESC_PATTERNS:
+        m = pattern.search(metatags)
+        if m:
+            return html.unescape(m.group("v"))
+    return None
 
-    Handles both attribute orders and both single/double quotes. HTML
-    entities are decoded before trimming so the visible budget is what
-    the SERP actually renders; we re-encode on the way back out.
+
+def _replace_descriptions_in_metatags(metatags: str, new_text: str) -> str:
+    """Rewrite the `content` attribute of every description /
+    og:description tag in ``metatags`` to ``new_text``. The surrounding
+    tag structure is preserved so extensions parsing the string later
+    still see well-formed markup.
+    """
+    escaped = html.escape(new_text, quote=True)
+
+    def _swap(m: re.Match) -> str:
+        original = m.group(0)
+        return original.replace(m.group("v"), escaped)
+
+    for pattern in _META_DESC_PATTERNS:
+        metatags = pattern.sub(_swap, metatags)
+    return metatags
+
+
+def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
+    """Cap every description / og:description content value in
+    ``metatags`` at ``limit`` chars. HTML-entity-decodes before
+    comparing so the visible budget is what the SERP renders.
     """
     if not metatags:
         return metatags
 
     def _trim(m: re.Match) -> str:
         value = m.group("v")
-        if value is None:
-            return m.group(0)
         decoded = html.unescape(value)
         if len(decoded) <= limit:
             return m.group(0)
         capped = _cap_meta_description(decoded, limit=limit)
         return m.group(0).replace(value, html.escape(capped, quote=True))
 
-    for pattern in _DESC_PATTERNS:
+    for pattern in _META_DESC_PATTERNS:
         metatags = pattern.sub(_trim, metatags)
     return metatags
 
@@ -3215,6 +3280,18 @@ def _synthesize_description(pagename: str) -> str | None:
             f"MNE-Python and braindecode. Full metadata, channels, and "
             f"citation on this page."
         )
+    # Module pages that landed under api/dataset/eegdash.* (not
+    # .dataset.*) — e.g. http_api_client, EEGDashDataset, bids_metadata.
+    # Sphinx-apidoc puts them here but they lack their own descriptions.
+    other_ds_prefix = "api/dataset/eegdash."
+    if pagename.startswith(other_ds_prefix) and not pagename.startswith(ds_prefix):
+        module = pagename[len(other_ds_prefix) :]
+        return (
+            f"EEGDash Python API reference for `eegdash.{module}` — "
+            f"classes, functions, and schemas used to discover, load, "
+            f"and preprocess BIDS-first EEG/MEG datasets for PyTorch "
+            f"machine-learning workflows."
+        )
     # Per-module API reference under api/generated/api-core/* or api-features/*
     if pagename.startswith("api/generated/api-core/"):
         module = pagename.rsplit("/", 1)[-1]
@@ -3230,7 +3307,47 @@ def _synthesize_description(pagename: str) -> str | None:
             f"spectral, connectivity, complexity, and spatial feature "
             f"extractors for EEG/MEG machine-learning pipelines."
         )
+    # Sphinx-gallery tutorial pages — sphinxext-opengraph picks the
+    # first paragraph from the gallery-generated RST, which is usually
+    # a one-liner ("This is a minimal tutorial demonstrating…") that
+    # Ahrefs flags as too short. Pad with keywords that match the
+    # tutorial's purpose.
+    if pagename.startswith("generated/auto_examples/"):
+        slug = pagename.rsplit("/", 1)[-1].replace("_", " ").removeprefix("noplot ")
+        slug = slug.replace("tutorial ", "").strip() or "tutorial"
+        return (
+            f"EEGDash tutorial — {slug}. Runnable Python example showing "
+            f"how to load BIDS-first EEG/MEG datasets, preprocess them "
+            f"with MNE-Python, and train a model end-to-end."
+        )
+    # Source-aggregator pages under api/dataset/source_* (one per
+    # upstream archive: OpenNeuro, NEMAR, Figshare, Zenodo, …). These
+    # are generated by `_generate_dataset_docs` and don't carry their
+    # own meta description.
+    src_prefix = "api/dataset/source_"
+    if pagename.startswith(src_prefix):
+        source = pagename[len(src_prefix) :].replace("_", " ").title()
+        return (
+            f"EEG, MEG, and iEEG datasets from {source} wrapped by the "
+            f"EEGDash Python library. Load any record with a single "
+            f"call; preprocess with MNE-Python; train with braindecode."
+        )
     return None
+
+
+def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
+    """Late-priority ``html-page-context`` handler that caps every
+    description / og:description tag added by any earlier handler.
+
+    Sphinx delivers events to connected callbacks in priority order
+    (higher priority == later execution; default 500). sphinxext-
+    opengraph registers at the default priority and writes its own
+    description into ``context['metatags']`` during this phase, so
+    any capping we do inside our own default-priority handler misses
+    those insertions. Running at priority 900 guarantees we see the
+    final value regardless of load order.
+    """
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
 
 
 def setup(app):
@@ -3250,6 +3367,8 @@ def setup(app):
     app.connect("build-finished", _rewrite_sitemap_index)
     app.connect("source-read", _inject_counter_values)
     app.connect("html-page-context", _inject_seo_context)
+    # Must run last — see docstring on ``_cap_descriptions_hook``.
+    app.connect("html-page-context", _cap_descriptions_hook, priority=900)
 
 
 # Configure sitemap URL format (omit .html where possible)

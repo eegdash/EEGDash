@@ -67,7 +67,7 @@ Or install everything, which is what you want for contributing:
 
 
 Verifying the installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 .. code-block:: shell
 

@@ -585,7 +585,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         """
         desc_file_name = "description.json"
         desc_file_path = os.path.join(sub_dir, desc_file_name)
-        description.to_json(desc_file_path)
+        description.to_json(desc_file_path, indent=4)
 
     @staticmethod
     def _save_raw_info(sub_dir: str, ds: FeaturesDataset):
@@ -631,7 +631,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                     kwargs_file_name = ".".join([kwargs_name, "json"])
                     kwargs_file_path = os.path.join(sub_dir, kwargs_file_name)
                     with open(kwargs_file_path, "w") as f:
-                        json.dump(kwargs, f)
+                        json.dump(kwargs, f, indent=4)
 
     def to_dataframe(
         self,

@@ -130,12 +130,23 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXC3DGL6');
       }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        scheduleGTM();
       } else {
-        document.addEventListener('DOMContentLoaded', function(){
-          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
-        });
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
       }
     })();
   </script>
@@ -656,7 +667,7 @@ every recording and derive summary statistics for the whole dataset.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>19 subjects. 19 recordings. 17.51 hours.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.286 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.526 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-tutorial-api-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/tutorial_api.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo4.svg" style="width: 150px;" />

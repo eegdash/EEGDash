@@ -130,12 +130,23 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXC3DGL6');
       }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        scheduleGTM();
       } else {
-        document.addEventListener('DOMContentLoaded', function(){
-          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
-        });
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
       }
     })();
   </script>
@@ -670,12 +681,12 @@ corresponding to their respective event markers).</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[04/20/26 12:20:23] WARNING  File not found on S3, skipping:   downloader.py:146
+[04/20/26 12:58:14] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
 Used Annotations descriptions: [np.str_(&#39;boundary&#39;), np.str_(&#39;break cnt&#39;), np.str_(&#39;instructed_toCloseEyes&#39;), np.str_(&#39;instructed_toOpenEyes&#39;), np.str_(&#39;resting_start&#39;)]
-[04/20/26 12:20:24] INFO     Original events found with ids: preprocessing.py:66
+                    INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -794,8 +805,8 @@ signal is present and looks as expected.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.39it/s]
-Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.39it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.35it/s]
+Extracting features: 100%|██████████| 1/1 [00:00&lt;00:00,  1.35it/s]
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features_ds</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_crop_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2070,7 +2081,7 @@ calculates test accuracy by comparing outputs with actual labels.</p></li>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_importance</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">importance_type</span><span class="o">=</span><span class="s2">&quot;gain&quot;</span><span class="p">,</span> <span class="n">max_num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.341 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.502 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/core/tutorial_feature_extractor_open_close_eye.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />

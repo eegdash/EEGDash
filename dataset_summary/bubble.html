@@ -126,12 +126,23 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXC3DGL6');
       }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        scheduleGTM();
       } else {
-        document.addEventListener('DOMContentLoaded', function(){
-          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
-        });
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
       }
     })();
   </script>

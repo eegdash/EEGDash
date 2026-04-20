@@ -137,12 +137,23 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXC3DGL6');
       }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        scheduleGTM();
       } else {
-        document.addEventListener('DOMContentLoaded', function(){
-          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
-        });
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
       }
     })();
   </script>
@@ -569,21 +580,21 @@ First search</label><div class="sd-tab-content docutils">
 </div>
 <h2 class="hf-section-title">At a glance</h2>
 <p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p><div class="hf-badges docutils container">
-<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml"><img alt="Test Status" height="20" src="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg" width="90" />
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml"><img alt="Test Status" src="https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg" width="90" />
 </a>
-<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml"><img alt="Doc Status" height="20" src="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg" width="90" />
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml"><img alt="Doc Status" src="https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg" width="90" />
 </a>
-<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="PyPI" height="20" src="https://img.shields.io/pypi/v/eegdash?color=blue&amp;style=flat-square" width="120" />
+<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="PyPI" src="https://img.shields.io/pypi/v/eegdash?color=blue&amp;style=flat-square" width="120" />
 </a>
-<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="Python Versions" height="20" src="https://img.shields.io/pypi/pyversions/eegdash?style=flat-square" width="140" />
+<a class="reference external image-reference" href="https://pypi.org/project/eegdash/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/eegdash?style=flat-square" width="140" />
 </a>
-<a class="reference external image-reference" href="https://pepy.tech/project/eegdash"><img alt="Downloads" height="20" src="https://pepy.tech/badge/eegdash" width="120" />
+<a class="reference external image-reference" href="https://pepy.tech/project/eegdash"><img alt="Downloads" src="https://pepy.tech/badge/eegdash" width="120" />
 </a>
-<a class="reference external image-reference" href="https://codecov.io/gh/eegdash/EEGDash"><img alt="Code Coverage" height="20" src="https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg" width="120" />
+<a class="reference external image-reference" href="https://codecov.io/gh/eegdash/EEGDash"><img alt="Code Coverage" src="https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg" width="120" />
 </a>
-<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/blob/main/LICENSE"><img alt="License" height="20" src="https://img.shields.io/pypi/l/eegdash?style=flat-square" width="120" />
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/pypi/l/eegdash?style=flat-square" width="120" />
 </a>
-<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash"><img alt="GitHub Stars" height="20" src="https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square" width="120" />
+<a class="reference external image-reference" href="https://github.com/eegdash/EEGDash"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square" width="120" />
 </a>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 hf-stat-grid docutils">

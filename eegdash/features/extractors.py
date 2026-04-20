@@ -119,6 +119,45 @@ def _adjust_dict_types(d: dict) -> dict:
     return dd
 
 
+def _tree_to_str(d: dict, s=None, prefix: str = ""):
+    """Convert a tree-style dict to directory-style string.
+
+    Parameters
+    ----------
+    d: dict
+        A tree-like dictionary.
+    s:
+        A stem object (optional).
+    prefix: str
+        A common prefix for all rows.
+
+    Returns
+    -------
+    str
+        A directory-tree-like string representing the tree-like dictionary.
+
+    """
+    out_str = []
+    if s is not None:
+        out_str.append(f"{s}")
+    for i, (k, v) in enumerate(d.items()):
+        conn = "╠═ " if i < len(d) - 1 else "╚═ "
+        if isinstance(v, tuple):
+            v, p = v
+            out_str.append(f"{prefix}{conn}{k}: {p}")
+        else:
+            p = None
+        if isinstance(v, dict):
+            if p is None:
+                out_str.append(f"{prefix}{conn}{k}:")
+            out_str.append(
+                _tree_to_str(v, prefix=prefix + ("║  " if i < len(d) - 1 else "   "))
+            )
+        else:
+            out_str.append(f"{prefix}{conn}{k}: {v}")
+    return "\n".join(out_str)
+
+
 class FeatureExtractor(TrainableFeature):
     r"""Pipeline for multi-stage feature extraction.
 
@@ -185,14 +224,7 @@ class FeatureExtractor(TrainableFeature):
         elif not hasattr(self, "parent_extractor_type"):
             self.parent_extractor_type = [SignalOutputType]
 
-        self.features_kwargs = dict()
-        if preprocessor is not None and isinstance(preprocessor, partial):
-            self.features_kwargs["preprocess_kwargs"] = preprocessor.args
-        for fn, fe in feature_extractors.items():
-            if isinstance(fe, FeatureExtractor):
-                self.features_kwargs[fn] = fe.features_kwargs
-            if isinstance(fe, partial):
-                self.features_kwargs[fn] = fe.keywords
+        self.features_kwargs = self.to_dict()
 
     def _validate_execution_tree(
         self, feature_extractors: dict, parent_type=None
@@ -548,3 +580,37 @@ class FeatureExtractor(TrainableFeature):
             outfile.write(
                 HOCONConverter.to_hocon(ConfigFactory.from_dict(self.to_dict()))
             )
+
+    def _repr(self):
+        d = {}
+        for k, v in self.feature_extractors_dict.items():
+            if isinstance(v, FeatureExtractor):
+                v = v._repr()
+            d[k] = v
+        if self.preprocessor is not None:
+            s = self.preprocessor
+        else:
+            s = None
+        return d, s
+
+    def __repr__(self):
+        return _tree_to_str(*self._repr())
+
+    def _str(self):
+        d = {}
+        for k, v in self.feature_extractors_dict.items():
+            if isinstance(v, FeatureExtractor):
+                v = v._str()
+            else:
+                v = get_underlying_func(v)
+                v = getattr(v, "__name__", str(v))
+            d[k] = v
+        if self.preprocessor is not None:
+            p = get_underlying_func(self.preprocessor)
+            s = getattr(p, "__name__", str(p))
+        else:
+            s = None
+        return d, s
+
+    def __str__(self):
+        return _tree_to_str(*self._str())

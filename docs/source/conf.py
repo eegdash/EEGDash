@@ -3035,6 +3035,13 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
                 existing + '<meta name="robots" content="noindex,follow" />'
             )
 
+    # Final pass: cap every <meta name="description"> and
+    # <meta property="og:description"> content to 155 chars regardless of
+    # how it arrived in `metatags`. Dataset pages, per-module API pages,
+    # and sphinxext-opengraph-injected descriptions all flow through
+    # here, so one regex covers the full Ahrefs "too long" wave.
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
+
 
 def _cap_meta_description(text: str, limit: int = 160) -> str:
     """Trim a meta description to at most ``limit`` characters on a word
@@ -3048,6 +3055,88 @@ def _cap_meta_description(text: str, limit: int = 160) -> str:
         return text
     trimmed = text[: limit - 1].rsplit(" ", 1)[0]
     return trimmed.rstrip(",. ") + "…"
+
+
+# Cap description tags regardless of attribute ordering. docutils emits
+# `<meta content="…" name="description" />`; sphinxext-opengraph and our
+# own injector emit the `name=`/`property=` first. We use 8 narrow
+# patterns (4 orderings × 2 quote styles) so the content character class
+# can exclude only the single quote character that's actually in use —
+# a mixed class like `[^"']` breaks on apostrophes inside double quotes
+# (e.g. "Alzheimer's disease"), which is exactly how the first version
+# of this helper silently failed to cap 400+ dataset pages.
+_DESC_PATTERNS = [
+    # <meta name="description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?name="description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?name='description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … name="description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?name="description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?name='description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta property="og:description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?property="og:description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?property='og:description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … property="og:description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?property="og:description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?property='og:description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+]
+
+
+def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
+    """Cap every ``<meta name="description">`` and
+    ``<meta property="og:description">`` content value in ``metatags``.
+
+    Handles both attribute orders and both single/double quotes. HTML
+    entities are decoded before trimming so the visible budget is what
+    the SERP actually renders; we re-encode on the way back out.
+    """
+    if not metatags:
+        return metatags
+
+    def _trim(m: re.Match) -> str:
+        value = m.group("v")
+        if value is None:
+            return m.group(0)
+        decoded = html.unescape(value)
+        if len(decoded) <= limit:
+            return m.group(0)
+        capped = _cap_meta_description(decoded, limit=limit)
+        return m.group(0).replace(value, html.escape(capped, quote=True))
+
+    for pattern in _DESC_PATTERNS:
+        metatags = pattern.sub(_trim, metatags)
+    return metatags
 
 
 def _page_still_lacks_description(context) -> bool:

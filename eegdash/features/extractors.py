@@ -32,6 +32,28 @@ __all__ = [
 ]
 
 
+def _get_func_name(func: Callable):
+    """Get the name of a function or callable object.
+
+    Parameters
+    ----------
+    func: Callable
+        A function or a callable object.
+
+    Returns
+    -------
+    str
+        The name of the function or callable object.
+
+    """
+    func = get_underlying_func(func)
+    if hasattr(func, "__name__"):
+        return func.__name__
+    if hasattr(func, "__class__"):
+        return func.__class__.__name__
+    return str(func)
+
+
 def _func_to_dict(func: FunctionType | partial) -> dict:
     r"""Dumps a function to a dictionary.
 
@@ -51,7 +73,7 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
     _func_from_dict
 
     """
-    func_dict = {"name": get_underlying_func(func).__name__}
+    func_dict = {"name": _get_func_name(func)}
     if isinstance(func, partial):
         if func.args:
             func_dict["args"] = list(func.args)
@@ -286,8 +308,8 @@ class FeatureExtractor(TrainableFeature):
                         is_valid_by_output_type = True
                         break
             if not is_valid_by_output_type:
-                parent = getattr(parent_type, "__name__", parent_type)
-                child = getattr(f, "__name__", f)
+                parent = _get_func_name(parent_type)
+                child = _get_func_name(f)
                 raise TypeError(
                     f"Feature '{fname}: {child}' cannot be a child of {parent}"
                 )
@@ -390,7 +412,7 @@ class FeatureExtractor(TrainableFeature):
             ):
                 r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
             if not isinstance(fname, str) or not fname:
-                fname = getattr(f_und, "__name__", "")
+                fname = _get_func_name(f_und)
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""
                 for k, v in r.items():
@@ -602,12 +624,10 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(v, FeatureExtractor):
                 v = v._str()
             else:
-                v = get_underlying_func(v)
-                v = getattr(v, "__name__", str(v))
+                v = _get_func_name(v)
             d[k] = v
         if self.preprocessor is not None:
-            p = get_underlying_func(self.preprocessor)
-            s = getattr(p, "__name__", str(p))
+            s = _get_func_name(self.preprocessor)
         else:
             s = None
         return d, s

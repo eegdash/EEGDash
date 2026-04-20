@@ -77,7 +77,7 @@ If you use this dataset in your research, please cite the original authors.
 
 ## About This Dataset
 
-<h1>HUP iEEG dataset</h1>
+<h3>HUP iEEG dataset</h3>
 This dataset was prepared for release as part of a manuscript by Bernabei & Li et al. (in preparation). A subset of the data has been featured in Kini & Bernabei et al., Brain (2019) [1], and Bernabei & Sinha et al., Brain (2022) [2].
 <h3>Dataset description</h3>
 These files contain de-identified patient data collected as part of surgical treatment for drug resistant epilepsy at the Hospital of the University of Pennsylvania. Each of the 58 subjects underwent intracranial EEG with subdural grid, strip, and depth electrodes (ECoG) or purely stereotactically-placed depth electrodes (SEEG). Each patient also underwent subsequent treatment with surgical resection or laser ablation. Electrophysiologic data for both interictal and ictal periods is available, as are electrode localizations in ICBM152 MNI space. Furthermore, clinically-determined seizure onset channels are provided, as are channels which overlap with the resection/ablation zone, which was rigorously determined by segmenting the resection cavity.

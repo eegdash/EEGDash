@@ -51,7 +51,7 @@ Or install everything, which is what you want for contributing:
 pip install -e .[all]
 ```
 
-# Verifying the installation
+## Verifying the installation
 
 ```shell
 python -c "import eegdash; print(eegdash.__version__)"

@@ -185,6 +185,6 @@ Transfer Learning Complete!
 The model effectively adapted to the new domain by updating only the classification head.
 ```
 
-**Total running time of the script:** (0 minutes 0.330 seconds)
+**Total running time of the script:** (0 minutes 0.316 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-tutorial-transfer-learning-py"></a>

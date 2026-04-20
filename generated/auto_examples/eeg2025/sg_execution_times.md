@@ -2,7 +2,7 @@
 
 # Computation times
 
-**10:44.187** total execution time for 3 files **from generated/auto_examples/eeg2025**:
+**11:06.317** total execution time for 3 files **from generated/auto_examples/eeg2025**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,6 +19,6 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                               | Time      |   Mem (MB) |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Challenge 2: Predicting the p-factor from EEG](tutorial_challenge_2.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py) (`tutorial_challenge_2.py`) | 06:28.857 |          0 |
-| [Challenge 1: Cross-Task Transfer Learning!](tutorial_challenge_1.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py) (`tutorial_challenge_1.py`)    | 04:04.854 |          0 |
-| [Working Offline with EEGDash](tutorial_eegdash_offline.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py) (`tutorial_eegdash_offline.py`)      | 00:10.476 |          0 |
+| [Challenge 2: Predicting the p-factor from EEG](tutorial_challenge_2.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py) (`tutorial_challenge_2.py`) | 06:32.280 |          0 |
+| [Challenge 1: Cross-Task Transfer Learning!](tutorial_challenge_1.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py) (`tutorial_challenge_1.py`)    | 04:20.679 |          0 |
+| [Working Offline with EEGDash](tutorial_eegdash_offline.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-eegdash-offline-py) (`tutorial_eegdash_offline.py`)      | 00:13.358 |          0 |

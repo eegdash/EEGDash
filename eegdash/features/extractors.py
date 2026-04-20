@@ -234,9 +234,9 @@ class FeatureExtractor(TrainableFeature):
         preprocessor: Callable | None = None,
     ):
         self.preprocessor = preprocessor
-        self._validate_execution_tree(feature_extractors)
         self.feature_extractors_dict = feature_extractors
-        self._is_trainable = self._check_is_trainable(feature_extractors)
+        self._validate_execution_tree()
+        self._is_trainable = self._check_is_trainable()
         super().__init__()
 
         # bypassing feature_predecessor to avoid circular import
@@ -249,9 +249,7 @@ class FeatureExtractor(TrainableFeature):
 
         self.features_kwargs = self.to_dict()
 
-    def _validate_execution_tree(
-        self, feature_extractors: dict, parent_type=None
-    ) -> dict:
+    def _validate_execution_tree(self, parent_type: Callable | None = None) -> dict:
         r"""Validate the consistency of the feature dependency graph.
 
         Parameters
@@ -283,7 +281,7 @@ class FeatureExtractor(TrainableFeature):
                 return
             parent_type = preprocessor
 
-        for fname, f in feature_extractors.items():
+        for fname, f in self.feature_extractors_dict.items():
             fe = None
             if isinstance(f, FeatureExtractor):
                 fe = f
@@ -291,7 +289,7 @@ class FeatureExtractor(TrainableFeature):
             f = get_underlying_func(f)
             if isinstance(f, AsInputOutputType):
                 if fe is not None:
-                    fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
+                    fe._validate_execution_tree(parent_type)
                     continue
                 elif hasattr(parent_type, "feature_kind"):
                     continue
@@ -315,7 +313,7 @@ class FeatureExtractor(TrainableFeature):
                     f"Feature '{fname}: {child}' cannot be a child of {parent}"
                 )
 
-    def _check_is_trainable(self, feature_extractors: dict) -> bool:
+    def _check_is_trainable(self) -> bool:
         r"""Scan the execution tree for components requiring training.
 
         Returns
@@ -324,7 +322,7 @@ class FeatureExtractor(TrainableFeature):
             True if any child function or nested extractor is trainable.
 
         """
-        for fname, f in feature_extractors.items():
+        for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
                 if f._is_trainable:
                     return True

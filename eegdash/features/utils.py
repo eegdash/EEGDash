@@ -38,7 +38,7 @@ __all__ = [
 ]
 
 
-def _get_record_metadata(win_ds):
+def _get_record_metadata(win_ds: EEGWindowsDataset) -> dict:
     """Get record metadata.
 
     Parameters
@@ -61,7 +61,9 @@ def _get_record_metadata(win_ds):
     }
 
 
-def _get_batch_metadata(win_ds, X, crop_inds):
+def _get_batch_metadata(
+    win_ds: EEGWindowsDataset, X: np.ndarray, crop_inds: list
+) -> dict:
     """Get batch metadata.
 
     Parameters
@@ -127,9 +129,8 @@ def _get_feature_extractor_from_parameter(
             "The given FeatureExtractor cannot process raw signals.\n"
             + "Please make sure the possible parent types of its "
             + "preprocessor/features include SignalOutputType or a "
-            + "subclass of it.\n\n"
-            + f"The full error message is:\n{e}"
-        )
+            + "subclass of it."
+        ) from e
 
 
 def _extract_features_from_windowsdataset(

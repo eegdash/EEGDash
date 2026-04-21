@@ -26,8 +26,8 @@ from safetensors.numpy import save_file as _save_safetensors
 
 from braindecode.datasets.base import (
     BaseConcatDataset,
-    EEGWindowsDataset,
-    _create_description,
+    RecordDataset,
+    _build_windowed_repr,
 )
 
 from ..logging import logger
@@ -38,7 +38,20 @@ __all__ = [
 ]
 
 
-class FeaturesDataset(EEGWindowsDataset):
+def _build_features_repr(
+    cls_name, n_windows, mne_obj, crop_inds, description, metadata, features
+):
+    """Build repr for FeaturesDataset."""
+    b = _build_windowed_repr(
+        cls_name, n_windows, mne_obj, crop_inds, description, metadata
+    )
+    if features is not None:
+        feature_names = ", ".join(f"{f}" for f in features.columns)
+        b.add_row("features", feature_names)
+    return b
+
+
+class FeaturesDataset(RecordDataset):
     r"""A dataset of features extracted from a single recording.
 
     This class holds features in a :class:`pandas.DataFrame` and provides an interface
@@ -110,11 +123,10 @@ class FeaturesDataset(EEGWindowsDataset):
         window_preproc_kwargs: Dict | None = None,
         features_kwargs: Dict | None = None,
     ):
+        super().__init__(description, transform)
         self.features = features
         self.n_features = features.columns.size
         self.metadata = metadata
-        self._description = _create_description(description)
-        self.transform = transform
         self.raw_info = raw_info
         self.raw_preproc_kwargs = raw_preproc_kwargs
         self.window_kwargs = window_kwargs
@@ -173,6 +185,25 @@ class FeaturesDataset(EEGWindowsDataset):
 
         """
         return len(self.features.index)
+
+    def _build_repr(self):
+        r"""Returns a textual representation of the dataset.
+
+        Returns
+        -------
+        str
+            A textual representation of the dataset.
+
+        """
+        return _build_features_repr(
+            type(self).__name__,
+            len(self),
+            self.raw_info,
+            self.crop_inds,
+            self.description,
+            self.metadata,
+            self.features,
+        )
 
 
 def _compute_stats(
@@ -585,7 +616,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
         """
         desc_file_name = "description.json"
         desc_file_path = os.path.join(sub_dir, desc_file_name)
-        description.to_json(desc_file_path)
+        description.to_json(desc_file_path, indent=4)
 
     @staticmethod
     def _save_raw_info(sub_dir: str, ds: FeaturesDataset):
@@ -631,7 +662,7 @@ class FeaturesConcatDataset(BaseConcatDataset):
                     kwargs_file_name = ".".join([kwargs_name, "json"])
                     kwargs_file_path = os.path.join(sub_dir, kwargs_file_name)
                     with open(kwargs_file_path, "w") as f:
-                        json.dump(kwargs, f)
+                        json.dump(kwargs, f, indent=4)
 
     def to_dataframe(
         self,

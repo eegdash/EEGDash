@@ -57,13 +57,14 @@ Works with Python 3.10+. BIDS-first. Runs locally.
 <h2 class="hf-section-title">At a glance</h2>
 <p class="hf-section-subtitle">Search-first discovery with reproducible pipelines and standardized metadata.</p>
 <!-- Badges come from shield/badge services (GitHub Actions, img.shields.io,
-pepy.tech, codecov) whose SVGs have variable natural widths driven by
-the text content. Hard-coding ``:width:`` + ``:height:`` to nice
-round numbers distorts the aspect ratio — PSI flagged e.g. PyPI
-versions 140x20 displayed vs 198x20 natural. Only ``:width:`` is
-set; browsers compute height from the SVG's own aspect ratio, which
-still reserves layout space thanks to the SVG's intrinsic
-dimensions. No CLS regression. -->[![Test Status](https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg)](https://github.com/eegdash/EEGDash/actions/workflows/tests.yml)[![Doc Status](https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg)](https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml)[![PyPI](https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square)](https://pypi.org/project/eegdash/)[![Python Versions](https://img.shields.io/pypi/pyversions/eegdash?style=flat-square)](https://pypi.org/project/eegdash/)[![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)[![Code Coverage](https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg)](https://codecov.io/gh/eegdash/EEGDash)[![License](https://img.shields.io/pypi/l/eegdash?style=flat-square)](https://github.com/eegdash/EEGDash/blob/main/LICENSE)[![GitHub Stars](https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square)](https://github.com/eegdash/EEGDash)
+pepy.tech, codecov) whose SVGs all share the same natural height (20)
+but have different natural widths driven by their text content. Each
+``:width:`` below matches the exact natural width of its SVG; every
+``:height:`` is 20. Rendering at 1:1 scale avoids the aspect-ratio
+distortion that PSI flagged (e.g. Python versions badge: natural
+198x20), and every ``<img>`` ships with explicit width+height so the
+browser reserves accurate layout space — no CLS regression, SEO
+contract preserved. -->[![Test Status](https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg)](https://github.com/eegdash/EEGDash/actions/workflows/tests.yml)[![Doc Status](https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg)](https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml)[![PyPI](https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square)](https://pypi.org/project/eegdash/)[![Python Versions](https://img.shields.io/pypi/pyversions/eegdash?style=flat-square)](https://pypi.org/project/eegdash/)[![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)[![Code Coverage](https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg)](https://codecov.io/gh/eegdash/EEGDash)[![License](https://img.shields.io/pypi/l/eegdash?style=flat-square)](https://github.com/eegdash/EEGDash/blob/main/LICENSE)[![GitHub Stars](https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square)](https://github.com/eegdash/EEGDash)
 
 700+
 

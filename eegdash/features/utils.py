@@ -14,7 +14,7 @@ The module provides the following functions:
 
 import copy
 from collections.abc import Callable
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -30,6 +30,7 @@ from braindecode.datasets.base import (
 
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .extractors import FeatureExtractor
+from .output_types import SignalOutputType
 
 __all__ = [
     "extract_features",
@@ -37,7 +38,7 @@ __all__ = [
 ]
 
 
-def _get_record_metadata(win_ds):
+def _get_record_metadata(win_ds: EEGWindowsDataset) -> dict:
     """Get record metadata.
 
     Parameters
@@ -60,7 +61,9 @@ def _get_record_metadata(win_ds):
     }
 
 
-def _get_batch_metadata(win_ds, X, crop_inds):
+def _get_batch_metadata(
+    win_ds: EEGWindowsDataset, X: np.ndarray, crop_inds: list
+) -> dict:
     """Get batch metadata.
 
     Parameters
@@ -87,6 +90,47 @@ def _get_batch_metadata(win_ds, X, crop_inds):
         "batch_size": X.shape[0],
         "crop_inds": crop_inds,
     }
+
+
+def _get_feature_extractor_from_parameter(
+    features: FeatureExtractor | Dict[Any, Callable] | List[Callable],
+) -> FeatureExtractor:
+    r"""Get a :class:`FeatureExtractor` instance from :class:`FeatureExtractor` | dict | list input.
+
+    Also validate that the resulting :class:`FeatureExtractor` instance
+    can operate on raw signals (its parent type is a :class:`SignalOutpuType`).
+
+    Parameters
+    ----------
+    features : ~eegdash.features.extractors.FeatureExtractor or dict or list
+        The feature extractor(s) to apply. Can be a
+        :class:`~eegdash.features.extractors.FeatureExtractor` instance,
+        a dictionary of named feature functions, or a list of feature
+        functions.
+
+    Returns
+    -------
+    ~eegdash.features.extractors.FeatureExtractor
+        A valid :class:`FeatureExtractor` instance.
+
+    """
+    if isinstance(features, list):
+        features = dict(enumerate(features))
+    if not isinstance(features, FeatureExtractor):
+        features = FeatureExtractor(features)
+    if hasattr(features, "parent_extractor_type"):
+        for pt in features.parent_extractor_type:
+            if issubclass(pt, SignalOutputType):
+                return features
+    try:
+        features._validate_execution_tree(parent_type=SignalOutputType)
+    except TypeError as e:
+        raise TypeError(
+            "The given FeatureExtractor cannot process raw signals.\n"
+            + "Please make sure the possible parent types of its "
+            + "preprocessor/features include SignalOutputType or a "
+            + "subclass of it."
+        ) from e
 
 
 def _extract_features_from_windowsdataset(
@@ -167,7 +211,7 @@ def _extract_features_from_windowsdataset(
 
 def extract_features(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[Any, Callable] | List[Callable],
     *,
     batch_size: int = 512,
     n_jobs: int = 1,
@@ -200,10 +244,7 @@ def extract_features(
         input recordings.
 
     """
-    if isinstance(features, list):
-        features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    features = _get_feature_extractor_from_parameter(features)
     feature_ds_list = list(
         tqdm(
             Parallel(n_jobs=n_jobs, return_as="generator")(
@@ -221,7 +262,7 @@ def extract_features(
 
 def fit_feature_extractors(
     concat_dataset: BaseConcatDataset,
-    features: FeatureExtractor | Dict[str, Callable] | List[Callable],
+    features: FeatureExtractor | Dict[Any, Callable] | List[Callable],
     batch_size: int = 8192,
 ) -> FeatureExtractor:
     r"""Fit trainable feature extractors on a concatenated dataset.
@@ -252,10 +293,7 @@ def fit_feature_extractors(
     the original input without modification.
 
     """
-    if isinstance(features, list):
-        features = dict(enumerate(features))
-    if not isinstance(features, FeatureExtractor):
-        features = FeatureExtractor(features)
+    features = _get_feature_extractor_from_parameter(features)
     if not features._is_trainable:
         return features
     features.clear()

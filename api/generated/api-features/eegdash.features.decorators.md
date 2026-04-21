@@ -103,7 +103,7 @@ should map the resulting numerical arrays to channel names.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.feature_predecessor(\*parent_extractor_type: List[Callable]) → Callable
+### eegdash.features.decorators.feature_predecessor(\*parent_extractor_type: List[Callable | Type]) → Callable
 
 Decorator to specify parent extractors for a feature function.
 
@@ -113,7 +113,7 @@ a feature extraction function. This metadata is used by the
 execution tree.
 
 * **Parameters:**
-  **\*parent_extractor_type** (*list* *of* *callable*) – A list of preprocessing functions that this feature immediately
+  **\*parent_extractor_type** (*list* *of* *callable* *or* *type*) – A list of preprocessing functions that this feature immediately
   depends on.
   Default is [`SignalOutputType`].
 

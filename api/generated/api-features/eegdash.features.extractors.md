@@ -79,7 +79,7 @@ extraction can occur.
 
 <!-- !! processed by numpydoc !! -->
 
-#### preprocess(\*x, \_metadata: dict)
+#### preprocess(\*x, \_metadata: dict) → tuple
 
 Apply the shared preprocessor to the input data.
 

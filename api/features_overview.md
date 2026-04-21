@@ -106,7 +106,7 @@ that subclass `BasePreprocessorOutputType`.
 
 ## Dataset and extraction utilities
 
-### eegdash.features.extract_features(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[str, Callable] | List[Callable], , batch_size: int = 512, n_jobs: int = 1) → FeaturesConcatDataset
+### eegdash.features.extract_features(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], , batch_size: int = 512, n_jobs: int = 1) → FeaturesConcatDataset
 
 Extract features from a collection of windowed recordings.
 
@@ -131,7 +131,7 @@ individual recording in a `BaseConcatDataset`.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.fit_feature_extractors(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[str, Callable] | List[Callable], batch_size: int = 8192) → FeatureExtractor
+### eegdash.features.fit_feature_extractors(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], batch_size: int = 8192) → FeatureExtractor
 
 Fit trainable feature extractors on a concatenated dataset.
 

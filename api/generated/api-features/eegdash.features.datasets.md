@@ -21,7 +21,7 @@ Provides the base classes:
 
 ### *class* eegdash.features.datasets.FeaturesDataset(features: DataFrame, metadata: DataFrame | None = None, description: dict | Series | None = None, transform: Callable | None = None, raw_info: Dict | None = None, raw_preproc_kwargs: Dict | None = None, window_kwargs: Dict | None = None, window_preproc_kwargs: Dict | None = None, features_kwargs: Dict | None = None)
 
-Bases: `EEGWindowsDataset`
+Bases: `RecordDataset`
 
 A dataset of features extracted from a single recording.
 

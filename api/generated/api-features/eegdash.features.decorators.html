@@ -719,7 +719,7 @@ should map the resulting numerical arrays to channel names.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">feature_predecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L246-L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.decorators.</span></span><span class="sig-name descname"><span class="pre">feature_predecessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parent_extractor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/decorators.py#L246-L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Decorator to specify parent extractors for a feature function.</p>
 <p>This decorator attaches a list of immediate parent preprocessing steps to
 a feature extraction function. This metadata is used by the
@@ -727,7 +727,7 @@ a feature extraction function. This metadata is used by the
 execution tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*parent_extractor_type</strong> (<em>list</em><em> of </em><em>callable</em>) – A list of preprocessing functions that this feature immediately
+<dd class="field-odd"><p><strong>*parent_extractor_type</strong> (<em>list</em><em> of </em><em>callable</em><em> or </em><em>type</em>) – A list of preprocessing functions that this feature immediately
 depends on.
 Default is [<code class="xref py py-class docutils literal notranslate"><span class="pre">SignalOutputType</span></code>].</p>
 </dd>

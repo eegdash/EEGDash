@@ -39,6 +39,32 @@ def is_broken_symlink(path: Path) -> bool:
         return False
 
 
+def extract_dataset_info(path: Path) -> tuple[str, str, str] | None:
+    r"""Extract ``(source, dataset_id, relative_path)`` from a path inside a cloned dataset.
+
+    Matches the two hosted source conventions currently supported:
+
+    - ``ds\d+`` paths → ``source="openneuro"`` (e.g. ``ds001234/sub-01/eeg/x.vhdr``)
+    - ``nm\d+`` paths → ``source="nemar"``   (e.g. ``nm000123/sub-01/meg/x.fif``)
+
+    The returned ``relative_path`` is the path relative to the dataset
+    root, normalised to forward slashes.
+
+    Returns ``None`` when neither pattern matches.
+    """
+    path_str = str(path.resolve() if not is_broken_symlink(path) else path.absolute())
+    for source, pat in (
+        ("openneuro", r"[/\\](ds\d+)[/\\](.+)$"),
+        ("nemar", r"[/\\](nm\d+)[/\\](.+)$"),
+    ):
+        m = re.search(pat, path_str)
+        if m:
+            ds_id = m.group(1)
+            rel = m.group(2).replace("\\", "/")
+            return source, ds_id, rel
+    return None
+
+
 def extract_openneuro_info(path: Path) -> tuple[str, str] | None:
     """Extract OpenNeuro dataset ID and relative path from a file path.
 
@@ -94,12 +120,65 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
         If the source is not supported.
 
     """
+    encoded_path = quote(relative_path, safe="/")
     if source == "openneuro":
-        # URL-encode the path, preserving forward slashes
-        encoded_path = quote(relative_path, safe="/")
         return f"https://s3.amazonaws.com/openneuro.org/{dataset_id}/{encoded_path}"
-    else:
-        raise ValueError(f"Unsupported source for S3 URL: {source}")
+    if source == "nemar":
+        # NEMAR mirrors datasets under s3://nemar/<id>/ with the same path
+        # scheme as OpenNeuro's bucket.
+        return f"https://s3.amazonaws.com/nemar/{dataset_id}/{encoded_path}"
+    raise ValueError(f"Unsupported source for S3 URL: {source}")
+
+
+def fetch_bytes_from_s3(
+    url: str,
+    *,
+    max_bytes: int = 262144,
+    timeout: float = 30.0,
+) -> bytes | None:
+    """Range-fetch the first ``max_bytes`` of an S3 object.
+
+    Used to pull MEG FIF / KIT SQD headers without downloading the full
+    multi-GB recording. S3 always supports ``Range: bytes=0-N`` — the
+    response is 206 Partial Content with the exact range requested.
+    The MNE FIF reader only needs enough bytes to walk the ``FIFFB_ROOT``
+    → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
+    256 KB even for 500-channel recordings.
+
+    Returns the raw byte slice on success, ``None`` on any network or
+    protocol failure (caller decides whether to retry with a larger
+    ``max_bytes``).
+    """
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Range": f"bytes=0-{int(max_bytes) - 1}",
+            "Accept": "*/*",
+        },
+    )
+    logger.debug("Range-fetching %d bytes from %s", max_bytes, url)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            # Servers that don't honour Range return 200 with the full
+            # body; accept both but log when we got more than asked.
+            data = resp.read()
+            if len(data) > max_bytes:
+                logger.debug(
+                    "server ignored Range; got %d bytes (asked %d) from %s",
+                    len(data),
+                    max_bytes,
+                    url,
+                )
+            return data
+    except HTTPError as e:
+        logger.debug("HTTP error range-fetching %s: %s", url, e)
+        return None
+    except URLError as e:
+        logger.debug("URL error range-fetching %s: %s", url, e)
+        return None
+    except (TimeoutError, OSError) as e:
+        logger.debug("Network error range-fetching %s: %s", url, e)
+        return None
 
 
 def fetch_from_s3(

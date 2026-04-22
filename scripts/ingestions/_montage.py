@@ -600,6 +600,258 @@ _MNE_COORD_FRAME_LABEL = {
 }
 
 
+def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str | None:
+    """Reconstruct a parseable FIF for **streaming-format** files (no
+    central directory). Walks tags sequentially from the file's start
+    until it finds ``FIFFB_MEAS_INFO`` end, then drops everything after.
+
+    The trick: MNE's ``read_info`` is happy when the file reports its
+    true size but only has valid FIF tags through the end of
+    ``MEAS_INFO``. We write a sparse tempfile of the correct size,
+    populate just the metadata prefix, and let MNE seek-but-not-read
+    the raw-data tail (it's zeros, which MNE skips).
+    """
+    import struct  # noqa: PLC0415
+    import tempfile  # noqa: PLC0415
+    import urllib.request  # noqa: PLC0415
+
+    # Try progressively larger buffers. 306-channel Neuromag files end
+    # their MEAS_INFO around 3-8 MB; 4 MB covers most, 16 MB is a safe
+    # backstop for dense HPI + isotrak + long comments.
+    for buf_size in (4_194_304, 16_777_216, 67_108_864):
+        try:
+            data = urllib.request.urlopen(
+                urllib.request.Request(
+                    url,
+                    headers={"Range": f"bytes=0-{min(buf_size, total) - 1}"},
+                ),
+                timeout=90,
+            ).read()
+        except Exception as exc:  # noqa: BLE001
+            LOGGER.debug("[layout.meg] streaming fetch %s failed: %s", url, exc)
+            return None
+
+        # Sequentially walk tags; track FIFFB_MEAS_INFO (kind 101)
+        # nesting to find its BLOCK_END position.
+        pos = 0
+        info_depth = 0
+        info_end: int | None = None
+        while pos + 16 <= len(data):
+            kind, _t, size, nxt = struct.unpack(">iiii", data[pos : pos + 16])
+            if kind == 104 and size == 4:  # FIFF_BLOCK_START
+                blk = struct.unpack(">i", data[pos + 16 : pos + 20])[0]
+                if blk == 101:  # FIFFB_MEAS_INFO
+                    info_depth += 1
+            elif kind == 105 and size == 4:  # FIFF_BLOCK_END
+                blk = struct.unpack(">i", data[pos + 16 : pos + 20])[0]
+                if blk == 101 and info_depth > 0:
+                    info_depth -= 1
+                    if info_depth == 0:
+                        info_end = pos + 16 + size
+                        break
+            # Advance: `next = -1 or 0` → sequential; else jump to offset
+            if nxt in (-1, 0):
+                new_pos = pos + 16 + size
+            else:
+                new_pos = nxt
+            if new_pos <= pos or new_pos > len(data):
+                break
+            pos = new_pos
+
+        if info_end is None:
+            continue  # escalate buffer size and retry
+
+        tmp = tempfile.NamedTemporaryFile(
+            suffix=data_file.suffix, prefix="megstr_", delete=False
+        )
+        try:
+            tmp.seek(total - 1)
+            tmp.write(b"\0")
+            tmp.seek(0)
+            tmp.write(data[:info_end])
+            tmp.flush()
+            LOGGER.info(
+                "[layout.meg] %s: streaming mode, MEAS_INFO ends at %.1f MB "
+                "(buffer %.1f MB, file %.1f MB)",
+                data_file.name,
+                info_end / (1024 * 1024),
+                buf_size / (1024 * 1024),
+                total / (1024 * 1024),
+            )
+            return tmp.name
+        except Exception as exc:  # noqa: BLE001
+            LOGGER.debug("[layout.meg] streaming stitch %s failed: %s", url, exc)
+            try:
+                Path(tmp.name).unlink()
+            except OSError:
+                pass
+            return None
+        finally:
+            tmp.close()
+
+    LOGGER.info(
+        "[layout.meg] %s: MEAS_INFO end not found within 64 MB; skipping",
+        url,
+    )
+    return None
+
+
+def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
+    """Reconstruct a parseable FIF from S3 by fetching only metadata tags.
+
+    OpenNeuro / NEMAR clone datasets leave FIF files as broken git-annex
+    symlinks after our shallow ``git clone --depth 1 GIT_LFS_SKIP_SMUDGE=1``.
+    ``mne.io.read_info`` then fails. Calling ``git annex get`` would
+    work but pulls multi-GB raw data just to read a header.
+
+    FIF files written by Neuromag/MaxFilter carry a central directory
+    (``FIFF_DIR`` tag, offset pointed to by ``FIFF_DIR_POINTER`` at
+    file start) that lists every tag's byte position. That directory
+    is small (~25 KB for a 306-channel recording). Of the ~1600 tags
+    it indexes, one kind (``FIFF_DATA_BUFFER`` = 300) accounts for
+    >99% of the file's bulk; the remaining ~7 MB is channel info,
+    HPI, isotrak, and block structure — exactly what ``read_info``
+    walks.
+
+    Flow:
+      1. HEAD → total size. Range-fetch last 64 KB → locate the
+         directory tag at ``FIFF_DIR_POINTER``.
+      2. Parse directory entries. Skip kind=300. Merge remaining
+         ranges (adjacent blocks get coalesced with an 8 KB slack to
+         cut HTTP round trips).
+      3. Write a sparse tempfile: seek to file-size, write one zero
+         byte (so the file reports the true size to MNE), then drop
+         every captured range into its original byte offset. Holes
+         read as zeros on macOS/Linux — MNE never touches them
+         because the directory drives all seeks.
+      4. Return the tempfile path. Caller deletes after parsing.
+
+    Typical cost: ~7 MB per file, 2-3 Range requests, ~3-7 seconds.
+    Returns ``None`` when the file lacks a usable directory (streaming-
+    only FIF) or the fetch fails.
+    """
+    import struct  # noqa: PLC0415
+    import tempfile  # noqa: PLC0415
+    import urllib.request  # noqa: PLC0415
+
+    # 1. Total size
+    try:
+        with urllib.request.urlopen(
+            urllib.request.Request(url, method="HEAD"), timeout=30
+        ) as r:
+            total = int(r.headers["Content-Length"])
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("[layout.meg] HEAD %s failed: %s", url, exc)
+        return None
+
+    # 2. Read FIFF_FILE_ID + FIFF_DIR_POINTER from the first 512 bytes.
+    #    FILE_ID sits at pos 0 with a 20-byte body (16 header + 20 data);
+    #    DIR_POINTER tag header is at pos 36, i32 data at pos 52.
+    try:
+        head = urllib.request.urlopen(
+            urllib.request.Request(url, headers={"Range": "bytes=0-511"}),
+            timeout=30,
+        ).read()
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("[layout.meg] head fetch %s failed: %s", url, exc)
+        return None
+    if len(head) < 56:
+        return None
+    # DIR_POINTER value: signed i32 at offset 52
+    dir_pointer = struct.unpack(">i", head[52:56])[0]
+    if dir_pointer <= 0 or dir_pointer >= total:
+        # Streaming-format FIF (no central directory). Fall back to a
+        # sequential tag walk from the start: grab an initial chunk,
+        # scan for BLOCK_END(FIFFB_MEAS_INFO=101), truncate the buffer
+        # there. Older MEG recordings (Neuromag MaxFilter pre-2010ish)
+        # use streaming mode exclusively.
+        return _fetch_fif_metadata_streaming(data_file, url, total)
+
+    # 3. Fetch the directory tag (we don't know its full size, so grab
+    #    from dir_pointer to EOF — typical directories are <100 KB).
+    try:
+        dir_bytes = urllib.request.urlopen(
+            urllib.request.Request(
+                url, headers={"Range": f"bytes={dir_pointer}-{total - 1}"}
+            ),
+            timeout=60,
+        ).read()
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("[layout.meg] dir fetch %s failed: %s", url, exc)
+        return None
+    if len(dir_bytes) < 16:
+        return None
+    dir_kind, _, dir_size, _ = struct.unpack(">iiii", dir_bytes[:16])
+    if dir_kind != 102:  # FIFF_DIR
+        LOGGER.debug("[layout.meg] %s: expected FIFF_DIR (102), got %d", url, dir_kind)
+        return None
+
+    RAW_DATA_KINDS = {300}  # FIFF_DATA_BUFFER — the huge payload
+    ranges: list[tuple[int, int]] = [(0, 4096)]
+    for i in range(dir_size // 16):
+        off = 16 + i * 16
+        k, _t, s, pos = struct.unpack(">iiii", dir_bytes[off : off + 16])
+        if k in RAW_DATA_KINDS or pos < 0:
+            continue
+        ranges.append((pos, pos + 16 + s))
+    # Always include the directory itself + everything after.
+    ranges.append((dir_pointer, total))
+    ranges.sort()
+
+    # Merge adjacent ranges with an 8 KB coalesce slack.
+    merged: list[list[int]] = []
+    for start, end in ranges:
+        if merged and start <= merged[-1][1] + 8192:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+
+    total_bytes = sum(e - s for s, e in merged)
+    if total_bytes > 128 * 1024 * 1024:  # pathological — bail out
+        LOGGER.info(
+            "[layout.meg] %s: metadata fetch would exceed 128 MB (%d bytes); skipping",
+            url,
+            total_bytes,
+        )
+        return None
+
+    # 4. Build sparse tempfile
+    tmp = tempfile.NamedTemporaryFile(
+        suffix=data_file.suffix, prefix="megpart_", delete=False
+    )
+    try:
+        # Create a sparse file at the true size by seeking past the end
+        # and writing a single byte. macOS/Linux fill the hole with
+        # zeros on read, which is exactly what MNE will skip over.
+        tmp.seek(total - 1)
+        tmp.write(b"\0")
+        for start, end in merged:
+            req = urllib.request.Request(
+                url, headers={"Range": f"bytes={start}-{end - 1}"}
+            )
+            with urllib.request.urlopen(req, timeout=90) as r:
+                data = r.read()
+            tmp.seek(start)
+            tmp.write(data)
+        tmp.flush()
+        LOGGER.info(
+            "[layout.meg] %s: reconstructed %.1f MB from %d range requests",
+            data_file.name,
+            total_bytes / (1024 * 1024),
+            len(merged),
+        )
+        return tmp.name
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("[layout.meg] range stitch %s failed: %s", url, exc)
+        try:
+            Path(tmp.name).unlink()
+        except OSError:
+            pass
+        return None
+    finally:
+        tmp.close()
+
+
 def extract_meg_layout(
     data_file: Path, _bids_root: Path | None = None
 ) -> tuple[str, dict[str, Any]] | None:
@@ -610,6 +862,11 @@ def extract_meg_layout(
     even for multi-GB recordings. MEG/EEG reference channels and
     stimulus/misc channels are filtered out — only channels with a
     valid sensor location are kept.
+
+    When the FIF file is a broken git-annex symlink (shallow clone),
+    attempts a directory-aware S3 Range-fetch via
+    ``_fetch_fif_metadata_via_directory``: only metadata tags come
+    over the wire (~7 MB for a 2 GB recording).
 
     The underscore-prefixed ``_bids_root`` parameter exists so the
     extractor matches the shared dispatcher signature; unused here.
@@ -625,25 +882,78 @@ def extract_meg_layout(
     suffix = data_file.suffix.lower()
     name = data_file.name.lower()
 
+    info = None
+    tmp_path: str | None = None
     try:
-        if suffix == ".fif":
-            info = mne.io.read_info(str(data_file), verbose="error")
-        elif data_file.is_dir() and suffix == ".ds":
-            # CTF datasets are directories; read_raw_ctf takes the .ds path.
-            info = mne.io.read_raw_ctf(
-                str(data_file), preload=False, verbose="error"
-            ).info
-        elif suffix in {".sqd", ".con"} or name.endswith(".kit"):
-            info = mne.io.read_raw_kit(
-                str(data_file), preload=False, verbose="error"
-            ).info
-        else:
-            # Not a MEG format we recognise; the caller shouldn't have
-            # routed us here, but degrade gracefully.
-            LOGGER.info("[layout.meg] unrecognised MEG format: %s", data_file)
-            return None
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.warning("[layout.meg] failed to read header for %s: %s", data_file, exc)
+        try:
+            if suffix == ".fif":
+                info = mne.io.read_info(str(data_file), verbose="error")
+            elif data_file.is_dir() and suffix == ".ds":
+                # CTF datasets are directories; read_raw_ctf takes the .ds path.
+                info = mne.io.read_raw_ctf(
+                    str(data_file), preload=False, verbose="error"
+                ).info
+            elif suffix in {".sqd", ".con"} or name.endswith(".kit"):
+                info = mne.io.read_raw_kit(
+                    str(data_file), preload=False, verbose="error"
+                ).info
+            else:
+                LOGGER.info("[layout.meg] unrecognised MEG format: %s", data_file)
+                return None
+        except Exception as direct_exc:  # noqa: BLE001
+            LOGGER.debug(
+                "[layout.meg] direct read %s failed: %s", data_file, direct_exc
+            )
+            # S3 directory-aware reconstruction — FIF only. CTF .ds is
+            # a directory of files, not range-fetchable as one blob;
+            # KIT .sqd uses a different binary layout we haven't
+            # investigated yet.
+            if suffix != ".fif":
+                return None
+            try:
+                from _parser_utils import (  # noqa: PLC0415
+                    build_s3_url,
+                    extract_dataset_info,
+                    is_broken_symlink,
+                )
+            except ImportError:
+                return None
+            # Only chase S3 for files that really are broken annex pointers.
+            if not is_broken_symlink(data_file) and data_file.exists():
+                LOGGER.warning(
+                    "[layout.meg] read failed on present file %s: %s",
+                    data_file,
+                    direct_exc,
+                )
+                return None
+            info_tuple = extract_dataset_info(data_file)
+            if info_tuple is None:
+                return None
+            source, ds_id, rel = info_tuple
+            try:
+                url = build_s3_url(ds_id, rel, source=source)
+            except ValueError:
+                return None
+            tmp_path = _fetch_fif_metadata_via_directory(data_file, url)
+            if tmp_path is None:
+                return None
+            try:
+                info = mne.io.read_info(tmp_path, verbose="error")
+            except Exception as partial_exc:  # noqa: BLE001
+                LOGGER.info(
+                    "[layout.meg] %s: directory-reconstructed FIF still "
+                    "unparsable (%s)",
+                    data_file.name,
+                    partial_exc,
+                )
+                return None
+    finally:
+        if tmp_path:
+            try:
+                Path(tmp_path).unlink()
+            except OSError:
+                pass
+    if info is None:
         return None
 
     import numpy as np  # noqa: PLC0415 — localised import

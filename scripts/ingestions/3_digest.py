@@ -44,6 +44,7 @@ from _constants import (
 from _file_utils import get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
+from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
@@ -2356,6 +2357,7 @@ def digest_dataset(
     # Extract Record metadata for each file
     records = []
     errors = []
+    montages: dict[str, dict[str, Any]] = {}
 
     for bids_file in files:
         # Filter out non-neuro data files (sidecars, etc.)
@@ -2378,6 +2380,37 @@ def digest_dataset(
                     }
                 )
                 continue
+            record_datatype = (record.get("datatype") or "").lower()
+            try:
+                layout_result = extract_layout(
+                    Path(str(bids_file)), dataset_dir, datatype=record_datatype
+                )
+            except Exception as layout_exc:  # noqa: BLE001
+                # best-effort; missing sidecars are fine
+                layout_result = None
+                errors.append(
+                    {
+                        "file": str(bids_file),
+                        "error": f"layout extraction failed: {layout_exc}",
+                    }
+                )
+            if layout_result is not None:
+                h, doc = layout_result
+                record["montage_hash"] = h
+                if h not in montages:
+                    # First time we see this hash in this dataset — stamp
+                    # the provenance fields that live outside the hashed
+                    # content. The API upsert layer uses $setOnInsert so
+                    # these don't get overwritten when the same hash
+                    # appears in a later dataset.
+                    doc["first_seen"] = digested_at
+                    doc["representative_dataset"] = dataset_id
+                    subject_entity = record.get("entities", {}).get("subject")
+                    if subject_entity:
+                        doc["representative_subject"] = f"sub-{subject_entity}"
+                    montages[h] = doc
+            else:
+                record["montage_hash"] = None
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
@@ -2433,6 +2466,18 @@ def digest_dataset(
     with open(records_path, "w") as f:
         json.dump(records_data, f, indent=2, default=_json_serializer)
 
+    # Always written (even when empty) so downstream tooling can assume it exists.
+    montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
+    montages_data = {
+        "dataset": dataset_id,
+        "source": source,
+        "digested_at": digested_at,
+        "montage_count": len(montages),
+        "montages": list(montages.values()),
+    }
+    with open(montages_path, "w") as f:
+        json.dump(montages_data, f, indent=2, default=_json_serializer)
+
     # Save summary
     summary = {
         "status": "success",
@@ -2441,8 +2486,10 @@ def digest_dataset(
         "record_count": len(records),
         "error_count": len(errors),
         "integrity_issues_count": integrity_issues_count,
+        "montage_count": len(montages),
         "dataset_file": str(dataset_path),
         "records_file": str(records_path),
+        "montages_file": str(montages_path),
     }
 
     # Log warnings for datasets with integrity issues

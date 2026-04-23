@@ -831,6 +831,11 @@ class Record(TypedDict, total=False):
         Number of time points.
     digested_at : str
         Timestamp of when this record was processed.
+    montage_hash : str | None
+        Foreign key into the ``montages`` collection, pointing at the BIDS
+        ``*_electrodes.tsv`` layout this record was recorded with. ``None``
+        when the dataset publishes no scalp electrode positions (e.g.
+        iEEG depth-electrode datasets or MEG-only recordings).
 
     """
 
@@ -850,6 +855,96 @@ class Record(TypedDict, total=False):
     nchans: int | None
     ntimes: int | None
     digested_at: str
+    montage_hash: str | None
+
+
+class MontageChannel(TypedDict, total=False):
+    """A single entry inside :attr:`Montage.channels`.
+
+    BIDS ``electrodes.tsv`` requires ``name, x, y, z`` (in the coordinate
+    system declared by the sibling ``coordsystem.json``). The optional
+    columns are preserved as-is when present.
+    """
+
+    name: str
+    x: float
+    y: float
+    z: float
+    type: str
+    material: str
+    impedance: str
+
+
+class Montage(TypedDict, total=False):
+    """TypedDict schema for a Montage document (polymorphic by modality).
+
+    A Montage captures the sensor layout used by one or more Records.
+    Identical layouts (same channel names + same positions to 1 mm)
+    collapse to a single document via :attr:`hash`; every Record that
+    uses them carries the hash as a foreign key.
+
+    **Modalities.** The collection is polymorphic — a :attr:`modality`
+    tag discriminates between layouts. Coordinate semantics vary by
+    modality, so viewers must branch on :attr:`modality` before
+    interpreting :attr:`space_declared` / :attr:`units_declared`:
+
+    - ``"eeg"``  — scalp electrodes on a fitted sphere.
+    - ``"ieeg"`` — intracranial contacts in MRI / ACPC / MNI space.
+    - ``"meg"``  — sensor helmet (device or head frame, both accepted).
+    - ``"emg"``  — surface electrodes with body-landmark frames.
+    - ``"nirs"`` — fNIRS optodes (sources + detectors).
+
+    The document is populated during Phase 3 digestion by the
+    per-modality extractors in ``scripts.ingestions._montage``. The
+    provenance fields (``first_seen``, ``representative_dataset``,
+    ``representative_subject``) are set by the admin bulk-upsert endpoint
+    when a new hash is first inserted; subsequent upserts don't overwrite
+    them.
+
+    Attributes
+    ----------
+    hash : str
+        16-char SHA1-prefix over sorted ``(modality, name, x_mm, y_mm,
+        z_mm, type?)`` tuples. Stable under row-order changes and sub-mm
+        jitter; modality is included so an EEG cap and a MEG helmet
+        cannot alias by name + position.
+    modality : str
+        One of ``"eeg" | "ieeg" | "meg" | "emg" | "nirs"``.
+    n_channels : int
+        Number of channels with finite coordinates (rows with ``n/a``
+        positions are excluded).
+    space_declared : str | None
+        Raw value of ``<modality>CoordinateSystem`` from the companion
+        ``coordsystem.json`` (or the FIF-derived frame label for MEG:
+        ``"device" | "head" | "mixed" | "unknown"``). Preserved even
+        when known to be wrong — client-side viewers infer the actual
+        space from the data.
+    units_declared : str | None
+        Raw value of ``<modality>CoordinateUnits``: ``"m" | "cm" | "mm"``
+        (or ``"percent"`` for EMG body-landmark frames). Client-side
+        viewers infer actual units from the fitted sphere radius.
+    channels : list[MontageChannel]
+        The full sensor list, preserving BIDS row order after ``n/a``
+        drops.
+    first_seen : str
+        ISO 8601 timestamp of the first ingest that saw this hash.
+    representative_dataset : str
+        Dataset ID that first introduced this hash.
+    representative_subject : str
+        Subject ID within ``representative_dataset`` used to extract
+        the canonical channel list.
+
+    """
+
+    hash: str
+    modality: str
+    n_channels: int
+    space_declared: str | None
+    units_declared: str | None
+    channels: list[MontageChannel]
+    first_seen: str
+    representative_dataset: str
+    representative_subject: str
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:

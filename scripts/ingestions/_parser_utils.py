@@ -39,36 +39,39 @@ def is_broken_symlink(path: Path) -> bool:
         return False
 
 
-def extract_openneuro_info(path: Path) -> tuple[str, str] | None:
-    """Extract OpenNeuro dataset ID and relative path from a file path.
+def extract_dataset_info(path: Path) -> tuple[str, str, str] | None:
+    r"""Extract ``(source, dataset_id, relative_path)`` from a path inside a cloned dataset.
 
-    Looks for patterns like:
-    - .../data/cloned/ds001234/sub-01/eeg/file.vhdr
-    - .../ds001234/sub-01/eeg/file.vhdr
+    Matches the two hosted source conventions currently supported:
 
-    Parameters
-    ----------
-    path : Path
-        Path to the file.
+    - ``ds\d+`` paths → ``source="openneuro"`` (e.g. ``ds001234/sub-01/eeg/x.vhdr``)
+    - ``nm\d+`` paths → ``source="nemar"``   (e.g. ``nm000123/sub-01/meg/x.fif``)
 
-    Returns
-    -------
-    tuple[str, str] | None
-        Tuple of (dataset_id, relative_path) if found, None otherwise.
-        relative_path is the path within the dataset (e.g., "sub-01/eeg/file.vhdr")
+    The returned ``relative_path`` is the path relative to the dataset
+    root, normalised to forward slashes.
 
+    Returns ``None`` when neither pattern matches.
     """
     path_str = str(path.resolve() if not is_broken_symlink(path) else path.absolute())
-
-    # Match OpenNeuro dataset ID pattern (ds followed by one or more digits)
-    # Supports variable length IDs: ds000117, ds00117, ds0001234, etc.
-    match = re.search(r"[/\\](ds\d+)[/\\](.+)$", path_str)
-    if match:
-        dataset_id = match.group(1)
-        relative_path = match.group(2).replace("\\", "/")  # Normalize path separators
-        return dataset_id, relative_path
-
+    for source, pat in (
+        ("openneuro", r"[/\\](ds\d+)[/\\](.+)$"),
+        ("nemar", r"[/\\](nm\d+)[/\\](.+)$"),
+    ):
+        m = re.search(pat, path_str)
+        if m:
+            ds_id = m.group(1)
+            rel = m.group(2).replace("\\", "/")
+            return source, ds_id, rel
     return None
+
+
+def extract_openneuro_info(path: Path) -> tuple[str, str] | None:
+    """Backwards-compatible OpenNeuro-only wrapper around ``extract_dataset_info``."""
+    info = extract_dataset_info(path)
+    if info is None or info[0] != "openneuro":
+        return None
+    _, dataset_id, relative_path = info
+    return dataset_id, relative_path
 
 
 def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro") -> str:
@@ -77,11 +80,11 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
     Parameters
     ----------
     dataset_id : str
-        Dataset identifier (e.g., "ds001234").
+        Dataset identifier (e.g., "ds001234", "nm000123").
     relative_path : str
         Path within the dataset (e.g., "sub-01/eeg/file.vhdr").
     source : str
-        Data source. Currently only "openneuro" is supported.
+        Data source: ``"openneuro"`` or ``"nemar"``.
 
     Returns
     -------
@@ -94,12 +97,83 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
         If the source is not supported.
 
     """
+    encoded_path = quote(relative_path, safe="/")
     if source == "openneuro":
-        # URL-encode the path, preserving forward slashes
-        encoded_path = quote(relative_path, safe="/")
         return f"https://s3.amazonaws.com/openneuro.org/{dataset_id}/{encoded_path}"
-    else:
-        raise ValueError(f"Unsupported source for S3 URL: {source}")
+    if source == "nemar":
+        # NEMAR mirrors datasets under s3://nemar/<id>/ with the same path
+        # scheme as OpenNeuro's bucket.
+        return f"https://s3.amazonaws.com/nemar/{dataset_id}/{encoded_path}"
+    raise ValueError(f"Unsupported source for S3 URL: {source}")
+
+
+def fetch_bytes_from_s3(
+    url: str,
+    *,
+    start: int = 0,
+    max_bytes: int = 262144,
+    timeout: float = 30.0,
+) -> bytes | None:
+    """Range-fetch ``max_bytes`` starting at ``start`` from an S3 object.
+
+    Used to pull MEG FIF / KIT SQD headers without downloading the full
+    multi-GB recording. S3 always supports ``Range: bytes=start-end`` —
+    the response is 206 Partial Content with the exact range requested.
+    The MNE FIF reader only needs enough bytes to walk the ``FIFFB_ROOT``
+    → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
+    256 KB even for 500-channel recordings.
+
+    Returns the raw byte slice on success, ``None`` on any network or
+    protocol failure (caller decides whether to retry with a larger
+    ``max_bytes``).
+    """
+    end = int(start) + int(max_bytes) - 1
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Range": f"bytes={int(start)}-{end}",
+            "Accept": "*/*",
+        },
+    )
+    logger.debug("Range-fetching bytes=%d-%d from %s", start, end, url)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            # Servers that don't honour Range return 200 with the full
+            # body; accept both but log when we got more than asked.
+            data = resp.read()
+            if len(data) > max_bytes:
+                logger.debug(
+                    "server ignored Range; got %d bytes (asked %d) from %s",
+                    len(data),
+                    max_bytes,
+                    url,
+                )
+            return data
+    except HTTPError as e:
+        logger.debug("HTTP error range-fetching %s: %s", url, e)
+        return None
+    except URLError as e:
+        logger.debug("URL error range-fetching %s: %s", url, e)
+        return None
+    except (TimeoutError, OSError) as e:
+        logger.debug("Network error range-fetching %s: %s", url, e)
+        return None
+
+
+def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
+    """Issue a HEAD request and return ``Content-Length`` as int.
+
+    Returns ``None`` on any network failure or when the header is absent.
+    """
+    try:
+        with urllib.request.urlopen(
+            urllib.request.Request(url, method="HEAD"), timeout=timeout
+        ) as resp:
+            raw = resp.headers.get("Content-Length")
+            return int(raw) if raw is not None else None
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        logger.debug("HEAD %s failed: %s", url, exc)
+        return None
 
 
 def fetch_from_s3(

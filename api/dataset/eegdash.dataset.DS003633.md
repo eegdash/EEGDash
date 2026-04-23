@@ -210,6 +210,12 @@ the FreeSurfer surface data, the high-resolution head surface and the MRI-fiduci
 - OpenNeuro: [ds003633](https://openneuro.org/datasets/ds003633)
 - NeMAR: [ds003633](https://nemar.org/dataexplorer/detail?dataset_id=ds003633)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003633` class to access this dataset programmatically.

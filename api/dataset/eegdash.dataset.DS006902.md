@@ -133,6 +133,12 @@ dataset: sub01-sub27 are athletes; sub29-sub53 are non-athletes
 - OpenNeuro: [ds006902](https://openneuro.org/datasets/ds006902)
 - NeMAR: [ds006902](https://nemar.org/dataexplorer/detail?dataset_id=ds006902)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006902` class to access this dataset programmatically.

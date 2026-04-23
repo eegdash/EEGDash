@@ -187,6 +187,12 @@ MEG dataset of N=20 participants:
 - OpenNeuro: [ds006012](https://openneuro.org/datasets/ds006012)
 - NeMAR: [ds006012](https://nemar.org/dataexplorer/detail?dataset_id=ds006012)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006012` class to access this dataset programmatically.

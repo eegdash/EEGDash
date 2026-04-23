@@ -140,6 +140,12 @@ We modeled the BOLD signal using a general linear model (GLM) with two separate 
 - OpenNeuro: [ds002158](https://openneuro.org/datasets/ds002158)
 - NeMAR: [ds002158](https://nemar.org/dataexplorer/detail?dataset_id=ds002158)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS002158` class to access this dataset programmatically.

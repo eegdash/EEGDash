@@ -147,6 +147,12 @@ Eye movements were monitored in the MEG to ensure participants maintained centra
 - OpenNeuro: [ds004212](https://openneuro.org/datasets/ds004212)
 - NeMAR: [ds004212](https://nemar.org/dataexplorer/detail?dataset_id=ds004212)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004212` class to access this dataset programmatically.

@@ -143,6 +143,12 @@ The marker encodes this information as follows:
 - OpenNeuro: [ds003190](https://openneuro.org/datasets/ds003190)
 - NeMAR: [ds003190](https://nemar.org/dataexplorer/detail?dataset_id=ds003190)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003190` class to access this dataset programmatically.

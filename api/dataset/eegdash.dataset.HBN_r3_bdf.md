@@ -120,6 +120,12 @@ No README content is available for this dataset.
 - OpenNeuro: [hbn_r3_bdf](https://openneuro.org/datasets/hbn_r3_bdf)
 - NeMAR: [hbn_r3_bdf](https://nemar.org/dataexplorer/detail?dataset_id=hbn_r3_bdf)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `HBN_r3_bdf` class to access this dataset programmatically.

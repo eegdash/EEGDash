@@ -116,6 +116,20 @@ This dataset is comprised of neuroimaging data collected at the Nathan Kline Ins
 - OpenNeuro: [nm000254](https://openneuro.org/datasets/nm000254)
 - NeMAR: [nm000254](https://nemar.org/dataexplorer/detail?dataset_id=nm000254)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 61 sensors — 61 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=eaad55e7013a1dc0&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 61 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000254` class to access this dataset programmatically.

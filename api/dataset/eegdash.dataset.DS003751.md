@@ -150,6 +150,12 @@ Dataset_description file described the metadata for the dataset. Participants re
 - OpenNeuro: [ds003751](https://openneuro.org/datasets/ds003751)
 - NeMAR: [ds003751](https://nemar.org/dataexplorer/detail?dataset_id=ds003751)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003751` class to access this dataset programmatically.

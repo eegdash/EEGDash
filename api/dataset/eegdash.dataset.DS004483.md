@@ -130,6 +130,12 @@ According to the language of thought hypothesis, regular sequences are compresse
 - OpenNeuro: [ds004483](https://openneuro.org/datasets/ds004483)
 - NeMAR: [ds004483](https://nemar.org/dataexplorer/detail?dataset_id=ds004483)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004483` class to access this dataset programmatically.

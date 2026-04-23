@@ -129,6 +129,20 @@ EEG during during continuous gameplay of an 8-bit style video game.  EEG publish
 - OpenNeuro: [ds003517](https://openneuro.org/datasets/ds003517)
 - NeMAR: [ds003517](https://nemar.org/dataexplorer/detail?dataset_id=ds003517)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 65 sensors — 65 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=43c971e02eeb60ee&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 65 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS003517` class to access this dataset programmatically.

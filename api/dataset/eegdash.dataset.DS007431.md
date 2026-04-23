@@ -129,6 +129,12 @@ Experimental task: participants judged whether a probe grating was rotated clock
 - OpenNeuro: [ds007431](https://openneuro.org/datasets/ds007431)
 - NeMAR: [ds007431](https://nemar.org/dataexplorer/detail?dataset_id=ds007431)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007431` class to access this dataset programmatically.

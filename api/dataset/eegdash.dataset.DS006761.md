@@ -134,6 +134,12 @@ Moerel, D., Grootswagers, T., Chin, J. L., Ciardo, F., Nijhuis, P., Quek, G. L.,
 - OpenNeuro: [ds006761](https://openneuro.org/datasets/ds006761)
 - NeMAR: [ds006761](https://nemar.org/dataexplorer/detail?dataset_id=ds006761)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006761` class to access this dataset programmatically.

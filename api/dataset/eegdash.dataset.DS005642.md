@@ -138,6 +138,12 @@ Stimuli, behavioural data and code available at GitHub: [https://doi.org/10.5281
 - OpenNeuro: [ds005642](https://openneuro.org/datasets/ds005642)
 - NeMAR: [ds005642](https://nemar.org/dataexplorer/detail?dataset_id=ds005642)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005642` class to access this dataset programmatically.

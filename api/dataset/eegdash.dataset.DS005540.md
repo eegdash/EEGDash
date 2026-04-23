@@ -456,6 +456,12 @@ subject      date                    endtime1        endtime2
 - OpenNeuro: [ds005540](https://openneuro.org/datasets/ds005540)
 - NeMAR: [ds005540](https://nemar.org/dataexplorer/detail?dataset_id=ds005540)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005540` class to access this dataset programmatically.

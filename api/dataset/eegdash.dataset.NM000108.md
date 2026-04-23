@@ -197,6 +197,20 @@ Converted using EMG-2-BIDS (EEGLAB + bids-matlab-tools). Data integrity verified
 - OpenNeuro: [nm000108](https://openneuro.org/datasets/nm000108)
 - NeMAR: [nm000108](https://nemar.org/dataexplorer/detail?dataset_id=nm000108)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EMG · 256 sensors — 256 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=4b6fa7b07aed823e&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EMG · 256 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000108` class to access this dataset programmatically.

@@ -134,6 +134,12 @@ Moerel, D., Grootswagers, T., Robinson, A. K., Shatek, S. M., Woolgar, A., Carls
 - OpenNeuro: [ds004043](https://openneuro.org/datasets/ds004043)
 - NeMAR: [ds004043](https://nemar.org/dataexplorer/detail?dataset_id=ds004043)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004043` class to access this dataset programmatically.

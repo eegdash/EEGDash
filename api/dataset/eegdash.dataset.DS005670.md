@@ -141,6 +141,20 @@ For questions, please contact Pengfei Xu ([pxu@bnu.edu.cn](mailto:pxu@bnu.edu.cn
 - OpenNeuro: [ds005670](https://openneuro.org/datasets/ds005670)
 - NeMAR: [ds005670](https://nemar.org/dataexplorer/detail?dataset_id=ds005670)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 186 sensors — 186 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=e2e9240bccf8d39a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 186 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005670` class to access this dataset programmatically.

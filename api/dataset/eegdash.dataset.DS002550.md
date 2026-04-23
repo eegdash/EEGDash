@@ -215,6 +215,12 @@ Contains the X, Y Z coordinates of the nasion, left and right HPI (head position
 - OpenNeuro: [ds002550](https://openneuro.org/datasets/ds002550)
 - NeMAR: [ds002550](https://nemar.org/dataexplorer/detail?dataset_id=ds002550)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS002550` class to access this dataset programmatically.

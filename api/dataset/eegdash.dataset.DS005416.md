@@ -134,6 +134,12 @@ Researchers can use this EEG data to do resting-state analysis (corresponding to
 - OpenNeuro: [ds005416](https://openneuro.org/datasets/ds005416)
 - NeMAR: [ds005416](https://nemar.org/dataexplorer/detail?dataset_id=ds005416)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005416` class to access this dataset programmatically.

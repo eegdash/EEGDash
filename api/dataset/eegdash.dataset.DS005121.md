@@ -145,6 +145,20 @@ Please contact Liz Siefert ([sieferte@pennmedicine.upenn.edu](mailto:sieferte@pe
 - OpenNeuro: [ds005121](https://openneuro.org/datasets/ds005121)
 - NeMAR: [ds005121](https://nemar.org/dataexplorer/detail?dataset_id=ds005121)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 58 sensors — 58 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=8aaacba1205eea30&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 58 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005121` class to access this dataset programmatically.

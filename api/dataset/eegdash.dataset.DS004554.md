@@ -132,6 +132,20 @@ Data pre-processing pipeline is illustrated in “./code/preprocess_pipeline.pdf
 - OpenNeuro: [ds004554](https://openneuro.org/datasets/ds004554)
 - NeMAR: [ds004554](https://nemar.org/dataexplorer/detail?dataset_id=ds004554)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 96 sensors — 96 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=40527225e5e8c8e7&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 96 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004554` class to access this dataset programmatically.

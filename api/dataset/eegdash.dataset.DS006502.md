@@ -206,6 +206,12 @@ No keypress responses were recorded for participant “sub-23” on trial 1 of M
 - OpenNeuro: [ds006502](https://openneuro.org/datasets/ds006502)
 - NeMAR: [ds006502](https://nemar.org/dataexplorer/detail?dataset_id=ds006502)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006502` class to access this dataset programmatically.

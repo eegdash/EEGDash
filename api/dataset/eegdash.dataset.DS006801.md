@@ -133,6 +133,12 @@ The study was approved by the Research Ethics Committee of the Health Sciences C
 - OpenNeuro: [ds006801](https://openneuro.org/datasets/ds006801)
 - NeMAR: [ds006801](https://nemar.org/dataexplorer/detail?dataset_id=ds006801)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006801` class to access this dataset programmatically.

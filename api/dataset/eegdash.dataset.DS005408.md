@@ -228,6 +228,12 @@ called ‘alice’ (Alice in Wonderland).
 - OpenNeuro: [ds005408](https://openneuro.org/datasets/ds005408)
 - NeMAR: [ds005408](https://nemar.org/dataexplorer/detail?dataset_id=ds005408)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005408` class to access this dataset programmatically.

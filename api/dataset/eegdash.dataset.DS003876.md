@@ -175,6 +175,12 @@ Moreover, the cclinic subjects are used in that study, but not open-access due t
 - OpenNeuro: [ds003876](https://openneuro.org/datasets/ds003876)
 - NeMAR: [ds003876](https://nemar.org/dataexplorer/detail?dataset_id=ds003876)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003876` class to access this dataset programmatically.

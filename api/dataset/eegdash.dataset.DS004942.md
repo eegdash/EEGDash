@@ -129,6 +129,12 @@ Visuo-spatial working memory (VSWM) for sequences is thought to be crucial for d
 - OpenNeuro: [ds004942](https://openneuro.org/datasets/ds004942)
 - NeMAR: [ds004942](https://nemar.org/dataexplorer/detail?dataset_id=ds004942)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004942` class to access this dataset programmatically.

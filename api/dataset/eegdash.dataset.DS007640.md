@@ -143,6 +143,12 @@ For a detailed description of the stimulus selection, experimental design, and d
 - OpenNeuro: [ds007640](https://openneuro.org/datasets/ds007640)
 - NeMAR: [ds007640](https://nemar.org/dataexplorer/detail?dataset_id=ds007640)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007640` class to access this dataset programmatically.

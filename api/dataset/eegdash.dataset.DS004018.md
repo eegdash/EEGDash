@@ -130,6 +130,12 @@ See also [https://osf.io/a7knv/](https://osf.io/a7knv/)
 - OpenNeuro: [ds004018](https://openneuro.org/datasets/ds004018)
 - NeMAR: [ds004018](https://nemar.org/dataexplorer/detail?dataset_id=ds004018)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004018` class to access this dataset programmatically.

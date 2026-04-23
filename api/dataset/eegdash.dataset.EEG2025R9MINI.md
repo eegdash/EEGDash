@@ -251,6 +251,12 @@ We would like to express our gratitude to all participants and their families, w
 - OpenNeuro: [eeg2025r9mini](https://openneuro.org/datasets/eeg2025r9mini)
 - NeMAR: [eeg2025r9mini](https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r9mini)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `EEG2025R9MINI` class to access this dataset programmatically.

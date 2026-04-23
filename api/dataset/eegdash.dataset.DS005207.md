@@ -144,6 +144,12 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 - OpenNeuro: [ds005207](https://openneuro.org/datasets/ds005207)
 - NeMAR: [ds005207](https://nemar.org/dataexplorer/detail?dataset_id=ds005207)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005207` class to access this dataset programmatically.

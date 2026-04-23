@@ -181,6 +181,20 @@ Data curator for NEMAR version: Arnaud Delorme (UCSD, La Jolla, CA, USA)
 - OpenNeuro: [nm000115](https://openneuro.org/datasets/nm000115)
 - NeMAR: [nm000115](https://nemar.org/dataexplorer/detail?dataset_id=nm000115)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 14 sensors — 14 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=8e33b38a66763dcd&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 14 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000115` class to access this dataset programmatically.

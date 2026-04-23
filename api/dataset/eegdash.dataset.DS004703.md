@@ -149,6 +149,12 @@ Anatomical scans for particpant SD012 are not available due to excessive movemen
 - OpenNeuro: [ds004703](https://openneuro.org/datasets/ds004703)
 - NeMAR: [ds004703](https://nemar.org/dataexplorer/detail?dataset_id=ds004703)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004703` class to access this dataset programmatically.

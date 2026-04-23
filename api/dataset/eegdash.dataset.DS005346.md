@@ -152,6 +152,12 @@ MEG data preprocessing was conducted using MNE-Python (v1.8.0). We first applied
 - OpenNeuro: [ds005346](https://openneuro.org/datasets/ds005346)
 - NeMAR: [ds005346](https://nemar.org/dataexplorer/detail?dataset_id=ds005346)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005346` class to access this dataset programmatically.

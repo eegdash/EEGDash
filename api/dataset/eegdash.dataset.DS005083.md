@@ -130,6 +130,12 @@ All coordinates are recorded in the individual native post-operative CT imaging 
 - OpenNeuro: [ds005083](https://openneuro.org/datasets/ds005083)
 - NeMAR: [ds005083](https://nemar.org/dataexplorer/detail?dataset_id=ds005083)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005083` class to access this dataset programmatically.

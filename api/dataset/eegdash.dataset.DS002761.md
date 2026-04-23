@@ -133,6 +133,12 @@ Methods note:  a sequenceness analysis step was omitted from the published 2020 
 - OpenNeuro: [ds002761](https://openneuro.org/datasets/ds002761)
 - NeMAR: [ds002761](https://nemar.org/dataexplorer/detail?dataset_id=ds002761)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS002761` class to access this dataset programmatically.

@@ -133,6 +133,12 @@ Most memory is not formed deliberately but as a by-product of natural behavior. 
 - OpenNeuro: [ds005189](https://openneuro.org/datasets/ds005189)
 - NeMAR: [ds005189](https://nemar.org/dataexplorer/detail?dataset_id=ds005189)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005189` class to access this dataset programmatically.

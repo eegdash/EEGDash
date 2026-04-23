@@ -129,6 +129,20 @@ This EEG dataset was recorded as part of a study of the predictive mechanisms of
 - OpenNeuro: [ds002218](https://openneuro.org/datasets/ds002218)
 - NeMAR: [ds002218](https://nemar.org/dataexplorer/detail?dataset_id=ds002218)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=c943841e2536898b&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002218` class to access this dataset programmatically.

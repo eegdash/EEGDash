@@ -120,6 +120,12 @@ No README content is available for this dataset.
 - OpenNeuro: [metardk](https://openneuro.org/datasets/metardk)
 - NeMAR: [metardk](https://nemar.org/dataexplorer/detail?dataset_id=metardk)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `MetaRDK` class to access this dataset programmatically.

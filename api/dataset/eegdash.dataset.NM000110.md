@@ -201,6 +201,12 @@ were used in analysis (0.0 +/- 0.0 were removed from analysis).
 - OpenNeuro: [nm000110](https://openneuro.org/datasets/nm000110)
 - NeMAR: [nm000110](https://nemar.org/dataexplorer/detail?dataset_id=nm000110)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `NM000110` class to access this dataset programmatically.

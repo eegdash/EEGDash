@@ -132,6 +132,12 @@ Contact: [c.hilton@tu-berlin.de](mailto:c.hilton@tu-berlin.de) in case of questi
 - OpenNeuro: [ds005397](https://openneuro.org/datasets/ds005397)
 - NeMAR: [ds005397](https://nemar.org/dataexplorer/detail?dataset_id=ds005397)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005397` class to access this dataset programmatically.

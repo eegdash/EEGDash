@@ -137,6 +137,20 @@ For the patient, electrocorticographical data was obtained through a 24 electrod
 - OpenNeuro: [ds001785](https://openneuro.org/datasets/ds001785)
 - NeMAR: [ds001785](https://nemar.org/dataexplorer/detail?dataset_id=ds001785)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 63 sensors — 63 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=42b9e8daf4ff0e6d&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 63 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS001785` class to access this dataset programmatically.

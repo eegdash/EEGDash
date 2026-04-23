@@ -144,6 +144,20 @@ not for task 3 conds. It plays during the first ~ 12 seconds of the 6 min trial
 - OpenNeuro: [ds004033](https://openneuro.org/datasets/ds004033)
 - NeMAR: [ds004033](https://nemar.org/dataexplorer/detail?dataset_id=ds004033)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 67 sensors — 67 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=13035a10e609db54&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 67 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004033` class to access this dataset programmatically.

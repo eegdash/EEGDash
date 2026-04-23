@@ -132,6 +132,12 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - OpenNeuro: [ds005420](https://openneuro.org/datasets/ds005420)
 - NeMAR: [ds005420](https://nemar.org/dataexplorer/detail?dataset_id=ds005420)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005420` class to access this dataset programmatically.

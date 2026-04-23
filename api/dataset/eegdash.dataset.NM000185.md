@@ -141,6 +141,12 @@ PhysioNet: [https://physionet.org/content/sleep-edfx/1.0.0/](https://physionet.o
 - OpenNeuro: [nm000185](https://openneuro.org/datasets/nm000185)
 - NeMAR: [nm000185](https://nemar.org/dataexplorer/detail?dataset_id=nm000185)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `NM000185` class to access this dataset programmatically.

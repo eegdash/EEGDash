@@ -129,6 +129,20 @@ No README content is available for this dataset.
 - OpenNeuro: [ds006903](https://openneuro.org/datasets/ds006903)
 - NeMAR: [ds006903](https://nemar.org/dataexplorer/detail?dataset_id=ds006903)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — fNIRS · 200 sensors — 200 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=c885c0175d01a742&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of fNIRS · 200 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006903` class to access this dataset programmatically.

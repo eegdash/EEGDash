@@ -132,6 +132,12 @@ Note: subject 5 was not included in the analysis because the testing stage did n
 - OpenNeuro: [ds005028](https://openneuro.org/datasets/ds005028)
 - NeMAR: [ds005028](https://nemar.org/dataexplorer/detail?dataset_id=ds005028)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005028` class to access this dataset programmatically.

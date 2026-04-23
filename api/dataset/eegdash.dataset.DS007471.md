@@ -279,6 +279,12 @@ The following event markers are present during the test section (see Figure 1 fo
 - OpenNeuro: [ds007471](https://openneuro.org/datasets/ds007471)
 - NeMAR: [ds007471](https://nemar.org/dataexplorer/detail?dataset_id=ds007471)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007471` class to access this dataset programmatically.

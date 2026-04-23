@@ -200,6 +200,12 @@ E-Mail: [neumann@psychologie.uni-kiel.de](mailto:neumann@psychologie.uni-kiel.de
 - OpenNeuro: [ds007605](https://openneuro.org/datasets/ds007605)
 - NeMAR: [ds007605](https://nemar.org/dataexplorer/detail?dataset_id=ds007605)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007605` class to access this dataset programmatically.

@@ -129,6 +129,20 @@ If you use this dataset in your research, please cite the original authors.
 - OpenNeuro: [ds005777](https://openneuro.org/datasets/ds005777)
 - NeMAR: [ds005777](https://nemar.org/dataexplorer/detail?dataset_id=ds005777)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — fNIRS · 30 sensors — 30 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=fcd70d7c363709fd&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of fNIRS · 30 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005777` class to access this dataset programmatically.

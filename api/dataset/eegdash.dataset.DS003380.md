@@ -140,6 +140,12 @@ PS. Sub-12 folder is to be ignored. It was added to satisfy the BIDS validation 
 - OpenNeuro: [ds003380](https://openneuro.org/datasets/ds003380)
 - NeMAR: [ds003380](https://nemar.org/dataexplorer/detail?dataset_id=ds003380)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003380` class to access this dataset programmatically.

@@ -215,6 +215,12 @@ For surgical patients whose postoperative medical records did not explicitly ind
 - OpenNeuro: [ds003029](https://openneuro.org/datasets/ds003029)
 - NeMAR: [ds003029](https://nemar.org/dataexplorer/detail?dataset_id=ds003029)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003029` class to access this dataset programmatically.

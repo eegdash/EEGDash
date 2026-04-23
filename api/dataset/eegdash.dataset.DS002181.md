@@ -130,6 +130,20 @@ Data with an ID <  2000 were collected for a cohort of  36-month-old toddlers, a
 - OpenNeuro: [ds002181](https://openneuro.org/datasets/ds002181)
 - NeMAR: [ds002181](https://nemar.org/dataexplorer/detail?dataset_id=ds002181)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 124 sensors — 124 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=1126f259e03a10f6&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 124 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002181` class to access this dataset programmatically.

@@ -130,6 +130,12 @@ Please email [ben.lowe@mq.edu.au](mailto:ben.lowe@mq.edu.au) if you have any fur
 - OpenNeuro: [ds006768](https://openneuro.org/datasets/ds006768)
 - NeMAR: [ds006768](https://nemar.org/dataexplorer/detail?dataset_id=ds006768)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006768` class to access this dataset programmatically.

@@ -216,6 +216,12 @@ Jens G. Klinzing: [jens.klinzing@bitbrain.com](mailto:jens.klinzing@bitbrain.com
 - OpenNeuro: [ds005555](https://openneuro.org/datasets/ds005555)
 - NeMAR: [ds005555](https://nemar.org/dataexplorer/detail?dataset_id=ds005555)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005555` class to access this dataset programmatically.

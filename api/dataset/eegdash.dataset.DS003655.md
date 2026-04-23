@@ -129,6 +129,20 @@ EEG in a modified Sternberg working memory paradigm with two types of task: with
 - OpenNeuro: [ds003655](https://openneuro.org/datasets/ds003655)
 - NeMAR: [ds003655](https://nemar.org/dataexplorer/detail?dataset_id=ds003655)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 19 sensors — 19 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=f3404cca36fbbc73&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 19 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS003655` class to access this dataset programmatically.

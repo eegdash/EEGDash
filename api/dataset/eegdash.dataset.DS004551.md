@@ -132,6 +132,20 @@ The iEEG coordinate system employed in this dataset is MNI305.
 - OpenNeuro: [ds004551](https://openneuro.org/datasets/ds004551)
 - NeMAR: [ds004551](https://nemar.org/dataexplorer/detail?dataset_id=ds004551)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 68 sensors — 68 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=73f269477f0d3769&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 68 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004551` class to access this dataset programmatically.

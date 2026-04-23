@@ -135,6 +135,20 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
 - OpenNeuro: [ds007118](https://openneuro.org/datasets/ds007118)
 - NeMAR: [ds007118](https://nemar.org/dataexplorer/detail?dataset_id=ds007118)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 124 sensors — 124 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=9ebfc89880079189&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 124 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007118` class to access this dataset programmatically.

@@ -172,6 +172,12 @@ Kappenman, E., Farrens, J., Zhang, W., Stewart, A. & Luck, S. Experiment control
 - OpenNeuro: [ds006018](https://openneuro.org/datasets/ds006018)
 - NeMAR: [ds006018](https://nemar.org/dataexplorer/detail?dataset_id=ds006018)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006018` class to access this dataset programmatically.

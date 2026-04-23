@@ -259,6 +259,12 @@ Averaged ERP files (`.erp`) for each participant and session after preprocessing
 - OpenNeuro: [ds006861](https://openneuro.org/datasets/ds006861)
 - NeMAR: [ds006861](https://nemar.org/dataexplorer/detail?dataset_id=ds006861)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006861` class to access this dataset programmatically.

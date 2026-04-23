@@ -134,6 +134,12 @@ sub-22658 and sub-24247 do not have an available structural scan.
 - OpenNeuro: [ds003568](https://openneuro.org/datasets/ds003568)
 - NeMAR: [ds003568](https://nemar.org/dataexplorer/detail?dataset_id=ds003568)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003568` class to access this dataset programmatically.

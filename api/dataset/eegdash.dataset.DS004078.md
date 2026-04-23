@@ -177,6 +177,12 @@ For the MEG data of sub-08_run-16 and sub-09_run-7, the stimuli-starting trigger
 - OpenNeuro: [ds004078](https://openneuro.org/datasets/ds004078)
 - NeMAR: [ds004078](https://nemar.org/dataexplorer/detail?dataset_id=ds004078)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004078` class to access this dataset programmatically.

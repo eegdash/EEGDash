@@ -120,6 +120,12 @@ No README content is available for this dataset.
 - OpenNeuro: [romani2025](https://openneuro.org/datasets/romani2025)
 - NeMAR: [romani2025](https://nemar.org/dataexplorer/detail?dataset_id=romani2025)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `Romani2025` class to access this dataset programmatically.

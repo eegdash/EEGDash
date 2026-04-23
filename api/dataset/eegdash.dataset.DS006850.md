@@ -231,6 +231,12 @@ Data was recorded by Carolina Zähme, Kim Aljoscha Bressem and Isabelle Sander.
 - OpenNeuro: [ds006850](https://openneuro.org/datasets/ds006850)
 - NeMAR: [ds006850](https://nemar.org/dataexplorer/detail?dataset_id=ds006850)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006850` class to access this dataset programmatically.

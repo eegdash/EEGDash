@@ -215,6 +215,20 @@ in analysis (0.0 +/- 0.0 were removed from analysis).
 - OpenNeuro: [nm000112](https://openneuro.org/datasets/nm000112)
 - NeMAR: [nm000112](https://nemar.org/dataexplorer/detail?dataset_id=nm000112)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 30 sensors — 30 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=1cc6450cf4be43dd&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 30 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000112` class to access this dataset programmatically.

@@ -129,6 +129,20 @@ Participants were 43, 5-10-month-old infants. Their caregivers provided informed
 - OpenNeuro: [ds005343](https://openneuro.org/datasets/ds005343)
 - NeMAR: [ds005343](https://nemar.org/dataexplorer/detail?dataset_id=ds005343)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 129 sensors — 129 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=d9fd8c61d1f4e7fa&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 129 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005343` class to access this dataset programmatically.

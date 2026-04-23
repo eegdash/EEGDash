@@ -132,6 +132,12 @@ resting state (3 periods per session for each condition).
 - OpenNeuro: [ds004040](https://openneuro.org/datasets/ds004040)
 - NeMAR: [ds004040](https://nemar.org/dataexplorer/detail?dataset_id=ds004040)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004040` class to access this dataset programmatically.

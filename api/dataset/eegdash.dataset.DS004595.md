@@ -129,6 +129,20 @@ RL task (3-armed bandit) with alcohol vs. beverage cues in N=53 Community partic
 - OpenNeuro: [ds004595](https://openneuro.org/datasets/ds004595)
 - NeMAR: [ds004595](https://nemar.org/dataexplorer/detail?dataset_id=ds004595)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 59 sensors — 59 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=4c6575e169ee09ac&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 59 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004595` class to access this dataset programmatically.

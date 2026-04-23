@@ -146,6 +146,12 @@ Kappenman, E. S., Farrens, J. L., Zhang, W., Stewart, A. X., & Luck, S. J. (2021
 - OpenNeuro: [ds005863](https://openneuro.org/datasets/ds005863)
 - NeMAR: [ds005863](https://nemar.org/dataexplorer/detail?dataset_id=ds005863)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005863` class to access this dataset programmatically.

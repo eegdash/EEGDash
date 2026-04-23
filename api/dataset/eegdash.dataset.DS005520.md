@@ -155,6 +155,20 @@ This dataset contains resting(eyes closed, eyes open) and EEG recordings during 
 - OpenNeuro: [ds005520](https://openneuro.org/datasets/ds005520)
 - NeMAR: [ds005520](https://nemar.org/dataexplorer/detail?dataset_id=ds005520)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 62 sensors — 62 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=44ac8e35daa4d079&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 62 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005520` class to access this dataset programmatically.

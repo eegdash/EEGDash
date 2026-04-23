@@ -198,6 +198,12 @@ This dataset is shared under \*\*CC0\*\*.
 - OpenNeuro: [ds007181](https://openneuro.org/datasets/ds007181)
 - NeMAR: [ds007181](https://nemar.org/dataexplorer/detail?dataset_id=ds007181)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007181` class to access this dataset programmatically.

@@ -132,6 +132,12 @@ The provided code was used for processing the EEG data. All statistics were run 
 - OpenNeuro: [ds004771](https://openneuro.org/datasets/ds004771)
 - NeMAR: [ds004771](https://nemar.org/dataexplorer/detail?dataset_id=ds004771)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004771` class to access this dataset programmatically.

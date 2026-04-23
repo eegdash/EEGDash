@@ -141,6 +141,12 @@ Release history:
 - OpenNeuro: [ds004621](https://openneuro.org/datasets/ds004621)
 - NeMAR: [ds004621](https://nemar.org/dataexplorer/detail?dataset_id=ds004621)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004621` class to access this dataset programmatically.

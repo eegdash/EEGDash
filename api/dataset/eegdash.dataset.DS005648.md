@@ -138,6 +138,12 @@ The “sourcedata” folder contains the trial behavioral data collected during 
 - OpenNeuro: [ds005648](https://openneuro.org/datasets/ds005648)
 - NeMAR: [ds005648](https://nemar.org/dataexplorer/detail?dataset_id=ds005648)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005648` class to access this dataset programmatically.

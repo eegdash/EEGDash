@@ -144,6 +144,20 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 - OpenNeuro: [ds004865](https://openneuro.org/datasets/ds004865)
 - NeMAR: [ds004865](https://nemar.org/dataexplorer/detail?dataset_id=ds004865)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 62 sensors — 62 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=f4b9d16040da0281&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 62 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004865` class to access this dataset programmatically.

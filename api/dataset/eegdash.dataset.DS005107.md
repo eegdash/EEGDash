@@ -136,6 +136,12 @@ Correspondence: [weixu@mail.bnu.edu.cn](mailto:weixu@mail.bnu.edu.cn)
 - OpenNeuro: [ds005107](https://openneuro.org/datasets/ds005107)
 - NeMAR: [ds005107](https://nemar.org/dataexplorer/detail?dataset_id=ds005107)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005107` class to access this dataset programmatically.

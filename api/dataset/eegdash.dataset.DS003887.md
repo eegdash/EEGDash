@@ -172,6 +172,12 @@ Contact Sophia Shatek ([sophia.shatek@sydney.edu.au](mailto:sophia.shatek@sydney
 - OpenNeuro: [ds003887](https://openneuro.org/datasets/ds003887)
 - NeMAR: [ds003887](https://nemar.org/dataexplorer/detail?dataset_id=ds003887)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003887` class to access this dataset programmatically.

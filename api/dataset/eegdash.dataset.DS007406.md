@@ -129,6 +129,12 @@ This dataset comprises EEG recordings from ten participants exposed to six marke
 - OpenNeuro: [ds007406](https://openneuro.org/datasets/ds007406)
 - NeMAR: [ds007406](https://nemar.org/dataexplorer/detail?dataset_id=ds007406)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007406` class to access this dataset programmatically.

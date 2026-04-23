@@ -149,6 +149,20 @@ Please contact Harvey Huang ([huang.harvey@mayo.edu](mailto:huang.harvey@mayo.ed
 - OpenNeuro: [ds004977](https://openneuro.org/datasets/ds004977)
 - NeMAR: [ds004977](https://nemar.org/dataexplorer/detail?dataset_id=ds004977)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 228 sensors — 228 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=47e70aaefff830ee&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 228 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004977` class to access this dataset programmatically.

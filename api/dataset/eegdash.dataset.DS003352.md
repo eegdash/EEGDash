@@ -139,6 +139,12 @@ Stimuli include eight different square wave spiral gratings subtending 10 degree
 - OpenNeuro: [ds003352](https://openneuro.org/datasets/ds003352)
 - NeMAR: [ds003352](https://nemar.org/dataexplorer/detail?dataset_id=ds003352)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003352` class to access this dataset programmatically.

@@ -136,6 +136,12 @@ There are three events of interest. “S1” is a keypress of the experimenter, 
 - OpenNeuro: [ds005692](https://openneuro.org/datasets/ds005692)
 - NeMAR: [ds005692](https://nemar.org/dataexplorer/detail?dataset_id=ds005692)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005692` class to access this dataset programmatically.

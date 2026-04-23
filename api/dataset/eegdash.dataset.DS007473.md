@@ -132,6 +132,20 @@ Kalyan Tripathy, Zachary E. Markow, Morgan Fogarty, Mariel L. Schroeder, Alexa M
 - OpenNeuro: [ds007473](https://openneuro.org/datasets/ds007473)
 - NeMAR: [ds007473](https://nemar.org/dataexplorer/detail?dataset_id=ds007473)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — fNIRS · 253 sensors — 253 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=7d8ae20f10dca301&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of fNIRS · 253 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007473` class to access this dataset programmatically.

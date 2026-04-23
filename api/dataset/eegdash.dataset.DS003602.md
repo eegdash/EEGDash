@@ -129,6 +129,12 @@ Data collection took place at the Washington University School of Medicine, St. 
 - OpenNeuro: [ds003602](https://openneuro.org/datasets/ds003602)
 - NeMAR: [ds003602](https://nemar.org/dataexplorer/detail?dataset_id=ds003602)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003602` class to access this dataset programmatically.

@@ -221,6 +221,12 @@ We thank V. Dimakopoulos for help in reformatting the data to BIDS. We acknowled
 - OpenNeuro: [ds004944](https://openneuro.org/datasets/ds004944)
 - NeMAR: [ds004944](https://nemar.org/dataexplorer/detail?dataset_id=ds004944)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004944` class to access this dataset programmatically.

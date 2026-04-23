@@ -142,6 +142,12 @@ Some data have their associated individual T1w anatomy scans, other do not.
 - OpenNeuro: [ds006334](https://openneuro.org/datasets/ds006334)
 - NeMAR: [ds006334](https://nemar.org/dataexplorer/detail?dataset_id=ds006334)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006334` class to access this dataset programmatically.

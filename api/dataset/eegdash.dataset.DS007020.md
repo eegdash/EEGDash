@@ -177,6 +177,20 @@ Please contact [nandakumar-narayanan@uiowa.edu](mailto:nandakumar-narayanan@uiow
 - OpenNeuro: [ds007020](https://openneuro.org/datasets/ds007020)
 - NeMAR: [ds007020](https://nemar.org/dataexplorer/detail?dataset_id=ds007020)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 63 sensors — 63 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=fbfec3d08945683f&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 63 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007020` class to access this dataset programmatically.

@@ -129,6 +129,12 @@ Dataset is related to publication: Mąka, S., Chrustowicz, M., & Okruszek, Ł. (
 - OpenNeuro: [ds004626](https://openneuro.org/datasets/ds004626)
 - NeMAR: [ds004626](https://nemar.org/dataexplorer/detail?dataset_id=ds004626)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004626` class to access this dataset programmatically.

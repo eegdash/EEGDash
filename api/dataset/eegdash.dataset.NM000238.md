@@ -176,6 +176,12 @@ Due to mistakes during recording, following recordings do not have an adequate n
 - OpenNeuro: [nm000238](https://openneuro.org/datasets/nm000238)
 - NeMAR: [nm000238](https://nemar.org/dataexplorer/detail?dataset_id=nm000238)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `NM000238` class to access this dataset programmatically.

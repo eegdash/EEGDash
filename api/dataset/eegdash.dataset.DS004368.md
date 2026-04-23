@@ -130,6 +130,12 @@ We used a visual discrimination task. Stimuli consisted of 100 moving dots withi
 - OpenNeuro: [ds004368](https://openneuro.org/datasets/ds004368)
 - NeMAR: [ds004368](https://nemar.org/dataexplorer/detail?dataset_id=ds004368)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004368` class to access this dataset programmatically.

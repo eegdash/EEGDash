@@ -156,6 +156,12 @@ For inquiries, contact: Foteini Simistira Liwicki ([Foteini.liwicki@ltu.se](mail
 - OpenNeuro: [ds006033](https://openneuro.org/datasets/ds006033)
 - NeMAR: [ds006033](https://nemar.org/dataexplorer/detail?dataset_id=ds006033)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006033` class to access this dataset programmatically.

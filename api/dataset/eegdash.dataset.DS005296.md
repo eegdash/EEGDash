@@ -131,6 +131,12 @@ Participants were presented with 180 sentences in white font on a black backgrou
 - OpenNeuro: [ds005296](https://openneuro.org/datasets/ds005296)
 - NeMAR: [ds005296](https://nemar.org/dataexplorer/detail?dataset_id=ds005296)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005296` class to access this dataset programmatically.

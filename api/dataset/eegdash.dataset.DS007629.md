@@ -177,6 +177,20 @@ The dataset paper describing the collection, synchronization, and baseline model
 - OpenNeuro: [ds007629](https://openneuro.org/datasets/ds007629)
 - NeMAR: [ds007629](https://nemar.org/dataexplorer/detail?dataset_id=ds007629)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=7ea64da5ec2a2192&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007629` class to access this dataset programmatically.

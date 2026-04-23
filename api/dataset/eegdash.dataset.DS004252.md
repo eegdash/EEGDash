@@ -131,6 +131,12 @@ The analysis codes, results, and figures can be found on OSF: Moerel, D., Groots
 - OpenNeuro: [ds004252](https://openneuro.org/datasets/ds004252)
 - NeMAR: [ds004252](https://nemar.org/dataexplorer/detail?dataset_id=ds004252)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004252` class to access this dataset programmatically.

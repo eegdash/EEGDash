@@ -133,6 +133,20 @@ The dataset can be used to evaluate the alterations of seizure onset pattern dur
 - OpenNeuro: [ds007095](https://openneuro.org/datasets/ds007095)
 - NeMAR: [ds007095](https://nemar.org/dataexplorer/detail?dataset_id=ds007095)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 2 sensors — 2 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=9391aee8d98da192&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 2 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007095` class to access this dataset programmatically.

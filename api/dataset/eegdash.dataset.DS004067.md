@@ -131,6 +131,12 @@ Other data and analysis scripts can be found on OSF (DOI 10.17605/OSF.IO/32DAS) 
 - OpenNeuro: [ds004067](https://openneuro.org/datasets/ds004067)
 - NeMAR: [ds004067](https://nemar.org/dataexplorer/detail?dataset_id=ds004067)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004067` class to access this dataset programmatically.

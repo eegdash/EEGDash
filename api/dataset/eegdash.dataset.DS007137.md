@@ -130,6 +130,12 @@ Race Key: “Levels”: { “x1”: “White”, “x2”: “Black/African Amer
 - OpenNeuro: [ds007137](https://openneuro.org/datasets/ds007137)
 - NeMAR: [ds007137](https://nemar.org/dataexplorer/detail?dataset_id=ds007137)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007137` class to access this dataset programmatically.

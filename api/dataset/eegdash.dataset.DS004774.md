@@ -129,6 +129,20 @@ No README content is available for this dataset.
 - OpenNeuro: [ds004774](https://openneuro.org/datasets/ds004774)
 - NeMAR: [ds004774](https://nemar.org/dataexplorer/detail?dataset_id=ds004774)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 36 sensors — 36 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=6cdeeb79228028fa&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 36 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004774` class to access this dataset programmatically.

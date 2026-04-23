@@ -133,6 +133,12 @@ Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system
 - OpenNeuro: [ds004563](https://openneuro.org/datasets/ds004563)
 - NeMAR: [ds004563](https://nemar.org/dataexplorer/detail?dataset_id=ds004563)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004563` class to access this dataset programmatically.

@@ -275,6 +275,12 @@ XP2/sub-xp2\*/anat
 - OpenNeuro: [ds002338](https://openneuro.org/datasets/ds002338)
 - NeMAR: [ds002338](https://nemar.org/dataexplorer/detail?dataset_id=ds002338)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS002338` class to access this dataset programmatically.

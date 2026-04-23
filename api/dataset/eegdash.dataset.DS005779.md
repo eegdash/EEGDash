@@ -132,6 +132,20 @@ This work was funded by NINDS under award number R21NS133605.
 - OpenNeuro: [ds005779](https://openneuro.org/datasets/ds005779)
 - NeMAR: [ds005779](https://nemar.org/dataexplorer/detail?dataset_id=ds005779)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 62 sensors — 62 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=23533e0830db2c4a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 62 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005779` class to access this dataset programmatically.

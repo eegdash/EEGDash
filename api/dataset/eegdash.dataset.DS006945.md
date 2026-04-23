@@ -264,6 +264,20 @@ If you use this dataset, please cite the associated study and acknowledge the co
 - OpenNeuro: [ds006945](https://openneuro.org/datasets/ds006945)
 - NeMAR: [ds006945](https://nemar.org/dataexplorer/detail?dataset_id=ds006945)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=675286c87b09f0f3&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006945` class to access this dataset programmatically.

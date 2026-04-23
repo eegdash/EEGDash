@@ -327,6 +327,20 @@ Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit
 - OpenNeuro: [ds003620](https://openneuro.org/datasets/ds003620)
 - NeMAR: [ds003620](https://nemar.org/dataexplorer/detail?dataset_id=ds003620)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=bdaa33827471bed1&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS003620` class to access this dataset programmatically.

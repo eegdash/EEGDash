@@ -133,6 +133,12 @@ Movement onset is recorded with an accelerometer and captured with MISC006-MISC0
 - OpenNeuro: [ds004738](https://openneuro.org/datasets/ds004738)
 - NeMAR: [ds004738](https://nemar.org/dataexplorer/detail?dataset_id=ds004738)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004738` class to access this dataset programmatically.

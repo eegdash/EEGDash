@@ -142,6 +142,12 @@ Each script can also run standalone, as intermediate results are saved in the de
 - OpenNeuro: [ds005106](https://openneuro.org/datasets/ds005106)
 - NeMAR: [ds005106](https://nemar.org/dataexplorer/detail?dataset_id=ds005106)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005106` class to access this dataset programmatically.

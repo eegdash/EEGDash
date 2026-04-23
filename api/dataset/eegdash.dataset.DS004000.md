@@ -132,6 +132,20 @@ For each role, participants performed three blocks, consisting of 30 repetitions
 - OpenNeuro: [ds004000](https://openneuro.org/datasets/ds004000)
 - NeMAR: [ds004000](https://nemar.org/dataexplorer/detail?dataset_id=ds004000)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 128 sensors — 128 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=b83e569c9de8f988&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 128 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004000` class to access this dataset programmatically.

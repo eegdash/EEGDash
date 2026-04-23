@@ -130,6 +130,20 @@ Behavioral performance data are available on OSF ([https://osf.io/v2qwc/](https:
 - OpenNeuro: [ds005034](https://openneuro.org/datasets/ds005034)
 - NeMAR: [ds005034](https://nemar.org/dataexplorer/detail?dataset_id=ds005034)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 129 sensors — 129 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=73efe87edf3ea664&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 129 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005034` class to access this dataset programmatically.

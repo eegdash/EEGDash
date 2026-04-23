@@ -181,6 +181,20 @@ Research reported in this publication was supported by EpilepsieNL under Award N
 - OpenNeuro: [ds004370](https://openneuro.org/datasets/ds004370)
 - NeMAR: [ds004370](https://nemar.org/dataexplorer/detail?dataset_id=ds004370)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 80 sensors — 80 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=b73dca14342d2321&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 80 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004370` class to access this dataset programmatically.

@@ -131,6 +131,12 @@ Forty participants selected one of two doors, then received feedback indicating 
 - OpenNeuro: [ds007647](https://openneuro.org/datasets/ds007647)
 - NeMAR: [ds007647](https://nemar.org/dataexplorer/detail?dataset_id=ds007647)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007647` class to access this dataset programmatically.

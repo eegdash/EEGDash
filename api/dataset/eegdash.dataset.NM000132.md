@@ -214,6 +214,20 @@ For other questions about the ERP CORE, contact us at [erpbootcamp@gmail.com](ma
 - OpenNeuro: [nm000132](https://openneuro.org/datasets/nm000132)
 - NeMAR: [nm000132](https://nemar.org/dataexplorer/detail?dataset_id=nm000132)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 30 sensors — 30 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=2d81c2f346c76752&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 30 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000132` class to access this dataset programmatically.

@@ -129,6 +129,20 @@ No README content is available for this dataset.
 - OpenNeuro: [ds006107](https://openneuro.org/datasets/ds006107)
 - NeMAR: [ds006107](https://nemar.org/dataexplorer/detail?dataset_id=ds006107)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 130 sensors — 130 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=0202075408b1712a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 130 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006107` class to access this dataset programmatically.

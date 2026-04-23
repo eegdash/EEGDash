@@ -134,6 +134,20 @@ Participants 9, 10 and 15 were excluded from the analyses due to excessive head 
 - OpenNeuro: [ds005586](https://openneuro.org/datasets/ds005586)
 - NeMAR: [ds005586](https://nemar.org/dataexplorer/detail?dataset_id=ds005586)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 60 sensors — 60 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=5b27af345e88758a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 60 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005586` class to access this dataset programmatically.

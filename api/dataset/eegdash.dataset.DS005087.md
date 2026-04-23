@@ -130,6 +130,12 @@ Object and word stimuli presented at 5Hz to the left or right visual fields, or 
 - OpenNeuro: [ds005087](https://openneuro.org/datasets/ds005087)
 - NeMAR: [ds005087](https://nemar.org/dataexplorer/detail?dataset_id=ds005087)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005087` class to access this dataset programmatically.

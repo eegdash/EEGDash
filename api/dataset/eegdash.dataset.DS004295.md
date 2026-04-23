@@ -129,6 +129,12 @@ Two reversal learning tasks with different reinforcer (monetary reward vs. prima
 - OpenNeuro: [ds004295](https://openneuro.org/datasets/ds004295)
 - NeMAR: [ds004295](https://nemar.org/dataexplorer/detail?dataset_id=ds004295)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004295` class to access this dataset programmatically.

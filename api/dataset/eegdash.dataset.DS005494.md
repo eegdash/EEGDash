@@ -161,6 +161,20 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - OpenNeuro: [ds005494](https://openneuro.org/datasets/ds005494)
 - NeMAR: [ds005494](https://nemar.org/dataexplorer/detail?dataset_id=ds005494)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 128 sensors — 128 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=0f75007316e64c84&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 128 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005494` class to access this dataset programmatically.

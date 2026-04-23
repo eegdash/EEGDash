@@ -137,6 +137,12 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - OpenNeuro: [ds007358](https://openneuro.org/datasets/ds007358)
 - NeMAR: [ds007358](https://nemar.org/dataexplorer/detail?dataset_id=ds007358)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007358` class to access this dataset programmatically.

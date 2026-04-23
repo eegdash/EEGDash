@@ -140,6 +140,12 @@ Tucker, B. V., Brenner, D., Danielson, D. K., Kelley, M. C., Nenadić, F., & Sim
 - OpenNeuro: [ds004276](https://openneuro.org/datasets/ds004276)
 - NeMAR: [ds004276](https://nemar.org/dataexplorer/detail?dataset_id=ds004276)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004276` class to access this dataset programmatically.

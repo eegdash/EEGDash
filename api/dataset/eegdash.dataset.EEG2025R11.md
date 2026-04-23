@@ -238,6 +238,12 @@ We would like to express our gratitude to all participants and their families, w
 - OpenNeuro: [eeg2025r11](https://openneuro.org/datasets/eeg2025r11)
 - NeMAR: [eeg2025r11](https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r11)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `EEG2025R11` class to access this dataset programmatically.

@@ -142,6 +142,20 @@ concentration. This sequence is repeated 20 times for each participant.
 - OpenNeuro: [ds002691](https://openneuro.org/datasets/ds002691)
 - NeMAR: [ds002691](https://nemar.org/dataexplorer/detail?dataset_id=ds002691)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=c8e34561eb2042ce&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002691` class to access this dataset programmatically.

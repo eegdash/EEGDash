@@ -129,6 +129,12 @@ Electroencephalography data for paper titled “Precise cortical contributions t
 - OpenNeuro: [ds004785](https://openneuro.org/datasets/ds004785)
 - NeMAR: [ds004785](https://nemar.org/dataexplorer/detail?dataset_id=ds004785)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004785` class to access this dataset programmatically.

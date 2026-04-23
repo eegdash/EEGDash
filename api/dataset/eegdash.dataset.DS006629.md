@@ -135,6 +135,12 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 - OpenNeuro: [ds006629](https://openneuro.org/datasets/ds006629)
 - NeMAR: [ds006629](https://nemar.org/dataexplorer/detail?dataset_id=ds006629)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006629` class to access this dataset programmatically.

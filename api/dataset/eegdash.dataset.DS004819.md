@@ -130,6 +130,12 @@ Data are in the iEEG-BIDS format with binary files and channel maps included in 
 - OpenNeuro: [ds004819](https://openneuro.org/datasets/ds004819)
 - NeMAR: [ds004819](https://nemar.org/dataexplorer/detail?dataset_id=ds004819)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004819` class to access this dataset programmatically.

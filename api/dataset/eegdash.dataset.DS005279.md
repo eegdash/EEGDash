@@ -132,6 +132,12 @@ Corresponding analysis code can be found under the code folder, with the “anal
 - OpenNeuro: [ds005279](https://openneuro.org/datasets/ds005279)
 - NeMAR: [ds005279](https://nemar.org/dataexplorer/detail?dataset_id=ds005279)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005279` class to access this dataset programmatically.

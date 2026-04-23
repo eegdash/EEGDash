@@ -171,6 +171,12 @@ American Academy of Sleep Medicine. The AASM manual for the scoring of sleep and
 - OpenNeuro: [ds006695](https://openneuro.org/datasets/ds006695)
 - NeMAR: [ds006695](https://nemar.org/dataexplorer/detail?dataset_id=ds006695)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006695` class to access this dataset programmatically.

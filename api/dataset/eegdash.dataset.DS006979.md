@@ -264,6 +264,20 @@ For this dataset project, the approved Stage 1 protocol (registered report) can 
 - OpenNeuro: [ds006979](https://openneuro.org/datasets/ds006979)
 - NeMAR: [ds006979](https://nemar.org/dataexplorer/detail?dataset_id=ds006979)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=3d95031d7460b0b2&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006979` class to access this dataset programmatically.

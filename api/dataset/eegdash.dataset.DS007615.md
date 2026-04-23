@@ -203,6 +203,20 @@ Dozois, D.J., Dobson, K.S., & Ahnberg, J.L. (1998). A psychometric evaluation of
 - OpenNeuro: [ds007615](https://openneuro.org/datasets/ds007615)
 - NeMAR: [ds007615](https://nemar.org/dataexplorer/detail?dataset_id=ds007615)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=2f372d91aac3f6a5&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS007615` class to access this dataset programmatically.

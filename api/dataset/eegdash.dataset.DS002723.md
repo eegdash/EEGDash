@@ -190,6 +190,20 @@ Thank you for your interest in our work.
 - OpenNeuro: [ds002723](https://openneuro.org/datasets/ds002723)
 - NeMAR: [ds002723](https://nemar.org/dataexplorer/detail?dataset_id=ds002723)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=bbb5cd76833abe81&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002723` class to access this dataset programmatically.

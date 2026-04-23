@@ -130,6 +130,12 @@ High-density EEG and one channel ECG were collected simultaneously by a bio-sign
 - OpenNeuro: [ds003816](https://openneuro.org/datasets/ds003816)
 - NeMAR: [ds003816](https://nemar.org/dataexplorer/detail?dataset_id=ds003816)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003816` class to access this dataset programmatically.

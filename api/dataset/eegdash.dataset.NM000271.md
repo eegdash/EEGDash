@@ -129,6 +129,20 @@ No README content is available for this dataset.
 - OpenNeuro: [nm000271](https://openneuro.org/datasets/nm000271)
 - NeMAR: [nm000271](https://nemar.org/dataexplorer/detail?dataset_id=nm000271)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 59 sensors — 59 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=ee718adef652d415&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 59 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000271` class to access this dataset programmatically.

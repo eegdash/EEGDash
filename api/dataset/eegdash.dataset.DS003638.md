@@ -129,6 +129,20 @@ Three different tasks.   From: “Electrophysiological biomarkers of behavioral 
 - OpenNeuro: [ds003638](https://openneuro.org/datasets/ds003638)
 - NeMAR: [ds003638](https://nemar.org/dataexplorer/detail?dataset_id=ds003638)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=cebbcb20312cda11&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS003638` class to access this dataset programmatically.

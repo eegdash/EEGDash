@@ -138,6 +138,12 @@ To improve the spatial resolution of the source reconstruction, individual high-
 - OpenNeuro: [ds006720](https://openneuro.org/datasets/ds006720)
 - NeMAR: [ds006720](https://nemar.org/dataexplorer/detail?dataset_id=ds006720)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006720` class to access this dataset programmatically.

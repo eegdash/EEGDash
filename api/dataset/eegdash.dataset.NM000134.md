@@ -266,6 +266,20 @@ Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image
 - OpenNeuro: [nm000134](https://openneuro.org/datasets/nm000134)
 - NeMAR: [nm000134](https://nemar.org/dataexplorer/detail?dataset_id=nm000134)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=fd7c912a8197b8fd&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000134` class to access this dataset programmatically.

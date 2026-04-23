@@ -130,6 +130,12 @@ Raw data is provided as `.fif` files, although it was acquired on a CRF system.
 - OpenNeuro: [ds003682](https://openneuro.org/datasets/ds003682)
 - NeMAR: [ds003682](https://nemar.org/dataexplorer/detail?dataset_id=ds003682)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003682` class to access this dataset programmatically.

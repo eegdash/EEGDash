@@ -132,6 +132,12 @@ Experiment length: 1 hour
 - OpenNeuro: [ds003825](https://openneuro.org/datasets/ds003825)
 - NeMAR: [ds003825](https://nemar.org/dataexplorer/detail?dataset_id=ds003825)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS003825` class to access this dataset programmatically.

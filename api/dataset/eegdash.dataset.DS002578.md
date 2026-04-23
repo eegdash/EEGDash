@@ -142,6 +142,20 @@ Raw data manipulation before export:
 - OpenNeuro: [ds002578](https://openneuro.org/datasets/ds002578)
 - NeMAR: [ds002578](https://nemar.org/dataexplorer/detail?dataset_id=ds002578)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 256 sensors — 256 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=aafe658be1a2dd7f&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 256 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002578` class to access this dataset programmatically.

@@ -132,6 +132,12 @@ EEG was sampled continuously at 500 Hz with a bandpass of DC to 200 Hz. Event ma
 - OpenNeuro: [ds005932](https://openneuro.org/datasets/ds005932)
 - NeMAR: [ds005932](https://nemar.org/dataexplorer/detail?dataset_id=ds005932)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005932` class to access this dataset programmatically.

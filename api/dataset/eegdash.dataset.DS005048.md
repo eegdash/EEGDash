@@ -135,6 +135,12 @@ Data from all the participants were preprocessed identically following Makoto’
 - OpenNeuro: [ds005048](https://openneuro.org/datasets/ds005048)
 - NeMAR: [ds005048](https://nemar.org/dataexplorer/detail?dataset_id=ds005048)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005048` class to access this dataset programmatically.

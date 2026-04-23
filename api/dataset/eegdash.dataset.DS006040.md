@@ -130,6 +130,12 @@ The following tasks were performed: resting state (eyes open and closed), checke
 - OpenNeuro: [ds006040](https://openneuro.org/datasets/ds006040)
 - NeMAR: [ds006040](https://nemar.org/dataexplorer/detail?dataset_id=ds006040)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006040` class to access this dataset programmatically.

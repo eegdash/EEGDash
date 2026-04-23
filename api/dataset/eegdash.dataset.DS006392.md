@@ -150,6 +150,20 @@ Dora Hermes: [hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu)
 - OpenNeuro: [ds006392](https://openneuro.org/datasets/ds006392)
 - NeMAR: [ds006392](https://nemar.org/dataexplorer/detail?dataset_id=ds006392)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 166 sensors — 166 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=4d961c3e680cba90&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 166 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006392` class to access this dataset programmatically.

@@ -168,6 +168,20 @@ Participant 5 has three runs for the local-global task due to a need for an extr
 - OpenNeuro: [ds005429](https://openneuro.org/datasets/ds005429)
 - NeMAR: [ds005429](https://nemar.org/dataexplorer/detail?dataset_id=ds005429)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 62 sensors — 62 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=b98e0d630263b875&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 62 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005429` class to access this dataset programmatically.

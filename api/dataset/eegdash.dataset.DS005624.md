@@ -132,6 +132,12 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - OpenNeuro: [ds005624](https://openneuro.org/datasets/ds005624)
 - NeMAR: [ds005624](https://nemar.org/dataexplorer/detail?dataset_id=ds005624)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005624` class to access this dataset programmatically.

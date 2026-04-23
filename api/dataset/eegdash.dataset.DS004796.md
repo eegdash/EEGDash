@@ -188,6 +188,12 @@ For participant 34, the S11 marker was also not recorded because he/she forgot t
 - OpenNeuro: [ds004796](https://openneuro.org/datasets/ds004796)
 - NeMAR: [ds004796](https://nemar.org/dataexplorer/detail?dataset_id=ds004796)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004796` class to access this dataset programmatically.

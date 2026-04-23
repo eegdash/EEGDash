@@ -129,6 +129,12 @@ This dataset consists of 6-hour long EEG recordings in wildtype (WT) and rats Sy
 - OpenNeuro: [ds006269](https://openneuro.org/datasets/ds006269)
 - NeMAR: [ds006269](https://nemar.org/dataexplorer/detail?dataset_id=ds006269)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006269` class to access this dataset programmatically.

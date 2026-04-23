@@ -295,6 +295,12 @@ https://github.com/NeuroTechX/moabb
 - OpenNeuro: [nm000147](https://openneuro.org/datasets/nm000147)
 - NeMAR: [nm000147](https://nemar.org/dataexplorer/detail?dataset_id=nm000147)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `NM000147` class to access this dataset programmatically.

@@ -137,6 +137,12 @@ The following subjects/sessions do not include a T1w anatomical scan: sub-160 se
 - OpenNeuro: [ds006576](https://openneuro.org/datasets/ds006576)
 - NeMAR: [ds006576](https://nemar.org/dataexplorer/detail?dataset_id=ds006576)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006576` class to access this dataset programmatically.

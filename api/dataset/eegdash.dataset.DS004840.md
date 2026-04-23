@@ -188,6 +188,12 @@ For more detailed information about the study, please refer to the associated ar
 - OpenNeuro: [ds004840](https://openneuro.org/datasets/ds004840)
 - NeMAR: [ds004840](https://nemar.org/dataexplorer/detail?dataset_id=ds004840)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004840` class to access this dataset programmatically.

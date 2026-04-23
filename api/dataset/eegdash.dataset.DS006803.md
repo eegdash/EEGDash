@@ -212,6 +212,20 @@ All responses to “OR4” in the spatial ability sections are invalid, given th
 - OpenNeuro: [ds006803](https://openneuro.org/datasets/ds006803)
 - NeMAR: [ds006803](https://nemar.org/dataexplorer/detail?dataset_id=ds006803)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 8 sensors — 8 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=13c9492a774b47d4&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 8 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS006803` class to access this dataset programmatically.

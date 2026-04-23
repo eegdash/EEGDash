@@ -198,6 +198,12 @@ bids-starter-kid and custom Matlab scripts were used to convert the dataset into
 - OpenNeuro: [ds004381](https://openneuro.org/datasets/ds004381)
 - NeMAR: [ds004381](https://nemar.org/dataexplorer/detail?dataset_id=ds004381)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004381` class to access this dataset programmatically.

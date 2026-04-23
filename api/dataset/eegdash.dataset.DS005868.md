@@ -131,6 +131,12 @@ Participants were presented with 90 four-letter real words and 90 four-letter ps
 - OpenNeuro: [ds005868](https://openneuro.org/datasets/ds005868)
 - NeMAR: [ds005868](https://nemar.org/dataexplorer/detail?dataset_id=ds005868)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005868` class to access this dataset programmatically.

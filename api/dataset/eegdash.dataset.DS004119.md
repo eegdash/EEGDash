@@ -227,6 +227,20 @@ were conducted on the same subject during the same session, counterbalanced with
 - OpenNeuro: [ds004119](https://openneuro.org/datasets/ds004119)
 - NeMAR: [ds004119](https://nemar.org/dataexplorer/detail?dataset_id=ds004119)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 256 sensors — 256 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=2c55a2eff3d3924c&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 256 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004119` class to access this dataset programmatically.

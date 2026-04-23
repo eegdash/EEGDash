@@ -180,6 +180,20 @@ Journal of Open Source Software, 4\*(1896). [https://doi.org/10.21105/joss.01896
 - OpenNeuro: [ds005811](https://openneuro.org/datasets/ds005811)
 - NeMAR: [ds005811](https://nemar.org/dataexplorer/detail?dataset_id=ds005811)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 62 sensors — 62 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=10f011d3cfb30f5a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 62 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS005811` class to access this dataset programmatically.

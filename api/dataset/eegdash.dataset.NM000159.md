@@ -199,6 +199,12 @@ See *dataset_description.json* for further details.
 - OpenNeuro: [nm000159](https://openneuro.org/datasets/nm000159)
 - NeMAR: [nm000159](https://nemar.org/dataexplorer/detail?dataset_id=nm000159)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `NM000159` class to access this dataset programmatically.

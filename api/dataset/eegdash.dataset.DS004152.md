@@ -155,6 +155,20 @@ Add 120: Red X (wrong key pressed)
 - OpenNeuro: [ds004152](https://openneuro.org/datasets/ds004152)
 - NeMAR: [ds004152](https://nemar.org/dataexplorer/detail?dataset_id=ds004152)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 31 sensors — 31 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=05bf027a64099142&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 31 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004152` class to access this dataset programmatically.

@@ -134,6 +134,12 @@ Preprocessing: The EEG recordings were exported in .eeg format and are transform
 - OpenNeuro: [ds006036](https://openneuro.org/datasets/ds006036)
 - NeMAR: [ds006036](https://nemar.org/dataexplorer/detail?dataset_id=ds006036)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS006036` class to access this dataset programmatically.

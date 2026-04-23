@@ -129,6 +129,12 @@ Pilot EEG data for the registered report ‘Pilot data for Loneliness in the Bra
 - OpenNeuro: [ds004802](https://openneuro.org/datasets/ds004802)
 - NeMAR: [ds004802](https://nemar.org/dataexplorer/detail?dataset_id=ds004802)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004802` class to access this dataset programmatically.

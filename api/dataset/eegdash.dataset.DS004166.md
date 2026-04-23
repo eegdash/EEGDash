@@ -170,6 +170,12 @@ Electrodes were set both below and above the right eye to record the vertical el
 - OpenNeuro: [ds004166](https://openneuro.org/datasets/ds004166)
 - NeMAR: [ds004166](https://nemar.org/dataexplorer/detail?dataset_id=ds004166)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004166` class to access this dataset programmatically.

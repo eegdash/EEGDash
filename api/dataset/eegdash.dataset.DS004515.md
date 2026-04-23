@@ -129,6 +129,20 @@ Affective state reinforcement learning task in N=54 Community participants.  Hig
 - OpenNeuro: [ds004515](https://openneuro.org/datasets/ds004515)
 - NeMAR: [ds004515](https://nemar.org/dataexplorer/detail?dataset_id=ds004515)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 59 sensors — 59 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=4c6575e169ee09ac&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 59 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS004515` class to access this dataset programmatically.

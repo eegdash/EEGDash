@@ -248,6 +248,12 @@ Acquisition time of day is correct.
 - OpenNeuro: [ds007663](https://openneuro.org/datasets/ds007663)
 - NeMAR: [ds007663](https://nemar.org/dataexplorer/detail?dataset_id=ds007663)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS007663` class to access this dataset programmatically.

@@ -129,6 +129,12 @@ Dataset consists of 6 participants who performed SSVEP tasks. We designed stimul
 - OpenNeuro: [ds004745](https://openneuro.org/datasets/ds004745)
 - NeMAR: [ds004745](https://nemar.org/dataexplorer/detail?dataset_id=ds004745)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004745` class to access this dataset programmatically.

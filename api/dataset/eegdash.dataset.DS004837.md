@@ -143,6 +143,12 @@ National Institutes of Health (R01 MH108568 and MH113533)
 - OpenNeuro: [ds004837](https://openneuro.org/datasets/ds004837)
 - NeMAR: [ds004837](https://nemar.org/dataexplorer/detail?dataset_id=ds004837)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004837` class to access this dataset programmatically.

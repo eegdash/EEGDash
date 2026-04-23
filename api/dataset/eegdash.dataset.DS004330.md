@@ -133,6 +133,12 @@ Results for the first-level analyses for this data can be found on OSF ([https:/
 - OpenNeuro: [ds004330](https://openneuro.org/datasets/ds004330)
 - NeMAR: [ds004330](https://nemar.org/dataexplorer/detail?dataset_id=ds004330)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS004330` class to access this dataset programmatically.

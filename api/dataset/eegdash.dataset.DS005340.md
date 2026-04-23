@@ -231,6 +231,12 @@ file - e.g., male_low_000_regress.hdf5 for the male narrator with the low f0.
 - OpenNeuro: [ds005340](https://openneuro.org/datasets/ds005340)
 - NeMAR: [ds005340](https://nemar.org/dataexplorer/detail?dataset_id=ds005340)
 
+## Electrode Layout
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
 ## API Reference
 
 Use the `DS005340` class to access this dataset programmatically.

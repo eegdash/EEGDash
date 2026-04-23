@@ -169,6 +169,20 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - OpenNeuro: [nm000180](https://openneuro.org/datasets/nm000180)
 - NeMAR: [nm000180](https://nemar.org/dataexplorer/detail?dataset_id=nm000180)
 
+## Electrode Layout
+
+<details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 60 sensors — 60 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=448d5658a348baa7&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 60 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `NM000180` class to access this dataset programmatically.

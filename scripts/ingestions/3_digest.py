@@ -2357,10 +2357,6 @@ def digest_dataset(
     # Extract Record metadata for each file
     records = []
     errors = []
-    # Unique montages discovered while digesting this dataset. Keyed by
-    # the 16-char hash returned by _montage.extract_montage so repeat
-    # subjects collapse to one document. Serialised alongside the records
-    # as <dataset_id>_montages.json and consumed by Phase 5 inject.
     montages: dict[str, dict[str, Any]] = {}
 
     for bids_file in files:
@@ -2384,22 +2380,13 @@ def digest_dataset(
                     }
                 )
                 continue
-            # Look up this record's sensor layout (if any). Dispatcher
-            # picks the right per-modality extractor:
-            #   eeg   → scalp electrodes.tsv
-            #   ieeg  → intracranial electrodes.tsv (brain space)
-            #   meg   → sensor positions from the raw file header
-            #   nirs  → optodes.tsv (source/detector)
-            # Other datatypes (beh, emg-draft, etc.) → extractor returns
-            # None, record just stores montage_hash=None.
             record_datatype = (record.get("datatype") or "").lower()
             try:
                 layout_result = extract_layout(
                     Path(str(bids_file)), dataset_dir, datatype=record_datatype
                 )
             except Exception as layout_exc:  # noqa: BLE001
-                # Never let a bad sidecar break the whole record — log
-                # and move on. The record still ships with montage_hash=None.
+                # best-effort; missing sidecars are fine
                 layout_result = None
                 errors.append(
                     {
@@ -2479,9 +2466,7 @@ def digest_dataset(
     with open(records_path, "w") as f:
         json.dump(records_data, f, indent=2, default=_json_serializer)
 
-    # Save unique Montages (may be empty — MEG-only / iEEG-depth datasets
-    # or datasets that never published electrodes.tsv). The file is always
-    # written so downstream tooling can assume it exists.
+    # Always written (even when empty) so downstream tooling can assume it exists.
     montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
     montages_data = {
         "dataset": dataset_id,

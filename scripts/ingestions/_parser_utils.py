@@ -66,35 +66,12 @@ def extract_dataset_info(path: Path) -> tuple[str, str, str] | None:
 
 
 def extract_openneuro_info(path: Path) -> tuple[str, str] | None:
-    """Extract OpenNeuro dataset ID and relative path from a file path.
-
-    Looks for patterns like:
-    - .../data/cloned/ds001234/sub-01/eeg/file.vhdr
-    - .../ds001234/sub-01/eeg/file.vhdr
-
-    Parameters
-    ----------
-    path : Path
-        Path to the file.
-
-    Returns
-    -------
-    tuple[str, str] | None
-        Tuple of (dataset_id, relative_path) if found, None otherwise.
-        relative_path is the path within the dataset (e.g., "sub-01/eeg/file.vhdr")
-
-    """
-    path_str = str(path.resolve() if not is_broken_symlink(path) else path.absolute())
-
-    # Match OpenNeuro dataset ID pattern (ds followed by one or more digits)
-    # Supports variable length IDs: ds000117, ds00117, ds0001234, etc.
-    match = re.search(r"[/\\](ds\d+)[/\\](.+)$", path_str)
-    if match:
-        dataset_id = match.group(1)
-        relative_path = match.group(2).replace("\\", "/")  # Normalize path separators
-        return dataset_id, relative_path
-
-    return None
+    """Backwards-compatible OpenNeuro-only wrapper around ``extract_dataset_info``."""
+    info = extract_dataset_info(path)
+    if info is None or info[0] != "openneuro":
+        return None
+    _, dataset_id, relative_path = info
+    return dataset_id, relative_path
 
 
 def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro") -> str:
@@ -133,14 +110,15 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
 def fetch_bytes_from_s3(
     url: str,
     *,
+    start: int = 0,
     max_bytes: int = 262144,
     timeout: float = 30.0,
 ) -> bytes | None:
-    """Range-fetch the first ``max_bytes`` of an S3 object.
+    """Range-fetch ``max_bytes`` starting at ``start`` from an S3 object.
 
     Used to pull MEG FIF / KIT SQD headers without downloading the full
-    multi-GB recording. S3 always supports ``Range: bytes=0-N`` — the
-    response is 206 Partial Content with the exact range requested.
+    multi-GB recording. S3 always supports ``Range: bytes=start-end`` —
+    the response is 206 Partial Content with the exact range requested.
     The MNE FIF reader only needs enough bytes to walk the ``FIFFB_ROOT``
     → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
     256 KB even for 500-channel recordings.
@@ -149,14 +127,15 @@ def fetch_bytes_from_s3(
     protocol failure (caller decides whether to retry with a larger
     ``max_bytes``).
     """
+    end = int(start) + int(max_bytes) - 1
     req = urllib.request.Request(
         url,
         headers={
-            "Range": f"bytes=0-{int(max_bytes) - 1}",
+            "Range": f"bytes={int(start)}-{end}",
             "Accept": "*/*",
         },
     )
-    logger.debug("Range-fetching %d bytes from %s", max_bytes, url)
+    logger.debug("Range-fetching bytes=%d-%d from %s", start, end, url)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             # Servers that don't honour Range return 200 with the full
@@ -178,6 +157,22 @@ def fetch_bytes_from_s3(
         return None
     except (TimeoutError, OSError) as e:
         logger.debug("Network error range-fetching %s: %s", url, e)
+        return None
+
+
+def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
+    """Issue a HEAD request and return ``Content-Length`` as int.
+
+    Returns ``None`` on any network failure or when the header is absent.
+    """
+    try:
+        with urllib.request.urlopen(
+            urllib.request.Request(url, method="HEAD"), timeout=timeout
+        ) as resp:
+            raw = resp.headers.get("Content-Length")
+            return int(raw) if raw is not None else None
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        logger.debug("HEAD %s failed: %s", url, exc)
         return None
 
 

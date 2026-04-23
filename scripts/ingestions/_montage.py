@@ -65,6 +65,7 @@ import hashlib
 import json
 import logging
 import re
+import threading
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -307,6 +308,7 @@ def extract_eeg_layout(
 # value is a dict (upper-case channel name → tuple[float, float, float]
 # in metres).
 _MNE_TEMPLATE_CACHE: dict[str, dict[str, tuple[float, float, float]]] | None = None
+_MNE_TEMPLATE_CACHE_LOCK = threading.Lock()
 
 
 _ELECTRODE_EXPLORER_MONTAGES_JSON = (
@@ -335,49 +337,63 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
     global _MNE_TEMPLATE_CACHE
     if _MNE_TEMPLATE_CACHE is not None:
         return _MNE_TEMPLATE_CACHE
-    cache: dict[str, dict[str, tuple[float, float, float]]] = {}
+    with _MNE_TEMPLATE_CACHE_LOCK:
+        if _MNE_TEMPLATE_CACHE is not None:
+            return _MNE_TEMPLATE_CACHE
+        cache: dict[str, dict[str, tuple[float, float, float]]] = {}
 
-    # Pool 1 — MNE built-ins. These land keyed by MNE's canonical name.
-    try:
-        import mne  # type: ignore
+        # Pool 1 — MNE built-ins. These land keyed by MNE's canonical name.
+        try:
+            import mne  # type: ignore
 
-        for name in mne.channels.get_builtin_montages():
+            for name in mne.channels.get_builtin_montages():
+                try:
+                    m = mne.channels.make_standard_montage(name)
+                    cache[name] = {
+                        k.upper(): (float(v[0]), float(v[1]), float(v[2]))
+                        for k, v in m.get_positions()["ch_pos"].items()
+                    }
+                except Exception:  # noqa: BLE001 — skip anything MNE can't build here
+                    continue
+        except Exception as exc:  # noqa: BLE001
+            LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
+
+        # Pool 2 — the electrode-explorer extras. montages.json stores each
+        # position in meters already (xyz is centred on the fitted head
+        # sphere), identical to what make_standard_montage produces.
+        try:
+            raw = _ELECTRODE_EXPLORER_MONTAGES_JSON.read_text()
+        except FileNotFoundError:
+            raw = None
+        except OSError as exc:
+            LOGGER.warning("[template] electrode-explorer catalog unreadable (%s)", exc)
+            raw = None
+        if raw is not None:
             try:
-                m = mne.channels.make_standard_montage(name)
-                cache[name] = {
-                    k.upper(): (float(v[0]), float(v[1]), float(v[2]))
-                    for k, v in m.get_positions()["ch_pos"].items()
-                }
-            except Exception:  # noqa: BLE001 — skip anything MNE can't build here
-                continue
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
+                doc = json.loads(raw)
+                for key, entry in doc.items():
+                    if key == "_meta" or not isinstance(entry, dict):
+                        continue
+                    if key in cache:  # MNE already provided this exact template
+                        continue
+                    sensors = entry.get("electrodes") or []
+                    if not sensors:
+                        continue
+                    cache[key] = {
+                        s["name"].upper(): (float(s["x"]), float(s["y"]), float(s["z"]))
+                        for s in sensors
+                        if s.get("name") and "x" in s and "y" in s and "z" in s
+                    }
+            except (ValueError, TypeError) as exc:
+                LOGGER.warning(
+                    "[template] electrode-explorer catalog parse failed (%s)", exc
+                )
 
-    # Pool 2 — the electrode-explorer extras. montages.json stores each
-    # position in meters already (xyz is centred on the fitted head
-    # sphere), identical to what make_standard_montage produces.
-    try:
-        if _ELECTRODE_EXPLORER_MONTAGES_JSON.exists():
-            doc = json.loads(_ELECTRODE_EXPLORER_MONTAGES_JSON.read_text())
-            for key, entry in doc.items():
-                if key == "_meta" or not isinstance(entry, dict):
-                    continue
-                if key in cache:  # MNE already provided this exact template
-                    continue
-                sensors = entry.get("electrodes") or []
-                if not sensors:
-                    continue
-                cache[key] = {
-                    s["name"].upper(): (float(s["x"]), float(s["y"]), float(s["z"]))
-                    for s in sensors
-                    if s.get("name") and "x" in s and "y" in s and "z" in s
-                }
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.warning("[template] electrode-explorer catalog failed (%s)", exc)
-
-    _MNE_TEMPLATE_CACHE = cache
-    LOGGER.info("[template] loaded %d templates (MNE + electrode-explorer)", len(cache))
-    return cache
+        _MNE_TEMPLATE_CACHE = cache
+        LOGGER.info(
+            "[template] loaded %d templates (MNE + electrode-explorer)", len(cache)
+        )
+        return cache
 
 
 _CHANNELS_TSV_TYPE_EEG = {"EEG", "EEGREF", "REF"}
@@ -613,22 +629,16 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
     """
     import struct  # noqa: PLC0415
     import tempfile  # noqa: PLC0415
-    import urllib.request  # noqa: PLC0415
+
+    from _parser_utils import fetch_bytes_from_s3  # noqa: PLC0415
 
     # Try progressively larger buffers. 306-channel Neuromag files end
     # their MEAS_INFO around 3-8 MB; 4 MB covers most, 16 MB is a safe
     # backstop for dense HPI + isotrak + long comments.
     for buf_size in (4_194_304, 16_777_216, 67_108_864):
-        try:
-            data = urllib.request.urlopen(
-                urllib.request.Request(
-                    url,
-                    headers={"Range": f"bytes=0-{min(buf_size, total) - 1}"},
-                ),
-                timeout=90,
-            ).read()
-        except Exception as exc:  # noqa: BLE001
-            LOGGER.debug("[layout.meg] streaming fetch %s failed: %s", url, exc)
+        data = fetch_bytes_from_s3(url, max_bytes=min(buf_size, total), timeout=90.0)
+        if data is None:
+            LOGGER.debug("[layout.meg] streaming fetch %s failed", url)
             return None
 
         # Sequentially walk tags; track FIFFB_MEAS_INFO (kind 101)
@@ -735,30 +745,19 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     """
     import struct  # noqa: PLC0415
     import tempfile  # noqa: PLC0415
-    import urllib.request  # noqa: PLC0415
+
+    from _parser_utils import fetch_bytes_from_s3, head_content_length  # noqa: PLC0415
 
     # 1. Total size
-    try:
-        with urllib.request.urlopen(
-            urllib.request.Request(url, method="HEAD"), timeout=30
-        ) as r:
-            total = int(r.headers["Content-Length"])
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.debug("[layout.meg] HEAD %s failed: %s", url, exc)
+    total = head_content_length(url, timeout=30.0)
+    if total is None:
         return None
 
     # 2. Read FIFF_FILE_ID + FIFF_DIR_POINTER from the first 512 bytes.
     #    FILE_ID sits at pos 0 with a 20-byte body (16 header + 20 data);
     #    DIR_POINTER tag header is at pos 36, i32 data at pos 52.
-    try:
-        head = urllib.request.urlopen(
-            urllib.request.Request(url, headers={"Range": "bytes=0-511"}),
-            timeout=30,
-        ).read()
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.debug("[layout.meg] head fetch %s failed: %s", url, exc)
-        return None
-    if len(head) < 56:
+    head = fetch_bytes_from_s3(url, max_bytes=512, timeout=30.0)
+    if head is None or len(head) < 56:
         return None
     # DIR_POINTER value: signed i32 at offset 52
     dir_pointer = struct.unpack(">i", head[52:56])[0]
@@ -772,17 +771,10 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
 
     # 3. Fetch the directory tag (we don't know its full size, so grab
     #    from dir_pointer to EOF — typical directories are <100 KB).
-    try:
-        dir_bytes = urllib.request.urlopen(
-            urllib.request.Request(
-                url, headers={"Range": f"bytes={dir_pointer}-{total - 1}"}
-            ),
-            timeout=60,
-        ).read()
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.debug("[layout.meg] dir fetch %s failed: %s", url, exc)
-        return None
-    if len(dir_bytes) < 16:
+    dir_bytes = fetch_bytes_from_s3(
+        url, start=dir_pointer, max_bytes=total - dir_pointer, timeout=60.0
+    )
+    if dir_bytes is None or len(dir_bytes) < 16:
         return None
     dir_kind, _, dir_size, _ = struct.unpack(">iiii", dir_bytes[:16])
     if dir_kind != 102:  # FIFF_DIR
@@ -829,11 +821,17 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
         tmp.seek(total - 1)
         tmp.write(b"\0")
         for start, end in merged:
-            req = urllib.request.Request(
-                url, headers={"Range": f"bytes={start}-{end - 1}"}
+            data = fetch_bytes_from_s3(
+                url, start=start, max_bytes=end - start, timeout=90.0
             )
-            with urllib.request.urlopen(req, timeout=90) as r:
-                data = r.read()
+            if data is None:
+                LOGGER.debug(
+                    "[layout.meg] range stitch %s: fetch %d-%d failed",
+                    url,
+                    start,
+                    end,
+                )
+                return None
             tmp.seek(start)
             tmp.write(data)
         tmp.flush()
@@ -870,9 +868,6 @@ def extract_meg_layout(
     attempts a directory-aware S3 Range-fetch via
     ``_fetch_fif_metadata_via_directory``: only metadata tags come
     over the wire (~7 MB for a 2 GB recording).
-
-    The underscore-prefixed ``_bids_root`` parameter exists so the
-    extractor matches the shared dispatcher signature; unused here.
     """
     # Import MNE lazily so this module's other entry points keep working
     # even when MNE isn't installed (rare, but possible in minimal envs).
@@ -913,14 +908,12 @@ def extract_meg_layout(
             # investigated yet.
             if suffix != ".fif":
                 return None
-            try:
-                from _parser_utils import (  # noqa: PLC0415
-                    build_s3_url,
-                    extract_dataset_info,
-                    is_broken_symlink,
-                )
-            except ImportError:
-                return None
+            from _parser_utils import (  # noqa: PLC0415
+                build_s3_url,
+                extract_dataset_info,
+                is_broken_symlink,
+            )
+
             # Only chase S3 for files that really are broken annex pointers.
             if not is_broken_symlink(data_file) and data_file.exists():
                 LOGGER.warning(
@@ -1109,17 +1102,3 @@ def extract_layout(
     if fn is None:
         return None
     return fn(data_file, bids_root)
-
-
-# ---------------------------------------------------------------------------
-# Backwards-compat alias (previous name of the single EEG extractor)
-# ---------------------------------------------------------------------------
-
-
-def extract_montage(
-    data_file: Path,
-    bids_root: Path,
-    datatype: str = "eeg",
-) -> tuple[str, dict[str, Any]] | None:
-    """Deprecated alias — use :func:`extract_layout` instead."""
-    return extract_layout(data_file, bids_root, datatype)

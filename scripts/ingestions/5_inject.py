@@ -615,6 +615,12 @@ def main():
             file=sys.stderr,
         )
         return 1
+    if args.only_montages and args.skip_montages:
+        print(
+            "Error: --only-montages and --skip-montages are contradictory",
+            file=sys.stderr,
+        )
+        return 1
 
     # Get admin token (validated later if injection is needed)
     admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")

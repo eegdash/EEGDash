@@ -80,11 +80,11 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
     Parameters
     ----------
     dataset_id : str
-        Dataset identifier (e.g., "ds001234").
+        Dataset identifier (e.g., "ds001234", "nm000123").
     relative_path : str
         Path within the dataset (e.g., "sub-01/eeg/file.vhdr").
     source : str
-        Data source. Currently only "openneuro" is supported.
+        Data source: ``"openneuro"`` or ``"nemar"``.
 
     Returns
     -------

@@ -876,31 +876,27 @@ class MontageChannel(TypedDict, total=False):
 
 
 class Montage(TypedDict, total=False):
-    """TypedDict schema for a Montage document — **scalp EEG only**.
+    """TypedDict schema for a Montage document (polymorphic by modality).
 
-    A Montage captures the scalp electrode layout used by one or more
-    Records. Identical layouts (same channel names + same positions
-    to 1 mm) collapse to a single document via :attr:`hash`; every Record
-    that uses them carries the hash as a foreign key.
+    A Montage captures the sensor layout used by one or more Records.
+    Identical layouts (same channel names + same positions to 1 mm)
+    collapse to a single document via :attr:`hash`; every Record that
+    uses them carries the hash as a foreign key.
 
-    **Scope.** This collection exclusively stores scalp EEG layouts.
-    Other modalities need their own sibling collections because the
-    coordinate semantics differ:
+    **Modalities.** The collection is polymorphic — a :attr:`modality`
+    tag discriminates between layouts. Coordinate semantics vary by
+    modality, so viewers must branch on :attr:`modality` before
+    interpreting :attr:`space_declared` / :attr:`units_declared`:
 
-    - **iEEG** electrodes live in MRI / ACPC space, not on a sphere.
-    - **EMG** electrodes are on limbs / muscles; no sphere.
-    - **fNIRS** uses ``_optodes.tsv`` (source + detector pairs), a
-      different BIDS file and schema.
-    - **MEG** has no scalp electrodes.
+    - ``"eeg"``  — scalp electrodes on a fitted sphere.
+    - ``"ieeg"`` — intracranial contacts in MRI / ACPC / MNI space.
+    - ``"meg"``  — sensor helmet (device or head frame, both accepted).
+    - ``"emg"``  — surface electrodes with body-landmark frames.
+    - ``"nirs"`` — fNIRS optodes (sources + detectors).
 
-    The :attr:`modality` field is ``"eeg"`` today and exists so a
-    future collection (e.g. ``sensor_layouts``) can merge all kinds
-    under a single polymorphic collection; until then, ingestion skips
-    non-EEG records entirely.
-
-    The document is populated during Phase 3 digestion by
-    :func:`scripts.ingestions._montage.extract_montage`. The provenance
-    fields (``first_seen``, ``representative_dataset``,
+    The document is populated during Phase 3 digestion by the
+    per-modality extractors in ``scripts.ingestions._montage``. The
+    provenance fields (``first_seen``, ``representative_dataset``,
     ``representative_subject``) are set by the admin bulk-upsert endpoint
     when a new hash is first inserted; subsequent upserts don't overwrite
     them.
@@ -908,24 +904,28 @@ class Montage(TypedDict, total=False):
     Attributes
     ----------
     hash : str
-        16-char SHA1-prefix over sorted ``(name, x_mm, y_mm, z_mm)``
-        tuples. Stable under row-order changes and sub-mm jitter.
+        16-char SHA1-prefix over sorted ``(modality, name, x_mm, y_mm,
+        z_mm, type?)`` tuples. Stable under row-order changes and sub-mm
+        jitter; modality is included so an EEG cap and a MEG helmet
+        cannot alias by name + position.
     modality : str
-        Always ``"eeg"`` today. Reserved for future polymorphic use.
+        One of ``"eeg" | "ieeg" | "meg" | "emg" | "nirs"``.
     n_channels : int
         Number of channels with finite coordinates (rows with ``n/a``
         positions are excluded).
     space_declared : str | None
-        Raw value of ``EEGCoordinateSystem`` from the companion
-        ``coordsystem.json``. Preserved even when known to be wrong —
-        client-side viewers infer the actual space from the data.
+        Raw value of ``<modality>CoordinateSystem`` from the companion
+        ``coordsystem.json`` (or the FIF-derived frame label for MEG:
+        ``"device" | "head" | "mixed" | "unknown"``). Preserved even
+        when known to be wrong — client-side viewers infer the actual
+        space from the data.
     units_declared : str | None
-        Raw value of ``EEGCoordinateUnits``: ``"m" | "cm" | "mm"`` or
-        ``None``. Client-side viewers infer actual units from the
-        fitted sphere radius.
+        Raw value of ``<modality>CoordinateUnits``: ``"m" | "cm" | "mm"``
+        (or ``"percent"`` for EMG body-landmark frames). Client-side
+        viewers infer actual units from the fitted sphere radius.
     channels : list[MontageChannel]
-        The full electrode list, preserving BIDS row order after
-        ``n/a`` drops.
+        The full sensor list, preserving BIDS row order after ``n/a``
+        drops.
     first_seen : str
         ISO 8601 timestamp of the first ingest that saw this hash.
     representative_dataset : str

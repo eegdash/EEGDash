@@ -69,6 +69,7 @@ import threading
 from pathlib import Path
 from typing import Any, Iterable
 
+import numpy as np
 import pandas as pd
 
 LOGGER = logging.getLogger("digest.montage")
@@ -308,6 +309,7 @@ def extract_eeg_layout(
 # value is a dict (upper-case channel name → tuple[float, float, float]
 # in metres).
 _MNE_TEMPLATE_CACHE: dict[str, dict[str, tuple[float, float, float]]] | None = None
+_MNE_TEMPLATE_KEYSETS: dict[str, frozenset[str]] | None = None
 _MNE_TEMPLATE_CACHE_LOCK = threading.Lock()
 
 
@@ -334,7 +336,7 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
     MNE is the authoritative source when a name collides; our pool only
     adds templates MNE doesn't ship.
     """
-    global _MNE_TEMPLATE_CACHE
+    global _MNE_TEMPLATE_CACHE, _MNE_TEMPLATE_KEYSETS
     if _MNE_TEMPLATE_CACHE is not None:
         return _MNE_TEMPLATE_CACHE
     with _MNE_TEMPLATE_CACHE_LOCK:
@@ -390,6 +392,7 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
                 )
 
         _MNE_TEMPLATE_CACHE = cache
+        _MNE_TEMPLATE_KEYSETS = {name: frozenset(pos) for name, pos in cache.items()}
         LOGGER.info(
             "[template] loaded %d templates (MNE + electrode-explorer)", len(cache)
         )
@@ -471,9 +474,11 @@ def _score_template_match(
     if not channels:
         return None
     channels_up = {c.upper() for c in channels}
+    # Keysets are pre-frozen at template-load time (see _load_mne_templates).
+    keysets = _MNE_TEMPLATE_KEYSETS or {}
     best: tuple[int, int, str, dict[str, tuple[float, float, float]]] | None = None
     for tname, tpos in templates.items():
-        hits = channels_up & set(tpos.keys())
+        hits = channels_up & keysets.get(tname, frozenset(tpos))
         if len(hits) < min_hits:
             continue
         ratio = len(hits) / len(channels_up)
@@ -482,7 +487,7 @@ def _score_template_match(
         # Rank primarily on hit count; tiebreak on smaller template size.
         # `best` stores (hits, -template_size, name, matched_subset) so
         # max(...) picks highest hits then smallest template.
-        matched = {k: tpos[k] for k in tpos if k in channels_up}
+        matched = {k: tpos[k] for k in hits}
         key = (len(hits), -len(tpos))
         if best is None or key > (best[0], best[1]):
             best = (len(hits), -len(tpos), tname, matched)
@@ -750,7 +755,7 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
 
     # 1. Total size
     total = head_content_length(url, timeout=30.0)
-    if total is None:
+    if total is None or total <= 0:
         return None
 
     # 2. Read FIFF_FILE_ID + FIFF_DIR_POINTER from the first 512 bytes.
@@ -951,8 +956,6 @@ def extract_meg_layout(
                 pass
     if info is None:
         return None
-
-    import numpy as np  # noqa: PLC0415 — localised import
 
     sensors: list[dict[str, Any]] = []
     coord_frames_seen: set[int] = set()

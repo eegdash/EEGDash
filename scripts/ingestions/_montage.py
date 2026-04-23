@@ -661,21 +661,24 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
         if info_end is None:
             continue  # escalate buffer size and retry
 
+        # Truncate the tempfile at info_end — do NOT pad to full size.
+        # Streaming-format FIF has no directory, so MNE's tag walker
+        # reads sequentially from byte 0. A sparse tail of zeros
+        # parses as (kind=0, type=0, size=0, next=0) tag headers
+        # forever, effectively hanging the walker for multi-GB files.
+        # MEAS_INFO ends at info_end; everything after is raw samples
+        # MNE doesn't need.
         tmp = tempfile.NamedTemporaryFile(
             suffix=data_file.suffix, prefix="megstr_", delete=False
         )
         try:
-            tmp.seek(total - 1)
-            tmp.write(b"\0")
-            tmp.seek(0)
             tmp.write(data[:info_end])
             tmp.flush()
             LOGGER.info(
-                "[layout.meg] %s: streaming mode, MEAS_INFO ends at %.1f MB "
-                "(buffer %.1f MB, file %.1f MB)",
+                "[layout.meg] %s: streaming mode, truncated at "
+                "MEAS_INFO end (%.1f MB; original file %.1f MB)",
                 data_file.name,
                 info_end / (1024 * 1024),
-                buf_size / (1024 * 1024),
                 total / (1024 * 1024),
             )
             return tmp.name

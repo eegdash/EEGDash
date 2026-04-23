@@ -88,8 +88,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Sustained Neural Representations of Personally Familiar People and Places During Cued Recall                                                                                      |
 | Author (year)  | `Kidder2022`                                                                                                                                                                      |
-| Canonical      | `Kidder2024`                                                                                                                                                                      |
-| Importable as  | `DS004278`, `Kidder2022`, `Kidder2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004278`, `Kidder2022`                                                                                                                                                          |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Alexis Kidder(\*), Anna Corriveau(\*), Lina Teichmann, Susan Wardle, Chris Baker, [(\*) = equal contribution]                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ Sustained Neural Representations of Personally Familiar People and Places During
 * **Author (year):**
   `Kidder2022`
 * **Canonical:**
-  `Kidder2024`
+  —
 
-Also importable as: `DS004278`, `Kidder2022`, `Kidder2024`.
+Also importable as: `DS004278`, `Kidder2022`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 30; recordings: 30; tasks: 1.

@@ -117,7 +117,7 @@ Moerel, D., Grootswagers, T., Robinson, A. K., Shatek, S. M., Woolgar, A., Carls
 
 - Channels: 63
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 18.234355555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

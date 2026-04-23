@@ -104,8 +104,8 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex                                                              |
 | Author (year)  | `Huang2023`                                                                                                                                                                       |
-| Canonical      | `Huang2022`                                                                                                                                                                       |
-| Importable as  | `DS004457`, `Huang2023`, `Huang2022`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004457`, `Huang2023`                                                                                                                                                           |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom, Gregory A Worrell, Kai J Miller, Dora Hermes                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -129,7 +129,7 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
 - Recordings: 5
 - Tasks: 1
 
-- Channels: 206, 178, 194, 135, 192
+- Channels: 192, 194, 135, 178, 206
 - Sampling rate (Hz): 2048.0
 - Duration (hours): 5.6259163411458335
 
@@ -163,9 +163,9 @@ Electrical stimulation of temporal and limbic circuitry produces distinct respon
 * **Author (year):**
   `Huang2023`
 * **Canonical:**
-  `Huang2022`
+  —
 
-Also importable as: `DS004457`, `Huang2023`, `Huang2022`.
+Also importable as: `DS004457`, `Huang2023`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 5; recordings: 5; tasks: 1.

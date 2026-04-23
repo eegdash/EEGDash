@@ -113,7 +113,7 @@ Please email [ben.lowe@mq.edu.au](mailto:ben.lowe@mq.edu.au) if you have any fur
 
 - Channels: 64
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 14.466388888888888
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

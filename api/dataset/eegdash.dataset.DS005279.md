@@ -114,8 +114,8 @@ Corresponding analysis code can be found under the code folder, with the “anal
 - Tasks: —
 
 - Channels: Varies
-- Sampling rate (Hz): 1200
-- Duration (hours): 3.4166666666666665
+- Sampling rate (Hz): 1200.0
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Multisensory

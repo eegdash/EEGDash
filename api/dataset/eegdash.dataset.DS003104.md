@@ -113,8 +113,8 @@ label.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MNE-somato-data-bids (anonymized)                                                                                                                                                 |
 | Author (year)  | `Parkkonen2020`                                                                                                                                                                   |
-| Canonical      | `MNESomato`, `Somato`, `MNESomatoData`                                                                                                                                            |
-| Importable as  | `DS003104`, `Parkkonen2020`, `MNESomato`, `Somato`, `MNESomatoData`                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003104`, `Parkkonen2020`                                                                                                                                                       |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -172,9 +172,9 @@ MNE-somato-data-bids (anonymized)
 * **Author (year):**
   `Parkkonen2020`
 * **Canonical:**
-  `MNESomato`, `Somato`, `MNESomatoData`
+  —
 
-Also importable as: `DS003104`, `Parkkonen2020`, `MNESomato`, `Somato`, `MNESomatoData`.
+Also importable as: `DS003104`, `Parkkonen2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.

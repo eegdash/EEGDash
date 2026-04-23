@@ -89,8 +89,8 @@ Funding: NIH U01NS128612
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Intracranial recordings using BCI2000 and the CorTec BrainInterchange                                                                                                             |
 | Author (year)  | `Mivalt2025`                                                                                                                                                                      |
-| Canonical      | `Mivalt2024`, `BCI2000_Intracranial`                                                                                                                                              |
-| Importable as  | `DS004624`, `Mivalt2025`, `Mivalt2024`, `BCI2000_Intracranial`                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004624`, `Mivalt2025`                                                                                                                                                          |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | 1. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim, Andrea Duque-lopez, M. Krakorova, V. Kremen, D. Hermes, G.A. Worrell, K. J. Miller                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -148,9 +148,9 @@ Intracranial recordings using BCI2000 and the CorTec BrainInterchange
 * **Author (year):**
   `Mivalt2025`
 * **Canonical:**
-  `Mivalt2024`, `BCI2000_Intracranial`
+  —
 
-Also importable as: `DS004624`, `Mivalt2025`, `Mivalt2024`, `BCI2000_Intracranial`.
+Also importable as: `DS004624`, `Mivalt2025`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 3; recordings: 614; tasks: 28.

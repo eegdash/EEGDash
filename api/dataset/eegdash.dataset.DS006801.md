@@ -116,7 +116,7 @@ The study was approved by the Research Ethics Committee of the Health Sciences C
 
 - Channels: 31
 - Sampling rate (Hz): 500.0
-- Duration (hours): 6.335461111111111
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Resting State

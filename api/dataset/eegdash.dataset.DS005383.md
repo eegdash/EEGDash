@@ -136,8 +136,8 @@ This work was mainly supported by the National Key R&D Program of China (2023YFF
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments                                                                   |
 | Author (year)  | `Bai2024`                                                                                                                                                                         |
-| Canonical      | `TMNRED`                                                                                                                                                                          |
-| Importable as  | `DS005383`, `Bai2024`, `TMNRED`                                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005383`, `Bai2024`                                                                                                                                                             |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo, Shuming Zhang, Minghan Guo, Junjie Wang, Changjian Wang, Mu Xing, Guangjian Ni, Dong Ming                                |
 | License        | CC0                                                                                                                                                                               |
@@ -195,9 +195,9 @@ TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification 
 * **Author (year):**
   `Bai2024`
 * **Canonical:**
-  `TMNRED`
+  —
 
-Also importable as: `DS005383`, `Bai2024`, `TMNRED`.
+Also importable as: `DS005383`, `Bai2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 30; recordings: 240; tasks: 1.

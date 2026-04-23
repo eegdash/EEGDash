@@ -170,8 +170,8 @@ International License (CC BY 4.0).
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Resting-State EEG and Trait Anxiety                                                                                                                                               |
 | Author (year)  | `Shalamberidze2026`                                                                                                                                                               |
-| Canonical      | `Shalamberidze2025`                                                                                                                                                               |
-| Importable as  | `DS007609`, `Shalamberidze2026`, `Shalamberidze2025`                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007609`, `Shalamberidze2026`                                                                                                                                                   |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Tamari Shalamberidze, Kyle Nash, Jeremy B. Caplan                                                                                                                                 |
 | License        | CC0                                                                                                                                                                               |
@@ -229,9 +229,9 @@ Resting-State EEG and Trait Anxiety
 * **Author (year):**
   `Shalamberidze2026`
 * **Canonical:**
-  `Shalamberidze2025`
+  —
 
-Also importable as: `DS007609`, `Shalamberidze2026`, `Shalamberidze2025`.
+Also importable as: `DS007609`, `Shalamberidze2026`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 51; recordings: 51; tasks: 1.

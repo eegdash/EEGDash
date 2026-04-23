@@ -214,8 +214,8 @@ University of California San Diego
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FRL Handwriting: Handwriting Decoding from Surface Electromyography                                                                                                                      |
 | Author (year)  | `Kaifosh2025_106`                                                                                                                                                                        |
-| Canonical      | `FRL_Handwriting`                                                                                                                                                                        |
-| Importable as  | `NM000106`, `Kaifosh2025_106`, `FRL_Handwriting`                                                                                                                                         |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000106`, `Kaifosh2025_106`                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                                     |
 | Authors        | Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs                                                                                                                            |
 | License        | CC-BY-NC 4.0                                                                                                                                                                             |
@@ -240,7 +240,7 @@ University of California San Diego
 - Tasks: 1
 
 - Channels: 16
-- Sampling rate (Hz): 2000
+- Sampling rate (Hz): 2000.0
 - Duration (hours): 140.70160930555554
 
 - Pathology: Not specified
@@ -273,9 +273,9 @@ FRL Handwriting: Handwriting Decoding from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025_106`
 * **Canonical:**
-  `FRL_Handwriting`
+  —
 
-Also importable as: `NM000106`, `Kaifosh2025_106`, `FRL_Handwriting`.
+Also importable as: `NM000106`, `Kaifosh2025_106`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 807; tasks: 1.

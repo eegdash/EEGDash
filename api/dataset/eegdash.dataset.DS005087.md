@@ -113,7 +113,7 @@ Object and word stimuli presented at 5Hz to the left or right visual fields, or 
 
 - Channels: 63
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 14.447911111111113
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

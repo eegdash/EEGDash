@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: eeg Subjects: 48 Recordings: 288 License: CC0 Source: openneuro
 
-Metadata: Complete (100%)
+Metadata: Complete (90%)
 
 ## Quickstart
 
@@ -132,9 +132,9 @@ This study was supported by a doctoral studentship awarded to EK. We thank the p
 - Recordings: 288
 - Tasks: 6
 
-- Channels: 73
-- Sampling rate (Hz): 512
-- Duration (hours): 21.566111111111116
+- Channels: Varies
+- Sampling rate (Hz): 512.0
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

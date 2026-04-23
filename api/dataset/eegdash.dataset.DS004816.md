@@ -114,7 +114,7 @@ See also [https://osf.io/7zhwp/](https://osf.io/7zhwp/) and [https://openneuro.o
 
 - Channels: 63
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 10.713711111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

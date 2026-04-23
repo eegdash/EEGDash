@@ -118,7 +118,7 @@ Additional Usage Notes
 
 - Channels: 66
 - Sampling rate (Hz): 5000.0
-- Duration (hours): 14.579594444444444
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

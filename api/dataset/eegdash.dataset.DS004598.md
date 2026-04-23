@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | LFP during linear track in 6-month old TgF344-AD rats                                                                                                                             |
 | Author (year)  | `Faraz2023`                                                                                                                                                                       |
-| Canonical      | `Moradi2024`                                                                                                                                                                      |
-| Importable as  | `DS004598`, `Faraz2023`, `Moradi2024`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004598`, `Faraz2023`                                                                                                                                                           |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen, Amiri Mahmood, Keliris A. Georgios                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 16
 - Sampling rate (Hz): 10000.0
-- Duration (hours): 8.2455
+- Duration (hours): Not calculated
 
 - Pathology: Dementia
 - Modality: Motor
@@ -144,9 +144,9 @@ LFP during linear track in 6-month old TgF344-AD rats
 * **Author (year):**
   `Faraz2023`
 * **Canonical:**
-  `Moradi2024`
+  —
 
-Also importable as: `DS004598`, `Faraz2023`, `Moradi2024`.
+Also importable as: `DS004598`, `Faraz2023`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Dementia`.
 Subjects: 9; recordings: 20; tasks: 1.

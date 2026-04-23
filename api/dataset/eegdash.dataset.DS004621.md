@@ -97,8 +97,8 @@ Release history:
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The Nencki-Symfonia EEG/ERP dataset                                                                                                                                               |
 | Author (year)  | `Patrycja2023_Nencki`                                                                                                                                                             |
-| Canonical      | `NenckiSymfonia`                                                                                                                                                                  |
-| Importable as  | `DS004621`, `Patrycja2023_Nencki`, `NenckiSymfonia`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004621`, `Patrycja2023_Nencki`                                                                                                                                                 |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -124,7 +124,7 @@ Release history:
 
 - Channels: 127
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 45.42930277777778
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —
@@ -156,9 +156,9 @@ The Nencki-Symfonia EEG/ERP dataset
 * **Author (year):**
   `Patrycja2023_Nencki`
 * **Canonical:**
-  `NenckiSymfonia`
+  —
 
-Also importable as: `DS004621`, `Patrycja2023_Nencki`, `NenckiSymfonia`.
+Also importable as: `DS004621`, `Patrycja2023_Nencki`.
 
 Modality: `eeg`.
 Subjects: 42; recordings: 167; tasks: 4.

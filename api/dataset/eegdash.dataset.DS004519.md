@@ -85,8 +85,8 @@ Preprocessed data files from “Internal selective attention is delayed by compe
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Internal selective attention is delayed by competition between endogenous and exogenous factors                                                                                   |
 | Author (year)  | `Ester2023_Internal`                                                                                                                                                              |
-| Canonical      | `Ester2022`                                                                                                                                                                       |
-| Importable as  | `DS004519`, `Ester2023_Internal`, `Ester2022`                                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004519`, `Ester2023_Internal`                                                                                                                                                  |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Edward Ester, Asal Nouri                                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Internal selective attention is delayed by competition between endogenous and ex
 * **Author (year):**
   `Ester2023_Internal`
 * **Canonical:**
-  `Ester2022`
+  —
 
-Also importable as: `DS004519`, `Ester2023_Internal`, `Ester2022`.
+Also importable as: `DS004519`, `Ester2023_Internal`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 40; recordings: 40; tasks: 1.

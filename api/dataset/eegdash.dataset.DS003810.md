@@ -112,7 +112,7 @@ This dataset consists of electroencephalography (EEG) signals adquired with a lo
 
 - Channels: 15
 - Sampling rate (Hz): 125.0
-- Duration (hours): 5.188611111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old                                                                                               |
 | Author (year)  | `Gama2024`                                                                                                                                                                        |
-| Canonical      | `Gama2019`                                                                                                                                                                        |
-| Importable as  | `DS005420`, `Gama2024`, `Gama2019`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005420`, `Gama2024`                                                                                                                                                            |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas, José María De La Roca Chiapas         |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ Resting state EEG with closed eyes and open eyes in females from 60 to 80 years 
 * **Author (year):**
   `Gama2024`
 * **Canonical:**
-  `Gama2019`
+  —
 
-Also importable as: `DS005420`, `Gama2024`, `Gama2019`.
+Also importable as: `DS005420`, `Gama2024`.
 
 Modality: `eeg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 37; recordings: 72; tasks: 2.

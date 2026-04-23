@@ -113,7 +113,7 @@ The experiment consists of a third-party moral judgment task integrated into a s
 
 - Channels: 36
 - Sampling rate (Hz): 512.0 (30), 2048.0
-- Duration (hours): 16.364166666666666
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

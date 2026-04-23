@@ -103,8 +103,8 @@ Eye movements were monitored in the MEG to ensure participants maintained centra
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | THINGS-MEG                                                                                                                                                                        |
 | Author (year)  | `Hebart2022`                                                                                                                                                                      |
-| Canonical      | `THINGS_MEG`, `THINGSMEG`                                                                                                                                                         |
-| Importable as  | `DS004212`, `Hebart2022`, `THINGS_MEG`, `THINGSMEG`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004212`, `Hebart2022`                                                                                                                                                          |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng, Alexis Kidder, Anna Corriveau, Maryam Vaziri-Pashkam, Chris I. Baker                            |
 | License        | CC0                                                                                                                                                                               |
@@ -162,9 +162,9 @@ THINGS-MEG
 * **Author (year):**
   `Hebart2022`
 * **Canonical:**
-  `THINGS_MEG`, `THINGSMEG`
+  —
 
-Also importable as: `DS004212`, `Hebart2022`, `THINGS_MEG`, `THINGSMEG`.
+Also importable as: `DS004212`, `Hebart2022`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 5; recordings: 500; tasks: 1.

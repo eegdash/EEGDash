@@ -124,7 +124,7 @@ Contact: [andrei.barborica@fizica.unibuc.ro](mailto:andrei.barborica@fizica.unib
 - Recordings: 35
 - Tasks: 1
 
-- Channels: 35 (5), 33 (5), 37 (4), 31 (2), 32 (2), 41 (2), 52 (2), 61, 176, 56, 63, 25, 150, 40, 34, 43, 89, 101, 69, 47
+- Channels: 33 (5), 35 (5), 37 (4), 31 (2), 52 (2), 32 (2), 41 (2), 34, 89, 43, 101, 63, 150, 40, 61, 176, 56, 47, 25, 69
 - Sampling rate (Hz): 4096.0 (31), 512.0 (4)
 - Duration (hours): 0.2686111111111111
 

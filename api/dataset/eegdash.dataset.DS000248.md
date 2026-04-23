@@ -107,8 +107,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MNE-Sample-Data                                                                                                                                                                   |
 | Author (year)  | `Gramfort2018`                                                                                                                                                                    |
-| Canonical      | `MNE_Sample_Data`                                                                                                                                                                 |
-| Importable as  | `DS000248`, `Gramfort2018`, `MNE_Sample_Data`                                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS000248`, `Gramfort2018`                                                                                                                                                        |
 | Year           | 2018                                                                                                                                                                              |
 | Authors        | Alexandre Gramfort, Matti S Hämäläinen                                                                                                                                            |
 | License        | CC0                                                                                                                                                                               |
@@ -132,7 +132,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 - Recordings: 3
 - Tasks: 2
 
-- Channels: 376, 315
+- Channels: 315, 376
 - Sampling rate (Hz): 600.614990234375
 - Duration (hours): 0.1076979446929193
 
@@ -166,9 +166,9 @@ MNE-Sample-Data
 * **Author (year):**
   `Gramfort2018`
 * **Canonical:**
-  `MNE_Sample_Data`
+  —
 
-Also importable as: `DS000248`, `Gramfort2018`, `MNE_Sample_Data`.
+Also importable as: `DS000248`, `Gramfort2018`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 2; recordings: 3; tasks: 2.

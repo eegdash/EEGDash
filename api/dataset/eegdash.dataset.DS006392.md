@@ -106,8 +106,8 @@ Dora Hermes: [hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu)
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HED schema library for SCORE annotations example                                                                                                                                  |
 | Author (year)  | `Attia2025`                                                                                                                                                                       |
-| Canonical      | `Hermes2024`                                                                                                                                                                      |
-| Importable as  | `DS006392`, `Attia2025`, `Hermes2024`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006392`, `Attia2025`                                                                                                                                                           |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Tal Pal Attia, Kay Robbins, Dora Hermes                                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -165,9 +165,9 @@ HED schema library for SCORE annotations example
 * **Author (year):**
   `Attia2025`
 * **Canonical:**
-  `Hermes2024`
+  —
 
-Also importable as: `DS006392`, `Attia2025`, `Hermes2024`.
+Also importable as: `DS006392`, `Attia2025`.
 
 Modality: `ieeg`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

@@ -180,7 +180,7 @@ analysis (0.0 +/- 0.0 were removed from analysis).
 - Tasks: 2
 
 - Channels: 21
-- Sampling rate (Hz): 500
+- Sampling rate (Hz): 500.0
 - Duration (hours): 2.40996
 
 - Pathology: Not specified

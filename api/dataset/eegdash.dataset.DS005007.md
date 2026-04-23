@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Auditory naming task with questions that begin or end with a wh-interrogative                                                                                                     |
 | Author (year)  | `Kitazawa2024`                                                                                                                                                                    |
-| Canonical      | `Kitazawa2025`                                                                                                                                                                    |
-| Importable as  | `DS005007`, `Kitazawa2024`, `Kitazawa2025`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005007`, `Kitazawa2024`                                                                                                                                                        |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Yu Kitazawa, Eishi Asano                                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -110,9 +110,9 @@ No README content is available for this dataset.
 - Recordings: 42
 - Tasks: 1
 
-- Channels: 100 (3), 74 (2), 78 (2), 156 (2), 86 (2), 58 (2), 66 (2), 116 (2), 82 (2), 122, 127, 155, 68, 94, 128, 140, 154, 138, 142, 91, 72, 102, 124, 137, 51, 120, 163, 48, 114, 129, 184, 88
+- Channels: 100 (3), 58 (2), 74 (2), 82 (2), 78 (2), 86 (2), 116 (2), 66 (2), 156 (2), 137, 184, 122, 127, 88, 128, 51, 68, 114, 140, 48, 124, 94, 102, 120, 154, 155, 129, 72, 163, 142, 138, 91
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 9.423494444444446
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory
@@ -144,9 +144,9 @@ Auditory naming task with questions that begin or end with a wh-interrogative
 * **Author (year):**
   `Kitazawa2024`
 * **Canonical:**
-  `Kitazawa2025`
+  —
 
-Also importable as: `DS005007`, `Kitazawa2024`, `Kitazawa2025`.
+Also importable as: `DS005007`, `Kitazawa2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 40; recordings: 42; tasks: 1.

@@ -122,7 +122,7 @@ For questions, please contact Pengfei Xu ([pxu@bnu.edu.cn](mailto:pxu@bnu.edu.cn
 - Recordings: 2
 - Tasks: 1
 
-- Channels: 186, 238
+- Channels: 238, 186
 - Sampling rate (Hz): 2000.0
 - Duration (hours): 0.24251
 

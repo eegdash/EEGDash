@@ -115,7 +115,7 @@ Whole brain 64-channel EEG data were recorded using an Active Two Biosemi system
 
 - Channels: 65
 - Sampling rate (Hz): 2048.0
-- Duration (hours): 80.46722222222222
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

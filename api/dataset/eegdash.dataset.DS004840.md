@@ -169,7 +169,7 @@ For more detailed information about the study, please refer to the associated ar
 - Recordings: 51
 - Tasks: 3
 
-- Channels: 10 (45), 9 (3), 8 (3)
+- Channels: 10 (45), 8 (3), 9 (3)
 - Sampling rate (Hz): 1024.0 (33), 512.0 (15), 256.0 (3)
 - Duration (hours): 10.935833333333331
 

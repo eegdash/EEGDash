@@ -114,7 +114,7 @@ Other data and analysis scripts can be found on OSF (DOI 10.17605/OSF.IO/32DAS) 
 
 - Channels: 63
 - Sampling rate (Hz): 2000.0
-- Duration (hours): 59.642625
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

@@ -116,7 +116,7 @@ Experiment length: 1 hour
 
 - Channels: 63
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 11.307033333333331
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

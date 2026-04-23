@@ -85,8 +85,8 @@ Auditory Oddball Experiment to understand how Personalized smartphone notificati
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Personalized smartphone notifications bias auditory salience across processing stages                                                                                             |
 | Author (year)  | `Mishra2026`                                                                                                                                                                      |
-| Canonical      | `Mishra2024`                                                                                                                                                                      |
-| Importable as  | `DS007322`, `Mishra2026`, `Mishra2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007322`, `Mishra2026`                                                                                                                                                          |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Prakash Mishra, Tapan K Gandhi, Saurabh R. Gandhi                                                                                                                                 |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Personalized smartphone notifications bias auditory salience across processing s
 * **Author (year):**
   `Mishra2026`
 * **Canonical:**
-  `Mishra2024`
+  —
 
-Also importable as: `DS007322`, `Mishra2026`, `Mishra2024`.
+Also importable as: `DS007322`, `Mishra2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 57; recordings: 57; tasks: 1.

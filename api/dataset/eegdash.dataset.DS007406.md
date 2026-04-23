@@ -85,8 +85,8 @@ This dataset comprises EEG recordings from ten participants exposed to six marke
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG dataset on consumer responses to extreme versus traditional marketing videos                                                                                                  |
 | Author (year)  | `Edit2026`                                                                                                                                                                        |
-| Canonical      | `Edit2024`                                                                                                                                                                        |
-| Importable as  | `DS007406`, `Edit2026`, `Edit2024`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007406`, `Edit2026`                                                                                                                                                            |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Allison Edit, Attila Pohlmann                                                                                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ EEG dataset on consumer responses to extreme versus traditional marketing videos
 * **Author (year):**
   `Edit2026`
 * **Canonical:**
-  `Edit2024`
+  —
 
-Also importable as: `DS007406`, `Edit2026`, `Edit2024`.
+Also importable as: `DS007406`, `Edit2026`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 10; recordings: 10; tasks: 1.

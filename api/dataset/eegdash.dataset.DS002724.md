@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 37
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 28.61055555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

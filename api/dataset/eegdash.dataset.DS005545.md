@@ -91,8 +91,8 @@ Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Auditory naming                                                                                                                                                                   |
 | Author (year)  | `Kanno2024`                                                                                                                                                                       |
-| Canonical      | `Kanno2025`                                                                                                                                                                       |
-| Importable as  | `DS005545`, `Kanno2024`, `Kanno2025`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005545`, `Kanno2024`                                                                                                                                                           |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda, Masaki Sonoda, Min-Hee Lee, Jeong-Won Jeong, Aimee F. Luat, Eishi Asano                         |
 | License        | CC0                                                                                                                                                                               |
@@ -116,9 +116,9 @@ Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda
 - Recordings: 336
 - Tasks: 1
 
-- Channels: 128 (237), 138 (14), 136 (11), 134 (11), 140 (8), 112 (6), 110 (6), 156 (5), 142 (5), 150 (5), 164 (4), 132 (4), 144 (4), 148 (4), 118 (3), 116 (3), 84 (3), 96 (3)
+- Channels: 128 (237), 138 (14), 136 (11), 134 (11), 140 (8), 112 (6), 110 (6), 142 (5), 156 (5), 150 (5), 148 (4), 144 (4), 164 (4), 132 (4), 116 (3), 96 (3), 118 (3), 84 (3)
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 117.62165555555556
+- Duration (hours): Not calculated
 
 - Pathology: Surgery
 - Modality: Auditory
@@ -150,9 +150,9 @@ Auditory naming
 * **Author (year):**
   `Kanno2024`
 * **Canonical:**
-  `Kanno2025`
+  —
 
-Also importable as: `DS005545`, `Kanno2024`, `Kanno2025`.
+Also importable as: `DS005545`, `Kanno2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Surgery`.
 Subjects: 106; recordings: 336; tasks: 1.

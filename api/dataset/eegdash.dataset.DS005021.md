@@ -187,7 +187,7 @@ in this dataset.
 
 - Channels: 72
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 43.06305555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

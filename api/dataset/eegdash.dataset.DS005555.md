@@ -172,8 +172,8 @@ Jens G. Klinzing: [jens.klinzing@bitbrain.com](mailto:jens.klinzing@bitbrain.com
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The Bitbrain Open Access Sleep (BOAS) dataset                                                                                                                                     |
 | Author (year)  | `LopezLarraz2024`                                                                                                                                                                 |
-| Canonical      | `BOAS`                                                                                                                                                                            |
-| Importable as  | `DS005555`, `LopezLarraz2024`, `BOAS`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005555`, `LopezLarraz2024`                                                                                                                                                     |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol, Javier Minguez, Luis Montesano, Jens G. Klinzing                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -231,9 +231,9 @@ The Bitbrain Open Access Sleep (BOAS) dataset
 * **Author (year):**
   `LopezLarraz2024`
 * **Canonical:**
-  `BOAS`
+  —
 
-Also importable as: `DS005555`, `LopezLarraz2024`, `BOAS`.
+Also importable as: `DS005555`, `LopezLarraz2024`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 128; recordings: 256; tasks: 1.

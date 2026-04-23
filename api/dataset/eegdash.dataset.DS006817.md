@@ -86,8 +86,8 @@ Associated pre-print: [https://doi.org/10.1101/2025.08.18.670829](https://doi.or
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Visual Attribute-Specific Contextual Trajectory Paradigm 2.0                                                                                                                                                                                                                                                                       |
 | Author (year)  | `Lowe2025`                                                                                                                                                                                                                                                                                                                         |
-| Canonical      | `VisualContextTrajectory_v2`                                                                                                                                                                                                                                                                                                       |
-| Importable as  | `DS006817`, `Lowe2025`, `VisualContextTrajectory_v2`                                                                                                                                                                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                                                                                                                                                                  |
+| Importable as  | `DS006817`, `Lowe2025`                                                                                                                                                                                                                                                                                                             |
 | Year           | 2025                                                                                                                                                                                                                                                                                                                               |
 | Authors        | Benjamin Lowe ([ben.lowe@mq.edu.au](mailto:ben.lowe@mq.edu.au)), Naohide Yamamoto ([naohide.yamamoto@qut.edu.au](mailto:naohide.yamamoto@qut.edu.au)), Jonathan Robinson ([jonathan.robinson@monash.edu](mailto:jonathan.robinson@monash.edu)), Patrick Johnston ([dr.pat.johnston@icloud.com](mailto:dr.pat.johnston@icloud.com)) |
 | License        | CC0                                                                                                                                                                                                                                                                                                                                |
@@ -113,7 +113,7 @@ Associated pre-print: [https://doi.org/10.1101/2025.08.18.670829](https://doi.or
 
 - Channels: 65
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 21.68111111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —
@@ -145,9 +145,9 @@ Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
 * **Author (year):**
   `Lowe2025`
 * **Canonical:**
-  `VisualContextTrajectory_v2`
+  —
 
-Also importable as: `DS006817`, `Lowe2025`, `VisualContextTrajectory_v2`.
+Also importable as: `DS006817`, `Lowe2025`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 34; recordings: 34; tasks: 1.

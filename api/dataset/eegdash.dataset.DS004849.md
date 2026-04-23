@@ -86,8 +86,8 @@ This is a placeholder dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | STRONG                                                                                                                                                                            |
 | Author (year)  | `Johnson2023_STRONG`                                                                                                                                                              |
-| Canonical      | `STRONG`                                                                                                                                                                          |
-| Importable as  | `DS004849`, `Johnson2023_STRONG`, `STRONG`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004849`, `Johnson2023_STRONG`                                                                                                                                                  |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ STRONG
 * **Author (year):**
   `Johnson2023_STRONG`
 * **Canonical:**
-  `STRONG`
+  —
 
-Also importable as: `DS004849`, `Johnson2023_STRONG`, `STRONG`.
+Also importable as: `DS004849`, `Johnson2023_STRONG`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

@@ -92,8 +92,8 @@ The MEG-SCANS (Stories, Chirps, And Noisy Sentences) dataset provides raw and Ma
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.                                                                       |
 | Author (year)  | `Habersetzer2025`                                                                                                                                                                 |
-| Canonical      | `MEG_SCANS`                                                                                                                                                                       |
-| Importable as  | `DS006468`, `Habersetzer2025`, `MEG_SCANS`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006468`, `Habersetzer2025`                                                                                                                                                     |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Till Habersetzer, Bernd T. Meyer                                                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -151,9 +151,9 @@ MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, 
 * **Author (year):**
   `Habersetzer2025`
 * **Canonical:**
-  `MEG_SCANS`
+  —
 
-Also importable as: `DS006468`, `Habersetzer2025`, `MEG_SCANS`.
+Also importable as: `DS006468`, `Habersetzer2025`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 24; recordings: 189; tasks: 4.

@@ -112,7 +112,7 @@ Pilot EEG data for the registered report ‘Pilot data for Loneliness in the Bra
 
 - Channels: 69
 - Sampling rate (Hz): 512.0 (27), 2048.0 (11)
-- Duration (hours): 40.855
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

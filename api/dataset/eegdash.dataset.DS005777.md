@@ -85,8 +85,8 @@ If you use this dataset in your research, please cite the original authors.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Electrical_Morphine_Placebo_2018                                                                                                                                                  |
 | Author (year)  | `Peng2025`                                                                                                                                                                        |
-| Canonical      | `Peng2018`                                                                                                                                                                        |
-| Importable as  | `DS005777`, `Peng2025`, `Peng2018`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005777`, `Peng2025`                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher, Hoeft, Mark, Lee, Arielle, George, Edward, Boas, David, Becerra, Lino, Borsook, David               |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Electrical_Morphine_Placebo_2018
 * **Author (year):**
   `Peng2025`
 * **Canonical:**
-  `Peng2018`
+  —
 
-Also importable as: `DS005777`, `Peng2025`, `Peng2018`.
+Also importable as: `DS005777`, `Peng2025`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 14; recordings: 113; tasks: 2.

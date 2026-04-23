@@ -90,8 +90,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MIND DATA                                                                                                                                                                         |
 | Author (year)  | `Weisend2022`                                                                                                                                                                     |
-| Canonical      | `Weisend2007`                                                                                                                                                                     |
-| Importable as  | `DS004107`, `Weisend2022`, `Weisend2007`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004107`, `Weisend2022`                                                                                                                                                         |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold, D. Pantazis, J.C. Mosher, A.P. Georgopoulos, M.S. Hamalainen, C.J. Aine                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -149,9 +149,9 @@ MIND DATA
 * **Author (year):**
   `Weisend2022`
 * **Canonical:**
-  `Weisend2007`
+  —
 
-Also importable as: `DS004107`, `Weisend2022`, `Weisend2007`.
+Also importable as: `DS004107`, `Weisend2022`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 9; recordings: 89; tasks: 6.

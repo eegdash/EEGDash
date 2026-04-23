@@ -92,9 +92,10 @@ Keys available in a record:
   data_name: 'ds003039_sub-019_task-neurCorrYoung_eeg.set'
   dataset: 'ds003039'
   datatype: 'eeg'
-  digested_at: '2026-04-04T19:41:28.872782+00:00'
+  digested_at: '2026-04-22T12:25:30.921437+00:00'
   entities_mne: {'subject': '019', 'session': None, 'task': 'neurCorrYoung', 'run': None, 'acquisition': None}
   extension: '.set'
+  montage_hash: '13035a10e609db54'
   nchans: 67
   ntimes: 1777354
   participant_tsv: {'gender': 'M', 'age': 20.0, 'handedness': 'R'}
@@ -176,6 +177,6 @@ else:
 19 subjects. 19 recordings. 17.51 hours.
 ```
 
-**Total running time of the script:** (0 minutes 0.347 seconds)
+**Total running time of the script:** (0 minutes 0.691 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-tutorial-api-py"></a>

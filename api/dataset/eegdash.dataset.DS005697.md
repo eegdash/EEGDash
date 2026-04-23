@@ -93,8 +93,8 @@ If you have any questions, please contact:yingxmbio@foxmail.com
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PerceiveImagine                                                                                                                                                                   |
 | Author (year)  | `Li2024_PerceiveImagine`                                                                                                                                                          |
-| Canonical      | `PerceiveImagine`                                                                                                                                                                 |
-| Importable as  | `DS005697`, `Li2024_PerceiveImagine`, `PerceiveImagine`                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005697`, `Li2024_PerceiveImagine`                                                                                                                                              |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Weilong Li, Hua Fan                                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -152,9 +152,9 @@ PerceiveImagine
 * **Author (year):**
   `Li2024_PerceiveImagine`
 * **Canonical:**
-  `PerceiveImagine`
+  —
 
-Also importable as: `DS005697`, `Li2024_PerceiveImagine`, `PerceiveImagine`.
+Also importable as: `DS005697`, `Li2024_PerceiveImagine`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 51; recordings: 51; tasks: 1.

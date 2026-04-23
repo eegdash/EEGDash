@@ -258,7 +258,7 @@ XP2/sub-xp2\*/anat
 
 - Channels: 64
 - Sampling rate (Hz): 5000.0
-- Duration (hours): 15.745905555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

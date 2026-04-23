@@ -86,8 +86,8 @@ The preprocessed version of this dataset can be found here: [https://figshare.co
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Neuma                                                                                                                                                                                                                       |
 | Author (year)  | `Georgiadis2023`                                                                                                                                                                                                            |
-| Canonical      | `Neuma`                                                                                                                                                                                                                     |
-| Importable as  | `DS004588`, `Georgiadis2023`, `Neuma`                                                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                                                           |
+| Importable as  | `DS004588`, `Georgiadis2023`                                                                                                                                                                                                |
 | Year           | 2023                                                                                                                                                                                                                        |
 | Authors        | Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou, Yfantidou Ioanna, Dimitris Chantziaras, Kyriakos Pantouvakis, Spiros Nikolopoulos, Nikos A. Laskaris, Ioannis Kompatsiaris |
 | License        | CC0                                                                                                                                                                                                                         |
@@ -145,9 +145,9 @@ Neuma
 * **Author (year):**
   `Georgiadis2023`
 * **Canonical:**
-  `Neuma`
+  —
 
-Also importable as: `DS004588`, `Georgiadis2023`, `Neuma`.
+Also importable as: `DS004588`, `Georgiadis2023`.
 
 Modality: `eeg`.
 Subjects: 42; recordings: 42; tasks: 1.

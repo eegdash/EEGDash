@@ -153,8 +153,8 @@ Simulator Sickness Questionnaire.
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Mind Wandering                                                                                                                                                                                                 |
 | Author (year)  | `Touryan2022_BCIT_Mind`                                                                                                                                                                                             |
-| Canonical      | `BCITMindWandering`                                                                                                                                                                                                 |
-| Importable as  | `DS004121`, `Touryan2022_BCIT_Mind`, `BCITMindWandering`                                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                                                   |
+| Importable as  | `DS004121`, `Touryan2022_BCIT_Mind`                                                                                                                                                                                 |
 | Year           | 2022                                                                                                                                                                                                                |
 | Authors        | Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Justin Brooks (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) |
 | License        | CC0                                                                                                                                                                                                                 |
@@ -212,9 +212,9 @@ BCIT Mind Wandering
 * **Author (year):**
   `Touryan2022_BCIT_Mind`
 * **Canonical:**
-  `BCITMindWandering`
+  —
 
-Also importable as: `DS004121`, `Touryan2022_BCIT_Mind`, `BCITMindWandering`.
+Also importable as: `DS004121`, `Touryan2022_BCIT_Mind`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 21; recordings: 60; tasks: 1.

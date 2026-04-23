@@ -136,8 +136,8 @@ Bateson AD, Asghar AUR (2021) Development and evaluation of a smartphone-based e
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Cognitive Workload 8-level arithmetic                                                                                                                                             |
 | Author (year)  | `Barras2026_Cognitive`                                                                                                                                                            |
-| Canonical      | `Barras2025`                                                                                                                                                                      |
-| Importable as  | `DS007262`, `Barras2026_Cognitive`, `Barras2025`                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007262`, `Barras2026_Cognitive`                                                                                                                                                |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Matthew Barras, Liam Booth                                                                                                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -195,9 +195,9 @@ Cognitive Workload 8-level arithmetic
 * **Author (year):**
   `Barras2026_Cognitive`
 * **Canonical:**
-  `Barras2025`
+  —
 
-Also importable as: `DS007262`, `Barras2026_Cognitive`, `Barras2025`.
+Also importable as: `DS007262`, `Barras2026_Cognitive`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 18; recordings: 18; tasks: 1.

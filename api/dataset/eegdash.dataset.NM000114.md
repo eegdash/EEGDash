@@ -180,7 +180,7 @@ on average 21.24 (std = 0.97) recording channels per scan, out of which 21.24
 - Tasks: 3
 
 - Channels: 22 (112), 20 (69)
-- Sampling rate (Hz): 256
+- Sampling rate (Hz): 256.0
 - Duration (hours): 20.55563693576389
 
 - Pathology: Not specified

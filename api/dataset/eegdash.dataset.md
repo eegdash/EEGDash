@@ -15,478 +15,6 @@ Public API for dataset helpers and dynamically generated datasets.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.dataset.ABSeqMEG
-
-alias of [`DS004483`](eegdash.dataset.DS004483.md#eegdash.dataset.DS004483)
-
-### eegdash.dataset.ANDI
-
-alias of [`DS004661`](eegdash.dataset.DS004661.md#eegdash.dataset.DS004661)
-
-### eegdash.dataset.APPLESEED
-
-alias of [`DS003710`](eegdash.dataset.DS003710.md#eegdash.dataset.DS003710)
-
-### eegdash.dataset.AlexMI
-
-alias of [`NM000138`](eegdash.dataset.NM000138.md#eegdash.dataset.NM000138)
-
-### eegdash.dataset.AlexMotorImagery
-
-alias of [`NM000138`](eegdash.dataset.NM000138.md#eegdash.dataset.NM000138)
-
-### eegdash.dataset.AlexandreMotorImagery
-
-alias of [`NM000138`](eegdash.dataset.NM000138.md#eegdash.dataset.NM000138)
-
-### eegdash.dataset.Alljoined
-
-alias of [`NM000133`](eegdash.dataset.NM000133.md#eegdash.dataset.NM000133)
-
-### eegdash.dataset.Alljoined1
-
-alias of [`NM000133`](eegdash.dataset.NM000133.md#eegdash.dataset.NM000133)
-
-### eegdash.dataset.Alljoined16M
-
-alias of [`NM000134`](eegdash.dataset.NM000134.md#eegdash.dataset.NM000134)
-
-### eegdash.dataset.Alljoined1p6M
-
-alias of [`NM000134`](eegdash.dataset.NM000134.md#eegdash.dataset.NM000134)
-
-### eegdash.dataset.Alljoined_16M
-
-alias of [`NM000134`](eegdash.dataset.NM000134.md#eegdash.dataset.NM000134)
-
-### eegdash.dataset.AlphaWaves
-
-alias of [`NM000221`](eegdash.dataset.NM000221.md#eegdash.dataset.NM000221)
-
-### eegdash.dataset.Alphawaves
-
-alias of [`NM000221`](eegdash.dataset.NM000221.md#eegdash.dataset.NM000221)
-
-### eegdash.dataset.ArEEG
-
-alias of [`DS005262`](eegdash.dataset.DS005262.md#eegdash.dataset.DS005262)
-
-### eegdash.dataset.Ataseven2024
-
-alias of [`DS007431`](eegdash.dataset.DS007431.md#eegdash.dataset.DS007431)
-
-### eegdash.dataset.BCI2000_Intracranial
-
-alias of [`DS004624`](eegdash.dataset.DS004624.md#eegdash.dataset.DS004624)
-
-### eegdash.dataset.BCI2000_intraop
-
-alias of [`DS004944`](eegdash.dataset.DS004944.md#eegdash.dataset.DS004944)
-
-### eegdash.dataset.BCIAUT
-
-alias of [`NM000210`](eegdash.dataset.NM000210.md#eegdash.dataset.NM000210)
-
-### eegdash.dataset.BCIAUTP300
-
-alias of [`NM000210`](eegdash.dataset.NM000210.md#eegdash.dataset.NM000210)
-
-### eegdash.dataset.BCIAUT_P300
-
-alias of [`NM000210`](eegdash.dataset.NM000210.md#eegdash.dataset.NM000210)
-
-### eegdash.dataset.BCICIII_IVa
-
-alias of [`NM000143`](eegdash.dataset.NM000143.md#eegdash.dataset.NM000143)
-
-### eegdash.dataset.BCICIV1
-
-alias of [`NM000139`](eegdash.dataset.NM000139.md#eegdash.dataset.NM000139)
-
-### eegdash.dataset.BCICompIII_IVa
-
-alias of [`NM000143`](eegdash.dataset.NM000143.md#eegdash.dataset.NM000143)
-
-### eegdash.dataset.BCICompIV1
-
-alias of [`NM000139`](eegdash.dataset.NM000139.md#eegdash.dataset.NM000139)
-
-### eegdash.dataset.BCIT
-
-alias of [`DS004119`](eegdash.dataset.DS004119.md#eegdash.dataset.DS004119)
-
-### eegdash.dataset.BCITAdvancedGuardDuty
-
-alias of [`DS004106`](eegdash.dataset.DS004106.md#eegdash.dataset.DS004106)
-
-### eegdash.dataset.BCITBaselineDriving
-
-alias of [`DS004120`](eegdash.dataset.DS004120.md#eegdash.dataset.DS004120)
-
-### eegdash.dataset.BCITMindWandering
-
-alias of [`DS004121`](eegdash.dataset.DS004121.md#eegdash.dataset.DS004121)
-
-### eegdash.dataset.BCIT_Auditory_Cueing
-
-alias of [`DS004105`](eegdash.dataset.DS004105.md#eegdash.dataset.DS004105)
-
-### eegdash.dataset.BCIT_Traffic_Complexity
-
-alias of [`DS004123`](eegdash.dataset.DS004123.md#eegdash.dataset.DS004123)
-
-### eegdash.dataset.BETA
-
-alias of [`NM000129`](eegdash.dataset.NM000129.md#eegdash.dataset.NM000129)
-
-### eegdash.dataset.BETA_SSVEP
-
-alias of [`NM000129`](eegdash.dataset.NM000129.md#eegdash.dataset.NM000129)
-
-### eegdash.dataset.BI2012
-
-alias of [`NM000260`](eegdash.dataset.NM000260.md#eegdash.dataset.NM000260)
-
-### eegdash.dataset.BI2013a
-
-alias of [`NM000264`](eegdash.dataset.NM000264.md#eegdash.dataset.NM000264)
-
-### eegdash.dataset.BI2014a
-
-alias of [`NM000244`](eegdash.dataset.NM000244.md#eegdash.dataset.NM000244)
-
-### eegdash.dataset.BI2014b
-
-alias of [`NM000215`](eegdash.dataset.NM000215.md#eegdash.dataset.NM000215)
-
-### eegdash.dataset.BI2015a
-
-alias of [`NM000216`](eegdash.dataset.NM000216.md#eegdash.dataset.NM000216)
-
-### eegdash.dataset.BI2015b
-
-alias of [`NM000217`](eegdash.dataset.NM000217.md#eegdash.dataset.NM000217)
-
-### eegdash.dataset.BMI_HDEEG_D1
-
-alias of [`DS004444`](eegdash.dataset.DS004444.md#eegdash.dataset.DS004444)
-
-### eegdash.dataset.BMI_HDEEG_D2
-
-alias of [`DS004446`](eegdash.dataset.DS004446.md#eegdash.dataset.DS004446)
-
-### eegdash.dataset.BMI_HDEEG_D3
-
-alias of [`DS004447`](eegdash.dataset.DS004447.md#eegdash.dataset.DS004447)
-
-### eegdash.dataset.BMI_HDEEG_D4
-
-alias of [`DS004448`](eegdash.dataset.DS004448.md#eegdash.dataset.DS004448)
-
-### eegdash.dataset.BNCI2003_IVa
-
-alias of [`NM000143`](eegdash.dataset.NM000143.md#eegdash.dataset.NM000143)
-
-### eegdash.dataset.BNCI2014001
-
-alias of [`NM000139`](eegdash.dataset.NM000139.md#eegdash.dataset.NM000139)
-
-### eegdash.dataset.BNCI2014002
-
-alias of [`NM000171`](eegdash.dataset.NM000171.md#eegdash.dataset.NM000171)
-
-### eegdash.dataset.BNCI2014004
-
-alias of [`NM000135`](eegdash.dataset.NM000135.md#eegdash.dataset.NM000135)
-
-### eegdash.dataset.BNCI2014008
-
-alias of [`NM000169`](eegdash.dataset.NM000169.md#eegdash.dataset.NM000169)
-
-### eegdash.dataset.BNCI2014_009_P300
-
-alias of [`NM000188`](eegdash.dataset.NM000188.md#eegdash.dataset.NM000188)
-
-### eegdash.dataset.BNCI2015
-
-alias of [`NM000140`](eegdash.dataset.NM000140.md#eegdash.dataset.NM000140)
-
-### eegdash.dataset.BNCI2015001
-
-alias of [`NM000140`](eegdash.dataset.NM000140.md#eegdash.dataset.NM000140)
-
-### eegdash.dataset.BNCI2015_003_AMUSE
-
-alias of [`NM000189`](eegdash.dataset.NM000189.md#eegdash.dataset.NM000189)
-
-### eegdash.dataset.BNCI2015_003_P300
-
-alias of [`NM000189`](eegdash.dataset.NM000189.md#eegdash.dataset.NM000189)
-
-### eegdash.dataset.BNCI2015_006_MusicBCI
-
-alias of [`NM000192`](eegdash.dataset.NM000192.md#eegdash.dataset.NM000192)
-
-### eegdash.dataset.BNCI2015_008_CenterSpeller
-
-alias of [`NM000198`](eegdash.dataset.NM000198.md#eegdash.dataset.NM000198)
-
-### eegdash.dataset.BNCI2015_008_P300
-
-alias of [`NM000198`](eegdash.dataset.NM000198.md#eegdash.dataset.NM000198)
-
-### eegdash.dataset.BNCI2015_BNCI_006_Music
-
-alias of [`NM000192`](eegdash.dataset.NM000192.md#eegdash.dataset.NM000192)
-
-### eegdash.dataset.BNCI2015_ERP
-
-alias of [`NM000234`](eegdash.dataset.NM000234.md#eegdash.dataset.NM000234)
-
-### eegdash.dataset.BNCI2015_P300
-
-alias of [`NM000189`](eegdash.dataset.NM000189.md#eegdash.dataset.NM000189)
-
-### eegdash.dataset.BNCI2016
-
-alias of [`NM000243`](eegdash.dataset.NM000243.md#eegdash.dataset.NM000243)
-
-### eegdash.dataset.BNCI2016002
-
-alias of [`NM000243`](eegdash.dataset.NM000243.md#eegdash.dataset.NM000243)
-
-### eegdash.dataset.BNCI2020
-
-alias of [`NM000219`](eegdash.dataset.NM000219.md#eegdash.dataset.NM000219)
-
-### eegdash.dataset.BNCI2020_002_AttentionShift
-
-alias of [`NM000219`](eegdash.dataset.NM000219.md#eegdash.dataset.NM000219)
-
-### eegdash.dataset.BNCI2020_002_CovertSpatialAttention
-
-alias of [`NM000219`](eegdash.dataset.NM000219.md#eegdash.dataset.NM000219)
-
-### eegdash.dataset.BNCI2025
-
-alias of [`NM000162`](eegdash.dataset.NM000162.md#eegdash.dataset.NM000162)
-
-### eegdash.dataset.BNCI_2015_006_Music
-
-alias of [`NM000192`](eegdash.dataset.NM000192.md#eegdash.dataset.NM000192)
-
-### eegdash.dataset.BOAS
-
-alias of [`DS005555`](eegdash.dataset.DS005555.md#eegdash.dataset.DS005555)
-
-### eegdash.dataset.Barras2021
-
-alias of [`DS007169`](eegdash.dataset.DS007169.md#eegdash.dataset.DS007169)
-
-### eegdash.dataset.Barras2025
-
-alias of [`DS007262`](eegdash.dataset.DS007262.md#eegdash.dataset.DS007262)
-
-### eegdash.dataset.BetaSSVEP
-
-alias of [`NM000129`](eegdash.dataset.NM000129.md#eegdash.dataset.NM000129)
-
-### eegdash.dataset.BigP3BCI_E
-
-alias of [`NM000186`](eegdash.dataset.NM000186.md#eegdash.dataset.NM000186)
-
-### eegdash.dataset.BigP3BCI_F
-
-alias of [`NM000191`](eegdash.dataset.NM000191.md#eegdash.dataset.NM000191)
-
-### eegdash.dataset.BigP3BCI_G
-
-alias of [`NM000277`](eegdash.dataset.NM000277.md#eegdash.dataset.NM000277)
-
-### eegdash.dataset.BigP3BCI_H
-
-alias of [`NM000218`](eegdash.dataset.NM000218.md#eegdash.dataset.NM000218)
-
-### eegdash.dataset.BigP3BCI_I
-
-alias of [`NM000200`](eegdash.dataset.NM000200.md#eegdash.dataset.NM000200)
-
-### eegdash.dataset.BigP3BCI_K
-
-alias of [`NM000176`](eegdash.dataset.NM000176.md#eegdash.dataset.NM000176)
-
-### eegdash.dataset.BigP3BCI_M
-
-alias of [`NM000197`](eegdash.dataset.NM000197.md#eegdash.dataset.NM000197)
-
-### eegdash.dataset.BigP3BCI_S1
-
-alias of [`NM000247`](eegdash.dataset.NM000247.md#eegdash.dataset.NM000247)
-
-### eegdash.dataset.BigP3BCI_StudyE
-
-alias of [`NM000186`](eegdash.dataset.NM000186.md#eegdash.dataset.NM000186)
-
-### eegdash.dataset.BigP3BCI_StudyF
-
-alias of [`NM000191`](eegdash.dataset.NM000191.md#eegdash.dataset.NM000191)
-
-### eegdash.dataset.BigP3BCI_StudyG
-
-alias of [`NM000277`](eegdash.dataset.NM000277.md#eegdash.dataset.NM000277)
-
-### eegdash.dataset.BigP3BCI_StudyH
-
-alias of [`NM000218`](eegdash.dataset.NM000218.md#eegdash.dataset.NM000218)
-
-### eegdash.dataset.BigP3BCI_StudyI
-
-alias of [`NM000200`](eegdash.dataset.NM000200.md#eegdash.dataset.NM000200)
-
-### eegdash.dataset.BigP3BCI_StudyK
-
-alias of [`NM000176`](eegdash.dataset.NM000176.md#eegdash.dataset.NM000176)
-
-### eegdash.dataset.BigP3BCI_StudyM
-
-alias of [`NM000197`](eegdash.dataset.NM000197.md#eegdash.dataset.NM000197)
-
-### eegdash.dataset.BigP3BCI_StudyN
-
-alias of [`NM000187`](eegdash.dataset.NM000187.md#eegdash.dataset.NM000187)
-
-### eegdash.dataset.BigP3BCI_StudyS1
-
-alias of [`NM000247`](eegdash.dataset.NM000247.md#eegdash.dataset.NM000247)
-
-### eegdash.dataset.Bogacz2024
-
-alias of [`DS002908`](eegdash.dataset.DS002908.md#eegdash.dataset.DS002908)
-
-### eegdash.dataset.BrainInvaders
-
-alias of [`NM000260`](eegdash.dataset.NM000260.md#eegdash.dataset.NM000260)
-
-### eegdash.dataset.BrainInvaders2013a
-
-alias of [`NM000264`](eegdash.dataset.NM000264.md#eegdash.dataset.NM000264)
-
-### eegdash.dataset.BrainInvaders2014a
-
-alias of [`NM000244`](eegdash.dataset.NM000244.md#eegdash.dataset.NM000244)
-
-### eegdash.dataset.BrainInvaders2014b
-
-alias of [`NM000215`](eegdash.dataset.NM000215.md#eegdash.dataset.NM000215)
-
-### eegdash.dataset.BrainInvaders2015a
-
-alias of [`NM000216`](eegdash.dataset.NM000216.md#eegdash.dataset.NM000216)
-
-### eegdash.dataset.BrainInvaders2015b
-
-alias of [`NM000217`](eegdash.dataset.NM000217.md#eegdash.dataset.NM000217)
-
-### eegdash.dataset.BrainInvadersBI2014b
-
-alias of [`NM000215`](eegdash.dataset.NM000215.md#eegdash.dataset.NM000215)
-
-### eegdash.dataset.BrainTreeBank
-
-alias of [`NM000253`](eegdash.dataset.NM000253.md#eegdash.dataset.NM000253)
-
-### eegdash.dataset.Broitman2019
-
-alias of [`DS005857`](eegdash.dataset.DS005857.md#eegdash.dataset.DS005857)
-
-### eegdash.dataset.CARLA
-
-alias of [`DS004977`](eegdash.dataset.DS004977.md#eegdash.dataset.DS004977)
-
-### eegdash.dataset.CHBMIT
-
-alias of [`NM000110`](eegdash.dataset.NM000110.md#eegdash.dataset.NM000110)
-
-### eegdash.dataset.CHB_MIT
-
-alias of [`NM000110`](eegdash.dataset.NM000110.md#eegdash.dataset.NM000110)
-
-### eegdash.dataset.CHISCO20
-
-alias of [`DS006317`](eegdash.dataset.DS006317.md#eegdash.dataset.DS006317)
-
-### eegdash.dataset.CPSEED
-
-alias of [`DS006465`](eegdash.dataset.DS006465.md#eegdash.dataset.DS006465)
-
-### eegdash.dataset.CPSEED_3M
-
-alias of [`DS006465`](eegdash.dataset.DS006465.md#eegdash.dataset.DS006465)
-
-### eegdash.dataset.CastillosCVEP40
-
-alias of [`NM000342`](eegdash.dataset.NM000342.md#eegdash.dataset.NM000342)
-
-### eegdash.dataset.CatFR
-
-alias of [`DS004809`](eegdash.dataset.DS004809.md#eegdash.dataset.DS004809)
-
-### eegdash.dataset.Chandravadia2022
-
-alias of [`DS005028`](eegdash.dataset.DS005028.md#eegdash.dataset.DS005028)
-
-### eegdash.dataset.Chang2025
-
-alias of [`NM000271`](eegdash.dataset.NM000271.md#eegdash.dataset.NM000271)
-
-### eegdash.dataset.Chavarriaga2010
-
-alias of [`NM000168`](eegdash.dataset.NM000168.md#eegdash.dataset.NM000168)
-
-### eegdash.dataset.Chisco
-
-alias of [`DS005170`](eegdash.dataset.DS005170.md#eegdash.dataset.DS005170)
-
-### eegdash.dataset.Chisco20
-
-alias of [`DS006317`](eegdash.dataset.DS006317.md#eegdash.dataset.DS006317)
-
-### eegdash.dataset.Chisco2_0
-
-alias of [`DS006317`](eegdash.dataset.DS006317.md#eegdash.dataset.DS006317)
-
-### eegdash.dataset.Cote2015
-
-alias of [`DS003082`](eegdash.dataset.DS003082.md#eegdash.dataset.DS003082)
-
-### eegdash.dataset.Couperus2017
-
-alias of [`DS007096`](eegdash.dataset.DS007096.md#eegdash.dataset.DS007096)
-
-### eegdash.dataset.Couperus2021_LRP
-
-alias of [`DS007139`](eegdash.dataset.DS007139.md#eegdash.dataset.DS007139)
-
-### eegdash.dataset.Couperus2021_MMN
-
-alias of [`DS007069`](eegdash.dataset.DS007069.md#eegdash.dataset.DS007069)
-
-### eegdash.dataset.Couperus2021_N2pc
-
-alias of [`DS007137`](eegdash.dataset.DS007137.md#eegdash.dataset.DS007137)
-
-### eegdash.dataset.Couperus2021_N400
-
-alias of [`DS007052`](eegdash.dataset.DS007052.md#eegdash.dataset.DS007052)
-
-### eegdash.dataset.Couperus2021_P300
-
-alias of [`DS007056`](eegdash.dataset.DS007056.md#eegdash.dataset.DS007056)
-
-### eegdash.dataset.DENS
-
-alias of [`DS003751`](eegdash.dataset.DS003751.md#eegdash.dataset.DS003751)
-
 ### *class* eegdash.dataset.DS000117(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -498,9 +26,9 @@ Multisubject, multimodal face processing
 * **Author (year):**
   `Wakeman2018`
 * **Canonical:**
-  `Wakeman2015`, `WakemanHenson`
+  —
 
-Also importable as: `DS000117`, `Wakeman2018`, `Wakeman2015`, `WakemanHenson`.
+Also importable as: `DS000117`, `Wakeman2018`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 17; recordings: 104; tasks: 2.
@@ -557,7 +85,7 @@ NEMAR citation count: 77
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Wakeman2015', 'WakemanHenson']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS000246(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -642,9 +170,9 @@ MEG-BIDS OMEGA RestingState_sample
 * **Author (year):**
   `Niso2018`
 * **Canonical:**
-  `OMEGA`
+  —
 
-Also importable as: `DS000247`, `Niso2018`, `OMEGA`.
+Also importable as: `DS000247`, `Niso2018`.
 
 Modality: `meg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 6; recordings: 10; tasks: 2.
@@ -701,7 +229,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['OMEGA']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS000248(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -714,9 +242,9 @@ MNE-Sample-Data
 * **Author (year):**
   `Gramfort2018`
 * **Canonical:**
-  `MNE_Sample_Data`
+  —
 
-Also importable as: `DS000248`, `Gramfort2018`, `MNE_Sample_Data`.
+Also importable as: `DS000248`, `Gramfort2018`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 2; recordings: 3; tasks: 2.
@@ -773,7 +301,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MNE_Sample_Data']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS001785(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -1146,9 +674,9 @@ Rivalry_Tagging
 * **Author (year):**
   `Mendola2019`
 * **Canonical:**
-  `Mendola2020`
+  —
 
-Also importable as: `DS002001`, `Mendola2019`, `Mendola2020`.
+Also importable as: `DS002001`, `Mendola2019`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 11; recordings: 69; tasks: 2.
@@ -1205,7 +733,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mendola2020']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS002034(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -1577,9 +1105,9 @@ OcularLDT
 * **Author (year):**
   `Brooks2019`
 * **Canonical:**
-  `OcularLDT`, `ocular_ldt`
+  —
 
-Also importable as: `DS002312`, `Brooks2019`, `OcularLDT`, `ocular_ldt`.
+Also importable as: `DS002312`, `Brooks2019`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 23; tasks: 1.
@@ -1635,7 +1163,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds002312.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['OcularLDT', 'ocular_ldt']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS002336(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -2152,9 +1680,9 @@ Face processing EEG dataset for EEGLAB
 * **Author (year):**
   `Wakeman2020`
 * **Canonical:**
-  `WakemanHenson_EEG_MEG`
+  —
 
-Also importable as: `DS002718`, `Wakeman2020`, `WakemanHenson_EEG_MEG`.
+Also importable as: `DS002718`, `Wakeman2020`.
 
 Modality: `eeg`.
 Subjects: 18; recordings: 18; tasks: 1.
@@ -2211,7 +1739,7 @@ NEMAR citation count: 11
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['WakemanHenson_EEG_MEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS002720(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -2800,9 +2328,9 @@ DataSet1
 * **Author (year):**
   `Mheich2020_DataSet1`
 * **Canonical:**
-  `Mheich2020`
+  —
 
-Also importable as: `DS002791`, `Mheich2020_DataSet1`, `Mheich2020`.
+Also importable as: `DS002791`, `Mheich2020_DataSet1`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 23; recordings: 92; tasks: 0.
@@ -2859,7 +2387,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mheich2020']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS002799(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -3015,9 +2543,9 @@ DataSet2
 * **Author (year):**
   `Mheich2020_DataSet2`
 * **Canonical:**
-  `Mheich2024`
+  —
 
-Also importable as: `DS002833`, `Mheich2020_DataSet2`, `Mheich2024`.
+Also importable as: `DS002833`, `Mheich2020_DataSet2`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 20; recordings: 80; tasks: 1.
@@ -3074,7 +2602,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mheich2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS002885(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -3231,9 +2759,9 @@ Human MEG recordings during sequential conflict task
 * **Author (year):**
   `Bogacz2020`
 * **Canonical:**
-  `Bogacz2024`
+  —
 
-Also importable as: `DS002908`, `Bogacz2020`, `Bogacz2024`.
+Also importable as: `DS002908`, `Bogacz2020`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 13; recordings: 53; tasks: 1.
@@ -3290,7 +2818,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Bogacz2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003004(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -3519,9 +3047,9 @@ EEG data from an auditory oddball task
 * **Author (year):**
   `Delorme2020_auditory_oddball`
 * **Canonical:**
-  `Delorme`
+  —
 
-Also importable as: `DS003061`, `Delorme2020_auditory_oddball`, `Delorme`.
+Also importable as: `DS003061`, `Delorme2020_auditory_oddball`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 39; tasks: 1.
@@ -3578,7 +3106,7 @@ NEMAR citation count: 4
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Delorme']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003078(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -3663,9 +3191,9 @@ Auditory Cortex Mapping Dataset
 * **Author (year):**
   `Cote2020`
 * **Canonical:**
-  `Cote2015`
+  —
 
-Also importable as: `DS003082`, `Cote2020`, `Cote2015`.
+Also importable as: `DS003082`, `Cote2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 2; recordings: 3; tasks: 2.
@@ -3722,7 +3250,7 @@ NEMAR citation count: 5
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Cote2015']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003104(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -3735,9 +3263,9 @@ MNE-somato-data-bids (anonymized)
 * **Author (year):**
   `Parkkonen2020`
 * **Canonical:**
-  `MNESomato`, `Somato`, `MNESomatoData`
+  —
 
-Also importable as: `DS003104`, `Parkkonen2020`, `MNESomato`, `Somato`, `MNESomatoData`.
+Also importable as: `DS003104`, `Parkkonen2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -3794,7 +3322,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MNESomato', 'Somato', 'MNESomatoData']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003190(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -4095,9 +3623,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Hermann2020`
 * **Canonical:**
-  `Hermann2021`
+  —
 
-Also importable as: `DS003352`, `Hermann2020`, `Hermann2021`.
+Also importable as: `DS003352`, `Hermann2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 18; recordings: 138; tasks: 1.
@@ -4154,7 +3682,7 @@ NEMAR citation count: 4
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Hermann2021']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003374(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -4742,9 +4270,9 @@ Logical reasoning study
 * **Author (year):**
   `Cognitive2021`
 * **Canonical:**
-  `Maestu2021`
+  —
 
-Also importable as: `DS003483`, `Cognitive2021`, `Maestu2021`.
+Also importable as: `DS003483`, `Cognitive2021`.
 
 Modality: `meg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 21; recordings: 41; tasks: 2.
@@ -4801,7 +4329,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Maestu2021']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003490(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -4958,9 +4486,9 @@ VEPCON: Source imaging of high-density visual evoked potentials with multi-scale
 * **Author (year):**
   `Pascucci2021`
 * **Canonical:**
-  `VEPCON`
+  —
 
-Also importable as: `DS003505`, `Pascucci2021`, `VEPCON`.
+Also importable as: `DS003505`, `Pascucci2021`.
 
 Modality: `eeg`.
 Subjects: 19; recordings: 37; tasks: 2.
@@ -5017,7 +4545,7 @@ NEMAR citation count: 5
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['VEPCON']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003506(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -5966,9 +5494,9 @@ Runabout: A mobile EEG study of auditory oddball processing in laboratory and re
 * **Author (year):**
   `Liebherr2021`
 * **Canonical:**
-  `Runabout`
+  —
 
-Also importable as: `DS003620`, `Liebherr2021`, `Runabout`.
+Also importable as: `DS003620`, `Liebherr2021`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 44; recordings: 100; tasks: 1.
@@ -6025,7 +5553,7 @@ NEMAR citation count: 4
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Runabout']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003626(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -6110,9 +5638,9 @@ ForrestGump-MEG
 * **Author (year):**
   `Liu2021`
 * **Canonical:**
-  `ForrestGump_MEG`
+  —
 
-Also importable as: `DS003633`, `Liu2021`, `ForrestGump_MEG`.
+Also importable as: `DS003633`, `Liu2021`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 12; recordings: 96; tasks: 2.
@@ -6169,7 +5697,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ForrestGump_MEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003638(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -6687,9 +6215,9 @@ MEGMEM
 * **Author (year):**
   `Griffiths2021`
 * **Canonical:**
-  `MEGMEM`
+  —
 
-Also importable as: `DS003694`, `Griffiths2021`, `MEGMEM`.
+Also importable as: `DS003694`, `Griffiths2021`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 28; recordings: 132; tasks: 1.
@@ -6746,7 +6274,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MEGMEM']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003702(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -6831,9 +6359,9 @@ Frequency Tagging of Syntactic Structure or Lexical Properties
 * **Author (year):**
   `Kalenkovich2021`
 * **Canonical:**
-  `Kalenkovich2019`
+  —
 
-Also importable as: `DS003703`, `Kalenkovich2021`, `Kalenkovich2019`.
+Also importable as: `DS003703`, `Kalenkovich2021`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 34; recordings: 102; tasks: 2.
@@ -6890,7 +6418,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kalenkovich2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003708(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -6903,9 +6431,9 @@ Basis profile curve identification to understand electrical stimulation effects 
 * **Author (year):**
   `Hermes2021`
 * **Canonical:**
-  `Miller2021`
+  —
 
-Also importable as: `DS003708`, `Hermes2021`, `Miller2021`.
+Also importable as: `DS003708`, `Hermes2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -6962,7 +6490,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Miller2021']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003710(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -6975,9 +6503,9 @@ APPLESEED Example Dataset
 * **Author (year):**
   `Williams2021`
 * **Canonical:**
-  `APPLESEED`
+  —
 
-Also importable as: `DS003710`, `Williams2021`, `APPLESEED`.
+Also importable as: `DS003710`, `Williams2021`.
 
 Modality: `eeg`.
 Subjects: 13; recordings: 48; tasks: 1.
@@ -7034,7 +6562,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['APPLESEED']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003739(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -7119,9 +6647,9 @@ Dataset on Emotion with Naturalistic Stimuli (DENS)
 * **Author (year):**
   `Mishra2021`
 * **Canonical:**
-  `DENS`
+  —
 
-Also importable as: `DS003751`, `Mishra2021`, `DENS`.
+Also importable as: `DS003751`, `Mishra2021`.
 
 Modality: `eeg`.
 Subjects: 38; recordings: 38; tasks: 1.
@@ -7178,7 +6706,7 @@ NEMAR citation count: 7
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['DENS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003753(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -7403,9 +6931,9 @@ Music Listening- Genre EEG dataset (MUSIN-G)
 * **Author (year):**
   `Miyapuram2021`
 * **Canonical:**
-  `MUSING`
+  —
 
-Also importable as: `DS003774`, `Miyapuram2021`, `MUSING`.
+Also importable as: `DS003774`, `Miyapuram2021`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 20; recordings: 240; tasks: 1.
@@ -7462,7 +6990,7 @@ NEMAR citation count: 8
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MUSING']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003775(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -7974,9 +7502,9 @@ Human electroencephalography recordings from 50 subjects for 22,248 images from 
 * **Author (year):**
   `Grootswagers2021`
 * **Canonical:**
-  `THINGS`, `THINGS_EEG`
+  —
 
-Also importable as: `DS003825`, `Grootswagers2021`, `THINGS`, `THINGS_EEG`.
+Also importable as: `DS003825`, `Grootswagers2021`.
 
 Modality: `eeg`.
 Subjects: 50; recordings: 50; tasks: 1.
@@ -8033,7 +7561,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['THINGS', 'THINGS_EEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003838(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -8118,9 +7646,9 @@ Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG
 * **Author (year):**
   `Zweiphenning2021`
 * **Canonical:**
-  `RESPect_intraop`
+  —
 
-Also importable as: `DS003844`, `Zweiphenning2021`, `RESPect_intraop`.
+Also importable as: `DS003844`, `Zweiphenning2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 6; recordings: 38; tasks: 1.
@@ -8177,7 +7705,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['RESPect_intraop']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003846(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -8262,9 +7790,9 @@ Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG
 * **Author (year):**
   `Blooijs2021`
 * **Canonical:**
-  `RESPect_longterm`
+  —
 
-Also importable as: `DS003848`, `Blooijs2021`, `RESPect_longterm`.
+Also importable as: `DS003848`, `Blooijs2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 6; recordings: 22; tasks: 6.
@@ -8321,7 +7849,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['RESPect_longterm']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS003876(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -8982,9 +8510,9 @@ MAVIS
 * **Author (year):**
   `Waschke2022`
 * **Canonical:**
-  `MAVIS`
+  —
 
-Also importable as: `DS004010`, `Waschke2022`, `MAVIS`.
+Also importable as: `DS004010`, `Waschke2022`.
 
 Modality: `eeg`.
 Subjects: 24; recordings: 24; tasks: 1.
@@ -9041,7 +8569,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MAVIS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004011(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -9126,9 +8654,9 @@ BRAR_NQ
 * **Author (year):**
   `Rani2022`
 * **Canonical:**
-  `Rani2019`
+  —
 
-Also importable as: `DS004012`, `Rani2022`, `Rani2019`.
+Also importable as: `DS004012`, `Rani2022`.
 
 Modality: `meg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 30; recordings: 294; tasks: 10.
@@ -9185,7 +8713,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Rani2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004015(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10062,9 +9590,9 @@ CCEP ECoG dataset across age 4-51
 * **Author (year):**
   `Blooijs2023_CCEP_ECoG`
 * **Canonical:**
-  `RESPect_CCEP`
+  —
 
-Also importable as: `DS004080`, `Blooijs2023_CCEP_ECoG`, `RESPect_CCEP`.
+Also importable as: `DS004080`, `Blooijs2023_CCEP_ECoG`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 74; recordings: 117; tasks: 1.
@@ -10121,7 +9649,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['RESPect_CCEP']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004100(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10134,9 +9662,9 @@ HUP iEEG Epilepsy Dataset
 * **Author (year):**
   `Bernabei2022`
 * **Canonical:**
-  `HUPiEEG`
+  —
 
-Also importable as: `DS004100`, `Bernabei2022`, `HUPiEEG`.
+Also importable as: `DS004100`, `Bernabei2022`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 57; recordings: 319; tasks: 2.
@@ -10193,7 +9721,7 @@ NEMAR citation count: 21
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HUPiEEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004105(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10206,9 +9734,9 @@ BCIT Auditory Cueing
 * **Author (year):**
   `Garcia2022`
 * **Canonical:**
-  `BCIT_Auditory_Cueing`
+  —
 
-Also importable as: `DS004105`, `Garcia2022`, `BCIT_Auditory_Cueing`.
+Also importable as: `DS004105`, `Garcia2022`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 17; recordings: 34; tasks: 1.
@@ -10265,7 +9793,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCIT_Auditory_Cueing']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004106(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10278,9 +9806,9 @@ BCIT Advanced Guard Duty
 * **Author (year):**
   `Touryan2022`
 * **Canonical:**
-  `BCITAdvancedGuardDuty`
+  —
 
-Also importable as: `DS004106`, `Touryan2022`, `BCITAdvancedGuardDuty`.
+Also importable as: `DS004106`, `Touryan2022`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 27; recordings: 29; tasks: 1.
@@ -10337,7 +9865,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCITAdvancedGuardDuty']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004107(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10350,9 +9878,9 @@ MIND DATA
 * **Author (year):**
   `Weisend2022`
 * **Canonical:**
-  `Weisend2007`
+  —
 
-Also importable as: `DS004107`, `Weisend2022`, `Weisend2007`.
+Also importable as: `DS004107`, `Weisend2022`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 9; recordings: 89; tasks: 6.
@@ -10409,7 +9937,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Weisend2007']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004117(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10494,9 +10022,9 @@ BCIT Calibration Driving
 * **Author (year):**
   `Touryan2022_BCIT_Calibration`
 * **Canonical:**
-  `Touryan1999`
+  —
 
-Also importable as: `DS004118`, `Touryan2022_BCIT_Calibration`, `Touryan1999`.
+Also importable as: `DS004118`, `Touryan2022_BCIT_Calibration`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 156; recordings: 247; tasks: 1.
@@ -10553,7 +10081,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Touryan1999']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004119(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10566,9 +10094,9 @@ BCIT Basic Guard Duty
 * **Author (year):**
   `Touryan2022_BCIT_Basic`
 * **Canonical:**
-  `BCIT`
+  —
 
-Also importable as: `DS004119`, `Touryan2022_BCIT_Basic`, `BCIT`.
+Also importable as: `DS004119`, `Touryan2022_BCIT_Basic`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 21; recordings: 22; tasks: 1.
@@ -10625,7 +10153,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCIT']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004120(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10638,9 +10166,9 @@ BCIT Baseline Driving
 * **Author (year):**
   `Touryan2022_BCIT_Baseline`
 * **Canonical:**
-  `BCITBaselineDriving`
+  —
 
-Also importable as: `DS004120`, `Touryan2022_BCIT_Baseline`, `BCITBaselineDriving`.
+Also importable as: `DS004120`, `Touryan2022_BCIT_Baseline`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 109; recordings: 131; tasks: 1.
@@ -10697,7 +10225,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCITBaselineDriving']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004121(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10710,9 +10238,9 @@ BCIT Mind Wandering
 * **Author (year):**
   `Touryan2022_BCIT_Mind`
 * **Canonical:**
-  `BCITMindWandering`
+  —
 
-Also importable as: `DS004121`, `Touryan2022_BCIT_Mind`, `BCITMindWandering`.
+Also importable as: `DS004121`, `Touryan2022_BCIT_Mind`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 21; recordings: 60; tasks: 1.
@@ -10769,7 +10297,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCITMindWandering']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004122(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -10854,9 +10382,9 @@ BCIT Traffic Complexity
 * **Author (year):**
   `Touryan2022_BCIT_Traffic`
 * **Canonical:**
-  `BCIT_Traffic_Complexity`
+  —
 
-Also importable as: `DS004123`, `Touryan2022_BCIT_Traffic`, `BCIT_Traffic_Complexity`.
+Also importable as: `DS004123`, `Touryan2022_BCIT_Traffic`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 29; recordings: 30; tasks: 1.
@@ -10913,7 +10441,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCIT_Traffic_Complexity']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004127(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -11575,9 +11103,9 @@ THINGS-MEG
 * **Author (year):**
   `Hebart2022`
 * **Canonical:**
-  `THINGS_MEG`, `THINGSMEG`
+  —
 
-Also importable as: `DS004212`, `Hebart2022`, `THINGS_MEG`, `THINGSMEG`.
+Also importable as: `DS004212`, `Hebart2022`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 5; recordings: 500; tasks: 1.
@@ -11634,7 +11162,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['THINGS_MEG', 'THINGSMEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004229(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -11724,7 +11252,7 @@ Rotation-tolerant representations elucidate the time course of high-level object
 Also importable as: `DS004252`, `Moerel2022_Rotation`.
 
 Modality: `eeg`.
-Subjects: 1; recordings: 1; tasks: 1.
+Subjects: 16; recordings: 16; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -11764,7 +11292,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds004252](https://openneuro.org/datasets/ds004252)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds004252](https://nemar.org/dataexplorer/detail?dataset_id=ds004252)
-DOI: [https://doi.org/10.18112/openneuro.ds004252.v1.0.2](https://doi.org/10.18112/openneuro.ds004252.v1.0.2)
+DOI: [https://doi.org/10.18112/openneuro.ds004252.v1.1.0](https://doi.org/10.18112/openneuro.ds004252.v1.1.0)
 NEMAR citation count: 1
 
 ### Examples
@@ -12079,9 +11607,9 @@ Sustained Neural Representations of Personally Familiar People and Places During
 * **Author (year):**
   `Kidder2022`
 * **Canonical:**
-  `Kidder2024`
+  —
 
-Also importable as: `DS004278`, `Kidder2022`, `Kidder2024`.
+Also importable as: `DS004278`, `Kidder2022`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 30; recordings: 30; tasks: 1.
@@ -12138,7 +11666,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kidder2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004279(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -12583,9 +12111,9 @@ ToonFaces
 * **Author (year):**
   `Chacon2022`
 * **Canonical:**
-  `ToonFaces`
+  —
 
-Also importable as: `DS004324`, `Chacon2022`, `ToonFaces`.
+Also importable as: `DS004324`, `Chacon2022`.
 
 Modality: `eeg`.
 Subjects: 26; recordings: 26; tasks: 1.
@@ -12642,7 +12170,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ToonFaces']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004330(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -12727,9 +12255,9 @@ FLUX: A pipeline for MEG analysis
 * **Author (year):**
   `Ferrante2022`
 * **Canonical:**
-  `FLUX`
+  —
 
-Also importable as: `DS004346`, `Ferrante2022`, `FLUX`.
+Also importable as: `DS004346`, `Ferrante2022`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 1; recordings: 3; tasks: 1.
@@ -12786,7 +12314,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FLUX']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004347(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -12871,9 +12399,9 @@ Ear-EEG Sleep Monitoring 2017 (EESM17)
 * **Author (year):**
   `Mikkelsen2022`
 * **Canonical:**
-  `EESM17`
+  —
 
-Also importable as: `DS004348`, `Mikkelsen2022`, `EESM17`.
+Also importable as: `DS004348`, `Mikkelsen2022`.
 
 Modality: `eeg`.
 Subjects: 9; recordings: 18; tasks: 2.
@@ -12930,7 +12458,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EESM17']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004350(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -13159,9 +12687,9 @@ EEG Motor Movement/Imagery Dataset
 * **Author (year):**
   `Schalk2022`
 * **Canonical:**
-  `PhysionetMI`, `EEGMotorMovementImagery`
+  —
 
-Also importable as: `DS004362`, `Schalk2022`, `PhysionetMI`, `EEGMotorMovementImagery`.
+Also importable as: `DS004362`, `Schalk2022`.
 
 Modality: `eeg`.
 Subjects: 109; recordings: 1526; tasks: 1.
@@ -13218,7 +12746,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PhysionetMI', 'EEGMotorMovementImagery']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004367(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -13447,9 +12975,9 @@ PRIOS
 * **Author (year):**
   `Blooijs2022_PRIOS`
 * **Canonical:**
-  `PRIOS`
+  —
 
-Also importable as: `DS004370`, `Blooijs2022_PRIOS`, `PRIOS`.
+Also importable as: `DS004370`, `Blooijs2022_PRIOS`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 7; recordings: 15; tasks: 2.
@@ -13506,7 +13034,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PRIOS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004381(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -13735,9 +13263,9 @@ Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
 * **Author (year):**
   `Kahana2023`
 * **Canonical:**
-  `PEERS`
+  —
 
-Also importable as: `DS004395`, `Kahana2023`, `PEERS`.
+Also importable as: `DS004395`, `Kahana2023`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 364; recordings: 6483; tasks: 3.
@@ -13794,7 +13322,7 @@ NEMAR citation count: 6
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PEERS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004398(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -13807,9 +13335,9 @@ planmemreplay
 * **Author (year):**
   `Wimmer2023`
 * **Canonical:**
-  `Wimmer2024`
+  —
 
-Also importable as: `DS004398`, `Wimmer2023`, `Wimmer2024`.
+Also importable as: `DS004398`, `Wimmer2023`.
 
 Modality: `meg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -13866,7 +13394,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Wimmer2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004408(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -13951,9 +13479,9 @@ The BMI-HDEEG dataset 1
 * **Author (year):**
   `Iwama2023_D1`
 * **Canonical:**
-  `BMI_HDEEG_D1`
+  —
 
-Also importable as: `DS004444`, `Iwama2023_D1`, `BMI_HDEEG_D1`.
+Also importable as: `DS004444`, `Iwama2023_D1`.
 
 Modality: `eeg`.
 Subjects: 30; recordings: 465; tasks: 1.
@@ -14010,7 +13538,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BMI_HDEEG_D1']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004446(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14023,9 +13551,9 @@ The BMI-HDEEG dataset 2
 * **Author (year):**
   `Iwama2023_D2`
 * **Canonical:**
-  `BMI_HDEEG_D2`
+  —
 
-Also importable as: `DS004446`, `Iwama2023_D2`, `BMI_HDEEG_D2`.
+Also importable as: `DS004446`, `Iwama2023_D2`.
 
 Modality: `eeg`.
 Subjects: 30; recordings: 237; tasks: 1.
@@ -14082,7 +13610,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BMI_HDEEG_D2']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004447(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14095,9 +13623,9 @@ The BMI-HDEEG dataset 3
 * **Author (year):**
   `Iwama2023_D3`
 * **Canonical:**
-  `BMI_HDEEG_D3`
+  —
 
-Also importable as: `DS004447`, `Iwama2023_D3`, `BMI_HDEEG_D3`.
+Also importable as: `DS004447`, `Iwama2023_D3`.
 
 Modality: `eeg`.
 Subjects: 22; recordings: 418; tasks: 1.
@@ -14154,7 +13682,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BMI_HDEEG_D3']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004448(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14167,9 +13695,9 @@ The BMI-HDEEG dataset 4
 * **Author (year):**
   `Iwama2023_D4`
 * **Canonical:**
-  `BMI_HDEEG_D4`
+  —
 
-Also importable as: `DS004448`, `Iwama2023_D4`, `BMI_HDEEG_D4`.
+Also importable as: `DS004448`, `Iwama2023_D4`.
 
 Modality: `eeg`.
 Subjects: 56; recordings: 280; tasks: 1.
@@ -14226,7 +13754,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BMI_HDEEG_D4']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004457(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14239,9 +13767,9 @@ Electrical stimulation of temporal and limbic circuitry produces distinct respon
 * **Author (year):**
   `Huang2023`
 * **Canonical:**
-  `Huang2022`
+  —
 
-Also importable as: `DS004457`, `Huang2023`, `Huang2022`.
+Also importable as: `DS004457`, `Huang2023`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 5; recordings: 5; tasks: 1.
@@ -14298,7 +13826,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Huang2022']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004460(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14383,9 +13911,9 @@ sEEG Forced Two-Choice Task
 * **Author (year):**
   `Rockhill2023`
 * **Canonical:**
-  `Rockhill2022`
+  —
 
-Also importable as: `DS004473`, `Rockhill2023`, `Rockhill2022`.
+Also importable as: `DS004473`, `Rockhill2023`.
 
 Modality: `ieeg`; Experiment type: `Motor`; Subject type: `Epilepsy`.
 Subjects: 8; recordings: 8; tasks: 1.
@@ -14442,7 +13970,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Rockhill2022']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004475(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14599,9 +14127,9 @@ ABSeqMEG
 * **Author (year):**
   `Planton2023`
 * **Canonical:**
-  `ABSeqMEG`
+  —
 
-Also importable as: `DS004483`, `Planton2023`, `ABSeqMEG`.
+Also importable as: `DS004483`, `Planton2023`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 19; recordings: 282; tasks: 1.
@@ -14658,7 +14186,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ABSeqMEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004502(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -14671,9 +14199,9 @@ Anticipatory differences between Attention and Expectation
 * **Author (year):**
   `Penalver2023`
 * **Canonical:**
-  `Penalver2024`
+  —
 
-Also importable as: `DS004502`, `Penalver2023`, `Penalver2024`.
+Also importable as: `DS004502`, `Penalver2023`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 48; recordings: 48; tasks: 1.
@@ -14730,7 +14258,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Penalver2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004504(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15173,9 +14701,9 @@ Internal selective attention is delayed by competition between endogenous and ex
 * **Author (year):**
   `Ester2023_Internal`
 * **Canonical:**
-  `Ester2022`
+  —
 
-Also importable as: `DS004519`, `Ester2023_Internal`, `Ester2022`.
+Also importable as: `DS004519`, `Ester2023_Internal`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 40; recordings: 40; tasks: 1.
@@ -15232,7 +14760,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ester2022']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004520(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15245,9 +14773,9 @@ Changes in behavioral priority influence the accessibility of working memory con
 * **Author (year):**
   `Ester2023_Changes`
 * **Canonical:**
-  `Ester2024_E2`
+  —
 
-Also importable as: `DS004520`, `Ester2023_Changes`, `Ester2024_E2`.
+Also importable as: `DS004520`, `Ester2023_Changes`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 33; recordings: 33; tasks: 1.
@@ -15304,7 +14832,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ester2024_E2']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004521(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15317,9 +14845,9 @@ Changes in behavioral priority influence the accessibility of working memory con
 * **Author (year):**
   `Ester2023_Changes_behavioral`
 * **Canonical:**
-  `Ester2024_E1`
+  —
 
-Also importable as: `DS004521`, `Ester2023_Changes_behavioral`, `Ester2024_E1`.
+Also importable as: `DS004521`, `Ester2023_Changes_behavioral`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 34; recordings: 34; tasks: 1.
@@ -15376,7 +14904,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ester2024_E1']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004532(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15461,9 +14989,9 @@ Multimodal EEG-fNIRS data from patients undergoing general anesthesia
 * **Author (year):**
   `Ferron2023`
 * **Canonical:**
-  `Ferron2019`
+  —
 
-Also importable as: `DS004541`, `Ferron2023`, `Ferron2019`.
+Also importable as: `DS004541`, `Ferron2023`.
 
 Modality: `eeg, fnirs`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 8; recordings: 18; tasks: 1.
@@ -15519,7 +15047,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds004541.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ferron2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004551(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15532,9 +15060,9 @@ iEEG on children during slow wave sleep
 * **Author (year):**
   `Sakakura2023_children_slow_wave`
 * **Canonical:**
-  `Sakakura2025`
+  —
 
-Also importable as: `DS004551`, `Sakakura2023_children_slow_wave`, `Sakakura2025`.
+Also importable as: `DS004551`, `Sakakura2023_children_slow_wave`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Epilepsy`.
 Subjects: 114; recordings: 125; tasks: 1.
@@ -15591,7 +15119,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Sakakura2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004554(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -15820,9 +15348,9 @@ The effects of sham hypnosis techniques
 * **Author (year):**
   `Kekecs2023`
 * **Canonical:**
-  `Kekecs2024`
+  —
 
-Also importable as: `DS004572`, `Kekecs2023`, `Kekecs2024`.
+Also importable as: `DS004572`, `Kekecs2023`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 52; recordings: 516; tasks: 10.
@@ -15879,7 +15407,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kekecs2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004574(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -16396,9 +15924,9 @@ Neuma
 * **Author (year):**
   `Georgiadis2023`
 * **Canonical:**
-  `Neuma`
+  —
 
-Also importable as: `DS004588`, `Georgiadis2023`, `Neuma`.
+Also importable as: `DS004588`, `Georgiadis2023`.
 
 Modality: `eeg`.
 Subjects: 42; recordings: 42; tasks: 1.
@@ -16455,7 +15983,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Neuma']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004595(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -16540,9 +16068,9 @@ LFP during linear track in 6-month old TgF344-AD rats
 * **Author (year):**
   `Faraz2023`
 * **Canonical:**
-  `Moradi2024`
+  —
 
-Also importable as: `DS004598`, `Faraz2023`, `Moradi2024`.
+Also importable as: `DS004598`, `Faraz2023`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Dementia`.
 Subjects: 9; recordings: 20; tasks: 1.
@@ -16599,7 +16127,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Moradi2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004602(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -16684,9 +16212,9 @@ Visual Attribute-Specific Contextual Trajectory Paradigm
 * **Author (year):**
   `Lowe2023`
 * **Canonical:**
-  `VisualContextTrajectory`
+  —
 
-Also importable as: `DS004603`, `Lowe2023`, `VisualContextTrajectory`.
+Also importable as: `DS004603`, `Lowe2023`.
 
 Modality: `eeg`.
 Subjects: 37; recordings: 37; tasks: 1.
@@ -16743,7 +16271,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['VisualContextTrajectory']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004621(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -16756,9 +16284,9 @@ The Nencki-Symfonia EEG/ERP dataset
 * **Author (year):**
   `Patrycja2023_Nencki`
 * **Canonical:**
-  `NenckiSymfonia`
+  —
 
-Also importable as: `DS004621`, `Patrycja2023_Nencki`, `NenckiSymfonia`.
+Also importable as: `DS004621`, `Patrycja2023_Nencki`.
 
 Modality: `eeg`.
 Subjects: 42; recordings: 167; tasks: 4.
@@ -16815,7 +16343,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['NenckiSymfonia']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004624(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -16828,9 +16356,9 @@ Intracranial recordings using BCI2000 and the CorTec BrainInterchange
 * **Author (year):**
   `Mivalt2025`
 * **Canonical:**
-  `Mivalt2024`, `BCI2000_Intracranial`
+  —
 
-Also importable as: `DS004624`, `Mivalt2025`, `Mivalt2024`, `BCI2000_Intracranial`.
+Also importable as: `DS004624`, `Mivalt2025`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 3; recordings: 614; tasks: 28.
@@ -16887,7 +16415,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mivalt2024', 'BCI2000_Intracranial']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004625(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -17188,9 +16716,9 @@ Driving with Autonomous Aids
 * **Author (year):**
   `Metcalfe2023_Driving`
 * **Canonical:**
-  `TX20`
+  —
 
-Also importable as: `DS004657`, `Metcalfe2023_Driving`, `TX20`.
+Also importable as: `DS004657`, `Metcalfe2023_Driving`.
 
 Modality: `eeg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 24; recordings: 119; tasks: 1.
@@ -17247,7 +16775,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TX20']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004660(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -17260,9 +16788,9 @@ TNO
 * **Author (year):**
   `Johnson2023_TNO`
 * **Canonical:**
-  `TNO`
+  —
 
-Also importable as: `DS004660`, `Johnson2023_TNO`, `TNO`.
+Also importable as: `DS004660`, `Johnson2023_TNO`.
 
 Modality: `eeg`.
 Subjects: 21; recordings: 42; tasks: 1.
@@ -17319,7 +16847,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TNO']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004661(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -17332,9 +16860,9 @@ ANDI
 * **Author (year):**
   `Johnson2023_ANDI`
 * **Canonical:**
-  `ANDI`
+  —
 
-Also importable as: `DS004661`, `Johnson2023_ANDI`, `ANDI`.
+Also importable as: `DS004661`, `Johnson2023_ANDI`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 17; recordings: 17; tasks: 1.
@@ -17391,7 +16919,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ANDI']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004696(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -18052,12 +17580,12 @@ Automatic Evoked Response Detection (ER-Detect) dataset
 * **Author (year):**
   `Boom2023`
 * **Canonical:**
-  `ERDetect`, `ER_Detect`
+  —
 
-Also importable as: `DS004774`, `Boom2023`, `ERDetect`, `ER_Detect`.
+Also importable as: `DS004774`, `Boom2023`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
-Subjects: 14; recordings: 14; tasks: 2.
+Subjects: 9; recordings: 9; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -18110,7 +17638,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds004774.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ERDetect', 'ER_Detect']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004784(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -18339,9 +17867,9 @@ A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroim
 * **Author (year):**
   `Patrycja2023_Polish`
 * **Canonical:**
-  `PEARLNeuro`
+  —
 
-Also importable as: `DS004796`, `Patrycja2023_Polish`, `PEARLNeuro`.
+Also importable as: `DS004796`, `Patrycja2023_Polish`.
 
 Modality: `eeg`.
 Subjects: 79; recordings: 235; tasks: 3.
@@ -18398,7 +17926,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PEARLNeuro']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004802(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -18483,9 +18011,9 @@ Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic
 * **Author (year):**
   `Herrema2023_Categorized_Free_Recall`
 * **Canonical:**
-  `catFR_Categorized_Free_Recall`, `CatFR`
+  —
 
-Also importable as: `DS004809`, `Herrema2023_Categorized_Free_Recall`, `catFR_Categorized_Free_Recall`, `CatFR`.
+Also importable as: `DS004809`, `Herrema2023_Categorized_Free_Recall`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Epilepsy`.
 Subjects: 252; recordings: 889; tasks: 1.
@@ -18542,7 +18070,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['catFR_Categorized_Free_Recall', 'CatFR']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004816(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -18771,12 +18299,12 @@ Spatial Attention Decoding using fNIRS During Complex Scene Analysis
 * **Author (year):**
   `Ning2023`
 * **Canonical:**
-  `Ning2024`
+  —
 
-Also importable as: `DS004830`, `Ning2023`, `Ning2024`.
+Also importable as: `DS004830`, `Ning2023`.
 
 Modality: `fnirs`; Experiment type: `Attention`; Subject type: `Healthy`.
-Subjects: 12; recordings: 14; tasks: 1.
+Subjects: 12; recordings: 19; tasks: 5.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -18816,7 +18344,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds004830](https://openneuro.org/datasets/ds004830)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds004830](https://nemar.org/dataexplorer/detail?dataset_id=ds004830)
-DOI: [https://doi.org/10.18112/openneuro.ds004830.v2.0.0](https://doi.org/10.18112/openneuro.ds004830.v2.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds004830.v1.0.1](https://doi.org/10.18112/openneuro.ds004830.v1.0.1)
 
 ### Examples
 
@@ -18829,7 +18357,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds004830.v2.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ning2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004837(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -18986,9 +18514,9 @@ TX14
 * **Author (year):**
   `Larkin2023_TX14`
 * **Canonical:**
-  `TX14`
+  —
 
-Also importable as: `DS004841`, `Larkin2023_TX14`, `TX14`.
+Also importable as: `DS004841`, `Larkin2023_TX14`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 20; recordings: 147; tasks: 1.
@@ -19045,7 +18573,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TX14']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004842(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19058,9 +18586,9 @@ TX15
 * **Author (year):**
   `Larkin2023_TX15`
 * **Canonical:**
-  `TX15`
+  —
 
-Also importable as: `DS004842`, `Larkin2023_TX15`, `TX15`.
+Also importable as: `DS004842`, `Larkin2023_TX15`.
 
 Modality: `eeg`.
 Subjects: 14; recordings: 102; tasks: 1.
@@ -19117,7 +18645,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TX15']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004843(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19274,9 +18802,9 @@ STRONG
 * **Author (year):**
   `Johnson2023_STRONG`
 * **Canonical:**
-  `STRONG`
+  —
 
-Also importable as: `DS004849`, `Johnson2023_STRONG`, `STRONG`.
+Also importable as: `DS004849`, `Johnson2023_STRONG`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -19333,7 +18861,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['STRONG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004850(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19346,9 +18874,9 @@ ODE
 * **Author (year):**
   `Johnson2023_ODE`
 * **Canonical:**
-  `Johnson2024`
+  —
 
-Also importable as: `DS004850`, `Johnson2023_ODE`, `Johnson2024`.
+Also importable as: `DS004850`, `Johnson2023_ODE`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -19405,7 +18933,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Johnson2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004851(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19418,9 +18946,9 @@ HID
 * **Author (year):**
   `Johnson2023_HID`
 * **Canonical:**
-  `HID`
+  —
 
-Also importable as: `DS004851`, `Johnson2023_HID`, `HID`.
+Also importable as: `DS004851`, `Johnson2023_HID`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 66; recordings: 66; tasks: 1.
@@ -19477,7 +19005,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HID']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004852(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19490,9 +19018,9 @@ InsurgentCivilian
 * **Author (year):**
   `Johnson2023_InsurgentCivilian`
 * **Canonical:**
-  `Johnson2025`
+  —
 
-Also importable as: `DS004852`, `Johnson2023_InsurgentCivilian`, `Johnson2025`.
+Also importable as: `DS004852`, `Johnson2023_InsurgentCivilian`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -19549,7 +19077,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Johnson2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004853(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19634,9 +19162,9 @@ TX18
 * **Author (year):**
   `Johnson2023_TX18`
 * **Canonical:**
-  `TX18`
+  —
 
-Also importable as: `DS004854`, `Johnson2023_TX18`, `TX18`.
+Also importable as: `DS004854`, `Johnson2023_TX18`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -19693,7 +19221,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TX18']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004855(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19778,9 +19306,9 @@ iEEG on children during Stroop task
 * **Author (year):**
   `Sakakura2023_children_Stroop`
 * **Canonical:**
-  `Sakakura2024`
+  —
 
-Also importable as: `DS004859`, `Sakakura2023_children_Stroop`, `Sakakura2024`.
+Also importable as: `DS004859`, `Sakakura2023_children_Stroop`.
 
 Modality: `ieeg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 7; recordings: 9; tasks: 1.
@@ -19837,7 +19365,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Sakakura2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004860(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -19922,9 +19450,9 @@ pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology
 * **Author (year):**
   `Herrema2023_pyFR_Delayed_Free`
 * **Canonical:**
-  `pyFR`
+  —
 
-Also importable as: `DS004865`, `Herrema2023_pyFR_Delayed_Free`, `pyFR`.
+Also importable as: `DS004865`, `Herrema2023_pyFR_Delayed_Free`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Surgery`.
 Subjects: 42; recordings: 172; tasks: 1.
@@ -19981,7 +19509,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['pyFR']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004883(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -20424,9 +19952,9 @@ Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding
 * **Author (year):**
   `Costa2024`
 * **Canonical:**
-  `BCI2000_intraop`
+  —
 
-Also importable as: `DS004944`, `Costa2024`, `BCI2000_intraop`.
+Also importable as: `DS004944`, `Costa2024`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 22; recordings: 44; tasks: 1.
@@ -20483,7 +20011,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCI2000_intraop']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004951(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -20496,9 +20024,9 @@ Braille letters - EEG
 * **Author (year):**
   `Haupt2024_Braille`
 * **Canonical:**
-  `Haupt2025`
+  —
 
-Also importable as: `DS004951`, `Haupt2024_Braille`, `Haupt2025`.
+Also importable as: `DS004951`, `Haupt2024_Braille`.
 
 Modality: `eeg`; Experiment type: `Learning`; Subject type: `Other`.
 Subjects: 11; recordings: 23; tasks: 1.
@@ -20555,7 +20083,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Haupt2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004952(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -20711,9 +20239,9 @@ CARLA: Adjusted common average referencing for cortico-cortical evoked potential
 * **Author (year):**
   `Huang2024`
 * **Canonical:**
-  `CARLA`
+  —
 
-Also importable as: `DS004977`, `Huang2024`, `CARLA`.
+Also importable as: `DS004977`, `Huang2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Epilepsy`.
 Subjects: 4; recordings: 6; tasks: 1.
@@ -20770,7 +20298,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['CARLA']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004980(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -20855,9 +20383,9 @@ WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilep
 * **Author (year):**
   `Hamilton2024`
 * **Canonical:**
-  `WIRED_ICM`
+  —
 
-Also importable as: `DS004993`, `Hamilton2024`, `WIRED_ICM`.
+Also importable as: `DS004993`, `Hamilton2024`.
 
 Modality: `ieeg`; Experiment type: `Perception`; Subject type: `Epilepsy`.
 Subjects: 3; recordings: 3; tasks: 3.
@@ -20914,7 +20442,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['WIRED_ICM']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004995(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -20927,9 +20455,9 @@ The Time-Course of Food Representation in the Human Brain
 * **Author (year):**
   `Moerel2024`
 * **Canonical:**
-  `Moerel2023`
+  —
 
-Also importable as: `DS004995`, `Moerel2024`, `Moerel2023`.
+Also importable as: `DS004995`, `Moerel2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 20; recordings: 20; tasks: 1.
@@ -20986,7 +20514,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Moerel2023']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS004998(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -21071,9 +20599,9 @@ Auditory naming task with questions that begin or end with a wh-interrogative
 * **Author (year):**
   `Kitazawa2024`
 * **Canonical:**
-  `Kitazawa2025`
+  —
 
-Also importable as: `DS005007`, `Kitazawa2024`, `Kitazawa2025`.
+Also importable as: `DS005007`, `Kitazawa2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 40; recordings: 42; tasks: 1.
@@ -21130,7 +20658,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kitazawa2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005021(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -21215,9 +20743,9 @@ Comparing P300 Flashing paradigms in online typing with language models
 * **Author (year):**
   `Chandravadia2024`
 * **Canonical:**
-  `Chandravadia2022`
+  —
 
-Also importable as: `DS005028`, `Chandravadia2024`, `Chandravadia2022`.
+Also importable as: `DS005028`, `Chandravadia2024`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 11; recordings: 105; tasks: 3.
@@ -21274,7 +20802,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Chandravadia2022']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005034(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -21431,9 +20959,9 @@ Paired Associates Learning: Memory for Word Pairs in Cued Recall
 * **Author (year):**
   `Herrema2024_Paired`
 * **Canonical:**
-  `PAL`
+  —
 
-Also importable as: `DS005059`, `Herrema2024_Paired`, `PAL`.
+Also importable as: `DS005059`, `Herrema2024_Paired`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Epilepsy`.
 Subjects: 69; recordings: 282; tasks: 1.
@@ -21490,7 +21018,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PAL']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005065(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22366,9 +21894,9 @@ Chisco
 * **Author (year):**
   `Zhang2024_Chisco`
 * **Canonical:**
-  `Chisco`
+  —
 
-Also importable as: `DS005170`, `Zhang2024_Chisco`, `Chisco`.
+Also importable as: `DS005170`, `Zhang2024_Chisco`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 5; recordings: 225; tasks: 1.
@@ -22425,7 +21953,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Chisco']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005178(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22438,9 +21966,9 @@ Ear-EEG Sleep Monitoring 2023 (EESM23)
 * **Author (year):**
   `Tabar2024`
 * **Canonical:**
-  `EESM23`
+  —
 
-Also importable as: `DS005178`, `Tabar2024`, `EESM23`.
+Also importable as: `DS005178`, `Tabar2024`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 10; recordings: 140; tasks: 1.
@@ -22496,7 +22024,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005178.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EESM23']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005185(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22509,9 +22037,9 @@ Ear-EEG Sleep Monitoring 2019 (EESM19)
 * **Author (year):**
   `Mikkelsen2024_Ear_Sleep_Monitoring`
 * **Canonical:**
-  `EESM19`
+  —
 
-Also importable as: `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`, `EESM19`.
+Also importable as: `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 20; recordings: 356; tasks: 3.
@@ -22567,7 +22095,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005185.v1.0.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EESM19']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005189(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22652,9 +22180,9 @@ Surrey cEEGrid sleep data set
 * **Author (year):**
   `Mikkelsen2024_Surrey_cEEGrid_sleep`
 * **Canonical:**
-  `Surrey_cEEGrid_sleep`
+  —
 
-Also importable as: `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`, `Surrey_cEEGrid_sleep`.
+Also importable as: `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`.
 
 Modality: `eeg`.
 Subjects: 20; recordings: 39; tasks: 1.
@@ -22711,7 +22239,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Surrey_cEEGrid_sleep']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005241(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22724,9 +22252,9 @@ NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic
 * **Author (year):**
   `Rodriguez2024`
 * **Canonical:**
-  `NeuroMorph`, `neuromorph`
+  —
 
-Also importable as: `DS005241`, `Rodriguez2024`, `NeuroMorph`, `neuromorph`.
+Also importable as: `DS005241`, `Rodriguez2024`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 24; recordings: 117; tasks: 2.
@@ -22783,7 +22311,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['NeuroMorph', 'neuromorph']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005261(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22796,9 +22324,9 @@ Gloups_MEG
 * **Author (year):**
   `Todorovic2024`
 * **Canonical:**
-  `Todorovic2023`
+  —
 
-Also importable as: `DS005261`, `Todorovic2024`, `Todorovic2023`.
+Also importable as: `DS005261`, `Todorovic2024`.
 
 Modality: `meg`; Experiment type: `Learning`; Subject type: `Healthy`.
 Subjects: 17; recordings: 128; tasks: 2.
@@ -22855,7 +22383,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Todorovic2023']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005262(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -22868,9 +22396,9 @@ ArEEG: Arabic Inner Speech EEG dataset
 * **Author (year):**
   `Metwalli2024`
 * **Canonical:**
-  `ArEEG`
+  —
 
-Also importable as: `DS005262`, `Metwalli2024`, `ArEEG`.
+Also importable as: `DS005262`, `Metwalli2024`.
 
 Modality: `eeg`.
 Subjects: 12; recordings: 186; tasks: 1.
@@ -22927,7 +22455,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ArEEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005273(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -23869,9 +23397,9 @@ Laser-evoked potentials in the human spinal cord and cortex
 * **Author (year):**
   `Nierula2024`
 * **Canonical:**
-  `Nierula2019`
+  —
 
-Also importable as: `DS005307`, `Nierula2024`, `Nierula2019`.
+Also importable as: `DS005307`, `Nierula2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 7; recordings: 73; tasks: 1.
@@ -23928,7 +23456,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Nierula2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005340(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24156,9 +23684,9 @@ Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset
 * **Author (year):**
   `Ma2024`
 * **Canonical:**
-  `LPP`
+  —
 
-Also importable as: `DS005345`, `Ma2024`, `LPP`.
+Also importable as: `DS005345`, `Ma2024`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 26; recordings: 26; tasks: 1.
@@ -24214,7 +23742,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005345.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['LPP']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005346(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24369,9 +23897,9 @@ Object recognition in healthy aging (ORHA) - EEG
 * **Author (year):**
   `Haupt2024_Object`
 * **Canonical:**
-  `ORHA`
+  —
 
-Also importable as: `DS005363`, `Haupt2024_Object`, `ORHA`.
+Also importable as: `DS005363`, `Haupt2024_Object`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 43; recordings: 43; tasks: 1.
@@ -24428,7 +23956,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ORHA']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005383(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24441,9 +23969,9 @@ TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification 
 * **Author (year):**
   `Bai2024`
 * **Canonical:**
-  `TMNRED`
+  —
 
-Also importable as: `DS005383`, `Bai2024`, `TMNRED`.
+Also importable as: `DS005383`, `Bai2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 30; recordings: 240; tasks: 1.
@@ -24500,7 +24028,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['TMNRED']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005385(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24729,9 +24257,9 @@ Delayed Auditory Feedback EEG/EGG
 * **Author (year):**
   `Veillette2024`
 * **Canonical:**
-  `Veillette2019`
+  —
 
-Also importable as: `DS005403`, `Veillette2024`, `Veillette2019`.
+Also importable as: `DS005403`, `Veillette2024`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 32; recordings: 32; tasks: 1.
@@ -24788,7 +24316,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Veillette2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005406(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24801,9 +24329,9 @@ EEG frequency tagging reveals the integration of dissimilar observed actions
 * **Author (year):**
   `Formica2024`
 * **Canonical:**
-  `Formica2025`
+  —
 
-Also importable as: `DS005406`, `Formica2024`, `Formica2025`.
+Also importable as: `DS005406`, `Formica2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.
@@ -24860,7 +24388,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Formica2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005407(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -24937,7 +24465,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005407.v1.0.1](https://doi.org/10.181
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-The effect of speech masking on the subcortical response to speech
+The effect of speech masking on the human subcortical response to continuous speech
 
 * **Study:**
   `ds005408` (OpenNeuro)
@@ -24989,7 +24517,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds005408](https://openneuro.org/datasets/ds005408)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds005408](https://nemar.org/dataexplorer/detail?dataset_id=ds005408)
-DOI: [https://doi.org/10.18112/openneuro.ds005408.v1.0.0](https://doi.org/10.18112/openneuro.ds005408.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds005408.v1.0.1](https://doi.org/10.18112/openneuro.ds005408.v1.0.1)
 
 ### Examples
 
@@ -25303,9 +24831,9 @@ Resting state EEG with closed eyes and open eyes in females from 60 to 80 years 
 * **Author (year):**
   `Gama2024`
 * **Canonical:**
-  `Gama2019`
+  —
 
-Also importable as: `DS005420`, `Gama2024`, `Gama2019`.
+Also importable as: `DS005420`, `Gama2024`.
 
 Modality: `eeg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 37; recordings: 72; tasks: 2.
@@ -25362,7 +24890,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Gama2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005429(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25447,9 +24975,9 @@ STReEF
 * **Author (year):**
   `Jelsma2024`
 * **Canonical:**
-  `STReEF`
+  —
 
-Also importable as: `DS005448`, `Jelsma2024`, `STReEF`.
+Also importable as: `DS005448`, `Jelsma2024`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 13; recordings: 18; tasks: 1.
@@ -25505,7 +25033,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005448.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['STReEF']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005473(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25518,9 +25046,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Xiangyue2024_29_BP`
 * **Canonical:**
-  `Zhao2024`
+  —
 
-Also importable as: `DS005473`, `Xiangyue2024_29_BP`, `Zhao2024`.
+Also importable as: `DS005473`, `Xiangyue2024_29_BP`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 29; recordings: 58; tasks: 1.
@@ -25576,7 +25104,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005473.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Zhao2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005486(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25733,9 +25261,9 @@ Categorized Free Recall with Open-Loop Stimulation at Encoding
 * **Author (year):**
   `Herrema2024_Categorized`
 * **Canonical:**
-  `catFR_open_loop`, `RAM_catFR`, `catFR_stim`
+  —
 
-Also importable as: `DS005491`, `Herrema2024_Categorized`, `catFR_open_loop`, `RAM_catFR`, `catFR_stim`.
+Also importable as: `DS005491`, `Herrema2024_Categorized`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 19; recordings: 51; tasks: 1.
@@ -25792,7 +25320,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['catFR_open_loop', 'RAM_catFR', 'catFR_stim']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005494(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25805,9 +25333,9 @@ Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retri
 * **Author (year):**
   `Herrema2024_Cued`
 * **Canonical:**
-  `Herrema2024`
+  —
 
-Also importable as: `DS005494`, `Herrema2024_Cued`, `Herrema2024`.
+Also importable as: `DS005494`, `Herrema2024_Cued`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 20; recordings: 51; tasks: 1.
@@ -25864,7 +25392,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Herrema2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005505(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25877,9 +25405,9 @@ Healthy Brain Network (HBN) EEG - Release 1
 * **Author (year):**
   `Shirazi2024_R1`
 * **Canonical:**
-  `HBN_r1`
+  —
 
-Also importable as: `DS005505`, `Shirazi2024_R1`, `HBN_r1`.
+Also importable as: `DS005505`, `Shirazi2024_R1`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 136; recordings: 1342; tasks: 10.
@@ -25936,7 +25464,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r1']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005506(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -25949,9 +25477,9 @@ Healthy Brain Network (HBN) EEG - Release 2
 * **Author (year):**
   `Shirazi2024_R2`
 * **Canonical:**
-  `HBN_r2`
+  —
 
-Also importable as: `DS005506`, `Shirazi2024_R2`, `HBN_r2`.
+Also importable as: `DS005506`, `Shirazi2024_R2`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 150; recordings: 1405; tasks: 10.
@@ -26008,7 +25536,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r2']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005507(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26021,9 +25549,9 @@ Healthy Brain Network (HBN) EEG - Release 3
 * **Author (year):**
   `Shirazi2024_R3`
 * **Canonical:**
-  `HBN_r3`
+  —
 
-Also importable as: `DS005507`, `Shirazi2024_R3`, `HBN_r3`.
+Also importable as: `DS005507`, `Shirazi2024_R3`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 184; recordings: 1812; tasks: 10.
@@ -26080,7 +25608,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r3']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005508(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26093,9 +25621,9 @@ Healthy Brain Network (HBN) EEG - Release 4
 * **Author (year):**
   `Shirazi2024_R4`
 * **Canonical:**
-  `HBN_r4`
+  —
 
-Also importable as: `DS005508`, `Shirazi2024_R4`, `HBN_r4`.
+Also importable as: `DS005508`, `Shirazi2024_R4`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 324; recordings: 3342; tasks: 10.
@@ -26152,7 +25680,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r4']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005509(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26165,9 +25693,9 @@ Healthy Brain Network (HBN) EEG - Release 5
 * **Author (year):**
   `Shirazi2024_R5`
 * **Canonical:**
-  `HBN_r5`
+  —
 
-Also importable as: `DS005509`, `Shirazi2024_R5`, `HBN_r5`.
+Also importable as: `DS005509`, `Shirazi2024_R5`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 330; recordings: 3326; tasks: 10.
@@ -26224,7 +25752,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r5']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005510(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26237,9 +25765,9 @@ Healthy Brain Network (HBN) EEG - Release 6
 * **Author (year):**
   `Shirazi2024_R6`
 * **Canonical:**
-  `HBN_r6`
+  —
 
-Also importable as: `DS005510`, `Shirazi2024_R6`, `HBN_r6`.
+Also importable as: `DS005510`, `Shirazi2024_R6`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 135; recordings: 1227; tasks: 10.
@@ -26296,7 +25824,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r6']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005512(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26309,9 +25837,9 @@ Healthy Brain Network (HBN) EEG - Release 8
 * **Author (year):**
   `Shirazi2024_R8`
 * **Canonical:**
-  `HBN_r8`
+  —
 
-Also importable as: `DS005512`, `Shirazi2024_R8`, `HBN_r8`.
+Also importable as: `DS005512`, `Shirazi2024_R8`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 257; recordings: 2320; tasks: 10.
@@ -26368,7 +25896,7 @@ NEMAR citation count: 2
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r8']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005514(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26381,9 +25909,9 @@ Healthy Brain Network (HBN) EEG - Release 9
 * **Author (year):**
   `Shirazi2024_R9`
 * **Canonical:**
-  `HBN_r9`
+  —
 
-Also importable as: `DS005514`, `Shirazi2024_R9`, `HBN_r9`.
+Also importable as: `DS005514`, `Shirazi2024_R9`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 295; recordings: 2885; tasks: 10.
@@ -26440,7 +25968,7 @@ NEMAR citation count: 1
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r9']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005515(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26453,9 +25981,9 @@ Healthy Brain Network (HBN) EEG - Release 10
 * **Author (year):**
   `Shirazi2024_R10`
 * **Canonical:**
-  `HBN_r10`
+  —
 
-Also importable as: `DS005515`, `Shirazi2024_R10`, `HBN_r10`.
+Also importable as: `DS005515`, `Shirazi2024_R10`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 533; recordings: 2516; tasks: 8.
@@ -26511,7 +26039,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005515.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r10']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005516(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26524,9 +26052,9 @@ Healthy Brain Network (HBN) EEG - Release 11
 * **Author (year):**
   `Shirazi2024_R11`
 * **Canonical:**
-  `HBN_r11`
+  —
 
-Also importable as: `DS005516`, `Shirazi2024_R11`, `HBN_r11`.
+Also importable as: `DS005516`, `Shirazi2024_R11`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 430; recordings: 3397; tasks: 8.
@@ -26582,7 +26110,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005516.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HBN_r11']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005520(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -26955,9 +26483,9 @@ Auditory naming
 * **Author (year):**
   `Kanno2024`
 * **Canonical:**
-  `Kanno2025`
+  —
 
-Also importable as: `DS005545`, `Kanno2024`, `Kanno2025`.
+Also importable as: `DS005545`, `Kanno2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Surgery`.
 Subjects: 106; recordings: 336; tasks: 1.
@@ -27014,7 +26542,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kanno2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005555(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -27027,9 +26555,9 @@ The Bitbrain Open Access Sleep (BOAS) dataset
 * **Author (year):**
   `LopezLarraz2024`
 * **Canonical:**
-  `BOAS`
+  —
 
-Also importable as: `DS005555`, `LopezLarraz2024`, `BOAS`.
+Also importable as: `DS005555`, `LopezLarraz2024`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 128; recordings: 256; tasks: 1.
@@ -27086,7 +26614,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BOAS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005557(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -27171,9 +26699,9 @@ Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Class
 * **Author (year):**
   `Herrema2024_Categorized_Free`
 * **Canonical:**
-  `catFR_closed_loop`
+  —
 
-Also importable as: `DS005558`, `Herrema2024_Categorized_Free`, `catFR_closed_loop`.
+Also importable as: `DS005558`, `Herrema2024_Categorized_Free`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Surgery`.
 Subjects: 7; recordings: 22; tasks: 1.
@@ -27230,7 +26758,7 @@ NEMAR citation count: 0
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['catFR_closed_loop']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005565(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -27387,9 +26915,9 @@ The “Podcast” ECoG dataset
 * **Author (year):**
   `Zada2024`
 * **Canonical:**
-  `Podcast`
+  —
 
-Also importable as: `DS005574`, `Zada2024`, `Podcast`.
+Also importable as: `DS005574`, `Zada2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Unknown`.
 Subjects: 9; recordings: 9; tasks: 1.
@@ -27445,7 +26973,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005574.v1.0.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Podcast']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005586(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -28391,9 +27919,9 @@ PerceiveImagine
 * **Author (year):**
   `Li2024_PerceiveImagine`
 * **Canonical:**
-  `PerceiveImagine`
+  —
 
-Also importable as: `DS005697`, `Li2024_PerceiveImagine`, `PerceiveImagine`.
+Also importable as: `DS005697`, `Li2024_PerceiveImagine`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 51; recordings: 51; tasks: 1.
@@ -28450,7 +27978,7 @@ NEMAR citation count: 3
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PerceiveImagine']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005752(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -28534,9 +28062,9 @@ Electrical_Thermal_FingerTapping_2015
 * **Author (year):**
   `Yucel2025_Electrical`
 * **Canonical:**
-  `Yucel2015`
+  —
 
-Also importable as: `DS005776`, `Yucel2025_Electrical`, `Yucel2015`.
+Also importable as: `DS005776`, `Yucel2025_Electrical`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 11; recordings: 46; tasks: 5.
@@ -28592,7 +28120,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005776.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Yucel2015']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005777(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -28605,9 +28133,9 @@ Electrical_Morphine_Placebo_2018
 * **Author (year):**
   `Peng2025`
 * **Canonical:**
-  `Peng2018`
+  —
 
-Also importable as: `DS005777`, `Peng2025`, `Peng2018`.
+Also importable as: `DS005777`, `Peng2025`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 14; recordings: 113; tasks: 2.
@@ -28663,7 +28191,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005777.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Peng2018']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005779(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -28818,9 +28346,9 @@ NOD-MEG
 * **Author (year):**
   `Zhang2025_MEG`
 * **Canonical:**
-  `NOD_MEG`
+  —
 
-Also importable as: `DS005810`, `Zhang2025_MEG`, `NOD_MEG`.
+Also importable as: `DS005810`, `Zhang2025_MEG`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 31; recordings: 305; tasks: 2.
@@ -28876,7 +28404,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005810.v2.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['NOD_MEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005811(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -28889,9 +28417,9 @@ NOD-EEG
 * **Author (year):**
   `Zhang2025_EEG`
 * **Canonical:**
-  `NOD_EEG`
+  —
 
-Also importable as: `DS005811`, `Zhang2025_EEG`, `NOD_EEG`.
+Also importable as: `DS005811`, `Zhang2025_EEG`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 448; tasks: 1.
@@ -28947,7 +28475,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005811.v1.0.9](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['NOD_EEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005815(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29104,9 +28632,9 @@ ltpDelayRepFRReadOnly
 * **Author (year):**
   `Broitman2025`
 * **Canonical:**
-  `Broitman2019`
+  —
 
-Also importable as: `DS005857`, `Broitman2025`, `Broitman2019`.
+Also importable as: `DS005857`, `Broitman2025`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 29; recordings: 110; tasks: 1.
@@ -29162,7 +28690,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005857.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Broitman2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005863(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29246,9 +28774,9 @@ Flankers-NEAR
 * **Author (year):**
   `TerhuneCotter2025_NEAR`
 * **Canonical:**
-  `Flankers_NEAR`
+  —
 
-Also importable as: `DS005866`, `TerhuneCotter2025_NEAR`, `Flankers_NEAR`.
+Also importable as: `DS005866`, `TerhuneCotter2025_NEAR`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 60; recordings: 60; tasks: 1.
@@ -29304,7 +28832,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005866.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Flankers_NEAR']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005868(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29317,9 +28845,9 @@ Flankers-FAR
 * **Author (year):**
   `TerhuneCotter2025_FAR`
 * **Canonical:**
-  `Flankers_FAR`
+  —
 
-Also importable as: `DS005868`, `TerhuneCotter2025_FAR`, `Flankers_FAR`.
+Also importable as: `DS005868`, `TerhuneCotter2025_FAR`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 48; recordings: 48; tasks: 1.
@@ -29375,7 +28903,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005868.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Flankers_FAR']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005872(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29388,9 +28916,9 @@ EEGEyeNet Dataset
 * **Author (year):**
   `Plomecka2025`
 * **Canonical:**
-  `EEGEyeNet`
+  —
 
-Also importable as: `DS005872`, `Plomecka2025`, `EEGEyeNet`.
+Also importable as: `DS005872`, `Plomecka2025`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -29446,7 +28974,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005872.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EEGEyeNet']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005873(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29459,9 +28987,9 @@ SeizeIT2
 * **Author (year):**
   `Bhagubai2025`
 * **Canonical:**
-  `SeizeIT2`
+  —
 
-Also importable as: `DS005873`, `Bhagubai2025`, `SeizeIT2`.
+Also importable as: `DS005873`, `Bhagubai2025`.
 
 Modality: `eeg, emg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 125; recordings: 5654; tasks: 1.
@@ -29517,7 +29045,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005873.v1.1.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['SeizeIT2']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005876(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29672,9 +29200,9 @@ Motion-Yucel2014
 * **Author (year):**
   `MotionYucel2014`
 * **Canonical:**
-  `Yucel2014`, `Motion_Yucel2014`
+  —
 
-Also importable as: `DS005929`, `MotionYucel2014`, `Yucel2014`, `Motion_Yucel2014`.
+Also importable as: `DS005929`, `MotionYucel2014`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 7; recordings: 7; tasks: 1.
@@ -29730,7 +29258,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005929.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Yucel2014', 'Motion_Yucel2014']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005930(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -29885,9 +29413,9 @@ PWIe
 * **Author (year):**
   `Holcomb2025`
 * **Canonical:**
-  `PWIe`
+  —
 
-Also importable as: `DS005932`, `Holcomb2025`, `PWIe`.
+Also importable as: `DS005932`, `Holcomb2025`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.
@@ -29943,7 +29471,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005932.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PWIe']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005935(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -30027,9 +29555,9 @@ ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)
 * **Author (year):**
   `Frau2025`
 * **Canonical:**
-  `PROMENADE`
+  —
 
-Also importable as: `DS005946`, `Frau2025`, `PROMENADE`.
+Also importable as: `DS005946`, `Frau2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 39; recordings: 39; tasks: 1.
@@ -30085,7 +29613,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005946.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PROMENADE']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005953(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -30240,9 +29768,9 @@ FRESH Motor Dataset
 * **Author (year):**
   `Mesquita2025`
 * **Canonical:**
-  `Mesquita2019`
+  —
 
-Also importable as: `DS005963`, `Mesquita2025`, `Mesquita2019`.
+Also importable as: `DS005963`, `Mesquita2025`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Unknown`.
 Subjects: 10; recordings: 40; tasks: 1.
@@ -30298,7 +29826,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005963.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mesquita2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS005964(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -30311,9 +29839,9 @@ FRESH Audio Dataset
 * **Author (year):**
   `Luke2025`
 * **Canonical:**
-  `Luke2019`
+  —
 
-Also importable as: `DS005964`, `Luke2025`, `Luke2019`.
+Also importable as: `DS005964`, `Luke2025`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 17; recordings: 17; tasks: 1.
@@ -30369,7 +29897,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds005964.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Luke2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006012(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -30595,9 +30123,9 @@ somatomotor
 * **Author (year):**
   `Lin2025`
 * **Canonical:**
-  `Lin2019`
+  —
 
-Also importable as: `DS006035`, `Lin2025`, `Lin2019`.
+Also importable as: `DS006035`, `Lin2025`.
 
 Modality: `meg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 5; recordings: 15; tasks: 1.
@@ -30653,7 +30181,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006035.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Lin2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006036(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -31021,9 +30549,9 @@ iEEG_Neural_spatial_volatility
 * **Author (year):**
   `Kuroda2025`
 * **Canonical:**
-  `Kuroda2024`
+  —
 
-Also importable as: `DS006107`, `Kuroda2025`, `Kuroda2024`.
+Also importable as: `DS006107`, `Kuroda2025`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Unknown`.
 Subjects: 166; recordings: 167; tasks: 1.
@@ -31079,7 +30607,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006107.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kuroda2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006126(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -31163,9 +30691,9 @@ OWM-Dataset
 * **Author (year):**
   `Omelyusik2025`
 * **Canonical:**
-  `Omelyusik2026`
+  —
 
-Also importable as: `DS006136`, `Omelyusik2025`, `Omelyusik2026`.
+Also importable as: `DS006136`, `Omelyusik2025`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Epilepsy`.
 Subjects: 13; recordings: 14; tasks: 1.
@@ -31221,7 +30749,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006136.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Omelyusik2026']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006142(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -31305,9 +30833,9 @@ Implicit Learning EEG (BioSemi)
 * **Author (year):**
   `LeganesFonteneau2025`
 * **Canonical:**
-  `LeganesFonteneau2024`
+  —
 
-Also importable as: `DS006159`, `LeganesFonteneau2025`, `LeganesFonteneau2024`.
+Also importable as: `DS006159`, `LeganesFonteneau2025`.
 
 Modality: `eeg`; Experiment type: `Learning`; Subject type: `Healthy`.
 Subjects: 61; recordings: 61; tasks: 1.
@@ -31363,7 +30891,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006159.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['LeganesFonteneau2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006171(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -31376,9 +30904,9 @@ EEG data during three near-threshold visual detection tasks: a no-cue task, a no
 * **Author (year):**
   `Melcon2025`
 * **Canonical:**
-  `Melcon2024`
+  —
 
-Also importable as: `DS006171`, `Melcon2025`, `Melcon2024`.
+Also importable as: `DS006171`, `Melcon2025`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 36; recordings: 104; tasks: 3.
@@ -31434,7 +30962,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006171.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Melcon2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006222(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -31873,9 +31401,9 @@ Chisco-2.0
 * **Author (year):**
   `Zhang2025_Chisco_2_0`
 * **Canonical:**
-  `Chisco2_0`, `Chisco20`, `CHISCO20`
+  —
 
-Also importable as: `DS006317`, `Zhang2025_Chisco_2_0`, `Chisco2_0`, `Chisco20`, `CHISCO20`.
+Also importable as: `DS006317`, `Zhang2025_Chisco_2_0`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 2; recordings: 64; tasks: 2.
@@ -31918,7 +31446,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds006317](https://openneuro.org/datasets/ds006317)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006317](https://nemar.org/dataexplorer/detail?dataset_id=ds006317)
-DOI: [https://doi.org/10.18112/openneuro.ds006317.v1.1.0](https://doi.org/10.18112/openneuro.ds006317.v1.1.0)
+DOI: [https://doi.org/10.18112/openneuro.ds006317.v1.1.1](https://doi.org/10.18112/openneuro.ds006317.v1.1.1)
 
 ### Examples
 
@@ -31931,7 +31459,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006317.v1.1.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Chisco2_0', 'Chisco20', 'CHISCO20']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006334(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32015,9 +31543,9 @@ Mouse Sleep Staging Validation dataset (MSSV)
 * **Author (year):**
   `Rose2025`
 * **Canonical:**
-  `MSSV`
+  —
 
-Also importable as: `DS006366`, `Rose2025`, `MSSV`.
+Also importable as: `DS006366`, `Rose2025`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 92; recordings: 148; tasks: 1.
@@ -32073,7 +31601,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006366.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MSSV']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006367(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32228,9 +31756,9 @@ Expectation effects on repetition suppression in nociception
 * **Author (year):**
   `Pohle2025`
 * **Canonical:**
-  `Pohle2019`
+  —
 
-Also importable as: `DS006374`, `Pohle2025`, `Pohle2019`.
+Also importable as: `DS006374`, `Pohle2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 36; recordings: 358; tasks: 2.
@@ -32286,7 +31814,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006374.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Pohle2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006377(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32370,9 +31898,9 @@ PhysioMotion_Artifact
 * **Author (year):**
   `Yu2025`
 * **Canonical:**
-  `Yu2019`
+  —
 
-Also importable as: `DS006386`, `Yu2025`, `Yu2019`.
+Also importable as: `DS006386`, `Yu2025`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 30; recordings: 180; tasks: 1.
@@ -32428,7 +31956,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006386.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Yu2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006392(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32441,9 +31969,9 @@ HED schema library for SCORE annotations example
 * **Author (year):**
   `Attia2025`
 * **Canonical:**
-  `Hermes2024`
+  —
 
-Also importable as: `DS006392`, `Attia2025`, `Hermes2024`.
+Also importable as: `DS006392`, `Attia2025`.
 
 Modality: `ieeg`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -32499,7 +32027,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006392.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Hermes2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006394(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32725,9 +32253,9 @@ Cueing the future to reduce temporal discounting
 * **Author (year):**
   `Kinley2025`
 * **Canonical:**
-  `Kinley2019`
+  —
 
-Also importable as: `DS006446`, `Kinley2025`, `Kinley2019`.
+Also importable as: `DS006446`, `Kinley2025`.
 
 Modality: `eeg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.
@@ -32783,7 +32311,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006446.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kinley2019']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006459(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -32938,9 +32466,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Ma2025`
 * **Canonical:**
-  `CPSEED_3M`, `CPSEED`
+  —
 
-Also importable as: `DS006465`, `Ma2025`, `CPSEED_3M`, `CPSEED`.
+Also importable as: `DS006465`, `Ma2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 20; recordings: 80; tasks: 1.
@@ -32996,7 +32524,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006465.v2.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['CPSEED_3M', 'CPSEED']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006466(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -33009,9 +32537,9 @@ HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data
 * **Author (year):**
   `Kim2025_HeartBEAM_Older_Adult`
 * **Canonical:**
-  `HeartBEAM`
+  —
 
-Also importable as: `DS006466`, `Kim2025_HeartBEAM_Older_Adult`, `HeartBEAM`.
+Also importable as: `DS006466`, `Kim2025_HeartBEAM_Older_Adult`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 66; recordings: 1257; tasks: 6.
@@ -33067,7 +32595,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006466.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HeartBEAM']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006468(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -33080,9 +32608,9 @@ MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, 
 * **Author (year):**
   `Habersetzer2025`
 * **Canonical:**
-  `MEG_SCANS`
+  —
 
-Also importable as: `DS006468`, `Habersetzer2025`, `MEG_SCANS`.
+Also importable as: `DS006468`, `Habersetzer2025`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 24; recordings: 189; tasks: 4.
@@ -33138,7 +32666,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006468.v1.1.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MEG_SCANS']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006480(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -33435,9 +32963,9 @@ Reliability-Dubois2024
 * **Author (year):**
   `ReliabilityDubois2024`
 * **Canonical:**
-  `Dubois2024`
+  —
 
-Also importable as: `DS006545`, `ReliabilityDubois2024`, `Dubois2024`.
+Also importable as: `DS006545`, `ReliabilityDubois2024`.
 
 Modality: `fnirs`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 49; recordings: 98; tasks: 1.
@@ -33493,7 +33021,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006545.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Dubois2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006547(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -33506,9 +33034,9 @@ Visual EEG Study (BrainVision → BIDS)
 * **Author (year):**
   `Ghaffari2025`
 * **Canonical:**
-  `Ghaffari2024`
+  —
 
-Also importable as: `DS006547`, `Ghaffari2025`, `Ghaffari2024`.
+Also importable as: `DS006547`, `Ghaffari2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 31; recordings: 31; tasks: 1.
@@ -33564,7 +33092,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006547.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ghaffari2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006554(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -33724,7 +33252,7 @@ The role of REM sleep in neural differentiation of memories in the hippocampus
 Also importable as: `DS006576`, `McDevitt2025`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
-Subjects: 57; recordings: 57; tasks: 1.
+Subjects: 67; recordings: 67; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -33764,7 +33292,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds006576](https://openneuro.org/datasets/ds006576)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006576](https://nemar.org/dataexplorer/detail?dataset_id=ds006576)
-DOI: [https://doi.org/10.18112/openneuro.ds006576.v1.0.3](https://doi.org/10.18112/openneuro.ds006576.v1.0.3)
+DOI: [https://doi.org/10.18112/openneuro.ds006576.v1.0.5](https://doi.org/10.18112/openneuro.ds006576.v1.0.5)
 
 ### Examples
 
@@ -33861,9 +33389,9 @@ SINGSING
 * **Author (year):**
   `Chanoine2025`
 * **Canonical:**
-  `SINGSING`
+  —
 
-Also importable as: `DS006629`, `Chanoine2025`, `SINGSING`.
+Also importable as: `DS006629`, `Chanoine2025`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 38; tasks: 2.
@@ -33919,7 +33447,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006629.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['SINGSING']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006647(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -34145,9 +33673,9 @@ Validation of Sleep Staging with Forehead EEG Patch
 * **Author (year):**
   `Onton2025`
 * **Canonical:**
-  `Onton2024`
+  —
 
-Also importable as: `DS006695`, `Onton2025`, `Onton2024`.
+Also importable as: `DS006695`, `Onton2025`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 19; recordings: 19; tasks: 1.
@@ -34203,7 +33731,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006695.v1.0.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Onton2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006720(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -34713,9 +34241,9 @@ Visual Attribute-Specific Contextual Trajectory Paradigm 2.0
 * **Author (year):**
   `Lowe2025`
 * **Canonical:**
-  `VisualContextTrajectory_v2`
+  —
 
-Also importable as: `DS006817`, `Lowe2025`, `VisualContextTrajectory_v2`.
+Also importable as: `DS006817`, `Lowe2025`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 34; recordings: 34; tasks: 1.
@@ -34771,7 +34299,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006817.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['VisualContextTrajectory_v2', 'Lowe2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006839(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -34855,9 +34383,9 @@ IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset
 * **Author (year):**
   `Cai2025`
 * **Canonical:**
-  `IACKD`
+  —
 
-Also importable as: `DS006840`, `Cai2025`, `IACKD`.
+Also importable as: `DS006840`, `Cai2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 15; recordings: 128; tasks: 1.
@@ -34913,7 +34441,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006840.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['IACKD']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS006848(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -35262,6 +34790,77 @@ DOI: [https://doi.org/10.18112/openneuro.ds006890.v1.0.0](https://doi.org/10.181
 ```pycon
 >>> from eegdash.dataset import DS006890
 >>> dataset = DS006890(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS006897(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+No effect of rhythmic visual stimulation on experimental pain perception
+
+* **Study:**
+  `ds006897` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS006897`, `nan`.
+
+Modality: `eeg`.
+Subjects: 41; recordings: 41; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds006897](https://openneuro.org/datasets/ds006897)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006897](https://nemar.org/dataexplorer/detail?dataset_id=ds006897)
+DOI: [https://doi.org/10.18112/openneuro.ds006897.v1.0.0](https://doi.org/10.18112/openneuro.ds006897.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS006897
+>>> dataset = DS006897(cache_dir="./data")
 >>> recording = dataset[0]
 >>> raw = recording.load()
 ```
@@ -35894,7 +35493,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds006963](https://openneuro.org/datasets/ds006963)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006963](https://nemar.org/dataexplorer/detail?dataset_id=ds006963)
-DOI: [https://doi.org/10.18112/openneuro.ds006963.v1.0.0](https://doi.org/10.18112/openneuro.ds006963.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds006963.v1.0.1](https://doi.org/10.18112/openneuro.ds006963.v1.0.1)
 
 ### Examples
 
@@ -35920,9 +35519,9 @@ Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: 
 * **Author (year):**
   `Ramzaoui2025`
 * **Canonical:**
-  `Ramzaoui2024`
+  —
 
-Also importable as: `DS006979`, `Ramzaoui2025`, `Ramzaoui2024`.
+Also importable as: `DS006979`, `Ramzaoui2025`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 53; recordings: 56; tasks: 3.
@@ -35978,7 +35577,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds006979.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ramzaoui2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007006(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36133,9 +35732,9 @@ Auditory Cortex Macaque Monkey DISC Data
 * **Author (year):**
   `Kajikawa2025`
 * **Canonical:**
-  `Kajikawa2000`
+  —
 
-Also importable as: `DS007028`, `Kajikawa2025`, `Kajikawa2000`.
+Also importable as: `DS007028`, `Kajikawa2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Other`.
 Subjects: 3; recordings: 3; tasks: 1.
@@ -36191,7 +35790,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007028.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kajikawa2000']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007052(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36204,9 +35803,9 @@ PURSUE N400 Word Processing
 * **Author (year):**
   `Couperus2025_N400`
 * **Canonical:**
-  `Couperus2021_N400`
+  —
 
-Also importable as: `DS007052`, `Couperus2025_N400`, `Couperus2021_N400`.
+Also importable as: `DS007052`, `Couperus2025_N400`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 288; recordings: 288; tasks: 1.
@@ -36262,7 +35861,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007052.v1.1.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2021_N400']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007056(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36275,9 +35874,9 @@ PURSUE P300 Visual Oddball
 * **Author (year):**
   `Couperus2025_P300`
 * **Canonical:**
-  `Couperus2021_P300`
+  —
 
-Also importable as: `DS007056`, `Couperus2025_P300`, `Couperus2021_P300`.
+Also importable as: `DS007056`, `Couperus2025_P300`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 286; recordings: 286; tasks: 1.
@@ -36333,7 +35932,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007056.v1.1.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2021_P300']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007069(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36346,9 +35945,9 @@ PURSUE MMN Auditory Oddball
 * **Author (year):**
   `Couperus2025_MMN`
 * **Canonical:**
-  `Couperus2021_MMN`
+  —
 
-Also importable as: `DS007069`, `Couperus2025_MMN`, `Couperus2021_MMN`.
+Also importable as: `DS007069`, `Couperus2025_MMN`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 281; recordings: 281; tasks: 1.
@@ -36404,7 +36003,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007069.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2021_MMN']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007081(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36559,9 +36158,9 @@ PURSUE N170 Face Perception
 * **Author (year):**
   `Couperus2025_PURSUE_N170_Face`
 * **Canonical:**
-  `Couperus2017`
+  —
 
-Also importable as: `DS007096`, `Couperus2025_PURSUE_N170_Face`, `Couperus2017`.
+Also importable as: `DS007096`, `Couperus2025_PURSUE_N170_Face`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 292; recordings: 292; tasks: 1.
@@ -36617,7 +36216,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007096.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2017']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007118(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36630,9 +36229,9 @@ iEEG_comprehensive_HFA_model_part1
 * **Author (year):**
   `Hatano2025_part1`
 * **Canonical:**
-  `Hatano`
+  —
 
-Also importable as: `DS007118`, `Hatano2025_part1`, `Hatano`.
+Also importable as: `DS007118`, `Hatano2025_part1`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Unknown`.
 Subjects: 65; recordings: 82; tasks: 1.
@@ -36688,7 +36287,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007118.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Hatano']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007119(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36843,9 +36442,9 @@ PURSUE N2pc Visual Search
 * **Author (year):**
   `Couperus2025_N2PC`
 * **Canonical:**
-  `Couperus2021_N2pc`
+  —
 
-Also importable as: `DS007137`, `Couperus2025_N2PC`, `Couperus2021_N2pc`.
+Also importable as: `DS007137`, `Couperus2025_N2PC`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 294; recordings: 294; tasks: 1.
@@ -36901,7 +36500,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007137.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2021_N2pc']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007139(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -36914,9 +36513,9 @@ PURSUE LRP/ERN Flanker
 * **Author (year):**
   `Couperus2025_LRP`
 * **Canonical:**
-  `Couperus2021_LRP`
+  —
 
-Also importable as: `DS007139`, `Couperus2025_LRP`, `Couperus2021_LRP`.
+Also importable as: `DS007139`, `Couperus2025_LRP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 292; recordings: 292; tasks: 1.
@@ -36972,7 +36571,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007139.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Couperus2021_LRP']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007162(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37056,9 +36655,9 @@ Multimodal Cognitive Workload n-back Task, 4 Difficulties
 * **Author (year):**
   `Barras2026_Multimodal`
 * **Canonical:**
-  `Barras2021`
+  —
 
-Also importable as: `DS007169`, `Barras2026_Multimodal`, `Barras2021`.
+Also importable as: `DS007169`, `Barras2026_Multimodal`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 18; recordings: 18; tasks: 1.
@@ -37114,7 +36713,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007169.v1.0.5](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Barras2021']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007172(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37127,9 +36726,9 @@ EEG-Asymmetries Dataset
 * **Author (year):**
   `Reinke2026`
 * **Canonical:**
-  `EEGAsymmetries`
+  —
 
-Also importable as: `DS007172`, `Reinke2026`, `EEGAsymmetries`.
+Also importable as: `DS007172`, `Reinke2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 100; recordings: 501; tasks: 6.
@@ -37185,7 +36784,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007172.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EEGAsymmetries']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007175(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37314,7 +36913,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007176](https://openneuro.org/datasets/ds007176)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007176](https://nemar.org/dataexplorer/detail?dataset_id=ds007176)
-DOI: [https://doi.org/10.18112/openneuro.ds007176.v1.0.1](https://doi.org/10.18112/openneuro.ds007176.v1.0.1)
+DOI: [https://doi.org/10.18112/openneuro.ds007176.v1.0.2](https://doi.org/10.18112/openneuro.ds007176.v1.0.2)
 
 ### Examples
 
@@ -37340,9 +36939,9 @@ Exo-EEG Experiment
 * **Author (year):**
   `FuentesGuerra2026`
 * **Canonical:**
-  `FuentesGuerra2024`
+  —
 
-Also importable as: `DS007180`, `FuentesGuerra2026`, `FuentesGuerra2024`.
+Also importable as: `DS007180`, `FuentesGuerra2026`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 25; recordings: 25; tasks: 1.
@@ -37398,7 +36997,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007180.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FuentesGuerra2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007181(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37482,9 +37081,9 @@ A multi-session simultaneous EEG-fMRI dataset with online experience sampling
 * **Author (year):**
   `Kucyi2026`
 * **Canonical:**
-  `Kucyi2024`
+  —
 
-Also importable as: `DS007216`, `Kucyi2026`, `Kucyi2024`.
+Also importable as: `DS007216`, `Kucyi2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 24; recordings: 187; tasks: 2.
@@ -37540,7 +37139,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007216.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kucyi2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007221(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37624,9 +37223,9 @@ Cognitive Workload 8-level arithmetic
 * **Author (year):**
   `Barras2026_Cognitive`
 * **Canonical:**
-  `Barras2025`
+  —
 
-Also importable as: `DS007262`, `Barras2026_Cognitive`, `Barras2025`.
+Also importable as: `DS007262`, `Barras2026_Cognitive`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 18; recordings: 18; tasks: 1.
@@ -37682,7 +37281,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007262.v1.0.6](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Barras2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007314(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37695,9 +37294,9 @@ tACS for Patients with Post-Stroke Anomia
 * **Author (year):**
   `Martzoukou2026_tACS`
 * **Canonical:**
-  `Martzoukou2024_Post`
+  —
 
-Also importable as: `DS007314`, `Martzoukou2026_tACS`, `Martzoukou2024_Post`.
+Also importable as: `DS007314`, `Martzoukou2026_tACS`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Other`.
 Subjects: 2; recordings: 14; tasks: 1.
@@ -37753,7 +37352,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007314.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Martzoukou2024_Post']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007315(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37766,9 +37365,9 @@ tACS for Patients with Post-Stroke Anomia
 * **Author (year):**
   `Martzoukou2026_tACS_Patients`
 * **Canonical:**
-  `Martzoukou2024_Post_A`
+  —
 
-Also importable as: `DS007315`, `Martzoukou2026_tACS_Patients`, `Martzoukou2024_Post_A`.
+Also importable as: `DS007315`, `Martzoukou2026_tACS_Patients`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Other`.
 Subjects: 2; recordings: 14; tasks: 1.
@@ -37824,7 +37423,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007315.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Martzoukou2024_Post_A']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007322(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37837,9 +37436,9 @@ Personalized smartphone notifications bias auditory salience across processing s
 * **Author (year):**
   `Mishra2026`
 * **Canonical:**
-  `Mishra2024`
+  —
 
-Also importable as: `DS007322`, `Mishra2026`, `Mishra2024`.
+Also importable as: `DS007322`, `Mishra2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 57; recordings: 57; tasks: 1.
@@ -37895,7 +37494,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007322.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Mishra2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007338(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -37908,9 +37507,9 @@ EEGEyeNet Dataset
 * **Author (year):**
   `Plomecka2026`
 * **Canonical:**
-  `EEGEyeNet_v2`, `EEGEYENET`
+  —
 
-Also importable as: `DS007338`, `Plomecka2026`, `EEGEyeNet_v2`, `EEGEYENET`.
+Also importable as: `DS007338`, `Plomecka2026`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.
@@ -37966,7 +37565,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007338.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EEGEyeNet_v2', 'EEGEYENET']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007347(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38050,9 +37649,9 @@ HAD-MEEG
 * **Author (year):**
   `Zhang2026`
 * **Canonical:**
-  `HAD_MEEG`, `HADMEEG`
+  —
 
-Also importable as: `DS007353`, `Zhang2026`, `HAD_MEEG`, `HADMEEG`.
+Also importable as: `DS007353`, `Zhang2026`.
 
 Modality: `eeg, meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 32; recordings: 473; tasks: 2.
@@ -38108,7 +37707,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007353.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HAD_MEEG', 'HADMEEG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007358(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38121,9 +37720,9 @@ A subset of large-scale EEG dataset (India + Tanzania)
 * **Author (year):**
   `Vianney2026`
 * **Canonical:**
-  `Vianney2025`
+  —
 
-Also importable as: `DS007358`, `Vianney2026`, `Vianney2025`.
+Also importable as: `DS007358`, `Vianney2026`.
 
 Modality: `eeg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 2000; recordings: 6000; tasks: 3.
@@ -38179,7 +37778,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007358.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Vianney2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007406(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38192,9 +37791,9 @@ EEG dataset on consumer responses to extreme versus traditional marketing videos
 * **Author (year):**
   `Edit2026`
 * **Canonical:**
-  `Edit2024`
+  —
 
-Also importable as: `DS007406`, `Edit2026`, `Edit2024`.
+Also importable as: `DS007406`, `Edit2026`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 10; recordings: 10; tasks: 1.
@@ -38250,7 +37849,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007406.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Edit2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007420(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38263,9 +37862,9 @@ A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposef
 * **Author (year):**
   `Gao2026_Light_Weight_Multi`
 * **Canonical:**
-  `Gao2024`
+  —
 
-Also importable as: `DS007420`, `Gao2026_Light_Weight_Multi`, `Gao2024`.
+Also importable as: `DS007420`, `Gao2026_Light_Weight_Multi`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 12; recordings: 60; tasks: 4.
@@ -38321,7 +37920,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007420.v1.0.2](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Gao2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007427(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38334,9 +37933,9 @@ Comprehensive methodology for sample enrichment in EEG biomarker studies for Alz
 * **Author (year):**
   `Isaza2026_Comprehensive`
 * **Canonical:**
-  `HenaoIsaza2026`
+  —
 
-Also importable as: `DS007427`, `Isaza2026_Comprehensive`, `HenaoIsaza2026`.
+Also importable as: `DS007427`, `Isaza2026_Comprehensive`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Dementia`.
 Subjects: 44; recordings: 44; tasks: 1.
@@ -38392,7 +37991,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007427.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HenaoIsaza2026']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007431(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38405,9 +38004,9 @@ Diffuse predictions stabilize and reshape neural code during memory encoding
 * **Author (year):**
   `Ataseven2026`
 * **Canonical:**
-  `Ataseven2024`
+  —
 
-Also importable as: `DS007431`, `Ataseven2026`, `Ataseven2024`.
+Also importable as: `DS007431`, `Ataseven2026`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 47; recordings: 47; tasks: 1.
@@ -38463,7 +38062,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007431.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Ataseven2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007445(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38618,9 +38217,9 @@ Very-High-Density Diffuse Optical Tomography System Validation Dataset
 * **Author (year):**
   `Fogarty2026_Very`
 * **Canonical:**
-  `Fogarty2025`
+  —
 
-Also importable as: `DS007463`, `Fogarty2026_Very`, `Fogarty2025`.
+Also importable as: `DS007463`, `Fogarty2026_Very`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 8; recordings: 88; tasks: 14.
@@ -38676,7 +38275,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007463.v1.1.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Fogarty2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007471(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38689,9 +38288,9 @@ Joint agency EEG dataset
 * **Author (year):**
   `Zhou2026`
 * **Canonical:**
-  `Zhou2024`
+  —
 
-Also importable as: `DS007471`, `Zhou2026`, `Zhou2024`.
+Also importable as: `DS007471`, `Zhou2026`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 31; recordings: 31; tasks: 1.
@@ -38747,7 +38346,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007471.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Zhou2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007473(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38760,9 +38359,9 @@ High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset
 * **Author (year):**
   `Fogarty2026_High`
 * **Canonical:**
-  `Tripathy2024`
+  —
 
-Also importable as: `DS007473`, `Fogarty2026_High`, `Tripathy2024`.
+Also importable as: `DS007473`, `Fogarty2026_High`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 5; recordings: 189; tasks: 19.
@@ -38818,7 +38417,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007473.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Tripathy2024']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007477(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38902,9 +38501,9 @@ The effect of hunger and state preferences on the neural processing of food imag
 * **Author (year):**
   `Moerel2026`
 * **Canonical:**
-  `Moerel2025`
+  —
 
-Also importable as: `DS007521`, `Moerel2026`, `Moerel2025`.
+Also importable as: `DS007521`, `Moerel2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 23; recordings: 46; tasks: 1.
@@ -38960,7 +38559,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007521.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Moerel2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007523(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -38973,9 +38572,9 @@ LPP MEG Listen
 * **Author (year):**
   `Bel2026`
 * **Canonical:**
-  `Dascoli2025`
+  —
 
-Also importable as: `DS007523`, `Bel2026`, `Dascoli2025`.
+Also importable as: `DS007523`, `Bel2026`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 58; recordings: 579; tasks: 1.
@@ -39031,7 +38630,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007523.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Dascoli2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007524(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39044,9 +38643,9 @@ LittlePrince_MEG_French_Read_Pallier2025
 * **Author (year):**
   `Pallier2025`
 * **Canonical:**
-  `LittlePrince`
+  —
 
-Also importable as: `DS007524`, `Pallier2025`, `LittlePrince`.
+Also importable as: `DS007524`, `Pallier2025`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 50; recordings: 500; tasks: 1.
@@ -39102,7 +38701,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007524.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['LittlePrince']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007526(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39115,9 +38714,9 @@ PD-EEG: Resting-State & Walking EEG in Parkinson’s Disease
 * **Author (year):**
   `Katzir2026`
 * **Canonical:**
-  `PD_EEG`, `PDEEG`
+  —
 
-Also importable as: `DS007526`, `Katzir2026`, `PD_EEG`, `PDEEG`.
+Also importable as: `DS007526`, `Katzir2026`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Parkinson's`.
 Subjects: 144; recordings: 277; tasks: 2.
@@ -39173,7 +38772,78 @@ DOI: [https://doi.org/10.18112/openneuro.ds007526.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['PD_EEG', 'PDEEG']*
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007537(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+A multimodal dataset of EEG, eye-tracking, and physiological signals during smartphone interaction
+
+* **Study:**
+  `ds007537` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007537`, `nan`.
+
+Modality: `eeg`.
+Subjects: 23; recordings: 23; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007537](https://openneuro.org/datasets/ds007537)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007537](https://nemar.org/dataexplorer/detail?dataset_id=ds007537)
+DOI: [https://doi.org/10.18112/openneuro.ds007537.v1.0.0](https://doi.org/10.18112/openneuro.ds007537.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007537
+>>> dataset = DS007537(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007554(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39328,9 +38998,9 @@ Delineating neural contributions to EEG-based speech decoding
 * **Author (year):**
   `Sato2026_Delineating`
 * **Canonical:**
-  `Sato2025`
+  —
 
-Also importable as: `DS007591`, `Sato2026_Delineating`, `Sato2025`.
+Also importable as: `DS007591`, `Sato2026_Delineating`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 3; recordings: 21; tasks: 3.
@@ -39386,7 +39056,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007591.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Sato2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007602(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39399,9 +39069,9 @@ EEG-Speech Brain Decoding Dataset
 * **Author (year):**
   `Sato2026_Speech`
 * **Canonical:**
-  `Sato2024`
+  —
 
-Also importable as: `DS007602`, `Sato2026_Speech`, `Sato2024`.
+Also importable as: `DS007602`, `Sato2026_Speech`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 3; recordings: 113; tasks: 1.
@@ -39457,7 +39127,78 @@ DOI: [https://doi.org/10.18112/openneuro.ds007602.v1.0.1](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Sato2024']*
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007605(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EPOC
+
+* **Study:**
+  `ds007605` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007605`, `nan`.
+
+Modality: `eeg`.
+Subjects: 97; recordings: 97; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007605](https://openneuro.org/datasets/ds007605)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007605](https://nemar.org/dataexplorer/detail?dataset_id=ds007605)
+DOI: [https://doi.org/10.18112/openneuro.ds007605.v1.0.0](https://doi.org/10.18112/openneuro.ds007605.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007605
+>>> dataset = DS007605(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007609(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39470,9 +39211,9 @@ Resting-State EEG and Trait Anxiety
 * **Author (year):**
   `Shalamberidze2026`
 * **Canonical:**
-  `Shalamberidze2025`
+  —
 
-Also importable as: `DS007609`, `Shalamberidze2026`, `Shalamberidze2025`.
+Also importable as: `DS007609`, `Shalamberidze2026`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 51; recordings: 51; tasks: 1.
@@ -39528,7 +39269,7 @@ DOI: [https://doi.org/10.18112/openneuro.ds007609.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Shalamberidze2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.DS007615(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -39599,19 +39340,646 @@ DOI: [https://doi.org/10.18112/openneuro.ds007615.v1.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Normannseth2026']*
+#### canonical_name *= []*
 
-### eegdash.dataset.Dascoli2025
+### *class* eegdash.dataset.DS007629(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
-alias of [`DS007523`](eegdash.dataset.DS007523.md#eegdash.dataset.DS007523)
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-### eegdash.dataset.Delorme
+ROAMM
 
-alias of [`DS003061`](eegdash.dataset.DS003061.md#eegdash.dataset.DS003061)
+* **Study:**
+  `ds007629` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
 
-### eegdash.dataset.Dubois2024
+Also importable as: `DS007629`, `nan`.
 
-alias of [`DS006545`](eegdash.dataset.DS006545.md#eegdash.dataset.DS006545)
+Modality: `eeg`.
+Subjects: 1; recordings: 5; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007629](https://openneuro.org/datasets/ds007629)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007629](https://nemar.org/dataexplorer/detail?dataset_id=ds007629)
+DOI: [https://doi.org/10.18112/openneuro.ds007629.v1.0.1](https://doi.org/10.18112/openneuro.ds007629.v1.0.1)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007629
+>>> dataset = DS007629(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007630(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG-Speech Brain Decoding Dataset
+
+* **Study:**
+  `ds007630` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007630`, `nan`.
+
+Modality: `eeg`.
+Subjects: 3; recordings: 1974; tasks: 3.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007630](https://openneuro.org/datasets/ds007630)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007630](https://nemar.org/dataexplorer/detail?dataset_id=ds007630)
+DOI: [https://doi.org/10.18112/openneuro.ds007630.v1.0.0](https://doi.org/10.18112/openneuro.ds007630.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007630
+>>> dataset = DS007630(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007640(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Dataset of emotion recognition using validated video stimuli with large-scale behavioral survey and MEG recordings
+
+* **Study:**
+  `ds007640` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007640`, `nan`.
+
+Modality: `meg`.
+Subjects: 23; recordings: 94; tasks: 4.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007640](https://openneuro.org/datasets/ds007640)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007640](https://nemar.org/dataexplorer/detail?dataset_id=ds007640)
+DOI: [https://doi.org/10.18112/openneuro.ds007640.v1.0.0](https://doi.org/10.18112/openneuro.ds007640.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007640
+>>> dataset = DS007640(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007647(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Different Doors
+
+* **Study:**
+  `ds007647` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007647`, `nan`.
+
+Modality: `eeg`.
+Subjects: 40; recordings: 40; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007647](https://openneuro.org/datasets/ds007647)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007647](https://nemar.org/dataexplorer/detail?dataset_id=ds007647)
+DOI: [https://doi.org/10.18112/openneuro.ds007647.v1.0.0](https://doi.org/10.18112/openneuro.ds007647.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007647
+>>> dataset = DS007647(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007648(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+CrossModal Study
+
+* **Study:**
+  `ds007648` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007648`, `nan`.
+
+Modality: `eeg`.
+Subjects: 22; recordings: 22; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007648](https://openneuro.org/datasets/ds007648)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007648](https://nemar.org/dataexplorer/detail?dataset_id=ds007648)
+DOI: [https://doi.org/10.18112/openneuro.ds007648.v1.1.0](https://doi.org/10.18112/openneuro.ds007648.v1.1.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007648
+>>> dataset = DS007648(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007655(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+MorseEEG-ATP
+
+* **Study:**
+  `ds007655` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007655`, `nan`.
+
+Modality: `eeg`.
+Subjects: 32; recordings: 64; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007655](https://openneuro.org/datasets/ds007655)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007655](https://nemar.org/dataexplorer/detail?dataset_id=ds007655)
+DOI: [https://doi.org/10.18112/openneuro.ds007655.v1.0.0](https://doi.org/10.18112/openneuro.ds007655.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007655
+>>> dataset = DS007655(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007663(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+CrossModal Study
+
+* **Study:**
+  `ds007663` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007663`, `nan`.
+
+Modality: `meg`.
+Subjects: 27; recordings: 59; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007663](https://openneuro.org/datasets/ds007663)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007663](https://nemar.org/dataexplorer/detail?dataset_id=ds007663)
+DOI: [https://doi.org/10.18112/openneuro.ds007663.v1.0.0](https://doi.org/10.18112/openneuro.ds007663.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007663
+>>> dataset = DS007663(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007666(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Grupos Pre and Post bids
+
+* **Study:**
+  `ds007666` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007666`, `nan`.
+
+Modality: `eeg`.
+Subjects: 55; recordings: 110; tasks: 20.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007666](https://openneuro.org/datasets/ds007666)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007666](https://nemar.org/dataexplorer/detail?dataset_id=ds007666)
+DOI: [https://doi.org/10.18112/openneuro.ds007666.v1.0.0](https://doi.org/10.18112/openneuro.ds007666.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007666
+>>> dataset = DS007666(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007667(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Grupos Pre and Post bids
+
+* **Study:**
+  `ds007667` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007667`, `nan`.
+
+Modality: `eeg`.
+Subjects: 55; recordings: 110; tasks: 20.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007667](https://openneuro.org/datasets/ds007667)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007667](https://nemar.org/dataexplorer/detail?dataset_id=ds007667)
+DOI: [https://doi.org/10.18112/openneuro.ds007667.v1.0.0](https://doi.org/10.18112/openneuro.ds007667.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007667
+>>> dataset = DS007667(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.EEG2025R1(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -41171,10 +41539,6 @@ DOI: [https://doi.org/10.18112/openneuro.ds005514.v1.0.1](https://doi.org/10.181
 
 #### canonical_name *= ['HBN_r9_bdf_mini']*
 
-### eegdash.dataset.EEGAsymmetries
-
-alias of [`DS007172`](eegdash.dataset.DS007172.md#eegdash.dataset.DS007172)
-
 ### *class* eegdash.dataset.EEGBIDSDataset(data_dir=None, dataset='', allow_symlinks=False, modalities=None)
 
 Bases: `object`
@@ -41621,182 +41985,6 @@ Save the dataset to disk.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.dataset.EEGEYENET
-
-alias of [`DS007338`](eegdash.dataset.DS007338.md#eegdash.dataset.DS007338)
-
-### eegdash.dataset.EEGEyeNet
-
-alias of [`DS005872`](eegdash.dataset.DS005872.md#eegdash.dataset.DS005872)
-
-### eegdash.dataset.EEGEyeNet_v2
-
-alias of [`DS007338`](eegdash.dataset.DS007338.md#eegdash.dataset.DS007338)
-
-### eegdash.dataset.EEGMotorMovementImagery
-
-alias of [`DS004362`](eegdash.dataset.DS004362.md#eegdash.dataset.DS004362)
-
-### eegdash.dataset.EESM17
-
-alias of [`DS004348`](eegdash.dataset.DS004348.md#eegdash.dataset.DS004348)
-
-### eegdash.dataset.EESM19
-
-alias of [`DS005185`](eegdash.dataset.DS005185.md#eegdash.dataset.DS005185)
-
-### eegdash.dataset.EESM23
-
-alias of [`DS005178`](eegdash.dataset.DS005178.md#eegdash.dataset.DS005178)
-
-### eegdash.dataset.EPFLP300
-
-alias of [`NM000231`](eegdash.dataset.NM000231.md#eegdash.dataset.NM000231)
-
-### eegdash.dataset.EPFLP300Dataset
-
-alias of [`NM000231`](eegdash.dataset.NM000231.md#eegdash.dataset.NM000231)
-
-### eegdash.dataset.EPFL_P300
-
-alias of [`NM000231`](eegdash.dataset.NM000231.md#eegdash.dataset.NM000231)
-
-### eegdash.dataset.ERDetect
-
-alias of [`DS004774`](eegdash.dataset.DS004774.md#eegdash.dataset.DS004774)
-
-### eegdash.dataset.ERPCORE
-
-alias of [`NM000132`](eegdash.dataset.NM000132.md#eegdash.dataset.NM000132)
-
-### eegdash.dataset.ERP_CORE
-
-alias of [`NM000132`](eegdash.dataset.NM000132.md#eegdash.dataset.NM000132)
-
-### eegdash.dataset.ER_Detect
-
-alias of [`DS004774`](eegdash.dataset.DS004774.md#eegdash.dataset.DS004774)
-
-### eegdash.dataset.Edit2024
-
-alias of [`DS007406`](eegdash.dataset.DS007406.md#eegdash.dataset.DS007406)
-
-### eegdash.dataset.EldBETA
-
-alias of [`NM000130`](eegdash.dataset.NM000130.md#eegdash.dataset.NM000130)
-
-### eegdash.dataset.Ester2022
-
-alias of [`DS004519`](eegdash.dataset.DS004519.md#eegdash.dataset.DS004519)
-
-### eegdash.dataset.Ester2024_E1
-
-alias of [`DS004521`](eegdash.dataset.DS004521.md#eegdash.dataset.DS004521)
-
-### eegdash.dataset.Ester2024_E2
-
-alias of [`DS004520`](eegdash.dataset.DS004520.md#eegdash.dataset.DS004520)
-
-### eegdash.dataset.FACED
-
-alias of [`NM000112`](eegdash.dataset.NM000112.md#eegdash.dataset.NM000112)
-
-### eegdash.dataset.FLUX
-
-alias of [`DS004346`](eegdash.dataset.DS004346.md#eegdash.dataset.DS004346)
-
-### eegdash.dataset.FRL_DiscreteGestures
-
-alias of [`NM000105`](eegdash.dataset.NM000105.md#eegdash.dataset.NM000105)
-
-### eegdash.dataset.FRL_Handwriting
-
-alias of [`NM000106`](eegdash.dataset.NM000106.md#eegdash.dataset.NM000106)
-
-### eegdash.dataset.FRL_WristControl
-
-alias of [`NM000107`](eegdash.dataset.NM000107.md#eegdash.dataset.NM000107)
-
-### eegdash.dataset.FernandezRodriguez2023
-
-alias of [`NM000240`](eegdash.dataset.NM000240.md#eegdash.dataset.NM000240)
-
-### eegdash.dataset.Ferron2019
-
-alias of [`DS004541`](eegdash.dataset.DS004541.md#eegdash.dataset.DS004541)
-
-### eegdash.dataset.Flankers_FAR
-
-alias of [`DS005868`](eegdash.dataset.DS005868.md#eegdash.dataset.DS005868)
-
-### eegdash.dataset.Flankers_NEAR
-
-alias of [`DS005866`](eegdash.dataset.DS005866.md#eegdash.dataset.DS005866)
-
-### eegdash.dataset.Fogarty2025
-
-alias of [`DS007463`](eegdash.dataset.DS007463.md#eegdash.dataset.DS007463)
-
-### eegdash.dataset.Formica2025
-
-alias of [`DS005406`](eegdash.dataset.DS005406.md#eegdash.dataset.DS005406)
-
-### eegdash.dataset.ForrestGump_MEG
-
-alias of [`DS003633`](eegdash.dataset.DS003633.md#eegdash.dataset.DS003633)
-
-### eegdash.dataset.FuentesGuerra2024
-
-alias of [`DS007180`](eegdash.dataset.DS007180.md#eegdash.dataset.DS007180)
-
-### eegdash.dataset.Gama2019
-
-alias of [`DS005420`](eegdash.dataset.DS005420.md#eegdash.dataset.DS005420)
-
-### eegdash.dataset.Gao2024
-
-alias of [`DS007420`](eegdash.dataset.DS007420.md#eegdash.dataset.DS007420)
-
-### eegdash.dataset.Gao2026
-
-alias of [`NM000242`](eegdash.dataset.NM000242.md#eegdash.dataset.NM000242)
-
-### eegdash.dataset.Ghaffari2024
-
-alias of [`DS006547`](eegdash.dataset.DS006547.md#eegdash.dataset.DS006547)
-
-### eegdash.dataset.GuttmannFlury2025_ME
-
-alias of [`NM000227`](eegdash.dataset.NM000227.md#eegdash.dataset.NM000227)
-
-### eegdash.dataset.GuttmannFlury2025_MIME
-
-alias of [`NM000235`](eegdash.dataset.NM000235.md#eegdash.dataset.NM000235)
-
-### eegdash.dataset.HADMEEG
-
-alias of [`DS007353`](eegdash.dataset.DS007353.md#eegdash.dataset.DS007353)
-
-### eegdash.dataset.HAD_MEEG
-
-alias of [`DS007353`](eegdash.dataset.DS007353.md#eegdash.dataset.DS007353)
-
-### eegdash.dataset.HBN_EEG_NC
-
-alias of [`NM000103`](eegdash.dataset.NM000103.md#eegdash.dataset.NM000103)
-
-### eegdash.dataset.HBN_NoCommercial
-
-alias of [`NM000103`](eegdash.dataset.NM000103.md#eegdash.dataset.NM000103)
-
-### eegdash.dataset.HBN_r1
-
-alias of [`DS005505`](eegdash.dataset.DS005505.md#eegdash.dataset.DS005505)
-
-### eegdash.dataset.HBN_r10
-
-alias of [`DS005515`](eegdash.dataset.DS005515.md#eegdash.dataset.DS005515)
-
 ### eegdash.dataset.HBN_r10_bdf
 
 alias of [`EEG2025R10`](eegdash.dataset.EEG2025R10.md#eegdash.dataset.EEG2025R10)
@@ -41804,10 +41992,6 @@ alias of [`EEG2025R10`](eegdash.dataset.EEG2025R10.md#eegdash.dataset.EEG2025R10
 ### eegdash.dataset.HBN_r10_bdf_mini
 
 alias of [`EEG2025R10MINI`](eegdash.dataset.EEG2025R10MINI.md#eegdash.dataset.EEG2025R10MINI)
-
-### eegdash.dataset.HBN_r11
-
-alias of [`DS005516`](eegdash.dataset.DS005516.md#eegdash.dataset.DS005516)
 
 ### eegdash.dataset.HBN_r11_bdf
 
@@ -41825,10 +42009,6 @@ alias of [`EEG2025R1`](eegdash.dataset.EEG2025R1.md#eegdash.dataset.EEG2025R1)
 
 alias of [`EEG2025R1MINI`](eegdash.dataset.EEG2025R1MINI.md#eegdash.dataset.EEG2025R1MINI)
 
-### eegdash.dataset.HBN_r2
-
-alias of [`DS005506`](eegdash.dataset.DS005506.md#eegdash.dataset.DS005506)
-
 ### eegdash.dataset.HBN_r2_bdf
 
 alias of [`EEG2025R2`](eegdash.dataset.EEG2025R2.md#eegdash.dataset.EEG2025R2)
@@ -41836,10 +42016,6 @@ alias of [`EEG2025R2`](eegdash.dataset.EEG2025R2.md#eegdash.dataset.EEG2025R2)
 ### eegdash.dataset.HBN_r2_bdf_mini
 
 alias of [`EEG2025R2MINI`](eegdash.dataset.EEG2025R2MINI.md#eegdash.dataset.EEG2025R2MINI)
-
-### eegdash.dataset.HBN_r3
-
-alias of [`DS005507`](eegdash.dataset.DS005507.md#eegdash.dataset.DS005507)
 
 ### eegdash.dataset.HBN_r3_bdf
 
@@ -41849,10 +42025,6 @@ alias of [`EEG2025R3`](eegdash.dataset.EEG2025R3.md#eegdash.dataset.EEG2025R3)
 
 alias of [`EEG2025R3MINI`](eegdash.dataset.EEG2025R3MINI.md#eegdash.dataset.EEG2025R3MINI)
 
-### eegdash.dataset.HBN_r4
-
-alias of [`DS005508`](eegdash.dataset.DS005508.md#eegdash.dataset.DS005508)
-
 ### eegdash.dataset.HBN_r4_bdf
 
 alias of [`EEG2025R4`](eegdash.dataset.EEG2025R4.md#eegdash.dataset.EEG2025R4)
@@ -41861,10 +42033,6 @@ alias of [`EEG2025R4`](eegdash.dataset.EEG2025R4.md#eegdash.dataset.EEG2025R4)
 
 alias of [`EEG2025R4MINI`](eegdash.dataset.EEG2025R4MINI.md#eegdash.dataset.EEG2025R4MINI)
 
-### eegdash.dataset.HBN_r5
-
-alias of [`DS005509`](eegdash.dataset.DS005509.md#eegdash.dataset.DS005509)
-
 ### eegdash.dataset.HBN_r5_bdf
 
 alias of [`EEG2025R5`](eegdash.dataset.EEG2025R5.md#eegdash.dataset.EEG2025R5)
@@ -41872,10 +42040,6 @@ alias of [`EEG2025R5`](eegdash.dataset.EEG2025R5.md#eegdash.dataset.EEG2025R5)
 ### eegdash.dataset.HBN_r5_bdf_mini
 
 alias of [`EEG2025R5MINI`](eegdash.dataset.EEG2025R5MINI.md#eegdash.dataset.EEG2025R5MINI)
-
-### eegdash.dataset.HBN_r6
-
-alias of [`DS005510`](eegdash.dataset.DS005510.md#eegdash.dataset.DS005510)
 
 ### eegdash.dataset.HBN_r6_bdf
 
@@ -41893,10 +42057,6 @@ alias of [`EEG2025R7`](eegdash.dataset.EEG2025R7.md#eegdash.dataset.EEG2025R7)
 
 alias of [`EEG2025R7MINI`](eegdash.dataset.EEG2025R7MINI.md#eegdash.dataset.EEG2025R7MINI)
 
-### eegdash.dataset.HBN_r8
-
-alias of [`DS005512`](eegdash.dataset.DS005512.md#eegdash.dataset.DS005512)
-
 ### eegdash.dataset.HBN_r8_bdf
 
 alias of [`EEG2025R8`](eegdash.dataset.EEG2025R8.md#eegdash.dataset.EEG2025R8)
@@ -41904,10 +42064,6 @@ alias of [`EEG2025R8`](eegdash.dataset.EEG2025R8.md#eegdash.dataset.EEG2025R8)
 ### eegdash.dataset.HBN_r8_bdf_mini
 
 alias of [`EEG2025R8MINI`](eegdash.dataset.EEG2025R8MINI.md#eegdash.dataset.EEG2025R8MINI)
-
-### eegdash.dataset.HBN_r9
-
-alias of [`DS005514`](eegdash.dataset.DS005514.md#eegdash.dataset.DS005514)
 
 ### eegdash.dataset.HBN_r9_bdf
 
@@ -41917,285 +42073,9 @@ alias of [`EEG2025R9`](eegdash.dataset.EEG2025R9.md#eegdash.dataset.EEG2025R9)
 
 alias of [`EEG2025R9MINI`](eegdash.dataset.EEG2025R9MINI.md#eegdash.dataset.EEG2025R9MINI)
 
-### eegdash.dataset.HEFMIICH
-
-alias of [`NM000347`](eegdash.dataset.NM000347.md#eegdash.dataset.NM000347)
-
-### eegdash.dataset.HEFMI_ICH
-
-alias of [`NM000347`](eegdash.dataset.NM000347.md#eegdash.dataset.NM000347)
-
-### eegdash.dataset.HID
-
-alias of [`DS004851`](eegdash.dataset.DS004851.md#eegdash.dataset.DS004851)
-
-### eegdash.dataset.HUPiEEG
-
-alias of [`DS004100`](eegdash.dataset.DS004100.md#eegdash.dataset.DS004100)
-
-### eegdash.dataset.Hatano
-
-alias of [`DS007118`](eegdash.dataset.DS007118.md#eegdash.dataset.DS007118)
-
-### eegdash.dataset.Haupt2025
-
-alias of [`DS004951`](eegdash.dataset.DS004951.md#eegdash.dataset.DS004951)
-
-### eegdash.dataset.HealthyBrainNetwork
-
-alias of [`NM000103`](eegdash.dataset.NM000103.md#eegdash.dataset.NM000103)
-
-### eegdash.dataset.HeartBEAM
-
-alias of [`DS006466`](eegdash.dataset.DS006466.md#eegdash.dataset.DS006466)
-
-### eegdash.dataset.HenaoIsaza2026
-
-alias of [`DS007427`](eegdash.dataset.DS007427.md#eegdash.dataset.DS007427)
-
-### eegdash.dataset.Hermann2021
-
-alias of [`DS003352`](eegdash.dataset.DS003352.md#eegdash.dataset.DS003352)
-
-### eegdash.dataset.Hermes2024
-
-alias of [`DS006392`](eegdash.dataset.DS006392.md#eegdash.dataset.DS006392)
-
-### eegdash.dataset.Herrema2024
-
-alias of [`DS005494`](eegdash.dataset.DS005494.md#eegdash.dataset.DS005494)
-
-### eegdash.dataset.Hinss2021
-
-alias of [`NM000206`](eegdash.dataset.NM000206.md#eegdash.dataset.NM000206)
-
-### eegdash.dataset.Hinss2021_v2
-
-alias of [`NM000343`](eegdash.dataset.NM000343.md#eegdash.dataset.NM000343)
-
-### eegdash.dataset.Huang2022
-
-alias of [`DS004457`](eegdash.dataset.DS004457.md#eegdash.dataset.DS004457)
-
-### eegdash.dataset.Huebner2017
-
-alias of [`NM000199`](eegdash.dataset.NM000199.md#eegdash.dataset.NM000199)
-
-### eegdash.dataset.Huebner2018
-
-alias of [`NM000195`](eegdash.dataset.NM000195.md#eegdash.dataset.NM000195)
-
-### eegdash.dataset.HySER
-
-alias of [`NM000108`](eegdash.dataset.NM000108.md#eegdash.dataset.NM000108)
-
-### eegdash.dataset.Hyser
-
-alias of [`NM000108`](eegdash.dataset.NM000108.md#eegdash.dataset.NM000108)
-
-### eegdash.dataset.IACKD
-
-alias of [`DS006840`](eegdash.dataset.DS006840.md#eegdash.dataset.DS006840)
-
-### eegdash.dataset.Jao2020
-
-alias of [`NM000249`](eegdash.dataset.NM000249.md#eegdash.dataset.NM000249)
-
-### eegdash.dataset.Johnson2024
-
-alias of [`DS004850`](eegdash.dataset.DS004850.md#eegdash.dataset.DS004850)
-
-### eegdash.dataset.Johnson2025
-
-alias of [`DS004852`](eegdash.dataset.DS004852.md#eegdash.dataset.DS004852)
-
-### eegdash.dataset.Kajikawa2000
-
-alias of [`DS007028`](eegdash.dataset.DS007028.md#eegdash.dataset.DS007028)
-
-### eegdash.dataset.Kalenkovich2019
-
-alias of [`DS003703`](eegdash.dataset.DS003703.md#eegdash.dataset.DS003703)
-
-### eegdash.dataset.Kanno2025
-
-alias of [`DS005545`](eegdash.dataset.DS005545.md#eegdash.dataset.DS005545)
-
-### eegdash.dataset.Kekecs2024
-
-alias of [`DS004572`](eegdash.dataset.DS004572.md#eegdash.dataset.DS004572)
-
-### eegdash.dataset.Kidder2024
-
-alias of [`DS004278`](eegdash.dataset.DS004278.md#eegdash.dataset.DS004278)
-
-### eegdash.dataset.Kim2025
-
-alias of [`NM000127`](eegdash.dataset.NM000127.md#eegdash.dataset.NM000127)
-
-### eegdash.dataset.Kinley2019
-
-alias of [`DS006446`](eegdash.dataset.DS006446.md#eegdash.dataset.DS006446)
-
-### eegdash.dataset.Kitazawa2025
-
-alias of [`DS005007`](eegdash.dataset.DS005007.md#eegdash.dataset.DS005007)
-
-### eegdash.dataset.Kucyi2024
-
-alias of [`DS007216`](eegdash.dataset.DS007216.md#eegdash.dataset.DS007216)
-
-### eegdash.dataset.Kuroda2024
-
-alias of [`DS006107`](eegdash.dataset.DS006107.md#eegdash.dataset.DS006107)
-
-### eegdash.dataset.LEMON
-
-alias of [`NM000179`](eegdash.dataset.NM000179.md#eegdash.dataset.NM000179)
-
-### eegdash.dataset.LPP
-
-alias of [`DS005345`](eegdash.dataset.DS005345.md#eegdash.dataset.DS005345)
-
-### eegdash.dataset.LeganesFonteneau2024
-
-alias of [`DS006159`](eegdash.dataset.DS006159.md#eegdash.dataset.DS006159)
-
-### eegdash.dataset.Lin2019
-
-alias of [`DS006035`](eegdash.dataset.DS006035.md#eegdash.dataset.DS006035)
-
-### eegdash.dataset.LittlePrince
-
-alias of [`DS007524`](eegdash.dataset.DS007524.md#eegdash.dataset.DS007524)
-
-### eegdash.dataset.Liu2022EldBETA
-
-alias of [`NM000130`](eegdash.dataset.NM000130.md#eegdash.dataset.NM000130)
-
-### eegdash.dataset.Lowe2025
-
-alias of [`DS006817`](eegdash.dataset.DS006817.md#eegdash.dataset.DS006817)
-
-### eegdash.dataset.Luke2019
-
-alias of [`DS005964`](eegdash.dataset.DS005964.md#eegdash.dataset.DS005964)
-
-### eegdash.dataset.MAMEM2
-
-alias of [`NM000120`](eegdash.dataset.NM000120.md#eegdash.dataset.NM000120)
-
-### eegdash.dataset.MAMEM2_SSVEP
-
-alias of [`NM000120`](eegdash.dataset.NM000120.md#eegdash.dataset.NM000120)
-
-### eegdash.dataset.MAMEM3
-
-alias of [`NM000121`](eegdash.dataset.NM000121.md#eegdash.dataset.NM000121)
-
-### eegdash.dataset.MASC_MEG
-
-alias of [`NM000229`](eegdash.dataset.NM000229.md#eegdash.dataset.NM000229)
-
-### eegdash.dataset.MAVIS
-
-alias of [`DS004010`](eegdash.dataset.DS004010.md#eegdash.dataset.DS004010)
-
-### eegdash.dataset.MEGMEM
-
-alias of [`DS003694`](eegdash.dataset.DS003694.md#eegdash.dataset.DS003694)
-
-### eegdash.dataset.MEG_MASC
-
-alias of [`NM000229`](eegdash.dataset.NM000229.md#eegdash.dataset.NM000229)
-
-### eegdash.dataset.MEG_SCANS
-
-alias of [`DS006468`](eegdash.dataset.DS006468.md#eegdash.dataset.DS006468)
-
-### eegdash.dataset.MNESomato
-
-alias of [`DS003104`](eegdash.dataset.DS003104.md#eegdash.dataset.DS003104)
-
-### eegdash.dataset.MNESomatoData
-
-alias of [`DS003104`](eegdash.dataset.DS003104.md#eegdash.dataset.DS003104)
-
-### eegdash.dataset.MNE_Sample_Data
-
-alias of [`DS000248`](eegdash.dataset.DS000248.md#eegdash.dataset.DS000248)
-
-### eegdash.dataset.MSSV
-
-alias of [`DS006366`](eegdash.dataset.DS006366.md#eegdash.dataset.DS006366)
-
-### eegdash.dataset.MUSING
-
-alias of [`DS003774`](eegdash.dataset.DS003774.md#eegdash.dataset.DS003774)
-
-### eegdash.dataset.Maestu2021
-
-alias of [`DS003483`](eegdash.dataset.DS003483.md#eegdash.dataset.DS003483)
-
-### eegdash.dataset.Martzoukou2024_Post
-
-alias of [`DS007314`](eegdash.dataset.DS007314.md#eegdash.dataset.DS007314)
-
-### eegdash.dataset.Martzoukou2024_Post_A
-
-alias of [`DS007315`](eegdash.dataset.DS007315.md#eegdash.dataset.DS007315)
-
-### eegdash.dataset.Melcon2024
-
-alias of [`DS006171`](eegdash.dataset.DS006171.md#eegdash.dataset.DS006171)
-
-### eegdash.dataset.Mendola2020
-
-alias of [`DS002001`](eegdash.dataset.DS002001.md#eegdash.dataset.DS002001)
-
-### eegdash.dataset.Mesquita2019
-
-alias of [`DS005963`](eegdash.dataset.DS005963.md#eegdash.dataset.DS005963)
-
 ### eegdash.dataset.MetaRDK
 
 alias of [`DS006253`](eegdash.dataset.DS006253.md#eegdash.dataset.DS006253)
-
-### eegdash.dataset.Mheich2020
-
-alias of [`DS002791`](eegdash.dataset.DS002791.md#eegdash.dataset.DS002791)
-
-### eegdash.dataset.Mheich2024
-
-alias of [`DS002833`](eegdash.dataset.DS002833.md#eegdash.dataset.DS002833)
-
-### eegdash.dataset.Miller2021
-
-alias of [`DS003708`](eegdash.dataset.DS003708.md#eegdash.dataset.DS003708)
-
-### eegdash.dataset.Mishra2024
-
-alias of [`DS007322`](eegdash.dataset.DS007322.md#eegdash.dataset.DS007322)
-
-### eegdash.dataset.Mivalt2024
-
-alias of [`DS004624`](eegdash.dataset.DS004624.md#eegdash.dataset.DS004624)
-
-### eegdash.dataset.Moerel2023
-
-alias of [`DS004995`](eegdash.dataset.DS004995.md#eegdash.dataset.DS004995)
-
-### eegdash.dataset.Moerel2025
-
-alias of [`DS007521`](eegdash.dataset.DS007521.md#eegdash.dataset.DS007521)
-
-### eegdash.dataset.Moradi2024
-
-alias of [`DS004598`](eegdash.dataset.DS004598.md#eegdash.dataset.DS004598)
-
-### eegdash.dataset.Motion_Yucel2014
-
-alias of [`DS005929`](eegdash.dataset.DS005929.md#eegdash.dataset.DS005929)
 
 ### *class* eegdash.dataset.NM000103(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42208,9 +42088,9 @@ Healthy Brain Network EEG - Not for Commercial Use
 * **Author (year):**
   `Shirazi2017`
 * **Canonical:**
-  `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`
+  —
 
-Also importable as: `NM000103`, `Shirazi2017`, `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`.
+Also importable as: `NM000103`, `Shirazi2017`.
 
 Modality: `eeg`.
 Subjects: 447; recordings: 3522; tasks: 10.
@@ -42266,7 +42146,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000103](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HealthyBrainNetwork', 'HBN_EEG_NC', 'HBN_NoCommercial']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000104(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42279,9 +42159,9 @@ emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electr
 * **Author (year):**
   `Sivakumar2024`
 * **Canonical:**
-  `emg2qwerty`
+  —
 
-Also importable as: `NM000104`, `Sivakumar2024`, `emg2qwerty`.
+Also importable as: `NM000104`, `Sivakumar2024`.
 
 Modality: `emg`.
 Subjects: 108; recordings: 1136; tasks: 1.
@@ -42337,7 +42217,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000104](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['emg2qwerty']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000105(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42350,9 +42230,9 @@ FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025`
 * **Canonical:**
-  `FRL_DiscreteGestures`
+  —
 
-Also importable as: `NM000105`, `Kaifosh2025`, `FRL_DiscreteGestures`.
+Also importable as: `NM000105`, `Kaifosh2025`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 100; tasks: 1.
@@ -42408,7 +42288,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000105](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FRL_DiscreteGestures']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000106(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42421,9 +42301,9 @@ FRL Handwriting: Handwriting Decoding from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025_106`
 * **Canonical:**
-  `FRL_Handwriting`
+  —
 
-Also importable as: `NM000106`, `Kaifosh2025_106`, `FRL_Handwriting`.
+Also importable as: `NM000106`, `Kaifosh2025_106`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 807; tasks: 1.
@@ -42479,7 +42359,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000106](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FRL_Handwriting']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000107(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42492,9 +42372,9 @@ FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025_107`
 * **Canonical:**
-  `FRL_WristControl`
+  —
 
-Also importable as: `NM000107`, `Kaifosh2025_107`, `FRL_WristControl`.
+Also importable as: `NM000107`, `Kaifosh2025_107`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 182; tasks: 1.
@@ -42550,7 +42430,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000107](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FRL_WristControl']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000108(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42563,9 +42443,9 @@ HySER: High-Density Surface Electromyogram Recordings
 * **Author (year):**
   `Jiang2021`
 * **Canonical:**
-  `HySER`, `Hyser`
+  —
 
-Also importable as: `NM000108`, `Jiang2021`, `HySER`, `Hyser`.
+Also importable as: `NM000108`, `Jiang2021`.
 
 Modality: `emg`.
 Subjects: 20; recordings: 1514; tasks: 38.
@@ -42621,7 +42501,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000108](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HySER', 'Hyser']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000109(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42705,9 +42585,9 @@ CHB-MIT
 * **Author (year):**
   `Connolly2010`
 * **Canonical:**
-  `CHBMIT`, `CHB_MIT`
+  —
 
-Also importable as: `NM000110`, `Connolly2010`, `CHBMIT`, `CHB_MIT`.
+Also importable as: `NM000110`, `Connolly2010`.
 
 Modality: `eeg`.
 Subjects: 24; recordings: 686; tasks: 1.
@@ -42763,7 +42643,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000110](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['CHBMIT', 'CHB_MIT']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000112(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -42776,9 +42656,9 @@ FACED - Finer-grained Affective Computing EEG Dataset
 * **Author (year):**
   `Liu2024_112`
 * **Canonical:**
-  `FACED`
+  —
 
-Also importable as: `NM000112`, `Liu2024_112`, `FACED`.
+Also importable as: `NM000112`, `Liu2024_112`.
 
 Modality: `eeg`.
 Subjects: 123; recordings: 123; tasks: 1.
@@ -42834,7 +42714,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000112](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FACED']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000113(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43056,7 +42936,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Nakanishi2015 – SSVEP Nakanishi 2015 dataset
 
 * **Study:**
-  `nm000118` (NeMAR)
+  `nm000118` (OpenNeuro)
 * **Author (year):**
   `Nakanishi2015`
 * **Canonical:**
@@ -43126,13 +43006,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 1 dataset
 
 * **Study:**
-  `nm000119` (NeMAR)
+  `nm000119` (OpenNeuro)
 * **Author (year):**
   `Oikonomou2016_MAMEM1`
 * **Canonical:**
-  `Oikonomou2016`
+  —
 
-Also importable as: `NM000119`, `Oikonomou2016_MAMEM1`, `Oikonomou2016`.
+Also importable as: `NM000119`, `Oikonomou2016_MAMEM1`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 11; recordings: 47; tasks: 1.
@@ -43187,7 +43067,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000119](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Oikonomou2016']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000120(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43196,13 +43076,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 2 dataset
 
 * **Study:**
-  `nm000120` (NeMAR)
+  `nm000120` (OpenNeuro)
 * **Author (year):**
   `Oikonomou2016_MAMEM2`
 * **Canonical:**
-  `MAMEM2`, `SSVEPMAMEM2`, `MAMEM2_SSVEP`
+  —
 
-Also importable as: `NM000120`, `Oikonomou2016_MAMEM2`, `MAMEM2`, `SSVEPMAMEM2`, `MAMEM2_SSVEP`.
+Also importable as: `NM000120`, `Oikonomou2016_MAMEM2`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 11; recordings: 55; tasks: 1.
@@ -43257,7 +43137,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000120](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MAMEM2', 'SSVEPMAMEM2', 'MAMEM2_SSVEP']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000121(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43266,13 +43146,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 3 dataset
 
 * **Study:**
-  `nm000121` (NeMAR)
+  `nm000121` (OpenNeuro)
 * **Author (year):**
   `Oikonomou2016_MAMEM3`
 * **Canonical:**
-  `MAMEM3`, `SSVEP_MAMEM3`
+  —
 
-Also importable as: `NM000121`, `Oikonomou2016_MAMEM3`, `MAMEM3`, `SSVEP_MAMEM3`.
+Also importable as: `NM000121`, `Oikonomou2016_MAMEM3`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 11; recordings: 110; tasks: 1.
@@ -43327,7 +43207,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000121](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MAMEM3', 'SSVEP_MAMEM3']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000122(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43336,7 +43216,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Chen2017 – Single-flicker online SSVEP BCI dataset
 
 * **Study:**
-  `nm000122` (NeMAR)
+  `nm000122` (OpenNeuro)
 * **Author (year):**
   `Chen2017`
 * **Canonical:**
@@ -43406,7 +43286,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kalunga2016 – SSVEP Exo dataset
 
 * **Study:**
-  `nm000123` (NeMAR)
+  `nm000123` (OpenNeuro)
 * **Author (year):**
   `Kalunga2016`
 * **Canonical:**
@@ -43476,7 +43356,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Han2024 – SSVEP fatigue dataset with two frequency paradigms
 
 * **Study:**
-  `nm000124` (NeMAR)
+  `nm000124` (OpenNeuro)
 * **Author (year):**
   `Han2024`
 * **Canonical:**
@@ -43546,7 +43426,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lee2021 – SSVEP paradigm of the Mobile BCI dataset
 
 * **Study:**
-  `nm000125` (NeMAR)
+  `nm000125` (OpenNeuro)
 * **Author (year):**
   `Lee2021_SSVEP`
 * **Canonical:**
@@ -43616,7 +43496,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang2016 – SSVEP Wang 2016 dataset
 
 * **Study:**
-  `nm000126` (NeMAR)
+  `nm000126` (OpenNeuro)
 * **Author (year):**
   `Wang2016`
 * **Canonical:**
@@ -43686,13 +43566,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kim2025 – 40-class beta-range SSVEP speller dataset
 
 * **Study:**
-  `nm000127` (NeMAR)
+  `nm000127` (OpenNeuro)
 * **Author (year):**
   `Kim2025_SSVEP`
 * **Canonical:**
-  `Kim2025`
+  —
 
-Also importable as: `NM000127`, `Kim2025_SSVEP`, `Kim2025`.
+Also importable as: `NM000127`, `Kim2025_SSVEP`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 40; recordings: 240; tasks: 1.
@@ -43747,7 +43627,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000127](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Kim2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000128(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43756,7 +43636,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Dong2023 – 59-subject 40-class SSVEP dataset
 
 * **Study:**
-  `nm000128` (NeMAR)
+  `nm000128` (OpenNeuro)
 * **Author (year):**
   `Dong2023`
 * **Canonical:**
@@ -43826,13 +43706,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu2020 – BETA SSVEP benchmark dataset
 
 * **Study:**
-  `nm000129` (NeMAR)
+  `nm000129` (OpenNeuro)
 * **Author (year):**
   `Liu2020`
 * **Canonical:**
-  `BetaSSVEP`, `BETA_SSVEP`, `BETA`
+  —
 
-Also importable as: `NM000129`, `Liu2020`, `BetaSSVEP`, `BETA_SSVEP`, `BETA`.
+Also importable as: `NM000129`, `Liu2020`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 70; recordings: 70; tasks: 1.
@@ -43887,7 +43767,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000129](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BetaSSVEP', 'BETA_SSVEP', 'BETA']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000130(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43896,13 +43776,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu2022 – eldBETA SSVEP benchmark dataset for elderly population
 
 * **Study:**
-  `nm000130` (NeMAR)
+  `nm000130` (OpenNeuro)
 * **Author (year):**
   `Liu2022`
 * **Canonical:**
-  `EldBETA`, `eldBETA`, `Liu2022EldBETA`
+  —
 
-Also importable as: `NM000130`, `Liu2022`, `EldBETA`, `eldBETA`, `Liu2022EldBETA`.
+Also importable as: `NM000130`, `Liu2022`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 100; recordings: 700; tasks: 1.
@@ -43957,7 +43837,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000130](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EldBETA', 'eldBETA', 'Liu2022EldBETA']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000131(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -43966,7 +43846,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang2021 – Combined SSVEP dataset with single stimulus location for two inputs
 
 * **Study:**
-  `nm000131` (NeMAR)
+  `nm000131` (OpenNeuro)
 * **Author (year):**
   `Wang2021`
 * **Canonical:**
@@ -44040,9 +43920,9 @@ ERP CORE
 * **Author (year):**
   `Kappenman2021`
 * **Canonical:**
-  `ERPCORE`, `ERP_CORE`
+  —
 
-Also importable as: `NM000132`, `Kappenman2021`, `ERPCORE`, `ERP_CORE`.
+Also importable as: `NM000132`, `Kappenman2021`.
 
 Modality: `eeg`.
 Subjects: 40; recordings: 240; tasks: 6.
@@ -44098,7 +43978,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000132](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['ERPCORE', 'ERP_CORE']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000133(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44111,9 +43991,9 @@ Alljoined1
 * **Author (year):**
   `Xu2024`
 * **Canonical:**
-  `Alljoined1`, `Alljoined`
+  —
 
-Also importable as: `NM000133`, `Xu2024`, `Alljoined1`, `Alljoined`.
+Also importable as: `NM000133`, `Xu2024`.
 
 Modality: `eeg`.
 Subjects: 8; recordings: 13; tasks: 1.
@@ -44169,7 +44049,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000133](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Alljoined1', 'Alljoined']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000134(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44182,9 +44062,9 @@ Alljoined-1.6M
 * **Author (year):**
   `Xu2025`
 * **Canonical:**
-  `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`
+  —
 
-Also importable as: `NM000134`, `Xu2025`, `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`.
+Also importable as: `NM000134`, `Xu2025`.
 
 Modality: `eeg`.
 Subjects: 20; recordings: 1525; tasks: 1.
@@ -44240,7 +44120,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000134](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Alljoined16M', 'Alljoined_16M', 'Alljoined1p6M']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000135(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44253,9 +44133,9 @@ BNCI 2014-004 Motor Imagery dataset
 * **Author (year):**
   `Leeb2014`
 * **Canonical:**
-  `BNCI2014004`
+  —
 
-Also importable as: `NM000135`, `Leeb2014`, `BNCI2014004`.
+Also importable as: `NM000135`, `Leeb2014`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 1; recordings: 5; tasks: 1.
@@ -44298,6 +44178,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000135](https://openneuro.org/datasets/nm000135)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000135](https://nemar.org/dataexplorer/detail?dataset_id=nm000135)
+DOI: [https://doi.org/10.82901/nemar.nm000135](https://doi.org/10.82901/nemar.nm000135)
 
 ### Examples
 
@@ -44310,13 +44191,13 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000135](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2014004']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000136(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-GuttmannFlury2025-P300
+Guttmann-Flury et al. 2025 (P300) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms
 
 * **Study:**
   `nm000136` (NeMAR)
@@ -44368,7 +44249,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000136](https://openneuro.org/datasets/nm000136)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000136](https://nemar.org/dataexplorer/detail?dataset_id=nm000136)
-DOI: [https://doi.org/10.1038/s41597-025-04861-9](https://doi.org/10.1038/s41597-025-04861-9)
+DOI: [https://doi.org/10.82901/nemar.nm000136](https://doi.org/10.82901/nemar.nm000136)
 
 ### Examples
 
@@ -44439,6 +44320,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000137](https://openneuro.org/datasets/nm000137)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000137](https://nemar.org/dataexplorer/detail?dataset_id=nm000137)
+DOI: [https://doi.org/10.82901/nemar.nm000137](https://doi.org/10.82901/nemar.nm000137)
 
 ### Examples
 
@@ -44464,9 +44346,9 @@ Alex Motor Imagery dataset
 * **Author (year):**
   `Barachant2012`
 * **Canonical:**
-  `AlexMI`, `AlexMotorImagery`, `AlexandreMotorImagery`
+  —
 
-Also importable as: `NM000138`, `Barachant2012`, `AlexMI`, `AlexMotorImagery`, `AlexandreMotorImagery`.
+Also importable as: `NM000138`, `Barachant2012`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 8; recordings: 8; tasks: 1.
@@ -44509,6 +44391,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000138](https://openneuro.org/datasets/nm000138)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000138](https://nemar.org/dataexplorer/detail?dataset_id=nm000138)
+DOI: [https://doi.org/10.82901/nemar.nm000138](https://doi.org/10.82901/nemar.nm000138)
 
 ### Examples
 
@@ -44521,7 +44404,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000138](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['AlexMI', 'AlexMotorImagery', 'AlexandreMotorImagery']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000139(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44534,9 +44417,9 @@ BNCI 2014-001 Motor Imagery dataset
 * **Author (year):**
   `Tangermann2014`
 * **Canonical:**
-  `BNCI2014001`, `BCICIV1`, `BCICompIV1`
+  —
 
-Also importable as: `NM000139`, `Tangermann2014`, `BNCI2014001`, `BCICIV1`, `BCICompIV1`.
+Also importable as: `NM000139`, `Tangermann2014`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 9; recordings: 108; tasks: 1.
@@ -44579,6 +44462,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000139](https://openneuro.org/datasets/nm000139)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000139](https://nemar.org/dataexplorer/detail?dataset_id=nm000139)
+DOI: [https://doi.org/10.82901/nemar.nm000139](https://doi.org/10.82901/nemar.nm000139)
 
 ### Examples
 
@@ -44591,7 +44475,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000139](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2014001', 'BCICIV1', 'BCICompIV1']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000140(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44604,9 +44488,9 @@ BNCI 2015-001 Motor Imagery dataset
 * **Author (year):**
   `Faller2015`
 * **Canonical:**
-  `BNCI2015`, `BNCI2015001`
+  —
 
-Also importable as: `NM000140`, `Faller2015`, `BNCI2015`, `BNCI2015001`.
+Also importable as: `NM000140`, `Faller2015`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 12; recordings: 28; tasks: 1.
@@ -44649,6 +44533,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000140](https://openneuro.org/datasets/nm000140)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000140](https://nemar.org/dataexplorer/detail?dataset_id=nm000140)
+DOI: [https://doi.org/10.82901/nemar.nm000140](https://doi.org/10.82901/nemar.nm000140)
 
 ### Examples
 
@@ -44661,7 +44546,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000140](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2015', 'BNCI2015001']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000141(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44719,6 +44604,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000141](https://openneuro.org/datasets/nm000141)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000141](https://nemar.org/dataexplorer/detail?dataset_id=nm000141)
+DOI: [https://doi.org/10.82901/nemar.nm000141](https://doi.org/10.82901/nemar.nm000141)
 
 ### Examples
 
@@ -44789,6 +44675,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000142](https://openneuro.org/datasets/nm000142)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000142](https://nemar.org/dataexplorer/detail?dataset_id=nm000142)
+DOI: [https://doi.org/10.82901/nemar.nm000142](https://doi.org/10.82901/nemar.nm000142)
 
 ### Examples
 
@@ -44814,9 +44701,9 @@ BNCI2003_IVa Motor Imagery dataset
 * **Author (year):**
   `BNCI2003`
 * **Canonical:**
-  `BCICIII_IVa`, `BCICompIII_IVa`, `BNCI2003_IVa`
+  —
 
-Also importable as: `NM000143`, `BNCI2003`, `BCICIII_IVa`, `BCICompIII_IVa`, `BNCI2003_IVa`.
+Also importable as: `NM000143`, `BNCI2003`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 5; recordings: 5; tasks: 1.
@@ -44859,6 +44746,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000143](https://openneuro.org/datasets/nm000143)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000143](https://nemar.org/dataexplorer/detail?dataset_id=nm000143)
+DOI: [https://doi.org/10.82901/nemar.nm000143](https://doi.org/10.82901/nemar.nm000143)
 
 ### Examples
 
@@ -44871,7 +44759,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000143](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCICIII_IVa', 'BCICompIII_IVa', 'BNCI2003_IVa']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000144(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44929,6 +44817,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000144](https://openneuro.org/datasets/nm000144)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000144](https://nemar.org/dataexplorer/detail?dataset_id=nm000144)
+DOI: [https://doi.org/10.82901/nemar.nm000144](https://doi.org/10.82901/nemar.nm000144)
 
 ### Examples
 
@@ -44950,7 +44839,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Munich Motor Imagery dataset
 
 * **Study:**
-  `nm000145` (NeMAR)
+  `nm000145` (OpenNeuro)
 * **Author (year):**
   `GrosseWentrup2009`
 * **Canonical:**
@@ -45020,13 +44909,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery dataset from Weibo et al 2014
 
 * **Study:**
-  `nm000146` (NeMAR)
+  `nm000146` (OpenNeuro)
 * **Author (year):**
   `Yi2014`
 * **Canonical:**
-  `Weibo2014`
+  —
 
-Also importable as: `NM000146`, `Yi2014`, `Weibo2014`.
+Also importable as: `NM000146`, `Yi2014`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 10; recordings: 10; tasks: 1.
@@ -45081,7 +44970,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000146](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Weibo2014']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000147(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -45161,7 +45050,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery BCI dataset with pupillometry augmentation
 
 * **Study:**
-  `nm000148` (NeMAR)
+  `nm000148` (OpenNeuro)
 * **Author (year):**
   `Rozado2015`
 * **Canonical:**
@@ -45231,7 +45120,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2019-001 Motor Imagery dataset for Spinal Cord Injury patients
 
 * **Study:**
-  `nm000149` (NeMAR)
+  `nm000149` (OpenNeuro)
 * **Author (year):**
   `Ofner2019`
 * **Canonical:**
@@ -45420,6 +45309,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000151](https://openneuro.org/datasets/nm000151)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000151](https://nemar.org/dataexplorer/detail?dataset_id=nm000151)
+DOI: [https://doi.org/10.82901/nemar.nm000151](https://doi.org/10.82901/nemar.nm000151)
 
 ### Examples
 
@@ -45441,7 +45331,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Upper-limb elbow-centered motor imagery dataset (10 classes)
 
 * **Study:**
-  `nm000152` (NeMAR)
+  `nm000152` (OpenNeuro)
 * **Author (year):**
   `Zhang2017`
 * **Canonical:**
@@ -45511,7 +45401,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Caillet et al 2023
 
 * **Study:**
-  `nm000155` (NeMAR)
+  `nm000155` (OpenNeuro)
 * **Author (year):**
   `Caillet2023`
 * **Canonical:**
@@ -45575,6 +45465,76 @@ DOI: [https://doi.org/https://doi.org/10.7910/DVN/F9GWIW](https://doi.org/https:
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.NM000156(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Hybrid EEG-fNIRS MI dataset for ICH from Shi et al 2025
+
+* **Study:**
+  `nm000156` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `NM000156`, `nan`.
+
+Modality: `eeg`.
+Subjects: 37; recordings: 98; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/nm000156](https://openneuro.org/datasets/nm000156)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000156](https://nemar.org/dataexplorer/detail?dataset_id=nm000156)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import NM000156
+>>> dataset = NM000156(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.NM000157(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -45582,7 +45542,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah2025-B
 
 * **Study:**
-  `nm000157` (NeMAR)
+  `nm000157` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025`
 * **Canonical:**
@@ -45650,20 +45610,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Dataset 
-
-```
-[1]_
-```
-
- from the study on motor imagery 
-
-```
-[2]_
-```
+Liu, Lv et al. 2023 — EEG datasets of stroke patients (motor imagery)
 
 * **Study:**
-  `nm000158` (NeMAR)
+  `nm000158` (OpenNeuro)
 * **Author (year):**
   `Liu2024`
 * **Canonical:**
@@ -45733,7 +45683,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Avrillon et al 2024
 
 * **Study:**
-  `nm000159` (NeMAR)
+  `nm000159` (OpenNeuro)
 * **Author (year):**
   `Avrillon2024`
 * **Canonical:**
@@ -45804,7 +45754,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Multi-joint upper-limb MI dataset from Yi et al. 2025
 
 * **Study:**
-  `nm000160` (NeMAR)
+  `nm000160` (OpenNeuro)
 * **Author (year):**
   `Yi2025`
 * **Canonical:**
@@ -45874,7 +45824,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2024-001 Handwritten Character Classification dataset
 
 * **Study:**
-  `nm000161` (NeMAR)
+  `nm000161` (OpenNeuro)
 * **Author (year):**
   `Crell2024`
 * **Canonical:**
@@ -45944,13 +45894,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2025-001 Motor Kinematics Reaching dataset
 
 * **Study:**
-  `nm000162` (NeMAR)
+  `nm000162` (OpenNeuro)
 * **Author (year):**
   `Srisrisawang2025`
 * **Canonical:**
-  `BNCI2025`
+  —
 
-Also importable as: `NM000162`, `Srisrisawang2025`, `BNCI2025`.
+Also importable as: `NM000162`, `Srisrisawang2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 20; recordings: 20; tasks: 1.
@@ -46005,7 +45955,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000162](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000163(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46014,7 +45964,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP and Burst-VEP dataset from Castillos et al. (2023)
 
 * **Study:**
-  `nm000163` (NeMAR)
+  `nm000163` (OpenNeuro)
 * **Author (year):**
   `Castillos2023_VEP`
 * **Canonical:**
@@ -46084,7 +46034,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Grison et al 2025
 
 * **Study:**
-  `nm000165` (NeMAR)
+  `nm000165` (OpenNeuro)
 * **Author (year):**
   `Grison2025`
 * **Canonical:**
@@ -46155,7 +46105,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 M3CV: Multi-subject, Multi-session, Multi-task EEG Database
 
 * **Study:**
-  `nm000166` (NeMAR)
+  `nm000166` (OpenNeuro)
 * **Author (year):**
   `Huang2018`
 * **Canonical:**
@@ -46226,7 +46176,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery dataset from Ma et al. 2020
 
 * **Study:**
-  `nm000167` (NeMAR)
+  `nm000167` (OpenNeuro)
 * **Author (year):**
   `Ma2020`
 * **Canonical:**
@@ -46296,13 +46246,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-013 Error-Related Potentials dataset
 
 * **Study:**
-  `nm000168` (NeMAR)
+  `nm000168` (OpenNeuro)
 * **Author (year):**
   `Chavarriaga2015`
 * **Canonical:**
-  `Chavarriaga2010`
+  —
 
-Also importable as: `NM000168`, `Chavarriaga2015`, `Chavarriaga2010`.
+Also importable as: `NM000168`, `Chavarriaga2015`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 6; recordings: 120; tasks: 1.
@@ -46357,7 +46307,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000168](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Chavarriaga2010']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000169(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46366,13 +46316,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-008 P300 dataset (ALS patients)
 
 * **Study:**
-  `nm000169` (NeMAR)
+  `nm000169` (OpenNeuro)
 * **Author (year):**
   `Riccio2014`
 * **Canonical:**
-  `BNCI2014008`
+  —
 
-Also importable as: `NM000169`, `Riccio2014`, `BNCI2014008`.
+Also importable as: `NM000169`, `Riccio2014`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Other`.
 Subjects: 8; recordings: 8; tasks: 1.
@@ -46427,7 +46377,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000169](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2014008']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000170(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46436,7 +46386,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2025-002 Continuous 2D Trajectory Decoding dataset
 
 * **Study:**
-  `nm000170` (NeMAR)
+  `nm000170` (OpenNeuro)
 * **Author (year):**
   `Pulferer2025`
 * **Canonical:**
@@ -46506,13 +46456,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-002 Motor Imagery dataset
 
 * **Study:**
-  `nm000171` (NeMAR)
+  `nm000171` (OpenNeuro)
 * **Author (year):**
   `Steyrl2014`
 * **Canonical:**
-  `BNCI2014002`
+  —
 
-Also importable as: `NM000171`, `Steyrl2014`, `BNCI2014002`.
+Also importable as: `NM000171`, `Steyrl2014`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 14; recordings: 112; tasks: 1.
@@ -46567,7 +46517,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000171](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2014002']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000172(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46576,7 +46526,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 High-gamma dataset described in Schirrmeister et al. 2017
 
 * **Study:**
-  `nm000172` (NeMAR)
+  `nm000172` (OpenNeuro)
 * **Author (year):**
   `Schirrmeister2017`
 * **Canonical:**
@@ -46646,7 +46596,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery ataset from Ofner et al 2017
 
 * **Study:**
-  `nm000173` (NeMAR)
+  `nm000173` (OpenNeuro)
 * **Author (year):**
   `Ofner2017`
 * **Canonical:**
@@ -46716,7 +46666,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 fNIRS Finger Tapping
 
 * **Study:**
-  `nm000175` (NeMAR)
+  `nm000175` (OpenNeuro)
 * **Author (year):**
   `Luke2024`
 * **Canonical:**
@@ -46786,13 +46736,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study K — 9x8 adaptive/checkerboard, 2 sessions (5 healthy subjects)
 
 * **Study:**
-  `nm000176` (NeMAR)
+  `nm000176` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI`
 * **Canonical:**
-  `BigP3BCI_StudyK`, `BigP3BCI_K`
+  —
 
-Also importable as: `NM000176`, `Mainsah2025_BigP3BCI`, `BigP3BCI_StudyK`, `BigP3BCI_K`.
+Also importable as: `NM000176`, `Mainsah2025_BigP3BCI`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 5; recordings: 128; tasks: 1.
@@ -46847,7 +46797,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000176](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyK', 'BigP3BCI_K']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000179(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46856,13 +46806,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)
 
 * **Study:**
-  `nm000179` (NeMAR)
+  `nm000179` (OpenNeuro)
 * **Author (year):**
   `Babayan2018`
 * **Canonical:**
-  `LEMON`
+  —
 
-Also importable as: `NM000179`, `Babayan2018`, `LEMON`.
+Also importable as: `NM000179`, `Babayan2018`.
 
 Modality: `eeg`.
 Subjects: 215; recordings: 215; tasks: 1.
@@ -46918,7 +46868,7 @@ DOI: [https://doi.org/10.1038/sdata.2018.308](https://doi.org/10.1038/sdata.2018
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['LEMON']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000180(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -46927,7 +46877,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Brennan2019: EEG during Alice in Wonderland Listening
 
 * **Study:**
-  `nm000180` (NeMAR)
+  `nm000180` (OpenNeuro)
 * **Author (year):**
   `Brennan2019`
 * **Canonical:**
@@ -46998,7 +46948,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 NMT: Neurodiagnostic Montage Template Scalp EEG
 
 * **Study:**
-  `nm000181` (NeMAR)
+  `nm000181` (OpenNeuro)
 * **Author (year):**
   `Khan2019`
 * **Canonical:**
@@ -47069,13 +47019,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Sleep-EDF Expanded: Whole-Night PSG Recordings
 
 * **Study:**
-  `nm000185` (NeMAR)
+  `nm000185` (OpenNeuro)
 * **Author (year):**
   `Kemp2000`
 * **Canonical:**
-  `SleepEDF`, `SleepEDFExpanded`
+  —
 
-Also importable as: `NM000185`, `Kemp2000`, `SleepEDF`, `SleepEDFExpanded`.
+Also importable as: `NM000185`, `Kemp2000`.
 
 Modality: `eeg`.
 Subjects: 100; recordings: 197; tasks: 1.
@@ -47131,7 +47081,7 @@ DOI: [https://doi.org/10.13026/C2X676](https://doi.org/10.13026/C2X676)
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['SleepEDF', 'SleepEDFExpanded']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000186(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47140,13 +47090,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study E — 6x6 checkerboard (8 healthy subjects)
 
 * **Study:**
-  `nm000186` (NeMAR)
+  `nm000186` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_E`
 * **Canonical:**
-  `BigP3BCI_StudyE`, `BigP3BCI_E`
+  —
 
-Also importable as: `NM000186`, `Mainsah2025_BigP3BCI_E`, `BigP3BCI_StudyE`, `BigP3BCI_E`.
+Also importable as: `NM000186`, `Mainsah2025_BigP3BCI_E`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 8; recordings: 88; tasks: 1.
@@ -47201,7 +47151,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000186](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyE', 'BigP3BCI_E']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000187(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47210,13 +47160,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study N — 9x8 dry/wet electrode comparison (8 ALS subjects)
 
 * **Study:**
-  `nm000187` (NeMAR)
+  `nm000187` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_N`
 * **Canonical:**
-  `BigP3BCI_StudyN`
+  —
 
-Also importable as: `NM000187`, `Mainsah2025_BigP3BCI_N`, `BigP3BCI_StudyN`.
+Also importable as: `NM000187`, `Mainsah2025_BigP3BCI_N`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Other`.
 Subjects: 8; recordings: 160; tasks: 1.
@@ -47271,7 +47221,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000187](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyN']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000188(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47280,13 +47230,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-009 P300 dataset
 
 * **Study:**
-  `nm000188` (NeMAR)
+  `nm000188` (OpenNeuro)
 * **Author (year):**
   `Arico2014`
 * **Canonical:**
-  `BNCI2014_009_P300`
+  —
 
-Also importable as: `NM000188`, `Arico2014`, `BNCI2014_009_P300`.
+Also importable as: `NM000188`, `Arico2014`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 10; recordings: 30; tasks: 1.
@@ -47341,7 +47291,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000188](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2014_009_P300']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000189(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47350,13 +47300,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-003 P300 dataset
 
 * **Study:**
-  `nm000189` (NeMAR)
+  `nm000189` (OpenNeuro)
 * **Author (year):**
   `Schreuder2015_P300`
 * **Canonical:**
-  `BNCI2015_P300`, `BNCI2015_003_P300`, `BNCI2015_003_AMUSE`
+  —
 
-Also importable as: `NM000189`, `Schreuder2015_P300`, `BNCI2015_P300`, `BNCI2015_003_P300`, `BNCI2015_003_AMUSE`.
+Also importable as: `NM000189`, `Schreuder2015_P300`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 10; recordings: 20; tasks: 1.
@@ -47411,7 +47361,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000189](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2015_P300', 'BNCI2015_003_P300', 'BNCI2015_003_AMUSE']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000190(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47420,7 +47370,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-012 PASS2D P300 dataset
 
 * **Study:**
-  `nm000190` (NeMAR)
+  `nm000190` (OpenNeuro)
 * **Author (year):**
   `Hohne2015`
 * **Canonical:**
@@ -47490,13 +47440,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study F — 6x6 multi-paradigm, 3 sessions (10 healthy subjects)
 
 * **Study:**
-  `nm000191` (NeMAR)
+  `nm000191` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_F`
 * **Canonical:**
-  `BigP3BCI_StudyF`, `BigP3BCI_F`
+  —
 
-Also importable as: `NM000191`, `Mainsah2025_BigP3BCI_F`, `BigP3BCI_StudyF`, `BigP3BCI_F`.
+Also importable as: `NM000191`, `Mainsah2025_BigP3BCI_F`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Other`.
 Subjects: 10; recordings: 270; tasks: 1.
@@ -47551,7 +47501,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000191](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyF', 'BigP3BCI_F']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000192(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47560,13 +47510,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-006 Music BCI dataset
 
 * **Study:**
-  `nm000192` (NeMAR)
+  `nm000192` (OpenNeuro)
 * **Author (year):**
   `Treder2015_BNCI_006_Music`
 * **Canonical:**
-  `BNCI2015_BNCI_006_Music`, `BNCI_2015_006_Music`, `BNCI2015_006_MusicBCI`
+  —
 
-Also importable as: `NM000192`, `Treder2015_BNCI_006_Music`, `BNCI2015_BNCI_006_Music`, `BNCI_2015_006_Music`, `BNCI2015_006_MusicBCI`.
+Also importable as: `NM000192`, `Treder2015_BNCI_006_Music`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 11; recordings: 11; tasks: 1.
@@ -47621,16 +47571,16 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000192](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2015_BNCI_006_Music', 'BNCI_2015_006_Music', 'BNCI2015_006_MusicBCI']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000193(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Class for Kojima2024A dataset management. P300 dataset
+Kojima et al. 2024 (Dataset A) — An auditory brain-computer interface based on selective attention to multiple tone streams
 
 * **Study:**
-  `nm000193` (NeMAR)
+  `nm000193` (OpenNeuro)
 * **Author (year):**
   `Kojima2024A_P300`
 * **Canonical:**
@@ -47700,7 +47650,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-010 RSVP P300 dataset
 
 * **Study:**
-  `nm000194` (NeMAR)
+  `nm000194` (OpenNeuro)
 * **Author (year):**
   `Acqualagna2015`
 * **Canonical:**
@@ -47770,13 +47720,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mixture of LLP and EM for a visual matrix speller (ERP) dataset from
 
 * **Study:**
-  `nm000195` (NeMAR)
+  `nm000195` (OpenNeuro)
 * **Author (year):**
   `Hubner2018`
 * **Canonical:**
-  `Huebner2018`
+  —
 
-Also importable as: `NM000195`, `Hubner2018`, `Huebner2018`.
+Also importable as: `NM000195`, `Hubner2018`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 12; recordings: 360; tasks: 1.
@@ -47831,7 +47781,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000195](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Huebner2018']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000196(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47840,7 +47790,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP dataset from Thielen et al. (2015)
 
 * **Study:**
-  `nm000196` (NeMAR)
+  `nm000196` (OpenNeuro)
 * **Author (year):**
   `Thielen2015`
 * **Canonical:**
@@ -47910,13 +47860,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study M — 9x8 adaptive/checkerboard (21 ALS subjects)
 
 * **Study:**
-  `nm000197` (NeMAR)
+  `nm000197` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_M`
 * **Canonical:**
-  `BigP3BCI_StudyM`, `BigP3BCI_M`
+  —
 
-Also importable as: `NM000197`, `Mainsah2025_BigP3BCI_M`, `BigP3BCI_StudyM`, `BigP3BCI_M`.
+Also importable as: `NM000197`, `Mainsah2025_BigP3BCI_M`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Other`.
 Subjects: 21; recordings: 420; tasks: 1.
@@ -47971,7 +47921,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000197](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyM', 'BigP3BCI_M']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000198(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -47980,13 +47930,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-008 Center Speller P300 dataset
 
 * **Study:**
-  `nm000198` (NeMAR)
+  `nm000198` (OpenNeuro)
 * **Author (year):**
   `Treder2015_P300`
 * **Canonical:**
-  `BNCI2015_008_P300`, `BNCI2015_008_CenterSpeller`
+  —
 
-Also importable as: `NM000198`, `Treder2015_P300`, `BNCI2015_008_P300`, `BNCI2015_008_CenterSpeller`.
+Also importable as: `NM000198`, `Treder2015_P300`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 26; tasks: 1.
@@ -48041,7 +47991,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000198](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2015_008_P300', 'BNCI2015_008_CenterSpeller']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000199(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -48050,13 +48000,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Learning from label proportions for a visual matrix speller (ERP)
 
 * **Study:**
-  `nm000199` (NeMAR)
+  `nm000199` (OpenNeuro)
 * **Author (year):**
   `Hubner2017`
 * **Canonical:**
-  `Huebner2017`
+  —
 
-Also importable as: `NM000199`, `Hubner2017`, `Huebner2017`.
+Also importable as: `NM000199`, `Hubner2017`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 342; tasks: 1.
@@ -48111,7 +48061,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000199](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Huebner2017']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000200(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -48120,13 +48070,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study I — 9x8 checkerboard/performance-based (13 healthy subjects)
 
 * **Study:**
-  `nm000200` (NeMAR)
+  `nm000200` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_I`
 * **Canonical:**
-  `BigP3BCI_StudyI`, `BigP3BCI_I`
+  —
 
-Also importable as: `NM000200`, `Mainsah2025_BigP3BCI_I`, `BigP3BCI_StudyI`, `BigP3BCI_I`.
+Also importable as: `NM000200`, `Mainsah2025_BigP3BCI_I`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 265; tasks: 1.
@@ -48181,7 +48131,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000200](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyI', 'BigP3BCI_I']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000201(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -48190,7 +48140,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 ERP paradigm of the Mobile BCI dataset
 
 * **Study:**
-  `nm000201` (NeMAR)
+  `nm000201` (OpenNeuro)
 * **Author (year):**
   `Lee2021_ERP`
 * **Canonical:**
@@ -48253,6 +48203,146 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000201](https
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.NM000202(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+P300 dataset BI2012 from a “Brain Invaders” experiment
+
+* **Study:**
+  `nm000202` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `NM000202`, `nan`.
+
+Modality: `eeg`.
+Subjects: 25; recordings: 25; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/nm000202](https://openneuro.org/datasets/nm000202)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000202](https://nemar.org/dataexplorer/detail?dataset_id=nm000202)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import NM000202
+>>> dataset = NM000202(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.NM000203(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+P300 dataset from initial spot study
+
+* **Study:**
+  `nm000203` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `NM000203`, `nan`.
+
+Modality: `eeg`.
+Subjects: 13; recordings: 800; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
+  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  dict
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  list[dict] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/nm000203](https://openneuro.org/datasets/nm000203)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000203](https://nemar.org/dataexplorer/detail?dataset_id=nm000203)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import NM000203
+>>> dataset = NM000203(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.NM000204(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -48260,7 +48350,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Bluetooth speaker experiment (14 subjects, 6 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000204` (NeMAR)
+  `nm000204` (OpenNeuro)
 * **Author (year):**
   `Lee2024_Bluetooth_speaker_14`
 * **Canonical:**
@@ -48330,7 +48420,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 RSVP collaborative BCI dataset from Zheng et al 2020
 
 * **Study:**
-  `nm000205` (NeMAR)
+  `nm000205` (OpenNeuro)
 * **Author (year):**
   `Zheng2020`
 * **Canonical:**
@@ -48400,13 +48490,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Neuroergonomic 2021 dataset
 
 * **Study:**
-  `nm000206` (NeMAR)
+  `nm000206` (OpenNeuro)
 * **Author (year):**
   `Hinss2021_Neuroergonomic`
 * **Canonical:**
-  `Hinss2021`
+  —
 
-Also importable as: `NM000206`, `Hinss2021_Neuroergonomic`, `Hinss2021`.
+Also importable as: `NM000206`, `Hinss2021_Neuroergonomic`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 15; recordings: 30; tasks: 1.
@@ -48461,16 +48551,16 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000206](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Hinss2021']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000207(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Class for Kojima2024B dataset management. P300 dataset
+Kojima et al. 2024 (Dataset B) — Four-class ASME BCI: investigation of the feasibility and comparison of two strategies for multiclassing
 
 * **Study:**
-  `nm000207` (NeMAR)
+  `nm000207` (OpenNeuro)
 * **Author (year):**
   `Kojima2024B_P300`
 * **Canonical:**
@@ -48540,7 +48630,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Door lock control experiment (15 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000208` (NeMAR)
+  `nm000208` (OpenNeuro)
 * **Author (year):**
   `Lee2024_Door_lock_control`
 * **Canonical:**
@@ -48610,7 +48700,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery + spatial attention dataset from Forenzo & He 2023
 
 * **Study:**
-  `nm000209` (NeMAR)
+  `nm000209` (OpenNeuro)
 * **Author (year):**
   `Forenzo2023`
 * **Canonical:**
@@ -48680,13 +48770,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BCIAUT-P300 dataset for autism from Simoes et al 2020
 
 * **Study:**
-  `nm000210` (NeMAR)
+  `nm000210` (OpenNeuro)
 * **Author (year):**
   `Simoes2020`
 * **Canonical:**
-  `BCIAUTP300`, `BCIAUT_P300`, `BCIAUT`
+  —
 
-Also importable as: `NM000210`, `Simoes2020`, `BCIAUTP300`, `BCIAUT_P300`, `BCIAUT`.
+Also importable as: `NM000210`, `Simoes2020`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 15; recordings: 210; tasks: 1.
@@ -48741,7 +48831,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000210](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BCIAUTP300', 'BCIAUT_P300', 'BCIAUT']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000211(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -48750,13 +48840,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 RSVP ERP dataset for authentication from Zhang et al 2025
 
 * **Study:**
-  `nm000211` (NeMAR)
+  `nm000211` (OpenNeuro)
 * **Author (year):**
   `Zhang2025_RSVP`
 * **Canonical:**
-  `Zhang2025`
+  —
 
-Also importable as: `NM000211`, `Zhang2025_RSVP`, `Zhang2025`.
+Also importable as: `NM000211`, `Zhang2025_RSVP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 15; recordings: 240; tasks: 1.
@@ -48811,7 +48901,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000211](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Zhang2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000212(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -48820,7 +48910,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-007 Motion VEP (mVEP) Speller dataset
 
 * **Study:**
-  `nm000212` (NeMAR)
+  `nm000212` (OpenNeuro)
 * **Author (year):**
   `Schaeff2015`
 * **Canonical:**
@@ -48890,7 +48980,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Television control experiment (30 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000213` (NeMAR)
+  `nm000213` (OpenNeuro)
 * **Author (year):**
   `Lee2024_Television_control_30`
 * **Canonical:**
@@ -48960,7 +49050,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP dataset from Thielen et al. (2021)
 
 * **Study:**
-  `nm000214` (NeMAR)
+  `nm000214` (OpenNeuro)
 * **Author (year):**
   `Thielen2021`
 * **Canonical:**
@@ -49030,13 +49120,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2014b from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000215` (NeMAR)
+  `nm000215` (OpenNeuro)
 * **Author (year):**
   `Korczowski2014_P300`
 * **Canonical:**
-  `BrainInvaders2014b`, `BI2014b`, `BrainInvadersBI2014b`
+  —
 
-Also importable as: `NM000215`, `Korczowski2014_P300`, `BrainInvaders2014b`, `BI2014b`, `BrainInvadersBI2014b`.
+Also importable as: `NM000215`, `Korczowski2014_P300`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 38; recordings: 38; tasks: 1.
@@ -49091,7 +49181,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000215](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainInvaders2014b', 'BI2014b', 'BrainInvadersBI2014b']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000216(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49100,13 +49190,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2015a from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000216` (NeMAR)
+  `nm000216` (OpenNeuro)
 * **Author (year):**
   `Korczowski2015_P300`
 * **Canonical:**
-  `BrainInvaders2015a`, `BI2015a`
+  —
 
-Also importable as: `NM000216`, `Korczowski2015_P300`, `BrainInvaders2015a`, `BI2015a`.
+Also importable as: `NM000216`, `Korczowski2015_P300`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 43; recordings: 129; tasks: 1.
@@ -49161,7 +49251,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000216](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainInvaders2015a', 'BI2015a']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000217(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49170,13 +49260,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2015b from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000217` (NeMAR)
+  `nm000217` (OpenNeuro)
 * **Author (year):**
   `Korczowski2015_P300_BI2015b`
 * **Canonical:**
-  `BrainInvaders2015b`, `BI2015b`
+  —
 
-Also importable as: `NM000217`, `Korczowski2015_P300_BI2015b`, `BrainInvaders2015b`, `BI2015b`.
+Also importable as: `NM000217`, `Korczowski2015_P300_BI2015b`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 44; recordings: 176; tasks: 1.
@@ -49231,7 +49321,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000217](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainInvaders2015b', 'BI2015b']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000218(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49240,13 +49330,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study H — 9x8 checkerboard with gaze conditions (16 healthy subjects)
 
 * **Study:**
-  `nm000218` (NeMAR)
+  `nm000218` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_H`
 * **Canonical:**
-  `BigP3BCI_StudyH`, `BigP3BCI_H`
+  —
 
-Also importable as: `NM000218`, `Mainsah2025_BigP3BCI_H`, `BigP3BCI_StudyH`, `BigP3BCI_H`.
+Also importable as: `NM000218`, `Mainsah2025_BigP3BCI_H`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 16; recordings: 372; tasks: 1.
@@ -49301,7 +49391,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000218](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyH', 'BigP3BCI_H']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000219(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49310,13 +49400,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2020-002 Attention Shift (Covert Spatial Attention) dataset
 
 * **Study:**
-  `nm000219` (NeMAR)
+  `nm000219` (OpenNeuro)
 * **Author (year):**
   `Reichert2020`
 * **Canonical:**
-  `BNCI2020`, `BNCI2020_002_AttentionShift`, `BNCI2020_002_CovertSpatialAttention`
+  —
 
-Also importable as: `NM000219`, `Reichert2020`, `BNCI2020`, `BNCI2020_002_AttentionShift`, `BNCI2020_002_CovertSpatialAttention`.
+Also importable as: `NM000219`, `Reichert2020`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 18; recordings: 18; tasks: 1.
@@ -49371,7 +49461,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000219](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2020', 'BNCI2020_002_AttentionShift', 'BNCI2020_002_CovertSpatialAttention']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000221(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49380,13 +49470,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Alphawaves dataset
 
 * **Study:**
-  `nm000221` (NeMAR)
+  `nm000221` (OpenNeuro)
 * **Author (year):**
   `Cattan2017`
 * **Canonical:**
-  `Alphawaves`, `Rodrigues2017`, `AlphaWaves`
+  —
 
-Also importable as: `NM000221`, `Cattan2017`, `Alphawaves`, `Rodrigues2017`, `AlphaWaves`.
+Also importable as: `NM000221`, `Cattan2017`.
 
 Modality: `eeg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 19; recordings: 19; tasks: 1.
@@ -49441,7 +49531,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000221](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Alphawaves', 'Rodrigues2017', 'AlphaWaves']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000222(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49450,7 +49540,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Air conditioner control experiment (10 subjects, 4 classes, 25 EEG ch)
 
 * **Study:**
-  `nm000222` (NeMAR)
+  `nm000222` (OpenNeuro)
 * **Author (year):**
   `Lee2024_Air_conditioner_control`
 * **Canonical:**
@@ -49520,7 +49610,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Electric light control experiment (15 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000223` (NeMAR)
+  `nm000223` (OpenNeuro)
 * **Author (year):**
   `Lee2024_Electric_light_control`
 * **Canonical:**
@@ -49590,7 +49680,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training)
 
 * **Study:**
-  `nm000225` (NeMAR)
+  `nm000225` (OpenNeuro)
 * **Author (year):**
   `Ghassemi2018`
 * **Canonical:**
@@ -49661,13 +49751,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Zhou2016
 
 * **Study:**
-  `nm000226` (NeMAR)
+  `nm000226` (OpenNeuro)
 * **Author (year):**
   `Zhou2016_226`
 * **Canonical:**
-  `Zhou2016_NEMAR`
+  —
 
-Also importable as: `NM000226`, `Zhou2016_226`, `Zhou2016_NEMAR`.
+Also importable as: `NM000226`, `Zhou2016_226`.
 
 Modality: `eeg`.
 Subjects: 4; recordings: 24; tasks: 1.
@@ -49723,7 +49813,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000115](https://doi.org/10.82901/nemar.nm
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Zhou2016_NEMAR']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000227(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49732,13 +49822,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Eye-BCI Motor Execution dataset from Guttmann-Flury et al 2025
 
 * **Study:**
-  `nm000227` (NeMAR)
+  `nm000227` (OpenNeuro)
 * **Author (year):**
   `GuttmannFlury2025_Eye`
 * **Canonical:**
-  `GuttmannFlury2025_ME`
+  —
 
-Also importable as: `NM000227`, `GuttmannFlury2025_Eye`, `GuttmannFlury2025_ME`.
+Also importable as: `NM000227`, `GuttmannFlury2025_Eye`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 31; recordings: 63; tasks: 1.
@@ -49793,7 +49883,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000227](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['GuttmannFlury2025_ME']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000228(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49802,7 +49892,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Nieuwland et al. 2018: Multi-site N400 Replication Study
 
 * **Study:**
-  `nm000228` (NeMAR)
+  `nm000228` (OpenNeuro)
 * **Author (year):**
   `Nieuwland2018`
 * **Canonical:**
@@ -49873,16 +49963,16 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing
 
 * **Study:**
-  `nm000229` (NeMAR)
+  `nm000229` (OpenNeuro)
 * **Author (year):**
   `Gwilliams2023`
 * **Canonical:**
-  `MASC_MEG`, `MEG_MASC`
+  —
 
-Also importable as: `NM000229`, `Gwilliams2023`, `MASC_MEG`, `MEG_MASC`.
+Also importable as: `NM000229`, `Gwilliams2023`.
 
-Modality: `eeg`.
-Subjects: 29; recordings: 1360; tasks: 79.
+Modality: `meg`.
+Subjects: 27; recordings: 196; tasks: 4.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -49935,7 +50025,7 @@ DOI: [https://doi.org/10.1038/s41597-023-02752-5](https://doi.org/10.1038/s41597
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['MASC_MEG', 'MEG_MASC']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000230(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -49944,7 +50034,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lower-limb MI dataset for knee pain patients from Zuo et al. 2025
 
 * **Study:**
-  `nm000230` (NeMAR)
+  `nm000230` (OpenNeuro)
 * **Author (year):**
   `Zuo2025`
 * **Canonical:**
@@ -50014,13 +50104,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset from Hoffmann et al 2008
 
 * **Study:**
-  `nm000231` (NeMAR)
+  `nm000231` (OpenNeuro)
 * **Author (year):**
   `Hoffmann2008`
 * **Canonical:**
-  `EPFLP300`, `EPFL_P300`, `EPFLP300Dataset`
+  —
 
-Also importable as: `NM000231`, `Hoffmann2008`, `EPFLP300`, `EPFL_P300`, `EPFLP300Dataset`.
+Also importable as: `NM000231`, `Hoffmann2008`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Other`.
 Subjects: 8; recordings: 192; tasks: 1.
@@ -50075,7 +50165,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000231](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['EPFLP300', 'EPFL_P300', 'EPFLP300Dataset']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000232(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50084,7 +50174,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition
 
 * **Study:**
-  `nm000232` (NeMAR)
+  `nm000232` (OpenNeuro)
 * **Author (year):**
   `Gifford2019`
 * **Canonical:**
@@ -50155,13 +50245,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-009 AMUSE (Auditory Multi-class Spatial ERP) dataset
 
 * **Study:**
-  `nm000234` (NeMAR)
+  `nm000234` (OpenNeuro)
 * **Author (year):**
   `Schreuder2015_ERP`
 * **Canonical:**
-  `BNCI2015_ERP`
+  —
 
-Also importable as: `NM000234`, `Schreuder2015_ERP`, `BNCI2015_ERP`.
+Also importable as: `NM000234`, `Schreuder2015_ERP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 21; recordings: 42; tasks: 1.
@@ -50216,7 +50306,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000234](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2015_ERP']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000235(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50225,13 +50315,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Eye-BCI multimodal MI/ME dataset from Guttmann-Flury et al 2025
 
 * **Study:**
-  `nm000235` (NeMAR)
+  `nm000235` (OpenNeuro)
 * **Author (year):**
   `GuttmannFlury2025_Eye_BCI`
 * **Canonical:**
-  `GuttmannFlury2025_MIME`
+  —
 
-Also importable as: `NM000235`, `GuttmannFlury2025_Eye_BCI`, `GuttmannFlury2025_MIME`.
+Also importable as: `NM000235`, `GuttmannFlury2025_Eye_BCI`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 31; recordings: 63; tasks: 1.
@@ -50286,7 +50376,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000235](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['GuttmannFlury2025_MIME']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000236(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50295,7 +50385,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Dataset of an EEG-based BCI experiment in Virtual Reality using P300
 
 * **Study:**
-  `nm000236` (NeMAR)
+  `nm000236` (OpenNeuro)
 * **Author (year):**
   `Cattan2019_P300`
 * **Canonical:**
@@ -50365,7 +50455,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 7-day motor imagery BCI EEG dataset from Zhou et al 2021
 
 * **Study:**
-  `nm000237` (NeMAR)
+  `nm000237` (OpenNeuro)
 * **Author (year):**
   `Zhou2021`
 * **Canonical:**
@@ -50506,7 +50596,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P-ary m-sequence-based c-VEP dataset from Martínez-Cagigal et al. (2023)
 
 * **Study:**
-  `nm000239` (NeMAR)
+  `nm000239` (OpenNeuro)
 * **Author (year):**
   `MartinezCagigal2023`
 * **Canonical:**
@@ -50576,13 +50666,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Checkerboard m-sequence-based c-VEP dataset from
 
 * **Study:**
-  `nm000240` (NeMAR)
+  `nm000240` (OpenNeuro)
 * **Author (year):**
   `FernandezRodriguez2025`
 * **Canonical:**
-  `FernandezRodriguez2023`
+  —
 
-Also importable as: `NM000240`, `FernandezRodriguez2025`, `FernandezRodriguez2023`.
+Also importable as: `NM000240`, `FernandezRodriguez2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 16; recordings: 383; tasks: 1.
@@ -50637,7 +50727,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000240](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['FernandezRodriguez2023']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000241(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50646,7 +50736,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CerebroVoice: Bilingual sEEG Speech Dataset
 
 * **Study:**
-  `nm000241` (NeMAR)
+  `nm000241` (OpenNeuro)
 * **Author (year):**
   `Zhang2019`
 * **Canonical:**
@@ -50717,13 +50807,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Visual imagery EEG dataset from Gao et al 2026
 
 * **Study:**
-  `nm000242` (NeMAR)
+  `nm000242` (OpenNeuro)
 * **Author (year):**
   `Gao2026_Visual_imagery_et`
 * **Canonical:**
-  `Gao2026`
+  —
 
-Also importable as: `NM000242`, `Gao2026_Visual_imagery_et`, `Gao2026`.
+Also importable as: `NM000242`, `Gao2026_Visual_imagery_et`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 22; recordings: 125; tasks: 1.
@@ -50778,7 +50868,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000242](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Gao2026']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000243(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50787,13 +50877,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2016-002 Emergency Braking during Simulated Driving dataset
 
 * **Study:**
-  `nm000243` (NeMAR)
+  `nm000243` (OpenNeuro)
 * **Author (year):**
   `Haufe2016`
 * **Canonical:**
-  `BNCI2016`, `BNCI2016002`
+  —
 
-Also importable as: `NM000243`, `Haufe2016`, `BNCI2016`, `BNCI2016002`.
+Also importable as: `NM000243`, `Haufe2016`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 15; recordings: 15; tasks: 1.
@@ -50848,7 +50938,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000243](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BNCI2016', 'BNCI2016002']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000244(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50857,13 +50947,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2014a from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000244` (NeMAR)
+  `nm000244` (OpenNeuro)
 * **Author (year):**
   `Korczowski2014_P300_BI2014a`
 * **Canonical:**
-  `BrainInvaders2014a`, `BI2014a`
+  —
 
-Also importable as: `NM000244`, `Korczowski2014_P300_BI2014a`, `BrainInvaders2014a`, `BI2014a`.
+Also importable as: `NM000244`, `Korczowski2014_P300_BI2014a`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 64; recordings: 64; tasks: 1.
@@ -50918,7 +51008,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000244](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainInvaders2014a', 'BI2014a']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000245(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -50927,7 +51017,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery dataset from Cho et al 2017
 
 * **Study:**
-  `nm000245` (NeMAR)
+  `nm000245` (OpenNeuro)
 * **Author (year):**
   `Cho2017`
 * **Canonical:**
@@ -50997,13 +51087,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Multi-day MI-BCI dataset (WBCIC-SHU) from Yang et al 2025
 
 * **Study:**
-  `nm000246` (NeMAR)
+  `nm000246` (OpenNeuro)
 * **Author (year):**
   `Yang2025_Multi`
 * **Canonical:**
-  `WBCIC_SHU`, `WBCICSHU`
+  —
 
-Also importable as: `NM000246`, `Yang2025_Multi`, `WBCIC_SHU`, `WBCICSHU`.
+Also importable as: `NM000246`, `Yang2025_Multi`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 51; recordings: 153; tasks: 1.
@@ -51058,7 +51148,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000246](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['WBCIC_SHU', 'WBCICSHU']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000247(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -51067,13 +51157,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study S1 — 9x8 face/house paradigm (10 healthy subjects)
 
 * **Study:**
-  `nm000247` (NeMAR)
+  `nm000247` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_S1`
 * **Canonical:**
-  `BigP3BCI_StudyS1`, `BigP3BCI_S1`
+  —
 
-Also importable as: `NM000247`, `Mainsah2025_BigP3BCI_S1`, `BigP3BCI_StudyS1`, `BigP3BCI_S1`.
+Also importable as: `NM000247`, `Mainsah2025_BigP3BCI_S1`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 10; recordings: 120; tasks: 1.
@@ -51128,7 +51218,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000247](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_StudyS1', 'BigP3BCI_S1']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000248(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -51137,7 +51227,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study L — 6x6 multi-paradigm (11 ALS subjects)
 
 * **Study:**
-  `nm000248` (NeMAR)
+  `nm000248` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_L`
 * **Canonical:**
@@ -51207,13 +51297,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2022-001 EEG Correlates of Difficulty Level dataset
 
 * **Study:**
-  `nm000249` (NeMAR)
+  `nm000249` (OpenNeuro)
 * **Author (year):**
   `Jao2022`
 * **Canonical:**
-  `Jao2020`
+  —
 
-Also importable as: `NM000249`, `Jao2022`, `Jao2020`.
+Also importable as: `NM000249`, `Jao2022`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 13; tasks: 1.
@@ -51268,16 +51358,16 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000249](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Jao2020']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000250(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Class for Dreyer2023 dataset management. MI dataset
+Dreyer et al. 2023 — A large EEG database with users’ profile information for motor imagery brain-computer interface research
 
 * **Study:**
-  `nm000250` (NeMAR)
+  `nm000250` (OpenNeuro)
 * **Author (year):**
   `Dreyer2023`
 * **Canonical:**
@@ -51347,7 +51437,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language
 
 * **Study:**
-  `nm000251` (NeMAR)
+  `nm000251` (OpenNeuro)
 * **Author (year):**
   `He2025`
 * **Canonical:**
@@ -51418,13 +51508,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli
 
 * **Study:**
-  `nm000253` (NeMAR)
+  `nm000253` (OpenNeuro)
 * **Author (year):**
   `Wang2024_et_al_Brain`
 * **Canonical:**
-  `BrainTreeBank`
+  —
 
-Also importable as: `NM000253`, `Wang2024_et_al_Brain`, `BrainTreeBank`.
+Also importable as: `NM000253`, `Wang2024_et_al_Brain`.
 
 Modality: `ieeg`.
 Subjects: 10; recordings: 26; tasks: 1.
@@ -51480,7 +51570,7 @@ DOI: [https://doi.org/10.48550/arXiv.2411.08343](https://doi.org/10.48550/arXiv.
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainTreeBank']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000254(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -51489,7 +51579,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Naturalistic viewing: An open-access dataset using simultaneous EEG-fMRI
 
 * **Study:**
-  `nm000254` (NeMAR)
+  `nm000254` (OpenNeuro)
 * **Author (year):**
   `Telesford2024`
 * **Canonical:**
@@ -51559,7 +51649,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 2
 
 * **Study:**
-  `nm000255` (NeMAR)
+  `nm000255` (OpenNeuro)
 * **Author (year):**
   `Madsen2024_E2`
 * **Canonical:**
@@ -51629,7 +51719,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 3
 
 * **Study:**
-  `nm000256` (NeMAR)
+  `nm000256` (OpenNeuro)
 * **Author (year):**
   `Madsen2024_E3`
 * **Canonical:**
@@ -51696,10 +51786,10 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000256](https
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Speier2017
+Speier et al. 2017 — A comparison of stimulus types in online classification of the P300 speller using language models
 
 * **Study:**
-  `nm000259` (NeMAR)
+  `nm000259` (OpenNeuro)
 * **Author (year):**
   `Speier2017`
 * **Canonical:**
@@ -51767,16 +51857,16 @@ DOI: [https://doi.org/10.1371/journal.pone.0175382](https://doi.org/10.1371/jour
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-BrainInvaders2012
+Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012)
 
 * **Study:**
-  `nm000260` (NeMAR)
+  `nm000260` (OpenNeuro)
 * **Author (year):**
   `BrainInvaders2012`
 * **Canonical:**
-  `BI2012`, `BrainInvaders`
+  —
 
-Also importable as: `NM000260`, `BrainInvaders2012`, `BI2012`, `BrainInvaders`.
+Also importable as: `NM000260`, `BrainInvaders2012`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 23; recordings: 46; tasks: 1.
@@ -51832,22 +51922,22 @@ DOI: [https://doi.org/10.5281/zenodo.2649006](https://doi.org/10.5281/zenodo.264
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BI2012', 'BrainInvaders']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000264(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-BrainInvaders2013a
+Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a)
 
 * **Study:**
-  `nm000264` (NeMAR)
+  `nm000264` (OpenNeuro)
 * **Author (year):**
   `BrainInvaders2013`
 * **Canonical:**
-  `BrainInvaders2013a`, `BI2013a`
+  —
 
-Also importable as: `NM000264`, `BrainInvaders2013`, `BrainInvaders2013a`, `BI2013a`.
+Also importable as: `NM000264`, `BrainInvaders2013`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 24; recordings: 292; tasks: 1.
@@ -51903,16 +51993,16 @@ DOI: [https://doi.org/10.5281/zenodo.1494163](https://doi.org/10.5281/zenodo.149
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BrainInvaders2013a', 'BI2013a']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000265(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-GuttmannFlury2025-MI
+Guttmann-Flury et al. 2025 (Motor Imagery) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms
 
 * **Study:**
-  `nm000265` (NeMAR)
+  `nm000265` (OpenNeuro)
 * **Author (year):**
   `GuttmannFlury2025_MI`
 * **Canonical:**
@@ -51980,10 +52070,10 @@ DOI: [https://doi.org/10.1038/s41597-025-04861-9](https://doi.org/10.1038/s41597
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Sosulski2019
+Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints
 
 * **Study:**
-  `nm000266` (NeMAR)
+  `nm000266` (OpenNeuro)
 * **Author (year):**
   `Sosulski2019`
 * **Canonical:**
@@ -52051,16 +52141,16 @@ DOI: [https://doi.org/10.48550/arXiv.2109.06011](https://doi.org/10.48550/arXiv.
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Shin2017A
+Shin et al. 2017 (Experiment A) — Open Access Dataset for EEG+NIRS Single-Trial Classification
 
 * **Study:**
-  `nm000267` (NeMAR)
+  `nm000267` (OpenNeuro)
 * **Author (year):**
   `Shin2017_Shin2017A`
 * **Canonical:**
-  `Shin2017A`
+  —
 
-Also importable as: `NM000267`, `Shin2017_Shin2017A`, `Shin2017A`.
+Also importable as: `NM000267`, `Shin2017_Shin2017A`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 29; recordings: 174; tasks: 1.
@@ -52116,22 +52206,22 @@ DOI: [https://doi.org/10.1109/TNSRE.2016.2628057](https://doi.org/10.1109/TNSRE.
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Shin2017A']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000268(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Shin2017B
+Shin et al. 2017 (Experiment B) — Open Access Dataset for EEG+NIRS Single-Trial Classification
 
 * **Study:**
-  `nm000268` (NeMAR)
+  `nm000268` (OpenNeuro)
 * **Author (year):**
   `Shin2017_Shin2017B`
 * **Canonical:**
-  `Shin2017B`
+  —
 
-Also importable as: `NM000268`, `Shin2017_Shin2017B`, `Shin2017B`.
+Also importable as: `NM000268`, `Shin2017_Shin2017B`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 29; recordings: 174; tasks: 1.
@@ -52187,16 +52277,16 @@ DOI: [https://doi.org/10.1109/TNSRE.2016.2628057](https://doi.org/10.1109/TNSRE.
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Shin2017B']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000270(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-liu2025 - NEMAR Dataset
+Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University)
 
 * **Study:**
-  `nm000270` (NeMAR)
+  `nm000270` (OpenNeuro)
 * **Author (year):**
   `Liu2025`
 * **Canonical:**
@@ -52205,7 +52295,7 @@ liu2025 - NEMAR Dataset
 Also importable as: `NM000270`, `Liu2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Unknown`.
-Subjects: 27; recordings: 797; tasks: 3.
+Subjects: 27; recordings: 110; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -52245,6 +52335,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000270](https://openneuro.org/datasets/nm000270)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000270](https://nemar.org/dataexplorer/detail?dataset_id=nm000270)
+DOI: [https://doi.org/10.1038/s41597-025-04618-4](https://doi.org/10.1038/s41597-025-04618-4)
 
 ### Examples
 
@@ -52263,19 +52354,19 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000270](https
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-chang2025 - NEMAR Dataset
+Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University)
 
 * **Study:**
-  `nm000271` (NeMAR)
+  `nm000271` (OpenNeuro)
 * **Author (year):**
   `Chang2025_2`
 * **Canonical:**
-  `Chang2025`
+  —
 
-Also importable as: `NM000271`, `Chang2025_2`, `Chang2025`.
+Also importable as: `NM000271`, `Chang2025_2`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Unknown`.
-Subjects: 28; recordings: 1245; tasks: 3.
+Subjects: 28; recordings: 113; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -52315,6 +52406,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000271](https://openneuro.org/datasets/nm000271)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000271](https://nemar.org/dataexplorer/detail?dataset_id=nm000271)
+DOI: [https://doi.org/10.1038/s41597-025-06147-6](https://doi.org/10.1038/s41597-025-06147-6)
 
 ### Examples
 
@@ -52327,25 +52419,25 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000271](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Chang2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000272(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-romani-bf2025-erp - NEMAR Dataset
+Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento)
 
 * **Study:**
-  `nm000272` (NeMAR)
+  `nm000272` (OpenNeuro)
 * **Author (year):**
   `Romani2025_BF_ERP`
 * **Canonical:**
-  `Romani2025_erp`
+  —
 
-Also importable as: `NM000272`, `Romani2025_BF_ERP`, `Romani2025_erp`.
+Also importable as: `NM000272`, `Romani2025_BF_ERP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Unknown`.
-Subjects: 22; recordings: 1022; tasks: 3.
+Subjects: 22; recordings: 120; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -52385,6 +52477,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000272](https://openneuro.org/datasets/nm000272)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000272](https://nemar.org/dataexplorer/detail?dataset_id=nm000272)
+DOI: [https://doi.org/10.48550/arXiv.2510.10169](https://doi.org/10.48550/arXiv.2510.10169)
 
 ### Examples
 
@@ -52397,22 +52490,22 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000272](https
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Romani2025_erp']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000277(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-G
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study G)
 
 * **Study:**
-  `nm000277` (NeMAR)
+  `nm000277` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_G`
 * **Canonical:**
-  `BigP3BCI_G`, `BigP3BCI_StudyG`
+  —
 
-Also importable as: `NM000277`, `Mainsah2025_G`, `BigP3BCI_G`, `BigP3BCI_StudyG`.
+Also importable as: `NM000277`, `Mainsah2025_G`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 20; recordings: 320; tasks: 1.
@@ -52468,16 +52561,16 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['BigP3BCI_G', 'BigP3BCI_StudyG']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000301(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-D
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study D)
 
 * **Study:**
-  `nm000301` (NeMAR)
+  `nm000301` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_D`
 * **Canonical:**
@@ -52545,10 +52638,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-O
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study O)
 
 * **Study:**
-  `nm000303` (NeMAR)
+  `nm000303` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_O`
 * **Canonical:**
@@ -52616,10 +52709,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-GuttmannFlury2025-SSVEP
+Guttmann-Flury et al. 2025 (SSVEP) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms
 
 * **Study:**
-  `nm000310` (NeMAR)
+  `nm000310` (OpenNeuro)
 * **Author (year):**
   `GuttmannFlury2025_SSVEP`
 * **Canonical:**
@@ -52758,10 +52851,10 @@ DOI: [https://doi.org/10.82901/nemar.nm000311](https://doi.org/10.82901/nemar.nm
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-S2
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study S2)
 
 * **Study:**
-  `nm000313` (NeMAR)
+  `nm000313` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_S2`
 * **Canonical:**
@@ -52829,10 +52922,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-Q
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study Q)
 
 * **Study:**
-  `nm000321` (NeMAR)
+  `nm000321` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_Q`
 * **Canonical:**
@@ -52900,16 +52993,16 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Lee2019-ERP
+Lee et al. 2019 (ERP) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy
 
 * **Study:**
-  `nm000323` (NeMAR)
+  `nm000323` (OpenNeuro)
 * **Author (year):**
   `Lee2019_ERP`
 * **Canonical:**
-  `OpenBMI_ERP`, `OpenBMI_P300`
+  —
 
-Also importable as: `NM000323`, `Lee2019_ERP`, `OpenBMI_ERP`, `OpenBMI_P300`.
+Also importable as: `NM000323`, `Lee2019_ERP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 54; recordings: 216; tasks: 1.
@@ -52965,16 +53058,16 @@ DOI: [https://doi.org/10.1093/gigascience/giz002](https://doi.org/10.1093/gigasc
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['OpenBMI_ERP', 'OpenBMI_P300']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000326(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-C
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study C)
 
 * **Study:**
-  `nm000326` (NeMAR)
+  `nm000326` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_C`
 * **Canonical:**
@@ -53042,10 +53135,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Brandl2020
+Brandl et al. 2020 — Motor Imagery Under Distraction: An Open Access BCI Dataset
 
 * **Study:**
-  `nm000329` (NeMAR)
+  `nm000329` (OpenNeuro)
 * **Author (year):**
   `Brandl2020`
 * **Canonical:**
@@ -53113,10 +53206,10 @@ DOI: [https://doi.org/10.3389/fnins.2020.566147](https://doi.org/10.3389/fnins.2
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-R
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study R)
 
 * **Study:**
-  `nm000336` (NeMAR)
+  `nm000336` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_R`
 * **Canonical:**
@@ -53184,16 +53277,16 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Lee2019-MI
+Lee et al. 2019 (Motor Imagery) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy
 
 * **Study:**
-  `nm000338` (NeMAR)
+  `nm000338` (OpenNeuro)
 * **Author (year):**
   `Lee2019_MI`
 * **Canonical:**
-  `OpenBMI_MI`
+  —
 
-Also importable as: `NM000338`, `Lee2019_MI`, `OpenBMI_MI`.
+Also importable as: `NM000338`, `Lee2019_MI`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 54; recordings: 216; tasks: 1.
@@ -53249,16 +53342,16 @@ DOI: [https://doi.org/10.1093/gigascience/giz002](https://doi.org/10.1093/gigasc
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['OpenBMI_MI']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000339(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Stieger2021
+Stieger et al. 2021 — Continuous sensorimotor rhythm based brain computer interface learning in a large population
 
 * **Study:**
-  `nm000339` (NeMAR)
+  `nm000339` (OpenNeuro)
 * **Author (year):**
   `Stieger2021`
 * **Canonical:**
@@ -53326,10 +53419,10 @@ DOI: [https://doi.org/10.1038/s41597-021-00883-1](https://doi.org/10.1038/s41597
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-J
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study J)
 
 * **Study:**
-  `nm000340` (NeMAR)
+  `nm000340` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_J`
 * **Canonical:**
@@ -53397,10 +53490,10 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Cattan2019-PHMD
+Cattan, Rodrigues & Congedo 2019 — Passive Head-Mounted Display Music-Listening EEG dataset (PHMD)
 
 * **Study:**
-  `nm000341` (NeMAR)
+  `nm000341` (OpenNeuro)
 * **Author (year):**
   `Cattan2019_PHMD`
 * **Canonical:**
@@ -53471,13 +53564,13 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosCVEP40
 
 * **Study:**
-  `nm000342` (NeMAR)
+  `nm000342` (OpenNeuro)
 * **Author (year):**
   `Castillos2023_CastillosCVEP40`
 * **Canonical:**
-  `CastillosCVEP40`
+  —
 
-Also importable as: `NM000342`, `Castillos2023_CastillosCVEP40`, `CastillosCVEP40`.
+Also importable as: `NM000342`, `Castillos2023_CastillosCVEP40`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 12; recordings: 12; tasks: 1.
@@ -53533,22 +53626,22 @@ DOI: [https://doi.org/10.1016/j.neuroimage.2023.120446](https://doi.org/10.1016/
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['CastillosCVEP40']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000343(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Hinss2021
+Hinss et al. 2021 — Open multi-session and multi-task EEG cognitive Dataset for passive brain-computer Interface Applications
 
 * **Study:**
-  `nm000343` (NeMAR)
+  `nm000343` (OpenNeuro)
 * **Author (year):**
   `Hinss2021`
 * **Canonical:**
-  `Hinss2021_v2`
+  —
 
-Also importable as: `NM000343`, `Hinss2021`, `Hinss2021_v2`.
+Also importable as: `NM000343`, `Hinss2021`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 15; recordings: 30; tasks: 1.
@@ -53604,7 +53697,7 @@ DOI: [https://doi.org/10.1038/s41597-022-01898-y](https://doi.org/10.1038/s41597
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Hinss2021_v2']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000344(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -53613,7 +53706,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosBurstVEP100
 
 * **Study:**
-  `nm000344` (NeMAR)
+  `nm000344` (OpenNeuro)
 * **Author (year):**
   `Castillos2023_CastillosBurstVEP100`
 * **Canonical:**
@@ -53684,7 +53777,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosBurstVEP40
 
 * **Study:**
-  `nm000345` (NeMAR)
+  `nm000345` (OpenNeuro)
 * **Author (year):**
   `Castillos2023_CastillosBurstVEP40`
 * **Canonical:**
@@ -53755,7 +53848,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosCVEP100
 
 * **Study:**
-  `nm000346` (NeMAR)
+  `nm000346` (OpenNeuro)
 * **Author (year):**
   `Castillos2023_CastillosCVEP100`
 * **Canonical:**
@@ -53823,16 +53916,16 @@ DOI: [https://doi.org/10.1016/j.neuroimage.2023.120446](https://doi.org/10.1016/
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-HefmiIch2025
+Shi et al. 2025 — HEFMI-ICH: a hybrid EEG-fNIRS motor imagery dataset for brain-computer interface in intracerebral hemorrhage
 
 * **Study:**
-  `nm000347` (NeMAR)
+  `nm000347` (OpenNeuro)
 * **Author (year):**
   `HefmiIch2025`
 * **Canonical:**
-  `HEFMI_ICH`, `HEFMIICH`
+  —
 
-Also importable as: `NM000347`, `HefmiIch2025`, `HEFMI_ICH`, `HEFMIICH`.
+Also importable as: `NM000347`, `HefmiIch2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Other`.
 Subjects: 37; recordings: 98; tasks: 1.
@@ -53888,16 +53981,16 @@ DOI: [https://doi.org/10.1038/s41597-025-06100-7](https://doi.org/10.1038/s41597
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['HEFMI_ICH', 'HEFMIICH']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000348(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Yang2025
+Yang et al. 2025 — A multi-day and high-quality EEG dataset for motor imagery brain-computer interface
 
 * **Study:**
-  `nm000348` (NeMAR)
+  `nm000348` (OpenNeuro)
 * **Author (year):**
   `Yang2025`
 * **Canonical:**
@@ -53959,16 +54052,16 @@ DOI: [https://doi.org/10.1038/s41597-025-04826-y](https://doi.org/10.1038/s41597
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Yang2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.NM000351(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Mainsah2025-P
+Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study P)
 
 * **Study:**
-  `nm000351` (NeMAR)
+  `nm000351` (OpenNeuro)
 * **Author (year):**
   `Mainsah2025_P`
 * **Canonical:**
@@ -54032,421 +54125,9 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 
 #### canonical_name *= []*
 
-### eegdash.dataset.NOD_EEG
-
-alias of [`DS005811`](eegdash.dataset.DS005811.md#eegdash.dataset.DS005811)
-
-### eegdash.dataset.NOD_MEG
-
-alias of [`DS005810`](eegdash.dataset.DS005810.md#eegdash.dataset.DS005810)
-
-### eegdash.dataset.NenckiSymfonia
-
-alias of [`DS004621`](eegdash.dataset.DS004621.md#eegdash.dataset.DS004621)
-
-### eegdash.dataset.Neuma
-
-alias of [`DS004588`](eegdash.dataset.DS004588.md#eegdash.dataset.DS004588)
-
-### eegdash.dataset.NeuroMorph
-
-alias of [`DS005241`](eegdash.dataset.DS005241.md#eegdash.dataset.DS005241)
-
-### eegdash.dataset.Nierula2019
-
-alias of [`DS005307`](eegdash.dataset.DS005307.md#eegdash.dataset.DS005307)
-
-### eegdash.dataset.Ning2024
-
-alias of [`DS004830`](eegdash.dataset.DS004830.md#eegdash.dataset.DS004830)
-
-### eegdash.dataset.Normannseth2026
-
-alias of [`DS007615`](eegdash.dataset.DS007615.md#eegdash.dataset.DS007615)
-
-### eegdash.dataset.OMEGA
-
-alias of [`DS000247`](eegdash.dataset.DS000247.md#eegdash.dataset.DS000247)
-
-### eegdash.dataset.ORHA
-
-alias of [`DS005363`](eegdash.dataset.DS005363.md#eegdash.dataset.DS005363)
-
-### eegdash.dataset.OcularLDT
-
-alias of [`DS002312`](eegdash.dataset.DS002312.md#eegdash.dataset.DS002312)
-
-### eegdash.dataset.Oikonomou2016
-
-alias of [`NM000119`](eegdash.dataset.NM000119.md#eegdash.dataset.NM000119)
-
-### eegdash.dataset.Omelyusik2026
-
-alias of [`DS006136`](eegdash.dataset.DS006136.md#eegdash.dataset.DS006136)
-
-### eegdash.dataset.Onton2024
-
-alias of [`DS006695`](eegdash.dataset.DS006695.md#eegdash.dataset.DS006695)
-
-### eegdash.dataset.OpenBMI_ERP
-
-alias of [`NM000323`](eegdash.dataset.NM000323.md#eegdash.dataset.NM000323)
-
-### eegdash.dataset.OpenBMI_MI
-
-alias of [`NM000338`](eegdash.dataset.NM000338.md#eegdash.dataset.NM000338)
-
-### eegdash.dataset.OpenBMI_P300
-
-alias of [`NM000323`](eegdash.dataset.NM000323.md#eegdash.dataset.NM000323)
-
-### eegdash.dataset.PAL
-
-alias of [`DS005059`](eegdash.dataset.DS005059.md#eegdash.dataset.DS005059)
-
-### eegdash.dataset.PDEEG
-
-alias of [`DS007526`](eegdash.dataset.DS007526.md#eegdash.dataset.DS007526)
-
-### eegdash.dataset.PD_EEG
-
-alias of [`DS007526`](eegdash.dataset.DS007526.md#eegdash.dataset.DS007526)
-
-### eegdash.dataset.PEARLNeuro
-
-alias of [`DS004796`](eegdash.dataset.DS004796.md#eegdash.dataset.DS004796)
-
-### eegdash.dataset.PEERS
-
-alias of [`DS004395`](eegdash.dataset.DS004395.md#eegdash.dataset.DS004395)
-
-### eegdash.dataset.PRIOS
-
-alias of [`DS004370`](eegdash.dataset.DS004370.md#eegdash.dataset.DS004370)
-
-### eegdash.dataset.PROMENADE
-
-alias of [`DS005946`](eegdash.dataset.DS005946.md#eegdash.dataset.DS005946)
-
-### eegdash.dataset.PWIe
-
-alias of [`DS005932`](eegdash.dataset.DS005932.md#eegdash.dataset.DS005932)
-
-### eegdash.dataset.Penalver2024
-
-alias of [`DS004502`](eegdash.dataset.DS004502.md#eegdash.dataset.DS004502)
-
-### eegdash.dataset.Peng2018
-
-alias of [`DS005777`](eegdash.dataset.DS005777.md#eegdash.dataset.DS005777)
-
-### eegdash.dataset.PerceiveImagine
-
-alias of [`DS005697`](eegdash.dataset.DS005697.md#eegdash.dataset.DS005697)
-
-### eegdash.dataset.PhysionetMI
-
-alias of [`DS004362`](eegdash.dataset.DS004362.md#eegdash.dataset.DS004362)
-
-### eegdash.dataset.Podcast
-
-alias of [`DS005574`](eegdash.dataset.DS005574.md#eegdash.dataset.DS005574)
-
-### eegdash.dataset.Pohle2019
-
-alias of [`DS006374`](eegdash.dataset.DS006374.md#eegdash.dataset.DS006374)
-
-### eegdash.dataset.RAM_catFR
-
-alias of [`DS005491`](eegdash.dataset.DS005491.md#eegdash.dataset.DS005491)
-
-### eegdash.dataset.RESPect_CCEP
-
-alias of [`DS004080`](eegdash.dataset.DS004080.md#eegdash.dataset.DS004080)
-
-### eegdash.dataset.RESPect_intraop
-
-alias of [`DS003844`](eegdash.dataset.DS003844.md#eegdash.dataset.DS003844)
-
-### eegdash.dataset.RESPect_longterm
-
-alias of [`DS003848`](eegdash.dataset.DS003848.md#eegdash.dataset.DS003848)
-
-### eegdash.dataset.Ramzaoui2024
-
-alias of [`DS006979`](eegdash.dataset.DS006979.md#eegdash.dataset.DS006979)
-
-### eegdash.dataset.Rani2019
-
-alias of [`DS004012`](eegdash.dataset.DS004012.md#eegdash.dataset.DS004012)
-
-### eegdash.dataset.Rockhill2022
-
-alias of [`DS004473`](eegdash.dataset.DS004473.md#eegdash.dataset.DS004473)
-
-### eegdash.dataset.Rodrigues2017
-
-alias of [`NM000221`](eegdash.dataset.NM000221.md#eegdash.dataset.NM000221)
-
 ### eegdash.dataset.Romani2025
 
 alias of [`NM000147`](eegdash.dataset.NM000147.md#eegdash.dataset.NM000147)
-
-### eegdash.dataset.Romani2025_erp
-
-alias of [`NM000272`](eegdash.dataset.NM000272.md#eegdash.dataset.NM000272)
-
-### eegdash.dataset.Runabout
-
-alias of [`DS003620`](eegdash.dataset.DS003620.md#eegdash.dataset.DS003620)
-
-### eegdash.dataset.SINGSING
-
-alias of [`DS006629`](eegdash.dataset.DS006629.md#eegdash.dataset.DS006629)
-
-### eegdash.dataset.SSVEPMAMEM2
-
-alias of [`NM000120`](eegdash.dataset.NM000120.md#eegdash.dataset.NM000120)
-
-### eegdash.dataset.SSVEP_MAMEM3
-
-alias of [`NM000121`](eegdash.dataset.NM000121.md#eegdash.dataset.NM000121)
-
-### eegdash.dataset.STRONG
-
-alias of [`DS004849`](eegdash.dataset.DS004849.md#eegdash.dataset.DS004849)
-
-### eegdash.dataset.STReEF
-
-alias of [`DS005448`](eegdash.dataset.DS005448.md#eegdash.dataset.DS005448)
-
-### eegdash.dataset.Sakakura2024
-
-alias of [`DS004859`](eegdash.dataset.DS004859.md#eegdash.dataset.DS004859)
-
-### eegdash.dataset.Sakakura2025
-
-alias of [`DS004551`](eegdash.dataset.DS004551.md#eegdash.dataset.DS004551)
-
-### eegdash.dataset.Sato2024
-
-alias of [`DS007602`](eegdash.dataset.DS007602.md#eegdash.dataset.DS007602)
-
-### eegdash.dataset.Sato2025
-
-alias of [`DS007591`](eegdash.dataset.DS007591.md#eegdash.dataset.DS007591)
-
-### eegdash.dataset.SeizeIT2
-
-alias of [`DS005873`](eegdash.dataset.DS005873.md#eegdash.dataset.DS005873)
-
-### eegdash.dataset.Shalamberidze2025
-
-alias of [`DS007609`](eegdash.dataset.DS007609.md#eegdash.dataset.DS007609)
-
-### eegdash.dataset.Shin2017A
-
-alias of [`NM000267`](eegdash.dataset.NM000267.md#eegdash.dataset.NM000267)
-
-### eegdash.dataset.Shin2017B
-
-alias of [`NM000268`](eegdash.dataset.NM000268.md#eegdash.dataset.NM000268)
-
-### eegdash.dataset.SleepEDF
-
-alias of [`NM000185`](eegdash.dataset.NM000185.md#eegdash.dataset.NM000185)
-
-### eegdash.dataset.SleepEDFExpanded
-
-alias of [`NM000185`](eegdash.dataset.NM000185.md#eegdash.dataset.NM000185)
-
-### eegdash.dataset.Somato
-
-alias of [`DS003104`](eegdash.dataset.DS003104.md#eegdash.dataset.DS003104)
-
-### eegdash.dataset.Surrey_cEEGrid_sleep
-
-alias of [`DS005207`](eegdash.dataset.DS005207.md#eegdash.dataset.DS005207)
-
-### eegdash.dataset.THINGS
-
-alias of [`DS003825`](eegdash.dataset.DS003825.md#eegdash.dataset.DS003825)
-
-### eegdash.dataset.THINGSMEG
-
-alias of [`DS004212`](eegdash.dataset.DS004212.md#eegdash.dataset.DS004212)
-
-### eegdash.dataset.THINGS_EEG
-
-alias of [`DS003825`](eegdash.dataset.DS003825.md#eegdash.dataset.DS003825)
-
-### eegdash.dataset.THINGS_MEG
-
-alias of [`DS004212`](eegdash.dataset.DS004212.md#eegdash.dataset.DS004212)
-
-### eegdash.dataset.TMNRED
-
-alias of [`DS005383`](eegdash.dataset.DS005383.md#eegdash.dataset.DS005383)
-
-### eegdash.dataset.TNO
-
-alias of [`DS004660`](eegdash.dataset.DS004660.md#eegdash.dataset.DS004660)
-
-### eegdash.dataset.TX14
-
-alias of [`DS004841`](eegdash.dataset.DS004841.md#eegdash.dataset.DS004841)
-
-### eegdash.dataset.TX15
-
-alias of [`DS004842`](eegdash.dataset.DS004842.md#eegdash.dataset.DS004842)
-
-### eegdash.dataset.TX18
-
-alias of [`DS004854`](eegdash.dataset.DS004854.md#eegdash.dataset.DS004854)
-
-### eegdash.dataset.TX20
-
-alias of [`DS004657`](eegdash.dataset.DS004657.md#eegdash.dataset.DS004657)
-
-### eegdash.dataset.Todorovic2023
-
-alias of [`DS005261`](eegdash.dataset.DS005261.md#eegdash.dataset.DS005261)
-
-### eegdash.dataset.ToonFaces
-
-alias of [`DS004324`](eegdash.dataset.DS004324.md#eegdash.dataset.DS004324)
-
-### eegdash.dataset.Touryan1999
-
-alias of [`DS004118`](eegdash.dataset.DS004118.md#eegdash.dataset.DS004118)
-
-### eegdash.dataset.Tripathy2024
-
-alias of [`DS007473`](eegdash.dataset.DS007473.md#eegdash.dataset.DS007473)
-
-### eegdash.dataset.VEPCON
-
-alias of [`DS003505`](eegdash.dataset.DS003505.md#eegdash.dataset.DS003505)
-
-### eegdash.dataset.Veillette2019
-
-alias of [`DS005403`](eegdash.dataset.DS005403.md#eegdash.dataset.DS005403)
-
-### eegdash.dataset.Vianney2025
-
-alias of [`DS007358`](eegdash.dataset.DS007358.md#eegdash.dataset.DS007358)
-
-### eegdash.dataset.VisualContextTrajectory
-
-alias of [`DS004603`](eegdash.dataset.DS004603.md#eegdash.dataset.DS004603)
-
-### eegdash.dataset.VisualContextTrajectory_v2
-
-alias of [`DS006817`](eegdash.dataset.DS006817.md#eegdash.dataset.DS006817)
-
-### eegdash.dataset.WBCICSHU
-
-alias of [`NM000246`](eegdash.dataset.NM000246.md#eegdash.dataset.NM000246)
-
-### eegdash.dataset.WBCIC_SHU
-
-alias of [`NM000246`](eegdash.dataset.NM000246.md#eegdash.dataset.NM000246)
-
-### eegdash.dataset.WIRED_ICM
-
-alias of [`DS004993`](eegdash.dataset.DS004993.md#eegdash.dataset.DS004993)
-
-### eegdash.dataset.Wakeman2015
-
-alias of [`DS000117`](eegdash.dataset.DS000117.md#eegdash.dataset.DS000117)
-
-### eegdash.dataset.WakemanHenson
-
-alias of [`DS000117`](eegdash.dataset.DS000117.md#eegdash.dataset.DS000117)
-
-### eegdash.dataset.WakemanHenson_EEG_MEG
-
-alias of [`DS002718`](eegdash.dataset.DS002718.md#eegdash.dataset.DS002718)
-
-### eegdash.dataset.Weibo2014
-
-alias of [`NM000146`](eegdash.dataset.NM000146.md#eegdash.dataset.NM000146)
-
-### eegdash.dataset.Weisend2007
-
-alias of [`DS004107`](eegdash.dataset.DS004107.md#eegdash.dataset.DS004107)
-
-### eegdash.dataset.Wimmer2024
-
-alias of [`DS004398`](eegdash.dataset.DS004398.md#eegdash.dataset.DS004398)
-
-### eegdash.dataset.Yang2025
-
-alias of [`NM000348`](eegdash.dataset.NM000348.md#eegdash.dataset.NM000348)
-
-### eegdash.dataset.Yu2019
-
-alias of [`DS006386`](eegdash.dataset.DS006386.md#eegdash.dataset.DS006386)
-
-### eegdash.dataset.Yucel2014
-
-alias of [`DS005929`](eegdash.dataset.DS005929.md#eegdash.dataset.DS005929)
-
-### eegdash.dataset.Yucel2015
-
-alias of [`DS005776`](eegdash.dataset.DS005776.md#eegdash.dataset.DS005776)
-
-### eegdash.dataset.Zhang2025
-
-alias of [`NM000211`](eegdash.dataset.NM000211.md#eegdash.dataset.NM000211)
-
-### eegdash.dataset.Zhao2024
-
-alias of [`DS005473`](eegdash.dataset.DS005473.md#eegdash.dataset.DS005473)
-
-### eegdash.dataset.Zhou2016_NEMAR
-
-alias of [`NM000226`](eegdash.dataset.NM000226.md#eegdash.dataset.NM000226)
-
-### eegdash.dataset.Zhou2024
-
-alias of [`DS007471`](eegdash.dataset.DS007471.md#eegdash.dataset.DS007471)
-
-### eegdash.dataset.catFR_Categorized_Free_Recall
-
-alias of [`DS004809`](eegdash.dataset.DS004809.md#eegdash.dataset.DS004809)
-
-### eegdash.dataset.catFR_closed_loop
-
-alias of [`DS005558`](eegdash.dataset.DS005558.md#eegdash.dataset.DS005558)
-
-### eegdash.dataset.catFR_open_loop
-
-alias of [`DS005491`](eegdash.dataset.DS005491.md#eegdash.dataset.DS005491)
-
-### eegdash.dataset.catFR_stim
-
-alias of [`DS005491`](eegdash.dataset.DS005491.md#eegdash.dataset.DS005491)
-
-### eegdash.dataset.eldBETA
-
-alias of [`NM000130`](eegdash.dataset.NM000130.md#eegdash.dataset.NM000130)
-
-### eegdash.dataset.emg2qwerty
-
-alias of [`NM000104`](eegdash.dataset.NM000104.md#eegdash.dataset.NM000104)
-
-### eegdash.dataset.neuromorph
-
-alias of [`DS005241`](eegdash.dataset.DS005241.md#eegdash.dataset.DS005241)
-
-### eegdash.dataset.ocular_ldt
-
-alias of [`DS002312`](eegdash.dataset.DS002312.md#eegdash.dataset.DS002312)
-
-### eegdash.dataset.pyFR
-
-alias of [`DS004865`](eegdash.dataset.DS004865.md#eegdash.dataset.DS004865)
 
 ### eegdash.dataset.register_openneuro_datasets(summary_file: str | Path | None = None, , base_class=None, namespace: Dict[str, Any] | None = None, add_to_all: bool = True, from_api: bool = False, api_url: str = 'https://data.eegdash.org/api', database: str = 'eegdash') → Dict[str, type]
 

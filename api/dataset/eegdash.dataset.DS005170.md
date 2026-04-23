@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: eeg Subjects: 5 Recordings: 225 License: CC0 Source: openneuro Citations: 1.0
 
-Metadata: Complete (90%)
+Metadata: Good (80%)
 
 ## Quickstart
 
@@ -190,8 +190,8 @@ Thank you for using the Chisco!
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Chisco                                                                                                                                                                            |
 | Author (year)  | `Zhang2024_Chisco`                                                                                                                                                                |
-| Canonical      | `Chisco`                                                                                                                                                                          |
-| Importable as  | `DS005170`, `Zhang2024_Chisco`, `Chisco`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005170`, `Zhang2024_Chisco`                                                                                                                                                    |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding                                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -215,9 +215,9 @@ Thank you for using the Chisco!
 - Recordings: 225
 - Tasks: 1
 
-- Channels: 134
+- Channels: Varies
 - Sampling rate (Hz): Varies
-- Duration (hours): 104.28733333333334
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -249,9 +249,9 @@ Chisco
 * **Author (year):**
   `Zhang2024_Chisco`
 * **Canonical:**
-  `Chisco`
+  —
 
-Also importable as: `DS005170`, `Zhang2024_Chisco`, `Chisco`.
+Also importable as: `DS005170`, `Zhang2024_Chisco`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 5; recordings: 225; tasks: 1.

@@ -141,8 +141,8 @@ Note: Visual stimuli processing for the English and Chinese conditions was handl
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset                                                                                                          |
 | Author (year)  | `Ma2024`                                                                                                                                                                          |
-| Canonical      | `LPP`                                                                                                                                                                             |
-| Importable as  | `DS005345`, `Ma2024`, `LPP`                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005345`, `Ma2024`                                                                                                                                                              |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Zhengwu Ma, Nan Wang, Jixing Li                                                                                                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -168,7 +168,7 @@ Note: Visual stimuli processing for the English and Chinese conditions was handl
 
 - Channels: 64
 - Sampling rate (Hz): 500.0
-- Duration (hours): 19.983922222222223
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory
@@ -200,9 +200,9 @@ Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset
 * **Author (year):**
   `Ma2024`
 * **Canonical:**
-  `LPP`
+  —
 
-Also importable as: `DS005345`, `Ma2024`, `LPP`.
+Also importable as: `DS005345`, `Ma2024`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 26; recordings: 26; tasks: 1.

@@ -93,8 +93,8 @@ All code supporting the dataset can be found in the `code/` folder.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes                                                              |
 | Author (year)  | `Pascucci2021`                                                                                                                                                                    |
-| Canonical      | `VEPCON`                                                                                                                                                                          |
-| Importable as  | `DS003505`, `Pascucci2021`, `VEPCON`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003505`, `Pascucci2021`                                                                                                                                                        |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann, Gijs Plomp                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -152,9 +152,9 @@ VEPCON: Source imaging of high-density visual evoked potentials with multi-scale
 * **Author (year):**
   `Pascucci2021`
 * **Canonical:**
-  `VEPCON`
+  —
 
-Also importable as: `DS003505`, `Pascucci2021`, `VEPCON`.
+Also importable as: `DS003505`, `Pascucci2021`.
 
 Modality: `eeg`.
 Subjects: 19; recordings: 37; tasks: 2.

@@ -85,8 +85,8 @@ Preprocessed data from Experiment 1 of Ester & Pytel “Changes in behavioral pr
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Changes in behavioral priority influence the accessibility of working memory content - Experiment 1                                                                               |
 | Author (year)  | `Ester2023_Changes_behavioral`                                                                                                                                                    |
-| Canonical      | `Ester2024_E1`                                                                                                                                                                    |
-| Importable as  | `DS004521`, `Ester2023_Changes_behavioral`, `Ester2024_E1`                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004521`, `Ester2023_Changes_behavioral`                                                                                                                                        |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Edward Ester, Paige Pytel                                                                                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Changes in behavioral priority influence the accessibility of working memory con
 * **Author (year):**
   `Ester2023_Changes_behavioral`
 * **Canonical:**
-  `Ester2024_E1`
+  —
 
-Also importable as: `DS004521`, `Ester2023_Changes_behavioral`, `Ester2024_E1`.
+Also importable as: `DS004521`, `Ester2023_Changes_behavioral`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 34; recordings: 34; tasks: 1.

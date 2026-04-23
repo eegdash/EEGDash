@@ -88,8 +88,8 @@ Go to [GitHub Repository](https://github.com/Eslam21/ArEEG-an-Open-Access-Arabic
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ArEEG: Arabic Inner Speech EEG dataset                                                                                                                                            |
 | Author (year)  | `Metwalli2024`                                                                                                                                                                    |
-| Canonical      | `ArEEG`                                                                                                                                                                           |
-| Importable as  | `DS005262`, `Metwalli2024`, `ArEEG`                                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005262`, `Metwalli2024`                                                                                                                                                        |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat, Anas Ahmed, Amro Omar, Sahar Selim                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -115,7 +115,7 @@ Go to [GitHub Repository](https://github.com/Eslam21/ArEEG-an-Open-Access-Arabic
 
 - Channels: 8
 - Sampling rate (Hz): 250.0
-- Duration (hours): 25.04766111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —
@@ -147,9 +147,9 @@ ArEEG: Arabic Inner Speech EEG dataset
 * **Author (year):**
   `Metwalli2024`
 * **Canonical:**
-  `ArEEG`
+  —
 
-Also importable as: `DS005262`, `Metwalli2024`, `ArEEG`.
+Also importable as: `DS005262`, `Metwalli2024`.
 
 Modality: `eeg`.
 Subjects: 12; recordings: 186; tasks: 1.

@@ -207,8 +207,8 @@ We would like to express our gratitude to all participants and their families, w
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Healthy Brain Network (HBN) EEG - Release 8                                                                                                                                       |
 | Author (year)  | `Shirazi2024_R8`                                                                                                                                                                  |
-| Canonical      | `HBN_r8`                                                                                                                                                                          |
-| Importable as  | `DS005512`, `Shirazi2024_R8`, `HBN_r8`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005512`, `Shirazi2024_R8`                                                                                                                                                      |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig                                     |
 | License        | CC-BY-SA 4.0                                                                                                                                                                      |
@@ -266,9 +266,9 @@ Healthy Brain Network (HBN) EEG - Release 8
 * **Author (year):**
   `Shirazi2024_R8`
 * **Canonical:**
-  `HBN_r8`
+  —
 
-Also importable as: `DS005512`, `Shirazi2024_R8`, `HBN_r8`.
+Also importable as: `DS005512`, `Shirazi2024_R8`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Development`.
 Subjects: 257; recordings: 2320; tasks: 10.

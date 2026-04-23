@@ -86,8 +86,8 @@ For the experiment,  the participants were indicated to close their eyes indicat
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Music Listening- Genre EEG dataset (MUSIN-G)                                                                                                                                      |
 | Author (year)  | `Miyapuram2021`                                                                                                                                                                   |
-| Canonical      | `MUSING`                                                                                                                                                                          |
-| Importable as  | `DS003774`, `Miyapuram2021`, `MUSING`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003774`, `Miyapuram2021`                                                                                                                                                       |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma, Prashant Lawhatre, Dhananjay Sonawane, Derek Lomas                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ Music Listening- Genre EEG dataset (MUSIN-G)
 * **Author (year):**
   `Miyapuram2021`
 * **Canonical:**
-  `MUSING`
+  —
 
-Also importable as: `DS003774`, `Miyapuram2021`, `MUSING`.
+Also importable as: `DS003774`, `Miyapuram2021`.
 
 Modality: `eeg`; Experiment type: `Affect`; Subject type: `Healthy`.
 Subjects: 20; recordings: 240; tasks: 1.

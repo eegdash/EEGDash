@@ -86,8 +86,8 @@ We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling 
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The “Podcast” ECoG dataset                                                                                                                                                                                                                             |
 | Author (year)  | `Zada2024`                                                                                                                                                                                                                                             |
-| Canonical      | `Podcast`                                                                                                                                                                                                                                              |
-| Importable as  | `DS005574`, `Zada2024`, `Podcast`                                                                                                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                                                                                      |
+| Importable as  | `DS005574`, `Zada2024`                                                                                                                                                                                                                                 |
 | Year           | 2024                                                                                                                                                                                                                                                   |
 | Authors        | Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein, Sebastian Michelmann, Haocheng Wang, Liat Hasenfratz, Werner Doyle, Daniel Friedman, Patricia Dugan, Lucia Melloni, Sasha Devore, Orrin Devinsky, Adeen Flinker, Uri Hasson |
 | License        | CC0                                                                                                                                                                                                                                                    |
@@ -111,7 +111,7 @@ We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling 
 - Recordings: 9
 - Tasks: 1
 
-- Channels: 178, 174, 114, 138, 264, 124, 167, 91, 205
+- Channels: 138, 174, 91, 178, 124, 114, 205, 264, 167
 - Sampling rate (Hz): 512.0 (8), 2048.0
 - Duration (hours): 4.499995524088542
 
@@ -145,9 +145,9 @@ The “Podcast” ECoG dataset
 * **Author (year):**
   `Zada2024`
 * **Canonical:**
-  `Podcast`
+  —
 
-Also importable as: `DS005574`, `Zada2024`, `Podcast`.
+Also importable as: `DS005574`, `Zada2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Unknown`.
 Subjects: 9; recordings: 9; tasks: 1.

@@ -102,8 +102,8 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Basis profile curve identification to understand electrical stimulation effects in human brain networks                                                                           |
 | Author (year)  | `Hermes2021`                                                                                                                                                                      |
-| Canonical      | `Miller2021`                                                                                                                                                                      |
-| Importable as  | `DS003708`, `Hermes2021`, `Miller2021`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003708`, `Hermes2021`                                                                                                                                                          |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic                                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -161,9 +161,9 @@ Basis profile curve identification to understand electrical stimulation effects 
 * **Author (year):**
   `Hermes2021`
 * **Canonical:**
-  `Miller2021`
+  —
 
-Also importable as: `DS003708`, `Hermes2021`, `Miller2021`.
+Also importable as: `DS003708`, `Hermes2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

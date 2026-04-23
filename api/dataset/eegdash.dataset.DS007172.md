@@ -150,8 +150,8 @@ Left Hand & Flat Roof: 22
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG-Asymmetries Dataset                                                                                                                                                           |
 | Author (year)  | `Reinke2026`                                                                                                                                                                      |
-| Canonical      | `EEGAsymmetries`                                                                                                                                                                  |
-| Importable as  | `DS007172`, `Reinke2026`, `EEGAsymmetries`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007172`, `Reinke2026`                                                                                                                                                          |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Petunia Reinke, Lisa Deneke, Sebastian Ocklenburg                                                                                                                                 |
 | License        | CC0                                                                                                                                                                               |
@@ -209,9 +209,9 @@ EEG-Asymmetries Dataset
 * **Author (year):**
   `Reinke2026`
 * **Canonical:**
-  `EEGAsymmetries`
+  —
 
-Also importable as: `DS007172`, `Reinke2026`, `EEGAsymmetries`.
+Also importable as: `DS007172`, `Reinke2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 100; recordings: 501; tasks: 6.

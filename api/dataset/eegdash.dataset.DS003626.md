@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: eeg Subjects: 10 Recordings: 30 License: CC0 Source: openneuro Citations: 6.0
 
-Metadata: Complete (90%)
+Metadata: Good (80%)
 
 ## Quickstart
 
@@ -120,9 +120,9 @@ Please contact us at this e-mail address if you have any doubts: [nnieto@sinc.un
 - Recordings: 30
 - Tasks: 1
 
-- Channels: 137
+- Channels: Varies
 - Sampling rate (Hz): Varies
-- Duration (hours): 12.951944444444443
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

@@ -86,8 +86,8 @@ According to the language of thought hypothesis, regular sequences are compresse
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ABSeqMEG                                                                                                                                                                          |
 | Author (year)  | `Planton2023`                                                                                                                                                                     |
-| Canonical      | `ABSeqMEG`                                                                                                                                                                        |
-| Importable as  | `DS004483`, `Planton2023`, `ABSeqMEG`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004483`, `Planton2023`                                                                                                                                                         |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Samuel Planton\*, Fosca Al Roumi\*, Liping Wang, Stanislas Dehaene                                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ ABSeqMEG
 * **Author (year):**
   `Planton2023`
 * **Canonical:**
-  `ABSeqMEG`
+  —
 
-Also importable as: `DS004483`, `Planton2023`, `ABSeqMEG`.
+Also importable as: `DS004483`, `Planton2023`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 19; recordings: 282; tasks: 1.

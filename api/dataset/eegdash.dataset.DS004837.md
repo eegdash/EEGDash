@@ -125,7 +125,7 @@ National Institutes of Health (R01 MH108568 and MH113533)
 - Tasks: 1
 
 - Channels: Varies
-- Sampling rate (Hz): 3000 (98), 1000 (8)
+- Sampling rate (Hz): 3000.0 (98), 1000.0 (8)
 - Duration (hours): Not calculated
 
 - Pathology: Schizophrenia/Psychosis

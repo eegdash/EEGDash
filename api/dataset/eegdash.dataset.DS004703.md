@@ -130,7 +130,7 @@ Anatomical scans for particpant SD012 are not available due to excessive movemen
 - Recordings: 11
 - Tasks: 1
 
-- Channels: 148 (4), 279 (2), 276 (2), 277 (2), 280
+- Channels: 148 (4), 276 (2), 277 (2), 279 (2), 280
 - Sampling rate (Hz): 1024.0 (7), 512.0 (4)
 - Duration (hours): 9.091059027777778
 

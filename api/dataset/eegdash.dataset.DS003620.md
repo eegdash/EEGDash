@@ -283,8 +283,8 @@ Java Version: Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions                                                                                         |
 | Author (year)  | `Liebherr2021`                                                                                                                                                                              |
-| Canonical      | `Runabout`                                                                                                                                                                                  |
-| Importable as  | `DS003620`, `Liebherr2021`, `Runabout`                                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                           |
+| Importable as  | `DS003620`, `Liebherr2021`                                                                                                                                                                  |
 | Year           | 2021                                                                                                                                                                                        |
 | Authors        | Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan, Caitlin A. Howlett, Maarten A. Immink, Mark Kohler, Matthias Schlesewsky, Ina Bornkessel-Schlesewsky |
 | License        | CC0                                                                                                                                                                                         |
@@ -342,9 +342,9 @@ Runabout: A mobile EEG study of auditory oddball processing in laboratory and re
 * **Author (year):**
   `Liebherr2021`
 * **Canonical:**
-  `Runabout`
+  —
 
-Also importable as: `DS003620`, `Liebherr2021`, `Runabout`.
+Also importable as: `DS003620`, `Liebherr2021`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 44; recordings: 100; tasks: 1.

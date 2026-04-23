@@ -143,8 +143,8 @@ longer driving task in a sparse environment.
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Traffic Complexity                                                                                                                                                                                             |
 | Author (year)  | `Touryan2022_BCIT_Traffic`                                                                                                                                                                                          |
-| Canonical      | `BCIT_Traffic_Complexity`                                                                                                                                                                                           |
-| Importable as  | `DS004123`, `Touryan2022_BCIT_Traffic`, `BCIT_Traffic_Complexity`                                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                                                   |
+| Importable as  | `DS004123`, `Touryan2022_BCIT_Traffic`                                                                                                                                                                              |
 | Year           | 2022                                                                                                                                                                                                                |
 | Authors        | Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Justin Brooks (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) |
 | License        | CC0                                                                                                                                                                                                                 |
@@ -202,9 +202,9 @@ BCIT Traffic Complexity
 * **Author (year):**
   `Touryan2022_BCIT_Traffic`
 * **Canonical:**
-  `BCIT_Traffic_Complexity`
+  —
 
-Also importable as: `DS004123`, `Touryan2022_BCIT_Traffic`, `BCIT_Traffic_Complexity`.
+Also importable as: `DS004123`, `Touryan2022_BCIT_Traffic`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 29; recordings: 30; tasks: 1.

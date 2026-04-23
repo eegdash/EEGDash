@@ -129,7 +129,7 @@ Kappenman, E. S., Farrens, J. L., Zhang, W., Stewart, A. X., & Luck, S. J. (2021
 
 - Channels: 30
 - Sampling rate (Hz): 500.0
-- Duration (hours): 50.88856666666666
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Multisensory

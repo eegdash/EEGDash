@@ -113,7 +113,7 @@ Data are in the iEEG-BIDS format with binary files and channel maps included in 
 
 - Channels: 64
 - Sampling rate (Hz): 30000.0
-- Duration (hours): 0.0522222222222222
+- Duration (hours): Not calculated
 
 - Pathology: Surgery
 - Modality: Other

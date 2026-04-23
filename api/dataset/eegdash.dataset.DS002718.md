@@ -133,8 +133,8 @@ Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, U
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Face processing EEG dataset for EEGLAB                                                                                                                                            |
 | Author (year)  | `Wakeman2020`                                                                                                                                                                     |
-| Canonical      | `Wakeman2015`, `WakemanHenson_EEG_MEG`                                                                                                                                            |
-| Importable as  | `DS002718`, `Wakeman2020`, `Wakeman2015`, `WakemanHenson_EEG_MEG`                                                                                                                 |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS002718`, `Wakeman2020`                                                                                                                                                         |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Daniel G. Wakeman, Richard N Henson                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -192,9 +192,9 @@ Face processing EEG dataset for EEGLAB
 * **Author (year):**
   `Wakeman2020`
 * **Canonical:**
-  `WakemanHenson_EEG_MEG`
+  —
 
-Also importable as: `DS002718`, `Wakeman2020`, `WakemanHenson_EEG_MEG`.
+Also importable as: `DS002718`, `Wakeman2020`.
 
 Modality: `eeg`.
 Subjects: 18; recordings: 18; tasks: 1.

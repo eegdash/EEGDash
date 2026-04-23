@@ -110,7 +110,7 @@ This mobile brain body imaging (MoBI) experiment investigates brain activity cor
 - Recordings: 30
 - Tasks: 1
 
-- Channels: 260 (5), 250 (3), 263 (3), 255 (3), 257 (3), 258 (3), 259 (2), 256, 249, 252, 265, 254, 253, 261, 262
+- Channels: 260 (5), 250 (3), 257 (3), 263 (3), 258 (3), 255 (3), 259 (2), 256, 253, 262, 249, 254, 252, 265, 261
 - Sampling rate (Hz): 512.0
 - Duration (hours): 26.898611111111112
 

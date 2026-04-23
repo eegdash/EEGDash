@@ -94,8 +94,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Delayed Auditory Feedback EEG/EGG                                                                                                                                                 |
 | Author (year)  | `Veillette2024`                                                                                                                                                                   |
-| Canonical      | `Veillette2019`                                                                                                                                                                   |
-| Importable as  | `DS005403`, `Veillette2024`, `Veillette2019`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005403`, `Veillette2024`                                                                                                                                                       |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H.                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -153,9 +153,9 @@ Delayed Auditory Feedback EEG/EGG
 * **Author (year):**
   `Veillette2024`
 * **Canonical:**
-  `Veillette2019`
+  —
 
-Also importable as: `DS005403`, `Veillette2024`, `Veillette2019`.
+Also importable as: `DS005403`, `Veillette2024`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 32; recordings: 32; tasks: 1.

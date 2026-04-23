@@ -144,8 +144,8 @@ For participant 34, the S11 marker was also not recorded because he/she forgot t
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroimaging (PEARL-Neuro) Database                                                                        |
 | Author (year)  | `Patrycja2023_Polish`                                                                                                                                                             |
-| Canonical      | `PEARLNeuro`                                                                                                                                                                      |
-| Importable as  | `DS004796`, `Patrycja2023_Polish`, `PEARLNeuro`                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004796`, `Patrycja2023_Polish`                                                                                                                                                 |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Dzianok Patrycja, Kublik Ewa                                                                                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -171,7 +171,7 @@ For participant 34, the S11 marker was also not recorded because he/she forgot t
 
 - Channels: 127
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 43.99488333333333
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —
@@ -203,9 +203,9 @@ A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroim
 * **Author (year):**
   `Patrycja2023_Polish`
 * **Canonical:**
-  `PEARLNeuro`
+  —
 
-Also importable as: `DS004796`, `Patrycja2023_Polish`, `PEARLNeuro`.
+Also importable as: `DS004796`, `Patrycja2023_Polish`.
 
 Modality: `eeg`.
 Subjects: 79; recordings: 235; tasks: 3.

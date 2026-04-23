@@ -275,7 +275,7 @@ CODE:
 
 - Channels: 128
 - Sampling rate (Hz): 512.0
-- Duration (hours): 36.86361111111111
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory

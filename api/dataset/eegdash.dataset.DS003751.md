@@ -106,8 +106,8 @@ Dataset_description file described the metadata for the dataset. Participants re
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Dataset on Emotion with Naturalistic Stimuli (DENS)                                                                                                                               |
 | Author (year)  | `Mishra2021`                                                                                                                                                                      |
-| Canonical      | `DENS`                                                                                                                                                                            |
-| Importable as  | `DS003751`, `Mishra2021`, `DENS`                                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003751`, `Mishra2021`                                                                                                                                                          |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -165,9 +165,9 @@ Dataset on Emotion with Naturalistic Stimuli (DENS)
 * **Author (year):**
   `Mishra2021`
 * **Canonical:**
-  `DENS`
+  —
 
-Also importable as: `DS003751`, `Mishra2021`, `DENS`.
+Also importable as: `DS003751`, `Mishra2021`.
 
 Modality: `eeg`.
 Subjects: 38; recordings: 38; tasks: 1.

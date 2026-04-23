@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Anticipatory differences between Attention and Expectation                                                                                                                        |
 | Author (year)  | `Penalver2023`                                                                                                                                                                    |
-| Canonical      | `Penalver2024`                                                                                                                                                                    |
-| Importable as  | `DS004502`, `Penalver2023`, `Penalver2024`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004502`, `Penalver2023`                                                                                                                                                        |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz                                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Anticipatory differences between Attention and Expectation
 * **Author (year):**
   `Penalver2023`
 * **Canonical:**
-  `Penalver2024`
+  —
 
-Also importable as: `DS004502`, `Penalver2023`, `Penalver2024`.
+Also importable as: `DS004502`, `Penalver2023`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 48; recordings: 48; tasks: 1.

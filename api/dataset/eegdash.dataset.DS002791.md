@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | DataSet1                                                                                                                                                                          |
 | Author (year)  | `Mheich2020_DataSet1`                                                                                                                                                             |
-| Canonical      | `Mheich2020`                                                                                                                                                                      |
-| Importable as  | `DS002791`, `Mheich2020_DataSet1`, `Mheich2020`                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS002791`, `Mheich2020_DataSet1`                                                                                                                                                 |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling, Mahmoud Hassan                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ DataSet1
 * **Author (year):**
   `Mheich2020_DataSet1`
 * **Canonical:**
-  `Mheich2020`
+  —
 
-Also importable as: `DS002791`, `Mheich2020_DataSet1`, `Mheich2020`.
+Also importable as: `DS002791`, `Mheich2020_DataSet1`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 23; recordings: 92; tasks: 0.

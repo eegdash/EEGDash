@@ -87,8 +87,8 @@ For access to the full dataset, please refer to the dataset DOI.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEGEyeNet Dataset                                                                                                                                                                 |
 | Author (year)  | `Plomecka2025`                                                                                                                                                                    |
-| Canonical      | `EEGEyeNet`                                                                                                                                                                       |
-| Importable as  | `DS005872`, `Plomecka2025`, `EEGEyeNet`                                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005872`, `Plomecka2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -146,9 +146,9 @@ EEGEyeNet Dataset
 * **Author (year):**
   `Plomecka2025`
 * **Canonical:**
-  `EEGEyeNet`
+  —
 
-Also importable as: `DS005872`, `Plomecka2025`, `EEGEyeNet`.
+Also importable as: `DS005872`, `Plomecka2025`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.

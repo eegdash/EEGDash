@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Logical reasoning study                                                                                                                                                           |
 | Author (year)  | `Cognitive2021`                                                                                                                                                                   |
-| Canonical      | `Maestu2021`                                                                                                                                                                      |
-| Importable as  | `DS003483`, `Cognitive2021`, `Maestu2021`                                                                                                                                         |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003483`, `Cognitive2021`                                                                                                                                                       |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Logical reasoning study
 * **Author (year):**
   `Cognitive2021`
 * **Canonical:**
-  `Maestu2021`
+  —
 
-Also importable as: `DS003483`, `Cognitive2021`, `Maestu2021`.
+Also importable as: `DS003483`, `Cognitive2021`.
 
 Modality: `meg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 21; recordings: 41; tasks: 2.

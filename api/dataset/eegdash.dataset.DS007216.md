@@ -148,8 +148,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | A multi-session simultaneous EEG-fMRI dataset with online experience sampling                                                                                                     |
 | Author (year)  | `Kucyi2026`                                                                                                                                                                       |
-| Canonical      | `Kucyi2024`                                                                                                                                                                       |
-| Importable as  | `DS007216`, `Kucyi2026`, `Kucyi2024`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007216`, `Kucyi2026`                                                                                                                                                           |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Aaron Kucyi, Lotus Shareef-Trudeau, David Braun, Huiling Peng, Tiara Bounyarith, Janet Z. Li                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -207,9 +207,9 @@ A multi-session simultaneous EEG-fMRI dataset with online experience sampling
 * **Author (year):**
   `Kucyi2026`
 * **Canonical:**
-  `Kucyi2024`
+  —
 
-Also importable as: `DS007216`, `Kucyi2026`, `Kucyi2024`.
+Also importable as: `DS007216`, `Kucyi2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 24; recordings: 187; tasks: 2.

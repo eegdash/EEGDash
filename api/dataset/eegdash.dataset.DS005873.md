@@ -129,8 +129,8 @@ The complete dataset contains around 11 640 hours of wearable data. Four differe
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | SeizeIT2                                                                                                                                                                                                                     |
 | Author (year)  | `Bhagubai2025`                                                                                                                                                                                                               |
-| Canonical      | `SeizeIT2`                                                                                                                                                                                                                   |
-| Importable as  | `DS005873`, `Bhagubai2025`, `SeizeIT2`                                                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                                                            |
+| Importable as  | `DS005873`, `Bhagubai2025`                                                                                                                                                                                                   |
 | Year           | 2025                                                                                                                                                                                                                         |
 | Authors        | Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang, Lieven Lagae, Katrien Jansen, Andreas Schulze-Bonhage, Francisco Sales, Benno Mahler, Yvonne Weber, Wim Van Paesschen, Maarten De Vos |
 | License        | CC0                                                                                                                                                                                                                          |
@@ -188,9 +188,9 @@ SeizeIT2
 * **Author (year):**
   `Bhagubai2025`
 * **Canonical:**
-  `SeizeIT2`
+  —
 
-Also importable as: `DS005873`, `Bhagubai2025`, `SeizeIT2`.
+Also importable as: `DS005873`, `Bhagubai2025`.
 
 Modality: `eeg, emg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 125; recordings: 5654; tasks: 1.

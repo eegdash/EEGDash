@@ -132,7 +132,7 @@ Add 80: Points displayed
 
 - Channels: 31
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 7.460555555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

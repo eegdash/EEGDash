@@ -149,8 +149,8 @@ for Current Session, Simulator Sickness Questionnaire.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Auditory Cueing                                                                                                                                                                          |
 | Author (year)  | `Garcia2022`                                                                                                                                                                                  |
-| Canonical      | `BCIT_Auditory_Cueing`                                                                                                                                                                        |
-| Importable as  | `DS004105`, `Garcia2022`, `BCIT_Auditory_Cueing`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                             |
+| Importable as  | `DS004105`, `Garcia2022`                                                                                                                                                                      |
 | Year           | 2022                                                                                                                                                                                          |
 | Authors        | Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data), Jean Vettel (data), Jonathan Touryan (curation), Kay Robbins (curation) |
 | License        | CC0                                                                                                                                                                                           |
@@ -208,9 +208,9 @@ BCIT Auditory Cueing
 * **Author (year):**
   `Garcia2022`
 * **Canonical:**
-  `BCIT_Auditory_Cueing`
+  —
 
-Also importable as: `DS004105`, `Garcia2022`, `BCIT_Auditory_Cueing`.
+Also importable as: `DS004105`, `Garcia2022`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 17; recordings: 34; tasks: 1.

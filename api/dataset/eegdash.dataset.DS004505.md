@@ -112,7 +112,7 @@ Please refer to our publication for more details.
 - Recordings: 25
 - Tasks: 1
 
-- Channels: 313 (13), 270 (4), 299 (2), 312 (2), 303, 327, 326, 340
+- Channels: 313 (13), 270 (4), 312 (2), 299 (2), 340, 326, 303, 327
 - Sampling rate (Hz): 250.0
 - Duration (hours): 30.398184444444443
 

@@ -163,7 +163,7 @@ Data curator for NEMAR version: Arnaud Delorme (UCSD, La Jolla, CA, USA)
 - Tasks: 1
 
 - Channels: 14
-- Sampling rate (Hz): 250
+- Sampling rate (Hz): 250.0
 - Duration (hours): 6.268284444444444
 
 - Pathology: Not specified

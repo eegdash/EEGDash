@@ -138,7 +138,7 @@ Add 120: Red X (wrong key pressed)
 
 - Channels: 31
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 11.451405555555557
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

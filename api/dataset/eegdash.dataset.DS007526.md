@@ -165,8 +165,8 @@ Email: [inbalm@tlvmc.gov.il](mailto:inbalm@tlvmc.gov.il)
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PD-EEG: Resting-State & Walking EEG in Parkinson’s Disease                                                                                                                        |
 | Author (year)  | `Katzir2026`                                                                                                                                                                      |
-| Canonical      | `PD_EEG`, `PDEEG`                                                                                                                                                                 |
-| Importable as  | `DS007526`, `Katzir2026`, `PD_EEG`, `PDEEG`                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007526`, `Katzir2026`                                                                                                                                                          |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Zoya Katzir, Daniel Vered, Inbal Maidan ([inbalm@tlvmc.gov.il](mailto:inbalm@tlvmc.gov.il))                                                                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -224,9 +224,9 @@ PD-EEG: Resting-State & Walking EEG in Parkinson’s Disease
 * **Author (year):**
   `Katzir2026`
 * **Canonical:**
-  `PD_EEG`, `PDEEG`
+  —
 
-Also importable as: `DS007526`, `Katzir2026`, `PD_EEG`, `PDEEG`.
+Also importable as: `DS007526`, `Katzir2026`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Parkinson's`.
 Subjects: 144; recordings: 277; tasks: 2.

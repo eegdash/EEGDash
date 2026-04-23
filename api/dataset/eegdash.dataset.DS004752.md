@@ -147,7 +147,7 @@ bids-starter-kid and custom Matlab scripts were used to convert the dataset into
 - Recordings: 136
 - Tasks: 1
 
-- Channels: 64 (34), 8 (16), 20 (15), 21 (14), 19 (10), 10 (7), 46 (6), 68 (6), 36 (6), 23 (6), 62 (4), 48 (4), 32 (3), 40 (3), 80 (2)
+- Channels: 64 (34), 8 (16), 20 (15), 21 (14), 19 (10), 10 (7), 46 (6), 68 (6), 36 (6), 23 (6), 48 (4), 62 (4), 32 (3), 40 (3), 80 (2)
 - Sampling rate (Hz): 2000.0 (40), 4000.0 (40), 200.0 (36), 4096.0 (20)
 - Duration (hours): 0.3022222222222222
 

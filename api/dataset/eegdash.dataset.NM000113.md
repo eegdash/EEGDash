@@ -175,7 +175,7 @@ analysis).
 - Tasks: 1
 
 - Channels: 64
-- Sampling rate (Hz): 256
+- Sampling rate (Hz): 256.0
 - Duration (hours): 5.175732421875
 
 - Pathology: Not specified

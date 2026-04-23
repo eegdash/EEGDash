@@ -101,8 +101,8 @@ If you use this dataset in your research, please cite the original authors.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | tACS for Patients with Post-Stroke Anomia                                                                                                                                         |
 | Author (year)  | `Martzoukou2026_tACS_Patients`                                                                                                                                                    |
-| Canonical      | `Martzoukou2024_Post_A`                                                                                                                                                           |
-| Importable as  | `DS007315`, `Martzoukou2026_tACS_Patients`, `Martzoukou2024_Post_A`                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007315`, `Martzoukou2026_tACS_Patients`                                                                                                                                        |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia, Alexandre Aksenov, Anne Beuter, Grigorios Nasios                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -160,9 +160,9 @@ tACS for Patients with Post-Stroke Anomia
 * **Author (year):**
   `Martzoukou2026_tACS_Patients`
 * **Canonical:**
-  `Martzoukou2024_Post_A`
+  —
 
-Also importable as: `DS007315`, `Martzoukou2026_tACS_Patients`, `Martzoukou2024_Post_A`.
+Also importable as: `DS007315`, `Martzoukou2026_tACS_Patients`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Other`.
 Subjects: 2; recordings: 14; tasks: 1.

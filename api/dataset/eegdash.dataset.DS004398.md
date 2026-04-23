@@ -88,8 +88,8 @@ Post triggers:  [Info to be added]
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | planmemreplay                                                                                                                                                                     |
 | Author (year)  | `Wimmer2023`                                                                                                                                                                      |
-| Canonical      | `Wimmer2024`                                                                                                                                                                      |
-| Importable as  | `DS004398`, `Wimmer2023`, `Wimmer2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004398`, `Wimmer2023`                                                                                                                                                          |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | 1. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan                                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ planmemreplay
 * **Author (year):**
   `Wimmer2023`
 * **Canonical:**
-  `Wimmer2024`
+  —
 
-Also importable as: `DS004398`, `Wimmer2023`, `Wimmer2024`.
+Also importable as: `DS004398`, `Wimmer2023`.
 
 Modality: `meg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

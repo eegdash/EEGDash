@@ -91,8 +91,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | SINGSING                                                                                                                                                                          |
 | Author (year)  | `Chanoine2025`                                                                                                                                                                    |
-| Canonical      | `SINGSING`                                                                                                                                                                        |
-| Importable as  | `DS006629`, `Chanoine2025`, `SINGSING`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006629`, `Chanoine2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Valerie Chanoine, Jean-Michel Badier, Mireille Besson, Talya Inbar                                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -150,9 +150,9 @@ SINGSING
 * **Author (year):**
   `Chanoine2025`
 * **Canonical:**
-  `SINGSING`
+  —
 
-Also importable as: `DS006629`, `Chanoine2025`, `SINGSING`.
+Also importable as: `DS006629`, `Chanoine2025`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 38; tasks: 2.

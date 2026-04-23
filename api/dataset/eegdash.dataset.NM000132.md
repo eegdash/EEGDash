@@ -170,8 +170,8 @@ For other questions about the ERP CORE, contact us at [erpbootcamp@gmail.com](ma
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ERP CORE                                                                                                                                                                                 |
 | Author (year)  | `Kappenman2021`                                                                                                                                                                          |
-| Canonical      | `ERPCORE`, `ERP_CORE`                                                                                                                                                                    |
-| Importable as  | `NM000132`, `Kappenman2021`, `ERPCORE`, `ERP_CORE`                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000132`, `Kappenman2021`                                                                                                                                                              |
 | Year           | 2004                                                                                                                                                                                     |
 | Authors        | Emily S. Kappenman, Jaclyn L. Farrens, Wendy Zhang, Andrew X. Stewart, Steven J. Luck.                                                                                                   |
 | License        | CC-BY-4.0                                                                                                                                                                                |
@@ -196,7 +196,7 @@ For other questions about the ERP CORE, contact us at [erpbootcamp@gmail.com](ma
 - Tasks: 6
 
 - Channels: 33
-- Sampling rate (Hz): 1024
+- Sampling rate (Hz): 1024.0
 - Duration (hours): 37.74583333333333
 
 - Pathology: Not specified
@@ -229,9 +229,9 @@ ERP CORE
 * **Author (year):**
   `Kappenman2021`
 * **Canonical:**
-  `ERPCORE`, `ERP_CORE`
+  —
 
-Also importable as: `NM000132`, `Kappenman2021`, `ERPCORE`, `ERP_CORE`.
+Also importable as: `NM000132`, `Kappenman2021`.
 
 Modality: `eeg`.
 Subjects: 40; recordings: 240; tasks: 6.

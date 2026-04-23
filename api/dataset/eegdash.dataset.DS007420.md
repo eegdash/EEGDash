@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task                                                                  |
 | Author (year)  | `Gao2026_Light_Weight_Multi`                                                                                                                                                      |
-| Canonical      | `Gao2024`                                                                                                                                                                         |
-| Importable as  | `DS007420`, `Gao2026_Light_Weight_Multi`, `Gao2024`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007420`, `Gao2026_Light_Weight_Multi`                                                                                                                                          |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David, Yücel, Meryem                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposef
 * **Author (year):**
   `Gao2026_Light_Weight_Multi`
 * **Canonical:**
-  `Gao2024`
+  —
 
-Also importable as: `DS007420`, `Gao2026_Light_Weight_Multi`, `Gao2024`.
+Also importable as: `DS007420`, `Gao2026_Light_Weight_Multi`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 12; recordings: 60; tasks: 4.

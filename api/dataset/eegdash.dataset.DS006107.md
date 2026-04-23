@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | iEEG_Neural_spatial_volatility                                                                                                                                                    |
 | Author (year)  | `Kuroda2025`                                                                                                                                                                      |
-| Canonical      | `Kuroda2024`                                                                                                                                                                      |
-| Importable as  | `DS006107`, `Kuroda2025`, `Kuroda2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006107`, `Kuroda2025`                                                                                                                                                          |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Naoto Kuroda, Eishi Asano, Nobukazu Nakasato                                                                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -110,9 +110,9 @@ No README content is available for this dataset.
 - Recordings: 167
 - Tasks: 1
 
-- Channels: 128 (30), 112 (19), 104 (7), 108 (6), 118 (6), 124 (5), 102 (5), 132 (5), 100 (5), 120 (5), 106 (5), 138 (4), 130 (4), 58 (4), 140 (3), 110 (3), 116 (3), 34 (2), 86 (2), 136 (2), 150 (2), 84 (2), 114 (2), 64 (2), 126 (2), 144 (2), 72 (2), 98 (2), 48, 78, 68, 94, 80, 44, 134, 73, 70, 52, 109, 156, 88, 28, 74, 69, 38, 164, 82, 56, 96, 54, 133, 90, 46, 122
+- Channels: 128 (30), 112 (19), 104 (7), 108 (6), 118 (6), 120 (5), 124 (5), 106 (5), 132 (5), 102 (5), 100 (5), 138 (4), 130 (4), 58 (4), 140 (3), 116 (3), 110 (3), 136 (2), 64 (2), 150 (2), 114 (2), 126 (2), 34 (2), 144 (2), 72 (2), 84 (2), 86 (2), 98 (2), 54, 69, 82, 156, 73, 38, 164, 80, 44, 96, 28, 88, 90, 46, 52, 68, 70, 122, 134, 78, 74, 133, 109, 48, 56, 94
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 16.50111111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Sleep
@@ -144,9 +144,9 @@ iEEG_Neural_spatial_volatility
 * **Author (year):**
   `Kuroda2025`
 * **Canonical:**
-  `Kuroda2024`
+  —
 
-Also importable as: `DS006107`, `Kuroda2025`, `Kuroda2024`.
+Also importable as: `DS006107`, `Kuroda2025`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Unknown`.
 Subjects: 166; recordings: 167; tasks: 1.

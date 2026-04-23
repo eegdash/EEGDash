@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Motion-Yucel2014                                                                                                                                                                  |
 | Author (year)  | `MotionYucel2014`                                                                                                                                                                 |
-| Canonical      | `Yucel2014`, `Motion_Yucel2014`                                                                                                                                                   |
-| Importable as  | `DS005929`, `MotionYucel2014`, `Yucel2014`, `Motion_Yucel2014`                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005929`, `MotionYucel2014`                                                                                                                                                     |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Motion-Yucel2014
 * **Author (year):**
   `MotionYucel2014`
 * **Canonical:**
-  `Yucel2014`, `Motion_Yucel2014`
+  —
 
-Also importable as: `DS005929`, `MotionYucel2014`, `Yucel2014`, `Motion_Yucel2014`.
+Also importable as: `DS005929`, `MotionYucel2014`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 7; recordings: 7; tasks: 1.

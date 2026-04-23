@@ -97,8 +97,8 @@ Todorović, S., Chanoine, V., Nazarian, B., Badier, J-M., Kanzari, K., Brovelli,
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Gloups_MEG                                                                                                                                                                        |
 | Author (year)  | `Todorovic2024`                                                                                                                                                                   |
-| Canonical      | `Todorovic2023`                                                                                                                                                                   |
-| Importable as  | `DS005261`, `Todorovic2024`, `Todorovic2023`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005261`, `Todorovic2024`                                                                                                                                                       |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -156,9 +156,9 @@ Gloups_MEG
 * **Author (year):**
   `Todorovic2024`
 * **Canonical:**
-  `Todorovic2023`
+  —
 
-Also importable as: `DS005261`, `Todorovic2024`, `Todorovic2023`.
+Also importable as: `DS005261`, `Todorovic2024`.
 
 Modality: `meg`; Experiment type: `Learning`; Subject type: `Healthy`.
 Subjects: 17; recordings: 128; tasks: 2.

@@ -88,8 +88,8 @@ Sample code
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The BMI-HDEEG dataset 3                                                                                                                                                           |
 | Author (year)  | `Iwama2023_D3`                                                                                                                                                                    |
-| Canonical      | `BMI_HDEEG_D3`                                                                                                                                                                    |
-| Importable as  | `DS004447`, `Iwama2023_D3`, `BMI_HDEEG_D3`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004447`, `Iwama2023_D3`                                                                                                                                                        |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Seitaro Iwama, Masumi Morishige, Yoshikazu Takahashi, Ryotaro Hirose, Midori Kodama, Junichi Ushiba                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ The BMI-HDEEG dataset 3
 * **Author (year):**
   `Iwama2023_D3`
 * **Canonical:**
-  `BMI_HDEEG_D3`
+  —
 
-Also importable as: `DS004447`, `Iwama2023_D3`, `BMI_HDEEG_D3`.
+Also importable as: `DS004447`, `Iwama2023_D3`.
 
 Modality: `eeg`.
 Subjects: 22; recordings: 418; tasks: 1.

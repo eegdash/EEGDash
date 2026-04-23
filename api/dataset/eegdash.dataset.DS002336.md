@@ -235,7 +235,7 @@ XP1/sub-xp1\*/anat
 
 - Channels: 64
 - Sampling rate (Hz): 5000.0
-- Duration (hours): 11.043072222222222
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

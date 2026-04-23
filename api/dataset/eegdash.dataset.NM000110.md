@@ -157,8 +157,8 @@ were used in analysis (0.0 +/- 0.0 were removed from analysis).
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | CHB-MIT                                                                                                                                                                                  |
 | Author (year)  | `Connolly2010`                                                                                                                                                                           |
-| Canonical      | `CHBMIT`, `CHB_MIT`                                                                                                                                                                      |
-| Importable as  | `NM000110`, `Connolly2010`, `CHBMIT`, `CHB_MIT`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000110`, `Connolly2010`                                                                                                                                                               |
 | Year           | 2010                                                                                                                                                                                     |
 | Authors        | Jack Connolly, Herman Edwards, Blaise Bourgeois, S. Ted Treves, Ali Shoeb, John Guttag                                                                                                   |
 | License        | ODC-By-1.0                                                                                                                                                                               |
@@ -182,8 +182,8 @@ were used in analysis (0.0 +/- 0.0 were removed from analysis).
 - Recordings: 686
 - Tasks: 1
 
-- Channels: 23 (306), 28 (259), 38 (39), 22 (36), 24 (30), 29 (14), 25, 31
-- Sampling rate (Hz): 256
+- Channels: 23 (306), 28 (259), 38 (39), 22 (36), 24 (30), 29 (14), 31, 25
+- Sampling rate (Hz): 256.0
 - Duration (hours): 982.9345334201388
 
 - Pathology: Not specified
@@ -216,9 +216,9 @@ CHB-MIT
 * **Author (year):**
   `Connolly2010`
 * **Canonical:**
-  `CHBMIT`, `CHB_MIT`
+  —
 
-Also importable as: `NM000110`, `Connolly2010`, `CHBMIT`, `CHB_MIT`.
+Also importable as: `NM000110`, `Connolly2010`.
 
 Modality: `eeg`.
 Subjects: 24; recordings: 686; tasks: 1.

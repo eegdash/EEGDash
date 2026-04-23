@@ -380,8 +380,8 @@ University of California San Diego
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography                                                                                               |
 | Author (year)  | `Sivakumar2024`                                                                                                                                                                          |
-| Canonical      | `emg2qwerty`                                                                                                                                                                             |
-| Importable as  | `NM000104`, `Sivakumar2024`, `emg2qwerty`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000104`, `Sivakumar2024`                                                                                                                                                              |
 | Year           | 2024                                                                                                                                                                                     |
 | Authors        | Viswanath Sivakumar, Jeffrey Seely, Alan Du, Sean R. Bittner, Adam Berenzweig, Anuoluwapo Bolarinwa, Alexandre Gramfort, Michael I. Mandel                                               |
 | License        | CC-BY-NC-SA-4.0                                                                                                                                                                          |
@@ -406,7 +406,7 @@ University of California San Diego
 - Tasks: 1
 
 - Channels: 32
-- Sampling rate (Hz): 2000
+- Sampling rate (Hz): 2000.0
 - Duration (hours): 346.3244476388889
 
 - Pathology: Not specified
@@ -439,9 +439,9 @@ emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electr
 * **Author (year):**
   `Sivakumar2024`
 * **Canonical:**
-  `emg2qwerty`
+  —
 
-Also importable as: `NM000104`, `Sivakumar2024`, `emg2qwerty`.
+Also importable as: `NM000104`, `Sivakumar2024`.
 
 Modality: `emg`.
 Subjects: 108; recordings: 1136; tasks: 1.

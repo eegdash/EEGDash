@@ -86,8 +86,8 @@ Race Key: “Levels”: { “x1”: “White”, “x2”: “Black/African Amer
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE LRP/ERN Flanker                                                                                                                                                            |
 | Author (year)  | `Couperus2025_LRP`                                                                                                                                                                |
-| Canonical      | `Couperus2021_LRP`                                                                                                                                                                |
-| Importable as  | `DS007139`, `Couperus2025_LRP`, `Couperus2021_LRP`                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007139`, `Couperus2025_LRP`                                                                                                                                                    |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed, C.L.                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ PURSUE LRP/ERN Flanker
 * **Author (year):**
   `Couperus2025_LRP`
 * **Canonical:**
-  `Couperus2021_LRP`
+  —
 
-Also importable as: `DS007139`, `Couperus2025_LRP`, `Couperus2021_LRP`.
+Also importable as: `DS007139`, `Couperus2025_LRP`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 292; recordings: 292; tasks: 1.

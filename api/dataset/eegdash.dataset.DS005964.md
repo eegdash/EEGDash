@@ -88,8 +88,8 @@ In preperation
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FRESH Audio Dataset                                                                                                                                                               |
 | Author (year)  | `Luke2025`                                                                                                                                                                        |
-| Canonical      | `Luke2019`                                                                                                                                                                        |
-| Importable as  | `DS005964`, `Luke2025`, `Luke2019`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005964`, `Luke2025`                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Robert Luke, Maureen Shader, David McAlpine                                                                                                                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ FRESH Audio Dataset
 * **Author (year):**
   `Luke2025`
 * **Canonical:**
-  `Luke2019`
+  —
 
-Also importable as: `DS005964`, `Luke2025`, `Luke2019`.
+Also importable as: `DS005964`, `Luke2025`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Unknown`.
 Subjects: 17; recordings: 17; tasks: 1.

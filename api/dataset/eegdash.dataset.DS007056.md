@@ -86,8 +86,8 @@ Race Key: “Levels”: { “x1”: “White”, “x2”: “Black/African Amer
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE P300 Visual Oddball                                                                                                                                                        |
 | Author (year)  | `Couperus2025_P300`                                                                                                                                                               |
-| Canonical      | `Couperus2021_P300`                                                                                                                                                               |
-| Importable as  | `DS007056`, `Couperus2025_P300`, `Couperus2021_P300`                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007056`, `Couperus2025_P300`                                                                                                                                                   |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed, C.L.                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ PURSUE P300 Visual Oddball
 * **Author (year):**
   `Couperus2025_P300`
 * **Canonical:**
-  `Couperus2021_P300`
+  —
 
-Also importable as: `DS007056`, `Couperus2025_P300`, `Couperus2021_P300`.
+Also importable as: `DS007056`, `Couperus2025_P300`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 286; recordings: 286; tasks: 1.

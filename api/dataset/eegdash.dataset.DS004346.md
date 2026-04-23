@@ -89,8 +89,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FLUX: A pipeline for MEG analysis                                                                                                                                                 |
 | Author (year)  | `Ferrante2022`                                                                                                                                                                    |
-| Canonical      | `FLUX`                                                                                                                                                                            |
-| Importable as  | `DS004346`, `Ferrante2022`, `FLUX`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004346`, `Ferrante2022`                                                                                                                                                        |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Oscar Ferrante, Ling Liu, Tamas Minarik, Urszula Gorska, Tara Ghafari, Huan Luo, Ole Jensen                                                                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -148,9 +148,9 @@ FLUX: A pipeline for MEG analysis
 * **Author (year):**
   `Ferrante2022`
 * **Canonical:**
-  `FLUX`
+  —
 
-Also importable as: `DS004346`, `Ferrante2022`, `FLUX`.
+Also importable as: `DS004346`, `Ferrante2022`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 1; recordings: 3; tasks: 1.

@@ -101,8 +101,8 @@ Race Key:
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE N170 Face Perception                                                                                                                                                       |
 | Author (year)  | `Couperus2025_PURSUE_N170_Face`                                                                                                                                                   |
-| Canonical      | `Couperus2017`                                                                                                                                                                    |
-| Importable as  | `DS007096`, `Couperus2025_PURSUE_N170_Face`, `Couperus2017`                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007096`, `Couperus2025_PURSUE_N170_Face`                                                                                                                                       |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed,C.L.                                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -160,9 +160,9 @@ PURSUE N170 Face Perception
 * **Author (year):**
   `Couperus2025_PURSUE_N170_Face`
 * **Canonical:**
-  `Couperus2017`
+  —
 
-Also importable as: `DS007096`, `Couperus2025_PURSUE_N170_Face`, `Couperus2017`.
+Also importable as: `DS007096`, `Couperus2025_PURSUE_N170_Face`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 292; recordings: 292; tasks: 1.

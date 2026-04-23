@@ -235,8 +235,8 @@ The following event markers are present during the test section (see Figure 1 fo
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Joint agency EEG dataset                                                                                                                                                          |
 | Author (year)  | `Zhou2026`                                                                                                                                                                        |
-| Canonical      | `Zhou2024`                                                                                                                                                                        |
-| Importable as  | `DS007471`, `Zhou2026`, `Zhou2024`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007471`, `Zhou2026`                                                                                                                                                            |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Zijun Zhou, Anna Zamm, Justin Christensen, Vinesh Rao, Janeen Loehr                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -262,7 +262,7 @@ The following event markers are present during the test section (see Figure 1 fo
 
 - Channels: 64
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 18.78229444444444
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory
@@ -294,9 +294,9 @@ Joint agency EEG dataset
 * **Author (year):**
   `Zhou2026`
 * **Canonical:**
-  `Zhou2024`
+  —
 
-Also importable as: `DS007471`, `Zhou2026`, `Zhou2024`.
+Also importable as: `DS007471`, `Zhou2026`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 31; recordings: 31; tasks: 1.

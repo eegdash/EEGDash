@@ -160,8 +160,8 @@ dataset_root/
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG-Speech Brain Decoding Dataset                                                                                                                                                 |
 | Author (year)  | `Sato2026_Speech`                                                                                                                                                                 |
-| Canonical      | `Sato2024`                                                                                                                                                                        |
-| Importable as  | `DS007602`, `Sato2026_Speech`, `Sato2024`                                                                                                                                         |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007602`, `Sato2026_Speech`                                                                                                                                                     |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Motoshige Sato, Masakazu Inoue, Kenichi Tomeoka, Ilya Horiguchi, Eri Hatakeyama, Yuya Kita, Atsushi Yamamoto, Ippei Fujisawa, Shuntaro Sasai                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -187,7 +187,7 @@ dataset_root/
 
 - Channels: 134
 - Sampling rate (Hz): 1200.0
-- Duration (hours): 44.18638888888889
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -219,9 +219,9 @@ EEG-Speech Brain Decoding Dataset
 * **Author (year):**
   `Sato2026_Speech`
 * **Canonical:**
-  `Sato2024`
+  —
 
-Also importable as: `DS007602`, `Sato2026_Speech`, `Sato2024`.
+Also importable as: `DS007602`, `Sato2026_Speech`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 3; recordings: 113; tasks: 1.

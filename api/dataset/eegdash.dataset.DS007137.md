@@ -86,8 +86,8 @@ Race Key: “Levels”: { “x1”: “White”, “x2”: “Black/African Amer
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE N2pc Visual Search                                                                                                                                                         |
 | Author (year)  | `Couperus2025_N2PC`                                                                                                                                                               |
-| Canonical      | `Couperus2021_N2pc`                                                                                                                                                               |
-| Importable as  | `DS007137`, `Couperus2025_N2PC`, `Couperus2021_N2pc`                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007137`, `Couperus2025_N2PC`                                                                                                                                                   |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed, C.L.                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ PURSUE N2pc Visual Search
 * **Author (year):**
   `Couperus2025_N2PC`
 * **Canonical:**
-  `Couperus2021_N2pc`
+  —
 
-Also importable as: `DS007137`, `Couperus2025_N2PC`, `Couperus2021_N2pc`.
+Also importable as: `DS007137`, `Couperus2025_N2PC`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 294; recordings: 294; tasks: 1.

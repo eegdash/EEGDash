@@ -100,8 +100,8 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study                                                                                            |
 | Author (year)  | `Herrema2023_pyFR_Delayed_Free`                                                                                                                                                   |
-| Canonical      | `pyFR`                                                                                                                                                                            |
-| Importable as  | `DS004865`, `Herrema2023_pyFR_Delayed_Free`, `pyFR`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004865`, `Herrema2023_pyFR_Delayed_Free`                                                                                                                                       |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Haydn G. Herrema, Michael J. Kahana                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -125,7 +125,7 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 - Recordings: 172
 - Tasks: 1
 
-- Channels: 100 (7), 80 (5), 74 (5), 131 (5), 46 (4), 108 (4), 62 (4), 110 (4), 54 (4), 85 (4), 86 (4), 53 (4), 32 (3), 116 (3), 47 (3), 150 (3), 121 (3), 42 (3), 55 (3), 75 (3), 78 (3), 84 (3), 109 (3), 27 (3), 82 (3), 91 (3), 72 (3), 88 (3), 105 (3), 168 (3), 48 (3), 123 (3), 96 (3), 70 (3), 104 (3), 130 (2), 63 (2), 126 (2), 68 (2), 57 (2), 52 (2), 36 (2), 102 (2), 124 (2), 76 (2), 111 (2), 58 (2), 149 (2), 144 (2), 87 (2), 119 (2), 153 (2), 142 (2), 187, 95, 81, 90, 56, 94, 98, 160, 203, 120, 101, 97, 64
+- Channels: 100 (7), 80 (5), 74 (5), 131 (5), 62 (4), 53 (4), 108 (4), 85 (4), 54 (4), 110 (4), 46 (4), 86 (4), 104 (3), 168 (3), 150 (3), 32 (3), 84 (3), 72 (3), 70 (3), 27 (3), 105 (3), 55 (3), 121 (3), 42 (3), 78 (3), 82 (3), 109 (3), 48 (3), 88 (3), 116 (3), 123 (3), 96 (3), 47 (3), 91 (3), 75 (3), 149 (2), 142 (2), 111 (2), 63 (2), 68 (2), 36 (2), 76 (2), 119 (2), 102 (2), 144 (2), 124 (2), 126 (2), 52 (2), 57 (2), 130 (2), 87 (2), 153 (2), 58 (2), 97, 94, 64, 98, 81, 203, 160, 95, 187, 56, 90, 101, 120
 - Sampling rate (Hz): 1000.0 (102), 512.0 (40), 2000.0 (16), 400.0 (8), 499.7071 (6)
 - Duration (hours): 180.6291955494362
 
@@ -159,9 +159,9 @@ pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology
 * **Author (year):**
   `Herrema2023_pyFR_Delayed_Free`
 * **Canonical:**
-  `pyFR`
+  —
 
-Also importable as: `DS004865`, `Herrema2023_pyFR_Delayed_Free`, `pyFR`.
+Also importable as: `DS004865`, `Herrema2023_pyFR_Delayed_Free`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Surgery`.
 Subjects: 42; recordings: 172; tasks: 1.

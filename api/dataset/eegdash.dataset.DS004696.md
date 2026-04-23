@@ -154,7 +154,7 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
 - Recordings: 8
 - Tasks: 1
 
-- Channels: 226, 201, 178, 192, 194, 244, 207, 256
+- Channels: 201, 178, 256, 226, 194, 192, 207, 244
 - Sampling rate (Hz): 2048.0
 - Duration (hours): 9.122338324652778
 

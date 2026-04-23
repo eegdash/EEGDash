@@ -117,8 +117,8 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval                                                                                              |
 | Author (year)  | `Herrema2024_Cued`                                                                                                                                                                |
-| Canonical      | `Herrema2024`                                                                                                                                                                     |
-| Importable as  | `DS005494`, `Herrema2024_Cued`, `Herrema2024`                                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005494`, `Herrema2024_Cued`                                                                                                                                                    |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Haydn G. Herrema, Michael J. Kahana                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -142,7 +142,7 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - Recordings: 51
 - Tasks: 1
 
-- Channels: 100 (4), 88 (4), 68 (3), 128 (3), 177 (3), 72 (3), 141 (2), 112 (2), 64 (2), 114 (2), 14 (2), 85 (2), 16 (2), 84, 111, 93, 122, 124, 95, 107, 102, 86, 110, 96, 146, 104, 119, 121, 138, 106
+- Channels: 88 (4), 100 (4), 68 (3), 177 (3), 128 (3), 72 (3), 85 (2), 14 (2), 16 (2), 112 (2), 114 (2), 141 (2), 64 (2), 96, 124, 138, 110, 84, 107, 119, 104, 146, 106, 121, 122, 93, 86, 102, 111, 95
 - Sampling rate (Hz): 500.0 (35), 1000.0 (16)
 - Duration (hours): 55.08165333333333
 
@@ -176,9 +176,9 @@ Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retri
 * **Author (year):**
   `Herrema2024_Cued`
 * **Canonical:**
-  `Herrema2024`
+  —
 
-Also importable as: `DS005494`, `Herrema2024_Cued`, `Herrema2024`.
+Also importable as: `DS005494`, `Herrema2024_Cued`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 20; recordings: 51; tasks: 1.

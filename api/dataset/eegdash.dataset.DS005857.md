@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ltpDelayRepFRReadOnly                                                                                                                                                             |
 | Author (year)  | `Broitman2025`                                                                                                                                                                    |
-| Canonical      | `Broitman2019`                                                                                                                                                                    |
-| Importable as  | `DS005857`, `Broitman2025`, `Broitman2019`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005857`, `Broitman2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | [Adam Broitman], [Michael Kahana]                                                                                                                                                 |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ ltpDelayRepFRReadOnly
 * **Author (year):**
   `Broitman2025`
 * **Canonical:**
-  `Broitman2019`
+  —
 
-Also importable as: `DS005857`, `Broitman2025`, `Broitman2019`.
+Also importable as: `DS005857`, `Broitman2025`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 29; recordings: 110; tasks: 1.

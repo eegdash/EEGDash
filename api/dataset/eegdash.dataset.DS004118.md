@@ -159,8 +159,8 @@ same subject during the same session. The Calibration Driving run was always con
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Calibration Driving                                                                                                                                                                      |
 | Author (year)  | `Touryan2022_BCIT_Calibration`                                                                                                                                                                |
-| Canonical      | `Touryan1999`                                                                                                                                                                                 |
-| Importable as  | `DS004118`, `Touryan2022_BCIT_Calibration`, `Touryan1999`                                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                             |
+| Importable as  | `DS004118`, `Touryan2022_BCIT_Calibration`                                                                                                                                                    |
 | Year           | 2022                                                                                                                                                                                          |
 | Authors        | Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) |
 | License        | CC0                                                                                                                                                                                           |
@@ -218,9 +218,9 @@ BCIT Calibration Driving
 * **Author (year):**
   `Touryan2022_BCIT_Calibration`
 * **Canonical:**
-  `Touryan1999`
+  —
 
-Also importable as: `DS004118`, `Touryan2022_BCIT_Calibration`, `Touryan1999`.
+Also importable as: `DS004118`, `Touryan2022_BCIT_Calibration`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 156; recordings: 247; tasks: 1.

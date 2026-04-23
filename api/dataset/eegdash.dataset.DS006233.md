@@ -115,7 +115,7 @@ Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Hidenori Endo, Michael 
 - Recordings: 347
 - Tasks: 1
 
-- Channels: 128 (245), 138 (19), 136 (19), 140 (8), 110 (6), 112 (6), 150 (5), 156 (5), 134 (4), 148 (4), 130 (4), 164 (4), 96 (3), 152 (3), 144 (3), 84 (3), 118 (3), 64 (2), 58
+- Channels: 128 (245), 138 (19), 136 (19), 140 (8), 110 (6), 112 (6), 150 (5), 156 (5), 130 (4), 164 (4), 148 (4), 134 (4), 152 (3), 144 (3), 84 (3), 96 (3), 118 (3), 64 (2), 58
 - Sampling rate (Hz): 1000.0
 - Duration (hours): Not calculated
 

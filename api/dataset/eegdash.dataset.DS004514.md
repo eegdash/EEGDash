@@ -164,7 +164,7 @@ This dataset was analyzed in the following publications:
 - Recordings: 24
 - Tasks: 2
 
-- Channels: 80 (12), 22 (6), 28 (6)
+- Channels: 80 (12), 28 (6), 22 (6)
 - Sampling rate (Hz): 2048.0 (12), 7.8125 (6), 8.928571428571429 (6)
 - Duration (hours): 29.3083050390625
 

@@ -131,7 +131,7 @@ Add 50: End of animation (and start of 1-second delay)
 
 - Channels: 31
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 8.347866666666667
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

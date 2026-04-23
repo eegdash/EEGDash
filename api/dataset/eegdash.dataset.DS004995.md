@@ -90,8 +90,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The Time-Course of Food Representation in the Human Brain                                                                                                                         |
 | Author (year)  | `Moerel2024`                                                                                                                                                                      |
-| Canonical      | `Moerel2023`                                                                                                                                                                      |
-| Importable as  | `DS004995`, `Moerel2024`, `Moerel2023`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004995`, `Moerel2024`                                                                                                                                                          |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Denise Moerel, James Psihoyos, Thomas A. Carlson                                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -117,7 +117,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 
 - Channels: 127
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 16.189522222222223
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -149,9 +149,9 @@ The Time-Course of Food Representation in the Human Brain
 * **Author (year):**
   `Moerel2024`
 * **Canonical:**
-  `Moerel2023`
+  —
 
-Also importable as: `DS004995`, `Moerel2024`, `Moerel2023`.
+Also importable as: `DS004995`, `Moerel2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 20; recordings: 20; tasks: 1.

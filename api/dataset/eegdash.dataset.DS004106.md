@@ -184,8 +184,8 @@ Simulator Sickness Questionnaire.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Advanced Guard Duty                                                                                                                                                          |
 | Author (year)  | `Touryan2022`                                                                                                                                                                     |
-| Canonical      | `BCITAdvancedGuardDuty`                                                                                                                                                           |
-| Importable as  | `DS004106`, `Touryan2022`, `BCITAdvancedGuardDuty`                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004106`, `Touryan2022`                                                                                                                                                         |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell(data), Tony Johnson (curation), Kay Robbins (curation)         |
 | License        | CC0                                                                                                                                                                               |
@@ -243,9 +243,9 @@ BCIT Advanced Guard Duty
 * **Author (year):**
   `Touryan2022`
 * **Canonical:**
-  `BCITAdvancedGuardDuty`
+  —
 
-Also importable as: `DS004106`, `Touryan2022`, `BCITAdvancedGuardDuty`.
+Also importable as: `DS004106`, `Touryan2022`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 27; recordings: 29; tasks: 1.

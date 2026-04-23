@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Rivalry_Tagging                                                                                                                                                                   |
 | Author (year)  | `Mendola2019`                                                                                                                                                                     |
-| Canonical      | `Mendola2020`                                                                                                                                                                     |
-| Importable as  | `DS002001`, `Mendola2019`, `Mendola2020`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS002001`, `Mendola2019`                                                                                                                                                         |
 | Year           | 2019                                                                                                                                                                              |
 | Authors        | Janine Mendola, Elizabeth Bock                                                                                                                                                    |
 | License        | PD                                                                                                                                                                                |
@@ -111,7 +111,7 @@ No README content is available for this dataset.
 - Tasks: 2
 
 - Channels: Varies
-- Sampling rate (Hz): 2400
+- Sampling rate (Hz): 2400.0
 - Duration (hours): Not calculated
 
 - Pathology: Healthy
@@ -144,9 +144,9 @@ Rivalry_Tagging
 * **Author (year):**
   `Mendola2019`
 * **Canonical:**
-  `Mendola2020`
+  —
 
-Also importable as: `DS002001`, `Mendola2019`, `Mendola2020`.
+Also importable as: `DS002001`, `Mendola2019`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 11; recordings: 69; tasks: 2.

@@ -171,8 +171,8 @@ in analysis (0.0 +/- 0.0 were removed from analysis).
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FACED - Finer-grained Affective Computing EEG Dataset                                                                                                                                    |
 | Author (year)  | `Liu2024_112`                                                                                                                                                                            |
-| Canonical      | `FACED`                                                                                                                                                                                  |
-| Importable as  | `NM000112`, `Liu2024_112`, `FACED`                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000112`, `Liu2024_112`                                                                                                                                                                |
 | Year           | 2023                                                                                                                                                                                     |
 | Authors        | Yisi Liu, Olga Sourina, Minh Khoa Nguyen                                                                                                                                                 |
 | License        | CC-BY-4.0                                                                                                                                                                                |
@@ -197,7 +197,7 @@ in analysis (0.0 +/- 0.0 were removed from analysis).
 - Tasks: 1
 
 - Channels: 32
-- Sampling rate (Hz): 1000 (68), 250 (55)
+- Sampling rate (Hz): 1000.0 (68), 250.0 (55)
 - Duration (hours): 155.28158666666664
 
 - Pathology: Not specified
@@ -230,9 +230,9 @@ FACED - Finer-grained Affective Computing EEG Dataset
 * **Author (year):**
   `Liu2024_112`
 * **Canonical:**
-  `FACED`
+  —
 
-Also importable as: `NM000112`, `Liu2024_112`, `FACED`.
+Also importable as: `NM000112`, `Liu2024_112`.
 
 Modality: `eeg`.
 Subjects: 123; recordings: 123; tasks: 1.

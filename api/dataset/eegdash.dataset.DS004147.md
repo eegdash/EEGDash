@@ -116,7 +116,7 @@ Analysis code: [https://github.com/chassall/averagetaskvalue](https://github.com
 
 - Channels: 31
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 9.60806111111111
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

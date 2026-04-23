@@ -119,7 +119,7 @@ Published in 2019
 
 - Channels: 46
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 22.538611111111116
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

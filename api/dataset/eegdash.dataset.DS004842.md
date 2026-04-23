@@ -85,8 +85,8 @@ TX15 dataset
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | TX15                                                                                                                                                                              |
 | Author (year)  | `Larkin2023_TX15`                                                                                                                                                                 |
-| Canonical      | `TX15`                                                                                                                                                                            |
-| Importable as  | `DS004842`, `Larkin2023_TX15`, `TX15`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004842`, `Larkin2023_TX15`                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King                               |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ TX15
 * **Author (year):**
   `Larkin2023_TX15`
 * **Canonical:**
-  `TX15`
+  —
 
-Also importable as: `DS004842`, `Larkin2023_TX15`, `TX15`.
+Also importable as: `DS004842`, `Larkin2023_TX15`.
 
 Modality: `eeg`.
 Subjects: 14; recordings: 102; tasks: 1.

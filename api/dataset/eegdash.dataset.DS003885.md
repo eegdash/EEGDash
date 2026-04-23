@@ -157,7 +157,7 @@ Contact Sophia Shatek ([sophia.shatek@sydney.edu.au](mailto:sophia.shatek@sydney
 
 - Channels: 128
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 27.061438888888887
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

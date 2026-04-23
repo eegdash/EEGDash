@@ -121,7 +121,7 @@ The “sourcedata” folder contains the trial behavioral data collected during 
 
 - Channels: 64
 - Sampling rate (Hz): 2048.0
-- Duration (hours): 11.576944444444443
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

@@ -85,8 +85,8 @@ HID dataset
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HID                                                                                                                                                                               |
 | Author (year)  | `Johnson2023_HID`                                                                                                                                                                 |
-| Canonical      | `HID`                                                                                                                                                                             |
-| Importable as  | `DS004851`, `Johnson2023_HID`, `HID`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004851`, `Johnson2023_HID`                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ HID
 * **Author (year):**
   `Johnson2023_HID`
 * **Canonical:**
-  `HID`
+  —
 
-Also importable as: `DS004851`, `Johnson2023_HID`, `HID`.
+Also importable as: `DS004851`, `Johnson2023_HID`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Unknown`.
 Subjects: 66; recordings: 66; tasks: 1.

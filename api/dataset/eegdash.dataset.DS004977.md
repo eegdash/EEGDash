@@ -105,8 +105,8 @@ Please contact Harvey Huang ([huang.harvey@mayo.edu](mailto:huang.harvey@mayo.ed
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | CARLA: Adjusted common average referencing for cortico-cortical evoked potential data                                                                                             |
 | Author (year)  | `Huang2024`                                                                                                                                                                       |
-| Canonical      | `CARLA`                                                                                                                                                                           |
-| Importable as  | `DS004977`, `Huang2024`, `CARLA`                                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004977`, `Huang2024`                                                                                                                                                           |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Harvey Huang, Gabriela Ojeda Valencia, Nicholas M Gregg, Gamaleldin M Osman, Morgan N Montoya, Gregory A Worrell, Kai J Miller, Dora Hermes                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -130,7 +130,7 @@ Please contact Harvey Huang ([huang.harvey@mayo.edu](mailto:huang.harvey@mayo.ed
 - Recordings: 6
 - Tasks: 1
 
-- Channels: 273 (4), 152, 232
+- Channels: 273 (4), 232, 152
 - Sampling rate (Hz): 4800.0
 - Duration (hours): 0.8750833333333332
 
@@ -164,9 +164,9 @@ CARLA: Adjusted common average referencing for cortico-cortical evoked potential
 * **Author (year):**
   `Huang2024`
 * **Canonical:**
-  `CARLA`
+  —
 
-Also importable as: `DS004977`, `Huang2024`, `CARLA`.
+Also importable as: `DS004977`, `Huang2024`.
 
 Modality: `ieeg`; Experiment type: `Other`; Subject type: `Epilepsy`.
 Subjects: 4; recordings: 6; tasks: 1.

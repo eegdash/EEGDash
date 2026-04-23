@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Implicit Learning EEG (BioSemi)                                                                                                                                                   |
 | Author (year)  | `LeganesFonteneau2025`                                                                                                                                                            |
-| Canonical      | `LeganesFonteneau2024`                                                                                                                                                            |
-| Importable as  | `DS006159`, `LeganesFonteneau2025`, `LeganesFonteneau2024`                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006159`, `LeganesFonteneau2025`                                                                                                                                                |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Mateo Leganes-Fonteneau                                                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 73
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 14.299166666666666
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: —
@@ -144,9 +144,9 @@ Implicit Learning EEG (BioSemi)
 * **Author (year):**
   `LeganesFonteneau2025`
 * **Canonical:**
-  `LeganesFonteneau2024`
+  —
 
-Also importable as: `DS006159`, `LeganesFonteneau2025`, `LeganesFonteneau2024`.
+Also importable as: `DS006159`, `LeganesFonteneau2025`.
 
 Modality: `eeg`; Experiment type: `Learning`; Subject type: `Healthy`.
 Subjects: 61; recordings: 61; tasks: 1.

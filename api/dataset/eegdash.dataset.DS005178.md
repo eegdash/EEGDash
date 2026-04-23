@@ -102,8 +102,8 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Ear-EEG Sleep Monitoring 2023 (EESM23)                                                                                                                                                                         |
 | Author (year)  | `Tabar2024`                                                                                                                                                                                                    |
-| Canonical      | `EESM23`                                                                                                                                                                                                       |
-| Importable as  | `DS005178`, `Tabar2024`, `EESM23`                                                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                                              |
+| Importable as  | `DS005178`, `Tabar2024`                                                                                                                                                                                        |
 | Year           | 2024                                                                                                                                                                                                           |
 | Authors        | Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel, Astrid R Bertelsen, Reza Nikbakht, Hans O Toft, Chris H Henriksen, Martin C Hemmsen, Mike L Rank, Marit Otto, Preben Kidmose |
 | License        | CC0                                                                                                                                                                                                            |
@@ -161,9 +161,9 @@ Ear-EEG Sleep Monitoring 2023 (EESM23)
 * **Author (year):**
   `Tabar2024`
 * **Canonical:**
-  `EESM23`
+  —
 
-Also importable as: `DS005178`, `Tabar2024`, `EESM23`.
+Also importable as: `DS005178`, `Tabar2024`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 10; recordings: 140; tasks: 1.

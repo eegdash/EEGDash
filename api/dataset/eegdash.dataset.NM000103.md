@@ -110,8 +110,8 @@ We would like to express our gratitude to all participants and their families, w
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Healthy Brain Network EEG - Not for Commercial Use                                                                                                                                       |
 | Author (year)  | `Shirazi2017`                                                                                                                                                                            |
-| Canonical      | `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`                                                                                                                                  |
-| Importable as  | `NM000103`, `Shirazi2017`, `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`                                                                                                       |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000103`, `Shirazi2017`                                                                                                                                                                |
 | Year           | 20                                                                                                                                                                                       |
 | Authors        | Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong, Arnaud Delorme, Michael Milham, Scott Makeig                                            |
 | License        | CC-BY-NC-SA 4.0                                                                                                                                                                          |
@@ -136,7 +136,7 @@ We would like to express our gratitude to all participants and their families, w
 - Tasks: 10
 
 - Channels: 129
-- Sampling rate (Hz): 500
+- Sampling rate (Hz): 500.0
 - Duration (hours): 285.0150427777777
 
 - Pathology: Not specified
@@ -169,9 +169,9 @@ Healthy Brain Network EEG - Not for Commercial Use
 * **Author (year):**
   `Shirazi2017`
 * **Canonical:**
-  `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`
+  —
 
-Also importable as: `NM000103`, `Shirazi2017`, `HealthyBrainNetwork`, `HBN_EEG_NC`, `HBN_NoCommercial`.
+Also importable as: `NM000103`, `Shirazi2017`.
 
 Modality: `eeg`.
 Subjects: 447; recordings: 3522; tasks: 10.

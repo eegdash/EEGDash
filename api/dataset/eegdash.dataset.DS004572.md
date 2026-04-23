@@ -89,8 +89,8 @@ Publications based on this dataset:
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The effects of sham hypnosis techniques                                                                                                                                           |
 | Author (year)  | `Kekecs2023`                                                                                                                                                                      |
-| Canonical      | `Kekecs2024`                                                                                                                                                                      |
-| Importable as  | `DS004572`, `Kekecs2023`, `Kekecs2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004572`, `Kekecs2023`                                                                                                                                                          |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi                                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -148,9 +148,9 @@ The effects of sham hypnosis techniques
 * **Author (year):**
   `Kekecs2023`
 * **Canonical:**
-  `Kekecs2024`
+  —
 
-Also importable as: `DS004572`, `Kekecs2023`, `Kekecs2024`.
+Also importable as: `DS004572`, `Kekecs2023`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 52; recordings: 516; tasks: 10.

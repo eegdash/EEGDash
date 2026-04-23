@@ -88,8 +88,8 @@ In preperation
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FRESH Motor Dataset                                                                                                                                                               |
 | Author (year)  | `Mesquita2025`                                                                                                                                                                    |
-| Canonical      | `Mesquita2019`                                                                                                                                                                    |
-| Importable as  | `DS005963`, `Mesquita2025`, `Mesquita2019`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005963`, `Mesquita2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Rickson C. Mesquita                                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ FRESH Motor Dataset
 * **Author (year):**
   `Mesquita2025`
 * **Canonical:**
-  `Mesquita2019`
+  —
 
-Also importable as: `DS005963`, `Mesquita2025`, `Mesquita2019`.
+Also importable as: `DS005963`, `Mesquita2025`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Unknown`.
 Subjects: 10; recordings: 40; tasks: 1.

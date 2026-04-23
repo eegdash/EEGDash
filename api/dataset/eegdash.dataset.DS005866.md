@@ -87,8 +87,8 @@ Participants were presented with 90 four-letter real words and 90 four-letter ps
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Flankers-NEAR                                                                                                                                                                     |
 | Author (year)  | `TerhuneCotter2025_NEAR`                                                                                                                                                          |
-| Canonical      | `Flankers_NEAR`                                                                                                                                                                   |
-| Importable as  | `DS005866`, `TerhuneCotter2025_NEAR`, `Flankers_NEAR`                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005866`, `TerhuneCotter2025_NEAR`                                                                                                                                              |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers, Karen Emmorey                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -146,9 +146,9 @@ Flankers-NEAR
 * **Author (year):**
   `TerhuneCotter2025_NEAR`
 * **Canonical:**
-  `Flankers_NEAR`
+  —
 
-Also importable as: `DS005866`, `TerhuneCotter2025_NEAR`, `Flankers_NEAR`.
+Also importable as: `DS005866`, `TerhuneCotter2025_NEAR`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 60; recordings: 60; tasks: 1.

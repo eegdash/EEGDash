@@ -166,8 +166,8 @@ the FreeSurfer surface data, the high-resolution head surface and the MRI-fiduci
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ForrestGump-MEG                                                                                                                                                                   |
 | Author (year)  | `Liu2021`                                                                                                                                                                         |
-| Canonical      | `ForrestGump_MEG`                                                                                                                                                                 |
-| Importable as  | `DS003633`, `Liu2021`, `ForrestGump_MEG`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003633`, `Liu2021`                                                                                                                                                             |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen                                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -225,9 +225,9 @@ ForrestGump-MEG
 * **Author (year):**
   `Liu2021`
 * **Canonical:**
-  `ForrestGump_MEG`
+  —
 
-Also importable as: `DS003633`, `Liu2021`, `ForrestGump_MEG`.
+Also importable as: `DS003633`, `Liu2021`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 12; recordings: 96; tasks: 2.

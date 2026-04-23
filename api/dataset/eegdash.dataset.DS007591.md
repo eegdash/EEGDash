@@ -128,8 +128,8 @@ Code for data loading, preprocessing, and decoding models is available at:
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Delineating neural contributions to EEG-based speech decoding                                                                                                                     |
 | Author (year)  | `Sato2026_Delineating`                                                                                                                                                            |
-| Canonical      | `Sato2025`                                                                                                                                                                        |
-| Importable as  | `DS007591`, `Sato2026_Delineating`, `Sato2025`                                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007591`, `Sato2026_Delineating`                                                                                                                                                |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Motoshige Sato, Yasuo Kabe, Sensho Nobe, Akito Yoshida, Masakazu Inoue, Mayumi Shimizu, Kenichi Tomeoka, Shuntaro Sasai                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -155,7 +155,7 @@ Code for data loading, preprocessing, and decoding models is available at:
 
 - Channels: 139
 - Sampling rate (Hz): 256.0
-- Duration (hours): 6.775833333333333
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: —
@@ -187,9 +187,9 @@ Delineating neural contributions to EEG-based speech decoding
 * **Author (year):**
   `Sato2026_Delineating`
 * **Canonical:**
-  `Sato2025`
+  —
 
-Also importable as: `DS007591`, `Sato2026_Delineating`, `Sato2025`.
+Also importable as: `DS007591`, `Sato2026_Delineating`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 3; recordings: 21; tasks: 3.

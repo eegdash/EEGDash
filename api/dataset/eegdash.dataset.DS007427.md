@@ -87,8 +87,8 @@ Henao Isaza, V., Aguillon, D., Tobón Quintero, C. A., Lopera, F., & Ochoa Góme
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Comprehensive methodology for sample enrichment in EEG biomarker studies for Alzheimer’s risk classification                                                                      |
 | Author (year)  | `Isaza2026_Comprehensive`                                                                                                                                                         |
-| Canonical      | `HenaoIsaza2026`                                                                                                                                                                  |
-| Importable as  | `DS007427`, `Isaza2026_Comprehensive`, `HenaoIsaza2026`                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007427`, `Isaza2026_Comprehensive`                                                                                                                                             |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Verónica Henao Isaza, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez                                                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -146,9 +146,9 @@ Comprehensive methodology for sample enrichment in EEG biomarker studies for Alz
 * **Author (year):**
   `Isaza2026_Comprehensive`
 * **Canonical:**
-  `HenaoIsaza2026`
+  —
 
-Also importable as: `DS007427`, `Isaza2026_Comprehensive`, `HenaoIsaza2026`.
+Also importable as: `DS007427`, `Isaza2026_Comprehensive`.
 
 Modality: `eeg`; Experiment type: `Clinical/Intervention`; Subject type: `Dementia`.
 Subjects: 44; recordings: 44; tasks: 1.

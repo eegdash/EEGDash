@@ -88,8 +88,8 @@ Contact: [aguedafgt@ugr.es](mailto:aguedafgt@ugr.es)
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Exo-EEG Experiment                                                                                                                                                                |
 | Author (year)  | `FuentesGuerra2026`                                                                                                                                                               |
-| Canonical      | `FuentesGuerra2024`                                                                                                                                                               |
-| Importable as  | `DS007180`, `FuentesGuerra2026`, `FuentesGuerra2024`                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007180`, `FuentesGuerra2026`                                                                                                                                                   |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ Exo-EEG Experiment
 * **Author (year):**
   `FuentesGuerra2026`
 * **Canonical:**
-  `FuentesGuerra2024`
+  —
 
-Also importable as: `DS007180`, `FuentesGuerra2026`, `FuentesGuerra2024`.
+Also importable as: `DS007180`, `FuentesGuerra2026`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 25; recordings: 25; tasks: 1.

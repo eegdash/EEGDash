@@ -101,8 +101,8 @@ Race Key:
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE N400 Word Processing                                                                                                                                                       |
 | Author (year)  | `Couperus2025_N400`                                                                                                                                                               |
-| Canonical      | `Couperus2021_N400`                                                                                                                                                               |
-| Importable as  | `DS007052`, `Couperus2025_N400`, `Couperus2021_N400`                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007052`, `Couperus2025_N400`                                                                                                                                                   |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed, C.L.                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -160,9 +160,9 @@ PURSUE N400 Word Processing
 * **Author (year):**
   `Couperus2025_N400`
 * **Canonical:**
-  `Couperus2021_N400`
+  —
 
-Also importable as: `DS007052`, `Couperus2025_N400`, `Couperus2021_N400`.
+Also importable as: `DS007052`, `Couperus2025_N400`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 288; recordings: 288; tasks: 1.

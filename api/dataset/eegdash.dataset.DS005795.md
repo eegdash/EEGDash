@@ -123,7 +123,7 @@ Respiration and heart rate was recorded with Invivo MRI Sensors at a sampling ra
 
 - Channels: 72
 - Sampling rate (Hz): 500.0
-- Duration (hours): 7.933313888888889
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory

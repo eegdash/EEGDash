@@ -89,8 +89,8 @@ Experiment length: 1 hour
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | The effect of hunger and state preferences on the neural processing of food images                                                                                                |
 | Author (year)  | `Moerel2026`                                                                                                                                                                      |
-| Canonical      | `Moerel2025`                                                                                                                                                                      |
-| Importable as  | `DS007521`, `Moerel2026`, `Moerel2025`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007521`, `Moerel2026`                                                                                                                                                          |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas                                                                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -116,7 +116,7 @@ Experiment length: 1 hour
 
 - Channels: 64
 - Sampling rate (Hz): 100.0
-- Duration (hours): 34.23017222222222
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -148,9 +148,9 @@ The effect of hunger and state preferences on the neural processing of food imag
 * **Author (year):**
   `Moerel2026`
 * **Canonical:**
-  `Moerel2025`
+  —
 
-Also importable as: `DS007521`, `Moerel2026`, `Moerel2025`.
+Also importable as: `DS007521`, `Moerel2026`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 23; recordings: 46; tasks: 1.

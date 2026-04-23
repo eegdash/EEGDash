@@ -128,8 +128,8 @@ in any publications.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG                                                                                                               |
 | Author (year)  | `Zweiphenning2021`                                                                                                                                                                |
-| Canonical      | `RESPect_intraop`                                                                                                                                                                 |
-| Importable as  | `DS003844`, `Zweiphenning2021`, `RESPect_intraop`                                                                                                                                 |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003844`, `Zweiphenning2021`                                                                                                                                                    |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M.                                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -187,9 +187,9 @@ Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG
 * **Author (year):**
   `Zweiphenning2021`
 * **Canonical:**
-  `RESPect_intraop`
+  —
 
-Also importable as: `DS003844`, `Zweiphenning2021`, `RESPect_intraop`.
+Also importable as: `DS003844`, `Zweiphenning2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 6; recordings: 38; tasks: 1.

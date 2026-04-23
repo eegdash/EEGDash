@@ -88,8 +88,8 @@ The iEEG coordinate system employed in this dataset is MNI305.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | iEEG on children during slow wave sleep                                                                                                                                           |
 | Author (year)  | `Sakakura2023_children_slow_wave`                                                                                                                                                 |
-| Canonical      | `Sakakura2025`                                                                                                                                                                    |
-| Importable as  | `DS004551`, `Sakakura2023_children_slow_wave`, `Sakakura2025`                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004551`, `Sakakura2023_children_slow_wave`                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone, Aimee F. Luat, Neena I. Marupudi, Sandeep Sood, Eishi Asano                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -113,9 +113,9 @@ The iEEG coordinate system employed in this dataset is MNI305.
 - Recordings: 125
 - Tasks: 1
 
-- Channels: 128 (82), 112 (5), 118 (3), 138 (3), 104 (2), 134 (2), 110 (2), 124 (2), 108 (2), 142 (2), 148 (2), 122 (2), 102 (2), 130 (2), 144 (2), 120, 96, 106, 146, 84, 116, 136, 126, 132, 58
+- Channels: 128 (82), 112 (5), 118 (3), 138 (3), 142 (2), 144 (2), 108 (2), 124 (2), 130 (2), 134 (2), 110 (2), 122 (2), 102 (2), 148 (2), 104 (2), 132, 116, 120, 106, 136, 146, 126, 96, 84, 58
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 1.0367611111111112
+- Duration (hours): Not calculated
 
 - Pathology: Epilepsy
 - Modality: Sleep
@@ -147,9 +147,9 @@ iEEG on children during slow wave sleep
 * **Author (year):**
   `Sakakura2023_children_slow_wave`
 * **Canonical:**
-  `Sakakura2025`
+  —
 
-Also importable as: `DS004551`, `Sakakura2023_children_slow_wave`, `Sakakura2025`.
+Also importable as: `DS004551`, `Sakakura2023_children_slow_wave`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Epilepsy`.
 Subjects: 114; recordings: 125; tasks: 1.

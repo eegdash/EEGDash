@@ -118,9 +118,9 @@ sub-/ses-/ieeg/: Contains the raw iEEG data in .edf format for each subject. Eac
 - Recordings: 16
 - Tasks: 1
 
-- Channels: 128 (12), 112 (2), 110 (2)
+- Channels: 128 (12), 110 (2), 112 (2)
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 1.8886666666666667
+- Duration (hours): Not calculated
 
 - Pathology: Epilepsy
 - Modality: Visual

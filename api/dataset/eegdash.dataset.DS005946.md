@@ -142,8 +142,8 @@ The procedure consisted in presenting a cue and a target picture, with different
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)                                                                                                               |
 | Author (year)  | `Frau2025`                                                                                                                                                                        |
-| Canonical      | `PROMENADE`                                                                                                                                                                       |
-| Importable as  | `DS005946`, `Frau2025`, `PROMENADE`                                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005946`, `Frau2025`                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -201,9 +201,9 @@ ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery)
 * **Author (year):**
   `Frau2025`
 * **Canonical:**
-  `PROMENADE`
+  —
 
-Also importable as: `DS005946`, `Frau2025`, `PROMENADE`.
+Also importable as: `DS005946`, `Frau2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 39; recordings: 39; tasks: 1.

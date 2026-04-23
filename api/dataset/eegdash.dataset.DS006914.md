@@ -115,9 +115,9 @@ Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano,  Masaki Sonoda, Hidenor
 - Recordings: 353
 - Tasks: 1
 
-- Channels: 128 (245), 136 (19), 138 (19), 140 (8), 112 (6), 110 (6), 156 (5), 150 (5), 164 (4), 134 (4), 130 (4), 148 (4), 96 (3), 84 (3), 160 (3), 152 (3), 118 (3), 144 (3), 154 (3), 64 (2), 58
+- Channels: 128 (245), 138 (19), 136 (19), 140 (8), 112 (6), 110 (6), 150 (5), 156 (5), 164 (4), 134 (4), 148 (4), 130 (4), 118 (3), 96 (3), 84 (3), 144 (3), 152 (3), 160 (3), 154 (3), 64 (2), 58
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 0.7271305555555556
+- Duration (hours): Not calculated
 
 - Pathology: Epilepsy
 - Modality: Visual

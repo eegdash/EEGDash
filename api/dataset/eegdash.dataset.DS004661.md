@@ -86,8 +86,8 @@ The visual search task for this experiment required participants to follow a red
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ANDI                                                                                                                                                                              |
 | Author (year)  | `Johnson2023_ANDI`                                                                                                                                                                |
-| Canonical      | `ANDI`                                                                                                                                                                            |
-| Importable as  | `DS004661`, `Johnson2023_ANDI`, `ANDI`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004661`, `Johnson2023_ANDI`                                                                                                                                                    |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ ANDI
 * **Author (year):**
   `Johnson2023_ANDI`
 * **Canonical:**
-  `ANDI`
+  —
 
-Also importable as: `DS004661`, `Johnson2023_ANDI`, `ANDI`.
+Also importable as: `DS004661`, `Johnson2023_ANDI`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 17; recordings: 17; tasks: 1.

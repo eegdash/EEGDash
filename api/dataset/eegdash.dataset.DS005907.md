@@ -110,7 +110,7 @@ RL task (3-armed bandit) with alcohol vs. beverage cues in N=53 Community partic
 - Recordings: 53
 - Tasks: 1
 
-- Channels: 58 (13), 57 (13), 56 (11), 55 (6), 59 (4), 54 (2), 52, 53, 33, 61
+- Channels: 58 (13), 57 (13), 56 (11), 55 (6), 59 (4), 54 (2), 61, 52, 53, 33
 - Sampling rate (Hz): 500.0
 - Duration (hours): 14.171917222222223
 

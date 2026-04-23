@@ -176,8 +176,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | LittlePrince_MEG_French_Read_Pallier2025                                                                                                                                          |
 | Author (year)  | `Pallier2025`                                                                                                                                                                     |
-| Canonical      | `LittlePrince`                                                                                                                                                                    |
-| Importable as  | `DS007524`, `Pallier2025`, `LittlePrince`                                                                                                                                         |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007524`, `Pallier2025`                                                                                                                                                         |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -235,9 +235,9 @@ LittlePrince_MEG_French_Read_Pallier2025
 * **Author (year):**
   `Pallier2025`
 * **Canonical:**
-  `LittlePrince`
+  —
 
-Also importable as: `DS007524`, `Pallier2025`, `LittlePrince`.
+Also importable as: `DS007524`, `Pallier2025`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 50; recordings: 500; tasks: 1.

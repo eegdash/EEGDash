@@ -113,7 +113,7 @@ See also [https://osf.io/a7knv/](https://osf.io/a7knv/)
 
 - Channels: 63
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 0.7925055555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

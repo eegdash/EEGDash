@@ -85,8 +85,8 @@ TNO dataset
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | TNO                                                                                                                                                                               |
 | Author (year)  | `Johnson2023_TNO`                                                                                                                                                                 |
-| Canonical      | `TNO`                                                                                                                                                                             |
-| Importable as  | `DS004660`, `Johnson2023_TNO`, `TNO`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004660`, `Johnson2023_TNO`                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ TNO
 * **Author (year):**
   `Johnson2023_TNO`
 * **Canonical:**
-  `TNO`
+  —
 
-Also importable as: `DS004660`, `Johnson2023_TNO`, `TNO`.
+Also importable as: `DS004660`, `Johnson2023_TNO`.
 
 Modality: `eeg`.
 Subjects: 21; recordings: 42; tasks: 1.

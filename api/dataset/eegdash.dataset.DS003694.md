@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MEGMEM                                                                                                                                                                            |
 | Author (year)  | `Griffiths2021`                                                                                                                                                                   |
-| Canonical      | `MEGMEM`                                                                                                                                                                          |
-| Importable as  | `DS003694`, `Griffiths2021`, `MEGMEM`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003694`, `Griffiths2021`                                                                                                                                                       |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ MEGMEM
 * **Author (year):**
   `Griffiths2021`
 * **Canonical:**
-  `MEGMEM`
+  —
 
-Also importable as: `DS003694`, `Griffiths2021`, `MEGMEM`.
+Also importable as: `DS003694`, `Griffiths2021`.
 
 Modality: `meg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 28; recordings: 132; tasks: 1.

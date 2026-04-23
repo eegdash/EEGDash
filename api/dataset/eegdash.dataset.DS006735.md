@@ -156,7 +156,7 @@ Following the experimental session, participants completed a self-reported music
 
 - Channels: 36 (24), 63 (2), 34
 - Sampling rate (Hz): 10000.0
-- Duration (hours): 38.84182222222222
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory

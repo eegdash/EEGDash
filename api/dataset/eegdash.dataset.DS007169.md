@@ -138,8 +138,8 @@ Bateson AD, Asghar AUR (2021) Development and evaluation of a smartphone-based e
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Multimodal Cognitive Workload n-back Task, 4 Difficulties                                                                                                                         |
 | Author (year)  | `Barras2026_Multimodal`                                                                                                                                                           |
-| Canonical      | `Barras2021`                                                                                                                                                                      |
-| Importable as  | `DS007169`, `Barras2026_Multimodal`, `Barras2021`                                                                                                                                 |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007169`, `Barras2026_Multimodal`                                                                                                                                               |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Matthew Barras, Liam Booth                                                                                                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -197,9 +197,9 @@ Multimodal Cognitive Workload n-back Task, 4 Difficulties
 * **Author (year):**
   `Barras2026_Multimodal`
 * **Canonical:**
-  `Barras2021`
+  —
 
-Also importable as: `DS007169`, `Barras2026_Multimodal`, `Barras2021`.
+Also importable as: `DS007169`, `Barras2026_Multimodal`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 18; recordings: 18; tasks: 1.

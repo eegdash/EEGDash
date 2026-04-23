@@ -87,8 +87,8 @@ Participants were presented with 90 four-letter real words and 90 four-letter ps
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Flankers-FAR                                                                                                                                                                      |
 | Author (year)  | `TerhuneCotter2025_FAR`                                                                                                                                                           |
-| Canonical      | `Flankers_FAR`                                                                                                                                                                    |
-| Importable as  | `DS005868`, `TerhuneCotter2025_FAR`, `Flankers_FAR`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005868`, `TerhuneCotter2025_FAR`                                                                                                                                               |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers, Karen Emmorey                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -146,9 +146,9 @@ Flankers-FAR
 * **Author (year):**
   `TerhuneCotter2025_FAR`
 * **Canonical:**
-  `Flankers_FAR`
+  —
 
-Also importable as: `DS005868`, `TerhuneCotter2025_FAR`, `Flankers_FAR`.
+Also importable as: `DS005868`, `TerhuneCotter2025_FAR`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 48; recordings: 48; tasks: 1.

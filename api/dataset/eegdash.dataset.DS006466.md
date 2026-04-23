@@ -145,8 +145,8 @@ Kim, A. J., Morales, S., Senior, J., & Mather, M. (2025). Electroencephalography
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data                                                                                                           |
 | Author (year)  | `Kim2025_HeartBEAM_Older_Adult`                                                                                                                                                   |
-| Canonical      | `HeartBEAM`                                                                                                                                                                       |
-| Importable as  | `DS006466`, `Kim2025_HeartBEAM_Older_Adult`, `HeartBEAM`                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006466`, `Kim2025_HeartBEAM_Older_Adult`                                                                                                                                       |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Andy Jeesu Kim, Santiago Morales, Joshua Senior, Mara Mather                                                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -172,7 +172,7 @@ Kim, A. J., Morales, S., Senior, J., & Mather, M. (2025). Electroencephalography
 
 - Channels: 65
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 131.76201944444446
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory
@@ -204,9 +204,9 @@ HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data
 * **Author (year):**
   `Kim2025_HeartBEAM_Older_Adult`
 * **Canonical:**
-  `HeartBEAM`
+  —
 
-Also importable as: `DS006466`, `Kim2025_HeartBEAM_Older_Adult`, `HeartBEAM`.
+Also importable as: `DS006466`, `Kim2025_HeartBEAM_Older_Adult`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 66; recordings: 1257; tasks: 6.

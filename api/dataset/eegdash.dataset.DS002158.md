@@ -123,7 +123,7 @@ We modeled the BOLD signal using a general linear model (GLM) with two separate 
 
 - Channels: 64
 - Sampling rate (Hz): 5000.0
-- Duration (hours): 17.080816666666667
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: eeg Subjects: 11 Recordings: 105 License: CC0 Source: openneuro Citations: 0.0
 
-Metadata: Complete (90%)
+Metadata: Good (80%)
 
 ## Quickstart
 
@@ -88,8 +88,8 @@ Note: subject 5 was not included in the analysis because the testing stage did n
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Comparing P300 Flashing paradigms in online typing with language models                                                                                                           |
 | Author (year)  | `Chandravadia2024`                                                                                                                                                                |
-| Canonical      | `Chandravadia2022`                                                                                                                                                                |
-| Importable as  | `DS005028`, `Chandravadia2024`, `Chandravadia2022`                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005028`, `Chandravadia2024`                                                                                                                                                    |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati, Corey Arnold, Nader Pouratian, William Speier                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -113,9 +113,9 @@ Note: subject 5 was not included in the analysis because the testing stage did n
 - Recordings: 105
 - Tasks: 3
 
-- Channels: 32
+- Channels: Varies
 - Sampling rate (Hz): Varies
-- Duration (hours): 0.0291666666666666
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Visual
@@ -147,9 +147,9 @@ Comparing P300 Flashing paradigms in online typing with language models
 * **Author (year):**
   `Chandravadia2024`
 * **Canonical:**
-  `Chandravadia2022`
+  —
 
-Also importable as: `DS005028`, `Chandravadia2024`, `Chandravadia2022`.
+Also importable as: `DS005028`, `Chandravadia2024`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 11; recordings: 105; tasks: 3.

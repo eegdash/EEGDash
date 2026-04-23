@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | OcularLDT                                                                                                                                                                         |
 | Author (year)  | `Brooks2019`                                                                                                                                                                      |
-| Canonical      | `OcularLDT`, `ocular_ldt`                                                                                                                                                         |
-| Importable as  | `DS002312`, `Brooks2019`, `OcularLDT`, `ocular_ldt`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS002312`, `Brooks2019`                                                                                                                                                          |
 | Year           | 2019                                                                                                                                                                              |
 | Authors        | Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ OcularLDT
 * **Author (year):**
   `Brooks2019`
 * **Canonical:**
-  `OcularLDT`, `ocular_ldt`
+  —
 
-Also importable as: `DS002312`, `Brooks2019`, `OcularLDT`, `ocular_ldt`.
+Also importable as: `DS002312`, `Brooks2019`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 23; tasks: 1.

@@ -173,7 +173,7 @@ Thank you for your interest in our work.
 
 - Channels: 37
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 10.46888888888889
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

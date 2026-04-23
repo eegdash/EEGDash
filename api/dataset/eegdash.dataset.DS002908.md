@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Human MEG recordings during sequential conflict task                                                                                                                              |
 | Author (year)  | `Bogacz2020`                                                                                                                                                                      |
-| Canonical      | `Bogacz2024`                                                                                                                                                                      |
-| Importable as  | `DS002908`, `Bogacz2020`, `Bogacz2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS002908`, `Bogacz2020`                                                                                                                                                          |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Rafal Bogacz, Vladimir Litvak                                                                                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Human MEG recordings during sequential conflict task
 * **Author (year):**
   `Bogacz2020`
 * **Canonical:**
-  `Bogacz2024`
+  —
 
-Also importable as: `DS002908`, `Bogacz2020`, `Bogacz2024`.
+Also importable as: `DS002908`, `Bogacz2020`.
 
 Modality: `meg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 13; recordings: 53; tasks: 1.

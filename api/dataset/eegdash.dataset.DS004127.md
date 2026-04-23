@@ -123,9 +123,9 @@ N/A
 - Recordings: 73
 - Tasks: 11
 
-- Channels: 128 (28), 110 (9), 102 (9), 104 (9), 112 (9), 105 (6), 106 (2), 111
+- Channels: 128 (28), 104 (9), 102 (9), 110 (9), 112 (9), 105 (6), 106 (2), 111
 - Sampling rate (Hz): 20000.0
-- Duration (hours): 6.083819444444444
+- Duration (hours): Not calculated
 
 - Pathology: Other
 - Modality: Tactile

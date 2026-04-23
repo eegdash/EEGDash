@@ -88,8 +88,8 @@ Kalyan Tripathy, Zachary E. Markow, Morgan Fogarty, Mariel L. Schroeder, Alexa M
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset                                                                                                                                                                                                                                                                       |
 | Author (year)  | `Fogarty2026_High`                                                                                                                                                                                                                                                                                                                              |
-| Canonical      | `Tripathy2024`                                                                                                                                                                                                                                                                                                                                  |
-| Importable as  | `DS007473`, `Fogarty2026_High`, `Tripathy2024`                                                                                                                                                                                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                                                                                                                                                                               |
+| Importable as  | `DS007473`, `Fogarty2026_High`                                                                                                                                                                                                                                                                                                                  |
 | Year           | 2026                                                                                                                                                                                                                                                                                                                                            |
 | Authors        | Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty, Edward J Richter, Christopher Tracy, Patricia K Mansfield, Madison Booth, Andrew K Fishell, Arefeh Sherafati, Zachary E Markow, Muriah D Wheelock, Ana Maria Arbelaez, Bradley L Schlaggar, Christopher D Smyser, Adam T Eggebrecht, Joseph P Culver |
 | License        | CC0                                                                                                                                                                                                                                                                                                                                             |
@@ -147,9 +147,9 @@ High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset
 * **Author (year):**
   `Fogarty2026_High`
 * **Canonical:**
-  `Tripathy2024`
+  —
 
-Also importable as: `DS007473`, `Fogarty2026_High`, `Tripathy2024`.
+Also importable as: `DS007473`, `Fogarty2026_High`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 5; recordings: 189; tasks: 19.

@@ -90,8 +90,8 @@ No acquisition-time filters applied (offline preprocessing not included here).
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Visual EEG Study (BrainVision → BIDS)                                                                                                                                             |
 | Author (year)  | `Ghaffari2025`                                                                                                                                                                    |
-| Canonical      | `Ghaffari2024`                                                                                                                                                                    |
-| Importable as  | `DS006547`, `Ghaffari2025`, `Ghaffari2024`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006547`, `Ghaffari2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler                                                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -117,7 +117,7 @@ No acquisition-time filters applied (offline preprocessing not included here).
 
 - Channels: 64
 - Sampling rate (Hz): 500.0
-- Duration (hours): 39.21989444444444
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -149,9 +149,9 @@ Visual EEG Study (BrainVision → BIDS)
 * **Author (year):**
   `Ghaffari2025`
 * **Canonical:**
-  `Ghaffari2024`
+  —
 
-Also importable as: `DS006547`, `Ghaffari2025`, `Ghaffari2024`.
+Also importable as: `DS006547`, `Ghaffari2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 31; recordings: 31; tasks: 1.

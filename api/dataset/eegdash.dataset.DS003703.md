@@ -88,8 +88,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Frequency Tagging of Syntactic Structure or Lexical Properties                                                                                                                    |
 | Author (year)  | `Kalenkovich2021`                                                                                                                                                                 |
-| Canonical      | `Kalenkovich2019`                                                                                                                                                                 |
-| Importable as  | `DS003703`, `Kalenkovich2021`, `Kalenkovich2019`                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003703`, `Kalenkovich2021`                                                                                                                                                     |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Evgenii Kalenkovich, Anna Shestakova, Nina Kazanina                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ Frequency Tagging of Syntactic Structure or Lexical Properties
 * **Author (year):**
   `Kalenkovich2021`
 * **Canonical:**
-  `Kalenkovich2019`
+  —
 
-Also importable as: `DS003703`, `Kalenkovich2021`, `Kalenkovich2019`.
+Also importable as: `DS003703`, `Kalenkovich2021`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 34; recordings: 102; tasks: 2.

@@ -86,8 +86,8 @@ This is a placeholder dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ODE                                                                                                                                                                               |
 | Author (year)  | `Johnson2023_ODE`                                                                                                                                                                 |
-| Canonical      | `Johnson2024`                                                                                                                                                                     |
-| Importable as  | `DS004850`, `Johnson2023_ODE`, `Johnson2024`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004850`, `Johnson2023_ODE`                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ ODE
 * **Author (year):**
   `Johnson2023_ODE`
 * **Canonical:**
-  `Johnson2024`
+  —
 
-Also importable as: `DS004850`, `Johnson2023_ODE`, `Johnson2024`.
+Also importable as: `DS004850`, `Johnson2023_ODE`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

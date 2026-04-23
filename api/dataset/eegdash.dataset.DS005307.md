@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Laser-evoked potentials in the human spinal cord and cortex                                                                                                                           |
 | Author (year)  | `Nierula2024`                                                                                                                                                                         |
-| Canonical      | `Nierula2019`                                                                                                                                                                         |
-| Importable as  | `DS005307`, `Nierula2024`, `Nierula2019`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                     |
+| Importable as  | `DS005307`, `Nierula2024`                                                                                                                                                             |
 | Year           | 2024                                                                                                                                                                                  |
 | Authors        | Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle, Ulrike Horn, Andre Mouraux, Burkhard Maess, Arno Villringer, Gabriel Curio, Vadim Nikulin, Falk Eippert |
 | License        | CC0                                                                                                                                                                                   |
@@ -147,9 +147,9 @@ Laser-evoked potentials in the human spinal cord and cortex
 * **Author (year):**
   `Nierula2024`
 * **Canonical:**
-  `Nierula2019`
+  —
 
-Also importable as: `DS005307`, `Nierula2024`, `Nierula2019`.
+Also importable as: `DS005307`, `Nierula2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 7; recordings: 73; tasks: 1.

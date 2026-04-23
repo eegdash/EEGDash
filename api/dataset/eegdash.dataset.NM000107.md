@@ -226,8 +226,8 @@ University of California San Diego
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography                                                                                                                 |
 | Author (year)  | `Kaifosh2025_107`                                                                                                                                                                        |
-| Canonical      | `FRL_WristControl`                                                                                                                                                                       |
-| Importable as  | `NM000107`, `Kaifosh2025_107`, `FRL_WristControl`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000107`, `Kaifosh2025_107`                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                                     |
 | Authors        | Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs                                                                                                                            |
 | License        | CC-BY-NC 4.0                                                                                                                                                                             |
@@ -252,7 +252,7 @@ University of California San Diego
 - Tasks: 1
 
 - Channels: 16
-- Sampling rate (Hz): 2000
+- Sampling rate (Hz): 2000.0
 - Duration (hours): 77.18355888888888
 
 - Pathology: Not specified
@@ -285,9 +285,9 @@ FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025_107`
 * **Canonical:**
-  `FRL_WristControl`
+  —
 
-Also importable as: `NM000107`, `Kaifosh2025_107`, `FRL_WristControl`.
+Also importable as: `NM000107`, `Kaifosh2025_107`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 182; tasks: 1.

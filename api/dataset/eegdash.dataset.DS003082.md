@@ -173,8 +173,8 @@ S01_20131218_
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Auditory Cortex Mapping Dataset                                                                                                                                                   |
 | Author (year)  | `Cote2020`                                                                                                                                                                        |
-| Canonical      | `Cote2015`                                                                                                                                                                        |
-| Importable as  | `DS003082`, `Cote2020`, `Cote2015`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003082`, `Cote2020`                                                                                                                                                            |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Jonathan Cote, Etienne de Villers-Sidani                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -232,9 +232,9 @@ Auditory Cortex Mapping Dataset
 * **Author (year):**
   `Cote2020`
 * **Canonical:**
-  `Cote2015`
+  —
 
-Also importable as: `DS003082`, `Cote2020`, `Cote2015`.
+Also importable as: `DS003082`, `Cote2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 2; recordings: 3; tasks: 2.

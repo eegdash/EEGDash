@@ -116,7 +116,7 @@ Most memory is not formed deliberately but as a by-product of natural behavior. 
 
 - Channels: 62
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 19.32608055555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

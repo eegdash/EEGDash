@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PhysioMotion_Artifact                                                                                                                                                             |
 | Author (year)  | `Yu2025`                                                                                                                                                                          |
-| Canonical      | `Yu2019`                                                                                                                                                                          |
-| Importable as  | `DS006386`, `Yu2025`, `Yu2019`                                                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006386`, `Yu2025`                                                                                                                                                              |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Jiangwei Yu, Aonan He                                                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ PhysioMotion_Artifact
 * **Author (year):**
   `Yu2025`
 * **Canonical:**
-  `Yu2019`
+  —
 
-Also importable as: `DS006386`, `Yu2025`, `Yu2019`.
+Also importable as: `DS006386`, `Yu2025`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 30; recordings: 180; tasks: 1.

@@ -87,8 +87,8 @@ Participants performed three identical sessions of 13 minutes each. 750 stimuli 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG data from an auditory oddball task                                                                                                                                            |
 | Author (year)  | `Delorme2020_auditory_oddball`                                                                                                                                                    |
-| Canonical      | `Delorme`                                                                                                                                                                         |
-| Importable as  | `DS003061`, `Delorme2020_auditory_oddball`, `Delorme`                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003061`, `Delorme2020_auditory_oddball`                                                                                                                                        |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Arnaud Delorme                                                                                                                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -146,9 +146,9 @@ EEG data from an auditory oddball task
 * **Author (year):**
   `Delorme2020_auditory_oddball`
 * **Canonical:**
-  `Delorme`
+  —
 
-Also importable as: `DS003061`, `Delorme2020_auditory_oddball`, `Delorme`.
+Also importable as: `DS003061`, `Delorme2020_auditory_oddball`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 13; recordings: 39; tasks: 1.

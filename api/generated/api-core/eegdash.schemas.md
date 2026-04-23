@@ -717,6 +717,16 @@ Timestamp of when this record was processed.
 * **Type:**
   str
 
+#### montage_hash
+
+Foreign key into the `montages` collection, pointing at the BIDS
+`*_electrodes.tsv` layout this record was recorded with. `None`
+when the dataset publishes no scalp electrode positions (e.g.
+iEEG depth-electrode datasets or MEG-only recordings).
+
+* **Type:**
+  str | None
+
 <!-- !! processed by numpydoc !! -->
 
 #### dataset *: str*
@@ -750,6 +760,8 @@ Timestamp of when this record was processed.
 #### ntimes *: int | None*
 
 #### digested_at *: str*
+
+#### montage_hash *: str | None*
 
 ### *class* eegdash.schemas.Storage
 

@@ -138,8 +138,8 @@ If you use this dataset in your research, please cite the original authors.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MEG-BIDS OMEGA RestingState_sample                                                                                                                                                |
 | Author (year)  | `Niso2018`                                                                                                                                                                        |
-| Canonical      | `OMEGA`                                                                                                                                                                           |
-| Importable as  | `DS000247`, `Niso2018`, `OMEGA`                                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS000247`, `Niso2018`                                                                                                                                                            |
 | Year           | 2018                                                                                                                                                                              |
 | Authors        | Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet                                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -197,9 +197,9 @@ MEG-BIDS OMEGA RestingState_sample
 * **Author (year):**
   `Niso2018`
 * **Canonical:**
-  `OMEGA`
+  —
 
-Also importable as: `DS000247`, `Niso2018`, `OMEGA`.
+Also importable as: `DS000247`, `Niso2018`.
 
 Modality: `meg`; Experiment type: `Resting-state`; Subject type: `Healthy`.
 Subjects: 6; recordings: 10; tasks: 2.

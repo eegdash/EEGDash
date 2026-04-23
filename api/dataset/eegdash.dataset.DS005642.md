@@ -121,7 +121,7 @@ Stimuli, behavioural data and code available at GitHub: [https://doi.org/10.5281
 
 - Channels: 68
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 18.59861111111111
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

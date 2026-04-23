@@ -88,8 +88,8 @@ Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Ca
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Very-High-Density Diffuse Optical Tomography System Validation Dataset                                                                                                                                                                                                              |
 | Author (year)  | `Fogarty2026_Very`                                                                                                                                                                                                                                                                  |
-| Canonical      | `Fogarty2025`                                                                                                                                                                                                                                                                       |
-| Importable as  | `DS007463`, `Fogarty2026_Very`, `Fogarty2025`                                                                                                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                                                                                                                   |
+| Importable as  | `DS007463`, `Fogarty2026_Very`                                                                                                                                                                                                                                                      |
 | Year           | 2026                                                                                                                                                                                                                                                                                |
 | Authors        | Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda, Tessa George, Kelsey King, Dana Wilhelm, Kalyan Tripathy, Emily M. Mugler, Stephanie Naufel, Allen Yin, Jason W. Trobaugh, Adam T. Eggebrecht, Edward J. Richter, Joseph P. Culver |
 | License        | CC0                                                                                                                                                                                                                                                                                 |
@@ -113,7 +113,7 @@ Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Ca
 - Recordings: 88
 - Tasks: 14
 
-- Channels: 19086 (14), 19426 (11), 21518 (11), 19620 (11), 19528 (11), 19908 (10), 20218 (10), 20874 (10)
+- Channels: 19086 (14), 19528 (11), 19426 (11), 19620 (11), 21518 (11), 20874 (10), 20218 (10), 19908 (10)
 - Sampling rate (Hz): 7.8125
 - Duration (hours): 18.898382222222224
 
@@ -147,9 +147,9 @@ Very-High-Density Diffuse Optical Tomography System Validation Dataset
 * **Author (year):**
   `Fogarty2026_Very`
 * **Canonical:**
-  `Fogarty2025`
+  —
 
-Also importable as: `DS007463`, `Fogarty2026_Very`, `Fogarty2025`.
+Also importable as: `DS007463`, `Fogarty2026_Very`.
 
 Modality: `fnirs`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 8; recordings: 88; tasks: 14.

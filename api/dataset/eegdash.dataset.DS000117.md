@@ -195,8 +195,8 @@ subject_25      sub019      Sub16   sub-16
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Multisubject, multimodal face processing                                                                                                                                          |
 | Author (year)  | `Wakeman2018`                                                                                                                                                                     |
-| Canonical      | `Wakeman2015`, `WakemanHenson`                                                                                                                                                    |
-| Importable as  | `DS000117`, `Wakeman2018`, `Wakeman2015`, `WakemanHenson`                                                                                                                         |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS000117`, `Wakeman2018`                                                                                                                                                         |
 | Year           | 2018                                                                                                                                                                              |
 | Authors        | Wakeman, DG, Henson, RN                                                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -254,9 +254,9 @@ Multisubject, multimodal face processing
 * **Author (year):**
   `Wakeman2018`
 * **Canonical:**
-  `Wakeman2015`, `WakemanHenson`
+  —
 
-Also importable as: `DS000117`, `Wakeman2018`, `Wakeman2015`, `WakemanHenson`.
+Also importable as: `DS000117`, `Wakeman2018`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 17; recordings: 104; tasks: 2.

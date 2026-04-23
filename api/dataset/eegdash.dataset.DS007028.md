@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Auditory Cortex Macaque Monkey DISC Data                                                                                                                                          |
 | Author (year)  | `Kajikawa2025`                                                                                                                                                                    |
-| Canonical      | `Kajikawa2000`                                                                                                                                                                    |
-| Importable as  | `DS007028`, `Kajikawa2025`, `Kajikawa2000`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007028`, `Kajikawa2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Yoshinao Kajikawa, Charles Schroeder                                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 64
 - Sampling rate (Hz): 20000.0
-- Duration (hours): 0.8074388888888889
+- Duration (hours): Not calculated
 
 - Pathology: Other
 - Modality: Auditory
@@ -144,9 +144,9 @@ Auditory Cortex Macaque Monkey DISC Data
 * **Author (year):**
   `Kajikawa2025`
 * **Canonical:**
-  `Kajikawa2000`
+  —
 
-Also importable as: `DS007028`, `Kajikawa2025`, `Kajikawa2000`.
+Also importable as: `DS007028`, `Kajikawa2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Other`.
 Subjects: 3; recordings: 3; tasks: 1.

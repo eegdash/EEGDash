@@ -110,7 +110,7 @@ Welcome to the numbers dataset. These data were collected using stereoelectroenc
 - Recordings: 13
 - Tasks: 1
 
-- Channels: 182 (2), 228, 230, 210, 194, 246, 188, 266, 192, 224, 202, 200
+- Channels: 182 (2), 266, 192, 246, 210, 202, 224, 228, 188, 194, 200, 230
 - Sampling rate (Hz): 1000.0 (10), 2000.0 (3)
 - Duration (hours): 4.21944125
 

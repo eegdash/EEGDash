@@ -130,8 +130,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | NOD-MEG                                                                                                                                                                           |
 | Author (year)  | `Zhang2025_MEG`                                                                                                                                                                   |
-| Canonical      | `NOD_MEG`                                                                                                                                                                         |
-| Importable as  | `DS005810`, `Zhang2025_MEG`, `NOD_MEG`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005810`, `Zhang2025_MEG`                                                                                                                                                       |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li, Zonglei Zhen                                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -189,9 +189,9 @@ NOD-MEG
 * **Author (year):**
   `Zhang2025_MEG`
 * **Canonical:**
-  `NOD_MEG`
+  —
 
-Also importable as: `DS005810`, `Zhang2025_MEG`, `NOD_MEG`.
+Also importable as: `DS005810`, `Zhang2025_MEG`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 31; recordings: 305; tasks: 2.

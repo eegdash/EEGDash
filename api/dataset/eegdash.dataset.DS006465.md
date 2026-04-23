@@ -102,8 +102,8 @@ This work was supported by a 1.3.5 project for disciplines of excellence from We
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech                                                                       |
 | Author (year)  | `Ma2025`                                                                                                                                                                          |
-| Canonical      | `CPSEED_3M`, `CPSEED`                                                                                                                                                             |
-| Importable as  | `DS006465`, `Ma2025`, `CPSEED_3M`, `CPSEED`                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006465`, `Ma2025`                                                                                                                                                              |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Xinyu Ma, Jiang Yi, Ning Jiang                                                                                                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -161,9 +161,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Ma2025`
 * **Canonical:**
-  `CPSEED_3M`, `CPSEED`
+  —
 
-Also importable as: `DS006465`, `Ma2025`, `CPSEED_3M`, `CPSEED`.
+Also importable as: `DS006465`, `Ma2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 20; recordings: 80; tasks: 1.

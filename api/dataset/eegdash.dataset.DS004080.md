@@ -141,8 +141,8 @@ Research reported in this publication was supported by the National Institute of
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | CCEP ECoG dataset across age 4-51                                                                                                                                                 |
 | Author (year)  | `Blooijs2023_CCEP_ECoG`                                                                                                                                                           |
-| Canonical      | `RESPect_CCEP`                                                                                                                                                                    |
-| Importable as  | `DS004080`, `Blooijs2023_CCEP_ECoG`, `RESPect_CCEP`                                                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004080`, `Blooijs2023_CCEP_ECoG`                                                                                                                                               |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | 1. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro, M. Demuru, W.J.E.M. Zweiphenning, P. van Eijsden, K. J. Miller, F.S.S. Leijten, D. Hermes    |
 | License        | CC0                                                                                                                                                                               |
@@ -166,7 +166,7 @@ Research reported in this publication was supported by the National Institute of
 - Recordings: 117
 - Tasks: 1
 
-- Channels: 133 (70), 68 (18), 130 (13), 98 (4), 131 (4), 96 (4), 64 (2), 94, 93
+- Channels: 133 (70), 68 (18), 130 (13), 96 (4), 98 (4), 131 (4), 64 (2), 94, 93
 - Sampling rate (Hz): 2048.0 (112), 512.0 (5)
 - Duration (hours): 89.39102945963542
 
@@ -200,9 +200,9 @@ CCEP ECoG dataset across age 4-51
 * **Author (year):**
   `Blooijs2023_CCEP_ECoG`
 * **Canonical:**
-  `RESPect_CCEP`
+  —
 
-Also importable as: `DS004080`, `Blooijs2023_CCEP_ECoG`, `RESPect_CCEP`.
+Also importable as: `DS004080`, `Blooijs2023_CCEP_ECoG`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 74; recordings: 117; tasks: 1.

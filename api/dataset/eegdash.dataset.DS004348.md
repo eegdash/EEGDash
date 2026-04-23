@@ -103,8 +103,8 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Ear-EEG Sleep Monitoring 2017 (EESM17)                                                                                                                                            |
 | Author (year)  | `Mikkelsen2022`                                                                                                                                                                   |
-| Canonical      | `EESM17`                                                                                                                                                                          |
-| Importable as  | `DS004348`, `Mikkelsen2022`, `EESM17`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004348`, `Mikkelsen2022`                                                                                                                                                       |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose                                                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -162,9 +162,9 @@ Ear-EEG Sleep Monitoring 2017 (EESM17)
 * **Author (year):**
   `Mikkelsen2022`
 * **Canonical:**
-  `EESM17`
+  —
 
-Also importable as: `DS004348`, `Mikkelsen2022`, `EESM17`.
+Also importable as: `DS004348`, `Mikkelsen2022`.
 
 Modality: `eeg`.
 Subjects: 9; recordings: 18; tasks: 2.

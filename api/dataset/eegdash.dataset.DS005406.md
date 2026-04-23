@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG frequency tagging reveals the integration of dissimilar observed actions                                                                                                      |
 | Author (year)  | `Formica2024`                                                                                                                                                                     |
-| Canonical      | `Formica2025`                                                                                                                                                                     |
-| Importable as  | `DS005406`, `Formica2024`, `Formica2025`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005406`, `Formica2024`                                                                                                                                                         |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco                                                                                                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ EEG frequency tagging reveals the integration of dissimilar observed actions
 * **Author (year):**
   `Formica2024`
 * **Canonical:**
-  `Formica2025`
+  —
 
-Also importable as: `DS005406`, `Formica2024`, `Formica2025`.
+Also importable as: `DS005406`, `Formica2024`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.

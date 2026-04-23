@@ -103,8 +103,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Object recognition in healthy aging (ORHA) - EEG                                                                                                                                  |
 | Author (year)  | `Haupt2024_Object`                                                                                                                                                                |
-| Canonical      | `ORHA`                                                                                                                                                                            |
-| Importable as  | `DS005363`, `Haupt2024_Object`, `ORHA`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005363`, `Haupt2024_Object`                                                                                                                                                    |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -162,9 +162,9 @@ Object recognition in healthy aging (ORHA) - EEG
 * **Author (year):**
   `Haupt2024_Object`
 * **Canonical:**
-  `ORHA`
+  —
 
-Also importable as: `DS005363`, `Haupt2024_Object`, `ORHA`.
+Also importable as: `DS005363`, `Haupt2024_Object`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 43; recordings: 43; tasks: 1.

@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | 29 By BP                                                                                                                                                                          |
 | Author (year)  | `Xiangyue2024_29_BP`                                                                                                                                                              |
-| Canonical      | `Zhao2024`                                                                                                                                                                        |
-| Importable as  | `DS005473`, `Xiangyue2024_29_BP`, `Zhao2024`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005473`, `Xiangyue2024_29_BP`                                                                                                                                                  |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu, Bi Yanzhi, Hu Li                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Xiangyue2024_29_BP`
 * **Canonical:**
-  `Zhao2024`
+  —
 
-Also importable as: `DS005473`, `Xiangyue2024_29_BP`, `Zhao2024`.
+Also importable as: `DS005473`, `Xiangyue2024_29_BP`.
 
 Modality: `eeg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 29; recordings: 58; tasks: 1.

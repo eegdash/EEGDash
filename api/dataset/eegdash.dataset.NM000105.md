@@ -362,8 +362,8 @@ University of California San Diego
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography                                                                                                            |
 | Author (year)  | `Kaifosh2025`                                                                                                                                                                            |
-| Canonical      | `FRL_DiscreteGestures`                                                                                                                                                                   |
-| Importable as  | `NM000105`, `Kaifosh2025`, `FRL_DiscreteGestures`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000105`, `Kaifosh2025`                                                                                                                                                                |
 | Year           | 2019                                                                                                                                                                                     |
 | Authors        | Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs                                                                                                                            |
 | License        | CC-BY-NC 4.0                                                                                                                                                                             |
@@ -388,7 +388,7 @@ University of California San Diego
 - Tasks: 1
 
 - Channels: 16
-- Sampling rate (Hz): 2000
+- Sampling rate (Hz): 2000.0
 - Duration (hours): 63.93759180555556
 
 - Pathology: Not specified
@@ -421,9 +421,9 @@ FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography
 * **Author (year):**
   `Kaifosh2025`
 * **Canonical:**
-  `FRL_DiscreteGestures`
+  —
 
-Also importable as: `NM000105`, `Kaifosh2025`, `FRL_DiscreteGestures`.
+Also importable as: `NM000105`, `Kaifosh2025`.
 
 Modality: `emg`.
 Subjects: 100; recordings: 100; tasks: 1.

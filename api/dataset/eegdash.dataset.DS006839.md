@@ -136,7 +136,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 
 - Channels: 29
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 26.62208888888889
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Multisensory

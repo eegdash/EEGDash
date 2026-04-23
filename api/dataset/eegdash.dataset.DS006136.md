@@ -111,8 +111,8 @@ The Paper repository ([https://github.com/V-Marco/FT-bursting-WM](https://github
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | OWM-Dataset                                                                                                                                                                       |
 | Author (year)  | `Omelyusik2025`                                                                                                                                                                   |
-| Canonical      | `Omelyusik2026`                                                                                                                                                                   |
-| Importable as  | `DS006136`, `Omelyusik2025`, `Omelyusik2026`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006136`, `Omelyusik2025`                                                                                                                                                       |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Vladimir Omelyusik, Tyler S. Davis, Satish S. Nair, Behrad Noudoost, Patrick Hackett, Elliot H. Smith, Shervin Rahimpour, John D. Rolston, Bornali Kundu                          |
 | License        | CC0                                                                                                                                                                               |
@@ -136,7 +136,7 @@ The Paper repository ([https://github.com/V-Marco/FT-bursting-WM](https://github
 - Recordings: 14
 - Tasks: 1
 
-- Channels: 8 (2), 7 (2), 9 (2), 12 (2), 18, 6, 14, 17, 5, 11
+- Channels: 9 (2), 8 (2), 7 (2), 12 (2), 14, 6, 17, 5, 18, 11
 - Sampling rate (Hz): 1000.0
 - Duration (hours): 25.273888888888887
 
@@ -170,9 +170,9 @@ OWM-Dataset
 * **Author (year):**
   `Omelyusik2025`
 * **Canonical:**
-  `Omelyusik2026`
+  —
 
-Also importable as: `DS006136`, `Omelyusik2025`, `Omelyusik2026`.
+Also importable as: `DS006136`, `Omelyusik2025`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Epilepsy`.
 Subjects: 13; recordings: 14; tasks: 1.

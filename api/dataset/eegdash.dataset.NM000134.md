@@ -222,8 +222,8 @@ Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Alljoined-1.6M                                                                                                                                                                           |
 | Author (year)  | `Xu2025`                                                                                                                                                                                 |
-| Canonical      | `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`                                                                                                                                         |
-| Importable as  | `NM000134`, `Xu2025`, `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000134`, `Xu2025`                                                                                                                                                                     |
 | Year           | 2025                                                                                                                                                                                     |
 | Authors        | Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle, Paul S. Scotti, Arnaud Delorme, Reese Kneeland                                                            |
 | License        | CC-BY-NC-ND-4.0                                                                                                                                                                          |
@@ -248,7 +248,7 @@ Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image
 - Tasks: 1
 
 - Channels: 32
-- Sampling rate (Hz): 256
+- Sampling rate (Hz): 256.0
 - Duration (hours): 129.4950119357639
 
 - Pathology: Not specified
@@ -281,9 +281,9 @@ Alljoined-1.6M
 * **Author (year):**
   `Xu2025`
 * **Canonical:**
-  `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`
+  —
 
-Also importable as: `NM000134`, `Xu2025`, `Alljoined16M`, `Alljoined_16M`, `Alljoined1p6M`.
+Also importable as: `NM000134`, `Xu2025`.
 
 Modality: `eeg`.
 Subjects: 20; recordings: 1525; tasks: 1.

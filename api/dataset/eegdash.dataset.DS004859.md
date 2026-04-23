@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | iEEG on children during Stroop task                                                                                                                                               |
 | Author (year)  | `Sakakura2023_children_Stroop`                                                                                                                                                    |
-| Canonical      | `Sakakura2024`                                                                                                                                                                    |
-| Importable as  | `DS004859`, `Sakakura2023_children_Stroop`, `Sakakura2024`                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004859`, `Sakakura2023_children_Stroop`                                                                                                                                        |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Kazuki Sakakura, Eishi Asano                                                                                                                                                      |
 | License        | CC0                                                                                                                                                                               |
@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 128 (8), 108
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 2.669722222222222
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Visual
@@ -144,9 +144,9 @@ iEEG on children during Stroop task
 * **Author (year):**
   `Sakakura2023_children_Stroop`
 * **Canonical:**
-  `Sakakura2024`
+  —
 
-Also importable as: `DS004859`, `Sakakura2023_children_Stroop`, `Sakakura2024`.
+Also importable as: `DS004859`, `Sakakura2023_children_Stroop`.
 
 Modality: `ieeg`; Experiment type: `Attention`; Subject type: `Unknown`.
 Subjects: 7; recordings: 9; tasks: 1.

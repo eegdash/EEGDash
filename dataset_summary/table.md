@@ -131,7 +131,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>129</td>
       <td>100</td>
-      <td><span class="sparkbar" style="--pct:81.2%;" title="32.1 GB — larger than 70% of datasets" aria-label="32.1 GB — larger than 70% of datasets"><span class="sparkbar-label">32.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:81.2%;" title="32.1 GB — larger than 71% of datasets" aria-label="32.1 GB — larger than 71% of datasets"><span class="sparkbar-label">32.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.EEG2025R10MINI.html" title="EEG2025R10MINI — eeg dataset, 20 subjects">EEG2025R10MINI</a></td>
@@ -143,7 +143,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:55.5%;" title="220 records — higher than 74% of datasets" aria-label="220 records — higher than 74% of datasets"><span class="sparkbar-label">220</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>8</td>
       <td>0</td>
       <td>129</td>
@@ -177,7 +177,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:55.5%;" title="220 records — higher than 74% of datasets" aria-label="220 records — higher than 74% of datasets"><span class="sparkbar-label">220</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>8</td>
       <td>0</td>
       <td>129</td>
@@ -194,7 +194,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:56.3%;" title="239 records — higher than 76% of datasets" aria-label="239 records — higher than 76% of datasets"><span class="sparkbar-label">239</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -210,7 +210,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:74.5%;" title="1,405 records — higher than 96% of datasets" aria-label="1,405 records — higher than 96% of datasets"><span class="sparkbar-label">1,405</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.5%;" title="1,405 records — higher than 95% of datasets" aria-label="1,405 records — higher than 95% of datasets"><span class="sparkbar-label">1,405</span></span></td>
       <td><span class="sparkbar" style="--pct:64.4%;" title="150 subjects — higher than 94% of datasets" aria-label="150 subjects — higher than 94% of datasets"><span class="sparkbar-label">150</span></span></td>
       <td>10</td>
       <td>0</td>
@@ -227,8 +227,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -261,13 +261,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
       <td>100</td>
-      <td><span class="sparkbar" style="--pct:73.9%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.9%;" title="3.7 GB — larger than 32% of datasets" aria-label="3.7 GB — larger than 32% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.EEG2025R4.html" title="EEG2025R4 — eeg dataset, 324 subjects">EEG2025R4</a></td>
@@ -295,8 +295,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -329,8 +329,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -346,7 +346,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:73.1%;" title="1,227 records — higher than 94% of datasets" aria-label="1,227 records — higher than 94% of datasets"><span class="sparkbar-label">1,227</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.1%;" title="1,227 records — higher than 95% of datasets" aria-label="1,227 records — higher than 95% of datasets"><span class="sparkbar-label">1,227</span></span></td>
       <td><span class="sparkbar" style="--pct:63.1%;" title="135 subjects — higher than 93% of datasets" aria-label="135 subjects — higher than 93% of datasets"><span class="sparkbar-label">135</span></span></td>
       <td>10</td>
       <td>0</td>
@@ -363,13 +363,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 75% of datasets" aria-label="237 records — higher than 75% of datasets"><span class="sparkbar-label">237</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 76% of datasets" aria-label="237 records — higher than 76% of datasets"><span class="sparkbar-label">237</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
       <td>100</td>
-      <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 31% of datasets" aria-label="3.5 GB — larger than 31% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.EEG2025R7.html" title="EEG2025R7 — eeg dataset, 381 subjects">EEG2025R7</a></td>
@@ -398,7 +398,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:56.3%;" title="239 records — higher than 76% of datasets" aria-label="239 records — higher than 76% of datasets"><span class="sparkbar-label">239</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -431,8 +431,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.3%;" title="238 records — higher than 75% of datasets" aria-label="238 records — higher than 75% of datasets"><span class="sparkbar-label">238</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.3%;" title="238 records — higher than 76% of datasets" aria-label="238 records — higher than 76% of datasets"><span class="sparkbar-label">238</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -465,8 +465,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 75% of datasets" aria-label="237 records — higher than 75% of datasets"><span class="sparkbar-label">237</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 76% of datasets" aria-label="237 records — higher than 76% of datasets"><span class="sparkbar-label">237</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>10</td>
       <td>0</td>
       <td>129</td>
@@ -476,13 +476,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS000117.html" title="DS000117 — meg dataset, 17 subjects">DS000117</a></td>
       <td>Wakeman2018</td>
-      <td>Wakeman2015, WakemanHenson</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:47.8%;" title="104 records — higher than 57% of datasets" aria-label="104 records — higher than 57% of datasets"><span class="sparkbar-label">104</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.8%;" title="104 records — higher than 58% of datasets" aria-label="104 records — higher than 58% of datasets"><span class="sparkbar-label">104</span></span></td>
       <td><span class="sparkbar" style="--pct:37.1%;" title="17 subjects — higher than 30% of datasets" aria-label="17 subjects — higher than 30% of datasets"><span class="sparkbar-label">17</span></span></td>
       <td>2</td>
       <td>9</td>
@@ -505,12 +505,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>340\*</td>
       <td>2400</td>
-      <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 26% of datasets" aria-label="2.3 GB — larger than 26% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:72.3%;" title="2.3 GB — larger than 25% of datasets" aria-label="2.3 GB — larger than 25% of datasets"><span class="sparkbar-label">2.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS000247.html" title="DS000247 — meg dataset, 6 subjects">DS000247</a></td>
       <td>Niso2018</td>
-      <td>OMEGA</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -527,7 +527,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS000248.html" title="DS000248 — meg dataset, 2 subjects">DS000248</a></td>
       <td>Gramfort2018</td>
-      <td>MNE_Sample_Data</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -537,7 +537,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:14.1%;" title="2 subjects — higher than 3% of datasets" aria-label="2 subjects — higher than 3% of datasets"><span class="sparkbar-label">2</span></span></td>
       <td>2</td>
       <td>1</td>
-      <td>376\*</td>
+      <td>315\*</td>
       <td>600</td>
       <td><span class="sparkbar" style="--pct:63.7%;" title="177.6 MB — larger than 6% of datasets" aria-label="177.6 MB — larger than 6% of datasets"><span class="sparkbar-label">177.6 MB</span></span></td>
     </tr>
@@ -556,7 +556,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>71</td>
       <td>1024\*</td>
-      <td><span class="sparkbar" style="--pct:80.3%;" title="24.9 GB — larger than 66% of datasets" aria-label="24.9 GB — larger than 66% of datasets"><span class="sparkbar-label">24.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:80.3%;" title="24.9 GB — larger than 67% of datasets" aria-label="24.9 GB — larger than 67% of datasets"><span class="sparkbar-label">24.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS001787.html" title="DS001787 — eeg dataset, 24 subjects">DS001787</a></td>
@@ -601,8 +601,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 61% of datasets" aria-label="120 records — higher than 61% of datasets"><span class="sparkbar-label">120</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>30</td>
@@ -618,8 +618,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:57.7%;" title="273 records — higher than 79% of datasets" aria-label="273 records — higher than 79% of datasets"><span class="sparkbar-label">273</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.7%;" title="273 records — higher than 80% of datasets" aria-label="273 records — higher than 80% of datasets"><span class="sparkbar-label">273</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>115\*</td>
@@ -629,14 +629,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002001.html" title="DS002001 — meg dataset, 11 subjects">DS002001</a></td>
       <td>Mendola2019</td>
-      <td>Mendola2020</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="69 records — higher than 49% of datasets" aria-label="69 records — higher than 49% of datasets"><span class="sparkbar-label">69</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>2</td>
       <td>7</td>
       <td></td>
@@ -653,7 +653,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:52.7%;" title="167 records — higher than 69% of datasets" aria-label="167 records — higher than 69% of datasets"><span class="sparkbar-label">167</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>4</td>
       <td>3</td>
       <td>81</td>
@@ -670,12 +670,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:38.9%;" title="43 records — higher than 35% of datasets" aria-label="43 records — higher than 35% of datasets"><span class="sparkbar-label">43</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>3</td>
       <td>0</td>
       <td>30</td>
       <td>5000</td>
-      <td><span class="sparkbar" style="--pct:81.9%;" title="39.4 GB — larger than 73% of datasets" aria-label="39.4 GB — larger than 73% of datasets"><span class="sparkbar-label">39.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:81.9%;" title="39.4 GB — larger than 74% of datasets" aria-label="39.4 GB — larger than 74% of datasets"><span class="sparkbar-label">39.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002158.html" title="DS002158 — eeg dataset, 20 subjects">DS002158</a></td>
@@ -686,8 +686,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 60% of datasets" aria-label="117 records — higher than 60% of datasets"><span class="sparkbar-label">117</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 61% of datasets" aria-label="117 records — higher than 61% of datasets"><span class="sparkbar-label">117</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>64</td>
@@ -731,7 +731,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002312.html" title="DS002312 — meg dataset, 19 subjects">DS002312</a></td>
       <td>Brooks2019</td>
-      <td>OcularLDT, ocular_ldt</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -822,8 +822,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:60.2%;" title="350 records — higher than 84% of datasets" aria-label="350 records — higher than 84% of datasets"><span class="sparkbar-label">350</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.2%;" title="350 records — higher than 85% of datasets" aria-label="350 records — higher than 85% of datasets"><span class="sparkbar-label">350</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>31</td>
@@ -840,12 +840,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>32</td>
       <td>250</td>
-      <td><span class="sparkbar" style="--pct:68.6%;" title="776.7 MB — larger than 15% of datasets" aria-label="776.7 MB — larger than 15% of datasets"><span class="sparkbar-label">776.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.6%;" title="776.7 MB — larger than 16% of datasets" aria-label="776.7 MB — larger than 16% of datasets"><span class="sparkbar-label">776.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002712.html" title="DS002712 — meg dataset, 25 subjects">DS002712</a></td>
@@ -862,12 +862,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>312\*</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:85.0%;" title="101.8 GB — larger than 88% of datasets" aria-label="101.8 GB — larger than 88% of datasets"><span class="sparkbar-label">101.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:85.0%;" title="101.8 GB — larger than 89% of datasets" aria-label="101.8 GB — larger than 89% of datasets"><span class="sparkbar-label">101.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002718.html" title="DS002718 — eeg dataset, 18 subjects">DS002718</a></td>
       <td>Wakeman2020</td>
-      <td>Wakeman2015, WakemanHenson_EEG_MEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -890,7 +890,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:52.5%;" title="165 records — higher than 68% of datasets" aria-label="165 records — higher than 68% of datasets"><span class="sparkbar-label">165</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.5%;" title="165 records — higher than 69% of datasets" aria-label="165 records — higher than 69% of datasets"><span class="sparkbar-label">165</span></span></td>
       <td><span class="sparkbar" style="--pct:37.8%;" title="18 subjects — higher than 32% of datasets" aria-label="18 subjects — higher than 32% of datasets"><span class="sparkbar-label">18</span></span></td>
       <td>0</td>
       <td>0</td>
@@ -907,7 +907,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:53.7%;" title="185 records — higher than 70% of datasets" aria-label="185 records — higher than 70% of datasets"><span class="sparkbar-label">185</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.7%;" title="185 records — higher than 71% of datasets" aria-label="185 records — higher than 71% of datasets"><span class="sparkbar-label">185</span></span></td>
       <td><span class="sparkbar" style="--pct:44.5%;" title="31 subjects — higher than 62% of datasets" aria-label="31 subjects — higher than 62% of datasets"><span class="sparkbar-label">31</span></span></td>
       <td>0</td>
       <td>0</td>
@@ -930,7 +930,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>37</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 38% of datasets" aria-label="6.1 GB — larger than 38% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 39% of datasets" aria-label="6.1 GB — larger than 39% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002723.html" title="DS002723 — eeg dataset, 8 subjects">DS002723</a></td>
@@ -964,7 +964,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>3</td>
       <td>37</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 44% of datasets" aria-label="8.5 GB — larger than 44% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 45% of datasets" aria-label="8.5 GB — larger than 45% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002725.html" title="DS002725 — eeg dataset, 21 subjects">DS002725</a></td>
@@ -992,7 +992,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:56.7%;" title="249 records — higher than 78% of datasets" aria-label="249 records — higher than 78% of datasets"><span class="sparkbar-label">249</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.7%;" title="249 records — higher than 79% of datasets" aria-label="249 records — higher than 79% of datasets"><span class="sparkbar-label">249</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>2</td>
       <td>0</td>
@@ -1020,7 +1020,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002791.html" title="DS002791 — eeg dataset, 23 subjects">DS002791</a></td>
       <td>Mheich2020_DataSet1</td>
-      <td>Mheich2020</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1044,7 +1044,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:100%;" title="16,824 records — higher than 100% of datasets" aria-label="16,824 records — higher than 100% of datasets"><span class="sparkbar-label">16,824</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
       <td>2</td>
       <td>2</td>
       <td>2\*</td>
@@ -1060,7 +1060,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:52.7%;" title="168 records — higher than 69% of datasets" aria-label="168 records — higher than 69% of datasets"><span class="sparkbar-label">168</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.7%;" title="168 records — higher than 70% of datasets" aria-label="168 records — higher than 70% of datasets"><span class="sparkbar-label">168</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -1071,14 +1071,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002833.html" title="DS002833 — eeg dataset, 20 subjects">DS002833</a></td>
       <td>Mheich2020_DataSet2</td>
-      <td>Mheich2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
       <td><span class="sparkbar" style="--pct:45.2%;" title="80 records — higher than 51% of datasets" aria-label="80 records — higher than 51% of datasets"><span class="sparkbar-label">80</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>4</td>
       <td>257</td>
@@ -1100,7 +1100,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>306\*</td>
       <td>19200\*</td>
-      <td><span class="sparkbar" style="--pct:79.6%;" title="20.1 GB — larger than 61% of datasets" aria-label="20.1 GB — larger than 61% of datasets"><span class="sparkbar-label">20.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:79.6%;" title="20.1 GB — larger than 62% of datasets" aria-label="20.1 GB — larger than 62% of datasets"><span class="sparkbar-label">20.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002893.html" title="DS002893 — eeg dataset, 49 subjects">DS002893</a></td>
@@ -1122,14 +1122,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS002908.html" title="DS002908 — meg dataset, 13 subjects">DS002908</a></td>
       <td>Bogacz2020</td>
-      <td>Bogacz2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:41.0%;" title="53 records — higher than 41% of datasets" aria-label="53 records — higher than 41% of datasets"><span class="sparkbar-label">53</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>6</td>
       <td>299</td>
@@ -1179,7 +1179,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 15% of datasets" aria-label="19 records — higher than 15% of datasets"><span class="sparkbar-label">19</span></span></td>
+      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 14% of datasets" aria-label="19 records — higher than 14% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -1190,14 +1190,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003061.html" title="DS003061 — eeg dataset, 13 subjects">DS003061</a></td>
       <td>Delorme2020_auditory_oddball</td>
-      <td>Delorme</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:37.9%;" title="39 records — higher than 32% of datasets" aria-label="39 records — higher than 32% of datasets"><span class="sparkbar-label">39</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>79</td>
@@ -1217,14 +1217,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:25.0%;" title="6 subjects — higher than 8% of datasets" aria-label="6 subjects — higher than 8% of datasets"><span class="sparkbar-label">6</span></span></td>
       <td>1</td>
       <td>0</td>
-      <td>130</td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 50% of datasets" aria-label="11.0 GB — larger than 50% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 51% of datasets" aria-label="11.0 GB — larger than 51% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003082.html" title="DS003082 — meg dataset, 2 subjects">DS003082</a></td>
       <td>Cote2020</td>
-      <td>Cote2015</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1241,7 +1241,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003104.html" title="DS003104 — meg dataset, 1 subjects">DS003104</a></td>
       <td>Parkkonen2020</td>
-      <td>MNESomato, Somato, MNESomatoData</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1264,7 +1264,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:61.2%;" title="384 records — higher than 86% of datasets" aria-label="384 records — higher than 86% of datasets"><span class="sparkbar-label">384</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.2%;" title="384 records — higher than 87% of datasets" aria-label="384 records — higher than 87% of datasets"><span class="sparkbar-label">384</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>2</td>
       <td>3</td>
@@ -1316,7 +1316,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:42.1%;" title="59 records — higher than 44% of datasets" aria-label="59 records — higher than 44% of datasets"><span class="sparkbar-label">59</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>20</td>
@@ -1326,13 +1326,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003352.html" title="DS003352 — meg dataset, 18 subjects">DS003352</a></td>
       <td>Hermann2020</td>
-      <td>Hermann2021</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:50.7%;" title="138 records — higher than 65% of datasets" aria-label="138 records — higher than 65% of datasets"><span class="sparkbar-label">138</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.7%;" title="138 records — higher than 66% of datasets" aria-label="138 records — higher than 66% of datasets"><span class="sparkbar-label">138</span></span></td>
       <td><span class="sparkbar" style="--pct:37.8%;" title="18 subjects — higher than 32% of datasets" aria-label="18 subjects — higher than 32% of datasets"><span class="sparkbar-label">18</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -1350,7 +1350,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
       <td><span class="sparkbar" style="--pct:30.3%;" title="18 records — higher than 13% of datasets" aria-label="18 records — higher than 13% of datasets"><span class="sparkbar-label">18</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>4\*</td>
@@ -1401,7 +1401,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
       <td><span class="sparkbar" style="--pct:45.2%;" title="80 records — higher than 51% of datasets" aria-label="80 records — higher than 51% of datasets"><span class="sparkbar-label">80</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>4</td>
       <td>257</td>
@@ -1434,8 +1434,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:49.5%;" title="122 records — higher than 62% of datasets" aria-label="122 records — higher than 62% of datasets"><span class="sparkbar-label">122</span></span></td>
-      <td><span class="sparkbar" style="--pct:61.8%;" title="122 subjects — higher than 91% of datasets" aria-label="122 subjects — higher than 91% of datasets"><span class="sparkbar-label">122</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.5%;" title="122 records — higher than 63% of datasets" aria-label="122 records — higher than 63% of datasets"><span class="sparkbar-label">122</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.8%;" title="122 subjects — higher than 92% of datasets" aria-label="122 subjects — higher than 92% of datasets"><span class="sparkbar-label">122</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>66\*</td>
@@ -1451,8 +1451,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
-      <td><span class="sparkbar" style="--pct:56.5%;" title="243 records — higher than 77% of datasets" aria-label="243 records — higher than 77% of datasets"><span class="sparkbar-label">243</span></span></td>
-      <td><span class="sparkbar" style="--pct:61.8%;" title="122 subjects — higher than 91% of datasets" aria-label="122 subjects — higher than 91% of datasets"><span class="sparkbar-label">122</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.5%;" title="243 records — higher than 78% of datasets" aria-label="243 records — higher than 78% of datasets"><span class="sparkbar-label">243</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.8%;" title="122 subjects — higher than 92% of datasets" aria-label="122 subjects — higher than 92% of datasets"><span class="sparkbar-label">122</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>66\*</td>
@@ -1462,7 +1462,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003483.html" title="DS003483 — meg dataset, 21 subjects">DS003483</a></td>
       <td>Cognitive2021</td>
-      <td>Maestu2021</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1503,7 +1503,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:61.2%;" title="385 records — higher than 87% of datasets" aria-label="385 records — higher than 87% of datasets"><span class="sparkbar-label">385</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>0</td>
       <td>1</td>
       <td>64\*</td>
@@ -1513,7 +1513,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003505.html" title="DS003505 — eeg dataset, 19 subjects">DS003505</a></td>
       <td>Pascucci2021</td>
-      <td>VEPCON</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1570,13 +1570,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>49</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 41% of datasets" aria-label="7.6 GB — larger than 41% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 42% of datasets" aria-label="7.6 GB — larger than 42% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003517.html" title="DS003517 — eeg dataset, 17 subjects">DS003517</a></td>
@@ -1604,7 +1604,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:50.6%;" title="137 records — higher than 65% of datasets" aria-label="137 records — higher than 65% of datasets"><span class="sparkbar-label">137</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.6%;" title="137 records — higher than 66% of datasets" aria-label="137 records — higher than 66% of datasets"><span class="sparkbar-label">137</span></span></td>
       <td><span class="sparkbar" style="--pct:60.5%;" title="110 subjects — higher than 90% of datasets" aria-label="110 subjects — higher than 90% of datasets"><span class="sparkbar-label">110</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -1622,12 +1622,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:41.2%;" title="54 records — higher than 42% of datasets" aria-label="54 records — higher than 42% of datasets"><span class="sparkbar-label">54</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>64</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 45% of datasets" aria-label="9.0 GB — larger than 45% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 46% of datasets" aria-label="9.0 GB — larger than 46% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003522.html" title="DS003522 — eeg dataset, 96 subjects">DS003522</a></td>
@@ -1638,7 +1638,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="tbi" data-tag-label="TBI" title="Pathology: TBI" aria-label="Pathology: TBI">TBI</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:54.5%;" title="200 records — higher than 72% of datasets" aria-label="200 records — higher than 72% of datasets"><span class="sparkbar-label">200</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.5%;" title="200 records — higher than 73% of datasets" aria-label="200 records — higher than 73% of datasets"><span class="sparkbar-label">200</span></span></td>
       <td><span class="sparkbar" style="--pct:58.7%;" title="96 subjects — higher than 88% of datasets" aria-label="96 subjects — higher than 88% of datasets"><span class="sparkbar-label">96</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -1655,7 +1655,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="tbi" data-tag-label="TBI" title="Pathology: TBI" aria-label="Pathology: TBI">TBI</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:55.5%;" title="221 records — higher than 74% of datasets" aria-label="221 records — higher than 74% of datasets"><span class="sparkbar-label">221</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.5%;" title="221 records — higher than 75% of datasets" aria-label="221 records — higher than 75% of datasets"><span class="sparkbar-label">221</span></span></td>
       <td><span class="sparkbar" style="--pct:58.0%;" title="91 subjects — higher than 87% of datasets" aria-label="91 subjects — higher than 87% of datasets"><span class="sparkbar-label">91</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -1751,14 +1751,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003620.html" title="DS003620 — eeg dataset, 44 subjects">DS003620</a></td>
       <td>Liebherr2021</td>
-      <td>Runabout</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 56% of datasets" aria-label="100 records — higher than 56% of datasets"><span class="sparkbar-label">100</span></span></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 72% of datasets" aria-label="44 subjects — higher than 72% of datasets"><span class="sparkbar-label">44</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 57% of datasets" aria-label="100 records — higher than 57% of datasets"><span class="sparkbar-label">100</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 73% of datasets" aria-label="44 subjects — higher than 73% of datasets"><span class="sparkbar-label">44</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>35</td>
@@ -1778,14 +1778,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:30.8%;" title="10 subjects — higher than 14% of datasets" aria-label="10 subjects — higher than 14% of datasets"><span class="sparkbar-label">10</span></span></td>
       <td>1</td>
       <td>3</td>
-      <td>137</td>
+      <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:79.3%;" title="18.3 GB — larger than 60% of datasets" aria-label="18.3 GB — larger than 60% of datasets"><span class="sparkbar-label">18.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003633.html" title="DS003633 — meg dataset, 12 subjects">DS003633</a></td>
       <td>Liu2021</td>
-      <td>ForrestGump_MEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1809,7 +1809,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
       <td><span class="sparkbar" style="--pct:41.7%;" title="57 records — higher than 43% of datasets" aria-label="57 records — higher than 43% of datasets"><span class="sparkbar-label">57</span></span></td>
-      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 79% of datasets" aria-label="57 subjects — higher than 79% of datasets"><span class="sparkbar-label">57</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 80% of datasets" aria-label="57 subjects — higher than 80% of datasets"><span class="sparkbar-label">57</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>72</td>
@@ -1825,7 +1825,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:55.7%;" title="224 records — higher than 74% of datasets" aria-label="224 records — higher than 74% of datasets"><span class="sparkbar-label">224</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.7%;" title="224 records — higher than 75% of datasets" aria-label="224 records — higher than 75% of datasets"><span class="sparkbar-label">224</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>2</td>
       <td>8</td>
@@ -1842,8 +1842,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:52.0%;" title="156 records — higher than 68% of datasets" aria-label="156 records — higher than 68% of datasets"><span class="sparkbar-label">156</span></span></td>
-      <td><span class="sparkbar" style="--pct:64.9%;" title="156 subjects — higher than 94% of datasets" aria-label="156 subjects — higher than 94% of datasets"><span class="sparkbar-label">156</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.0%;" title="156 records — higher than 69% of datasets" aria-label="156 records — higher than 69% of datasets"><span class="sparkbar-label">156</span></span></td>
+      <td><span class="sparkbar" style="--pct:64.9%;" title="156 subjects — higher than 95% of datasets" aria-label="156 subjects — higher than 95% of datasets"><span class="sparkbar-label">156</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>21</td>
@@ -1876,7 +1876,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:59.8%;" title="336 records — higher than 83% of datasets" aria-label="336 records — higher than 83% of datasets"><span class="sparkbar-label">336</span></span></td>
+      <td><span class="sparkbar" style="--pct:59.8%;" title="336 records — higher than 84% of datasets" aria-label="336 records — higher than 84% of datasets"><span class="sparkbar-label">336</span></span></td>
       <td><span class="sparkbar" style="--pct:43.2%;" title="28 subjects — higher than 56% of datasets" aria-label="28 subjects — higher than 56% of datasets"><span class="sparkbar-label">28</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -1893,13 +1893,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:48.1%;" title="107 records — higher than 58% of datasets" aria-label="107 records — higher than 58% of datasets"><span class="sparkbar-label">107</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.1%;" title="107 records — higher than 59% of datasets" aria-label="107 records — higher than 59% of datasets"><span class="sparkbar-label">107</span></span></td>
       <td><span class="sparkbar" style="--pct:50.7%;" title="51 subjects — higher than 76% of datasets" aria-label="51 subjects — higher than 76% of datasets"><span class="sparkbar-label">51</span></span></td>
       <td>2</td>
       <td>1</td>
       <td>74\*</td>
       <td>512\*</td>
-      <td><span class="sparkbar" style="--pct:78.7%;" title="15.2 GB — larger than 55% of datasets" aria-label="15.2 GB — larger than 55% of datasets"><span class="sparkbar-label">15.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.7%;" title="15.2 GB — larger than 56% of datasets" aria-label="15.2 GB — larger than 56% of datasets"><span class="sparkbar-label">15.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003690.html" title="DS003690 — eeg dataset, 75 subjects">DS003690</a></td>
@@ -1910,7 +1910,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:60.9%;" title="375 records — higher than 85% of datasets" aria-label="375 records — higher than 85% of datasets"><span class="sparkbar-label">375</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.9%;" title="375 records — higher than 86% of datasets" aria-label="375 records — higher than 86% of datasets"><span class="sparkbar-label">375</span></span></td>
       <td><span class="sparkbar" style="--pct:55.6%;" title="75 subjects — higher than 85% of datasets" aria-label="75 subjects — higher than 85% of datasets"><span class="sparkbar-label">75</span></span></td>
       <td>3</td>
       <td>0</td>
@@ -1921,13 +1921,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003694.html" title="DS003694 — meg dataset, 28 subjects">DS003694</a></td>
       <td>Griffiths2021</td>
-      <td>MEGMEM</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:50.3%;" title="132 records — higher than 64% of datasets" aria-label="132 records — higher than 64% of datasets"><span class="sparkbar-label">132</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.3%;" title="132 records — higher than 65% of datasets" aria-label="132 records — higher than 65% of datasets"><span class="sparkbar-label">132</span></span></td>
       <td><span class="sparkbar" style="--pct:43.2%;" title="28 subjects — higher than 56% of datasets" aria-label="28 subjects — higher than 56% of datasets"><span class="sparkbar-label">28</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -1955,7 +1955,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003703.html" title="DS003703 — meg dataset, 34 subjects">DS003703</a></td>
       <td>Kalenkovich2021</td>
-      <td>Kalenkovich2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -1972,7 +1972,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003708.html" title="DS003708 — ieeg dataset, 1 subjects">DS003708</a></td>
       <td>Hermes2021</td>
-      <td>Miller2021</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -1989,19 +1989,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003710.html" title="DS003710 — eeg dataset, 13 subjects">DS003710</a></td>
       <td>Williams2021</td>
-      <td>APPLESEED</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:40.0%;" title="48 records — higher than 38% of datasets" aria-label="48 records — higher than 38% of datasets"><span class="sparkbar-label">48</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>4</td>
       <td>32</td>
       <td>5000</td>
-      <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 48% of datasets" aria-label="10.2 GB — larger than 48% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 49% of datasets" aria-label="10.2 GB — larger than 49% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003739.html" title="DS003739 — eeg dataset, 30 subjects">DS003739</a></td>
@@ -2012,18 +2012,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 61% of datasets" aria-label="120 records — higher than 61% of datasets"><span class="sparkbar-label">120</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>4</td>
       <td>4</td>
       <td>149</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 50% of datasets" aria-label="10.9 GB — larger than 50% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 51% of datasets" aria-label="10.9 GB — larger than 51% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003751.html" title="DS003751 — eeg dataset, 38 subjects">DS003751</a></td>
       <td>Mishra2021</td>
-      <td>DENS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2046,7 +2046,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -2063,7 +2063,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:49.6%;" title="124 records — higher than 62% of datasets" aria-label="124 records — higher than 62% of datasets"><span class="sparkbar-label">124</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.6%;" title="124 records — higher than 63% of datasets" aria-label="124 records — higher than 63% of datasets"><span class="sparkbar-label">124</span></span></td>
       <td><span class="sparkbar" style="--pct:44.5%;" title="31 subjects — higher than 62% of datasets" aria-label="31 subjects — higher than 62% of datasets"><span class="sparkbar-label">31</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -2080,8 +2080,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:57.0%;" title="255 records — higher than 78% of datasets" aria-label="255 records — higher than 78% of datasets"><span class="sparkbar-label">255</span></span></td>
-      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 65% of datasets" aria-label="33 subjects — higher than 65% of datasets"><span class="sparkbar-label">33</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.0%;" title="255 records — higher than 79% of datasets" aria-label="255 records — higher than 79% of datasets"><span class="sparkbar-label">255</span></span></td>
+      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 64% of datasets" aria-label="33 subjects — higher than 64% of datasets"><span class="sparkbar-label">33</span></span></td>
       <td>2</td>
       <td>0</td>
       <td>32</td>
@@ -2091,14 +2091,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003774.html" title="DS003774 — eeg dataset, 20 subjects">DS003774</a></td>
       <td>Miyapuram2021</td>
-      <td>MUSING</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>12</td>
       <td>129</td>
@@ -2114,8 +2114,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
-      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 67% of datasets" aria-label="153 records — higher than 67% of datasets"><span class="sparkbar-label">153</span></span></td>
-      <td><span class="sparkbar" style="--pct:60.6%;" title="111 subjects — higher than 90% of datasets" aria-label="111 subjects — higher than 90% of datasets"><span class="sparkbar-label">111</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 68% of datasets" aria-label="153 records — higher than 68% of datasets"><span class="sparkbar-label">153</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.6%;" title="111 subjects — higher than 91% of datasets" aria-label="111 subjects — higher than 91% of datasets"><span class="sparkbar-label">111</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>64</td>
@@ -2132,7 +2132,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:33.1%;" title="24 records — higher than 20% of datasets" aria-label="24 records — higher than 20% of datasets"><span class="sparkbar-label">24</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>2</td>
       <td>0</td>
       <td>19</td>
@@ -2149,7 +2149,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>24</td>
@@ -2216,7 +2216,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -2227,7 +2227,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003825.html" title="DS003825 — eeg dataset, 50 subjects">DS003825</a></td>
       <td>Grootswagers2021</td>
-      <td>THINGS, THINGS_EEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2239,7 +2239,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>63\*</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:82.0%;" title="41.2 GB — larger than 74% of datasets" aria-label="41.2 GB — larger than 74% of datasets"><span class="sparkbar-label">41.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:82.0%;" title="41.2 GB — larger than 75% of datasets" aria-label="41.2 GB — larger than 75% of datasets"><span class="sparkbar-label">41.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003838.html" title="DS003838 — eeg dataset, 65 subjects">DS003838</a></td>
@@ -2250,7 +2250,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:50.1%;" title="130 records — higher than 64% of datasets" aria-label="130 records — higher than 64% of datasets"><span class="sparkbar-label">130</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.1%;" title="130 records — higher than 65% of datasets" aria-label="130 records — higher than 65% of datasets"><span class="sparkbar-label">130</span></span></td>
       <td><span class="sparkbar" style="--pct:53.8%;" title="65 subjects — higher than 83% of datasets" aria-label="65 subjects — higher than 83% of datasets"><span class="sparkbar-label">65</span></span></td>
       <td>2</td>
       <td>0</td>
@@ -2261,7 +2261,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003844.html" title="DS003844 — ieeg dataset, 6 subjects">DS003844</a></td>
       <td>Zweiphenning2021</td>
-      <td>RESPect_intraop</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -2295,7 +2295,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS003848.html" title="DS003848 — ieeg dataset, 6 subjects">DS003848</a></td>
       <td>Blooijs2021</td>
-      <td>RESPect_longterm</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -2369,8 +2369,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:52.5%;" title="164 records — higher than 68% of datasets" aria-label="164 records — higher than 68% of datasets"><span class="sparkbar-label">164</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.5%;" title="164 records — higher than 69% of datasets" aria-label="164 records — higher than 69% of datasets"><span class="sparkbar-label">164</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>3</td>
       <td>9</td>
       <td>342\*</td>
@@ -2465,7 +2465,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004010.html" title="DS004010 — eeg dataset, 24 subjects">DS004010</a></td>
       <td>Waschke2022</td>
-      <td>MAVIS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2488,24 +2488,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:50.3%;" title="132 records — higher than 64% of datasets" aria-label="132 records — higher than 64% of datasets"><span class="sparkbar-label">132</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.3%;" title="132 records — higher than 65% of datasets" aria-label="132 records — higher than 65% of datasets"><span class="sparkbar-label">132</span></span></td>
       <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>309</td>
       <td>1200</td>
-      <td><span class="sparkbar" style="--pct:87.3%;" title="198.1 GB — larger than 94% of datasets" aria-label="198.1 GB — larger than 94% of datasets"><span class="sparkbar-label">198.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:87.3%;" title="198.1 GB — larger than 95% of datasets" aria-label="198.1 GB — larger than 95% of datasets"><span class="sparkbar-label">198.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004012.html" title="DS004012 — meg dataset, 30 subjects">DS004012</a></td>
       <td>Rani2022</td>
-      <td>Rani2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:58.4%;" title="294 records — higher than 81% of datasets" aria-label="294 records — higher than 81% of datasets"><span class="sparkbar-label">294</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.4%;" title="294 records — higher than 82% of datasets" aria-label="294 records — higher than 82% of datasets"><span class="sparkbar-label">294</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>10</td>
       <td>0</td>
@@ -2562,7 +2562,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>63</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 49% of datasets" aria-label="10.6 GB — larger than 49% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 50% of datasets" aria-label="10.6 GB — larger than 50% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004019.html" title="DS004019 — eeg dataset, 62 subjects">DS004019</a></td>
@@ -2608,7 +2608,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:63.8%;" title="497 records — higher than 89% of datasets" aria-label="497 records — higher than 89% of datasets"><span class="sparkbar-label">497</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>3</td>
       <td>3</td>
       <td>69</td>
@@ -2642,7 +2642,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
       <td><span class="sparkbar" style="--pct:33.9%;" title="26 records — higher than 22% of datasets" aria-label="26 records — higher than 22% of datasets"><span class="sparkbar-label">26</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>64</td>
@@ -2659,7 +2659,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63</td>
@@ -2692,7 +2692,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 60% of datasets" aria-label="116 records — higher than 60% of datasets"><span class="sparkbar-label">116</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 61% of datasets" aria-label="116 records — higher than 61% of datasets"><span class="sparkbar-label">116</span></span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -2720,13 +2720,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004080.html" title="DS004080 — ieeg dataset, 74 subjects">DS004080</a></td>
       <td>Blooijs2023_CCEP_ECoG</td>
-      <td>RESPect_CCEP</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 60% of datasets" aria-label="117 records — higher than 60% of datasets"><span class="sparkbar-label">117</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 61% of datasets" aria-label="117 records — higher than 61% of datasets"><span class="sparkbar-label">117</span></span></td>
       <td><span class="sparkbar" style="--pct:55.4%;" title="74 subjects — higher than 85% of datasets" aria-label="74 subjects — higher than 85% of datasets"><span class="sparkbar-label">74</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -2737,14 +2737,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004100.html" title="DS004100 — ieeg dataset, 57 subjects">DS004100</a></td>
       <td>Bernabei2022</td>
-      <td>HUPiEEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:59.3%;" title="319 records — higher than 83% of datasets" aria-label="319 records — higher than 83% of datasets"><span class="sparkbar-label">319</span></span></td>
-      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 79% of datasets" aria-label="57 subjects — higher than 79% of datasets"><span class="sparkbar-label">57</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 80% of datasets" aria-label="57 subjects — higher than 80% of datasets"><span class="sparkbar-label">57</span></span></td>
       <td>2</td>
       <td>1</td>
       <td>122\*</td>
@@ -2754,7 +2754,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004105.html" title="DS004105 — eeg dataset, 17 subjects">DS004105</a></td>
       <td>Garcia2022</td>
-      <td>BCIT_Auditory_Cueing</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2771,14 +2771,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004106.html" title="DS004106 — eeg dataset, 27 subjects">DS004106</a></td>
       <td>Touryan2022</td>
-      <td>BCITAdvancedGuardDuty</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:35.0%;" title="29 records — higher than 24% of datasets" aria-label="29 records — higher than 24% of datasets"><span class="sparkbar-label">29</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>262</td>
@@ -2788,14 +2788,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004107.html" title="DS004107 — meg dataset, 9 subjects">DS004107</a></td>
       <td>Weisend2022</td>
-      <td>Weisend2007</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
       <td><span class="sparkbar" style="--pct:46.2%;" title="89 records — higher than 54% of datasets" aria-label="89 records — higher than 54% of datasets"><span class="sparkbar-label">89</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>6</td>
       <td>15</td>
       <td>318\*</td>
@@ -2817,19 +2817,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>71</td>
       <td>250\*</td>
-      <td><span class="sparkbar" style="--pct:75.4%;" title="5.8 GB — larger than 37% of datasets" aria-label="5.8 GB — larger than 37% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.4%;" title="5.8 GB — larger than 38% of datasets" aria-label="5.8 GB — larger than 38% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004118.html" title="DS004118 — eeg dataset, 156 subjects">DS004118</a></td>
       <td>Touryan2022_BCIT_Calibration</td>
-      <td>Touryan1999</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:56.7%;" title="247 records — higher than 78% of datasets" aria-label="247 records — higher than 78% of datasets"><span class="sparkbar-label">247</span></span></td>
-      <td><span class="sparkbar" style="--pct:64.9%;" title="156 subjects — higher than 94% of datasets" aria-label="156 subjects — higher than 94% of datasets"><span class="sparkbar-label">156</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.7%;" title="247 records — higher than 79% of datasets" aria-label="247 records — higher than 79% of datasets"><span class="sparkbar-label">247</span></span></td>
+      <td><span class="sparkbar" style="--pct:64.9%;" title="156 subjects — higher than 95% of datasets" aria-label="156 subjects — higher than 95% of datasets"><span class="sparkbar-label">156</span></span></td>
       <td>1</td>
       <td>7</td>
       <td>266\*</td>
@@ -2839,7 +2839,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004119.html" title="DS004119 — eeg dataset, 21 subjects">DS004119</a></td>
       <td>Touryan2022_BCIT_Basic</td>
-      <td>BCIT</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2856,13 +2856,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004120.html" title="DS004120 — eeg dataset, 109 subjects">DS004120</a></td>
       <td>Touryan2022_BCIT_Baseline</td>
-      <td>BCITBaselineDriving</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:50.2%;" title="131 records — higher than 64% of datasets" aria-label="131 records — higher than 64% of datasets"><span class="sparkbar-label">131</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.2%;" title="131 records — higher than 65% of datasets" aria-label="131 records — higher than 65% of datasets"><span class="sparkbar-label">131</span></span></td>
       <td><span class="sparkbar" style="--pct:60.3%;" title="109 subjects — higher than 90% of datasets" aria-label="109 subjects — higher than 90% of datasets"><span class="sparkbar-label">109</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -2873,13 +2873,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004121.html" title="DS004121 — eeg dataset, 21 subjects">DS004121</a></td>
       <td>Touryan2022_BCIT_Mind</td>
-      <td>BCITMindWandering</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -2907,7 +2907,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004123.html" title="DS004123 — eeg dataset, 29 subjects">DS004123</a></td>
       <td>Touryan2022_BCIT_Traffic</td>
-      <td>BCIT_Traffic_Complexity</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -2970,7 +2970,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>3</td>
       <td>61</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:81.0%;" title="30.7 GB — larger than 69% of datasets" aria-label="30.7 GB — larger than 69% of datasets"><span class="sparkbar-label">30.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:81.0%;" title="30.7 GB — larger than 70% of datasets" aria-label="30.7 GB — larger than 70% of datasets"><span class="sparkbar-label">30.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004151.html" title="DS004151 — eeg dataset, 57 subjects">DS004151</a></td>
@@ -2982,7 +2982,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:41.7%;" title="57 records — higher than 43% of datasets" aria-label="57 records — higher than 43% of datasets"><span class="sparkbar-label">57</span></span></td>
-      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 79% of datasets" aria-label="57 subjects — higher than 79% of datasets"><span class="sparkbar-label">57</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 80% of datasets" aria-label="57 subjects — higher than 80% of datasets"><span class="sparkbar-label">57</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>128</td>
@@ -3015,13 +3015,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:55.1%;" title="213 records — higher than 73% of datasets" aria-label="213 records — higher than 73% of datasets"><span class="sparkbar-label">213</span></span></td>
-      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 84% of datasets" aria-label="71 subjects — higher than 84% of datasets"><span class="sparkbar-label">71</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.1%;" title="213 records — higher than 74% of datasets" aria-label="213 records — higher than 74% of datasets"><span class="sparkbar-label">213</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 85% of datasets" aria-label="71 subjects — higher than 85% of datasets"><span class="sparkbar-label">71</span></span></td>
       <td>1</td>
       <td>3</td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:84.1%;" title="77.4 GB — larger than 86% of datasets" aria-label="77.4 GB — larger than 86% of datasets"><span class="sparkbar-label">77.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:84.1%;" title="77.4 GB — larger than 85% of datasets" aria-label="77.4 GB — larger than 85% of datasets"><span class="sparkbar-label">77.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004194.html" title="DS004194 — ieeg dataset, 14 subjects">DS004194</a></td>
@@ -3032,8 +3032,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:55.0%;" title="209 records — higher than 72% of datasets" aria-label="209 records — higher than 72% of datasets"><span class="sparkbar-label">209</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.0%;" title="209 records — higher than 73% of datasets" aria-label="209 records — higher than 73% of datasets"><span class="sparkbar-label">209</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>7</td>
       <td>5</td>
       <td>265\*</td>
@@ -3067,23 +3067,23 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>37</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 40% of datasets" aria-label="7.2 GB — larger than 40% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 41% of datasets" aria-label="7.2 GB — larger than 41% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004212.html" title="DS004212 — meg dataset, 5 subjects">DS004212</a></td>
       <td>Hebart2022</td>
-      <td>THINGS_MEG, THINGSMEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:63.9%;" title="500 records — higher than 89% of datasets" aria-label="500 records — higher than 89% of datasets"><span class="sparkbar-label">500</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.9%;" title="500 records — higher than 90% of datasets" aria-label="500 records — higher than 90% of datasets"><span class="sparkbar-label">500</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>28</td>
@@ -3109,7 +3109,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:71.5%;" title="1.8 GB — larger than 23% of datasets" aria-label="1.8 GB — larger than 23% of datasets"><span class="sparkbar-label">1.8 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="/api/dataset/eegdash.dataset.DS004252.html" title="DS004252 — eeg dataset, 1 subjects">DS004252</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004252.html" title="DS004252 — eeg dataset, 16 subjects">DS004252</a></td>
       <td>Moerel2022_Rotation</td>
       <td></td>
       <td>openneuro</td>
@@ -3117,13 +3117,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:7.1%;" title="1 records — higher than 0% of datasets" aria-label="1 records — higher than 0% of datasets"><span class="sparkbar-label">1</span></span></td>
-      <td><span class="sparkbar" style="--pct:8.9%;" title="1 subjects — higher than 0% of datasets" aria-label="1 subjects — higher than 0% of datasets"><span class="sparkbar-label">1</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.1%;" title="16 records — higher than 11% of datasets" aria-label="16 records — higher than 11% of datasets"><span class="sparkbar-label">16</span></span></td>
+      <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>1</td>
       <td>0</td>
-      <td>127</td>
+      <td>128</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:70.4%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:79.3%;" title="18.3 GB — larger than 60% of datasets" aria-label="18.3 GB — larger than 60% of datasets"><span class="sparkbar-label">18.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004256.html" title="DS004256 — eeg dataset, 53 subjects">DS004256</a></td>
@@ -3185,7 +3185,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 15% of datasets" aria-label="19 records — higher than 15% of datasets"><span class="sparkbar-label">19</span></span></td>
+      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 14% of datasets" aria-label="19 records — higher than 14% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>2</td>
       <td>1</td>
@@ -3196,7 +3196,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004278.html" title="DS004278 — meg dataset, 30 subjects">DS004278</a></td>
       <td>Kidder2022</td>
-      <td>Kidder2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3219,7 +3219,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:51.9%;" title="56 subjects — higher than 79% of datasets" aria-label="56 subjects — higher than 79% of datasets"><span class="sparkbar-label">56</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -3242,7 +3242,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>129</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:78.9%;" title="16.4 GB — larger than 57% of datasets" aria-label="16.4 GB — larger than 57% of datasets"><span class="sparkbar-label">16.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.9%;" title="16.4 GB — larger than 58% of datasets" aria-label="16.4 GB — larger than 58% of datasets"><span class="sparkbar-label">16.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004295.html" title="DS004295 — eeg dataset, 26 subjects">DS004295</a></td>
@@ -3270,7 +3270,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 11% of datasets" aria-label="15 records — higher than 11% of datasets"><span class="sparkbar-label">15</span></span></td>
+      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 10% of datasets" aria-label="15 records — higher than 10% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td><span class="sparkbar" style="--pct:32.9%;" title="12 subjects — higher than 19% of datasets" aria-label="12 subjects — higher than 19% of datasets"><span class="sparkbar-label">12</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -3293,7 +3293,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>66</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:77.2%;" title="9.8 GB — larger than 47% of datasets" aria-label="9.8 GB — larger than 47% of datasets"><span class="sparkbar-label">9.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.2%;" title="9.8 GB — larger than 48% of datasets" aria-label="9.8 GB — larger than 48% of datasets"><span class="sparkbar-label">9.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004317.html" title="DS004317 — eeg dataset, 50 subjects">DS004317</a></td>
@@ -3315,7 +3315,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004324.html" title="DS004324 — eeg dataset, 26 subjects">DS004324</a></td>
       <td>Chacon2022</td>
-      <td>ToonFaces</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3338,7 +3338,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:57.6%;" title="270 records — higher than 79% of datasets" aria-label="270 records — higher than 79% of datasets"><span class="sparkbar-label">270</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.6%;" title="270 records — higher than 80% of datasets" aria-label="270 records — higher than 80% of datasets"><span class="sparkbar-label">270</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -3349,7 +3349,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004346.html" title="DS004346 — meg dataset, 1 subjects">DS004346</a></td>
       <td>Ferrante2022</td>
-      <td>FLUX</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3383,14 +3383,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004348.html" title="DS004348 — eeg dataset, 9 subjects">DS004348</a></td>
       <td>Mikkelsen2022</td>
-      <td>EESM17</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
       <td><span class="sparkbar" style="--pct:30.3%;" title="18 records — higher than 13% of datasets" aria-label="18 records — higher than 13% of datasets"><span class="sparkbar-label">18</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>2</td>
       <td>1</td>
       <td>34</td>
@@ -3406,13 +3406,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>5</td>
       <td>2</td>
       <td>64</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 47% of datasets" aria-label="9.4 GB — larger than 47% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004356.html" title="DS004356 — eeg dataset, 22 subjects">DS004356</a></td>
@@ -3451,7 +3451,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004362.html" title="DS004362 — eeg dataset, 109 subjects">DS004362</a></td>
       <td>Schalk2022</td>
-      <td>PhysionetMI, EEGMotorMovementImagery</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3519,13 +3519,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004370.html" title="DS004370 — ieeg dataset, 7 subjects">DS004370</a></td>
       <td>Blooijs2022_PRIOS</td>
-      <td>PRIOS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="anesthesia" data-tag-label="Anesthesia" title="Modality: Anesthesia" aria-label="Modality: Anesthesia">Anesthesia</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 11% of datasets" aria-label="15 records — higher than 11% of datasets"><span class="sparkbar-label">15</span></span></td>
+      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 10% of datasets" aria-label="15 records — higher than 10% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td><span class="sparkbar" style="--pct:26.7%;" title="7 subjects — higher than 9% of datasets" aria-label="7 subjects — higher than 9% of datasets"><span class="sparkbar-label">7</span></span></td>
       <td>2</td>
       <td>1</td>
@@ -3542,7 +3542,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:62.5%;" title="437 records — higher than 88% of datasets" aria-label="437 records — higher than 88% of datasets"><span class="sparkbar-label">437</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.5%;" title="437 records — higher than 89% of datasets" aria-label="437 records — higher than 89% of datasets"><span class="sparkbar-label">437</span></span></td>
       <td><span class="sparkbar" style="--pct:37.8%;" title="18 subjects — higher than 32% of datasets" aria-label="18 subjects — higher than 32% of datasets"><span class="sparkbar-label">18</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -3559,7 +3559,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:61.6%;" title="399 records — higher than 87% of datasets" aria-label="399 records — higher than 87% of datasets"><span class="sparkbar-label">399</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.6%;" title="399 records — higher than 88% of datasets" aria-label="399 records — higher than 88% of datasets"><span class="sparkbar-label">399</span></span></td>
       <td><span class="sparkbar" style="--pct:47.7%;" title="40 subjects — higher than 69% of datasets" aria-label="40 subjects — higher than 69% of datasets"><span class="sparkbar-label">40</span></span></td>
       <td>3</td>
       <td>0</td>
@@ -3576,7 +3576,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:57.2%;" title="260 records — higher than 78% of datasets" aria-label="260 records — higher than 78% of datasets"><span class="sparkbar-label">260</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.2%;" title="260 records — higher than 79% of datasets" aria-label="260 records — higher than 79% of datasets"><span class="sparkbar-label">260</span></span></td>
       <td><span class="sparkbar" style="--pct:42.3%;" title="26 subjects — higher than 55% of datasets" aria-label="26 subjects — higher than 55% of datasets"><span class="sparkbar-label">26</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -3587,7 +3587,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004395.html" title="DS004395 — eeg dataset, 364 subjects">DS004395</a></td>
       <td>Kahana2023</td>
-      <td>PEERS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3604,7 +3604,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004398.html" title="DS004398 — meg dataset, 1 subjects">DS004398</a></td>
       <td>Wimmer2023</td>
-      <td>Wimmer2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td></td>
@@ -3627,7 +3627,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:61.1%;" title="380 records — higher than 86% of datasets" aria-label="380 records — higher than 86% of datasets"><span class="sparkbar-label">380</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.1%;" title="380 records — higher than 87% of datasets" aria-label="380 records — higher than 87% of datasets"><span class="sparkbar-label">380</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -3638,13 +3638,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004444.html" title="DS004444 — eeg dataset, 30 subjects">DS004444</a></td>
       <td>Iwama2023_D1</td>
-      <td>BMI_HDEEG_D1</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:63.1%;" title="465 records — higher than 88% of datasets" aria-label="465 records — higher than 88% of datasets"><span class="sparkbar-label">465</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.1%;" title="465 records — higher than 89% of datasets" aria-label="465 records — higher than 89% of datasets"><span class="sparkbar-label">465</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>16</td>
@@ -3655,13 +3655,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004446.html" title="DS004446 — eeg dataset, 30 subjects">DS004446</a></td>
       <td>Iwama2023_D2</td>
-      <td>BMI_HDEEG_D2</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 75% of datasets" aria-label="237 records — higher than 75% of datasets"><span class="sparkbar-label">237</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.2%;" title="237 records — higher than 76% of datasets" aria-label="237 records — higher than 76% of datasets"><span class="sparkbar-label">237</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>8</td>
@@ -3672,13 +3672,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004447.html" title="DS004447 — eeg dataset, 22 subjects">DS004447</a></td>
       <td>Iwama2023_D3</td>
-      <td>BMI_HDEEG_D3</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:62.1%;" title="418 records — higher than 87% of datasets" aria-label="418 records — higher than 87% of datasets"><span class="sparkbar-label">418</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.1%;" title="418 records — higher than 88% of datasets" aria-label="418 records — higher than 88% of datasets"><span class="sparkbar-label">418</span></span></td>
       <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
       <td>1</td>
       <td>20</td>
@@ -3689,7 +3689,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004448.html" title="DS004448 — eeg dataset, 56 subjects">DS004448</a></td>
       <td>Iwama2023_D4</td>
-      <td>BMI_HDEEG_D4</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3706,17 +3706,17 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004457.html" title="DS004457 — ieeg dataset, 5 subjects">DS004457</a></td>
       <td>Huang2023</td>
-      <td>Huang2022</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 4% of datasets" aria-label="5 records — higher than 4% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>1</td>
-      <td>206\*</td>
+      <td>192\*</td>
       <td>2048</td>
       <td><span class="sparkbar" style="--pct:77.6%;" title="10.9 GB — larger than 50% of datasets" aria-label="10.9 GB — larger than 50% of datasets"><span class="sparkbar-label">10.9 GB</span></span></td>
     </tr>
@@ -3730,7 +3730,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:38.2%;" title="40 records — higher than 32% of datasets" aria-label="40 records — higher than 32% of datasets"><span class="sparkbar-label">40</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>160</td>
@@ -3740,7 +3740,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004473.html" title="DS004473 — ieeg dataset, 8 subjects">DS004473</a></td>
       <td>Rockhill2023</td>
-      <td>Rockhill2022</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -3781,7 +3781,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
       <td><span class="sparkbar" style="--pct:23.7%;" title="9 records — higher than 6% of datasets" aria-label="9 records — higher than 6% of datasets"><span class="sparkbar-label">9</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>80</td>
@@ -3791,13 +3791,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004483.html" title="DS004483 — meg dataset, 19 subjects">DS004483</a></td>
       <td>Planton2023</td>
-      <td>ABSeqMEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:58.0%;" title="282 records — higher than 80% of datasets" aria-label="282 records — higher than 80% of datasets"><span class="sparkbar-label">282</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.0%;" title="282 records — higher than 81% of datasets" aria-label="282 records — higher than 81% of datasets"><span class="sparkbar-label">282</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -3808,7 +3808,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004502.html" title="DS004502 — eeg dataset, 48 subjects">DS004502</a></td>
       <td>Penalver2023</td>
-      <td>Penalver2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3848,7 +3848,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -3865,7 +3865,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:50.4%;" title="134 records — higher than 65% of datasets" aria-label="134 records — higher than 65% of datasets"><span class="sparkbar-label">134</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.4%;" title="134 records — higher than 66% of datasets" aria-label="134 records — higher than 66% of datasets"><span class="sparkbar-label">134</span></span></td>
       <td><span class="sparkbar" style="--pct:49.1%;" title="45 subjects — higher than 73% of datasets" aria-label="45 subjects — higher than 73% of datasets"><span class="sparkbar-label">45</span></span></td>
       <td>3</td>
       <td>1</td>
@@ -3927,7 +3927,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004519.html" title="DS004519 — eeg dataset, 40 subjects">DS004519</a></td>
       <td>Ester2023_Internal</td>
-      <td>Ester2022</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3944,14 +3944,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004520.html" title="DS004520 — eeg dataset, 33 subjects">DS004520</a></td>
       <td>Ester2023_Changes</td>
-      <td>Ester2024_E2</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
       <td><span class="sparkbar" style="--pct:36.2%;" title="33 records — higher than 28% of datasets" aria-label="33 records — higher than 28% of datasets"><span class="sparkbar-label">33</span></span></td>
-      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 65% of datasets" aria-label="33 subjects — higher than 65% of datasets"><span class="sparkbar-label">33</span></span></td>
+      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 64% of datasets" aria-label="33 subjects — higher than 64% of datasets"><span class="sparkbar-label">33</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>62</td>
@@ -3961,7 +3961,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004521.html" title="DS004521 — eeg dataset, 34 subjects">DS004521</a></td>
       <td>Ester2023_Changes_behavioral</td>
-      <td>Ester2024_E1</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -3984,7 +3984,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:50.6%;" title="137 records — higher than 65% of datasets" aria-label="137 records — higher than 65% of datasets"><span class="sparkbar-label">137</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.6%;" title="137 records — higher than 66% of datasets" aria-label="137 records — higher than 66% of datasets"><span class="sparkbar-label">137</span></span></td>
       <td><span class="sparkbar" style="--pct:60.5%;" title="110 subjects — higher than 90% of datasets" aria-label="110 subjects — higher than 90% of datasets"><span class="sparkbar-label">110</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -3995,7 +3995,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004541.html" title="DS004541 — eeg, fnirs dataset, 8 subjects">DS004541</a></td>
       <td>Ferron2023</td>
-      <td>Ferron2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span> <span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
@@ -4006,19 +4006,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>2</td>
       <td>59\*</td>
-      <td>1000\*</td>
+      <td>7\*</td>
       <td><span class="sparkbar" style="--pct:73.1%;" title="2.9 GB — larger than 28% of datasets" aria-label="2.9 GB — larger than 28% of datasets"><span class="sparkbar-label">2.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004551.html" title="DS004551 — ieeg dataset, 114 subjects">DS004551</a></td>
       <td>Sakakura2023_children_slow_wave</td>
-      <td>Sakakura2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:49.7%;" title="125 records — higher than 63% of datasets" aria-label="125 records — higher than 63% of datasets"><span class="sparkbar-label">125</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.7%;" title="125 records — higher than 64% of datasets" aria-label="125 records — higher than 64% of datasets"><span class="sparkbar-label">125</span></span></td>
       <td><span class="sparkbar" style="--pct:60.9%;" title="114 subjects — higher than 91% of datasets" aria-label="114 subjects — higher than 91% of datasets"><span class="sparkbar-label">114</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -4069,7 +4069,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:49.2%;" title="119 records — higher than 61% of datasets" aria-label="119 records — higher than 61% of datasets"><span class="sparkbar-label">119</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.2%;" title="119 records — higher than 62% of datasets" aria-label="119 records — higher than 62% of datasets"><span class="sparkbar-label">119</span></span></td>
       <td><span class="sparkbar" style="--pct:47.7%;" title="40 subjects — higher than 69% of datasets" aria-label="40 subjects — higher than 69% of datasets"><span class="sparkbar-label">40</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -4080,7 +4080,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004572.html" title="DS004572 — eeg dataset, 52 subjects">DS004572</a></td>
       <td>Kekecs2023</td>
-      <td>Kekecs2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4103,13 +4103,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:51.3%;" title="146 records — higher than 66% of datasets" aria-label="146 records — higher than 66% of datasets"><span class="sparkbar-label">146</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.3%;" title="146 records — higher than 67% of datasets" aria-label="146 records — higher than 67% of datasets"><span class="sparkbar-label">146</span></span></td>
       <td><span class="sparkbar" style="--pct:64.1%;" title="146 subjects — higher than 94% of datasets" aria-label="146 subjects — higher than 94% of datasets"><span class="sparkbar-label">146</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63\*</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:78.3%;" title="13.5 GB — larger than 53% of datasets" aria-label="13.5 GB — larger than 53% of datasets"><span class="sparkbar-label">13.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.3%;" title="13.5 GB — larger than 54% of datasets" aria-label="13.5 GB — larger than 54% of datasets"><span class="sparkbar-label">13.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004577.html" title="DS004577 — eeg dataset, 103 subjects">DS004577</a></td>
@@ -4120,7 +4120,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:50.1%;" title="130 records — higher than 64% of datasets" aria-label="130 records — higher than 64% of datasets"><span class="sparkbar-label">130</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.1%;" title="130 records — higher than 65% of datasets" aria-label="130 records — higher than 65% of datasets"><span class="sparkbar-label">130</span></span></td>
       <td><span class="sparkbar" style="--pct:59.6%;" title="103 subjects — higher than 89% of datasets" aria-label="103 subjects — higher than 89% of datasets"><span class="sparkbar-label">103</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -4137,13 +4137,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:50.8%;" title="139 records — higher than 65% of datasets" aria-label="139 records — higher than 65% of datasets"><span class="sparkbar-label">139</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.8%;" title="139 records — higher than 66% of datasets" aria-label="139 records — higher than 66% of datasets"><span class="sparkbar-label">139</span></span></td>
       <td><span class="sparkbar" style="--pct:63.4%;" title="139 subjects — higher than 93% of datasets" aria-label="139 subjects — higher than 93% of datasets"><span class="sparkbar-label">139</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63\*</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:80.2%;" title="24.1 GB — larger than 65% of datasets" aria-label="24.1 GB — larger than 65% of datasets"><span class="sparkbar-label">24.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:80.2%;" title="24.1 GB — larger than 66% of datasets" aria-label="24.1 GB — larger than 66% of datasets"><span class="sparkbar-label">24.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004580.html" title="DS004580 — eeg dataset, 147 subjects">DS004580</a></td>
@@ -4154,7 +4154,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:51.4%;" title="147 records — higher than 66% of datasets" aria-label="147 records — higher than 66% of datasets"><span class="sparkbar-label">147</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.4%;" title="147 records — higher than 67% of datasets" aria-label="147 records — higher than 67% of datasets"><span class="sparkbar-label">147</span></span></td>
       <td><span class="sparkbar" style="--pct:64.1%;" title="147 subjects — higher than 94% of datasets" aria-label="147 subjects — higher than 94% of datasets"><span class="sparkbar-label">147</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -4177,7 +4177,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>64</td>
       <td>10000</td>
-      <td><span class="sparkbar" style="--pct:88.6%;" title="294.2 GB — larger than 98% of datasets" aria-label="294.2 GB — larger than 98% of datasets"><span class="sparkbar-label">294.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:88.6%;" title="294.2 GB — larger than 97% of datasets" aria-label="294.2 GB — larger than 97% of datasets"><span class="sparkbar-label">294.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004584.html" title="DS004584 — eeg dataset, 149 subjects">DS004584</a></td>
@@ -4188,7 +4188,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:51.5%;" title="149 records — higher than 67% of datasets" aria-label="149 records — higher than 67% of datasets"><span class="sparkbar-label">149</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.5%;" title="149 records — higher than 68% of datasets" aria-label="149 records — higher than 68% of datasets"><span class="sparkbar-label">149</span></span></td>
       <td><span class="sparkbar" style="--pct:64.3%;" title="149 subjects — higher than 94% of datasets" aria-label="149 subjects — higher than 94% of datasets"><span class="sparkbar-label">149</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -4216,7 +4216,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004588.html" title="DS004588 — eeg dataset, 42 subjects">DS004588</a></td>
       <td>Georgiadis2023</td>
-      <td>Neuma</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4245,24 +4245,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>66</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 42% of datasets" aria-label="7.8 GB — larger than 42% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 43% of datasets" aria-label="7.8 GB — larger than 43% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004598.html" title="DS004598 — eeg dataset, 9 subjects">DS004598</a></td>
       <td>Faraz2023</td>
-      <td>Moradi2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="dementia" data-tag-label="Dementia" title="Pathology: Dementia" aria-label="Pathology: Dementia">Dementia</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>3</td>
       <td>16</td>
       <td>10000</td>
-      <td><span class="sparkbar" style="--pct:77.3%;" title="9.9 GB — larger than 47% of datasets" aria-label="9.9 GB — larger than 47% of datasets"><span class="sparkbar-label">9.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.3%;" title="9.9 GB — larger than 48% of datasets" aria-label="9.9 GB — larger than 48% of datasets"><span class="sparkbar-label">9.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004602.html" title="DS004602 — eeg dataset, 182 subjects">DS004602</a></td>
@@ -4273,18 +4273,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:64.8%;" title="546 records — higher than 90% of datasets" aria-label="546 records — higher than 90% of datasets"><span class="sparkbar-label">546</span></span></td>
+      <td><span class="sparkbar" style="--pct:64.8%;" title="546 records — higher than 91% of datasets" aria-label="546 records — higher than 91% of datasets"><span class="sparkbar-label">546</span></span></td>
       <td><span class="sparkbar" style="--pct:66.9%;" title="182 subjects — higher than 95% of datasets" aria-label="182 subjects — higher than 95% of datasets"><span class="sparkbar-label">182</span></span></td>
       <td>3</td>
       <td>0</td>
       <td>129</td>
       <td>500\*</td>
-      <td><span class="sparkbar" style="--pct:84.0%;" title="73.9 GB — larger than 85% of datasets" aria-label="73.9 GB — larger than 85% of datasets"><span class="sparkbar-label">73.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:84.0%;" title="73.9 GB — larger than 84% of datasets" aria-label="73.9 GB — larger than 84% of datasets"><span class="sparkbar-label">73.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004603.html" title="DS004603 — eeg dataset, 37 subjects">DS004603</a></td>
       <td>Lowe2023</td>
-      <td>VisualContextTrajectory</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4301,7 +4301,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004621.html" title="DS004621 — eeg dataset, 42 subjects">DS004621</a></td>
       <td>Patrycja2023_Nencki</td>
-      <td>NenckiSymfonia</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4318,7 +4318,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004624.html" title="DS004624 — ieeg dataset, 3 subjects">DS004624</a></td>
       <td>Mivalt2025</td>
-      <td>Mivalt2024, BCI2000_Intracranial</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
@@ -4341,7 +4341,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:64.7%;" title="543 records — higher than 90% of datasets" aria-label="543 records — higher than 90% of datasets"><span class="sparkbar-label">543</span></span></td>
+      <td><span class="sparkbar" style="--pct:64.7%;" title="543 records — higher than 91% of datasets" aria-label="543 records — higher than 91% of datasets"><span class="sparkbar-label">543</span></span></td>
       <td><span class="sparkbar" style="--pct:44.9%;" title="32 subjects — higher than 64% of datasets" aria-label="32 subjects — higher than 64% of datasets"><span class="sparkbar-label">32</span></span></td>
       <td>9</td>
       <td>0</td>
@@ -4403,13 +4403,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004657.html" title="DS004657 — eeg dataset, 24 subjects">DS004657</a></td>
       <td>Metcalfe2023_Driving</td>
-      <td>TX20</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:49.2%;" title="119 records — higher than 61% of datasets" aria-label="119 records — higher than 61% of datasets"><span class="sparkbar-label">119</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.2%;" title="119 records — higher than 62% of datasets" aria-label="119 records — higher than 62% of datasets"><span class="sparkbar-label">119</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>1</td>
       <td>6</td>
@@ -4420,7 +4420,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004660.html" title="DS004660 — eeg dataset, 21 subjects">DS004660</a></td>
       <td>Johnson2023_TNO</td>
-      <td>TNO</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4432,12 +4432,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>38</td>
       <td>512\*</td>
-      <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 40% of datasets" aria-label="7.2 GB — larger than 40% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.2%;" title="7.2 GB — larger than 41% of datasets" aria-label="7.2 GB — larger than 41% of datasets"><span class="sparkbar-label">7.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004661.html" title="DS004661 — eeg dataset, 17 subjects">DS004661</a></td>
       <td>Johnson2023_ANDI</td>
-      <td>ANDI</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -4464,7 +4464,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:28.2%;" title="8 subjects — higher than 10% of datasets" aria-label="8 subjects — higher than 10% of datasets"><span class="sparkbar-label">8</span></span></td>
       <td>1</td>
       <td>1</td>
-      <td>226\*</td>
+      <td>201\*</td>
       <td>2048</td>
       <td><span class="sparkbar" style="--pct:78.4%;" title="14.2 GB — larger than 54% of datasets" aria-label="14.2 GB — larger than 54% of datasets"><span class="sparkbar-label">14.2 GB</span></span></td>
     </tr>
@@ -4483,7 +4483,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>148\*</td>
       <td>1024\*</td>
-      <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 52% of datasets" aria-label="12.4 GB — larger than 52% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 53% of datasets" aria-label="12.4 GB — larger than 53% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004706.html" title="DS004706 — eeg dataset, 34 subjects">DS004706</a></td>
@@ -4528,7 +4528,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:20.7%;" title="4 subjects — higher than 6% of datasets" aria-label="4 subjects — higher than 6% of datasets"><span class="sparkbar-label">4</span></span></td>
       <td>2</td>
       <td>2</td>
@@ -4562,7 +4562,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:50.6%;" title="136 records — higher than 65% of datasets" aria-label="136 records — higher than 65% of datasets"><span class="sparkbar-label">136</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.6%;" title="136 records — higher than 66% of datasets" aria-label="136 records — higher than 66% of datasets"><span class="sparkbar-label">136</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>8</td>
@@ -4605,18 +4605,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.6%;" title="1.4 GB — larger than 21% of datasets" aria-label="1.4 GB — larger than 21% of datasets"><span class="sparkbar-label">1.4 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="/api/dataset/eegdash.dataset.DS004774.html" title="DS004774 — ieeg dataset, 14 subjects">DS004774</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS004774.html" title="DS004774 — ieeg dataset, 9 subjects">DS004774</a></td>
       <td>Boom2023</td>
-      <td>ERDetect, ER_Detect</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:27.8%;" title="14 records — higher than 10% of datasets" aria-label="14 records — higher than 10% of datasets"><span class="sparkbar-label">14</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:23.7%;" title="9 records — higher than 6% of datasets" aria-label="9 records — higher than 6% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td>1</td>
       <td>2</td>
-      <td>3</td>
       <td>133\*</td>
       <td>2048</td>
       <td><span class="sparkbar" style="--pct:80.3%;" title="24.8 GB — larger than 66% of datasets" aria-label="24.8 GB — larger than 66% of datasets"><span class="sparkbar-label">24.8 GB</span></span></td>
@@ -4664,7 +4664,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:70.8%;" title="983 records — higher than 93% of datasets" aria-label="983 records — higher than 93% of datasets"><span class="sparkbar-label">983</span></span></td>
+      <td><span class="sparkbar" style="--pct:70.8%;" title="983 records — higher than 94% of datasets" aria-label="983 records — higher than 94% of datasets"><span class="sparkbar-label">983</span></span></td>
       <td><span class="sparkbar" style="--pct:72.0%;" title="273 subjects — higher than 97% of datasets" aria-label="273 subjects — higher than 97% of datasets"><span class="sparkbar-label">273</span></span></td>
       <td>1</td>
       <td>12</td>
@@ -4675,14 +4675,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004796.html" title="DS004796 — eeg dataset, 79 subjects">DS004796</a></td>
       <td>Patrycja2023_Polish</td>
-      <td>PEARLNeuro</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span> <span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
-      <td><span class="sparkbar" style="--pct:56.2%;" title="235 records — higher than 75% of datasets" aria-label="235 records — higher than 75% of datasets"><span class="sparkbar-label">235</span></span></td>
-      <td><span class="sparkbar" style="--pct:56.2%;" title="79 subjects — higher than 85% of datasets" aria-label="79 subjects — higher than 85% of datasets"><span class="sparkbar-label">79</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.2%;" title="235 records — higher than 76% of datasets" aria-label="235 records — higher than 76% of datasets"><span class="sparkbar-label">235</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.2%;" title="79 subjects — higher than 86% of datasets" aria-label="79 subjects — higher than 86% of datasets"><span class="sparkbar-label">79</span></span></td>
       <td>3</td>
       <td>0</td>
       <td>127</td>
@@ -4709,7 +4709,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004809.html" title="DS004809 — ieeg dataset, 252 subjects">DS004809</a></td>
       <td>Herrema2023_Categorized_Free_Recall</td>
-      <td>catFR_Categorized_Free_Recall, CatFR</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -4733,7 +4733,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63</td>
@@ -4750,7 +4750,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63</td>
@@ -4772,20 +4772,20 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>64</td>
       <td>30000</td>
-      <td><span class="sparkbar" style="--pct:68.2%;" title="688.7 MB — larger than 14% of datasets" aria-label="688.7 MB — larger than 14% of datasets"><span class="sparkbar-label">688.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.2%;" title="688.7 MB — larger than 15% of datasets" aria-label="688.7 MB — larger than 15% of datasets"><span class="sparkbar-label">688.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004830.html" title="DS004830 — fnirs dataset, 12 subjects">DS004830</a></td>
       <td>Ning2023</td>
-      <td>Ning2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:27.8%;" title="14 records — higher than 10% of datasets" aria-label="14 records — higher than 10% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 14% of datasets" aria-label="19 records — higher than 14% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td><span class="sparkbar" style="--pct:32.9%;" title="12 subjects — higher than 19% of datasets" aria-label="12 subjects — higher than 19% of datasets"><span class="sparkbar-label">12</span></span></td>
-      <td>1</td>
+      <td>5</td>
       <td>0</td>
       <td>72\*</td>
       <td>50</td>
@@ -4818,7 +4818,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:40.6%;" title="51 records — higher than 40% of datasets" aria-label="51 records — higher than 40% of datasets"><span class="sparkbar-label">51</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>3</td>
       <td>2</td>
       <td>10\*</td>
@@ -4828,31 +4828,31 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004841.html" title="DS004841 — eeg dataset, 20 subjects">DS004841</a></td>
       <td>Larkin2023_TX14</td>
-      <td>TX14</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:51.4%;" title="147 records — higher than 66% of datasets" aria-label="147 records — higher than 66% of datasets"><span class="sparkbar-label">147</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.4%;" title="147 records — higher than 67% of datasets" aria-label="147 records — higher than 67% of datasets"><span class="sparkbar-label">147</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>70</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 40% of datasets" aria-label="7.3 GB — larger than 40% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 41% of datasets" aria-label="7.3 GB — larger than 41% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004842.html" title="DS004842 — eeg dataset, 14 subjects">DS004842</a></td>
       <td>Larkin2023_TX15</td>
-      <td>TX15</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:47.6%;" title="102 records — higher than 57% of datasets" aria-label="102 records — higher than 57% of datasets"><span class="sparkbar-label">102</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>70\*</td>
@@ -4869,7 +4869,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:46.6%;" title="92 records — higher than 55% of datasets" aria-label="92 records — higher than 55% of datasets"><span class="sparkbar-label">92</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>70</td>
@@ -4896,7 +4896,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004849.html" title="DS004849 — eeg dataset, 1 subjects">DS004849</a></td>
       <td>Johnson2023_STRONG</td>
-      <td>STRONG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -4913,7 +4913,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004850.html" title="DS004850 — eeg dataset, 1 subjects">DS004850</a></td>
       <td>Johnson2023_ODE</td>
-      <td>Johnson2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -4930,7 +4930,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004851.html" title="DS004851 — eeg dataset, 66 subjects">DS004851</a></td>
       <td>Johnson2023_HID</td>
-      <td>HID</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -4947,7 +4947,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004852.html" title="DS004852 — eeg dataset, 1 subjects">DS004852</a></td>
       <td>Johnson2023_InsurgentCivilian</td>
-      <td>Johnson2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -4981,7 +4981,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004854.html" title="DS004854 — eeg dataset, 1 subjects">DS004854</a></td>
       <td>Johnson2023_TX18</td>
-      <td>TX18</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -5015,7 +5015,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004859.html" title="DS004859 — ieeg dataset, 7 subjects">DS004859</a></td>
       <td>Sakakura2023_children_Stroop</td>
-      <td>Sakakura2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -5044,18 +5044,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>36</td>
       <td>512\*</td>
-      <td><span class="sparkbar" style="--pct:74.0%;" title="3.8 GB — larger than 31% of datasets" aria-label="3.8 GB — larger than 31% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.0%;" title="3.8 GB — larger than 32% of datasets" aria-label="3.8 GB — larger than 32% of datasets"><span class="sparkbar-label">3.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004865.html" title="DS004865 — ieeg dataset, 42 subjects">DS004865</a></td>
       <td>Herrema2023_pyFR_Delayed_Free</td>
-      <td>pyFR</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:53.0%;" title="172 records — higher than 69% of datasets" aria-label="172 records — higher than 69% of datasets"><span class="sparkbar-label">172</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.0%;" title="172 records — higher than 70% of datasets" aria-label="172 records — higher than 70% of datasets"><span class="sparkbar-label">172</span></span></td>
       <td><span class="sparkbar" style="--pct:48.3%;" title="42 subjects — higher than 71% of datasets" aria-label="42 subjects — higher than 71% of datasets"><span class="sparkbar-label">42</span></span></td>
       <td>1</td>
       <td>5</td>
@@ -5090,7 +5090,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
       <td><span class="sparkbar" style="--pct:55.4%;" title="218 records — higher than 74% of datasets" aria-label="218 records — higher than 74% of datasets"><span class="sparkbar-label">218</span></span></td>
-      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 84% of datasets" aria-label="71 subjects — higher than 84% of datasets"><span class="sparkbar-label">71</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 85% of datasets" aria-label="71 subjects — higher than 85% of datasets"><span class="sparkbar-label">71</span></span></td>
       <td>2</td>
       <td>2</td>
       <td>61</td>
@@ -5112,7 +5112,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>66</td>
       <td>5000</td>
-      <td><span class="sparkbar" style="--pct:81.7%;" title="37.5 GB — larger than 72% of datasets" aria-label="37.5 GB — larger than 72% of datasets"><span class="sparkbar-label">37.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:81.7%;" title="37.5 GB — larger than 73% of datasets" aria-label="37.5 GB — larger than 73% of datasets"><span class="sparkbar-label">37.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004929.html" title="DS004929 — fnirs dataset, 12 subjects">DS004929</a></td>
@@ -5168,7 +5168,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004944.html" title="DS004944 — ieeg dataset, 22 subjects">DS004944</a></td>
       <td>Costa2024</td>
-      <td>BCI2000_intraop</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -5185,19 +5185,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004951.html" title="DS004951 — eeg dataset, 11 subjects">DS004951</a></td>
       <td>Haupt2024_Braille</td>
-      <td>Haupt2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
       <td><span class="sparkbar" style="--pct:32.7%;" title="23 records — higher than 19% of datasets" aria-label="23 records — higher than 19% of datasets"><span class="sparkbar-label">23</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>64\*</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:79.9%;" title="22.0 GB — larger than 63% of datasets" aria-label="22.0 GB — larger than 63% of datasets"><span class="sparkbar-label">22.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:79.9%;" title="22.0 GB — larger than 64% of datasets" aria-label="22.0 GB — larger than 64% of datasets"><span class="sparkbar-label">22.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004952.html" title="DS004952 — eeg dataset, 10 subjects">DS004952</a></td>
@@ -5225,8 +5225,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:55.6%;" title="222 records — higher than 74% of datasets" aria-label="222 records — higher than 74% of datasets"><span class="sparkbar-label">222</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.6%;" title="222 records — higher than 75% of datasets" aria-label="222 records — higher than 75% of datasets"><span class="sparkbar-label">222</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>12</td>
       <td>0</td>
       <td>16</td>
@@ -5236,7 +5236,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004977.html" title="DS004977 — ieeg dataset, 4 subjects">DS004977</a></td>
       <td>Huang2024</td>
-      <td>CARLA</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -5270,7 +5270,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004993.html" title="DS004993 — ieeg dataset, 3 subjects">DS004993</a></td>
       <td>Hamilton2024</td>
-      <td>WIRED_ICM</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -5280,21 +5280,21 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:17.8%;" title="3 subjects — higher than 5% of datasets" aria-label="3 subjects — higher than 5% of datasets"><span class="sparkbar-label">3</span></span></td>
       <td>3</td>
       <td>1</td>
-      <td>148\*</td>
+      <td>106\*</td>
       <td>512\*</td>
-      <td><span class="sparkbar" style="--pct:65.5%;" title="305.1 MB — larger than 7% of datasets" aria-label="305.1 MB — larger than 7% of datasets"><span class="sparkbar-label">305.1 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.5%;" title="305.1 MB — larger than 8% of datasets" aria-label="305.1 MB — larger than 8% of datasets"><span class="sparkbar-label">305.1 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS004995.html" title="DS004995 — eeg dataset, 20 subjects">DS004995</a></td>
       <td>Moerel2024</td>
-      <td>Moerel2023</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>127</td>
@@ -5310,8 +5310,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:51.2%;" title="145 records — higher than 66% of datasets" aria-label="145 records — higher than 66% of datasets"><span class="sparkbar-label">145</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.2%;" title="145 records — higher than 67% of datasets" aria-label="145 records — higher than 67% of datasets"><span class="sparkbar-label">145</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>6</td>
       <td>1</td>
       <td>323\*</td>
@@ -5321,7 +5321,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005007.html" title="DS005007 — ieeg dataset, 40 subjects">DS005007</a></td>
       <td>Kitazawa2024</td>
-      <td>Kitazawa2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -5355,17 +5355,17 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005028.html" title="DS005028 — eeg dataset, 11 subjects">DS005028</a></td>
       <td>Chandravadia2024</td>
-      <td>Chandravadia2022</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:47.9%;" title="105 records — higher than 58% of datasets" aria-label="105 records — higher than 58% of datasets"><span class="sparkbar-label">105</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>3</td>
       <td>2</td>
-      <td>32</td>
+      <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:66.6%;" title="422.1 MB — larger than 10% of datasets" aria-label="422.1 MB — larger than 10% of datasets"><span class="sparkbar-label">422.1 MB</span></span></td>
     </tr>
@@ -5378,7 +5378,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 56% of datasets" aria-label="100 records — higher than 56% of datasets"><span class="sparkbar-label">100</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 57% of datasets" aria-label="100 records — higher than 57% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>2</td>
       <td>2</td>
@@ -5406,13 +5406,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005059.html" title="DS005059 — ieeg dataset, 69 subjects">DS005059</a></td>
       <td>Herrema2024_Paired</td>
-      <td>PAL</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:58.0%;" title="282 records — higher than 80% of datasets" aria-label="282 records — higher than 80% of datasets"><span class="sparkbar-label">282</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.0%;" title="282 records — higher than 81% of datasets" aria-label="282 records — higher than 81% of datasets"><span class="sparkbar-label">282</span></span></td>
       <td><span class="sparkbar" style="--pct:54.5%;" title="69 subjects — higher than 84% of datasets" aria-label="69 subjects — higher than 84% of datasets"><span class="sparkbar-label">69</span></span></td>
       <td>1</td>
       <td>7</td>
@@ -5429,7 +5429,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:57.8%;" title="275 records — higher than 79% of datasets" aria-label="275 records — higher than 79% of datasets"><span class="sparkbar-label">275</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.8%;" title="275 records — higher than 80% of datasets" aria-label="275 records — higher than 80% of datasets"><span class="sparkbar-label">275</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -5446,7 +5446,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:8.9%;" title="1 subjects — higher than 0% of datasets" aria-label="1 subjects — higher than 0% of datasets"><span class="sparkbar-label">1</span></span></td>
       <td>15</td>
       <td>12</td>
@@ -5480,8 +5480,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>3</td>
       <td>0</td>
       <td>63</td>
@@ -5520,7 +5520,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>63</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 54% of datasets" aria-label="14.3 GB — larger than 54% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 55% of datasets" aria-label="14.3 GB — larger than 55% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005106.html" title="DS005106 — eeg dataset, 42 subjects">DS005106</a></td>
@@ -5548,7 +5548,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:60.2%;" title="350 records — higher than 84% of datasets" aria-label="350 records — higher than 84% of datasets"><span class="sparkbar-label">350</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.2%;" title="350 records — higher than 85% of datasets" aria-label="350 records — higher than 85% of datasets"><span class="sparkbar-label">350</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -5565,7 +5565,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="tbi" data-tag-label="TBI" title="Pathology: TBI" aria-label="Pathology: TBI">TBI</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:55.6%;" title="223 records — higher than 74% of datasets" aria-label="223 records — higher than 74% of datasets"><span class="sparkbar-label">223</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.6%;" title="223 records — higher than 75% of datasets" aria-label="223 records — higher than 75% of datasets"><span class="sparkbar-label">223</span></span></td>
       <td><span class="sparkbar" style="--pct:58.0%;" title="91 subjects — higher than 87% of datasets" aria-label="91 subjects — higher than 87% of datasets"><span class="sparkbar-label">91</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -5616,18 +5616,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 59% of datasets" aria-label="112 records — higher than 59% of datasets"><span class="sparkbar-label">112</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 60% of datasets" aria-label="112 records — higher than 60% of datasets"><span class="sparkbar-label">112</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>16</td>
       <td>82\*</td>
       <td>4096</td>
-      <td><span class="sparkbar" style="--pct:74.2%;" title="4.0 GB — larger than 32% of datasets" aria-label="4.0 GB — larger than 32% of datasets"><span class="sparkbar-label">4.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.2%;" title="4.0 GB — larger than 33% of datasets" aria-label="4.0 GB — larger than 33% of datasets"><span class="sparkbar-label">4.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005170.html" title="DS005170 — eeg dataset, 5 subjects">DS005170</a></td>
       <td>Zhang2024_Chisco</td>
-      <td>Chisco</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -5637,14 +5637,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>6</td>
-      <td>134</td>
+      <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:84.6%;" title="90.7 GB — larger than 87% of datasets" aria-label="90.7 GB — larger than 87% of datasets"><span class="sparkbar-label">90.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005178.html" title="DS005178 — eeg dataset, 10 subjects">DS005178</a></td>
       <td>Tabar2024</td>
-      <td>EESM23</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -5661,14 +5661,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005185.html" title="DS005185 — eeg dataset, 20 subjects">DS005185</a></td>
       <td>Mikkelsen2024_Ear_Sleep_Monitoring</td>
-      <td>EESM19</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:60.4%;" title="356 records — higher than 84% of datasets" aria-label="356 records — higher than 84% of datasets"><span class="sparkbar-label">356</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.4%;" title="356 records — higher than 85% of datasets" aria-label="356 records — higher than 85% of datasets"><span class="sparkbar-label">356</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>3</td>
       <td>16</td>
       <td>25</td>
@@ -5695,14 +5695,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005207.html" title="DS005207 — eeg dataset, 20 subjects">DS005207</a></td>
       <td>Mikkelsen2024_Surrey_cEEGrid_sleep</td>
-      <td>Surrey_cEEGrid_sleep</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
       <td><span class="sparkbar" style="--pct:37.9%;" title="39 records — higher than 32% of datasets" aria-label="39 records — higher than 32% of datasets"><span class="sparkbar-label">39</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>13\*</td>
@@ -5712,13 +5712,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005241.html" title="DS005241 — meg dataset, 24 subjects">DS005241</a></td>
       <td>Rodriguez2024</td>
-      <td>NeuroMorph, neuromorph</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 60% of datasets" aria-label="117 records — higher than 60% of datasets"><span class="sparkbar-label">117</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.0%;" title="117 records — higher than 61% of datasets" aria-label="117 records — higher than 61% of datasets"><span class="sparkbar-label">117</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>2</td>
       <td>3</td>
@@ -5729,13 +5729,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005261.html" title="DS005261 — meg dataset, 17 subjects">DS005261</a></td>
       <td>Todorovic2024</td>
-      <td>Todorovic2023</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 63% of datasets" aria-label="128 records — higher than 63% of datasets"><span class="sparkbar-label">128</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 64% of datasets" aria-label="128 records — higher than 64% of datasets"><span class="sparkbar-label">128</span></span></td>
       <td><span class="sparkbar" style="--pct:37.1%;" title="17 subjects — higher than 30% of datasets" aria-label="17 subjects — higher than 30% of datasets"><span class="sparkbar-label">17</span></span></td>
       <td>2</td>
       <td>0</td>
@@ -5746,7 +5746,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005262.html" title="DS005262 — eeg dataset, 12 subjects">DS005262</a></td>
       <td>Metwalli2024</td>
-      <td>ArEEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -5770,7 +5770,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
       <td><span class="sparkbar" style="--pct:36.2%;" title="33 records — higher than 28% of datasets" aria-label="33 records — higher than 28% of datasets"><span class="sparkbar-label">33</span></span></td>
-      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 65% of datasets" aria-label="33 subjects — higher than 65% of datasets"><span class="sparkbar-label">33</span></span></td>
+      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 64% of datasets" aria-label="33 subjects — higher than 64% of datasets"><span class="sparkbar-label">33</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>63</td>
@@ -5820,7 +5820,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:66.9%;" title="669 records — higher than 91% of datasets" aria-label="669 records — higher than 91% of datasets"><span class="sparkbar-label">669</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.9%;" title="669 records — higher than 92% of datasets" aria-label="669 records — higher than 92% of datasets"><span class="sparkbar-label">669</span></span></td>
       <td><span class="sparkbar" style="--pct:69.5%;" title="223 subjects — higher than 96% of datasets" aria-label="223 subjects — higher than 96% of datasets"><span class="sparkbar-label">223</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -5854,13 +5854,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 60% of datasets" aria-label="116 records — higher than 60% of datasets"><span class="sparkbar-label">116</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 61% of datasets" aria-label="116 records — higher than 61% of datasets"><span class="sparkbar-label">116</span></span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
       <td>1</td>
       <td>4</td>
       <td>32</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:77.8%;" title="11.8 GB — larger than 51% of datasets" aria-label="11.8 GB — larger than 51% of datasets"><span class="sparkbar-label">11.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.8%;" title="11.8 GB — larger than 52% of datasets" aria-label="11.8 GB — larger than 52% of datasets"><span class="sparkbar-label">11.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005286.html" title="DS005286 — eeg dataset, 30 subjects">DS005286</a></td>
@@ -5877,7 +5877,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>32</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:77.0%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.0%;" title="9.4 GB — larger than 47% of datasets" aria-label="9.4 GB — larger than 47% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005289.html" title="DS005289 — eeg dataset, 39 subjects">DS005289</a></td>
@@ -5939,8 +5939,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:65.2%;" title="570 records — higher than 90% of datasets" aria-label="570 records — higher than 90% of datasets"><span class="sparkbar-label">570</span></span></td>
-      <td><span class="sparkbar" style="--pct:58.6%;" title="95 subjects — higher than 87% of datasets" aria-label="95 subjects — higher than 87% of datasets"><span class="sparkbar-label">95</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.2%;" title="570 records — higher than 91% of datasets" aria-label="570 records — higher than 91% of datasets"><span class="sparkbar-label">570</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.6%;" title="95 subjects — higher than 88% of datasets" aria-label="95 subjects — higher than 88% of datasets"><span class="sparkbar-label">95</span></span></td>
       <td>1</td>
       <td>6</td>
       <td>60</td>
@@ -5962,7 +5962,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>32</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 44% of datasets" aria-label="8.5 GB — larger than 44% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.7%;" title="8.5 GB — larger than 45% of datasets" aria-label="8.5 GB — larger than 45% of datasets"><span class="sparkbar-label">8.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005305.html" title="DS005305 — eeg dataset, 165 subjects">DS005305</a></td>
@@ -5973,7 +5973,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:52.5%;" title="165 records — higher than 68% of datasets" aria-label="165 records — higher than 68% of datasets"><span class="sparkbar-label">165</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.5%;" title="165 records — higher than 69% of datasets" aria-label="165 records — higher than 69% of datasets"><span class="sparkbar-label">165</span></span></td>
       <td><span class="sparkbar" style="--pct:65.6%;" title="165 subjects — higher than 95% of datasets" aria-label="165 subjects — higher than 95% of datasets"><span class="sparkbar-label">165</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -5984,7 +5984,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005307.html" title="DS005307 — eeg dataset, 7 subjects">DS005307</a></td>
       <td>Nierula2024</td>
-      <td>Nierula2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6007,7 +6007,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 11% of datasets" aria-label="15 records — higher than 11% of datasets"><span class="sparkbar-label">15</span></span></td>
+      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 10% of datasets" aria-label="15 records — higher than 10% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -6052,7 +6052,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005345.html" title="DS005345 — eeg dataset, 26 subjects">DS005345</a></td>
       <td>Ma2024</td>
-      <td>LPP</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6092,7 +6092,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="depression" data-tag-label="Depression" title="Pathology: Depression" aria-label="Pathology: Depression">Depression</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 60% of datasets" aria-label="116 records — higher than 60% of datasets"><span class="sparkbar-label">116</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="116 records — higher than 61% of datasets" aria-label="116 records — higher than 61% of datasets"><span class="sparkbar-label">116</span></span></td>
       <td><span class="sparkbar" style="--pct:57.2%;" title="85 subjects — higher than 86% of datasets" aria-label="85 subjects — higher than 86% of datasets"><span class="sparkbar-label">85</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -6103,7 +6103,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005363.html" title="DS005363 — eeg dataset, 43 subjects">DS005363</a></td>
       <td>Haupt2024_Object</td>
-      <td>ORHA</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6120,13 +6120,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005383.html" title="DS005383 — eeg dataset, 30 subjects">DS005383</a></td>
       <td>Bai2024</td>
-      <td>TMNRED</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>8</td>
@@ -6177,7 +6177,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:53.7%;" title="185 records — higher than 70% of datasets" aria-label="185 records — higher than 70% of datasets"><span class="sparkbar-label">185</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.7%;" title="185 records — higher than 71% of datasets" aria-label="185 records — higher than 71% of datasets"><span class="sparkbar-label">185</span></span></td>
       <td><span class="sparkbar" style="--pct:67.1%;" title="185 subjects — higher than 96% of datasets" aria-label="185 subjects — higher than 96% of datasets"><span class="sparkbar-label">185</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -6188,7 +6188,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005403.html" title="DS005403 — eeg dataset, 32 subjects">DS005403</a></td>
       <td>Veillette2024</td>
-      <td>Veillette2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6205,7 +6205,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005406.html" title="DS005406 — eeg dataset, 29 subjects">DS005406</a></td>
       <td>Formica2024</td>
-      <td>Formica2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6251,7 +6251,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>2</td>
       <td>10000</td>
-      <td><span class="sparkbar" style="--pct:78.7%;" title="15.3 GB — larger than 56% of datasets" aria-label="15.3 GB — larger than 56% of datasets"><span class="sparkbar-label">15.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:81.7%;" title="37.8 GB — larger than 73% of datasets" aria-label="37.8 GB — larger than 73% of datasets"><span class="sparkbar-label">37.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005410.html" title="DS005410 — eeg dataset, 81 subjects">DS005410</a></td>
@@ -6297,7 +6297,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:27.1%;" title="13 records — higher than 9% of datasets" aria-label="13 records — higher than 9% of datasets"><span class="sparkbar-label">13</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>182\*</td>
@@ -6324,7 +6324,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005420.html" title="DS005420 — eeg dataset, 37 subjects">DS005420</a></td>
       <td>Gama2024</td>
-      <td>Gama2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6358,24 +6358,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005448.html" title="DS005448 — ieeg dataset, 13 subjects">DS005448</a></td>
       <td>Jelsma2024</td>
-      <td>STReEF</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:30.3%;" title="18 records — higher than 13% of datasets" aria-label="18 records — higher than 13% of datasets"><span class="sparkbar-label">18</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>133\*</td>
       <td>2048</td>
-      <td><span class="sparkbar" style="--pct:82.3%;" title="44.7 GB — larger than 76% of datasets" aria-label="44.7 GB — larger than 76% of datasets"><span class="sparkbar-label">44.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:82.3%;" title="44.7 GB — larger than 77% of datasets" aria-label="44.7 GB — larger than 77% of datasets"><span class="sparkbar-label">44.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005473.html" title="DS005473 — eeg dataset, 29 subjects">DS005473</a></td>
       <td>Xiangyue2024_29_BP</td>
-      <td>Zhao2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -6398,7 +6398,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
-      <td><span class="sparkbar" style="--pct:62.7%;" title="445 records — higher than 88% of datasets" aria-label="445 records — higher than 88% of datasets"><span class="sparkbar-label">445</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.7%;" title="445 records — higher than 89% of datasets" aria-label="445 records — higher than 89% of datasets"><span class="sparkbar-label">445</span></span></td>
       <td><span class="sparkbar" style="--pct:65.1%;" title="159 subjects — higher than 95% of datasets" aria-label="159 subjects — higher than 95% of datasets"><span class="sparkbar-label">159</span></span></td>
       <td>1</td>
       <td>5</td>
@@ -6426,7 +6426,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005491.html" title="DS005491 — ieeg dataset, 19 subjects">DS005491</a></td>
       <td>Herrema2024_Categorized</td>
-      <td>catFR_open_loop, RAM_catFR, catFR_stim</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -6436,31 +6436,31 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>3</td>
-      <td>64\*</td>
+      <td>126\*</td>
       <td>500\*</td>
       <td><span class="sparkbar" style="--pct:80.0%;" title="22.5 GB — larger than 65% of datasets" aria-label="22.5 GB — larger than 65% of datasets"><span class="sparkbar-label">22.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005494.html" title="DS005494 — ieeg dataset, 20 subjects">DS005494</a></td>
       <td>Herrema2024_Cued</td>
-      <td>Herrema2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:40.6%;" title="51 records — higher than 40% of datasets" aria-label="51 records — higher than 40% of datasets"><span class="sparkbar-label">51</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>3</td>
-      <td>100\*</td>
+      <td>88\*</td>
       <td>500\*</td>
-      <td><span class="sparkbar" style="--pct:80.5%;" title="26.3 GB — larger than 67% of datasets" aria-label="26.3 GB — larger than 67% of datasets"><span class="sparkbar-label">26.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:80.5%;" title="26.3 GB — larger than 68% of datasets" aria-label="26.3 GB — larger than 68% of datasets"><span class="sparkbar-label">26.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005505.html" title="DS005505 — eeg dataset, 136 subjects">DS005505</a></td>
       <td>Shirazi2024_R1</td>
-      <td>HBN_r1</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6477,13 +6477,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005506.html" title="DS005506 — eeg dataset, 150 subjects">DS005506</a></td>
       <td>Shirazi2024_R2</td>
-      <td>HBN_r2</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:74.5%;" title="1,405 records — higher than 96% of datasets" aria-label="1,405 records — higher than 96% of datasets"><span class="sparkbar-label">1,405</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.5%;" title="1,405 records — higher than 95% of datasets" aria-label="1,405 records — higher than 95% of datasets"><span class="sparkbar-label">1,405</span></span></td>
       <td><span class="sparkbar" style="--pct:64.4%;" title="150 subjects — higher than 94% of datasets" aria-label="150 subjects — higher than 94% of datasets"><span class="sparkbar-label">150</span></span></td>
       <td>10</td>
       <td>0</td>
@@ -6494,7 +6494,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005507.html" title="DS005507 — eeg dataset, 184 subjects">DS005507</a></td>
       <td>Shirazi2024_R3</td>
-      <td>HBN_r3</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6511,7 +6511,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005508.html" title="DS005508 — eeg dataset, 324 subjects">DS005508</a></td>
       <td>Shirazi2024_R4</td>
-      <td>HBN_r4</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6528,7 +6528,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005509.html" title="DS005509 — eeg dataset, 330 subjects">DS005509</a></td>
       <td>Shirazi2024_R5</td>
-      <td>HBN_r5</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6545,13 +6545,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005510.html" title="DS005510 — eeg dataset, 135 subjects">DS005510</a></td>
       <td>Shirazi2024_R6</td>
-      <td>HBN_r6</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:73.1%;" title="1,227 records — higher than 94% of datasets" aria-label="1,227 records — higher than 94% of datasets"><span class="sparkbar-label">1,227</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.1%;" title="1,227 records — higher than 95% of datasets" aria-label="1,227 records — higher than 95% of datasets"><span class="sparkbar-label">1,227</span></span></td>
       <td><span class="sparkbar" style="--pct:63.1%;" title="135 subjects — higher than 93% of datasets" aria-label="135 subjects — higher than 93% of datasets"><span class="sparkbar-label">135</span></span></td>
       <td>10</td>
       <td>0</td>
@@ -6562,7 +6562,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005512.html" title="DS005512 — eeg dataset, 257 subjects">DS005512</a></td>
       <td>Shirazi2024_R8</td>
-      <td>HBN_r8</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6579,7 +6579,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005514.html" title="DS005514 — eeg dataset, 295 subjects">DS005514</a></td>
       <td>Shirazi2024_R9</td>
-      <td>HBN_r9</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6596,7 +6596,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005515.html" title="DS005515 — eeg dataset, 533 subjects">DS005515</a></td>
       <td>Shirazi2024_R10</td>
-      <td>HBN_r10</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6613,7 +6613,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005516.html" title="DS005516 — eeg dataset, 430 subjects">DS005516</a></td>
       <td>Shirazi2024_R11</td>
-      <td>HBN_r11</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
@@ -6653,11 +6653,11 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:53.2%;" title="176 records — higher than 69% of datasets" aria-label="176 records — higher than 69% of datasets"><span class="sparkbar-label">176</span></span></td>
-      <td><span class="sparkbar" style="--pct:51.7%;" title="55 subjects — higher than 78% of datasets" aria-label="55 subjects — higher than 78% of datasets"><span class="sparkbar-label">55</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.2%;" title="176 records — higher than 70% of datasets" aria-label="176 records — higher than 70% of datasets"><span class="sparkbar-label">176</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.7%;" title="55 subjects — higher than 79% of datasets" aria-label="55 subjects — higher than 79% of datasets"><span class="sparkbar-label">55</span></span></td>
       <td>1</td>
       <td>6</td>
-      <td>133\*</td>
+      <td>110\*</td>
       <td>1000\*</td>
       <td><span class="sparkbar" style="--pct:85.2%;" title="107.5 GB — larger than 90% of datasets" aria-label="107.5 GB — larger than 90% of datasets"><span class="sparkbar-label">107.5 GB</span></span></td>
     </tr>
@@ -6674,7 +6674,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>7</td>
-      <td>166\*</td>
+      <td>144\*</td>
       <td>1000\*</td>
       <td><span class="sparkbar" style="--pct:83.8%;" title="69.7 GB — larger than 84% of datasets" aria-label="69.7 GB — larger than 84% of datasets"><span class="sparkbar-label">69.7 GB</span></span></td>
     </tr>
@@ -6693,7 +6693,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>10</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 39% of datasets" aria-label="6.5 GB — larger than 39% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 40% of datasets" aria-label="6.5 GB — larger than 40% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005540.html" title="DS005540 — eeg dataset, 59 subjects">DS005540</a></td>
@@ -6715,14 +6715,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005545.html" title="DS005545 — ieeg dataset, 106 subjects">DS005545</a></td>
       <td>Kanno2024</td>
-      <td>Kanno2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:59.8%;" title="336 records — higher than 83% of datasets" aria-label="336 records — higher than 83% of datasets"><span class="sparkbar-label">336</span></span></td>
-      <td><span class="sparkbar" style="--pct:60.0%;" title="106 subjects — higher than 89% of datasets" aria-label="106 subjects — higher than 89% of datasets"><span class="sparkbar-label">106</span></span></td>
+      <td><span class="sparkbar" style="--pct:59.8%;" title="336 records — higher than 84% of datasets" aria-label="336 records — higher than 84% of datasets"><span class="sparkbar-label">336</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.0%;" title="106 subjects — higher than 90% of datasets" aria-label="106 subjects — higher than 90% of datasets"><span class="sparkbar-label">106</span></span></td>
       <td>1</td>
       <td>5</td>
       <td>128\*</td>
@@ -6732,14 +6732,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005555.html" title="DS005555 — eeg dataset, 128 subjects">DS005555</a></td>
       <td>LopezLarraz2024</td>
-      <td>BOAS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:57.0%;" title="256 records — higher than 78% of datasets" aria-label="256 records — higher than 78% of datasets"><span class="sparkbar-label">256</span></span></td>
-      <td><span class="sparkbar" style="--pct:62.4%;" title="128 subjects — higher than 92% of datasets" aria-label="128 subjects — higher than 92% of datasets"><span class="sparkbar-label">128</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.0%;" title="256 records — higher than 79% of datasets" aria-label="256 records — higher than 79% of datasets"><span class="sparkbar-label">256</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.4%;" title="128 subjects — higher than 93% of datasets" aria-label="128 subjects — higher than 93% of datasets"><span class="sparkbar-label">128</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>9\*</td>
@@ -6766,7 +6766,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005558.html" title="DS005558 — ieeg dataset, 7 subjects">DS005558</a></td>
       <td>Herrema2024_Categorized_Free</td>
-      <td>catFR_closed_loop</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="surgery" data-tag-label="Surgery" title="Pathology: Surgery" aria-label="Pathology: Surgery">Surgery</span></td>
@@ -6817,17 +6817,17 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005574.html" title="DS005574 — ieeg dataset, 9 subjects">DS005574</a></td>
       <td>Zada2024</td>
-      <td>Podcast</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
       <td><span class="sparkbar" style="--pct:23.7%;" title="9 records — higher than 6% of datasets" aria-label="9 records — higher than 6% of datasets"><span class="sparkbar-label">9</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>0</td>
-      <td>178\*</td>
+      <td>138\*</td>
       <td>512\*</td>
       <td><span class="sparkbar" style="--pct:73.5%;" title="3.2 GB — larger than 29% of datasets" aria-label="3.2 GB — larger than 29% of datasets"><span class="sparkbar-label">3.2 GB</span></span></td>
     </tr>
@@ -6874,7 +6874,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="anesthesia" data-tag-label="Anesthesia" title="Modality: Anesthesia" aria-label="Modality: Anesthesia">Anesthesia</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:54.6%;" title="202 records — higher than 72% of datasets" aria-label="202 records — higher than 72% of datasets"><span class="sparkbar-label">202</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.6%;" title="202 records — higher than 73% of datasets" aria-label="202 records — higher than 73% of datasets"><span class="sparkbar-label">202</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>3</td>
       <td>0</td>
@@ -6908,13 +6908,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.9%;" title="306 records — higher than 82% of datasets" aria-label="306 records — higher than 82% of datasets"><span class="sparkbar-label">306</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.9%;" title="306 records — higher than 83% of datasets" aria-label="306 records — higher than 83% of datasets"><span class="sparkbar-label">306</span></span></td>
       <td><span class="sparkbar" style="--pct:59.5%;" title="102 subjects — higher than 89% of datasets" aria-label="102 subjects — higher than 89% of datasets"><span class="sparkbar-label">102</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>8</td>
       <td>250</td>
-      <td><span class="sparkbar" style="--pct:68.0%;" title="633.7 MB — larger than 13% of datasets" aria-label="633.7 MB — larger than 13% of datasets"><span class="sparkbar-label">633.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.0%;" title="633.7 MB — larger than 14% of datasets" aria-label="633.7 MB — larger than 14% of datasets"><span class="sparkbar-label">633.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005642.html" title="DS005642 — eeg dataset, 21 subjects">DS005642</a></td>
@@ -6980,7 +6980,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:14.1%;" title="2 subjects — higher than 3% of datasets" aria-label="2 subjects — higher than 3% of datasets"><span class="sparkbar-label">2</span></span></td>
       <td>1</td>
       <td>0</td>
-      <td>186\*</td>
+      <td>238\*</td>
       <td>2000</td>
       <td><span class="sparkbar" style="--pct:68.3%;" title="708.8 MB — larger than 15% of datasets" aria-label="708.8 MB — larger than 15% of datasets"><span class="sparkbar-label">708.8 MB</span></span></td>
     </tr>
@@ -7011,12 +7011,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:46.2%;" title="89 records — higher than 54% of datasets" aria-label="89 records — higher than 54% of datasets"><span class="sparkbar-label">89</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>5</td>
       <td>1</td>
       <td>5\*</td>
       <td>10000\*</td>
-      <td><span class="sparkbar" style="--pct:76.7%;" title="8.4 GB — larger than 44% of datasets" aria-label="8.4 GB — larger than 44% of datasets"><span class="sparkbar-label">8.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.7%;" title="8.4 GB — larger than 45% of datasets" aria-label="8.4 GB — larger than 45% of datasets"><span class="sparkbar-label">8.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005691.html" title="DS005691 — ieeg dataset, 8 subjects">DS005691</a></td>
@@ -7055,7 +7055,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005697.html" title="DS005697 — eeg dataset, 51 subjects">DS005697</a></td>
       <td>Li2024_PerceiveImagine</td>
-      <td>PerceiveImagine</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7089,14 +7089,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005776.html" title="DS005776 — fnirs dataset, 11 subjects">DS005776</a></td>
       <td>Yucel2025_Electrical</td>
-      <td>Yucel2015</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:39.6%;" title="46 records — higher than 37% of datasets" aria-label="46 records — higher than 37% of datasets"><span class="sparkbar-label">46</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>5</td>
       <td>1</td>
       <td>102</td>
@@ -7106,14 +7106,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005777.html" title="DS005777 — fnirs dataset, 14 subjects">DS005777</a></td>
       <td>Peng2025</td>
-      <td>Peng2018</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 59% of datasets" aria-label="113 records — higher than 59% of datasets"><span class="sparkbar-label">113</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 60% of datasets" aria-label="113 records — higher than 60% of datasets"><span class="sparkbar-label">113</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>2</td>
       <td>2</td>
       <td>66</td>
@@ -7129,13 +7129,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="other" data-tag-label="Other" title="Modality: Other" aria-label="Modality: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:56.8%;" title="250 records — higher than 78% of datasets" aria-label="250 records — higher than 78% of datasets"><span class="sparkbar-label">250</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.8%;" title="250 records — higher than 79% of datasets" aria-label="250 records — higher than 79% of datasets"><span class="sparkbar-label">250</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>16</td>
       <td>0</td>
       <td>67\*</td>
       <td>5000</td>
-      <td><span class="sparkbar" style="--pct:84.6%;" title="88.7 GB — larger than 87% of datasets" aria-label="88.7 GB — larger than 87% of datasets"><span class="sparkbar-label">88.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:84.6%;" title="88.7 GB — larger than 86% of datasets" aria-label="88.7 GB — larger than 86% of datasets"><span class="sparkbar-label">88.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005795.html" title="DS005795 — eeg dataset, 34 subjects">DS005795</a></td>
@@ -7152,18 +7152,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>72</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:75.8%;" title="6.4 GB — larger than 39% of datasets" aria-label="6.4 GB — larger than 39% of datasets"><span class="sparkbar-label">6.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.8%;" title="6.4 GB — larger than 40% of datasets" aria-label="6.4 GB — larger than 40% of datasets"><span class="sparkbar-label">6.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005810.html" title="DS005810 — meg dataset, 31 subjects">DS005810</a></td>
       <td>Zhang2025_MEG</td>
-      <td>NOD_MEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:58.8%;" title="305 records — higher than 82% of datasets" aria-label="305 records — higher than 82% of datasets"><span class="sparkbar-label">305</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.8%;" title="305 records — higher than 83% of datasets" aria-label="305 records — higher than 83% of datasets"><span class="sparkbar-label">305</span></span></td>
       <td><span class="sparkbar" style="--pct:44.5%;" title="31 subjects — higher than 62% of datasets" aria-label="31 subjects — higher than 62% of datasets"><span class="sparkbar-label">31</span></span></td>
       <td>2</td>
       <td>24</td>
@@ -7174,13 +7174,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005811.html" title="DS005811 — eeg dataset, 19 subjects">DS005811</a></td>
       <td>Zhang2025_EEG</td>
-      <td>NOD_EEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:62.8%;" title="448 records — higher than 88% of datasets" aria-label="448 records — higher than 88% of datasets"><span class="sparkbar-label">448</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.8%;" title="448 records — higher than 89% of datasets" aria-label="448 records — higher than 89% of datasets"><span class="sparkbar-label">448</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -7198,7 +7198,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:47.7%;" title="103 records — higher than 57% of datasets" aria-label="103 records — higher than 57% of datasets"><span class="sparkbar-label">103</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>3</td>
       <td>2</td>
       <td>31</td>
@@ -7214,18 +7214,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 80% of datasets" aria-label="288 records — higher than 80% of datasets"><span class="sparkbar-label">288</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 81% of datasets" aria-label="288 records — higher than 81% of datasets"><span class="sparkbar-label">288</span></span></td>
       <td><span class="sparkbar" style="--pct:50.0%;" title="48 subjects — higher than 74% of datasets" aria-label="48 subjects — higher than 74% of datasets"><span class="sparkbar-label">48</span></span></td>
       <td>6</td>
       <td>0</td>
-      <td>73</td>
+      <td></td>
       <td>512</td>
       <td><span class="sparkbar" style="--pct:76.2%;" title="7.3 GB — larger than 41% of datasets" aria-label="7.3 GB — larger than 41% of datasets"><span class="sparkbar-label">7.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005857.html" title="DS005857 — eeg dataset, 29 subjects">DS005857</a></td>
       <td>Broitman2025</td>
-      <td>Broitman2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -7248,24 +7248,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:60.4%;" title="357 records — higher than 84% of datasets" aria-label="357 records — higher than 84% of datasets"><span class="sparkbar-label">357</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.4%;" title="357 records — higher than 85% of datasets" aria-label="357 records — higher than 85% of datasets"><span class="sparkbar-label">357</span></span></td>
       <td><span class="sparkbar" style="--pct:62.3%;" title="127 subjects — higher than 92% of datasets" aria-label="127 subjects — higher than 92% of datasets"><span class="sparkbar-label">127</span></span></td>
       <td>4</td>
       <td>0</td>
       <td>30</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 49% of datasets" aria-label="10.6 GB — larger than 49% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.5%;" title="10.6 GB — larger than 50% of datasets" aria-label="10.6 GB — larger than 50% of datasets"><span class="sparkbar-label">10.6 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005866.html" title="DS005866 — eeg dataset, 60 subjects">DS005866</a></td>
       <td>TerhuneCotter2025_NEAR</td>
-      <td>Flankers_NEAR</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:52.8%;" title="60 subjects — higher than 81% of datasets" aria-label="60 subjects — higher than 81% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -7276,7 +7276,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005868.html" title="DS005868 — eeg dataset, 48 subjects">DS005868</a></td>
       <td>TerhuneCotter2025_FAR</td>
-      <td>Flankers_FAR</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7293,7 +7293,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005872.html" title="DS005872 — eeg dataset, 1 subjects">DS005872</a></td>
       <td>Plomecka2025</td>
-      <td>EEGEyeNet</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7310,7 +7310,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005873.html" title="DS005873 — eeg, emg dataset, 125 subjects">DS005873</a></td>
       <td>Bhagubai2025</td>
-      <td>SeizeIT2</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span> <span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
@@ -7361,7 +7361,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005929.html" title="DS005929 — fnirs dataset, 7 subjects">DS005929</a></td>
       <td>MotionYucel2014</td>
-      <td>Yucel2014, Motion_Yucel2014</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7390,7 +7390,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>200</td>
       <td>8</td>
-      <td><span class="sparkbar" style="--pct:65.5%;" title="304.2 MB — larger than 7% of datasets" aria-label="304.2 MB — larger than 7% of datasets"><span class="sparkbar-label">304.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.5%;" title="304.2 MB — larger than 8% of datasets" aria-label="304.2 MB — larger than 8% of datasets"><span class="sparkbar-label">304.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005931.html" title="DS005931 — ieeg dataset, 8 subjects">DS005931</a></td>
@@ -7412,7 +7412,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005932.html" title="DS005932 — eeg dataset, 29 subjects">DS005932</a></td>
       <td>Holcomb2025</td>
-      <td>PWIe</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7446,7 +7446,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005946.html" title="DS005946 — eeg dataset, 39 subjects">DS005946</a></td>
       <td>Frau2025</td>
-      <td>PROMENADE</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7497,7 +7497,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005963.html" title="DS005963 — fnirs dataset, 10 subjects">DS005963</a></td>
       <td>Mesquita2025</td>
-      <td>Mesquita2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
@@ -7514,7 +7514,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS005964.html" title="DS005964 — fnirs dataset, 17 subjects">DS005964</a></td>
       <td>Luke2025</td>
-      <td>Luke2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
@@ -7554,7 +7554,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:60.4%;" title="357 records — higher than 84% of datasets" aria-label="357 records — higher than 84% of datasets"><span class="sparkbar-label">357</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.4%;" title="357 records — higher than 85% of datasets" aria-label="357 records — higher than 85% of datasets"><span class="sparkbar-label">357</span></span></td>
       <td><span class="sparkbar" style="--pct:62.3%;" title="127 subjects — higher than 92% of datasets" aria-label="127 subjects — higher than 92% of datasets"><span class="sparkbar-label">127</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -7571,7 +7571,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 4% of datasets" aria-label="5 records — higher than 4% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td><span class="sparkbar" style="--pct:17.8%;" title="3 subjects — higher than 5% of datasets" aria-label="3 subjects — higher than 5% of datasets"><span class="sparkbar-label">3</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -7582,19 +7582,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006035.html" title="DS006035 — meg dataset, 5 subjects">DS006035</a></td>
       <td>Lin2025</td>
-      <td>Lin2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="tactile" data-tag-label="Tactile" title="Modality: Tactile" aria-label="Modality: Tactile">Tactile</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 11% of datasets" aria-label="15 records — higher than 11% of datasets"><span class="sparkbar-label">15</span></span></td>
+      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 10% of datasets" aria-label="15 records — higher than 10% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>388\*</td>
       <td>1004</td>
-      <td><span class="sparkbar" style="--pct:73.3%;" title="3.1 GB — larger than 28% of datasets" aria-label="3.1 GB — larger than 28% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.3%;" title="3.1 GB — larger than 29% of datasets" aria-label="3.1 GB — larger than 29% of datasets"><span class="sparkbar-label">3.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006036.html" title="DS006036 — eeg dataset, 88 subjects">DS006036</a></td>
@@ -7611,7 +7611,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>19</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 18% of datasets" aria-label="1.0 GB — larger than 18% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006040.html" title="DS006040 — eeg dataset, 28 subjects">DS006040</a></td>
@@ -7657,12 +7657,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:72.7%;" title="1,182 records — higher than 94% of datasets" aria-label="1,182 records — higher than 94% of datasets"><span class="sparkbar-label">1,182</span></span></td>
-      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 84% of datasets" aria-label="71 subjects — higher than 84% of datasets"><span class="sparkbar-label">71</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.9%;" title="71 subjects — higher than 85% of datasets" aria-label="71 subjects — higher than 85% of datasets"><span class="sparkbar-label">71</span></span></td>
       <td>9</td>
       <td>0</td>
       <td>284\*</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:85.8%;" title="129.8 GB — larger than 91% of datasets" aria-label="129.8 GB — larger than 91% of datasets"><span class="sparkbar-label">129.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:85.8%;" title="129.8 GB — larger than 92% of datasets" aria-label="129.8 GB — larger than 92% of datasets"><span class="sparkbar-label">129.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006104.html" title="DS006104 — eeg dataset, 24 subjects">DS006104</a></td>
@@ -7684,7 +7684,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006107.html" title="DS006107 — ieeg dataset, 166 subjects">DS006107</a></td>
       <td>Kuroda2025</td>
-      <td>Kuroda2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -7696,7 +7696,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>128\*</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:77.9%;" title="11.9 GB — larger than 51% of datasets" aria-label="11.9 GB — larger than 51% of datasets"><span class="sparkbar-label">11.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.9%;" title="11.9 GB — larger than 52% of datasets" aria-label="11.9 GB — larger than 52% of datasets"><span class="sparkbar-label">11.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006126.html" title="DS006126 — eeg dataset, 5 subjects">DS006126</a></td>
@@ -7718,17 +7718,17 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006136.html" title="DS006136 — ieeg dataset, 13 subjects">DS006136</a></td>
       <td>Omelyusik2025</td>
-      <td>Omelyusik2026</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
       <td><span class="sparkbar" style="--pct:27.8%;" title="14 records — higher than 10% of datasets" aria-label="14 records — higher than 10% of datasets"><span class="sparkbar-label">14</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>2</td>
-      <td>8\*</td>
+      <td>9\*</td>
       <td>1000</td>
       <td><span class="sparkbar" style="--pct:65.3%;" title="285.9 MB — larger than 7% of datasets" aria-label="285.9 MB — larger than 7% of datasets"><span class="sparkbar-label">285.9 MB</span></span></td>
     </tr>
@@ -7742,7 +7742,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
       <td><span class="sparkbar" style="--pct:34.2%;" title="27 records — higher than 24% of datasets" aria-label="27 records — higher than 24% of datasets"><span class="sparkbar-label">27</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>65</td>
@@ -7752,7 +7752,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006159.html" title="DS006159 — eeg dataset, 61 subjects">DS006159</a></td>
       <td>LeganesFonteneau2025</td>
-      <td>LeganesFonteneau2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7764,18 +7764,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>73</td>
       <td>1024</td>
-      <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 54% of datasets" aria-label="14.3 GB — larger than 54% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.5%;" title="14.3 GB — larger than 55% of datasets" aria-label="14.3 GB — larger than 55% of datasets"><span class="sparkbar-label">14.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006171.html" title="DS006171 — eeg dataset, 36 subjects">DS006171</a></td>
       <td>Melcon2025</td>
-      <td>Melcon2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:47.8%;" title="104 records — higher than 57% of datasets" aria-label="104 records — higher than 57% of datasets"><span class="sparkbar-label">104</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.8%;" title="104 records — higher than 58% of datasets" aria-label="104 records — higher than 58% of datasets"><span class="sparkbar-label">104</span></span></td>
       <td><span class="sparkbar" style="--pct:46.3%;" title="36 subjects — higher than 67% of datasets" aria-label="36 subjects — higher than 67% of datasets"><span class="sparkbar-label">36</span></span></td>
       <td>3</td>
       <td>0</td>
@@ -7843,7 +7843,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="decision-making" data-tag-label="Decision-making" title="Type: Decision-making" aria-label="Type: Decision-making">Decision-making</span></td>
-      <td><span class="sparkbar" style="--pct:54.6%;" title="201 records — higher than 72% of datasets" aria-label="201 records — higher than 72% of datasets"><span class="sparkbar-label">201</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.6%;" title="201 records — higher than 73% of datasets" aria-label="201 records — higher than 73% of datasets"><span class="sparkbar-label">201</span></span></td>
       <td><span class="sparkbar" style="--pct:40.8%;" title="23 subjects — higher than 48% of datasets" aria-label="23 subjects — higher than 48% of datasets"><span class="sparkbar-label">23</span></span></td>
       <td>4</td>
       <td>1</td>
@@ -7860,7 +7860,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:60.7%;" title="366 records — higher than 85% of datasets" aria-label="366 records — higher than 85% of datasets"><span class="sparkbar-label">366</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.7%;" title="366 records — higher than 86% of datasets" aria-label="366 records — higher than 86% of datasets"><span class="sparkbar-label">366</span></span></td>
       <td><span class="sparkbar" style="--pct:55.8%;" title="76 subjects — higher than 85% of datasets" aria-label="76 subjects — higher than 85% of datasets"><span class="sparkbar-label">76</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -7883,12 +7883,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>33</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:85.2%;" title="106.7 GB — larger than 89% of datasets" aria-label="106.7 GB — larger than 89% of datasets"><span class="sparkbar-label">106.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:85.2%;" title="106.7 GB — larger than 90% of datasets" aria-label="106.7 GB — larger than 90% of datasets"><span class="sparkbar-label">106.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006317.html" title="DS006317 — eeg dataset, 2 subjects">DS006317</a></td>
       <td>Zhang2025_Chisco_2_0</td>
-      <td>Chisco2_0, Chisco20, CHISCO20</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -7900,7 +7900,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>4</td>
       <td>127</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:82.8%;" title="52.9 GB — larger than 80% of datasets" aria-label="52.9 GB — larger than 80% of datasets"><span class="sparkbar-label">52.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:82.8%;" title="52.9 GB — larger than 79% of datasets" aria-label="52.9 GB — larger than 79% of datasets"><span class="sparkbar-label">52.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006334.html" title="DS006334 — meg dataset, 30 subjects">DS006334</a></td>
@@ -7911,7 +7911,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 63% of datasets" aria-label="128 records — higher than 63% of datasets"><span class="sparkbar-label">128</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 64% of datasets" aria-label="128 records — higher than 64% of datasets"><span class="sparkbar-label">128</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -7922,13 +7922,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006366.html" title="DS006366 — eeg dataset, 92 subjects">DS006366</a></td>
       <td>Rose2025</td>
-      <td>MSSV</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:51.4%;" title="148 records — higher than 66% of datasets" aria-label="148 records — higher than 66% of datasets"><span class="sparkbar-label">148</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.4%;" title="148 records — higher than 67% of datasets" aria-label="148 records — higher than 67% of datasets"><span class="sparkbar-label">148</span></span></td>
       <td><span class="sparkbar" style="--pct:58.2%;" title="92 subjects — higher than 87% of datasets" aria-label="92 subjects — higher than 87% of datasets"><span class="sparkbar-label">92</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -7973,7 +7973,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006374.html" title="DS006374 — eeg dataset, 36 subjects">DS006374</a></td>
       <td>Pohle2025</td>
-      <td>Pohle2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8007,7 +8007,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006386.html" title="DS006386 — eeg dataset, 30 subjects">DS006386</a></td>
       <td>Yu2025</td>
-      <td>Yu2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8024,7 +8024,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006392.html" title="DS006392 — ieeg dataset, 1 subjects">DS006392</a></td>
       <td>Attia2025</td>
-      <td>Hermes2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -8047,13 +8047,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
-      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 65% of datasets" aria-label="33 subjects — higher than 65% of datasets"><span class="sparkbar-label">33</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:45.3%;" title="33 subjects — higher than 64% of datasets" aria-label="33 subjects — higher than 64% of datasets"><span class="sparkbar-label">33</span></span></td>
       <td>2</td>
       <td>0</td>
       <td>16</td>
       <td>125</td>
-      <td><span class="sparkbar" style="--pct:67.4%;" title="534.8 MB — larger than 11% of datasets" aria-label="534.8 MB — larger than 11% of datasets"><span class="sparkbar-label">534.8 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.4%;" title="534.8 MB — larger than 12% of datasets" aria-label="534.8 MB — larger than 12% of datasets"><span class="sparkbar-label">534.8 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006434.html" title="DS006434 — eeg dataset, 66 subjects">DS006434</a></td>
@@ -8082,7 +8082,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:42.7%;" title="63 records — higher than 47% of datasets" aria-label="63 records — higher than 47% of datasets"><span class="sparkbar-label">63</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>5</td>
       <td>4</td>
       <td>64</td>
@@ -8092,7 +8092,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006446.html" title="DS006446 — eeg dataset, 29 subjects">DS006446</a></td>
       <td>Kinley2025</td>
-      <td>Kinley2019</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8138,29 +8138,29 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>428</td>
       <td>17</td>
-      <td><span class="sparkbar" style="--pct:66.9%;" title="459.7 MB — larger than 10% of datasets" aria-label="459.7 MB — larger than 10% of datasets"><span class="sparkbar-label">459.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.9%;" title="459.7 MB — larger than 11% of datasets" aria-label="459.7 MB — larger than 11% of datasets"><span class="sparkbar-label">459.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006465.html" title="DS006465 — eeg dataset, 20 subjects">DS006465</a></td>
       <td>Ma2025</td>
-      <td>CPSEED_3M, CPSEED</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:45.2%;" title="80 records — higher than 51% of datasets" aria-label="80 records — higher than 51% of datasets"><span class="sparkbar-label">80</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>4</td>
       <td>32\*</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.6%;" title="8.2 GB — larger than 43% of datasets" aria-label="8.2 GB — larger than 43% of datasets"><span class="sparkbar-label">8.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.6%;" title="8.2 GB — larger than 44% of datasets" aria-label="8.2 GB — larger than 44% of datasets"><span class="sparkbar-label">8.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006466.html" title="DS006466 — eeg dataset, 66 subjects">DS006466</a></td>
       <td>Kim2025_HeartBEAM_Older_Adult</td>
-      <td>HeartBEAM</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8177,13 +8177,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006468.html" title="DS006468 — meg dataset, 24 subjects">DS006468</a></td>
       <td>Habersetzer2025</td>
-      <td>MEG_SCANS</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:53.9%;" title="189 records — higher than 71% of datasets" aria-label="189 records — higher than 71% of datasets"><span class="sparkbar-label">189</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.9%;" title="189 records — higher than 72% of datasets" aria-label="189 records — higher than 72% of datasets"><span class="sparkbar-label">189</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -8217,7 +8217,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:61.1%;" title="380 records — higher than 86% of datasets" aria-label="380 records — higher than 86% of datasets"><span class="sparkbar-label">380</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.1%;" title="380 records — higher than 87% of datasets" aria-label="380 records — higher than 87% of datasets"><span class="sparkbar-label">380</span></span></td>
       <td><span class="sparkbar" style="--pct:44.5%;" title="31 subjects — higher than 62% of datasets" aria-label="31 subjects — higher than 62% of datasets"><span class="sparkbar-label">31</span></span></td>
       <td>4</td>
       <td>3</td>
@@ -8238,9 +8238,9 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>5</td>
-      <td>35\*</td>
+      <td>33\*</td>
       <td>4096\*</td>
-      <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 17% of datasets" aria-label="1.0 GB — larger than 17% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.7%;" title="1.0 GB — larger than 18% of datasets" aria-label="1.0 GB — larger than 18% of datasets"><span class="sparkbar-label">1.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006525.html" title="DS006525 — eeg dataset, 34 subjects">DS006525</a></td>
@@ -8262,7 +8262,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006545.html" title="DS006545 — fnirs dataset, 49 subjects">DS006545</a></td>
       <td>ReliabilityDubois2024</td>
-      <td>Dubois2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
@@ -8272,14 +8272,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:50.2%;" title="49 subjects — higher than 75% of datasets" aria-label="49 subjects — higher than 75% of datasets"><span class="sparkbar-label">49</span></span></td>
       <td>1</td>
       <td>2</td>
-      <td>6180\*</td>
+      <td>12180\*</td>
       <td>3</td>
       <td><span class="sparkbar" style="--pct:82.4%;" title="46.7 GB — larger than 78% of datasets" aria-label="46.7 GB — larger than 78% of datasets"><span class="sparkbar-label">46.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006547.html" title="DS006547 — eeg dataset, 31 subjects">DS006547</a></td>
       <td>Ghaffari2025</td>
-      <td>Ghaffari2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8328,7 +8328,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:75.3%;" title="5.6 GB — larger than 37% of datasets" aria-label="5.6 GB — larger than 37% of datasets"><span class="sparkbar-label">5.6 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="/api/dataset/eegdash.dataset.DS006576.html" title="DS006576 — eeg dataset, 57 subjects">DS006576</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.DS006576.html" title="DS006576 — eeg dataset, 67 subjects">DS006576</a></td>
       <td>McDevitt2025</td>
       <td></td>
       <td>openneuro</td>
@@ -8336,13 +8336,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:41.7%;" title="57 records — higher than 43% of datasets" aria-label="57 records — higher than 43% of datasets"><span class="sparkbar-label">57</span></span></td>
-      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 79% of datasets" aria-label="57 subjects — higher than 79% of datasets"><span class="sparkbar-label">57</span></span></td>
+      <td><span class="sparkbar" style="--pct:43.4%;" title="67 records — higher than 49% of datasets" aria-label="67 records — higher than 49% of datasets"><span class="sparkbar-label">67</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.2%;" title="67 subjects — higher than 84% of datasets" aria-label="67 subjects — higher than 84% of datasets"><span class="sparkbar-label">67</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>73</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:90.7%;" title="553.9 GB — larger than 99% of datasets" aria-label="553.9 GB — larger than 99% of datasets"><span class="sparkbar-label">553.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:91.2%;" title="649.8 GB — larger than 99% of datasets" aria-label="649.8 GB — larger than 99% of datasets"><span class="sparkbar-label">649.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006593.html" title="DS006593 — eeg dataset, 21 subjects">DS006593</a></td>
@@ -8364,7 +8364,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006629.html" title="DS006629 — meg dataset, 19 subjects">DS006629</a></td>
       <td>Chanoine2025</td>
-      <td>SINGSING</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8427,24 +8427,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>2440\*</td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 42% of datasets" aria-label="7.8 GB — larger than 42% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.4%;" title="7.8 GB — larger than 43% of datasets" aria-label="7.8 GB — larger than 43% of datasets"><span class="sparkbar-label">7.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006695.html" title="DS006695 — eeg dataset, 19 subjects">DS006695</a></td>
       <td>Onton2025</td>
-      <td>Onton2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="sleep" data-tag-label="Sleep" title="Modality: Sleep" aria-label="Modality: Sleep">Sleep</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="sleep" data-tag-label="Sleep" title="Type: Sleep" aria-label="Type: Sleep">Sleep</span></td>
-      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 15% of datasets" aria-label="19 records — higher than 15% of datasets"><span class="sparkbar-label">19</span></span></td>
+      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 14% of datasets" aria-label="19 records — higher than 14% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>3</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 46% of datasets" aria-label="9.4 GB — larger than 46% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.1%;" title="9.4 GB — larger than 47% of datasets" aria-label="9.4 GB — larger than 47% of datasets"><span class="sparkbar-label">9.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006720.html" title="DS006720 — meg dataset, 24 subjects">DS006720</a></td>
@@ -8473,7 +8473,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:34.2%;" title="27 records — higher than 24% of datasets" aria-label="27 records — higher than 24% of datasets"><span class="sparkbar-label">27</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>36\*</td>
@@ -8512,7 +8512,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>64</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 39% of datasets" aria-label="6.5 GB — larger than 39% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.8%;" title="6.5 GB — larger than 40% of datasets" aria-label="6.5 GB — larger than 40% of datasets"><span class="sparkbar-label">6.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006801.html" title="DS006801 — eeg dataset, 21 subjects">DS006801</a></td>
@@ -8529,7 +8529,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>31</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:70.5%;" title="1.3 GB — larger than 20% of datasets" aria-label="1.3 GB — larger than 20% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:70.5%;" title="1.3 GB — larger than 21% of datasets" aria-label="1.3 GB — larger than 21% of datasets"><span class="sparkbar-label">1.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006802.html" title="DS006802 — eeg dataset, 24 subjects">DS006802</a></td>
@@ -8557,7 +8557,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 63% of datasets" aria-label="126 records — higher than 63% of datasets"><span class="sparkbar-label">126</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 64% of datasets" aria-label="126 records — higher than 64% of datasets"><span class="sparkbar-label">126</span></span></td>
       <td><span class="sparkbar" style="--pct:53.4%;" title="63 subjects — higher than 82% of datasets" aria-label="63 subjects — higher than 82% of datasets"><span class="sparkbar-label">63</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -8568,7 +8568,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006817.html" title="DS006817 — eeg dataset, 34 subjects">DS006817</a></td>
       <td>Lowe2025</td>
-      <td>VisualContextTrajectory_v2</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -8591,7 +8591,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:51.1%;" title="144 records — higher than 66% of datasets" aria-label="144 records — higher than 66% of datasets"><span class="sparkbar-label">144</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.1%;" title="144 records — higher than 67% of datasets" aria-label="144 records — higher than 67% of datasets"><span class="sparkbar-label">144</span></span></td>
       <td><span class="sparkbar" style="--pct:46.3%;" title="36 subjects — higher than 67% of datasets" aria-label="36 subjects — higher than 67% of datasets"><span class="sparkbar-label">36</span></span></td>
       <td>4</td>
       <td>0</td>
@@ -8602,13 +8602,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006840.html" title="DS006840 — eeg dataset, 15 subjects">DS006840</a></td>
       <td>Cai2025</td>
-      <td>IACKD</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 63% of datasets" aria-label="128 records — higher than 63% of datasets"><span class="sparkbar-label">128</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 64% of datasets" aria-label="128 records — higher than 64% of datasets"><span class="sparkbar-label">128</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -8642,7 +8642,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 63% of datasets" aria-label="126 records — higher than 63% of datasets"><span class="sparkbar-label">126</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 64% of datasets" aria-label="126 records — higher than 64% of datasets"><span class="sparkbar-label">126</span></span></td>
       <td><span class="sparkbar" style="--pct:53.4%;" title="63 subjects — higher than 82% of datasets" aria-label="63 subjects — higher than 82% of datasets"><span class="sparkbar-label">63</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -8676,7 +8676,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="affect" data-tag-label="Affect" title="Type: Affect" aria-label="Type: Affect">Affect</span></td>
-      <td><span class="sparkbar" style="--pct:51.4%;" title="148 records — higher than 66% of datasets" aria-label="148 records — higher than 66% of datasets"><span class="sparkbar-label">148</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.4%;" title="148 records — higher than 67% of datasets" aria-label="148 records — higher than 67% of datasets"><span class="sparkbar-label">148</span></span></td>
       <td><span class="sparkbar" style="--pct:64.2%;" title="148 subjects — higher than 94% of datasets" aria-label="148 subjects — higher than 94% of datasets"><span class="sparkbar-label">148</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -8700,6 +8700,23 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>50\*</td>
       <td>1000</td>
       <td><span class="sparkbar" style="--pct:82.0%;" title="41.2 GB — larger than 74% of datasets" aria-label="41.2 GB — larger than 74% of datasets"><span class="sparkbar-label">41.2 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS006897.html" title="DS006897 — eeg dataset, 41 subjects">DS006897</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:38.4%;" title="41 records — higher than 34% of datasets" aria-label="41 records — higher than 34% of datasets"><span class="sparkbar-label">41</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.0%;" title="41 subjects — higher than 71% of datasets" aria-label="41 subjects — higher than 71% of datasets"><span class="sparkbar-label">41</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>63</td>
+      <td>500</td>
+      <td><span class="sparkbar" style="--pct:80.2%;" title="24.3 GB — larger than 66% of datasets" aria-label="24.3 GB — larger than 66% of datasets"><span class="sparkbar-label">24.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006902.html" title="DS006902 — fnirs dataset, 42 subjects">DS006902</a></td>
@@ -8733,7 +8750,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>1134\*</td>
       <td>4\*</td>
-      <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 36% of datasets" aria-label="5.4 GB — larger than 36% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.2%;" title="5.4 GB — larger than 37% of datasets" aria-label="5.4 GB — larger than 37% of datasets"><span class="sparkbar-label">5.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006910.html" title="DS006910 — ieeg dataset, 121 subjects">DS006910</a></td>
@@ -8744,7 +8761,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:61.2%;" title="384 records — higher than 86% of datasets" aria-label="384 records — higher than 86% of datasets"><span class="sparkbar-label">384</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.2%;" title="384 records — higher than 87% of datasets" aria-label="384 records — higher than 87% of datasets"><span class="sparkbar-label">384</span></span></td>
       <td><span class="sparkbar" style="--pct:61.7%;" title="121 subjects — higher than 91% of datasets" aria-label="121 subjects — higher than 91% of datasets"><span class="sparkbar-label">121</span></span></td>
       <td>1</td>
       <td>6</td>
@@ -8761,7 +8778,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="epilepsy" data-tag-label="Epilepsy" title="Pathology: Epilepsy" aria-label="Pathology: Epilepsy">Epilepsy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:60.3%;" title="353 records — higher than 84% of datasets" aria-label="353 records — higher than 84% of datasets"><span class="sparkbar-label">353</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.3%;" title="353 records — higher than 85% of datasets" aria-label="353 records — higher than 85% of datasets"><span class="sparkbar-label">353</span></span></td>
       <td><span class="sparkbar" style="--pct:60.5%;" title="110 subjects — higher than 90% of datasets" aria-label="110 subjects — higher than 90% of datasets"><span class="sparkbar-label">110</span></span></td>
       <td>1</td>
       <td>5</td>
@@ -8778,13 +8795,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:51.7%;" title="152 records — higher than 67% of datasets" aria-label="152 records — higher than 67% of datasets"><span class="sparkbar-label">152</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.7%;" title="152 records — higher than 68% of datasets" aria-label="152 records — higher than 68% of datasets"><span class="sparkbar-label">152</span></span></td>
       <td><span class="sparkbar" style="--pct:47.0%;" title="38 subjects — higher than 68% of datasets" aria-label="38 subjects — higher than 68% of datasets"><span class="sparkbar-label">38</span></span></td>
       <td>2</td>
       <td>5</td>
       <td>128\*</td>
       <td>2400</td>
-      <td><span class="sparkbar" style="--pct:83.5%;" title="64.4 GB — larger than 83% of datasets" aria-label="64.4 GB — larger than 83% of datasets"><span class="sparkbar-label">64.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:83.5%;" title="64.4 GB — larger than 82% of datasets" aria-label="64.4 GB — larger than 82% of datasets"><span class="sparkbar-label">64.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006923.html" title="DS006923 — eeg dataset, 140 subjects">DS006923</a></td>
@@ -8801,7 +8818,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>0</td>
       <td>128</td>
       <td>128</td>
-      <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 44% of datasets" aria-label="8.1 GB — larger than 44% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006940.html" title="DS006940 — eeg dataset, 7 subjects">DS006940</a></td>
@@ -8857,7 +8874,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS006979.html" title="DS006979 — eeg dataset, 53 subjects">DS006979</a></td>
       <td>Ramzaoui2025</td>
-      <td>Ramzaoui2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -8908,7 +8925,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007028.html" title="DS007028 — eeg dataset, 3 subjects">DS007028</a></td>
       <td>Kajikawa2025</td>
-      <td>Kajikawa2000</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
@@ -8925,30 +8942,30 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007052.html" title="DS007052 — eeg dataset, 288 subjects">DS007052</a></td>
       <td>Couperus2025_N400</td>
-      <td>Couperus2021_N400</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 80% of datasets" aria-label="288 records — higher than 80% of datasets"><span class="sparkbar-label">288</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 81% of datasets" aria-label="288 records — higher than 81% of datasets"><span class="sparkbar-label">288</span></span></td>
       <td><span class="sparkbar" style="--pct:72.7%;" title="288 subjects — higher than 97% of datasets" aria-label="288 subjects — higher than 97% of datasets"><span class="sparkbar-label">288</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>32</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 45% of datasets" aria-label="9.0 GB — larger than 45% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.9%;" title="9.0 GB — larger than 46% of datasets" aria-label="9.0 GB — larger than 46% of datasets"><span class="sparkbar-label">9.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007056.html" title="DS007056 — eeg dataset, 286 subjects">DS007056</a></td>
       <td>Couperus2025_P300</td>
-      <td>Couperus2021_P300</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.2%;" title="286 records — higher than 80% of datasets" aria-label="286 records — higher than 80% of datasets"><span class="sparkbar-label">286</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.2%;" title="286 records — higher than 81% of datasets" aria-label="286 records — higher than 81% of datasets"><span class="sparkbar-label">286</span></span></td>
       <td><span class="sparkbar" style="--pct:72.6%;" title="286 subjects — higher than 97% of datasets" aria-label="286 subjects — higher than 97% of datasets"><span class="sparkbar-label">286</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -8959,19 +8976,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007069.html" title="DS007069 — eeg dataset, 281 subjects">DS007069</a></td>
       <td>Couperus2025_MMN</td>
-      <td>Couperus2021_MMN</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:58.0%;" title="281 records — higher than 80% of datasets" aria-label="281 records — higher than 80% of datasets"><span class="sparkbar-label">281</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.0%;" title="281 records — higher than 81% of datasets" aria-label="281 records — higher than 81% of datasets"><span class="sparkbar-label">281</span></span></td>
       <td><span class="sparkbar" style="--pct:72.4%;" title="281 subjects — higher than 97% of datasets" aria-label="281 subjects — higher than 97% of datasets"><span class="sparkbar-label">281</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>32</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 52% of datasets" aria-label="12.4 GB — larger than 52% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.0%;" title="12.4 GB — larger than 53% of datasets" aria-label="12.4 GB — larger than 53% of datasets"><span class="sparkbar-label">12.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007081.html" title="DS007081 — eeg dataset, 41 subjects">DS007081</a></td>
@@ -9010,13 +9027,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007096.html" title="DS007096 — eeg dataset, 292 subjects">DS007096</a></td>
       <td>Couperus2025_PURSUE_N170_Face</td>
-      <td>Couperus2017</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 81% of datasets" aria-label="292 records — higher than 81% of datasets"><span class="sparkbar-label">292</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 82% of datasets" aria-label="292 records — higher than 82% of datasets"><span class="sparkbar-label">292</span></span></td>
       <td><span class="sparkbar" style="--pct:72.9%;" title="292 subjects — higher than 97% of datasets" aria-label="292 subjects — higher than 97% of datasets"><span class="sparkbar-label">292</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9027,7 +9044,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007118.html" title="DS007118 — ieeg dataset, 65 subjects">DS007118</a></td>
       <td>Hatano2025_part1</td>
-      <td>Hatano</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
@@ -9078,13 +9095,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007137.html" title="DS007137 — eeg dataset, 294 subjects">DS007137</a></td>
       <td>Couperus2025_N2PC</td>
-      <td>Couperus2021_N2pc</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.4%;" title="294 records — higher than 81% of datasets" aria-label="294 records — higher than 81% of datasets"><span class="sparkbar-label">294</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.4%;" title="294 records — higher than 82% of datasets" aria-label="294 records — higher than 82% of datasets"><span class="sparkbar-label">294</span></span></td>
       <td><span class="sparkbar" style="--pct:73.0%;" title="294 subjects — higher than 97% of datasets" aria-label="294 subjects — higher than 97% of datasets"><span class="sparkbar-label">294</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9095,13 +9112,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007139.html" title="DS007139 — eeg dataset, 292 subjects">DS007139</a></td>
       <td>Couperus2025_LRP</td>
-      <td>Couperus2021_LRP</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 81% of datasets" aria-label="292 records — higher than 81% of datasets"><span class="sparkbar-label">292</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 82% of datasets" aria-label="292 records — higher than 82% of datasets"><span class="sparkbar-label">292</span></span></td>
       <td><span class="sparkbar" style="--pct:72.9%;" title="292 subjects — higher than 97% of datasets" aria-label="292 subjects — higher than 97% of datasets"><span class="sparkbar-label">292</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9129,7 +9146,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007169.html" title="DS007169 — eeg dataset, 18 subjects">DS007169</a></td>
       <td>Barras2026_Multimodal</td>
-      <td>Barras2021</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9146,19 +9163,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007172.html" title="DS007172 — eeg dataset, 100 subjects">DS007172</a></td>
       <td>Reinke2026</td>
-      <td>EEGAsymmetries</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:63.9%;" title="501 records — higher than 89% of datasets" aria-label="501 records — higher than 89% of datasets"><span class="sparkbar-label">501</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.9%;" title="501 records — higher than 90% of datasets" aria-label="501 records — higher than 90% of datasets"><span class="sparkbar-label">501</span></span></td>
       <td><span class="sparkbar" style="--pct:59.2%;" title="100 subjects — higher than 88% of datasets" aria-label="100 subjects — higher than 88% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td>6</td>
       <td>0</td>
       <td>32\*</td>
       <td>500\*</td>
-      <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 50% of datasets" aria-label="11.0 GB — larger than 50% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.6%;" title="11.0 GB — larger than 51% of datasets" aria-label="11.0 GB — larger than 51% of datasets"><span class="sparkbar-label">11.0 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007175.html" title="DS007175 — eeg dataset, 41 subjects">DS007175</a></td>
@@ -9197,13 +9214,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007180.html" title="DS007180 — eeg dataset, 25 subjects">DS007180</a></td>
       <td>FuentesGuerra2026</td>
-      <td>FuentesGuerra2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 22% of datasets" aria-label="25 records — higher than 22% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9231,13 +9248,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007216.html" title="DS007216 — eeg dataset, 24 subjects">DS007216</a></td>
       <td>Kucyi2026</td>
-      <td>Kucyi2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:53.8%;" title="187 records — higher than 71% of datasets" aria-label="187 records — higher than 71% of datasets"><span class="sparkbar-label">187</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.8%;" title="187 records — higher than 72% of datasets" aria-label="187 records — higher than 72% of datasets"><span class="sparkbar-label">187</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>2</td>
       <td>2</td>
@@ -9265,7 +9282,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007262.html" title="DS007262 — eeg dataset, 18 subjects">DS007262</a></td>
       <td>Barras2026_Cognitive</td>
-      <td>Barras2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9282,7 +9299,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007314.html" title="DS007314 — eeg dataset, 2 subjects">DS007314</a></td>
       <td>Martzoukou2026_tACS</td>
-      <td>Martzoukou2024_Post</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
@@ -9299,7 +9316,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007315.html" title="DS007315 — eeg dataset, 2 subjects">DS007315</a></td>
       <td>Martzoukou2026_tACS_Patients</td>
-      <td>Martzoukou2024_Post_A</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
@@ -9316,14 +9333,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007322.html" title="DS007322 — eeg dataset, 57 subjects">DS007322</a></td>
       <td>Mishra2026</td>
-      <td>Mishra2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:41.7%;" title="57 records — higher than 43% of datasets" aria-label="57 records — higher than 43% of datasets"><span class="sparkbar-label">57</span></span></td>
-      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 79% of datasets" aria-label="57 subjects — higher than 79% of datasets"><span class="sparkbar-label">57</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.1%;" title="57 subjects — higher than 80% of datasets" aria-label="57 subjects — higher than 80% of datasets"><span class="sparkbar-label">57</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>64\*</td>
@@ -9333,7 +9350,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007338.html" title="DS007338 — eeg dataset, 1 subjects">DS007338</a></td>
       <td>Plomecka2026</td>
-      <td>EEGEyeNet_v2, EEGEYENET</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9367,7 +9384,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007353.html" title="DS007353 — eeg, meg dataset, 32 subjects">DS007353</a></td>
       <td>Zhang2026</td>
-      <td>HAD_MEEG, HADMEEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span> <span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9384,7 +9401,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007358.html" title="DS007358 — eeg dataset, 2000 subjects">DS007358</a></td>
       <td>Vianney2026</td>
-      <td>Vianney2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9401,7 +9418,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007406.html" title="DS007406 — eeg dataset, 10 subjects">DS007406</a></td>
       <td>Edit2026</td>
-      <td>Edit2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9418,13 +9435,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007420.html" title="DS007420 — fnirs dataset, 12 subjects">DS007420</a></td>
       <td>Gao2026_Light_Weight_Multi</td>
-      <td>Gao2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:32.9%;" title="12 subjects — higher than 19% of datasets" aria-label="12 subjects — higher than 19% of datasets"><span class="sparkbar-label">12</span></span></td>
       <td>4</td>
       <td>3</td>
@@ -9435,14 +9452,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007427.html" title="DS007427 — eeg dataset, 44 subjects">DS007427</a></td>
       <td>Isaza2026_Comprehensive</td>
-      <td>HenaoIsaza2026</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="dementia" data-tag-label="Dementia" title="Pathology: Dementia" aria-label="Pathology: Dementia">Dementia</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
       <td><span class="sparkbar" style="--pct:39.1%;" title="44 records — higher than 36% of datasets" aria-label="44 records — higher than 36% of datasets"><span class="sparkbar-label">44</span></span></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 72% of datasets" aria-label="44 subjects — higher than 72% of datasets"><span class="sparkbar-label">44</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 73% of datasets" aria-label="44 subjects — higher than 73% of datasets"><span class="sparkbar-label">44</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>60</td>
@@ -9452,7 +9469,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007431.html" title="DS007431 — eeg dataset, 47 subjects">DS007431</a></td>
       <td>Ataseven2026</td>
-      <td>Ataseven2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9503,7 +9520,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007463.html" title="DS007463 — fnirs dataset, 8 subjects">DS007463</a></td>
       <td>Fogarty2026_Very</td>
-      <td>Fogarty2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9520,7 +9537,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007471.html" title="DS007471 — eeg dataset, 31 subjects">DS007471</a></td>
       <td>Zhou2026</td>
-      <td>Zhou2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9537,13 +9554,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007473.html" title="DS007473 — fnirs dataset, 5 subjects">DS007473</a></td>
       <td>Fogarty2026_High</td>
-      <td>Tripathy2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:53.9%;" title="189 records — higher than 71% of datasets" aria-label="189 records — higher than 71% of datasets"><span class="sparkbar-label">189</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.9%;" title="189 records — higher than 72% of datasets" aria-label="189 records — higher than 72% of datasets"><span class="sparkbar-label">189</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>19</td>
       <td>8</td>
@@ -9571,7 +9588,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007521.html" title="DS007521 — eeg dataset, 23 subjects">DS007521</a></td>
       <td>Moerel2026</td>
-      <td>Moerel2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9588,7 +9605,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007523.html" title="DS007523 — meg dataset, 58 subjects">DS007523</a></td>
       <td>Bel2026</td>
-      <td>Dascoli2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9605,13 +9622,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007524.html" title="DS007524 — meg dataset, 50 subjects">DS007524</a></td>
       <td>Pallier2025</td>
-      <td>LittlePrince</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:63.9%;" title="500 records — higher than 89% of datasets" aria-label="500 records — higher than 89% of datasets"><span class="sparkbar-label">500</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.9%;" title="500 records — higher than 90% of datasets" aria-label="500 records — higher than 90% of datasets"><span class="sparkbar-label">500</span></span></td>
       <td><span class="sparkbar" style="--pct:50.5%;" title="50 subjects — higher than 75% of datasets" aria-label="50 subjects — higher than 75% of datasets"><span class="sparkbar-label">50</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -9622,19 +9639,36 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007526.html" title="DS007526 — eeg dataset, 144 subjects">DS007526</a></td>
       <td>Katzir2026</td>
-      <td>PD_EEG, PDEEG</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="parkinson-s" data-tag-label="Parkinson&#x27;s" title="Pathology: Parkinson&#x27;s" aria-label="Pathology: Parkinson&#x27;s">Parkinson&#x27;s</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="motor" data-tag-label="Motor" title="Modality: Motor" aria-label="Modality: Motor">Motor</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:57.8%;" title="277 records — higher than 79% of datasets" aria-label="277 records — higher than 79% of datasets"><span class="sparkbar-label">277</span></span></td>
-      <td><span class="sparkbar" style="--pct:63.9%;" title="144 subjects — higher than 93% of datasets" aria-label="144 subjects — higher than 93% of datasets"><span class="sparkbar-label">144</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.8%;" title="277 records — higher than 80% of datasets" aria-label="277 records — higher than 80% of datasets"><span class="sparkbar-label">277</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.9%;" title="144 subjects — higher than 94% of datasets" aria-label="144 subjects — higher than 94% of datasets"><span class="sparkbar-label">144</span></span></td>
       <td>2</td>
       <td>0</td>
       <td>65</td>
       <td>250</td>
       <td><span class="sparkbar" style="--pct:74.4%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007537.html" title="DS007537 — eeg dataset, 23 subjects">DS007537</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:32.7%;" title="23 records — higher than 19% of datasets" aria-label="23 records — higher than 19% of datasets"><span class="sparkbar-label">23</span></span></td>
+      <td><span class="sparkbar" style="--pct:40.8%;" title="23 subjects — higher than 48% of datasets" aria-label="23 subjects — higher than 48% of datasets"><span class="sparkbar-label">23</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>66</td>
+      <td>1000</td>
+      <td><span class="sparkbar" style="--pct:75.6%;" title="6.1 GB — larger than 39% of datasets" aria-label="6.1 GB — larger than 39% of datasets"><span class="sparkbar-label">6.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007554.html" title="DS007554 — eeg, fnirs dataset, 30 subjects">DS007554</a></td>
@@ -9645,13 +9679,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:71.3%;" title="1,034 records — higher than 93% of datasets" aria-label="1,034 records — higher than 93% of datasets"><span class="sparkbar-label">1,034</span></span></td>
+      <td><span class="sparkbar" style="--pct:71.3%;" title="1,034 records — higher than 94% of datasets" aria-label="1,034 records — higher than 94% of datasets"><span class="sparkbar-label">1,034</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>7</td>
       <td>3</td>
       <td>32</td>
       <td>10\*</td>
-      <td><span class="sparkbar" style="--pct:74.4%;" title="4.2 GB — larger than 32% of datasets" aria-label="4.2 GB — larger than 32% of datasets"><span class="sparkbar-label">4.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.4%;" title="4.2 GB — larger than 33% of datasets" aria-label="4.2 GB — larger than 33% of datasets"><span class="sparkbar-label">4.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007558.html" title="DS007558 — eeg dataset, 67 subjects">DS007558</a></td>
@@ -9662,18 +9696,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="clinical" data-tag-label="Clinical" title="Type: Clinical" aria-label="Type: Clinical">Clinical</span> <span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="intervention" data-tag-label="Intervention" title="Type: Intervention" aria-label="Type: Intervention">Intervention</span></td>
-      <td><span class="sparkbar" style="--pct:49.4%;" title="121 records — higher than 62% of datasets" aria-label="121 records — higher than 62% of datasets"><span class="sparkbar-label">121</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.4%;" title="121 records — higher than 63% of datasets" aria-label="121 records — higher than 63% of datasets"><span class="sparkbar-label">121</span></span></td>
       <td><span class="sparkbar" style="--pct:54.2%;" title="67 subjects — higher than 84% of datasets" aria-label="67 subjects — higher than 84% of datasets"><span class="sparkbar-label">67</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>19\*</td>
       <td>200</td>
-      <td><span class="sparkbar" style="--pct:68.2%;" title="686.4 MB — larger than 14% of datasets" aria-label="686.4 MB — larger than 14% of datasets"><span class="sparkbar-label">686.4 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.2%;" title="686.4 MB — larger than 15% of datasets" aria-label="686.4 MB — larger than 15% of datasets"><span class="sparkbar-label">686.4 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007591.html" title="DS007591 — eeg dataset, 3 subjects">DS007591</a></td>
       <td>Sato2026_Delineating</td>
-      <td>Sato2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9690,13 +9724,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007602.html" title="DS007602 — eeg dataset, 3 subjects">DS007602</a></td>
       <td>Sato2026_Speech</td>
-      <td>Sato2024</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 59% of datasets" aria-label="113 records — higher than 59% of datasets"><span class="sparkbar-label">113</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 60% of datasets" aria-label="113 records — higher than 60% of datasets"><span class="sparkbar-label">113</span></span></td>
       <td><span class="sparkbar" style="--pct:17.8%;" title="3 subjects — higher than 5% of datasets" aria-label="3 subjects — higher than 5% of datasets"><span class="sparkbar-label">3</span></span></td>
       <td>1</td>
       <td>15</td>
@@ -9705,9 +9739,26 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:82.6%;" title="49.6 GB — larger than 79% of datasets" aria-label="49.6 GB — larger than 79% of datasets"><span class="sparkbar-label">49.6 GB</span></span></td>
     </tr>
     <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007605.html" title="DS007605 — eeg dataset, 97 subjects">DS007605</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:47.1%;" title="97 records — higher than 56% of datasets" aria-label="97 records — higher than 56% of datasets"><span class="sparkbar-label">97</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.9%;" title="97 subjects — higher than 88% of datasets" aria-label="97 subjects — higher than 88% of datasets"><span class="sparkbar-label">97</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>128</td>
+      <td>1000</td>
+      <td><span class="sparkbar" style="--pct:79.9%;" title="21.7 GB — larger than 63% of datasets" aria-label="21.7 GB — larger than 63% of datasets"><span class="sparkbar-label">21.7 GB</span></span></td>
+    </tr>
+    <tr>
       <td><a href="/api/dataset/eegdash.dataset.DS007609.html" title="DS007609 — eeg dataset, 51 subjects">DS007609</a></td>
       <td>Shalamberidze2026</td>
-      <td>Shalamberidze2025</td>
+      <td></td>
       <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -9730,7 +9781,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:54.1%;" title="192 records — higher than 71% of datasets" aria-label="192 records — higher than 71% of datasets"><span class="sparkbar-label">192</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.1%;" title="192 records — higher than 72% of datasets" aria-label="192 records — higher than 72% of datasets"><span class="sparkbar-label">192</span></span></td>
       <td><span class="sparkbar" style="--pct:54.5%;" title="69 subjects — higher than 84% of datasets" aria-label="69 subjects — higher than 84% of datasets"><span class="sparkbar-label">69</span></span></td>
       <td>2</td>
       <td>0</td>
@@ -9739,9 +9790,162 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:81.4%;" title="34.6 GB — larger than 71% of datasets" aria-label="34.6 GB — larger than 71% of datasets"><span class="sparkbar-label">34.6 GB</span></span></td>
     </tr>
     <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007629.html" title="DS007629 — eeg dataset, 1 subjects">DS007629</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:8.9%;" title="1 subjects — higher than 0% of datasets" aria-label="1 subjects — higher than 0% of datasets"><span class="sparkbar-label">1</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>64</td>
+      <td>256</td>
+      <td><span class="sparkbar" style="--pct:64.5%;" title="223.8 MB — larger than 7% of datasets" aria-label="223.8 MB — larger than 7% of datasets"><span class="sparkbar-label">223.8 MB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007630.html" title="DS007630 — eeg dataset, 3 subjects">DS007630</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:78.0%;" title="1,974 records — higher than 96% of datasets" aria-label="1,974 records — higher than 96% of datasets"><span class="sparkbar-label">1,974</span></span></td>
+      <td><span class="sparkbar" style="--pct:17.8%;" title="3 subjects — higher than 5% of datasets" aria-label="3 subjects — higher than 5% of datasets"><span class="sparkbar-label">3</span></span></td>
+      <td>3</td>
+      <td>312</td>
+      <td>134\*</td>
+      <td>1200\*</td>
+      <td><span class="sparkbar" style="--pct:92.5%;" title="955.3 GB — larger than 99% of datasets" aria-label="955.3 GB — larger than 99% of datasets"><span class="sparkbar-label">955.3 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007640.html" title="DS007640 — meg dataset, 23 subjects">DS007640</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:46.8%;" title="94 records — higher than 55% of datasets" aria-label="94 records — higher than 55% of datasets"><span class="sparkbar-label">94</span></span></td>
+      <td><span class="sparkbar" style="--pct:40.8%;" title="23 subjects — higher than 48% of datasets" aria-label="23 subjects — higher than 48% of datasets"><span class="sparkbar-label">23</span></span></td>
+      <td>4</td>
+      <td>4</td>
+      <td></td>
+      <td>1024</td>
+      <td><span class="sparkbar" style="--pct:84.6%;" title="88.8 GB — larger than 87% of datasets" aria-label="88.8 GB — larger than 87% of datasets"><span class="sparkbar-label">88.8 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007647.html" title="DS007647 — eeg dataset, 40 subjects">DS007647</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:38.2%;" title="40 records — higher than 32% of datasets" aria-label="40 records — higher than 32% of datasets"><span class="sparkbar-label">40</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.7%;" title="40 subjects — higher than 69% of datasets" aria-label="40 subjects — higher than 69% of datasets"><span class="sparkbar-label">40</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>32</td>
+      <td>1000</td>
+      <td><span class="sparkbar" style="--pct:73.6%;" title="3.3 GB — larger than 30% of datasets" aria-label="3.3 GB — larger than 30% of datasets"><span class="sparkbar-label">3.3 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007648.html" title="DS007648 — eeg dataset, 22 subjects">DS007648</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:32.2%;" title="22 records — higher than 18% of datasets" aria-label="22 records — higher than 18% of datasets"><span class="sparkbar-label">22</span></span></td>
+      <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>64</td>
+      <td>500</td>
+      <td><span class="sparkbar" style="--pct:76.1%;" title="7.0 GB — larger than 40% of datasets" aria-label="7.0 GB — larger than 40% of datasets"><span class="sparkbar-label">7.0 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007655.html" title="DS007655 — eeg dataset, 32 subjects">DS007655</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:42.9%;" title="64 records — higher than 48% of datasets" aria-label="64 records — higher than 48% of datasets"><span class="sparkbar-label">64</span></span></td>
+      <td><span class="sparkbar" style="--pct:44.9%;" title="32 subjects — higher than 64% of datasets" aria-label="32 subjects — higher than 64% of datasets"><span class="sparkbar-label">32</span></span></td>
+      <td>2</td>
+      <td>0</td>
+      <td>62</td>
+      <td>600</td>
+      <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 49% of datasets" aria-label="10.2 GB — larger than 49% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007663.html" title="DS007663 — meg dataset, 27 subjects">DS007663</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:42.1%;" title="59 records — higher than 44% of datasets" aria-label="59 records — higher than 44% of datasets"><span class="sparkbar-label">59</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td>1</td>
+      <td>0</td>
+      <td>334</td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:84.9%;" title="98.2 GB — larger than 88% of datasets" aria-label="98.2 GB — larger than 88% of datasets"><span class="sparkbar-label">98.2 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007666.html" title="DS007666 — eeg dataset, 55 subjects">DS007666</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:48.4%;" title="110 records — higher than 59% of datasets" aria-label="110 records — higher than 59% of datasets"><span class="sparkbar-label">110</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.7%;" title="55 subjects — higher than 79% of datasets" aria-label="55 subjects — higher than 79% of datasets"><span class="sparkbar-label">55</span></span></td>
+      <td>20</td>
+      <td>2</td>
+      <td>19\*</td>
+      <td>200</td>
+      <td><span class="sparkbar" style="--pct:67.9%;" title="625.8 MB — larger than 13% of datasets" aria-label="625.8 MB — larger than 13% of datasets"><span class="sparkbar-label">625.8 MB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.DS007667.html" title="DS007667 — eeg dataset, 55 subjects">DS007667</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:48.4%;" title="110 records — higher than 59% of datasets" aria-label="110 records — higher than 59% of datasets"><span class="sparkbar-label">110</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.7%;" title="55 subjects — higher than 79% of datasets" aria-label="55 subjects — higher than 79% of datasets"><span class="sparkbar-label">55</span></span></td>
+      <td>20</td>
+      <td>2</td>
+      <td>19\*</td>
+      <td>200</td>
+      <td><span class="sparkbar" style="--pct:67.9%;" title="625.8 MB — larger than 13% of datasets" aria-label="625.8 MB — larger than 13% of datasets"><span class="sparkbar-label">625.8 MB</span></span></td>
+    </tr>
+    <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000103.html" title="NM000103 — eeg dataset, 447 subjects">NM000103</a></td>
       <td>Shirazi2017</td>
-      <td>HealthyBrainNetwork, HBN_EEG_NC, HBN_NoCommercial</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -9758,7 +9962,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000104.html" title="NM000104 — emg dataset, 108 subjects">NM000104</a></td>
       <td>Sivakumar2024</td>
-      <td>emg2qwerty</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
@@ -9775,13 +9979,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000105.html" title="NM000105 — emg dataset, 100 subjects">NM000105</a></td>
       <td>Kaifosh2025</td>
-      <td>FRL_DiscreteGestures</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 56% of datasets" aria-label="100 records — higher than 56% of datasets"><span class="sparkbar-label">100</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.4%;" title="100 records — higher than 57% of datasets" aria-label="100 records — higher than 57% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td><span class="sparkbar" style="--pct:59.2%;" title="100 subjects — higher than 88% of datasets" aria-label="100 subjects — higher than 88% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -9792,13 +9996,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000106.html" title="NM000106 — emg dataset, 100 subjects">NM000106</a></td>
       <td>Kaifosh2025_106</td>
-      <td>FRL_Handwriting</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:68.8%;" title="807 records — higher than 92% of datasets" aria-label="807 records — higher than 92% of datasets"><span class="sparkbar-label">807</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.8%;" title="807 records — higher than 93% of datasets" aria-label="807 records — higher than 93% of datasets"><span class="sparkbar-label">807</span></span></td>
       <td><span class="sparkbar" style="--pct:59.2%;" title="100 subjects — higher than 88% of datasets" aria-label="100 subjects — higher than 88% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td>1</td>
       <td>26</td>
@@ -9809,13 +10013,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000107.html" title="NM000107 — emg dataset, 100 subjects">NM000107</a></td>
       <td>Kaifosh2025_107</td>
-      <td>FRL_WristControl</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:53.5%;" title="182 records — higher than 70% of datasets" aria-label="182 records — higher than 70% of datasets"><span class="sparkbar-label">182</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.5%;" title="182 records — higher than 71% of datasets" aria-label="182 records — higher than 71% of datasets"><span class="sparkbar-label">182</span></span></td>
       <td><span class="sparkbar" style="--pct:59.2%;" title="100 subjects — higher than 88% of datasets" aria-label="100 subjects — higher than 88% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -9826,14 +10030,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000108.html" title="NM000108 — emg dataset, 20 subjects">NM000108</a></td>
       <td>Jiang2021</td>
-      <td>HySER, Hyser</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:75.3%;" title="1,514 records — higher than 96% of datasets" aria-label="1,514 records — higher than 96% of datasets"><span class="sparkbar-label">1,514</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>38</td>
       <td>2</td>
       <td>256</td>
@@ -9860,13 +10064,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000110.html" title="NM000110 — eeg dataset, 24 subjects">NM000110</a></td>
       <td>Connolly2010</td>
-      <td>CHBMIT, CHB_MIT</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:67.1%;" title="686 records — higher than 91% of datasets" aria-label="686 records — higher than 91% of datasets"><span class="sparkbar-label">686</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.1%;" title="686 records — higher than 92% of datasets" aria-label="686 records — higher than 92% of datasets"><span class="sparkbar-label">686</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9877,13 +10081,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000112.html" title="NM000112 — eeg dataset, 123 subjects">NM000112</a></td>
       <td>Liu2024_112</td>
-      <td>FACED</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:49.5%;" title="123 records — higher than 62% of datasets" aria-label="123 records — higher than 62% of datasets"><span class="sparkbar-label">123</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.5%;" title="123 records — higher than 63% of datasets" aria-label="123 records — higher than 63% of datasets"><span class="sparkbar-label">123</span></span></td>
       <td><span class="sparkbar" style="--pct:61.9%;" title="123 subjects — higher than 92% of datasets" aria-label="123 subjects — higher than 92% of datasets"><span class="sparkbar-label">123</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -9917,8 +10121,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:53.5%;" title="181 records — higher than 70% of datasets" aria-label="181 records — higher than 70% of datasets"><span class="sparkbar-label">181</span></span></td>
-      <td><span class="sparkbar" style="--pct:53.6%;" title="64 subjects — higher than 82% of datasets" aria-label="64 subjects — higher than 82% of datasets"><span class="sparkbar-label">64</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.5%;" title="181 records — higher than 71% of datasets" aria-label="181 records — higher than 71% of datasets"><span class="sparkbar-label">181</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.6%;" title="64 subjects — higher than 83% of datasets" aria-label="64 subjects — higher than 83% of datasets"><span class="sparkbar-label">64</span></span></td>
       <td>3</td>
       <td>0</td>
       <td>22\*</td>
@@ -9946,30 +10150,30 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000118.html" title="NM000118 — eeg dataset, 9 subjects">NM000118</a></td>
       <td>Nakanishi2015</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:23.7%;" title="9 records — higher than 6% of datasets" aria-label="9 records — higher than 6% of datasets"><span class="sparkbar-label">9</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>8</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:60.4%;" title="65.4 MB — larger than 2% of datasets" aria-label="65.4 MB — larger than 2% of datasets"><span class="sparkbar-label">65.4 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.4%;" title="65.3 MB — larger than 2% of datasets" aria-label="65.3 MB — larger than 2% of datasets"><span class="sparkbar-label">65.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000119.html" title="NM000119 — eeg dataset, 11 subjects">NM000119</a></td>
       <td>Oikonomou2016_MAMEM1</td>
-      <td>Oikonomou2016</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:39.8%;" title="47 records — higher than 37% of datasets" aria-label="47 records — higher than 37% of datasets"><span class="sparkbar-label">47</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>256</td>
@@ -9979,14 +10183,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000120.html" title="NM000120 — eeg dataset, 11 subjects">NM000120</a></td>
       <td>Oikonomou2016_MAMEM2</td>
-      <td>MAMEM2, SSVEPMAMEM2, MAMEM2_SSVEP</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:41.4%;" title="55 records — higher than 43% of datasets" aria-label="55 records — higher than 43% of datasets"><span class="sparkbar-label">55</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>256</td>
@@ -9996,25 +10200,25 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000121.html" title="NM000121 — eeg dataset, 11 subjects">NM000121</a></td>
       <td>Oikonomou2016_MAMEM3</td>
-      <td>MAMEM3, SSVEP_MAMEM3</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:48.4%;" title="110 records — higher than 59% of datasets" aria-label="110 records — higher than 59% of datasets"><span class="sparkbar-label">110</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>14</td>
       <td>128</td>
-      <td><span class="sparkbar" style="--pct:62.4%;" title="120.2 MB — larger than 4% of datasets" aria-label="120.2 MB — larger than 4% of datasets"><span class="sparkbar-label">120.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.4%;" title="120.1 MB — larger than 4% of datasets" aria-label="120.1 MB — larger than 4% of datasets"><span class="sparkbar-label">120.1 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000122.html" title="NM000122 — eeg dataset, 12 subjects">NM000122</a></td>
       <td>Chen2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10025,13 +10229,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>32</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:68.5%;" title="741.9 MB — larger than 15% of datasets" aria-label="741.9 MB — larger than 15% of datasets"><span class="sparkbar-label">741.9 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.5%;" title="741.9 MB — larger than 16% of datasets" aria-label="741.9 MB — larger than 16% of datasets"><span class="sparkbar-label">741.9 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000123.html" title="NM000123 — eeg dataset, 12 subjects">NM000123</a></td>
       <td>Kalunga2016</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10048,7 +10252,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000124.html" title="NM000124 — eeg dataset, 24 subjects">NM000124</a></td>
       <td>Han2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10065,7 +10269,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000125.html" title="NM000125 — eeg dataset, 23 subjects">NM000125</a></td>
       <td>Lee2021_SSVEP</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10082,7 +10286,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000126.html" title="NM000126 — eeg dataset, 34 subjects">NM000126</a></td>
       <td>Wang2016</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10098,13 +10302,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000127.html" title="NM000127 — eeg dataset, 40 subjects">NM000127</a></td>
       <td>Kim2025_SSVEP</td>
-      <td>Kim2025</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
       <td><span class="sparkbar" style="--pct:47.7%;" title="40 subjects — higher than 69% of datasets" aria-label="40 subjects — higher than 69% of datasets"><span class="sparkbar-label">40</span></span></td>
       <td>1</td>
       <td>6</td>
@@ -10116,7 +10320,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000128.html" title="NM000128 — eeg dataset, 59 subjects">NM000128</a></td>
       <td>Dong2023</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10127,19 +10331,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>8</td>
       <td>250</td>
-      <td><span class="sparkbar" style="--pct:66.4%;" title="397.1 MB — larger than 9% of datasets" aria-label="397.1 MB — larger than 9% of datasets"><span class="sparkbar-label">397.1 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.4%;" title="397.0 MB — larger than 9% of datasets" aria-label="397.0 MB — larger than 9% of datasets"><span class="sparkbar-label">397.0 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000129.html" title="NM000129 — eeg dataset, 70 subjects">NM000129</a></td>
       <td>Liu2020</td>
-      <td>BetaSSVEP, BETA_SSVEP, BETA</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:43.8%;" title="70 records — higher than 50% of datasets" aria-label="70 records — higher than 50% of datasets"><span class="sparkbar-label">70</span></span></td>
-      <td><span class="sparkbar" style="--pct:54.7%;" title="70 subjects — higher than 84% of datasets" aria-label="70 subjects — higher than 84% of datasets"><span class="sparkbar-label">70</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.7%;" title="70 subjects — higher than 85% of datasets" aria-label="70 subjects — higher than 85% of datasets"><span class="sparkbar-label">70</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>64</td>
@@ -10149,8 +10353,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000130.html" title="NM000130 — eeg dataset, 100 subjects">NM000130</a></td>
       <td>Liu2022</td>
-      <td>EldBETA, eldBETA, Liu2022EldBETA</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10167,7 +10371,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000131.html" title="NM000131 — eeg dataset, 8 subjects">NM000131</a></td>
       <td>Wang2021</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10183,13 +10387,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000132.html" title="NM000132 — eeg dataset, 40 subjects">NM000132</a></td>
       <td>Kappenman2021</td>
-      <td>ERPCORE, ERP_CORE</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
       <td><span class="sparkbar" style="--pct:47.7%;" title="40 subjects — higher than 69% of datasets" aria-label="40 subjects — higher than 69% of datasets"><span class="sparkbar-label">40</span></span></td>
       <td>6</td>
       <td>0</td>
@@ -10200,7 +10404,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000133.html" title="NM000133 — eeg dataset, 8 subjects">NM000133</a></td>
       <td>Xu2024</td>
-      <td>Alljoined1, Alljoined</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
@@ -10212,19 +10416,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>64</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 41% of datasets" aria-label="7.6 GB — larger than 41% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.3%;" title="7.6 GB — larger than 42% of datasets" aria-label="7.6 GB — larger than 42% of datasets"><span class="sparkbar-label">7.6 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000134.html" title="NM000134 — eeg dataset, 20 subjects">NM000134</a></td>
       <td>Xu2025</td>
-      <td>Alljoined16M, Alljoined_16M, Alljoined1p6M</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:75.3%;" title="1,525 records — higher than 96% of datasets" aria-label="1,525 records — higher than 96% of datasets"><span class="sparkbar-label">1,525</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>5</td>
       <td>32</td>
@@ -10234,13 +10438,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000135.html" title="NM000135 — eeg dataset, 1 subjects">NM000135</a></td>
       <td>Leeb2014</td>
-      <td>BNCI2014004</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 4% of datasets" aria-label="5 records — higher than 4% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td><span class="sparkbar" style="--pct:8.9%;" title="1 subjects — higher than 0% of datasets" aria-label="1 subjects — higher than 0% of datasets"><span class="sparkbar-label">1</span></span></td>
       <td>1</td>
       <td>5</td>
@@ -10285,7 +10489,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000138.html" title="NM000138 — eeg dataset, 8 subjects">NM000138</a></td>
       <td>Barachant2012</td>
-      <td>AlexMI, AlexMotorImagery, AlexandreMotorImagery</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -10302,14 +10506,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000139.html" title="NM000139 — eeg dataset, 9 subjects">NM000139</a></td>
       <td>Tangermann2014</td>
-      <td>BNCI2014001, BCICIV1, BCICompIV1</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:48.2%;" title="108 records — higher than 58% of datasets" aria-label="108 records — higher than 58% of datasets"><span class="sparkbar-label">108</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.2%;" title="108 records — higher than 59% of datasets" aria-label="108 records — higher than 59% of datasets"><span class="sparkbar-label">108</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>22</td>
@@ -10319,7 +10523,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000140.html" title="NM000140 — eeg dataset, 12 subjects">NM000140</a></td>
       <td>Faller2015</td>
-      <td>BNCI2015, BNCI2015001</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
@@ -10331,7 +10535,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>3</td>
       <td>13</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:70.0%;" title="1.1 GB — larger than 18% of datasets" aria-label="1.1 GB — larger than 18% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:70.0%;" title="1.1 GB — larger than 19% of datasets" aria-label="1.1 GB — larger than 19% of datasets"><span class="sparkbar-label">1.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000141.html" title="NM000141 — eeg dataset, 14 subjects">NM000141</a></td>
@@ -10343,7 +10547,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:27.8%;" title="14 records — higher than 10% of datasets" aria-label="14 records — higher than 10% of datasets"><span class="sparkbar-label">14</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>19</td>
@@ -10370,13 +10574,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000143.html" title="NM000143 — eeg dataset, 5 subjects">NM000143</a></td>
       <td>BNCI2003</td>
-      <td>BCICIII_IVa, BCICompIII_IVa, BNCI2003_IVa</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 4% of datasets" aria-label="5 records — higher than 4% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -10387,14 +10591,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000144.html" title="NM000144 — eeg dataset, 9 subjects">NM000144</a></td>
       <td>Scherer2015</td>
-      <td>BNCI2015</td>
+      <td></td>
       <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:30.3%;" title="18 records — higher than 13% of datasets" aria-label="18 records — higher than 13% of datasets"><span class="sparkbar-label">18</span></span></td>
-      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 13% of datasets" aria-label="9 subjects — higher than 13% of datasets"><span class="sparkbar-label">9</span></span></td>
+      <td><span class="sparkbar" style="--pct:29.6%;" title="9 subjects — higher than 12% of datasets" aria-label="9 subjects — higher than 12% of datasets"><span class="sparkbar-label">9</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>30</td>
@@ -10405,7 +10609,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000145.html" title="NM000145 — eeg dataset, 10 subjects">NM000145</a></td>
       <td>GrosseWentrup2009</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10421,8 +10625,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000146.html" title="NM000146 — eeg dataset, 10 subjects">NM000146</a></td>
       <td>Yi2014</td>
-      <td>Weibo2014</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10444,7 +10648,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="learning" data-tag-label="Learning" title="Type: Learning" aria-label="Type: Learning">Learning</span></td>
-      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 61% of datasets" aria-label="120 records — higher than 61% of datasets"><span class="sparkbar-label">120</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
       <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
       <td>1</td>
       <td>6</td>
@@ -10456,24 +10660,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000148.html" title="NM000148 — eeg dataset, 30 subjects">NM000148</a></td>
       <td>Rozado2015</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>32</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:69.4%;" title="975.3 MB — larger than 16% of datasets" aria-label="975.3 MB — larger than 16% of datasets"><span class="sparkbar-label">975.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.4%;" title="975.2 MB — larger than 17% of datasets" aria-label="975.2 MB — larger than 17% of datasets"><span class="sparkbar-label">975.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000149.html" title="NM000149 — eeg dataset, 10 subjects">NM000149</a></td>
       <td>Ofner2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10524,7 +10728,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000152.html" title="NM000152 — eeg dataset, 12 subjects">NM000152</a></td>
       <td>Zhang2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10541,7 +10745,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000155.html" title="NM000155 — emg dataset, 6 subjects">NM000155</a></td>
       <td>Caillet2023</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
@@ -10555,15 +10759,32 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:66.8%;" title="448.3 MB — larger than 10% of datasets" aria-label="448.3 MB — larger than 10% of datasets"><span class="sparkbar-label">448.3 MB</span></span></td>
     </tr>
     <tr>
-      <td><a href="/api/dataset/eegdash.dataset.NM000157.html" title="NM000157 — eeg dataset, 19 subjects">NM000157</a></td>
-      <td>Mainsah2025</td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000156.html" title="NM000156 — eeg dataset, 37 subjects">NM000156</a></td>
       <td></td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:64.8%;" title="544 records — higher than 90% of datasets" aria-label="544 records — higher than 90% of datasets"><span class="sparkbar-label">544</span></span></td>
+      <td><span class="sparkbar" style="--pct:47.2%;" title="98 records — higher than 56% of datasets" aria-label="98 records — higher than 56% of datasets"><span class="sparkbar-label">98</span></span></td>
+      <td><span class="sparkbar" style="--pct:46.7%;" title="37 subjects — higher than 68% of datasets" aria-label="37 subjects — higher than 68% of datasets"><span class="sparkbar-label">37</span></span></td>
+      <td>1</td>
+      <td>6</td>
+      <td>32</td>
+      <td>256</td>
+      <td><span class="sparkbar" style="--pct:72.8%;" title="2.6 GB — larger than 26% of datasets" aria-label="2.6 GB — larger than 26% of datasets"><span class="sparkbar-label">2.6 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.NM000157.html" title="NM000157 — eeg dataset, 19 subjects">NM000157</a></td>
+      <td>Mainsah2025</td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:64.8%;" title="544 records — higher than 91% of datasets" aria-label="544 records — higher than 91% of datasets"><span class="sparkbar-label">544</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>8</td>
@@ -10575,7 +10796,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000158.html" title="NM000158 — eeg dataset, 50 subjects">NM000158</a></td>
       <td>Liu2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
@@ -10586,18 +10807,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>29</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:68.2%;" title="673.7 MB — larger than 14% of datasets" aria-label="673.7 MB — larger than 14% of datasets"><span class="sparkbar-label">673.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.2%;" title="673.6 MB — larger than 14% of datasets" aria-label="673.6 MB — larger than 14% of datasets"><span class="sparkbar-label">673.6 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000159.html" title="NM000159 — emg dataset, 16 subjects">NM000159</a></td>
       <td>Avrillon2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:49.6%;" title="124 records — higher than 62% of datasets" aria-label="124 records — higher than 62% of datasets"><span class="sparkbar-label">124</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.6%;" title="124 records — higher than 63% of datasets" aria-label="124 records — higher than 63% of datasets"><span class="sparkbar-label">124</span></span></td>
       <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>8</td>
       <td>0</td>
@@ -10609,7 +10830,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000160.html" title="NM000160 — eeg dataset, 18 subjects">NM000160</a></td>
       <td>Yi2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10626,30 +10847,30 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000161.html" title="NM000161 — eeg dataset, 20 subjects">NM000161</a></td>
       <td>Crell2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:38.2%;" title="40 records — higher than 32% of datasets" aria-label="40 records — higher than 32% of datasets"><span class="sparkbar-label">40</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>60</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 48% of datasets" aria-label="10.2 GB — larger than 48% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:77.3%;" title="10.2 GB — larger than 49% of datasets" aria-label="10.2 GB — larger than 49% of datasets"><span class="sparkbar-label">10.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000162.html" title="NM000162 — eeg dataset, 20 subjects">NM000162</a></td>
       <td>Srisrisawang2025</td>
-      <td>BNCI2025</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:31.3%;" title="20 records — higher than 15% of datasets" aria-label="20 records — higher than 15% of datasets"><span class="sparkbar-label">20</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>67</td>
@@ -10660,7 +10881,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000163.html" title="NM000163 — eeg dataset, 12 subjects">NM000163</a></td>
       <td>Castillos2023_VEP</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10677,7 +10898,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000165.html" title="NM000165 — emg dataset, 1 subjects">NM000165</a></td>
       <td>Grison2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
@@ -10694,13 +10915,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000166.html" title="NM000166 — eeg dataset, 95 subjects">NM000166</a></td>
       <td>Huang2018</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:80.3%;" title="2,469 records — higher than 97% of datasets" aria-label="2,469 records — higher than 97% of datasets"><span class="sparkbar-label">2,469</span></span></td>
-      <td><span class="sparkbar" style="--pct:58.6%;" title="95 subjects — higher than 87% of datasets" aria-label="95 subjects — higher than 87% of datasets"><span class="sparkbar-label">95</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.6%;" title="95 subjects — higher than 88% of datasets" aria-label="95 subjects — higher than 88% of datasets"><span class="sparkbar-label">95</span></span></td>
       <td>13</td>
       <td>2</td>
       <td>64</td>
@@ -10711,12 +10932,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000167.html" title="NM000167 — eeg dataset, 25 subjects">NM000167</a></td>
       <td>Ma2020</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:60.9%;" title="375 records — higher than 85% of datasets" aria-label="375 records — higher than 85% of datasets"><span class="sparkbar-label">375</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.9%;" title="375 records — higher than 86% of datasets" aria-label="375 records — higher than 86% of datasets"><span class="sparkbar-label">375</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>15</td>
@@ -10727,13 +10948,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000168.html" title="NM000168 — eeg dataset, 6 subjects">NM000168</a></td>
       <td>Chavarriaga2015</td>
-      <td>Chavarriaga2010</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 61% of datasets" aria-label="120 records — higher than 61% of datasets"><span class="sparkbar-label">120</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
       <td><span class="sparkbar" style="--pct:25.0%;" title="6 subjects — higher than 8% of datasets" aria-label="6 subjects — higher than 8% of datasets"><span class="sparkbar-label">6</span></span></td>
       <td>1</td>
       <td>20</td>
@@ -10744,8 +10965,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000169.html" title="NM000169 — eeg dataset, 8 subjects">NM000169</a></td>
       <td>Riccio2014</td>
-      <td>BNCI2014008</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10756,13 +10977,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>8</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:60.9%;" title="75.9 MB — larger than 2% of datasets" aria-label="75.9 MB — larger than 2% of datasets"><span class="sparkbar-label">75.9 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.9%;" title="75.9 MB — larger than 3% of datasets" aria-label="75.9 MB — larger than 3% of datasets"><span class="sparkbar-label">75.9 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000170.html" title="NM000170 — eeg dataset, 10 subjects">NM000170</a></td>
       <td>Pulferer2025</td>
-      <td>BNCI2025</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10778,31 +10999,31 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000171.html" title="NM000171 — eeg dataset, 14 subjects">NM000171</a></td>
       <td>Steyrl2014</td>
-      <td>BNCI2014002</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 59% of datasets" aria-label="112 records — higher than 59% of datasets"><span class="sparkbar-label">112</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 60% of datasets" aria-label="112 records — higher than 60% of datasets"><span class="sparkbar-label">112</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>15</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:67.5%;" title="554.3 MB — larger than 12% of datasets" aria-label="554.3 MB — larger than 12% of datasets"><span class="sparkbar-label">554.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.5%;" title="554.2 MB — larger than 12% of datasets" aria-label="554.2 MB — larger than 12% of datasets"><span class="sparkbar-label">554.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000172.html" title="NM000172 — eeg dataset, 14 subjects">NM000172</a></td>
       <td>Schirrmeister2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:34.6%;" title="28 records — higher than 24% of datasets" aria-label="28 records — higher than 24% of datasets"><span class="sparkbar-label">28</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>128</td>
@@ -10813,7 +11034,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000173.html" title="NM000173 — eeg dataset, 15 subjects">NM000173</a></td>
       <td>Ofner2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10830,46 +11051,46 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000175.html" title="NM000175 — fnirs dataset, 5 subjects">NM000175</a></td>
       <td>Luke2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 4% of datasets" aria-label="5 records — higher than 4% of datasets"><span class="sparkbar-label">5</span></span></td>
+      <td><span class="sparkbar" style="--pct:18.4%;" title="5 records — higher than 3% of datasets" aria-label="5 records — higher than 3% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>0</td>
       <td>56</td>
       <td>7</td>
-      <td><span class="sparkbar" style="--pct:59.3%;" title="47.5 MB — larger than 2% of datasets" aria-label="47.5 MB — larger than 2% of datasets"><span class="sparkbar-label">47.5 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:59.3%;" title="47.5 MB — larger than 1% of datasets" aria-label="47.5 MB — larger than 1% of datasets"><span class="sparkbar-label">47.5 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000176.html" title="NM000176 — eeg dataset, 5 subjects">NM000176</a></td>
       <td>Mainsah2025_BigP3BCI</td>
-      <td>BigP3BCI_StudyK, BigP3BCI_K</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 63% of datasets" aria-label="128 records — higher than 63% of datasets"><span class="sparkbar-label">128</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.9%;" title="128 records — higher than 64% of datasets" aria-label="128 records — higher than 64% of datasets"><span class="sparkbar-label">128</span></span></td>
       <td><span class="sparkbar" style="--pct:23.0%;" title="5 subjects — higher than 6% of datasets" aria-label="5 subjects — higher than 6% of datasets"><span class="sparkbar-label">5</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:63.5%;" title="168.3 MB — larger than 6% of datasets" aria-label="168.3 MB — larger than 6% of datasets"><span class="sparkbar-label">168.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.5%;" title="168.2 MB — larger than 6% of datasets" aria-label="168.2 MB — larger than 6% of datasets"><span class="sparkbar-label">168.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000179.html" title="NM000179 — eeg dataset, 215 subjects">NM000179</a></td>
       <td>Babayan2018</td>
-      <td>LEMON</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:55.2%;" title="215 records — higher than 73% of datasets" aria-label="215 records — higher than 73% of datasets"><span class="sparkbar-label">215</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.2%;" title="215 records — higher than 74% of datasets" aria-label="215 records — higher than 74% of datasets"><span class="sparkbar-label">215</span></span></td>
       <td><span class="sparkbar" style="--pct:69.0%;" title="215 subjects — higher than 96% of datasets" aria-label="215 subjects — higher than 96% of datasets"><span class="sparkbar-label">215</span></span></td>
       <td>1</td>
       <td>0</td>
@@ -10881,7 +11102,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000180.html" title="NM000180 — eeg dataset, 45 subjects">NM000180</a></td>
       <td>Brennan2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -10898,7 +11119,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000181.html" title="NM000181 — eeg dataset, 2417 subjects">NM000181</a></td>
       <td>Khan2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -10914,25 +11135,25 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000185.html" title="NM000185 — eeg dataset, 100 subjects">NM000185</a></td>
       <td>Kemp2000</td>
-      <td>SleepEDF, SleepEDFExpanded</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:54.3%;" title="197 records — higher than 72% of datasets" aria-label="197 records — higher than 72% of datasets"><span class="sparkbar-label">197</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.3%;" title="197 records — higher than 73% of datasets" aria-label="197 records — higher than 73% of datasets"><span class="sparkbar-label">197</span></span></td>
       <td><span class="sparkbar" style="--pct:59.2%;" title="100 subjects — higher than 88% of datasets" aria-label="100 subjects — higher than 88% of datasets"><span class="sparkbar-label">100</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>7\*</td>
       <td>100</td>
-      <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 43% of datasets" aria-label="8.1 GB — larger than 43% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.6%;" title="8.1 GB — larger than 44% of datasets" aria-label="8.1 GB — larger than 44% of datasets"><span class="sparkbar-label">8.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000186.html" title="NM000186 — eeg dataset, 8 subjects">NM000186</a></td>
       <td>Mainsah2025_BigP3BCI_E</td>
-      <td>BigP3BCI_StudyE, BigP3BCI_E</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10943,30 +11164,30 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:61.9%;" title="104.7 MB — larger than 4% of datasets" aria-label="104.7 MB — larger than 4% of datasets"><span class="sparkbar-label">104.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.9%;" title="104.6 MB — larger than 4% of datasets" aria-label="104.6 MB — larger than 4% of datasets"><span class="sparkbar-label">104.6 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000187.html" title="NM000187 — eeg dataset, 8 subjects">NM000187</a></td>
       <td>Mainsah2025_BigP3BCI_N</td>
-      <td>BigP3BCI_StudyN</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:52.2%;" title="160 records — higher than 68% of datasets" aria-label="160 records — higher than 68% of datasets"><span class="sparkbar-label">160</span></span></td>
+      <td><span class="sparkbar" style="--pct:52.2%;" title="160 records — higher than 69% of datasets" aria-label="160 records — higher than 69% of datasets"><span class="sparkbar-label">160</span></span></td>
       <td><span class="sparkbar" style="--pct:28.2%;" title="8 subjects — higher than 10% of datasets" aria-label="8 subjects — higher than 10% of datasets"><span class="sparkbar-label">8</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:66.0%;" title="353.2 MB — larger than 8% of datasets" aria-label="353.2 MB — larger than 8% of datasets"><span class="sparkbar-label">353.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.0%;" title="353.1 MB — larger than 9% of datasets" aria-label="353.1 MB — larger than 9% of datasets"><span class="sparkbar-label">353.1 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000188.html" title="NM000188 — eeg dataset, 10 subjects">NM000188</a></td>
       <td>Arico2014</td>
-      <td>BNCI2014_009_P300</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10982,8 +11203,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000189.html" title="NM000189 — eeg dataset, 10 subjects">NM000189</a></td>
       <td>Schreuder2015_P300</td>
-      <td>BNCI2015_P300, BNCI2015_003_P300, BNCI2015_003_AMUSE</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -10994,13 +11215,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>8</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:56.7%;" title="21.8 MB — larger than 1% of datasets" aria-label="21.8 MB — larger than 1% of datasets"><span class="sparkbar-label">21.8 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.7%;" title="21.7 MB — larger than 1% of datasets" aria-label="21.7 MB — larger than 1% of datasets"><span class="sparkbar-label">21.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000190.html" title="NM000190 — eeg dataset, 10 subjects">NM000190</a></td>
       <td>Hohne2015</td>
-      <td>BNCI2015</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11016,59 +11237,59 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000191.html" title="NM000191 — eeg dataset, 10 subjects">NM000191</a></td>
       <td>Mainsah2025_BigP3BCI_F</td>
-      <td>BigP3BCI_StudyF, BigP3BCI_F</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:57.6%;" title="270 records — higher than 79% of datasets" aria-label="270 records — higher than 79% of datasets"><span class="sparkbar-label">270</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.6%;" title="270 records — higher than 80% of datasets" aria-label="270 records — higher than 80% of datasets"><span class="sparkbar-label">270</span></span></td>
       <td><span class="sparkbar" style="--pct:30.8%;" title="10 subjects — higher than 14% of datasets" aria-label="10 subjects — higher than 14% of datasets"><span class="sparkbar-label">10</span></span></td>
       <td>1</td>
       <td>3</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:67.5%;" title="551.9 MB — larger than 12% of datasets" aria-label="551.9 MB — larger than 12% of datasets"><span class="sparkbar-label">551.9 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.5%;" title="551.7 MB — larger than 12% of datasets" aria-label="551.7 MB — larger than 12% of datasets"><span class="sparkbar-label">551.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000192.html" title="NM000192 — eeg dataset, 11 subjects">NM000192</a></td>
       <td>Treder2015_BNCI_006_Music</td>
-      <td>BNCI2015_BNCI_006_Music, BNCI_2015_006_Music, BNCI2015_006_MusicBCI</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:25.5%;" title="11 records — higher than 8% of datasets" aria-label="11 records — higher than 8% of datasets"><span class="sparkbar-label">11</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>64</td>
       <td>200</td>
-      <td><span class="sparkbar" style="--pct:74.5%;" title="4.4 GB — larger than 33% of datasets" aria-label="4.4 GB — larger than 33% of datasets"><span class="sparkbar-label">4.4 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.5%;" title="4.4 GB — larger than 34% of datasets" aria-label="4.4 GB — larger than 34% of datasets"><span class="sparkbar-label">4.4 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000193.html" title="NM000193 — eeg dataset, 11 subjects">NM000193</a></td>
       <td>Kojima2024A_P300</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:43.2%;" title="66 records — higher than 48% of datasets" aria-label="66 records — higher than 48% of datasets"><span class="sparkbar-label">66</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>64</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:74.0%;" title="3.7 GB — larger than 31% of datasets" aria-label="3.7 GB — larger than 31% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.0%;" title="3.7 GB — larger than 32% of datasets" aria-label="3.7 GB — larger than 32% of datasets"><span class="sparkbar-label">3.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000194.html" title="NM000194 — eeg dataset, 12 subjects">NM000194</a></td>
       <td>Acqualagna2015</td>
-      <td>BNCI2015</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11084,8 +11305,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000195.html" title="NM000195 — eeg dataset, 12 subjects">NM000195</a></td>
       <td>Hubner2018</td>
-      <td>Huebner2018</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11102,7 +11323,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000196.html" title="NM000196 — eeg dataset, 12 subjects">NM000196</a></td>
       <td>Thielen2015</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11113,36 +11334,36 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>64</td>
       <td>2048</td>
-      <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.8%;" title="3.5 GB — larger than 31% of datasets" aria-label="3.5 GB — larger than 31% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000197.html" title="NM000197 — eeg dataset, 21 subjects">NM000197</a></td>
       <td>Mainsah2025_BigP3BCI_M</td>
-      <td>BigP3BCI_StudyM, BigP3BCI_M</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:62.1%;" title="420 records — higher than 87% of datasets" aria-label="420 records — higher than 87% of datasets"><span class="sparkbar-label">420</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.1%;" title="420 records — higher than 88% of datasets" aria-label="420 records — higher than 88% of datasets"><span class="sparkbar-label">420</span></span></td>
       <td><span class="sparkbar" style="--pct:39.7%;" title="21 subjects — higher than 43% of datasets" aria-label="21 subjects — higher than 43% of datasets"><span class="sparkbar-label">21</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:67.1%;" title="491.6 MB — larger than 11% of datasets" aria-label="491.6 MB — larger than 11% of datasets"><span class="sparkbar-label">491.6 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.1%;" title="491.3 MB — larger than 11% of datasets" aria-label="491.3 MB — larger than 11% of datasets"><span class="sparkbar-label">491.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000198.html" title="NM000198 — eeg dataset, 13 subjects">NM000198</a></td>
       <td>Treder2015_P300</td>
-      <td>BNCI2015_P300, BNCI2015_008_P300, BNCI2015_008_CenterSpeller</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:33.9%;" title="26 records — higher than 22% of datasets" aria-label="26 records — higher than 22% of datasets"><span class="sparkbar-label">26</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>63</td>
@@ -11152,82 +11373,116 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000199.html" title="NM000199 — eeg dataset, 13 subjects">NM000199</a></td>
       <td>Hubner2017</td>
-      <td>Huebner2017</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:60.0%;" title="342 records — higher than 84% of datasets" aria-label="342 records — higher than 84% of datasets"><span class="sparkbar-label">342</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>3</td>
       <td>31</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:75.0%;" title="5.1 GB — larger than 35% of datasets" aria-label="5.1 GB — larger than 35% of datasets"><span class="sparkbar-label">5.1 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.0%;" title="5.1 GB — larger than 36% of datasets" aria-label="5.1 GB — larger than 36% of datasets"><span class="sparkbar-label">5.1 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000200.html" title="NM000200 — eeg dataset, 13 subjects">NM000200</a></td>
       <td>Mainsah2025_BigP3BCI_I</td>
-      <td>BigP3BCI_StudyI, BigP3BCI_I</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:57.4%;" title="265 records — higher than 79% of datasets" aria-label="265 records — higher than 79% of datasets"><span class="sparkbar-label">265</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:65.7%;" title="324.4 MB — larger than 8% of datasets" aria-label="324.4 MB — larger than 8% of datasets"><span class="sparkbar-label">324.4 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.7%;" title="324.2 MB — larger than 8% of datasets" aria-label="324.2 MB — larger than 8% of datasets"><span class="sparkbar-label">324.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000201.html" title="NM000201 — eeg dataset, 24 subjects">NM000201</a></td>
       <td>Lee2021_ERP</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 59% of datasets" aria-label="113 records — higher than 59% of datasets"><span class="sparkbar-label">113</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 60% of datasets" aria-label="113 records — higher than 60% of datasets"><span class="sparkbar-label">113</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>1</td>
       <td>5</td>
       <td>48\*</td>
       <td>500\*</td>
-      <td><span class="sparkbar" style="--pct:75.1%;" title="5.2 GB — larger than 35% of datasets" aria-label="5.2 GB — larger than 35% of datasets"><span class="sparkbar-label">5.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.1%;" title="5.2 GB — larger than 36% of datasets" aria-label="5.2 GB — larger than 36% of datasets"><span class="sparkbar-label">5.2 GB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.NM000202.html" title="NM000202 — eeg dataset, 25 subjects">NM000202</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:33.5%;" title="25 records — higher than 21% of datasets" aria-label="25 records — higher than 21% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
+      <td>1</td>
+      <td>1</td>
+      <td>16</td>
+      <td>128</td>
+      <td><span class="sparkbar" style="--pct:59.8%;" title="55.3 MB — larger than 2% of datasets" aria-label="55.3 MB — larger than 2% of datasets"><span class="sparkbar-label">55.3 MB</span></span></td>
+    </tr>
+    <tr>
+      <td><a href="/api/dataset/eegdash.dataset.NM000203.html" title="NM000203 — eeg dataset, 13 subjects">NM000203</a></td>
+      <td></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><span class="sparkbar" style="--pct:68.7%;" title="800 records — higher than 93% of datasets" aria-label="800 records — higher than 93% of datasets"><span class="sparkbar-label">800</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td>1</td>
+      <td>777</td>
+      <td>31</td>
+      <td>1000</td>
+      <td><span class="sparkbar" style="--pct:73.0%;" title="2.8 GB — larger than 27% of datasets" aria-label="2.8 GB — larger than 27% of datasets"><span class="sparkbar-label">2.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000204.html" title="NM000204 — eeg dataset, 14 subjects">NM000204</a></td>
       <td>Lee2024_Bluetooth_speaker_14</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:62.1%;" title="420 records — higher than 87% of datasets" aria-label="420 records — higher than 87% of datasets"><span class="sparkbar-label">420</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.1%;" title="420 records — higher than 88% of datasets" aria-label="420 records — higher than 88% of datasets"><span class="sparkbar-label">420</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>31</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:65.7%;" title="323.0 MB — larger than 8% of datasets" aria-label="323.0 MB — larger than 8% of datasets"><span class="sparkbar-label">323.0 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.7%;" title="322.7 MB — larger than 8% of datasets" aria-label="322.7 MB — larger than 8% of datasets"><span class="sparkbar-label">322.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000205.html" title="NM000205 — eeg dataset, 14 subjects">NM000205</a></td>
       <td>Zheng2020</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:45.7%;" title="84 records — higher than 52% of datasets" aria-label="84 records — higher than 52% of datasets"><span class="sparkbar-label">84</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>62</td>
@@ -11237,8 +11492,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000206.html" title="NM000206 — eeg dataset, 15 subjects">NM000206</a></td>
       <td>Hinss2021_Neuroergonomic</td>
-      <td>Hinss2021</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11255,7 +11510,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000207.html" title="NM000207 — eeg dataset, 15 subjects">NM000207</a></td>
       <td>Kojima2024B_P300</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11272,29 +11527,29 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000208.html" title="NM000208 — eeg dataset, 14 subjects">NM000208</a></td>
       <td>Lee2024_Door_lock_control</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:62.4%;" title="434 records — higher than 88% of datasets" aria-label="434 records — higher than 88% of datasets"><span class="sparkbar-label">434</span></span></td>
-      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 25% of datasets" aria-label="14 subjects — higher than 25% of datasets"><span class="sparkbar-label">14</span></span></td>
+      <td><span class="sparkbar" style="--pct:34.8%;" title="14 subjects — higher than 24% of datasets" aria-label="14 subjects — higher than 24% of datasets"><span class="sparkbar-label">14</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>31</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:67.8%;" title="609.6 MB — larger than 13% of datasets" aria-label="609.6 MB — larger than 13% of datasets"><span class="sparkbar-label">609.6 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.8%;" title="609.3 MB — larger than 13% of datasets" aria-label="609.3 MB — larger than 13% of datasets"><span class="sparkbar-label">609.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000209.html" title="NM000209 — eeg dataset, 25 subjects">NM000209</a></td>
       <td>Forenzo2023</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:51.6%;" title="150 records — higher than 67% of datasets" aria-label="150 records — higher than 67% of datasets"><span class="sparkbar-label">150</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.6%;" title="150 records — higher than 68% of datasets" aria-label="150 records — higher than 68% of datasets"><span class="sparkbar-label">150</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -11305,8 +11560,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000210.html" title="NM000210 — eeg dataset, 15 subjects">NM000210</a></td>
       <td>Simoes2020</td>
-      <td>BCIAUTP300, BCIAUT_P300, BCIAUT</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11322,13 +11577,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000211.html" title="NM000211 — eeg dataset, 15 subjects">NM000211</a></td>
       <td>Zhang2025_RSVP</td>
-      <td>Zhang2025</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 76% of datasets" aria-label="240 records — higher than 76% of datasets"><span class="sparkbar-label">240</span></span></td>
+      <td><span class="sparkbar" style="--pct:56.4%;" title="240 records — higher than 77% of datasets" aria-label="240 records — higher than 77% of datasets"><span class="sparkbar-label">240</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -11339,8 +11594,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000212.html" title="NM000212 — eeg dataset, 16 subjects">NM000212</a></td>
       <td>Schaeff2015</td>
-      <td>BNCI2015</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11357,7 +11612,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000213.html" title="NM000213 — eeg dataset, 30 subjects">NM000213</a></td>
       <td>Lee2024_Television_control_30</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11374,12 +11629,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000214.html" title="NM000214 — eeg dataset, 30 subjects">NM000214</a></td>
       <td>Thielen2021</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:51.6%;" title="150 records — higher than 67% of datasets" aria-label="150 records — higher than 67% of datasets"><span class="sparkbar-label">150</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.6%;" title="150 records — higher than 68% of datasets" aria-label="150 records — higher than 68% of datasets"><span class="sparkbar-label">150</span></span></td>
       <td><span class="sparkbar" style="--pct:44.1%;" title="30 subjects — higher than 59% of datasets" aria-label="30 subjects — higher than 59% of datasets"><span class="sparkbar-label">30</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -11390,8 +11645,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000215.html" title="NM000215 — eeg dataset, 38 subjects">NM000215</a></td>
       <td>Korczowski2014_P300</td>
-      <td>BrainInvaders2014b, BI2014b, BrainInvadersBI2014b</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11402,18 +11657,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>32</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:66.4%;" title="401.8 MB — larger than 9% of datasets" aria-label="401.8 MB — larger than 9% of datasets"><span class="sparkbar-label">401.8 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.4%;" title="401.8 MB — larger than 10% of datasets" aria-label="401.8 MB — larger than 10% of datasets"><span class="sparkbar-label">401.8 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000216.html" title="NM000216 — eeg dataset, 43 subjects">NM000216</a></td>
       <td>Korczowski2015_P300</td>
-      <td>BrainInvaders2015a, BI2015a</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:50.0%;" title="129 records — higher than 64% of datasets" aria-label="129 records — higher than 64% of datasets"><span class="sparkbar-label">129</span></span></td>
+      <td><span class="sparkbar" style="--pct:50.0%;" title="129 records — higher than 65% of datasets" aria-label="129 records — higher than 65% of datasets"><span class="sparkbar-label">129</span></span></td>
       <td><span class="sparkbar" style="--pct:48.6%;" title="43 subjects — higher than 72% of datasets" aria-label="43 subjects — higher than 72% of datasets"><span class="sparkbar-label">43</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -11424,42 +11679,42 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000217.html" title="NM000217 — eeg dataset, 44 subjects">NM000217</a></td>
       <td>Korczowski2015_P300_BI2015b</td>
-      <td>BrainInvaders2015b, BI2015b</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:53.2%;" title="176 records — higher than 69% of datasets" aria-label="176 records — higher than 69% of datasets"><span class="sparkbar-label">176</span></span></td>
-      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 72% of datasets" aria-label="44 subjects — higher than 72% of datasets"><span class="sparkbar-label">44</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.2%;" title="176 records — higher than 70% of datasets" aria-label="176 records — higher than 70% of datasets"><span class="sparkbar-label">176</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.9%;" title="44 subjects — higher than 73% of datasets" aria-label="44 subjects — higher than 73% of datasets"><span class="sparkbar-label">44</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>32</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:74.5%;" title="4.3 GB — larger than 33% of datasets" aria-label="4.3 GB — larger than 33% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.5%;" title="4.3 GB — larger than 34% of datasets" aria-label="4.3 GB — larger than 34% of datasets"><span class="sparkbar-label">4.3 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000218.html" title="NM000218 — eeg dataset, 16 subjects">NM000218</a></td>
       <td>Mainsah2025_BigP3BCI_H</td>
-      <td>BigP3BCI_StudyH, BigP3BCI_H</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:60.9%;" title="372 records — higher than 85% of datasets" aria-label="372 records — higher than 85% of datasets"><span class="sparkbar-label">372</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.9%;" title="372 records — higher than 86% of datasets" aria-label="372 records — higher than 86% of datasets"><span class="sparkbar-label">372</span></span></td>
       <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:65.7%;" title="326.5 MB — larger than 8% of datasets" aria-label="326.5 MB — larger than 8% of datasets"><span class="sparkbar-label">326.5 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.7%;" title="326.3 MB — larger than 8% of datasets" aria-label="326.3 MB — larger than 8% of datasets"><span class="sparkbar-label">326.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000219.html" title="NM000219 — eeg dataset, 18 subjects">NM000219</a></td>
       <td>Reichert2020</td>
-      <td>BNCI2020, BNCI2020_002_AttentionShift, BNCI2020_002_CovertSpatialAttention</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11470,18 +11725,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>30</td>
       <td>250</td>
-      <td><span class="sparkbar" style="--pct:69.6%;" title="1023.6 MB — larger than 17% of datasets" aria-label="1023.6 MB — larger than 17% of datasets"><span class="sparkbar-label">1023.6 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.6%;" title="1023.5 MB — larger than 17% of datasets" aria-label="1023.5 MB — larger than 17% of datasets"><span class="sparkbar-label">1023.5 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000221.html" title="NM000221 — eeg dataset, 19 subjects">NM000221</a></td>
       <td>Cattan2017</td>
-      <td>Alphawaves, Rodrigues2017, AlphaWaves</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="resting-state" data-tag-label="Resting-state" title="Type: Resting-state" aria-label="Type: Resting-state">Resting-state</span></td>
-      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 15% of datasets" aria-label="19 records — higher than 15% of datasets"><span class="sparkbar-label">19</span></span></td>
+      <td><span class="sparkbar" style="--pct:30.8%;" title="19 records — higher than 14% of datasets" aria-label="19 records — higher than 14% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -11493,46 +11748,46 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000222.html" title="NM000222 — eeg dataset, 10 subjects">NM000222</a></td>
       <td>Lee2024_Air_conditioner_control</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.8%;" title="305 records — higher than 82% of datasets" aria-label="305 records — higher than 82% of datasets"><span class="sparkbar-label">305</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.8%;" title="305 records — higher than 83% of datasets" aria-label="305 records — higher than 83% of datasets"><span class="sparkbar-label">305</span></span></td>
       <td><span class="sparkbar" style="--pct:30.8%;" title="10 subjects — higher than 14% of datasets" aria-label="10 subjects — higher than 14% of datasets"><span class="sparkbar-label">10</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>25</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:66.5%;" title="415.3 MB — larger than 9% of datasets" aria-label="415.3 MB — larger than 9% of datasets"><span class="sparkbar-label">415.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.5%;" title="415.1 MB — larger than 10% of datasets" aria-label="415.1 MB — larger than 10% of datasets"><span class="sparkbar-label">415.1 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000223.html" title="NM000223 — eeg dataset, 15 subjects">NM000223</a></td>
       <td>Lee2024_Electric_light_control</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:63.1%;" title="465 records — higher than 88% of datasets" aria-label="465 records — higher than 88% of datasets"><span class="sparkbar-label">465</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.1%;" title="465 records — higher than 89% of datasets" aria-label="465 records — higher than 89% of datasets"><span class="sparkbar-label">465</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>31</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:68.0%;" title="632.4 MB — larger than 13% of datasets" aria-label="632.4 MB — larger than 13% of datasets"><span class="sparkbar-label">632.4 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.0%;" title="632.1 MB — larger than 14% of datasets" aria-label="632.1 MB — larger than 14% of datasets"><span class="sparkbar-label">632.1 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000225.html" title="NM000225 — eeg dataset, 1983 subjects">NM000225</a></td>
       <td>Ghassemi2018</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:78.0%;" title="1,983 records — higher than 96% of datasets" aria-label="1,983 records — higher than 96% of datasets"><span class="sparkbar-label">1,983</span></span></td>
+      <td><span class="sparkbar" style="--pct:78.0%;" title="1,983 records — higher than 97% of datasets" aria-label="1,983 records — higher than 97% of datasets"><span class="sparkbar-label">1,983</span></span></td>
       <td><span class="sparkbar" style="--pct:97.5%;" title="1,983 subjects — higher than 100% of datasets" aria-label="1,983 subjects — higher than 100% of datasets"><span class="sparkbar-label">1,983</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -11543,8 +11798,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000226.html" title="NM000226 — eeg dataset, 4 subjects">NM000226</a></td>
       <td>Zhou2016_226</td>
-      <td>Zhou2016_NEMAR</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11560,8 +11815,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000227.html" title="NM000227 — eeg dataset, 31 subjects">NM000227</a></td>
       <td>GuttmannFlury2025_Eye</td>
-      <td>GuttmannFlury2025_ME</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11572,18 +11827,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>3</td>
       <td>66</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:74.8%;" title="4.7 GB — larger than 34% of datasets" aria-label="4.7 GB — larger than 34% of datasets"><span class="sparkbar-label">4.7 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:74.8%;" title="4.7 GB — larger than 35% of datasets" aria-label="4.7 GB — larger than 35% of datasets"><span class="sparkbar-label">4.7 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000228.html" title="NM000228 — eeg dataset, 356 subjects">NM000228</a></td>
       <td>Nieuwland2018</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:61.5%;" title="397 records — higher than 87% of datasets" aria-label="397 records — higher than 87% of datasets"><span class="sparkbar-label">397</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.5%;" title="397 records — higher than 88% of datasets" aria-label="397 records — higher than 88% of datasets"><span class="sparkbar-label">397</span></span></td>
       <td><span class="sparkbar" style="--pct:75.4%;" title="356 subjects — higher than 98% of datasets" aria-label="356 subjects — higher than 98% of datasets"><span class="sparkbar-label">356</span></span></td>
       <td>2</td>
       <td>0</td>
@@ -11592,27 +11847,27 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:85.1%;" title="102.7 GB — larger than 89% of datasets" aria-label="102.7 GB — larger than 89% of datasets"><span class="sparkbar-label">102.7 GB</span></span></td>
     </tr>
     <tr>
-      <td><a href="/api/dataset/eegdash.dataset.NM000229.html" title="NM000229 — eeg dataset, 29 subjects">NM000229</a></td>
+      <td><a href="/api/dataset/eegdash.dataset.NM000229.html" title="NM000229 — meg dataset, 27 subjects">NM000229</a></td>
       <td>Gwilliams2023</td>
-      <td>MASC_MEG, MEG_MASC</td>
-      <td>nemar</td>
-      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
+      <td></td>
+      <td>openneuro</td>
+      <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:74.2%;" title="1,360 records — higher than 95% of datasets" aria-label="1,360 records — higher than 95% of datasets"><span class="sparkbar-label">1,360</span></span></td>
-      <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
-      <td>79</td>
+      <td><span class="sparkbar" style="--pct:54.3%;" title="196 records — higher than 73% of datasets" aria-label="196 records — higher than 73% of datasets"><span class="sparkbar-label">196</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td>4</td>
       <td>2</td>
-      <td>208</td>
+      <td>256</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
+      <td><span class="sparkbar" style="--pct:85.0%;" title="99.8 GB — larger than 88% of datasets" aria-label="99.8 GB — larger than 88% of datasets"><span class="sparkbar-label">99.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000230.html" title="NM000230 — eeg dataset, 30 subjects">NM000230</a></td>
       <td>Zuo2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11628,13 +11883,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000231.html" title="NM000231 — eeg dataset, 8 subjects">NM000231</a></td>
       <td>Hoffmann2008</td>
-      <td>EPFLP300, EPFL_P300, EPFLP300Dataset</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:54.1%;" title="192 records — higher than 71% of datasets" aria-label="192 records — higher than 71% of datasets"><span class="sparkbar-label">192</span></span></td>
+      <td><span class="sparkbar" style="--pct:54.1%;" title="192 records — higher than 72% of datasets" aria-label="192 records — higher than 72% of datasets"><span class="sparkbar-label">192</span></span></td>
       <td><span class="sparkbar" style="--pct:28.2%;" title="8 subjects — higher than 10% of datasets" aria-label="8 subjects — higher than 10% of datasets"><span class="sparkbar-label">8</span></span></td>
       <td>1</td>
       <td>4</td>
@@ -11646,7 +11901,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000232.html" title="NM000232 — eeg dataset, 10 subjects">NM000232</a></td>
       <td>Gifford2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11662,8 +11917,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000234.html" title="NM000234 — eeg dataset, 21 subjects">NM000234</a></td>
       <td>Schreuder2015_ERP</td>
-      <td>BNCI2015_ERP</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11679,8 +11934,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000235.html" title="NM000235 — eeg dataset, 31 subjects">NM000235</a></td>
       <td>GuttmannFlury2025_Eye_BCI</td>
-      <td>GuttmannFlury2025_MIME</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11697,7 +11952,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000236.html" title="NM000236 — eeg dataset, 21 subjects">NM000236</a></td>
       <td>Cattan2019_P300</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11708,19 +11963,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>16</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:66.2%;" title="373.3 MB — larger than 9% of datasets" aria-label="373.3 MB — larger than 9% of datasets"><span class="sparkbar-label">373.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.2%;" title="371.4 MB — larger than 9% of datasets" aria-label="371.4 MB — larger than 9% of datasets"><span class="sparkbar-label">371.4 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000237.html" title="NM000237 — eeg dataset, 20 subjects">NM000237</a></td>
       <td>Zhou2021</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:69.1%;" title="833 records — higher than 92% of datasets" aria-label="833 records — higher than 92% of datasets"><span class="sparkbar-label">833</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.1%;" title="833 records — higher than 93% of datasets" aria-label="833 records — higher than 93% of datasets"><span class="sparkbar-label">833</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>7</td>
       <td>41\*</td>
@@ -11737,7 +11992,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td></td>
       <td><span class="sparkbar" style="--pct:85.5%;" title="4,088 records — higher than 99% of datasets" aria-label="4,088 records — higher than 99% of datasets"><span class="sparkbar-label">4,088</span></span></td>
-      <td><span class="sparkbar" style="--pct:57.5%;" title="87 subjects — higher than 86% of datasets" aria-label="87 subjects — higher than 86% of datasets"><span class="sparkbar-label">87</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.5%;" title="87 subjects — higher than 87% of datasets" aria-label="87 subjects — higher than 87% of datasets"><span class="sparkbar-label">87</span></span></td>
       <td>366</td>
       <td>11</td>
       <td>64</td>
@@ -11748,41 +12003,41 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000239.html" title="NM000239 — eeg dataset, 16 subjects">NM000239</a></td>
       <td>MartinezCagigal2023</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:66.4%;" title="640 records — higher than 91% of datasets" aria-label="640 records — higher than 91% of datasets"><span class="sparkbar-label">640</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.4%;" title="640 records — higher than 92% of datasets" aria-label="640 records — higher than 92% of datasets"><span class="sparkbar-label">640</span></span></td>
       <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>1</td>
       <td>5</td>
       <td>16</td>
       <td>256\*</td>
-      <td><span class="sparkbar" style="--pct:68.7%;" title="783.0 MB — larger than 16% of datasets" aria-label="783.0 MB — larger than 16% of datasets"><span class="sparkbar-label">783.0 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.7%;" title="782.5 MB — larger than 16% of datasets" aria-label="782.5 MB — larger than 16% of datasets"><span class="sparkbar-label">782.5 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000240.html" title="NM000240 — eeg dataset, 16 subjects">NM000240</a></td>
       <td>FernandezRodriguez2025</td>
-      <td>FernandezRodriguez2023</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:61.2%;" title="383 records — higher than 86% of datasets" aria-label="383 records — higher than 86% of datasets"><span class="sparkbar-label">383</span></span></td>
+      <td><span class="sparkbar" style="--pct:61.2%;" title="383 records — higher than 87% of datasets" aria-label="383 records — higher than 87% of datasets"><span class="sparkbar-label">383</span></span></td>
       <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>1</td>
       <td>8</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:68.0%;" title="637.7 MB — larger than 13% of datasets" aria-label="637.7 MB — larger than 13% of datasets"><span class="sparkbar-label">637.7 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.0%;" title="637.4 MB — larger than 14% of datasets" aria-label="637.4 MB — larger than 14% of datasets"><span class="sparkbar-label">637.4 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000241.html" title="NM000241 — ieeg dataset, 2 subjects">NM000241</a></td>
       <td>Zhang2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -11798,13 +12053,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000242.html" title="NM000242 — eeg dataset, 22 subjects">NM000242</a></td>
       <td>Gao2026_Visual_imagery_et</td>
-      <td>Gao2026</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="other" data-tag-label="Other" title="Type: Other" aria-label="Type: Other">Other</span></td>
-      <td><span class="sparkbar" style="--pct:49.7%;" title="125 records — higher than 63% of datasets" aria-label="125 records — higher than 63% of datasets"><span class="sparkbar-label">125</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.7%;" title="125 records — higher than 64% of datasets" aria-label="125 records — higher than 64% of datasets"><span class="sparkbar-label">125</span></span></td>
       <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -11815,13 +12070,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000243.html" title="NM000243 — eeg dataset, 15 subjects">NM000243</a></td>
       <td>Haufe2016</td>
-      <td>BNCI2016, BNCI2016002</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 11% of datasets" aria-label="15 records — higher than 11% of datasets"><span class="sparkbar-label">15</span></span></td>
+      <td><span class="sparkbar" style="--pct:28.5%;" title="15 records — higher than 10% of datasets" aria-label="15 records — higher than 10% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td><span class="sparkbar" style="--pct:35.6%;" title="15 subjects — higher than 26% of datasets" aria-label="15 subjects — higher than 26% of datasets"><span class="sparkbar-label">15</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -11832,14 +12087,14 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000244.html" title="NM000244 — eeg dataset, 64 subjects">NM000244</a></td>
       <td>Korczowski2014_P300_BI2014a</td>
-      <td>BrainInvaders2014a, BI2014a</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:42.9%;" title="64 records — higher than 48% of datasets" aria-label="64 records — higher than 48% of datasets"><span class="sparkbar-label">64</span></span></td>
-      <td><span class="sparkbar" style="--pct:53.6%;" title="64 subjects — higher than 82% of datasets" aria-label="64 subjects — higher than 82% of datasets"><span class="sparkbar-label">64</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.6%;" title="64 subjects — higher than 83% of datasets" aria-label="64 subjects — higher than 83% of datasets"><span class="sparkbar-label">64</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
@@ -11850,7 +12105,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000245.html" title="NM000245 — eeg dataset, 52 subjects">NM000245</a></td>
       <td>Cho2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11866,13 +12121,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000246.html" title="NM000246 — eeg dataset, 51 subjects">NM000246</a></td>
       <td>Yang2025_Multi</td>
-      <td>WBCIC_SHU, WBCICSHU</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 67% of datasets" aria-label="153 records — higher than 67% of datasets"><span class="sparkbar-label">153</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 68% of datasets" aria-label="153 records — higher than 68% of datasets"><span class="sparkbar-label">153</span></span></td>
       <td><span class="sparkbar" style="--pct:50.7%;" title="51 subjects — higher than 76% of datasets" aria-label="51 subjects — higher than 76% of datasets"><span class="sparkbar-label">51</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -11883,48 +12138,48 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000247.html" title="NM000247 — eeg dataset, 10 subjects">NM000247</a></td>
       <td>Mainsah2025_BigP3BCI_S1</td>
-      <td>BigP3BCI_StudyS1, BigP3BCI_S1</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 61% of datasets" aria-label="120 records — higher than 61% of datasets"><span class="sparkbar-label">120</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
       <td><span class="sparkbar" style="--pct:30.8%;" title="10 subjects — higher than 14% of datasets" aria-label="10 subjects — higher than 14% of datasets"><span class="sparkbar-label">10</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>32</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:67.0%;" title="477.9 MB — larger than 11% of datasets" aria-label="477.9 MB — larger than 11% of datasets"><span class="sparkbar-label">477.9 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:67.0%;" title="477.8 MB — larger than 11% of datasets" aria-label="477.8 MB — larger than 11% of datasets"><span class="sparkbar-label">477.8 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000248.html" title="NM000248 — eeg dataset, 11 subjects">NM000248</a></td>
       <td>Mainsah2025_BigP3BCI_L</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:59.6%;" title="330 records — higher than 83% of datasets" aria-label="330 records — higher than 83% of datasets"><span class="sparkbar-label">330</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:68.7%;" title="780.5 MB — larger than 16% of datasets" aria-label="780.5 MB — larger than 16% of datasets"><span class="sparkbar-label">780.5 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.7%;" title="780.3 MB — larger than 16% of datasets" aria-label="780.3 MB — larger than 16% of datasets"><span class="sparkbar-label">780.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000249.html" title="NM000249 — eeg dataset, 13 subjects">NM000249</a></td>
       <td>Jao2022</td>
-      <td>Jao2020</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:27.1%;" title="13 records — higher than 9% of datasets" aria-label="13 records — higher than 9% of datasets"><span class="sparkbar-label">13</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>64</td>
@@ -11935,13 +12190,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000250.html" title="NM000250 — eeg dataset, 87 subjects">NM000250</a></td>
       <td>Dreyer2023</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
       <td><span class="sparkbar" style="--pct:64.3%;" title="520 records — higher than 90% of datasets" aria-label="520 records — higher than 90% of datasets"><span class="sparkbar-label">520</span></span></td>
-      <td><span class="sparkbar" style="--pct:57.5%;" title="87 subjects — higher than 86% of datasets" aria-label="87 subjects — higher than 86% of datasets"><span class="sparkbar-label">87</span></span></td>
+      <td><span class="sparkbar" style="--pct:57.5%;" title="87 subjects — higher than 87% of datasets" aria-label="87 subjects — higher than 87% of datasets"><span class="sparkbar-label">87</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>27</td>
@@ -11952,7 +12207,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000251.html" title="NM000251 — ieeg dataset, 1 subjects">NM000251</a></td>
       <td>He2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -11968,8 +12223,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000253.html" title="NM000253 — ieeg dataset, 10 subjects">NM000253</a></td>
       <td>Wang2024_et_al_Brain</td>
-      <td>BrainTreeBank</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -11986,7 +12241,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000254.html" title="NM000254 — eeg dataset, 22 subjects">NM000254</a></td>
       <td>Telesford2024</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12003,7 +12258,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000255.html" title="NM000255 — eeg dataset, 30 subjects">NM000255</a></td>
       <td>Madsen2024_E2</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12020,29 +12275,29 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000256.html" title="NM000256 — eeg dataset, 29 subjects">NM000256</a></td>
       <td>Madsen2024_E3</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:59.7%;" title="332 records — higher than 83% of datasets" aria-label="332 records — higher than 83% of datasets"><span class="sparkbar-label">332</span></span></td>
+      <td><span class="sparkbar" style="--pct:59.7%;" title="332 records — higher than 84% of datasets" aria-label="332 records — higher than 84% of datasets"><span class="sparkbar-label">332</span></span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
       <td>6</td>
       <td>2</td>
       <td>64</td>
       <td>128</td>
-      <td><span class="sparkbar" style="--pct:76.3%;" title="7.5 GB — larger than 41% of datasets" aria-label="7.5 GB — larger than 41% of datasets"><span class="sparkbar-label">7.5 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:76.3%;" title="7.5 GB — larger than 42% of datasets" aria-label="7.5 GB — larger than 42% of datasets"><span class="sparkbar-label">7.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000259.html" title="NM000259 — eeg dataset, 10 subjects">NM000259</a></td>
       <td>Speier2017</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 45% of datasets" aria-label="60 records — higher than 45% of datasets"><span class="sparkbar-label">60</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.2%;" title="60 records — higher than 44% of datasets" aria-label="60 records — higher than 44% of datasets"><span class="sparkbar-label">60</span></span></td>
       <td><span class="sparkbar" style="--pct:30.8%;" title="10 subjects — higher than 14% of datasets" aria-label="10 subjects — higher than 14% of datasets"><span class="sparkbar-label">10</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -12053,8 +12308,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000260.html" title="NM000260 — eeg dataset, 23 subjects">NM000260</a></td>
       <td>BrainInvaders2012</td>
-      <td>BI2012, BrainInvaders</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12065,18 +12320,18 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>17</td>
       <td>128</td>
-      <td><span class="sparkbar" style="--pct:63.5%;" title="164.8 MB — larger than 5% of datasets" aria-label="164.8 MB — larger than 5% of datasets"><span class="sparkbar-label">164.8 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.5%;" title="164.7 MB — larger than 5% of datasets" aria-label="164.7 MB — larger than 5% of datasets"><span class="sparkbar-label">164.7 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000264.html" title="NM000264 — eeg dataset, 24 subjects">NM000264</a></td>
       <td>BrainInvaders2013</td>
-      <td>BrainInvaders2013a, BI2013a</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 81% of datasets" aria-label="292 records — higher than 81% of datasets"><span class="sparkbar-label">292</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.4%;" title="292 records — higher than 82% of datasets" aria-label="292 records — higher than 82% of datasets"><span class="sparkbar-label">292</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>1</td>
       <td>8</td>
@@ -12088,12 +12343,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000265.html" title="NM000265 — eeg dataset, 31 subjects">NM000265</a></td>
       <td>GuttmannFlury2025_MI</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 63% of datasets" aria-label="126 records — higher than 63% of datasets"><span class="sparkbar-label">126</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.8%;" title="126 records — higher than 64% of datasets" aria-label="126 records — higher than 64% of datasets"><span class="sparkbar-label">126</span></span></td>
       <td><span class="sparkbar" style="--pct:44.5%;" title="31 subjects — higher than 62% of datasets" aria-label="31 subjects — higher than 62% of datasets"><span class="sparkbar-label">31</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -12105,13 +12360,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000266.html" title="NM000266 — eeg dataset, 13 subjects">NM000266</a></td>
       <td>Sosulski2019</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:71.6%;" title="1,060 records — higher than 94% of datasets" aria-label="1,060 records — higher than 94% of datasets"><span class="sparkbar-label">1,060</span></span></td>
-      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 23% of datasets" aria-label="13 subjects — higher than 23% of datasets"><span class="sparkbar-label">13</span></span></td>
+      <td><span class="sparkbar" style="--pct:33.9%;" title="13 subjects — higher than 22% of datasets" aria-label="13 subjects — higher than 22% of datasets"><span class="sparkbar-label">13</span></span></td>
       <td>1</td>
       <td>841</td>
       <td>37</td>
@@ -12121,30 +12376,30 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000267.html" title="NM000267 — eeg dataset, 29 subjects">NM000267</a></td>
       <td>Shin2017_Shin2017A</td>
-      <td>Shin2017A</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:53.1%;" title="174 records — higher than 69% of datasets" aria-label="174 records — higher than 69% of datasets"><span class="sparkbar-label">174</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.1%;" title="174 records — higher than 70% of datasets" aria-label="174 records — higher than 70% of datasets"><span class="sparkbar-label">174</span></span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
       <td>1</td>
       <td>6</td>
       <td>32</td>
       <td>200</td>
-      <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 24% of datasets" aria-label="1.9 GB — larger than 24% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:71.7%;" title="1.9 GB — larger than 23% of datasets" aria-label="1.9 GB — larger than 23% of datasets"><span class="sparkbar-label">1.9 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000268.html" title="NM000268 — eeg dataset, 29 subjects">NM000268</a></td>
       <td>Shin2017_Shin2017B</td>
-      <td>Shin2017B</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="memory" data-tag-label="Memory" title="Type: Memory" aria-label="Type: Memory">Memory</span></td>
-      <td><span class="sparkbar" style="--pct:53.1%;" title="174 records — higher than 69% of datasets" aria-label="174 records — higher than 69% of datasets"><span class="sparkbar-label">174</span></span></td>
+      <td><span class="sparkbar" style="--pct:53.1%;" title="174 records — higher than 70% of datasets" aria-label="174 records — higher than 70% of datasets"><span class="sparkbar-label">174</span></span></td>
       <td><span class="sparkbar" style="--pct:43.7%;" title="29 subjects — higher than 57% of datasets" aria-label="29 subjects — higher than 57% of datasets"><span class="sparkbar-label">29</span></span></td>
       <td>1</td>
       <td>6</td>
@@ -12156,92 +12411,92 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000270.html" title="NM000270 — eeg dataset, 27 subjects">NM000270</a></td>
       <td>Liu2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:68.7%;" title="797 records — higher than 92% of datasets" aria-label="797 records — higher than 92% of datasets"><span class="sparkbar-label">797</span></span></td>
-      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 56% of datasets" aria-label="27 subjects — higher than 56% of datasets"><span class="sparkbar-label">27</span></span></td>
-      <td>3</td>
+      <td><span class="sparkbar" style="--pct:48.4%;" title="110 records — higher than 59% of datasets" aria-label="110 records — higher than 59% of datasets"><span class="sparkbar-label">110</span></span></td>
+      <td><span class="sparkbar" style="--pct:42.8%;" title="27 subjects — higher than 55% of datasets" aria-label="27 subjects — higher than 55% of datasets"><span class="sparkbar-label">27</span></span></td>
+      <td>1</td>
       <td>1</td>
       <td>64</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
+      <td><span class="sparkbar" style="--pct:75.4%;" title="5.8 GB — larger than 38% of datasets" aria-label="5.8 GB — larger than 38% of datasets"><span class="sparkbar-label">5.8 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000271.html" title="NM000271 — eeg dataset, 28 subjects">NM000271</a></td>
       <td>Chang2025_2</td>
-      <td>Chang2025</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:73.3%;" title="1,245 records — higher than 95% of datasets" aria-label="1,245 records — higher than 95% of datasets"><span class="sparkbar-label">1,245</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.7%;" title="113 records — higher than 60% of datasets" aria-label="113 records — higher than 60% of datasets"><span class="sparkbar-label">113</span></span></td>
       <td><span class="sparkbar" style="--pct:43.2%;" title="28 subjects — higher than 56% of datasets" aria-label="28 subjects — higher than 56% of datasets"><span class="sparkbar-label">28</span></span></td>
-      <td>3</td>
+      <td>1</td>
       <td>6</td>
       <td>59</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
+      <td><span class="sparkbar" style="--pct:73.7%;" title="3.5 GB — larger than 30% of datasets" aria-label="3.5 GB — larger than 30% of datasets"><span class="sparkbar-label">3.5 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000272.html" title="NM000272 — eeg dataset, 22 subjects">NM000272</a></td>
       <td>Romani2025_BF_ERP</td>
-      <td>Romani2025_erp</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:71.2%;" title="1,022 records — higher than 93% of datasets" aria-label="1,022 records — higher than 93% of datasets"><span class="sparkbar-label">1,022</span></span></td>
+      <td><span class="sparkbar" style="--pct:49.3%;" title="120 records — higher than 62% of datasets" aria-label="120 records — higher than 62% of datasets"><span class="sparkbar-label">120</span></span></td>
       <td><span class="sparkbar" style="--pct:40.2%;" title="22 subjects — higher than 46% of datasets" aria-label="22 subjects — higher than 46% of datasets"><span class="sparkbar-label">22</span></span></td>
-      <td>3</td>
+      <td>1</td>
       <td>6</td>
       <td>8</td>
       <td>250</td>
-      <td><span class="sparkbar" style="--pct:0%;" title="Not reported" aria-label="Not reported"><span class="sparkbar-label">—</span></span></td>
+      <td><span class="sparkbar" style="--pct:62.8%;" title="134.2 MB — larger than 4% of datasets" aria-label="134.2 MB — larger than 4% of datasets"><span class="sparkbar-label">134.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000277.html" title="NM000277 — eeg dataset, 20 subjects">NM000277</a></td>
       <td>Mainsah2025_G</td>
-      <td>BigP3BCI_G, BigP3BCI_StudyG</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:59.3%;" title="320 records — higher than 83% of datasets" aria-label="320 records — higher than 83% of datasets"><span class="sparkbar-label">320</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:65.8%;" title="333.2 MB — larger than 8% of datasets" aria-label="333.2 MB — larger than 8% of datasets"><span class="sparkbar-label">333.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:65.8%;" title="333.0 MB — larger than 8% of datasets" aria-label="333.0 MB — larger than 8% of datasets"><span class="sparkbar-label">333.0 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000301.html" title="NM000301 — eeg dataset, 17 subjects">NM000301</a></td>
       <td>Mainsah2025_D</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:58.9%;" title="307 records — higher than 82% of datasets" aria-label="307 records — higher than 82% of datasets"><span class="sparkbar-label">307</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.9%;" title="307 records — higher than 83% of datasets" aria-label="307 records — higher than 83% of datasets"><span class="sparkbar-label">307</span></span></td>
       <td><span class="sparkbar" style="--pct:37.1%;" title="17 subjects — higher than 30% of datasets" aria-label="17 subjects — higher than 30% of datasets"><span class="sparkbar-label">17</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>32</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:68.5%;" title="738.1 MB — larger than 15% of datasets" aria-label="738.1 MB — larger than 15% of datasets"><span class="sparkbar-label">738.1 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:68.5%;" title="737.9 MB — larger than 15% of datasets" aria-label="737.9 MB — larger than 15% of datasets"><span class="sparkbar-label">737.9 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000303.html" title="NM000303 — eeg dataset, 18 subjects">NM000303</a></td>
       <td>Mainsah2025_O</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12252,19 +12507,19 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>32</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:69.5%;" title="992.2 MB — larger than 17% of datasets" aria-label="992.2 MB — larger than 17% of datasets"><span class="sparkbar-label">992.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:69.5%;" title="992.0 MB — larger than 17% of datasets" aria-label="992.0 MB — larger than 17% of datasets"><span class="sparkbar-label">992.0 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000310.html" title="NM000310 — eeg dataset, 11 subjects">NM000310</a></td>
       <td>GuttmannFlury2025_SSVEP</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
       <td><span class="sparkbar" style="--pct:33.9%;" title="26 records — higher than 22% of datasets" aria-label="26 records — higher than 22% of datasets"><span class="sparkbar-label">26</span></span></td>
-      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 18% of datasets" aria-label="11 subjects — higher than 18% of datasets"><span class="sparkbar-label">11</span></span></td>
+      <td><span class="sparkbar" style="--pct:31.9%;" title="11 subjects — higher than 17% of datasets" aria-label="11 subjects — higher than 17% of datasets"><span class="sparkbar-label">11</span></span></td>
       <td>1</td>
       <td>3</td>
       <td>65</td>
@@ -12280,24 +12535,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:55.1%;" title="213 records — higher than 73% of datasets" aria-label="213 records — higher than 73% of datasets"><span class="sparkbar-label">213</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.1%;" title="213 records — higher than 74% of datasets" aria-label="213 records — higher than 74% of datasets"><span class="sparkbar-label">213</span></span></td>
       <td><span class="sparkbar" style="--pct:41.8%;" title="25 subjects — higher than 53% of datasets" aria-label="25 subjects — higher than 53% of datasets"><span class="sparkbar-label">25</span></span></td>
       <td>1</td>
       <td>3</td>
       <td>71</td>
       <td>1000</td>
-      <td><span class="sparkbar" style="--pct:84.6%;" title="88.6 GB — larger than 87% of datasets" aria-label="88.6 GB — larger than 87% of datasets"><span class="sparkbar-label">88.6 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:84.6%;" title="88.6 GB — larger than 86% of datasets" aria-label="88.6 GB — larger than 86% of datasets"><span class="sparkbar-label">88.6 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000313.html" title="NM000313 — eeg dataset, 24 subjects">NM000313</a></td>
       <td>Mainsah2025_S2</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="perception" data-tag-label="Perception" title="Type: Perception" aria-label="Type: Perception">Perception</span></td>
-      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 80% of datasets" aria-label="288 records — higher than 80% of datasets"><span class="sparkbar-label">288</span></span></td>
+      <td><span class="sparkbar" style="--pct:58.2%;" title="288 records — higher than 81% of datasets" aria-label="288 records — higher than 81% of datasets"><span class="sparkbar-label">288</span></span></td>
       <td><span class="sparkbar" style="--pct:41.3%;" title="24 subjects — higher than 50% of datasets" aria-label="24 subjects — higher than 50% of datasets"><span class="sparkbar-label">24</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -12309,7 +12564,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000321.html" title="NM000321 — eeg dataset, 36 subjects">NM000321</a></td>
       <td>Mainsah2025_Q</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12325,13 +12580,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000323.html" title="NM000323 — eeg dataset, 54 subjects">NM000323</a></td>
       <td>Lee2019_ERP</td>
-      <td>OpenBMI_ERP, OpenBMI_P300</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:55.3%;" title="216 records — higher than 73% of datasets" aria-label="216 records — higher than 73% of datasets"><span class="sparkbar-label">216</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.3%;" title="216 records — higher than 74% of datasets" aria-label="216 records — higher than 74% of datasets"><span class="sparkbar-label">216</span></span></td>
       <td><span class="sparkbar" style="--pct:51.4%;" title="54 subjects — higher than 78% of datasets" aria-label="54 subjects — higher than 78% of datasets"><span class="sparkbar-label">54</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -12343,12 +12598,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000326.html" title="NM000326 — eeg dataset, 19 subjects">NM000326</a></td>
       <td>Mainsah2025_C</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:60.0%;" title="341 records — higher than 83% of datasets" aria-label="341 records — higher than 83% of datasets"><span class="sparkbar-label">341</span></span></td>
+      <td><span class="sparkbar" style="--pct:60.0%;" title="341 records — higher than 84% of datasets" aria-label="341 records — higher than 84% of datasets"><span class="sparkbar-label">341</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -12360,12 +12615,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000329.html" title="NM000329 — eeg dataset, 16 subjects">NM000329</a></td>
       <td>Brandl2020</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 59% of datasets" aria-label="112 records — higher than 59% of datasets"><span class="sparkbar-label">112</span></span></td>
+      <td><span class="sparkbar" style="--pct:48.6%;" title="112 records — higher than 60% of datasets" aria-label="112 records — higher than 60% of datasets"><span class="sparkbar-label">112</span></span></td>
       <td><span class="sparkbar" style="--pct:36.4%;" title="16 subjects — higher than 28% of datasets" aria-label="16 subjects — higher than 28% of datasets"><span class="sparkbar-label">16</span></span></td>
       <td>1</td>
       <td>1</td>
@@ -12377,13 +12632,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000336.html" title="NM000336 — eeg dataset, 20 subjects">NM000336</a></td>
       <td>Mainsah2025_R</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:63.5%;" title="480 records — higher than 89% of datasets" aria-label="480 records — higher than 89% of datasets"><span class="sparkbar-label">480</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>2</td>
       <td>32</td>
@@ -12393,13 +12648,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000338.html" title="NM000338 — eeg dataset, 54 subjects">NM000338</a></td>
       <td>Lee2019_MI</td>
-      <td>OpenBMI_MI</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:55.3%;" title="216 records — higher than 73% of datasets" aria-label="216 records — higher than 73% of datasets"><span class="sparkbar-label">216</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.3%;" title="216 records — higher than 74% of datasets" aria-label="216 records — higher than 74% of datasets"><span class="sparkbar-label">216</span></span></td>
       <td><span class="sparkbar" style="--pct:51.4%;" title="54 subjects — higher than 78% of datasets" aria-label="54 subjects — higher than 78% of datasets"><span class="sparkbar-label">54</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -12411,7 +12666,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000339.html" title="NM000339 — eeg dataset, 62 subjects">NM000339</a></td>
       <td>Stieger2021</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12428,24 +12683,24 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000340.html" title="NM000340 — eeg dataset, 20 subjects">NM000340</a></td>
       <td>Mainsah2025_J</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
       <td><span class="sparkbar" style="--pct:63.9%;" title="502 records — higher than 90% of datasets" aria-label="502 records — higher than 90% of datasets"><span class="sparkbar-label">502</span></span></td>
-      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 37% of datasets" aria-label="20 subjects — higher than 37% of datasets"><span class="sparkbar-label">20</span></span></td>
+      <td><span class="sparkbar" style="--pct:39.1%;" title="20 subjects — higher than 36% of datasets" aria-label="20 subjects — higher than 36% of datasets"><span class="sparkbar-label">20</span></span></td>
       <td>1</td>
       <td>1</td>
       <td>16</td>
       <td>256</td>
-      <td><span class="sparkbar" style="--pct:66.7%;" title="433.6 MB — larger than 10% of datasets" aria-label="433.6 MB — larger than 10% of datasets"><span class="sparkbar-label">433.6 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:66.7%;" title="433.3 MB — larger than 10% of datasets" aria-label="433.3 MB — larger than 10% of datasets"><span class="sparkbar-label">433.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000341.html" title="NM000341 — eeg dataset, 12 subjects">NM000341</a></td>
       <td>Cattan2019_PHMD</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -12456,13 +12711,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>16</td>
       <td>512</td>
-      <td><span class="sparkbar" style="--pct:64.6%;" title="231.3 MB — larger than 6% of datasets" aria-label="231.3 MB — larger than 6% of datasets"><span class="sparkbar-label">231.3 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:64.6%;" title="231.3 MB — larger than 7% of datasets" aria-label="231.3 MB — larger than 7% of datasets"><span class="sparkbar-label">231.3 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000342.html" title="NM000342 — eeg dataset, 12 subjects">NM000342</a></td>
       <td>Castillos2023_CastillosCVEP40</td>
-      <td>CastillosCVEP40</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12478,8 +12733,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000343.html" title="NM000343 — eeg dataset, 15 subjects">NM000343</a></td>
       <td>Hinss2021</td>
-      <td>Hinss2021_v2</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12490,13 +12745,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>2</td>
       <td>61</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 19% of datasets" aria-label="1.2 GB — larger than 19% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
+      <td><span class="sparkbar" style="--pct:70.2%;" title="1.2 GB — larger than 20% of datasets" aria-label="1.2 GB — larger than 20% of datasets"><span class="sparkbar-label">1.2 GB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000344.html" title="NM000344 — eeg dataset, 12 subjects">NM000344</a></td>
       <td>Castillos2023_CastillosBurstVEP100</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12513,7 +12768,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000345.html" title="NM000345 — eeg dataset, 12 subjects">NM000345</a></td>
       <td>Castillos2023_CastillosBurstVEP40</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12524,13 +12779,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td>1</td>
       <td>32</td>
       <td>500</td>
-      <td><span class="sparkbar" style="--pct:63.0%;" title="144.2 MB — larger than 4% of datasets" aria-label="144.2 MB — larger than 4% of datasets"><span class="sparkbar-label">144.2 MB</span></span></td>
+      <td><span class="sparkbar" style="--pct:63.0%;" title="144.2 MB — larger than 5% of datasets" aria-label="144.2 MB — larger than 5% of datasets"><span class="sparkbar-label">144.2 MB</span></span></td>
     </tr>
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000346.html" title="NM000346 — eeg dataset, 12 subjects">NM000346</a></td>
       <td>Castillos2023_CastillosCVEP100</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12546,8 +12801,8 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
     <tr>
       <td><a href="/api/dataset/eegdash.dataset.NM000347.html" title="NM000347 — eeg dataset, 37 subjects">NM000347</a></td>
       <td>HefmiIch2025</td>
-      <td>HEFMI_ICH, HEFMIICH</td>
-      <td>nemar</td>
+      <td></td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
@@ -12564,12 +12819,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000348.html" title="NM000348 — eeg dataset, 51 subjects">NM000348</a></td>
       <td>Yang2025</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="motor" data-tag-label="Motor" title="Type: Motor" aria-label="Type: Motor">Motor</span></td>
-      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 67% of datasets" aria-label="153 records — higher than 67% of datasets"><span class="sparkbar-label">153</span></span></td>
+      <td><span class="sparkbar" style="--pct:51.8%;" title="153 records — higher than 68% of datasets" aria-label="153 records — higher than 68% of datasets"><span class="sparkbar-label">153</span></span></td>
       <td><span class="sparkbar" style="--pct:50.7%;" title="51 subjects — higher than 76% of datasets" aria-label="51 subjects — higher than 76% of datasets"><span class="sparkbar-label">51</span></span></td>
       <td>1</td>
       <td>3</td>
@@ -12581,12 +12836,12 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000351.html" title="NM000351 — eeg dataset, 19 subjects">NM000351</a></td>
       <td>Mainsah2025_P</td>
       <td></td>
-      <td>nemar</td>
+      <td>openneuro</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
       <td><span class="tag tag-kind-dataset-type" data-tag-kind="dataset-type" data-tag-value="attention" data-tag-label="Attention" title="Type: Attention" aria-label="Type: Attention">Attention</span></td>
-      <td><span class="sparkbar" style="--pct:55.8%;" title="228 records — higher than 75% of datasets" aria-label="228 records — higher than 75% of datasets"><span class="sparkbar-label">228</span></span></td>
+      <td><span class="sparkbar" style="--pct:55.8%;" title="228 records — higher than 76% of datasets" aria-label="228 records — higher than 76% of datasets"><span class="sparkbar-label">228</span></span></td>
       <td><span class="sparkbar" style="--pct:38.5%;" title="19 subjects — higher than 34% of datasets" aria-label="19 subjects — higher than 34% of datasets"><span class="sparkbar-label">19</span></span></td>
       <td>1</td>
       <td>2</td>
@@ -12595,7 +12850,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><span class="sparkbar" style="--pct:70.9%;" title="1.5 GB — larger than 22% of datasets" aria-label="1.5 GB — larger than 22% of datasets"><span class="sparkbar-label">1.5 GB</span></span></td>
     </tr>
     <tr>
-      <td>Total 735 datasets</td>
+      <td>Total 750 datasets</td>
       <td></td>
       <td></td>
       <td></td>
@@ -12603,13 +12858,13 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td></td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:100%;" title="222,745 records — higher than 100% of datasets" aria-label="222,745 records — higher than 100% of datasets"><span class="sparkbar-label">222,745</span></span></td>
-      <td><span class="sparkbar" style="--pct:100%;" title="40,360 subjects — higher than 100% of datasets" aria-label="40,360 subjects — higher than 100% of datasets"><span class="sparkbar-label">40,360</span></span></td>
-      <td>2033</td>
-      <td>3690</td>
+      <td><span class="sparkbar" style="--pct:100%;" title="222,447 records — higher than 100% of datasets" aria-label="222,447 records — higher than 100% of datasets"><span class="sparkbar-label">222,447</span></span></td>
+      <td><span class="sparkbar" style="--pct:100%;" title="40,872 subjects — higher than 100% of datasets" aria-label="40,872 subjects — higher than 100% of datasets"><span class="sparkbar-label">40,872</span></span></td>
+      <td>2014</td>
+      <td>4793</td>
       <td></td>
       <td></td>
-      <td><span class="sparkbar" style="--pct:100%;" title="39.9 TB — larger than 100% of datasets" aria-label="39.9 TB — larger than 100% of datasets"><span class="sparkbar-label">39.9 TB</span></span></td>
+      <td><span class="sparkbar" style="--pct:100%;" title="41.3 TB — larger than 100% of datasets" aria-label="41.3 TB — larger than 100% of datasets"><span class="sparkbar-label">41.3 TB</span></span></td>
     </tr>
   </tbody>
 </table>

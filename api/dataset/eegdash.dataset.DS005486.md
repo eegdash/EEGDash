@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 66
 - Sampling rate (Hz): 5000.0 (399), 25000.0 (46)
-- Duration (hours): 56.76204444444444
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Resting State

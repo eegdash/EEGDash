@@ -164,8 +164,8 @@ the BCIT Advanced Guard Duty Task (ds004106) counterbalanced during the same ses
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Baseline Driving                                                                                                                                                                         |
 | Author (year)  | `Touryan2022_BCIT_Baseline`                                                                                                                                                                   |
-| Canonical      | `BCITBaselineDriving`                                                                                                                                                                         |
-| Importable as  | `DS004120`, `Touryan2022_BCIT_Baseline`, `BCITBaselineDriving`                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                             |
+| Importable as  | `DS004120`, `Touryan2022_BCIT_Baseline`                                                                                                                                                       |
 | Year           | 2022                                                                                                                                                                                          |
 | Authors        | Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation) |
 | License        | CC0                                                                                                                                                                                           |
@@ -223,9 +223,9 @@ BCIT Baseline Driving
 * **Author (year):**
   `Touryan2022_BCIT_Baseline`
 * **Canonical:**
-  `BCITBaselineDriving`
+  —
 
-Also importable as: `DS004120`, `Touryan2022_BCIT_Baseline`, `BCITBaselineDriving`.
+Also importable as: `DS004120`, `Touryan2022_BCIT_Baseline`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 109; recordings: 131; tasks: 1.

@@ -169,7 +169,7 @@ For questions on the dataset or the task, contact Johannes Sarnthein at [johanne
 
 - Channels: 23 (27), 24 (3)
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 107.92361111111111
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

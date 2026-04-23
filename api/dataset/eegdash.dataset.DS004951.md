@@ -103,8 +103,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Braille letters - EEG                                                                                                                                                             |
 | Author (year)  | `Haupt2024_Braille`                                                                                                                                                               |
-| Canonical      | `Haupt2025`                                                                                                                                                                       |
-| Importable as  | `DS004951`, `Haupt2024_Braille`, `Haupt2025`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004951`, `Haupt2024_Braille`                                                                                                                                                   |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy                                                                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -162,9 +162,9 @@ Braille letters - EEG
 * **Author (year):**
   `Haupt2024_Braille`
 * **Canonical:**
-  `Haupt2025`
+  —
 
-Also importable as: `DS004951`, `Haupt2024_Braille`, `Haupt2025`.
+Also importable as: `DS004951`, `Haupt2024_Braille`.
 
 Modality: `eeg`; Experiment type: `Learning`; Subject type: `Other`.
 Subjects: 11; recordings: 23; tasks: 1.

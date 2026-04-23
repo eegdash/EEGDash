@@ -137,8 +137,8 @@ Research reported in this publication was supported by EpilepsieNL under Award N
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PRIOS                                                                                                                                                                             |
 | Author (year)  | `Blooijs2022_PRIOS`                                                                                                                                                               |
-| Canonical      | `PRIOS`                                                                                                                                                                           |
-| Importable as  | `DS004370`, `Blooijs2022_PRIOS`, `PRIOS`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004370`, `Blooijs2022_PRIOS`                                                                                                                                                   |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS                                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -196,9 +196,9 @@ PRIOS
 * **Author (year):**
   `Blooijs2022_PRIOS`
 * **Canonical:**
-  `PRIOS`
+  —
 
-Also importable as: `DS004370`, `Blooijs2022_PRIOS`, `PRIOS`.
+Also importable as: `DS004370`, `Blooijs2022_PRIOS`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 7; recordings: 15; tasks: 2.

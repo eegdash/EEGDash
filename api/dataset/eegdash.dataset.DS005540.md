@@ -439,7 +439,7 @@ subject      date                    endtime1        endtime2
 
 - Channels: 68
 - Sampling rate (Hz): 600.0 (95), 1200.0 (8)
-- Duration (hours): 167.10194444444446
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

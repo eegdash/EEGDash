@@ -117,7 +117,7 @@ Moerel, D., Grootswagers, T., Chin, J. L., Ciardo, F., Nijhuis, P., Quek, G. L.,
 
 - Channels: 64
 - Sampling rate (Hz): 2048.0
-- Duration (hours): 25.621111111111112
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

@@ -111,7 +111,7 @@ No README content is available for this dataset.
 - Tasks: 1
 
 - Channels: 120
-- Sampling rate (Hz): 24.414062499999996 (15), 24.414062499999993, 24.414062500000004
+- Sampling rate (Hz): 24.414062499999996 (15), 24.414062500000004, 24.414062499999993
 - Duration (hours): Not calculated
 
 - Pathology: Healthy

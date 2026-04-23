@@ -86,8 +86,8 @@ Race Key: “Levels”: { “x1”: “White”, “x2”: “Black/African Amer
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PURSUE MMN Auditory Oddball                                                                                                                                                       |
 | Author (year)  | `Couperus2025_MMN`                                                                                                                                                                |
-| Canonical      | `Couperus2021_MMN`                                                                                                                                                                |
-| Importable as  | `DS007069`, `Couperus2025_MMN`, `Couperus2021_MMN`                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007069`, `Couperus2025_MMN`                                                                                                                                                    |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Couperus, J.W., Bukach, C.M., Reed, C.L.                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ PURSUE MMN Auditory Oddball
 * **Author (year):**
   `Couperus2025_MMN`
 * **Canonical:**
-  `Couperus2021_MMN`
+  —
 
-Also importable as: `DS007069`, `Couperus2025_MMN`, `Couperus2021_MMN`.
+Also importable as: `DS007069`, `Couperus2025_MMN`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 281; recordings: 281; tasks: 1.

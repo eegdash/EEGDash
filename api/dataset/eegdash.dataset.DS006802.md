@@ -117,7 +117,7 @@ Code: [https://doi.org/10.17605/OSF.IO/HE4TU](https://doi.org/10.17605/OSF.IO/HE
 
 - Channels: 64
 - Sampling rate (Hz): 2048.0
-- Duration (hours): 23.414166666666667
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual

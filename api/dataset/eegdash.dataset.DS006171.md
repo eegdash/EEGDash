@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity)                 |
 | Author (year)  | `Melcon2025`                                                                                                                                                                      |
-| Canonical      | `Melcon2024`                                                                                                                                                                      |
-| Importable as  | `DS006171`, `Melcon2025`, `Melcon2024`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006171`, `Melcon2025`                                                                                                                                                          |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla                                                                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 144
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 40.88305555555556
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -144,9 +144,9 @@ EEG data during three near-threshold visual detection tasks: a no-cue task, a no
 * **Author (year):**
   `Melcon2025`
 * **Canonical:**
-  `Melcon2024`
+  —
 
-Also importable as: `DS006171`, `Melcon2025`, `Melcon2024`.
+Also importable as: `DS006171`, `Melcon2025`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 36; recordings: 104; tasks: 3.

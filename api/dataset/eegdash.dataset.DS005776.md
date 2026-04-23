@@ -85,8 +85,8 @@ No README content is available for this dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Electrical_Thermal_FingerTapping_2015                                                                                                                                             |
 | Author (year)  | `Yucel2025_Electrical`                                                                                                                                                            |
-| Canonical      | `Yucel2015`                                                                                                                                                                       |
-| Importable as  | `DS005776`, `Yucel2025_Electrical`, `Yucel2015`                                                                                                                                   |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005776`, `Yucel2025_Electrical`                                                                                                                                                |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David, Boas, David, Becerra, Lino                                                                    |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Electrical_Thermal_FingerTapping_2015
 * **Author (year):**
   `Yucel2025_Electrical`
 * **Canonical:**
-  `Yucel2015`
+  —
 
-Also importable as: `DS005776`, `Yucel2025_Electrical`, `Yucel2015`.
+Also importable as: `DS005776`, `Yucel2025_Electrical`.
 
 Modality: `fnirs`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 11; recordings: 46; tasks: 5.

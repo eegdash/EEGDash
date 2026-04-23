@@ -92,8 +92,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEGEyeNet Dataset                                                                                                                                                                 |
 | Author (year)  | `Plomecka2026`                                                                                                                                                                    |
-| Canonical      | `EEGEyeNet_v2`, `EEGEYENET`                                                                                                                                                       |
-| Importable as  | `DS007338`, `Plomecka2026`, `EEGEyeNet_v2`, `EEGEYENET`                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007338`, `Plomecka2026`                                                                                                                                                        |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -151,9 +151,9 @@ EEGEyeNet Dataset
 * **Author (year):**
   `Plomecka2026`
 * **Canonical:**
-  `EEGEyeNet_v2`, `EEGEYENET`
+  —
 
-Also importable as: `DS007338`, `Plomecka2026`, `EEGEyeNet_v2`, `EEGEYENET`.
+Also importable as: `DS007338`, `Plomecka2026`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 1; recordings: 1; tasks: 1.

@@ -120,7 +120,7 @@ For the patient, electrocorticographical data was obtained through a 24 electrod
 
 - Channels: 71
 - Sampling rate (Hz): 1024.0 (53), 1000.0
-- Duration (hours): 25.714475
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

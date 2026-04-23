@@ -86,8 +86,8 @@ This Army’s transition to a leaner, more agile and rapidly-deployable force re
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | TX14                                                                                                                                                                              |
 | Author (year)  | `Larkin2023_TX14`                                                                                                                                                                 |
-| Canonical      | `TX14`                                                                                                                                                                            |
-| Importable as  | `DS004841`, `Larkin2023_TX14`, `TX14`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004841`, `Larkin2023_TX14`                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel, Ben Brewster, Tony Johnson, Mike Dunkel, Stephen Gordon, Kevin King                               |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ TX14
 * **Author (year):**
   `Larkin2023_TX14`
 * **Canonical:**
-  `TX14`
+  —
 
-Also importable as: `DS004841`, `Larkin2023_TX14`, `TX14`.
+Also importable as: `DS004841`, `Larkin2023_TX14`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 20; recordings: 147; tasks: 1.

@@ -91,8 +91,8 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | iEEG_comprehensive_HFA_model_part1                                                                                                                                                                                                             |
 | Author (year)  | `Hatano2025_part1`                                                                                                                                                                                                                             |
-| Canonical      | `Hatano`                                                                                                                                                                                                                                       |
-| Importable as  | `DS007118`, `Hatano2025_part1`, `Hatano`                                                                                                                                                                                                       |
+| Canonical      | —                                                                                                                                                                                                                                              |
+| Importable as  | `DS007118`, `Hatano2025_part1`                                                                                                                                                                                                                 |
 | Year           | 2025                                                                                                                                                                                                                                           |
 | Authors        | Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools, Aimee F. Luat, Shin-Ichiro Osawa, Hitoshi Nemoto, Kazushi Ukishiro, Hidenori Endo, Nobukazu Nakasato, Yutaro Takayama, Keiya Iijima, Masaki Iwasaki, Eishi Asano |
 | License        | CC0                                                                                                                                                                                                                                            |
@@ -116,9 +116,9 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
 - Recordings: 82
 - Tasks: 1
 
-- Channels: 128 (21), 112 (17), 124 (6), 102 (5), 108 (4), 120 (4), 68 (3), 116 (3), 138 (3), 118 (3), 106 (2), 144 (2), 64 (2), 122, 114, 74, 94, 36, 132, 58
+- Channels: 128 (21), 112 (17), 124 (6), 102 (5), 120 (4), 108 (4), 68 (3), 118 (3), 138 (3), 116 (3), 106 (2), 64 (2), 144 (2), 114, 132, 58, 122, 94, 36, 74
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 44.215
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Sleep
@@ -150,9 +150,9 @@ iEEG_comprehensive_HFA_model_part1
 * **Author (year):**
   `Hatano2025_part1`
 * **Canonical:**
-  `Hatano`
+  —
 
-Also importable as: `DS007118`, `Hatano2025_part1`, `Hatano`.
+Also importable as: `DS007118`, `Hatano2025_part1`.
 
 Modality: `ieeg`; Experiment type: `Sleep`; Subject type: `Unknown`.
 Subjects: 65; recordings: 82; tasks: 1.

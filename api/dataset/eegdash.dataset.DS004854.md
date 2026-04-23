@@ -86,8 +86,8 @@ This is a placeholder dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | TX18                                                                                                                                                                              |
 | Author (year)  | `Johnson2023_TX18`                                                                                                                                                                |
-| Canonical      | `TX18`                                                                                                                                                                            |
-| Importable as  | `DS004854`, `Johnson2023_TX18`, `TX18`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004854`, `Johnson2023_TX18`                                                                                                                                                    |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ TX18
 * **Author (year):**
   `Johnson2023_TX18`
 * **Canonical:**
-  `TX18`
+  —
 
-Also importable as: `DS004854`, `Johnson2023_TX18`, `TX18`.
+Also importable as: `DS004854`, `Johnson2023_TX18`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

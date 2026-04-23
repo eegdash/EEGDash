@@ -90,8 +90,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Cueing the future to reduce temporal discounting                                                                                                                                  |
 | Author (year)  | `Kinley2025`                                                                                                                                                                      |
-| Canonical      | `Kinley2019`                                                                                                                                                                      |
-| Importable as  | `DS006446`, `Kinley2025`, `Kinley2019`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006446`, `Kinley2025`                                                                                                                                                          |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Isaac Kinley, Sue Becker                                                                                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -149,9 +149,9 @@ Cueing the future to reduce temporal discounting
 * **Author (year):**
   `Kinley2025`
 * **Canonical:**
-  `Kinley2019`
+  —
 
-Also importable as: `DS006446`, `Kinley2025`, `Kinley2019`.
+Also importable as: `DS006446`, `Kinley2025`.
 
 Modality: `eeg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.

@@ -91,8 +91,8 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | sEEG Forced Two-Choice Task                                                                                                                                                       |
 | Author (year)  | `Rockhill2023`                                                                                                                                                                    |
-| Canonical      | `Rockhill2022`                                                                                                                                                                    |
-| Importable as  | `DS004473`, `Rockhill2023`, `Rockhill2022`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004473`, `Rockhill2023`                                                                                                                                                        |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -150,9 +150,9 @@ sEEG Forced Two-Choice Task
 * **Author (year):**
   `Rockhill2023`
 * **Canonical:**
-  `Rockhill2022`
+  —
 
-Also importable as: `DS004473`, `Rockhill2023`, `Rockhill2022`.
+Also importable as: `DS004473`, `Rockhill2023`.
 
 Modality: `ieeg`; Experiment type: `Motor`; Subject type: `Epilepsy`.
 Subjects: 8; recordings: 8; tasks: 1.

@@ -85,8 +85,8 @@ Human action recognition is a core component of social cognition, engaging spati
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HAD-MEEG                                                                                                                                                                          |
 | Author (year)  | `Zhang2026`                                                                                                                                                                       |
-| Canonical      | `HAD_MEEG`, `HADMEEG`                                                                                                                                                             |
-| Importable as  | `DS007353`, `Zhang2026`, `HAD_MEEG`, `HADMEEG`                                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007353`, `Zhang2026`                                                                                                                                                           |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Guohao Zhang, Sai Ma, Ming Zhou, Shaohua Tang, Shuyi Zhen, Zheng Li, Zonglei Zhen                                                                                                 |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ HAD-MEEG
 * **Author (year):**
   `Zhang2026`
 * **Canonical:**
-  `HAD_MEEG`, `HADMEEG`
+  —
 
-Also importable as: `DS007353`, `Zhang2026`, `HAD_MEEG`, `HADMEEG`.
+Also importable as: `DS007353`, `Zhang2026`.
 
 Modality: `eeg, meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 32; recordings: 473; tasks: 2.

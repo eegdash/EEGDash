@@ -161,7 +161,7 @@ Electrode coordinates are provided in \*\*MNI space\*\*, registered to the \*\*M
 - Recordings: 45
 - Tasks: 10
 
-- Channels: 168 (15), 175 (10), 82 (5), 68 (5), 181 (5), 43 (5)
+- Channels: 168 (15), 175 (10), 68 (5), 43 (5), 82 (5), 181 (5)
 - Sampling rate (Hz): 500.0
 - Duration (hours): 10.699191111111112
 

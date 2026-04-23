@@ -97,8 +97,8 @@ SCSG: Speed Good autonomy.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Driving with Autonomous Aids                                                                                                                                                      |
 | Author (year)  | `Metcalfe2023_Driving`                                                                                                                                                            |
-| Canonical      | `TX20`                                                                                                                                                                            |
-| Importable as  | `DS004657`, `Metcalfe2023_Driving`, `TX20`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004657`, `Metcalfe2023_Driving`                                                                                                                                                |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -156,9 +156,9 @@ Driving with Autonomous Aids
 * **Author (year):**
   `Metcalfe2023_Driving`
 * **Canonical:**
-  `TX20`
+  —
 
-Also importable as: `DS004657`, `Metcalfe2023_Driving`, `TX20`.
+Also importable as: `DS004657`, `Metcalfe2023_Driving`.
 
 Modality: `eeg`; Experiment type: `Decision-making`; Subject type: `Healthy`.
 Subjects: 24; recordings: 119; tasks: 1.

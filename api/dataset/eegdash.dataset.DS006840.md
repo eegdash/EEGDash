@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset                                                                                                                      |
 | Author (year)  | `Cai2025`                                                                                                                                                                         |
-| Canonical      | `IACKD`                                                                                                                                                                           |
-| Importable as  | `DS006840`, `Cai2025`, `IACKD`                                                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006840`, `Cai2025`                                                                                                                                                             |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Mengpu Cai, Rongrong Fu, Yaodong Wang, Bin Lu, Saiwei Guo, Fangyao Xu                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset
 * **Author (year):**
   `Cai2025`
 * **Canonical:**
-  `IACKD`
+  —
 
-Also importable as: `DS006840`, `Cai2025`, `IACKD`.
+Also importable as: `DS006840`, `Cai2025`.
 
 Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 15; recordings: 128; tasks: 1.

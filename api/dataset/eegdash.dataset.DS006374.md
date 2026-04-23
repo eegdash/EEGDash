@@ -88,8 +88,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Expectation effects on repetition suppression in nociception                                                                                                                      |
 | Author (year)  | `Pohle2025`                                                                                                                                                                       |
-| Canonical      | `Pohle2019`                                                                                                                                                                       |
-| Importable as  | `DS006374`, `Pohle2025`, `Pohle2019`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006374`, `Pohle2025`                                                                                                                                                           |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn, Falk Eippert                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ Expectation effects on repetition suppression in nociception
 * **Author (year):**
   `Pohle2025`
 * **Canonical:**
-  `Pohle2019`
+  —
 
-Also importable as: `DS006374`, `Pohle2025`, `Pohle2019`.
+Also importable as: `DS006374`, `Pohle2025`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 36; recordings: 358; tasks: 2.

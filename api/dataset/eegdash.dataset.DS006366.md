@@ -108,8 +108,8 @@ For questions regarding this dataset, contact Birgitte Rahbek Kornum, [kornum@su
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Mouse Sleep Staging Validation dataset (MSSV)                                                                                                                                                                                                                                                                                                                                                                     |
 | Author (year)  | `Rose2025`                                                                                                                                                                                                                                                                                                                                                                                                        |
-| Canonical      | `MSSV`                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Importable as  | `DS006366`, `Rose2025`, `MSSV`                                                                                                                                                                                                                                                                                                                                                                                    |
+| Canonical      | —                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Importable as  | `DS006366`, `Rose2025`                                                                                                                                                                                                                                                                                                                                                                                            |
 | Year           | 2025                                                                                                                                                                                                                                                                                                                                                                                                              |
 | Authors        | Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard, Frederikke Lynge Sørensen, Mie Andersen, Tessa Radovanovic, Anastasia Tsopanidou, Maiken Nedergaard, Sébastien Arthaud, Renato Maciel, Christelle Peyron, Chiara Berteotti, Viviana Lo Martire, Alessandro Silvani, Giovanna Zoccoli, Micaela Borsa, Antoine Adamantidis, Morten Mørup, Birgitte Rahbek Kornum |
 | License        | CC0                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -135,7 +135,7 @@ For questions regarding this dataset, contact Birgitte Rahbek Kornum, [kornum@su
 
 - Channels: 3 (71), 2 (43), 5 (34)
 - Sampling rate (Hz): 128.0
-- Duration (hours): 2163.2877777777776
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Sleep
@@ -167,9 +167,9 @@ Mouse Sleep Staging Validation dataset (MSSV)
 * **Author (year):**
   `Rose2025`
 * **Canonical:**
-  `MSSV`
+  —
 
-Also importable as: `DS006366`, `Rose2025`, `MSSV`.
+Also importable as: `DS006366`, `Rose2025`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 92; recordings: 148; tasks: 1.

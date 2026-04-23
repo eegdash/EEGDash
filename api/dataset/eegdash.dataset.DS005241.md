@@ -92,8 +92,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis                                                                                         |
 | Author (year)  | `Rodriguez2024`                                                                                                                                                                   |
-| Canonical      | `NeuroMorph`, `neuromorph`                                                                                                                                                        |
-| Importable as  | `DS005241`, `Rodriguez2024`, `NeuroMorph`, `neuromorph`                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005241`, `Rodriguez2024`                                                                                                                                                       |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau, Alec Marantz                                                                                          |
 | License        | CC0                                                                                                                                                                               |
@@ -151,9 +151,9 @@ NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic
 * **Author (year):**
   `Rodriguez2024`
 * **Canonical:**
-  `NeuroMorph`, `neuromorph`
+  —
 
-Also importable as: `DS005241`, `Rodriguez2024`, `NeuroMorph`, `neuromorph`.
+Also importable as: `DS005241`, `Rodriguez2024`.
 
 Modality: `meg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 24; recordings: 117; tasks: 2.

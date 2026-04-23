@@ -95,8 +95,8 @@ MNE-BIDS was used to convert the dataset into BIDS format.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HUP iEEG Epilepsy Dataset                                                                                                                                                         |
 | Author (year)  | `Bernabei2022`                                                                                                                                                                    |
-| Canonical      | `HUPiEEG`                                                                                                                                                                         |
-| Importable as  | `DS004100`, `Bernabei2022`, `HUPiEEG`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004100`, `Bernabei2022`                                                                                                                                                        |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir, Ian Z. Ong, Kathryn A. Davis, Nishant Sinha, Sridevi Sarma, Brian Litt                    |
 | License        | CC0                                                                                                                                                                               |
@@ -120,7 +120,7 @@ MNE-BIDS was used to convert the dataset into BIDS format.
 - Recordings: 319
 - Tasks: 2
 
-- Channels: 122 (21), 128 (18), 118 (17), 172 (15), 126 (14), 104 (13), 82 (12), 127 (12), 180 (12), 96 (12), 92 (7), 80 (7), 190 (7), 108 (7), 74 (7), 121 (7), 136 (7), 109 (7), 117 (7), 102 (7), 174 (7), 149 (7), 120 (7), 163 (6), 98 (6), 63 (5), 186 (5), 162 (5), 100 (5), 164 (5), 88 (5), 59 (5), 116 (5), 52 (5), 71 (5), 105 (4), 90 (4), 61 (4), 85 (3), 94 (2), 192 (2), 232
+- Channels: 122 (21), 128 (18), 118 (17), 172 (15), 126 (14), 104 (13), 82 (12), 180 (12), 127 (12), 96 (12), 149 (7), 74 (7), 102 (7), 117 (7), 121 (7), 109 (7), 80 (7), 120 (7), 92 (7), 190 (7), 136 (7), 108 (7), 174 (7), 163 (6), 98 (6), 100 (5), 162 (5), 186 (5), 63 (5), 59 (5), 88 (5), 71 (5), 116 (5), 52 (5), 164 (5), 90 (4), 61 (4), 105 (4), 85 (3), 94 (2), 192 (2), 232
 - Sampling rate (Hz): 512.0 (165), 1024.0 (78), 500.0 (69), 256.0 (7)
 - Duration (hours): 25.717898949652778
 
@@ -154,9 +154,9 @@ HUP iEEG Epilepsy Dataset
 * **Author (year):**
   `Bernabei2022`
 * **Canonical:**
-  `HUPiEEG`
+  —
 
-Also importable as: `DS004100`, `Bernabei2022`, `HUPiEEG`.
+Also importable as: `DS004100`, `Bernabei2022`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 57; recordings: 319; tasks: 2.

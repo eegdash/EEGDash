@@ -118,7 +118,7 @@ Files includes are
 
 - Channels: 69
 - Sampling rate (Hz): 500.0
-- Duration (hours): 30.093788888888888
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

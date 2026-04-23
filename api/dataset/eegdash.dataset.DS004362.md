@@ -142,8 +142,8 @@ The EEGs were recorded from 64 electrodes as per the international 10-10 system 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | EEG Motor Movement/Imagery Dataset                                                                                                                                                |
 | Author (year)  | `Schalk2022`                                                                                                                                                                      |
-| Canonical      | `PhysionetMI`, `EEGMotorMovementImagery`                                                                                                                                          |
-| Importable as  | `DS004362`, `Schalk2022`, `PhysionetMI`, `EEGMotorMovementImagery`                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004362`, `Schalk2022`                                                                                                                                                          |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -201,9 +201,9 @@ EEG Motor Movement/Imagery Dataset
 * **Author (year):**
   `Schalk2022`
 * **Canonical:**
-  `PhysionetMI`, `EEGMotorMovementImagery`
+  —
 
-Also importable as: `DS004362`, `Schalk2022`, `PhysionetMI`, `EEGMotorMovementImagery`.
+Also importable as: `DS004362`, `Schalk2022`.
 
 Modality: `eeg`.
 Subjects: 109; recordings: 1526; tasks: 1.

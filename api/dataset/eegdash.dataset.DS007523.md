@@ -195,8 +195,8 @@ Li, Jixing, et al. “Le Petit Prince Multilingual Naturalistic fMRI Corpus.” 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | LPP MEG Listen                                                                                                                                                                    |
 | Author (year)  | `Bel2026`                                                                                                                                                                         |
-| Canonical      | `Dascoli2025`                                                                                                                                                                     |
-| Importable as  | `DS007523`, `Bel2026`, `Dascoli2025`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007523`, `Bel2026`                                                                                                                                                             |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Corentin Bel, Julie Bonnaire, Christophe Pallier, Jean-Rémi King                                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -254,9 +254,9 @@ LPP MEG Listen
 * **Author (year):**
   `Bel2026`
 * **Canonical:**
-  `Dascoli2025`
+  —
 
-Also importable as: `DS007523`, `Bel2026`, `Dascoli2025`.
+Also importable as: `DS007523`, `Bel2026`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 58; recordings: 579; tasks: 1.

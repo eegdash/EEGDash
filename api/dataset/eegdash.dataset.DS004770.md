@@ -119,9 +119,9 @@ Subfolders:
 - Recordings: 22
 - Tasks: 1
 
-- Channels: 128 (14), 105 (2), 112 (2), 110 (2), 113 (2)
+- Channels: 128 (14), 105 (2), 110 (2), 113 (2), 112 (2)
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 2.0000166666666668
+- Duration (hours): Not calculated
 
 - Pathology: Epilepsy
 - Modality: Visual

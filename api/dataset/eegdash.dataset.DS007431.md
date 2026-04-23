@@ -85,8 +85,8 @@ Experimental task: participants judged whether a probe grating was rotated clock
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Diffuse predictions stabilize and reshape neural code during memory encoding                                                                                                      |
 | Author (year)  | `Ataseven2026`                                                                                                                                                                    |
-| Canonical      | `Ataseven2024`                                                                                                                                                                    |
-| Importable as  | `DS007431`, `Ataseven2026`, `Ataseven2024`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS007431`, `Ataseven2026`                                                                                                                                                        |
 | Year           | 2026                                                                                                                                                                              |
 | Authors        | Nursena Ataseven, Sahcan Ozdemir, Wouter Kruijne, Daniel Schneider, Elkan G. Akyurek                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ Diffuse predictions stabilize and reshape neural code during memory encoding
 * **Author (year):**
   `Ataseven2026`
 * **Canonical:**
-  `Ataseven2024`
+  —
 
-Also importable as: `DS007431`, `Ataseven2026`, `Ataseven2024`.
+Also importable as: `DS007431`, `Ataseven2026`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 47; recordings: 47; tasks: 1.

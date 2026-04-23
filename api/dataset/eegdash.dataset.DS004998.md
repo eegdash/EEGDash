@@ -118,7 +118,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 - Recordings: 145
 - Tasks: 6
 
-- Channels: 323 (122), 326 (6), 333 (6), 324 (6), 347 (4), 319
+- Channels: 323 (122), 333 (6), 326 (6), 324 (6), 347 (4), 319
 - Sampling rate (Hz): 2000.0
 - Duration (hours): 10.766654722222222
 

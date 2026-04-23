@@ -104,8 +104,8 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Categorized Free Recall with Open-Loop Stimulation at Encoding                                                                                                                    |
 | Author (year)  | `Herrema2024_Categorized`                                                                                                                                                         |
-| Canonical      | `catFR_open_loop`, `RAM_catFR`, `catFR_stim`                                                                                                                                      |
-| Importable as  | `DS005491`, `Herrema2024_Categorized`, `catFR_open_loop`, `RAM_catFR`, `catFR_stim`                                                                                               |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005491`, `Herrema2024_Categorized`                                                                                                                                             |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Haydn G. Herrema, Michael J. Kahana                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -129,7 +129,7 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 - Recordings: 51
 - Tasks: 1
 
-- Channels: 64 (5), 126 (5), 88 (4), 85 (3), 93 (3), 113 (2), 163 (2), 104 (2), 155 (2), 133 (2), 116 (2), 119, 72, 68, 92, 96, 127, 177, 146, 78, 128, 124, 110, 70, 80, 14, 115, 130, 112, 16
+- Channels: 126 (5), 64 (5), 88 (4), 93 (3), 85 (3), 133 (2), 104 (2), 155 (2), 116 (2), 163 (2), 113 (2), 177, 68, 78, 96, 146, 92, 124, 127, 80, 119, 115, 112, 70, 16, 128, 72, 130, 110, 14
 - Sampling rate (Hz): 500.0 (39), 1600.0 (6), 999.0 (4), 1000.0 (2)
 - Duration (hours): 46.67650149705261
 
@@ -163,9 +163,9 @@ Categorized Free Recall with Open-Loop Stimulation at Encoding
 * **Author (year):**
   `Herrema2024_Categorized`
 * **Canonical:**
-  `catFR_open_loop`, `RAM_catFR`, `catFR_stim`
+  —
 
-Also importable as: `DS005491`, `Herrema2024_Categorized`, `catFR_open_loop`, `RAM_catFR`, `catFR_stim`.
+Also importable as: `DS005491`, `Herrema2024_Categorized`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Unknown`.
 Subjects: 19; recordings: 51; tasks: 1.

@@ -115,7 +115,7 @@ For each role, participants performed three blocks, consisting of 30 repetitions
 
 - Channels: 132
 - Sampling rate (Hz): 2048.0
-- Duration (hours): 12.335
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

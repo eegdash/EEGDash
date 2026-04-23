@@ -153,8 +153,8 @@ Converted using EMG-2-BIDS (EEGLAB + bids-matlab-tools). Data integrity verified
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | HySER: High-Density Surface Electromyogram Recordings                                                                                                                                    |
 | Author (year)  | `Jiang2021`                                                                                                                                                                              |
-| Canonical      | `HySER`, `Hyser`                                                                                                                                                                         |
-| Importable as  | `NM000108`, `Jiang2021`, `HySER`, `Hyser`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                        |
+| Importable as  | `NM000108`, `Jiang2021`                                                                                                                                                                  |
 | Year           | 20                                                                                                                                                                                       |
 | Authors        | Xinyu Jiang, Chenyun Dai, Xiangyu Liu, Jiahao Fan                                                                                                                                        |
 | License        | ODC-By-1.0                                                                                                                                                                               |
@@ -212,9 +212,9 @@ HySER: High-Density Surface Electromyogram Recordings
 * **Author (year):**
   `Jiang2021`
 * **Canonical:**
-  `HySER`, `Hyser`
+  —
 
-Also importable as: `NM000108`, `Jiang2021`, `HySER`, `Hyser`.
+Also importable as: `NM000108`, `Jiang2021`.
 
 Modality: `emg`.
 Subjects: 20; recordings: 1514; tasks: 38.

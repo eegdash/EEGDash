@@ -85,8 +85,8 @@ EEG data from 24 healthy participants performing a multisensory detection task w
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | MAVIS                                                                                                                                                                             |
 | Author (year)  | `Waschke2022`                                                                                                                                                                     |
-| Canonical      | `MAVIS`                                                                                                                                                                           |
-| Importable as  | `DS004010`, `Waschke2022`, `MAVIS`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004010`, `Waschke2022`                                                                                                                                                         |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett, Bradley Voytek, Jonas Obleser                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -144,9 +144,9 @@ MAVIS
 * **Author (year):**
   `Waschke2022`
 * **Canonical:**
-  `MAVIS`
+  —
 
-Also importable as: `DS004010`, `Waschke2022`, `MAVIS`.
+Also importable as: `DS004010`, `Waschke2022`.
 
 Modality: `eeg`.
 Subjects: 24; recordings: 24; tasks: 1.

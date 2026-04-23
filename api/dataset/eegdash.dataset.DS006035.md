@@ -106,8 +106,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | somatomotor                                                                                                                                                                       |
 | Author (year)  | `Lin2025`                                                                                                                                                                         |
-| Canonical      | `Lin2019`                                                                                                                                                                         |
-| Importable as  | `DS006035`, `Lin2025`, `Lin2019`                                                                                                                                                  |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006035`, `Lin2025`                                                                                                                                                             |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen, Jyrki Ahveninen, Matti Hämäläinen, Tommi Raij                                                |
 | License        | CC0                                                                                                                                                                               |
@@ -165,9 +165,9 @@ somatomotor
 * **Author (year):**
   `Lin2025`
 * **Canonical:**
-  `Lin2019`
+  —
 
-Also importable as: `DS006035`, `Lin2025`, `Lin2019`.
+Also importable as: `DS006035`, `Lin2025`.
 
 Modality: `meg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 5; recordings: 15; tasks: 1.

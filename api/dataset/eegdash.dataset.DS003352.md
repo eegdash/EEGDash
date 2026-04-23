@@ -95,8 +95,8 @@ Stimuli include eight different square wave spiral gratings subtending 10 degree
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | 1 - Light Pink Spiral                                                                                                                                                             |
 | Author (year)  | `Hermann2020`                                                                                                                                                                     |
-| Canonical      | `Hermann2021`                                                                                                                                                                     |
-| Importable as  | `DS003352`, `Hermann2020`, `Hermann2021`                                                                                                                                          |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003352`, `Hermann2020`                                                                                                                                                         |
 | Year           | 2020                                                                                                                                                                              |
 | Authors        | Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -154,9 +154,9 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 * **Author (year):**
   `Hermann2020`
 * **Canonical:**
-  `Hermann2021`
+  —
 
-Also importable as: `DS003352`, `Hermann2020`, `Hermann2021`.
+Also importable as: `DS003352`, `Hermann2020`.
 
 Modality: `meg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 18; recordings: 138; tasks: 1.

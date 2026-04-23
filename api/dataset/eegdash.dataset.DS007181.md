@@ -181,7 +181,7 @@ This dataset is shared under \*\*CC0\*\*.
 
 - Channels: 24
 - Sampling rate (Hz): 1024.0
-- Duration (hours): 454.4836111111111
+- Duration (hours): Not calculated
 
 - Pathology: Other
 - Modality: Sleep

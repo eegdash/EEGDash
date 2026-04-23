@@ -183,8 +183,8 @@ were conducted on the same subject during the same session, counterbalanced with
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BCIT Basic Guard Duty                                                                                                                                                             |
 | Author (year)  | `Touryan2022_BCIT_Basic`                                                                                                                                                          |
-| Canonical      | `BCIT`                                                                                                                                                                            |
-| Importable as  | `DS004119`, `Touryan2022_BCIT_Basic`, `BCIT`                                                                                                                                      |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004119`, `Touryan2022_BCIT_Basic`                                                                                                                                              |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data), Tony Johnson (curation), Kay Robbins (curation)        |
 | License        | CC0                                                                                                                                                                               |
@@ -242,9 +242,9 @@ BCIT Basic Guard Duty
 * **Author (year):**
   `Touryan2022_BCIT_Basic`
 * **Canonical:**
-  `BCIT`
+  —
 
-Also importable as: `DS004119`, `Touryan2022_BCIT_Basic`, `BCIT`.
+Also importable as: `DS004119`, `Touryan2022_BCIT_Basic`.
 
 Modality: `eeg`; Experiment type: `Attention`; Subject type: `Healthy`.
 Subjects: 21; recordings: 22; tasks: 1.

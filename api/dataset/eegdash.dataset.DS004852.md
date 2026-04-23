@@ -86,8 +86,8 @@ This is a placeholder dataset.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | InsurgentCivilian                                                                                                                                                                 |
 | Author (year)  | `Johnson2023_InsurgentCivilian`                                                                                                                                                   |
-| Canonical      | `Johnson2025`                                                                                                                                                                     |
-| Importable as  | `DS004852`, `Johnson2023_InsurgentCivilian`, `Johnson2025`                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004852`, `Johnson2023_InsurgentCivilian`                                                                                                                                       |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King                                                                                                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -145,9 +145,9 @@ InsurgentCivilian
 * **Author (year):**
   `Johnson2023_InsurgentCivilian`
 * **Canonical:**
-  `Johnson2025`
+  —
 
-Also importable as: `DS004852`, `Johnson2023_InsurgentCivilian`, `Johnson2025`.
+Also importable as: `DS004852`, `Johnson2023_InsurgentCivilian`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Unknown`.
 Subjects: 1; recordings: 1; tasks: 1.

@@ -88,8 +88,8 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | BRAR_NQ                                                                                                                                                                           |
 | Author (year)  | `Rani2022`                                                                                                                                                                        |
-| Canonical      | `Rani2019`                                                                                                                                                                        |
-| Importable as  | `DS004012`, `Rani2022`, `Rani2019`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004012`, `Rani2022`                                                                                                                                                            |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ BRAR_NQ
 * **Author (year):**
   `Rani2022`
 * **Canonical:**
-  `Rani2019`
+  —
 
-Also importable as: `DS004012`, `Rani2022`, `Rani2019`.
+Also importable as: `DS004012`, `Rani2022`.
 
 Modality: `meg`; Experiment type: `Unknown`; Subject type: `Healthy`.
 Subjects: 30; recordings: 294; tasks: 10.

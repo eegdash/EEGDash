@@ -136,8 +136,8 @@ Journal of Open Source Software, 4\*(1896). [https://doi.org/10.21105/joss.01896
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | NOD-EEG                                                                                                                                                                           |
 | Author (year)  | `Zhang2025_EEG`                                                                                                                                                                   |
-| Canonical      | `NOD_EEG`                                                                                                                                                                         |
-| Importable as  | `DS005811`, `Zhang2025_EEG`, `NOD_EEG`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005811`, `Zhang2025_EEG`                                                                                                                                                       |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li, Zonglei Zhen                                                                                                         |
 | License        | CC0                                                                                                                                                                               |
@@ -195,9 +195,9 @@ NOD-EEG
 * **Author (year):**
   `Zhang2025_EEG`
 * **Canonical:**
-  `NOD_EEG`
+  —
 
-Also importable as: `DS005811`, `Zhang2025_EEG`, `NOD_EEG`.
+Also importable as: `DS005811`, `Zhang2025_EEG`.
 
 Modality: `eeg`; Experiment type: `Perception`; Subject type: `Healthy`.
 Subjects: 19; recordings: 448; tasks: 1.

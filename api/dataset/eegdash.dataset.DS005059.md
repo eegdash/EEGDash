@@ -100,8 +100,8 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Paired Associates Learning: Memory for Word Pairs in Cued Recall                                                                                                                  |
 | Author (year)  | `Herrema2024_Paired`                                                                                                                                                              |
-| Canonical      | `PAL`                                                                                                                                                                             |
-| Importable as  | `DS005059`, `Herrema2024_Paired`, `PAL`                                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005059`, `Herrema2024_Paired`                                                                                                                                                  |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Haydn G. Herrema, Michael J. Kahana                                                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -125,7 +125,7 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 - Recordings: 282
 - Tasks: 1
 
-- Channels: 112 (22), 126 (15), 85 (11), 110 (10), 128 (10), 104 (9), 88 (9), 100 (9), 72 (8), 64 (8), 186 (8), 102 (7), 116 (7), 121 (7), 92 (6), 142 (6), 119 (5), 97 (5), 95 (5), 94 (5), 106 (4), 140 (4), 124 (4), 96 (4), 123 (4), 139 (4), 86 (4), 130 (4), 68 (4), 87 (3), 107 (3), 188 (3), 84 (3), 120 (3), 58 (3), 74 (3), 114 (3), 83 (3), 108 (3), 55 (3), 80 (3), 117 (3), 173 (3), 118 (2), 141 (2), 73 (2), 138 (2), 115 (2), 122 (2), 111 (2), 149 (2), 60, 146, 77, 67, 93, 76, 46, 53, 14, 99, 177, 90, 98, 52, 133, 16
+- Channels: 112 (22), 126 (15), 85 (11), 128 (10), 110 (10), 100 (9), 88 (9), 104 (9), 64 (8), 72 (8), 186 (8), 102 (7), 121 (7), 116 (7), 142 (6), 92 (6), 95 (5), 119 (5), 94 (5), 97 (5), 123 (4), 106 (4), 68 (4), 96 (4), 140 (4), 124 (4), 139 (4), 130 (4), 86 (4), 117 (3), 74 (3), 120 (3), 173 (3), 80 (3), 55 (3), 87 (3), 84 (3), 114 (3), 107 (3), 58 (3), 188 (3), 83 (3), 108 (3), 73 (2), 118 (2), 115 (2), 122 (2), 138 (2), 149 (2), 111 (2), 141 (2), 177, 16, 67, 146, 77, 133, 52, 98, 76, 99, 46, 93, 14, 53, 60, 90
 - Sampling rate (Hz): 1000.0 (193), 500.0 (71), 1024.0 (8), 499.7071 (6), 1600.0 (4)
 - Duration (hours): 261.3157287560348
 
@@ -159,9 +159,9 @@ Paired Associates Learning: Memory for Word Pairs in Cued Recall
 * **Author (year):**
   `Herrema2024_Paired`
 * **Canonical:**
-  `PAL`
+  —
 
-Also importable as: `DS005059`, `Herrema2024_Paired`, `PAL`.
+Also importable as: `DS005059`, `Herrema2024_Paired`.
 
 Modality: `ieeg`; Experiment type: `Memory`; Subject type: `Epilepsy`.
 Subjects: 69; recordings: 282; tasks: 1.

@@ -116,9 +116,9 @@ Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano,  Masaki Sonoda, Hidenor
 - Recordings: 384
 - Tasks: 1
 
-- Channels: 128 (269), 138 (14), 136 (11), 112 (9), 140 (8), 164 (8), 134 (7), 110 (6), 142 (5), 156 (5), 150 (5), 132 (4), 148 (4), 144 (4), 130 (4), 160 (3), 154 (3), 84 (3), 118 (3), 96 (3), 152 (3), 64 (2), 58
+- Channels: 128 (269), 138 (14), 136 (11), 112 (9), 140 (8), 164 (8), 134 (7), 110 (6), 142 (5), 156 (5), 150 (5), 130 (4), 144 (4), 132 (4), 148 (4), 160 (3), 152 (3), 154 (3), 96 (3), 118 (3), 84 (3), 64 (2), 58
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 130.07328611111112
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: Auditory

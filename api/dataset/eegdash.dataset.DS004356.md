@@ -161,7 +161,7 @@ Subjects were seated in a sound-isolating booth on a chair in front of a 24-inch
 
 - Channels: 34
 - Sampling rate (Hz): 10000.0
-- Duration (hours): 46.26655555555556
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

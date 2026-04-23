@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: ieeg Subjects: 6 Recordings: 72 License: CC0 Source: openneuro Citations: 1.0
 
-Metadata: Complete (90%)
+Metadata: Good (80%)
 
 ## Quickstart
 
@@ -113,7 +113,7 @@ No reference to the published study (still in press)
 - Recordings: 72
 - Tasks: 1
 
-- Channels: 130
+- Channels: Varies
 - Sampling rate (Hz): Varies
 - Duration (hours): Not calculated
 

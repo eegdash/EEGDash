@@ -89,8 +89,8 @@ This dataset is part of a larger, ongoing longitudinal study initially described
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | APPLESEED Example Dataset                                                                                                                                                         |
 | Author (year)  | `Williams2021`                                                                                                                                                                    |
-| Canonical      | `APPLESEED`                                                                                                                                                                       |
-| Importable as  | `DS003710`, `Williams2021`, `APPLESEED`                                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003710`, `Williams2021`                                                                                                                                                        |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Cabell L. Williams, Meghan H. Puglia                                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -148,9 +148,9 @@ APPLESEED Example Dataset
 * **Author (year):**
   `Williams2021`
 * **Canonical:**
-  `APPLESEED`
+  —
 
-Also importable as: `DS003710`, `Williams2021`, `APPLESEED`.
+Also importable as: `DS003710`, `Williams2021`.
 
 Modality: `eeg`.
 Subjects: 13; recordings: 48; tasks: 1.

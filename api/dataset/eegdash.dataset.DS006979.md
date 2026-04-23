@@ -220,8 +220,8 @@ For this dataset project, the approved Stage 1 protocol (registered report) can 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study                                                                                      |
 | Author (year)  | `Ramzaoui2025`                                                                                                                                                                    |
-| Canonical      | `Ramzaoui2024`                                                                                                                                                                    |
-| Importable as  | `DS006979`, `Ramzaoui2025`, `Ramzaoui2024`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006979`, `Ramzaoui2025`                                                                                                                                                        |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Hanane Ramzaoui, Melissa Beck                                                                                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -247,7 +247,7 @@ For this dataset project, the approved Stage 1 protocol (registered report) can 
 
 - Channels: 69 (53), 72
 - Sampling rate (Hz): 512.0 (55), 500.0
-- Duration (hours): 148.12
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Visual
@@ -279,9 +279,9 @@ Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: 
 * **Author (year):**
   `Ramzaoui2025`
 * **Canonical:**
-  `Ramzaoui2024`
+  —
 
-Also importable as: `DS006979`, `Ramzaoui2025`, `Ramzaoui2024`.
+Also importable as: `DS006979`, `Ramzaoui2025`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 53; recordings: 56; tasks: 3.

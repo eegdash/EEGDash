@@ -14,7 +14,7 @@ and helper utilities.
 
 EEGDash exposes **700+ OpenNeuro EEG datasets**, registered dynamically
 from MongoDB. The table below summarises the breakdown by experimental
-type (1106 datasets in this build).
+type (775 datasets in this build).
 
 ## Base Dataset API
 
@@ -25,7 +25,7 @@ type (1106 datasets in this build).
 
 | Experimental Type     |   Datasets |
 |-----------------------|------------|
-| nan                   |        207 |
+| nan                   |        222 |
 | Attention             |        116 |
 | Perception            |         97 |
 | Clinical/Intervention |         82 |

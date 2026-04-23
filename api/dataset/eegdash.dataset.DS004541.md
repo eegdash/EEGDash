@@ -92,8 +92,8 @@ In preperation
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Multimodal EEG-fNIRS data from patients undergoing general anesthesia                                                                                                             |
 | Author (year)  | `Ferron2023`                                                                                                                                                                      |
-| Canonical      | `Ferron2019`                                                                                                                                                                      |
-| Importable as  | `DS004541`, `Ferron2023`, `Ferron2019`                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004541`, `Ferron2023`                                                                                                                                                          |
 | Year           | 2023                                                                                                                                                                              |
 | Authors        | Catalina Saini Ferrón, Gabriela Vargas González, Carlos Valle Araya                                                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -118,7 +118,7 @@ In preperation
 - Tasks: 1
 
 - Channels: 59 (9), 40 (5), 30 (3), 38
-- Sampling rate (Hz): 1000.0 (9), 7.8125 (9)
+- Sampling rate (Hz): 7.8125 (9), 1000.0 (9)
 - Duration (hours): 12.130006388888887
 
 - Pathology: Surgery
@@ -151,9 +151,9 @@ Multimodal EEG-fNIRS data from patients undergoing general anesthesia
 * **Author (year):**
   `Ferron2023`
 * **Canonical:**
-  `Ferron2019`
+  —
 
-Also importable as: `DS004541`, `Ferron2023`, `Ferron2019`.
+Also importable as: `DS004541`, `Ferron2023`.
 
 Modality: `eeg, fnirs`; Experiment type: `Clinical/Intervention`; Subject type: `Surgery`.
 Subjects: 8; recordings: 18; tasks: 1.

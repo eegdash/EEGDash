@@ -127,8 +127,8 @@ American Academy of Sleep Medicine. The AASM manual for the scoring of sleep and
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Validation of Sleep Staging with Forehead EEG Patch                                                                                                                               |
 | Author (year)  | `Onton2025`                                                                                                                                                                       |
-| Canonical      | `Onton2024`                                                                                                                                                                       |
-| Importable as  | `DS006695`, `Onton2025`, `Onton2024`                                                                                                                                              |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS006695`, `Onton2025`                                                                                                                                                           |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Julie Onton, Sarah Mednick                                                                                                                                                        |
 | License        | CC0                                                                                                                                                                               |
@@ -186,9 +186,9 @@ Validation of Sleep Staging with Forehead EEG Patch
 * **Author (year):**
   `Onton2025`
 * **Canonical:**
-  `Onton2024`
+  —
 
-Also importable as: `DS006695`, `Onton2025`, `Onton2024`.
+Also importable as: `DS006695`, `Onton2025`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 19; recordings: 19; tasks: 1.

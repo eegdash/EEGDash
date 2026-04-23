@@ -88,8 +88,8 @@ Experiment length: 1 hour
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts                                                                             |
 | Author (year)  | `Grootswagers2021`                                                                                                                                                                |
-| Canonical      | `THINGS`, `THINGS_EEG`                                                                                                                                                            |
-| Importable as  | `DS003825`, `Grootswagers2021`, `THINGS`, `THINGS_EEG`                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003825`, `Grootswagers2021`                                                                                                                                                    |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas                                                                                                  |
 | License        | CC0                                                                                                                                                                               |
@@ -115,7 +115,7 @@ Experiment length: 1 hour
 
 - Channels: 63 (48), 128 (2)
 - Sampling rate (Hz): 1000.0
-- Duration (hours): 46.32270555555555
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —
@@ -147,9 +147,9 @@ Human electroencephalography recordings from 50 subjects for 22,248 images from 
 * **Author (year):**
   `Grootswagers2021`
 * **Canonical:**
-  `THINGS`, `THINGS_EEG`
+  —
 
-Also importable as: `DS003825`, `Grootswagers2021`, `THINGS`, `THINGS_EEG`.
+Also importable as: `DS003825`, `Grootswagers2021`.
 
 Modality: `eeg`.
 Subjects: 50; recordings: 50; tasks: 1.

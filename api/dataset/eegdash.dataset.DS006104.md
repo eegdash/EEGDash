@@ -166,7 +166,7 @@ For questions about this dataset, please contact Lindy Comstock at [lbcomstock@u
 
 - Channels: 61 (53), 83 (3)
 - Sampling rate (Hz): 2000.0
-- Duration (hours): 50.75694444444444
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Auditory

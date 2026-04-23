@@ -101,8 +101,8 @@ We thank the SEIN-UMCU RESPect database group (C.J.J. van Asch, L. van de Berg, 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | STReEF                                                                                                                                                                            |
 | Author (year)  | `Jelsma2024`                                                                                                                                                                      |
-| Canonical      | `STReEF`                                                                                                                                                                          |
-| Importable as  | `DS005448`, `Jelsma2024`, `STReEF`                                                                                                                                                |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005448`, `Jelsma2024`                                                                                                                                                          |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M, Bourez-Swart M.D., Otte W.M, van Blooijs D., van Klink N.E.C.                                             |
 | License        | CC0                                                                                                                                                                               |
@@ -160,9 +160,9 @@ STReEF
 * **Author (year):**
   `Jelsma2024`
 * **Canonical:**
-  `STReEF`
+  —
 
-Also importable as: `DS005448`, `Jelsma2024`, `STReEF`.
+Also importable as: `DS005448`, `Jelsma2024`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 13; recordings: 18; tasks: 1.

@@ -94,8 +94,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | ToonFaces                                                                                                                                                                         |
 | Author (year)  | `Chacon2022`                                                                                                                                                                      |
-| Canonical      | `ToonFaces`                                                                                                                                                                       |
-| Importable as  | `DS004324`, `Chacon2022`, `ToonFaces`                                                                                                                                             |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004324`, `Chacon2022`                                                                                                                                                          |
 | Year           | 2022                                                                                                                                                                              |
 | Authors        | Luis Alberto Barradas Chacón, Selina C. Wriessnegger                                                                                                                              |
 | License        | CC0                                                                                                                                                                               |
@@ -153,9 +153,9 @@ ToonFaces
 * **Author (year):**
   `Chacon2022`
 * **Canonical:**
-  `ToonFaces`
+  —
 
-Also importable as: `DS004324`, `Chacon2022`, `ToonFaces`.
+Also importable as: `DS004324`, `Chacon2022`.
 
 Modality: `eeg`.
 Subjects: 26; recordings: 26; tasks: 1.

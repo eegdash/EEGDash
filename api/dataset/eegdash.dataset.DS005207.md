@@ -100,8 +100,8 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 |----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Surrey cEEGrid sleep data set                                                                                                                                                                                      |
 | Author (year)  | `Mikkelsen2024_Surrey_cEEGrid_sleep`                                                                                                                                                                               |
-| Canonical      | `Surrey_cEEGrid_sleep`                                                                                                                                                                                             |
-| Importable as  | `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`, `Surrey_cEEGrid_sleep`                                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                                                  |
+| Importable as  | `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`                                                                                                                                                                   |
 | Year           | 2024                                                                                                                                                                                                               |
 | Authors        | Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell, Giuseppe Atzori, Laura Birch, Ciro Della Monica, Stefan Debener, Derk-Jan Dijk, Annette Sterr, Maarten De Vos |
 | License        | CC0                                                                                                                                                                                                                |
@@ -125,7 +125,7 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 - Recordings: 39
 - Tasks: 1
 
-- Channels: 13 (8), 24 (6), 20 (5), 11 (5), 27 (4), 18 (3), 21 (3), 15 (2), 23 (2), 22
+- Channels: 13 (8), 24 (6), 11 (5), 20 (5), 27 (4), 18 (3), 21 (3), 15 (2), 23 (2), 22
 - Sampling rate (Hz): 128.0 (20), 250.0 (19)
 - Duration (hours): 422.5796577083333
 
@@ -159,9 +159,9 @@ Surrey cEEGrid sleep data set
 * **Author (year):**
   `Mikkelsen2024_Surrey_cEEGrid_sleep`
 * **Canonical:**
-  `Surrey_cEEGrid_sleep`
+  —
 
-Also importable as: `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`, `Surrey_cEEGrid_sleep`.
+Also importable as: `DS005207`, `Mikkelsen2024_Surrey_cEEGrid_sleep`.
 
 Modality: `eeg`.
 Subjects: 20; recordings: 39; tasks: 1.

@@ -113,8 +113,8 @@ This contains intracranial recordings collected by the Hamilton Lab at the Unive
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS                                                                                           |
 | Author (year)  | `Hamilton2024`                                                                                                                                                                    |
-| Canonical      | `WIRED_ICM`                                                                                                                                                                       |
-| Importable as  | `DS004993`, `Hamilton2024`, `WIRED_ICM`                                                                                                                                           |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004993`, `Hamilton2024`                                                                                                                                                        |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Liberty S. Hamilton, Maansi Desai, Alyssa Field                                                                                                                                   |
 | License        | CC0                                                                                                                                                                               |
@@ -138,7 +138,7 @@ This contains intracranial recordings collected by the Hamilton Lab at the Unive
 - Recordings: 3
 - Tasks: 3
 
-- Channels: 148, 106, 160
+- Channels: 106, 148, 160
 - Sampling rate (Hz): 512.0 (2), 2048.0
 - Duration (hours): 0.2299173990885416
 
@@ -172,9 +172,9 @@ WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilep
 * **Author (year):**
   `Hamilton2024`
 * **Canonical:**
-  `WIRED_ICM`
+  —
 
-Also importable as: `DS004993`, `Hamilton2024`, `WIRED_ICM`.
+Also importable as: `DS004993`, `Hamilton2024`.
 
 Modality: `ieeg`; Experiment type: `Perception`; Subject type: `Epilepsy`.
 Subjects: 3; recordings: 3; tasks: 3.

@@ -213,7 +213,7 @@ Trial info EEG processed data
 
 - Channels: 59
 - Sampling rate (Hz): 500.0
-- Duration (hours): 40.45904166666666
+- Duration (hours): Not calculated
 
 - Pathology: Not specified
 - Modality: —

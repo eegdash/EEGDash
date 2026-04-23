@@ -105,8 +105,8 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Ear-EEG Sleep Monitoring 2019 (EESM19)                                                                                                                                            |
 | Author (year)  | `Mikkelsen2024_Ear_Sleep_Monitoring`                                                                                                                                              |
-| Canonical      | `EESM19`                                                                                                                                                                          |
-| Importable as  | `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`, `EESM19`                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`                                                                                                                                  |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar                                                                                                                           |
 | License        | CC0                                                                                                                                                                               |
@@ -132,7 +132,7 @@ Kaare Mikkelsen, [Mikkelsen.kaare@ece.au.dk](mailto:Mikkelsen.kaare@ece.au.dk), 
 
 - Channels: 25
 - Sampling rate (Hz): 500.0
-- Duration (hours): 1365.566388888889
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: Sleep
@@ -164,9 +164,9 @@ Ear-EEG Sleep Monitoring 2019 (EESM19)
 * **Author (year):**
   `Mikkelsen2024_Ear_Sleep_Monitoring`
 * **Canonical:**
-  `EESM19`
+  —
 
-Also importable as: `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`, `EESM19`.
+Also importable as: `DS005185`, `Mikkelsen2024_Ear_Sleep_Monitoring`.
 
 Modality: `eeg`; Experiment type: `Sleep`; Subject type: `Healthy`.
 Subjects: 20; recordings: 356; tasks: 3.

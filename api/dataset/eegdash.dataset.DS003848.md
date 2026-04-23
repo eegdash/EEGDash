@@ -112,8 +112,8 @@ Please cite Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlma
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG                                                                                                                    |
 | Author (year)  | `Blooijs2021`                                                                                                                                                                     |
-| Canonical      | `RESPect_longterm`                                                                                                                                                                |
-| Importable as  | `DS003848`, `Blooijs2021`, `RESPect_longterm`                                                                                                                                     |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS003848`, `Blooijs2021`                                                                                                                                                         |
 | Year           | 2021                                                                                                                                                                              |
 | Authors        | van Blooijs D., Demuru M., Zweiphenning W, Hermes D., Leijten F., Zijlmans M.                                                                                                     |
 | License        | CC0                                                                                                                                                                               |
@@ -171,9 +171,9 @@ Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG
 * **Author (year):**
   `Blooijs2021`
 * **Canonical:**
-  `RESPect_longterm`
+  —
 
-Also importable as: `DS003848`, `Blooijs2021`, `RESPect_longterm`.
+Also importable as: `DS003848`, `Blooijs2021`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 6; recordings: 22; tasks: 6.

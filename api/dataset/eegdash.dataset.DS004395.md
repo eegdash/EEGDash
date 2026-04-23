@@ -98,8 +98,8 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Penn Electrophysiology of Encoding and Retrieval Study (PEERS)                                                                                                                                                                                                                                                               |
 | Author (year)  | `Kahana2023`                                                                                                                                                                                                                                                                                                                 |
-| Canonical      | `PEERS`                                                                                                                                                                                                                                                                                                                      |
-| Importable as  | `DS004395`, `Kahana2023`, `PEERS`                                                                                                                                                                                                                                                                                            |
+| Canonical      | —                                                                                                                                                                                                                                                                                                                            |
+| Importable as  | `DS004395`, `Kahana2023`                                                                                                                                                                                                                                                                                                     |
 | Year           | 2023                                                                                                                                                                                                                                                                                                                         |
 | Authors        | Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka, Adam Broitman, Elizabeth Crutchley, Patrick Crutchley, Kylie H. Alm, Brandon S. Katerman, Nicole E. Miller, Joel R. Kuhn, Yuxuan Li, Nicole M. Long, Jonathan Miller, Madison D. Paron, Jesse K. Pazdera, Isaac Pedisich, Christoph T. Weidemann |
 | License        | CC0                                                                                                                                                                                                                                                                                                                          |
@@ -157,9 +157,9 @@ Penn Electrophysiology of Encoding and Retrieval Study (PEERS)
 * **Author (year):**
   `Kahana2023`
 * **Canonical:**
-  `PEERS`
+  —
 
-Also importable as: `DS004395`, `Kahana2023`, `PEERS`.
+Also importable as: `DS004395`, `Kahana2023`.
 
 Modality: `eeg`; Experiment type: `Memory`; Subject type: `Healthy`.
 Subjects: 364; recordings: 6483; tasks: 3.

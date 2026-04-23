@@ -88,8 +88,8 @@ EEG was sampled continuously at 500 Hz with a bandpass of DC to 200 Hz. Event ma
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | PWIe                                                                                                                                                                              |
 | Author (year)  | `Holcomb2025`                                                                                                                                                                     |
-| Canonical      | `PWIe`                                                                                                                                                                            |
-| Importable as  | `DS005932`, `Holcomb2025`, `PWIe`                                                                                                                                                 |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS005932`, `Holcomb2025`                                                                                                                                                         |
 | Year           | 2025                                                                                                                                                                              |
 | Authors        | Phillip J. Holcomb, Jacklyn Jardel, Katherine J. Midgley, and Karen Emmorey                                                                                                       |
 | License        | CC0                                                                                                                                                                               |
@@ -147,9 +147,9 @@ PWIe
 * **Author (year):**
   `Holcomb2025`
 * **Canonical:**
-  `PWIe`
+  —
 
-Also importable as: `DS005932`, `Holcomb2025`, `PWIe`.
+Also importable as: `DS005932`, `Holcomb2025`.
 
 Modality: `eeg`; Experiment type: `Other`; Subject type: `Healthy`.
 Subjects: 29; recordings: 29; tasks: 1.

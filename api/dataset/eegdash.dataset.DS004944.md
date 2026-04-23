@@ -177,8 +177,8 @@ We thank V. Dimakopoulos for help in reformatting the data to BIDS. We acknowled
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Title          | Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding                                                                                                      |
 | Author (year)  | `Costa2024`                                                                                                                                                                       |
-| Canonical      | `BCI2000_intraop`                                                                                                                                                                 |
-| Importable as  | `DS004944`, `Costa2024`, `BCI2000_intraop`                                                                                                                                        |
+| Canonical      | —                                                                                                                                                                                 |
+| Importable as  | `DS004944`, `Costa2024`                                                                                                                                                           |
 | Year           | 2024                                                                                                                                                                              |
 | Authors        | Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König, Johannes Sarnthein                                                                               |
 | License        | CC0                                                                                                                                                                               |
@@ -202,7 +202,7 @@ We thank V. Dimakopoulos for help in reformatting the data to BIDS. We acknowled
 - Recordings: 44
 - Tasks: 1
 
-- Channels: 3 (10), 6 (6), 5 (6), 4 (5), 23 (3), 20 (2), 19 (2), 25, 22, 10, 15, 28, 27, 2, 17, 11, 21
+- Channels: 3 (10), 6 (6), 5 (6), 4 (5), 23 (3), 20 (2), 19 (2), 22, 15, 27, 2, 28, 17, 11, 10, 25, 21
 - Sampling rate (Hz): 2000.0
 - Duration (hours): 3.0518518055555552
 
@@ -236,9 +236,9 @@ Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding
 * **Author (year):**
   `Costa2024`
 * **Canonical:**
-  `BCI2000_intraop`
+  —
 
-Also importable as: `DS004944`, `Costa2024`, `BCI2000_intraop`.
+Also importable as: `DS004944`, `Costa2024`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
 Subjects: 22; recordings: 44; tasks: 1.

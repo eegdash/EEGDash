@@ -112,7 +112,7 @@ No README content is available for this dataset.
 
 - Channels: 6
 - Sampling rate (Hz): 500.0
-- Duration (hours): 1.6619166666666665
+- Duration (hours): Not calculated
 
 - Pathology: Healthy
 - Modality: —

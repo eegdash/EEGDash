@@ -132,6 +132,8 @@ html_js_files = [
     ("js/tag-palette.js", {"defer": "defer"}),
     # Live search in PyData theme search modal (rendered on every page).
     ("js/search-as-you-type.js", {"defer": "defer"}),
+    # Lazy-load the electrode-explorer iframe on <details> expansion.
+    ("js/lazy-embed.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -401,6 +403,8 @@ Technical Details
 -----------------
 
 {highlights_section}
+
+{electrodes_section}
 
 API Reference
 -------------
@@ -2086,6 +2090,127 @@ def _format_api_section(class_name: str) -> str:
     )
 
 
+# ---------------------------------------------------------------------------
+# Electrode-explorer embed (Step 5 of the electrodes integration plan).
+#
+# `_static/dataset_generated/electrode-layouts.json` maps dataset_id →
+# {label, n_channels, tsv_url, coords_url}. It is eventually populated
+# by the eegdash backend montage registry; while that's being built we
+# maintain a curated subset here as a fallback.
+#
+# Each dataset page gets a collapsed <details> block. Expanding it swaps
+# the iframe's `data-src` onto `src` (see lazy-embed.js), so zero bytes
+# are fetched from electrodes.eegdash.org until a reader opts in.
+# ---------------------------------------------------------------------------
+
+_ELECTRODE_EXPLORER_BASE = "https://electrodes.eegdash.org/"
+
+_electrode_layouts_cache: dict[str, object] | None = None
+
+
+def _load_electrode_layouts() -> Mapping[str, Mapping[str, object]]:
+    """Read the curated electrode-layouts manifest (cached across calls).
+
+    Missing file or malformed JSON degrades silently to empty — dataset
+    pages then render a 'no scalp layout published' placeholder instead
+    of the iframe.
+    """
+    global _electrode_layouts_cache
+    if _electrode_layouts_cache is not None:
+        return _electrode_layouts_cache  # type: ignore[return-value]
+    path = (
+        Path(__file__).parent
+        / "_static"
+        / "dataset_generated"
+        / "electrode-layouts.json"
+    )
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        layouts = doc.get("layouts", {})
+        if not isinstance(layouts, dict):
+            layouts = {}
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        LOGGER.info(
+            "[electrode-layouts] manifest unavailable (%s); placeholders only", exc
+        )
+        layouts = {}
+    _electrode_layouts_cache = layouts
+    return layouts
+
+
+def _format_electrodes_section(context: Mapping[str, object]) -> str:
+    """Render a lazy <details><iframe> block for this dataset's montage.
+
+    If the manifest doesn't have an entry for this dataset_id, we still
+    emit the section but with a short note — keeps the page layout
+    consistent across the catalog.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    layouts = _load_electrode_layouts()
+    entry = layouts.get(dataset_id)
+
+    heading = "Electrode Layout\n----------------\n\n"
+
+    if not entry or not (entry.get("montage_id") or entry.get("tsv_url")):
+        # Placeholder — keeps the section visible so readers know the
+        # catalog intends to show it, just that this particular dataset
+        # hasn't been indexed yet. Either shape of URL is acceptable:
+        # schema v2 carries ``montage_id`` (the registry hash), schema
+        # v1 carried ``tsv_url`` + optional ``coords_url``.
+        body = (
+            "No scalp electrode layout is currently indexed for this\n"
+            "dataset. Once the eegdash montage registry ingests it,\n"
+            "the interactive viewer will appear here automatically.\n"
+        )
+        return heading + body
+
+    # Build the iframe URL. Prefer the registry id shape if present;
+    # otherwise fall back to direct tsv/coords URLs so pages work even
+    # before the registry endpoint is live.
+    label = str(entry.get("label") or "Electrodes").strip()
+    n_channels = entry.get("n_channels")
+    montage_id = str(entry.get("montage_id") or "").strip()
+
+    if montage_id:
+        query = f"montage={montage_id}"
+    else:
+        from urllib.parse import quote
+
+        tsv_q = quote(str(entry["tsv_url"]), safe="")
+        parts = [f"tsv={tsv_q}"]
+        coords_url = entry.get("coords_url")
+        if coords_url:
+            parts.append(f"coords={quote(str(coords_url), safe='')}")
+        query = "&".join(parts)
+
+    iframe_src = f"{_ELECTRODE_EXPLORER_BASE}?{query}&embed=1"
+
+    title_bits = [label]
+    if n_channels:
+        title_bits.append(f"{n_channels} channels")
+    summary_text = " — ".join(title_bits)
+
+    # Keep the HTML block compact; Sphinx renders it as-is.
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="electrode-explorer">\n'
+        f"     <summary>Electrode layout — {summary_text}</summary>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"\n'
+        f'       title="Topomap of {label}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -2397,6 +2522,7 @@ def _process_dataset_item(
         readme_section=_format_readme_section(context),
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
+        electrodes_section=_format_electrodes_section(context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),

@@ -13,8 +13,11 @@ Strategy
    client-side filtering, or from an explicit ``--ids`` list).
 2. PATCH each dataset document's ``source`` field via
    ``/admin/{db}/datasets/{id}``.
-3. Bulk-update ``records`` via ``/admin/{db}/records`` with a regex
-   filter on ``dataset_id``.
+
+The ``records`` collection is intentionally not touched: records carry
+only a ``dataset`` foreign key back to ``Dataset.dataset_id`` and have
+no ``source`` field of their own, so correcting the dataset document is
+sufficient.
 
 Usage
 -----
@@ -146,13 +149,11 @@ def main() -> int:
         print(
             "\n[DRY-RUN] Would PATCH:"
             f"\n  - {len(mislabeled_ids)} dataset documents (source -> 'nemar')"
-            "\n  - records collection: filter {dataset_id: <id>, source: 'openneuro'} "
-            "-> $set {source: 'nemar'}"
             "\n\nRe-run with --apply to commit changes."
         )
         return 0
 
-    # 1) Patch dataset documents one by one
+    # Patch dataset documents one by one
     dataset_updated = 0
     dataset_failed: list[tuple[str, str]] = []
     for dsid in mislabeled_ids:
@@ -167,22 +168,6 @@ def main() -> int:
             dataset_failed.append((dsid, str(e)))
             print(f"ERROR dataset {dsid}: {e}", file=sys.stderr)
 
-    # 2) Bulk-patch records for each dataset
-    records_matched = 0
-    records_modified = 0
-    for dsid in mislabeled_ids:
-        try:
-            matched, modified = client.update_many(
-                {"dataset_id": dsid, "source": "openneuro"},
-                {"source": "nemar"},
-            )
-            records_matched += matched
-            records_modified += modified
-            if matched:
-                print(f"Records {dsid}: matched={matched} modified={modified}")
-        except Exception as e:  # noqa: BLE001
-            print(f"ERROR records {dsid}: {e}", file=sys.stderr)
-
     print("\n" + "=" * 50)
     print("Summary")
     print("=" * 50)
@@ -191,8 +176,6 @@ def main() -> int:
         print(f"Datasets failed:  {len(dataset_failed)}")
         for dsid, err in dataset_failed:
             print(f"  - {dsid}: {err}")
-    print(f"Records matched:  {records_matched}")
-    print(f"Records modified: {records_modified}")
 
     return 0 if not dataset_failed else 1
 

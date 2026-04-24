@@ -62,6 +62,11 @@ from tqdm import tqdm
 EXCLUDED_DATASETS = {
     "test",
     "ds003380",
+    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
+    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
+    "ds004929",
+    "ds005407",
+    "ds005930",
     "ABUDUKADI",
     "ABUDUKADI_2",
     "ABUDUKADI_3",

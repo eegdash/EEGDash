@@ -111,6 +111,11 @@ EXCLUDED_DATASETS = {
     "BENABBOU",
     "BING",
     "BOXIN",
+    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
+    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
+    "ds004929",
+    "ds005407",
+    "ds005930",
 }
 
 
@@ -131,27 +136,39 @@ def get_storage_backend(source: str) -> str:
     return config["backend"]
 
 
+def _source_from_dataset_id(dataset_id: str) -> str:
+    """Infer source from a dataset_id pattern.
+
+    Mirrors the pattern-based detection used in ``2_clone.py`` so the two
+    stages stay aligned (OpenNeuro ``dsNNNNNN``, NEMAR ``nmNNNNNN``).
+    """
+    if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
+        return "openneuro"
+    if dataset_id.startswith("nm") and dataset_id[2:].isdigit():
+        return "nemar"
+    if "EEGManyLabs" in dataset_id:
+        return "gin"
+    if dataset_id.startswith("EEG2025"):
+        return "nemar"
+    return "unknown"
+
+
 def detect_source(dataset_dir: Path) -> str:
     """Detect source from manifest.json or dataset structure."""
+    dataset_id = dataset_dir.name
     manifest_path = dataset_dir / "manifest.json"
     if manifest_path.exists():
         try:
             with open(manifest_path) as f:
                 manifest = json.load(f)
-                return manifest.get("source", "openneuro")
+            src = manifest.get("source")
+            if src:
+                return src
         except Exception:
             pass
 
     # Fallback: check dataset_id pattern
-    dataset_id = dataset_dir.name
-    if dataset_id.startswith("ds"):
-        return "openneuro"
-    elif "EEGManyLabs" in dataset_id:
-        return "gin"
-    elif dataset_id.startswith("EEG2025"):
-        return "nemar"
-
-    return "openneuro"
+    return _source_from_dataset_id(dataset_id)
 
 
 def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
@@ -1664,7 +1681,7 @@ def digest_from_manifest(
             "error": f"Failed to load manifest: {e}",
         }
 
-    source = manifest.get("source", "osf")
+    source = manifest.get("source") or _source_from_dataset_id(dataset_id)
     digested_at = datetime.now(timezone.utc).isoformat()
 
     # Get file list from manifest

@@ -72,7 +72,9 @@ def discover_mislabeled(client, page_size: int = 1000) -> list[dict[str, Any]]:
         data = resp.json().get("data", [])
         if not data:
             break
-        mislabeled.extend(d for d in data if NM_PATTERN.match(str(d.get("dataset_id", ""))))
+        mislabeled.extend(
+            d for d in data if NM_PATTERN.match(str(d.get("dataset_id", "")))
+        )
         if len(data) < page_size:
             break
         skip += page_size
@@ -83,7 +85,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--database", default="eegdash", help="Database name (default: eegdash)")
+    parser.add_argument(
+        "--database", default="eegdash", help="Database name (default: eegdash)"
+    )
     parser.add_argument(
         "--api-url",
         default=None,

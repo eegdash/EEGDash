@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Xueyi Zhang (2019). *CerebroVoice: Bilingual sEEG Speech Dataset*. [10.5281/zenodo.13332808](https://doi.org/10.5281/zenodo.13332808)
 
-Modality: ieeg Subjects: 2 Recordings: 18 License: CC BY 4.0 Source: openneuro
+Modality: ieeg Subjects: 2 Recordings: 18 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -146,7 +146,7 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - License: CC BY 4.0
 - DOI: doi:10.5281/zenodo.13332808
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000241](https://openneuro.org/datasets/nm000241)
 - NeMAR: [nm000241](https://nemar.org/dataexplorer/detail?dataset_id=nm000241)
 
@@ -167,7 +167,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CerebroVoice: Bilingual sEEG Speech Dataset
 
 * **Study:**
-  `nm000241` (OpenNeuro)
+  `nm000241` (NeMAR)
 * **Author (year):**
   `Zhang2019`
 * **Canonical:**

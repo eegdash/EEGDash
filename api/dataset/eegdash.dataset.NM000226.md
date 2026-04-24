@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Bangyan Zhou, Xiaopei Wu, Zongtan Lv, Lei Zhang, Xiaojin Guo (2016). *Zhou2016*. [10.82901/nemar.nm000115](https://doi.org/10.82901/nemar.nm000115)
 
-Modality: eeg Subjects: 4 Recordings: 24 License: CC-BY-4.0 Source: openneuro
+Modality: eeg Subjects: 4 Recordings: 24 License: CC-BY-4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -179,7 +179,7 @@ Data curator for NEMAR version: Arnaud Delorme (UCSD, La Jolla, CA, USA)
 - License: CC-BY-4.0
 - DOI: 10.82901/nemar.nm000115
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000226](https://openneuro.org/datasets/nm000226)
 - NeMAR: [nm000226](https://nemar.org/dataexplorer/detail?dataset_id=nm000226)
 
@@ -208,7 +208,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Zhou2016
 
 * **Study:**
-  `nm000226` (OpenNeuro)
+  `nm000226` (NeMAR)
 * **Author (year):**
   `Zhou2016_226`
 * **Canonical:**

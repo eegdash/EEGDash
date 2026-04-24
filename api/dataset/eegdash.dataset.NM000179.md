@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Anahit Babayan, Miray Erbey, Deniz Kumral, Janis D. Reinelt, Andrea M.F. Reiter, Josefin Röbbig, H. Lina Schaare, Marie Uhlig, Alfred Anwander, Pierre-Louis Bazin, Annette Horstmann, Leonie Lampe, Vadim V. Nikulin, Hadas Okon-Singer, Sven Preusser, Andre Pampel, Christiane S. Rohr, Julia Sacher, Angelika Thone-Otto, Sabrina Trapp, Till Nierhaus, Denise Altmann, Katrin Arelin, Maria Blochl, Edith Bongartz, Patric Breig, Elena Cesnaite, Sufang Chen, Roberto Cozatl, Saskia Czerwonatis, Gabriele Dambrauskaite, Maria Dreyer, Jessica Enders, Melina Engelhardt, Marie Michele Fischer, Norman Forschack, Johannes Golchert, Laura Golz, C. Alexandrina Guran, Susanna Hedrich, Nicole Hentschel, Daria I. Hoffmann, Julia M. Huntenburg, Rebecca Jost, Anna Kosatschek, Stella Kunzendorf, Hannah Lammers, Mark E. Lauckner, Keyvan Mahjoory, Natacha Mendes, Ramona Menger, Enzo Morino, Karina Nathe, Jennifer Neubauer, Handan Noyan, Sabine Oligschlager, Patricia Panczyszyn-Trzewik, Dorothee Poehlchen, Nadine Putzke, Sabrina Roski, Marie-Catherine Schaller, Anja Schieferbein, Benito Schlaak, Hanna Maria Schmidt, Robert Schmidt, Anne Schrimpf, Sylvia Stasch, Maria Voss, Anett Wiedemann, Daniel S. Margulies, Michael Gaebler, Arno Villringer (2019). *LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)*. [10.1038/sdata.2018.308](https://doi.org/10.1038/sdata.2018.308)
 
-Modality: eeg Subjects: 215 Recordings: 215 License: CC BY 4.0 Source: openneuro
+Modality: eeg Subjects: 215 Recordings: 215 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -183,7 +183,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: CC BY 4.0
 - DOI: doi:10.1038/sdata.2018.308
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000179](https://openneuro.org/datasets/nm000179)
 - NeMAR: [nm000179](https://nemar.org/dataexplorer/detail?dataset_id=nm000179)
 
@@ -212,7 +212,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)
 
 * **Study:**
-  `nm000179` (OpenNeuro)
+  `nm000179` (NeMAR)
 * **Author (year):**
   `Babayan2018`
 * **Canonical:**

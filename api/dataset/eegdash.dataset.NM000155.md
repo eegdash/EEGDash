@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Arnault H. Caillet, Simon Avrillon, Aritra Kundu, Tianyi Yu, Andrew T. M. Phillips, Luca Modenese, Dario Farina (20). *MUniverse Caillet et al 2023*. [https://doi.org/10.7910/DVN/F9GWIW](https://doi.org/https://doi.org/10.7910/DVN/F9GWIW)
 
-Modality: emg Subjects: 6 Recordings: 11 License: CC0 BY 4.0 Source: openneuro
+Modality: emg Subjects: 6 Recordings: 11 License: CC0 BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -189,7 +189,7 @@ See *dataset_description.json* for further details.
 - License: CC0 BY 4.0
 - DOI: [https://doi.org/10.7910/DVN/F9GWIW](https://doi.org/10.7910/DVN/F9GWIW)
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000155](https://openneuro.org/datasets/nm000155)
 - NeMAR: [nm000155](https://nemar.org/dataexplorer/detail?dataset_id=nm000155)
 
@@ -210,7 +210,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Caillet et al 2023
 
 * **Study:**
-  `nm000155` (OpenNeuro)
+  `nm000155` (NeMAR)
 * **Author (year):**
   `Caillet2023`
 * **Canonical:**

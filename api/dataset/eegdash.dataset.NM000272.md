@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Michele Romani, Devis Zanoni, Elisabetta Farella, Luca Turchet (—). *Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento)*. [10.48550/arXiv.2510.10169](https://doi.org/10.48550/arXiv.2510.10169)
 
-Modality: eeg Subjects: 22 Recordings: 120 License: CC-BY-4.0 Source: openneuro
+Modality: eeg Subjects: 22 Recordings: 120 License: CC-BY-4.0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -125,7 +125,7 @@ No README content is available for this dataset.
 - License: CC-BY-4.0
 - DOI: doi:10.48550/arXiv.2510.10169
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000272](https://openneuro.org/datasets/nm000272)
 - NeMAR: [nm000272](https://nemar.org/dataexplorer/detail?dataset_id=nm000272)
 
@@ -154,7 +154,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento)
 
 * **Study:**
-  `nm000272` (OpenNeuro)
+  `nm000272` (NeMAR)
 * **Author (year):**
   `Romani2025_BF_ERP`
 * **Canonical:**

@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Bob Kemp, Aeilko H. Zwinderman, Bert Tuk, Hilbert A.C. Kamphuisen, Josefien J.L. Oberye (2000). *Sleep-EDF Expanded: Whole-Night PSG Recordings*. [10.13026/C2X676](https://doi.org/10.13026/C2X676)
 
-Modality: eeg Subjects: 100 Recordings: 197 License: ODbL v1.0 Source: openneuro
+Modality: eeg Subjects: 100 Recordings: 197 License: ODbL v1.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -137,7 +137,7 @@ PhysioNet: [https://physionet.org/content/sleep-edfx/1.0.0/](https://physionet.o
 - License: ODbL v1.0
 - DOI: doi:10.13026/C2X676
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000185](https://openneuro.org/datasets/nm000185)
 - NeMAR: [nm000185](https://nemar.org/dataexplorer/detail?dataset_id=nm000185)
 
@@ -158,7 +158,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Sleep-EDF Expanded: Whole-Night PSG Recordings
 
 * **Study:**
-  `nm000185` (OpenNeuro)
+  `nm000185` (NeMAR)
 * **Author (year):**
   `Kemp2000`
 * **Canonical:**

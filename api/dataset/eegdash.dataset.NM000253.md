@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Christopher Wang, Adam Yaari, Aaditya K Singh, Vighnesh Subramaniam, Dana Rosenfarb, Jan DeWitt, Pranav Misra, Joseph R Madsen, Scellig Stone, Gabriel Kreiman, Boris Katz, Ignacio Cases, Andrei Barbu (2019). *Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli*. [10.48550/arXiv.2411.08343](https://doi.org/10.48550/arXiv.2411.08343)
 
-Modality: ieeg Subjects: 10 Recordings: 26 License: CC BY 4.0 Source: openneuro
+Modality: ieeg Subjects: 10 Recordings: 26 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -128,7 +128,7 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - License: CC BY 4.0
 - DOI: doi:10.48550/arXiv.2411.08343
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000253](https://openneuro.org/datasets/nm000253)
 - NeMAR: [nm000253](https://nemar.org/dataexplorer/detail?dataset_id=nm000253)
 
@@ -157,7 +157,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli
 
 * **Study:**
-  `nm000253` (OpenNeuro)
+  `nm000253` (NeMAR)
 * **Author (year):**
   `Wang2024_et_al_Brain`
 * **Canonical:**

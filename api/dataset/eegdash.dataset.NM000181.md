@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Hussain A. Khan (2019). *NMT: Neurodiagnostic Montage Template Scalp EEG*. [10.5281/zenodo.10909103](https://doi.org/10.5281/zenodo.10909103)
 
-Modality: eeg Subjects: 2417 Recordings: 2417 License: CC BY-SA 4.0 Source: openneuro
+Modality: eeg Subjects: 2417 Recordings: 2417 License: CC BY-SA 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -140,7 +140,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: CC BY-SA 4.0
 - DOI: doi:10.5281/zenodo.10909103
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000181](https://openneuro.org/datasets/nm000181)
 - NeMAR: [nm000181](https://nemar.org/dataexplorer/detail?dataset_id=nm000181)
 
@@ -169,7 +169,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 NMT: Neurodiagnostic Montage Template Scalp EEG
 
 * **Study:**
-  `nm000181` (OpenNeuro)
+  `nm000181` (NeMAR)
 * **Author (year):**
   `Khan2019`
 * **Canonical:**

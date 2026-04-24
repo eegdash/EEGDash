@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** G.F.P. Van Veen, A. Barachant, A. Andreev, G. Cattan, P. Rodrigues, M. Congedo (2019). *Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012)*. [10.5281/zenodo.2649006](https://doi.org/10.5281/zenodo.2649006)
 
-Modality: eeg Subjects: 23 Recordings: 46 License: CC-BY-4.0 Source: openneuro
+Modality: eeg Subjects: 23 Recordings: 46 License: CC-BY-4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -284,7 +284,7 @@ https://github.com/NeuroTechX/moabb
 - License: CC-BY-4.0
 - DOI: doi:10.5281/zenodo.2649006
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000260](https://openneuro.org/datasets/nm000260)
 - NeMAR: [nm000260](https://nemar.org/dataexplorer/detail?dataset_id=nm000260)
 
@@ -313,7 +313,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012)
 
 * **Study:**
-  `nm000260` (OpenNeuro)
+  `nm000260` (NeMAR)
 * **Author (year):**
   `BrainInvaders2012`
 * **Canonical:**

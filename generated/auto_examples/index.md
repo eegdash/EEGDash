@@ -2,7 +2,7 @@
 
 More tutorials are on the way! In the meantime, check out the EEG2025 Competition lessons and our EEGDash basics guide.
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open -->
 <!-- thumbnail-parent-div-close --></div>
 
@@ -10,7 +10,7 @@ More tutorials are on the way! In the meantime, check out the EEG2025 Competitio
 
 Playing with eegdash!
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to train a domain-adaptive deep learning model for EEG P3 component classification across two different datasets using Adaptive Symmetric Maximum Mean Discrepancy (AS-MMD).">  <div class="sphx-glr-thumbnail-title">EEG P3 Transfer Learning with AS-MMD</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">EEGDash Feature Extractor</div>
@@ -20,14 +20,14 @@ Playing with eegdash!
 
 # Dev scripts for EEGDash
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids">  <div class="sphx-glr-thumbnail-title">Exploring Braindecode's BIDSDataset</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>
 
 # General tutorials
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Objective: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).">  <div class="sphx-glr-thumbnail-title">Age Prediction from EEG</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates using the EEGDash library with PyTorch to classify EEG responses in an oddball paradigm.">  <div class="sphx-glr-thumbnail-title">Oddball Classification</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="The code below provides an example of using the EEGDash library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.">  <div class="sphx-glr-thumbnail-title">EEG Features for Sex Classification</div>
@@ -47,7 +47,7 @@ Playing with eegdash!
 1. Cross-Task Transfer Learning: Developing models that can effectively transfer knowledge from passive EEG tasks to active tasks
 2. Subject Invariant Representation: Creating robust representations that generalize across different subjects while predicting clinical factors
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Challenge 1: Cross-Task Transfer Learning!">  <div class="sphx-glr-thumbnail-title">Challenge 1: Cross-Task Transfer Learning!</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Challenge 2: Predicting the p-factor from EEG">  <div class="sphx-glr-thumbnail-title">Challenge 2: Predicting the p-factor from EEG</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use /api/dataset/eegdash.dataset.EEGChallengeDataset offline once a dataset is present on disk.">  <div class="sphx-glr-thumbnail-title">Working Offline with EEGDash</div>
@@ -56,7 +56,7 @@ Playing with eegdash!
 
 # HPC tutorials
 
-<div class="sphx-glr-thumbnails">
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>

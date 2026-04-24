@@ -10150,7 +10150,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000118.html" title="NM000118 — eeg dataset, 9 subjects">NM000118</a></td>
       <td>Nakanishi2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10167,7 +10167,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000119.html" title="NM000119 — eeg dataset, 11 subjects">NM000119</a></td>
       <td>Oikonomou2016_MAMEM1</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10184,7 +10184,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000120.html" title="NM000120 — eeg dataset, 11 subjects">NM000120</a></td>
       <td>Oikonomou2016_MAMEM2</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10201,7 +10201,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000121.html" title="NM000121 — eeg dataset, 11 subjects">NM000121</a></td>
       <td>Oikonomou2016_MAMEM3</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10218,7 +10218,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000122.html" title="NM000122 — eeg dataset, 12 subjects">NM000122</a></td>
       <td>Chen2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10235,7 +10235,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000123.html" title="NM000123 — eeg dataset, 12 subjects">NM000123</a></td>
       <td>Kalunga2016</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10252,7 +10252,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000124.html" title="NM000124 — eeg dataset, 24 subjects">NM000124</a></td>
       <td>Han2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10269,7 +10269,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000125.html" title="NM000125 — eeg dataset, 23 subjects">NM000125</a></td>
       <td>Lee2021_SSVEP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10286,7 +10286,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000126.html" title="NM000126 — eeg dataset, 34 subjects">NM000126</a></td>
       <td>Wang2016</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10303,7 +10303,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000127.html" title="NM000127 — eeg dataset, 40 subjects">NM000127</a></td>
       <td>Kim2025_SSVEP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10320,7 +10320,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000128.html" title="NM000128 — eeg dataset, 59 subjects">NM000128</a></td>
       <td>Dong2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10337,7 +10337,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000129.html" title="NM000129 — eeg dataset, 70 subjects">NM000129</a></td>
       <td>Liu2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10354,7 +10354,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000130.html" title="NM000130 — eeg dataset, 100 subjects">NM000130</a></td>
       <td>Liu2022</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10371,7 +10371,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000131.html" title="NM000131 — eeg dataset, 8 subjects">NM000131</a></td>
       <td>Wang2021</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10609,7 +10609,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000145.html" title="NM000145 — eeg dataset, 10 subjects">NM000145</a></td>
       <td>GrosseWentrup2009</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10626,7 +10626,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000146.html" title="NM000146 — eeg dataset, 10 subjects">NM000146</a></td>
       <td>Yi2014</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10660,7 +10660,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000148.html" title="NM000148 — eeg dataset, 30 subjects">NM000148</a></td>
       <td>Rozado2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -10677,7 +10677,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000149.html" title="NM000149 — eeg dataset, 10 subjects">NM000149</a></td>
       <td>Ofner2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10728,7 +10728,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000152.html" title="NM000152 — eeg dataset, 12 subjects">NM000152</a></td>
       <td>Zhang2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10745,7 +10745,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000155.html" title="NM000155 — emg dataset, 6 subjects">NM000155</a></td>
       <td>Caillet2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
@@ -10762,7 +10762,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000156.html" title="NM000156 — eeg dataset, 37 subjects">NM000156</a></td>
       <td></td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -10779,7 +10779,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000157.html" title="NM000157 — eeg dataset, 19 subjects">NM000157</a></td>
       <td>Mainsah2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -10796,7 +10796,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000158.html" title="NM000158 — eeg dataset, 50 subjects">NM000158</a></td>
       <td>Liu2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
@@ -10813,7 +10813,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000159.html" title="NM000159 — emg dataset, 16 subjects">NM000159</a></td>
       <td>Avrillon2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
@@ -10830,7 +10830,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000160.html" title="NM000160 — eeg dataset, 18 subjects">NM000160</a></td>
       <td>Yi2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10847,7 +10847,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000161.html" title="NM000161 — eeg dataset, 20 subjects">NM000161</a></td>
       <td>Crell2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10864,7 +10864,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000162.html" title="NM000162 — eeg dataset, 20 subjects">NM000162</a></td>
       <td>Srisrisawang2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10881,7 +10881,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000163.html" title="NM000163 — eeg dataset, 12 subjects">NM000163</a></td>
       <td>Castillos2023_VEP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10898,7 +10898,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000165.html" title="NM000165 — emg dataset, 1 subjects">NM000165</a></td>
       <td>Grison2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="emg" data-tag-label="EMG" title="Recording: EMG" aria-label="Recording: EMG">EMG</span></td>
       <td></td>
       <td></td>
@@ -10915,7 +10915,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000166.html" title="NM000166 — eeg dataset, 95 subjects">NM000166</a></td>
       <td>Huang2018</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -10932,7 +10932,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000167.html" title="NM000167 — eeg dataset, 25 subjects">NM000167</a></td>
       <td>Ma2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10949,7 +10949,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000168.html" title="NM000168 — eeg dataset, 6 subjects">NM000168</a></td>
       <td>Chavarriaga2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10966,7 +10966,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000169.html" title="NM000169 — eeg dataset, 8 subjects">NM000169</a></td>
       <td>Riccio2014</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -10983,7 +10983,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000170.html" title="NM000170 — eeg dataset, 10 subjects">NM000170</a></td>
       <td>Pulferer2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11000,7 +11000,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000171.html" title="NM000171 — eeg dataset, 14 subjects">NM000171</a></td>
       <td>Steyrl2014</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11017,7 +11017,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000172.html" title="NM000172 — eeg dataset, 14 subjects">NM000172</a></td>
       <td>Schirrmeister2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11034,7 +11034,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000173.html" title="NM000173 — eeg dataset, 15 subjects">NM000173</a></td>
       <td>Ofner2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11051,7 +11051,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000175.html" title="NM000175 — fnirs dataset, 5 subjects">NM000175</a></td>
       <td>Luke2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="fnirs" data-tag-label="fnirs" title="Recording: fNIRS" aria-label="Recording: fNIRS">fNIRS</span></td>
       <td></td>
       <td></td>
@@ -11068,7 +11068,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000176.html" title="NM000176 — eeg dataset, 5 subjects">NM000176</a></td>
       <td>Mainsah2025_BigP3BCI</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11085,7 +11085,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000179.html" title="NM000179 — eeg dataset, 215 subjects">NM000179</a></td>
       <td>Babayan2018</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11102,7 +11102,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000180.html" title="NM000180 — eeg dataset, 45 subjects">NM000180</a></td>
       <td>Brennan2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11119,7 +11119,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000181.html" title="NM000181 — eeg dataset, 2417 subjects">NM000181</a></td>
       <td>Khan2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11136,7 +11136,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000185.html" title="NM000185 — eeg dataset, 100 subjects">NM000185</a></td>
       <td>Kemp2000</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11153,7 +11153,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000186.html" title="NM000186 — eeg dataset, 8 subjects">NM000186</a></td>
       <td>Mainsah2025_BigP3BCI_E</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11170,7 +11170,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000187.html" title="NM000187 — eeg dataset, 8 subjects">NM000187</a></td>
       <td>Mainsah2025_BigP3BCI_N</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11187,7 +11187,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000188.html" title="NM000188 — eeg dataset, 10 subjects">NM000188</a></td>
       <td>Arico2014</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11204,7 +11204,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000189.html" title="NM000189 — eeg dataset, 10 subjects">NM000189</a></td>
       <td>Schreuder2015_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11221,7 +11221,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000190.html" title="NM000190 — eeg dataset, 10 subjects">NM000190</a></td>
       <td>Hohne2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11238,7 +11238,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000191.html" title="NM000191 — eeg dataset, 10 subjects">NM000191</a></td>
       <td>Mainsah2025_BigP3BCI_F</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11255,7 +11255,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000192.html" title="NM000192 — eeg dataset, 11 subjects">NM000192</a></td>
       <td>Treder2015_BNCI_006_Music</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11272,7 +11272,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000193.html" title="NM000193 — eeg dataset, 11 subjects">NM000193</a></td>
       <td>Kojima2024A_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11289,7 +11289,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000194.html" title="NM000194 — eeg dataset, 12 subjects">NM000194</a></td>
       <td>Acqualagna2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11306,7 +11306,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000195.html" title="NM000195 — eeg dataset, 12 subjects">NM000195</a></td>
       <td>Hubner2018</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11323,7 +11323,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000196.html" title="NM000196 — eeg dataset, 12 subjects">NM000196</a></td>
       <td>Thielen2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11340,7 +11340,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000197.html" title="NM000197 — eeg dataset, 21 subjects">NM000197</a></td>
       <td>Mainsah2025_BigP3BCI_M</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11357,7 +11357,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000198.html" title="NM000198 — eeg dataset, 13 subjects">NM000198</a></td>
       <td>Treder2015_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11374,7 +11374,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000199.html" title="NM000199 — eeg dataset, 13 subjects">NM000199</a></td>
       <td>Hubner2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11391,7 +11391,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000200.html" title="NM000200 — eeg dataset, 13 subjects">NM000200</a></td>
       <td>Mainsah2025_BigP3BCI_I</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11408,7 +11408,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000201.html" title="NM000201 — eeg dataset, 24 subjects">NM000201</a></td>
       <td>Lee2021_ERP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11425,7 +11425,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000202.html" title="NM000202 — eeg dataset, 25 subjects">NM000202</a></td>
       <td></td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11442,7 +11442,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000203.html" title="NM000203 — eeg dataset, 13 subjects">NM000203</a></td>
       <td></td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11459,7 +11459,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000204.html" title="NM000204 — eeg dataset, 14 subjects">NM000204</a></td>
       <td>Lee2024_Bluetooth_speaker_14</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11476,7 +11476,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000205.html" title="NM000205 — eeg dataset, 14 subjects">NM000205</a></td>
       <td>Zheng2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11493,7 +11493,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000206.html" title="NM000206 — eeg dataset, 15 subjects">NM000206</a></td>
       <td>Hinss2021_Neuroergonomic</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11510,7 +11510,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000207.html" title="NM000207 — eeg dataset, 15 subjects">NM000207</a></td>
       <td>Kojima2024B_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11527,7 +11527,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000208.html" title="NM000208 — eeg dataset, 14 subjects">NM000208</a></td>
       <td>Lee2024_Door_lock_control</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11544,7 +11544,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000209.html" title="NM000209 — eeg dataset, 25 subjects">NM000209</a></td>
       <td>Forenzo2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11561,7 +11561,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000210.html" title="NM000210 — eeg dataset, 15 subjects">NM000210</a></td>
       <td>Simoes2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="development" data-tag-label="Development" title="Pathology: Development" aria-label="Pathology: Development">Development</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11578,7 +11578,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000211.html" title="NM000211 — eeg dataset, 15 subjects">NM000211</a></td>
       <td>Zhang2025_RSVP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11595,7 +11595,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000212.html" title="NM000212 — eeg dataset, 16 subjects">NM000212</a></td>
       <td>Schaeff2015</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11612,7 +11612,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000213.html" title="NM000213 — eeg dataset, 30 subjects">NM000213</a></td>
       <td>Lee2024_Television_control_30</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11629,7 +11629,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000214.html" title="NM000214 — eeg dataset, 30 subjects">NM000214</a></td>
       <td>Thielen2021</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11646,7 +11646,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000215.html" title="NM000215 — eeg dataset, 38 subjects">NM000215</a></td>
       <td>Korczowski2014_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11663,7 +11663,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000216.html" title="NM000216 — eeg dataset, 43 subjects">NM000216</a></td>
       <td>Korczowski2015_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11680,7 +11680,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000217.html" title="NM000217 — eeg dataset, 44 subjects">NM000217</a></td>
       <td>Korczowski2015_P300_BI2015b</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11697,7 +11697,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000218.html" title="NM000218 — eeg dataset, 16 subjects">NM000218</a></td>
       <td>Mainsah2025_BigP3BCI_H</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11714,7 +11714,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000219.html" title="NM000219 — eeg dataset, 18 subjects">NM000219</a></td>
       <td>Reichert2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11731,7 +11731,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000221.html" title="NM000221 — eeg dataset, 19 subjects">NM000221</a></td>
       <td>Cattan2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="resting-state" data-tag-label="Resting State" title="Modality: Resting State" aria-label="Modality: Resting State">Resting State</span></td>
@@ -11748,7 +11748,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000222.html" title="NM000222 — eeg dataset, 10 subjects">NM000222</a></td>
       <td>Lee2024_Air_conditioner_control</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11765,7 +11765,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000223.html" title="NM000223 — eeg dataset, 15 subjects">NM000223</a></td>
       <td>Lee2024_Electric_light_control</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11782,7 +11782,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000225.html" title="NM000225 — eeg dataset, 1983 subjects">NM000225</a></td>
       <td>Ghassemi2018</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11799,7 +11799,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000226.html" title="NM000226 — eeg dataset, 4 subjects">NM000226</a></td>
       <td>Zhou2016_226</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11816,7 +11816,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000227.html" title="NM000227 — eeg dataset, 31 subjects">NM000227</a></td>
       <td>GuttmannFlury2025_Eye</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11833,7 +11833,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000228.html" title="NM000228 — eeg dataset, 356 subjects">NM000228</a></td>
       <td>Nieuwland2018</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11850,7 +11850,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000229.html" title="NM000229 — meg dataset, 27 subjects">NM000229</a></td>
       <td>Gwilliams2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="meg" data-tag-label="meg" title="Recording: MEG" aria-label="Recording: MEG">MEG</span></td>
       <td></td>
       <td></td>
@@ -11867,7 +11867,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000230.html" title="NM000230 — eeg dataset, 30 subjects">NM000230</a></td>
       <td>Zuo2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11884,7 +11884,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000231.html" title="NM000231 — eeg dataset, 8 subjects">NM000231</a></td>
       <td>Hoffmann2008</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11901,7 +11901,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000232.html" title="NM000232 — eeg dataset, 10 subjects">NM000232</a></td>
       <td>Gifford2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -11918,7 +11918,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000234.html" title="NM000234 — eeg dataset, 21 subjects">NM000234</a></td>
       <td>Schreuder2015_ERP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -11935,7 +11935,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000235.html" title="NM000235 — eeg dataset, 31 subjects">NM000235</a></td>
       <td>GuttmannFlury2025_Eye_BCI</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11952,7 +11952,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000236.html" title="NM000236 — eeg dataset, 21 subjects">NM000236</a></td>
       <td>Cattan2019_P300</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -11969,7 +11969,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000237.html" title="NM000237 — eeg dataset, 20 subjects">NM000237</a></td>
       <td>Zhou2021</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12003,7 +12003,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000239.html" title="NM000239 — eeg dataset, 16 subjects">NM000239</a></td>
       <td>MartinezCagigal2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12020,7 +12020,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000240.html" title="NM000240 — eeg dataset, 16 subjects">NM000240</a></td>
       <td>FernandezRodriguez2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12037,7 +12037,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000241.html" title="NM000241 — ieeg dataset, 2 subjects">NM000241</a></td>
       <td>Zhang2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -12054,7 +12054,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000242.html" title="NM000242 — eeg dataset, 22 subjects">NM000242</a></td>
       <td>Gao2026_Visual_imagery_et</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12071,7 +12071,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000243.html" title="NM000243 — eeg dataset, 15 subjects">NM000243</a></td>
       <td>Haufe2016</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12088,7 +12088,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000244.html" title="NM000244 — eeg dataset, 64 subjects">NM000244</a></td>
       <td>Korczowski2014_P300_BI2014a</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12105,7 +12105,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000245.html" title="NM000245 — eeg dataset, 52 subjects">NM000245</a></td>
       <td>Cho2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12122,7 +12122,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000246.html" title="NM000246 — eeg dataset, 51 subjects">NM000246</a></td>
       <td>Yang2025_Multi</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12139,7 +12139,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000247.html" title="NM000247 — eeg dataset, 10 subjects">NM000247</a></td>
       <td>Mainsah2025_BigP3BCI_S1</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12156,7 +12156,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000248.html" title="NM000248 — eeg dataset, 11 subjects">NM000248</a></td>
       <td>Mainsah2025_BigP3BCI_L</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12173,7 +12173,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000249.html" title="NM000249 — eeg dataset, 13 subjects">NM000249</a></td>
       <td>Jao2022</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12190,7 +12190,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000250.html" title="NM000250 — eeg dataset, 87 subjects">NM000250</a></td>
       <td>Dreyer2023</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12207,7 +12207,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000251.html" title="NM000251 — ieeg dataset, 1 subjects">NM000251</a></td>
       <td>He2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -12224,7 +12224,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000253.html" title="NM000253 — ieeg dataset, 10 subjects">NM000253</a></td>
       <td>Wang2024_et_al_Brain</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="ieeg" data-tag-label="ieeg" title="Recording: iEEG" aria-label="Recording: iEEG">iEEG</span></td>
       <td></td>
       <td></td>
@@ -12241,7 +12241,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000254.html" title="NM000254 — eeg dataset, 22 subjects">NM000254</a></td>
       <td>Telesford2024</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12258,7 +12258,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000255.html" title="NM000255 — eeg dataset, 30 subjects">NM000255</a></td>
       <td>Madsen2024_E2</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12275,7 +12275,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000256.html" title="NM000256 — eeg dataset, 29 subjects">NM000256</a></td>
       <td>Madsen2024_E3</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12292,7 +12292,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000259.html" title="NM000259 — eeg dataset, 10 subjects">NM000259</a></td>
       <td>Speier2017</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12309,7 +12309,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000260.html" title="NM000260 — eeg dataset, 23 subjects">NM000260</a></td>
       <td>BrainInvaders2012</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12326,7 +12326,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000264.html" title="NM000264 — eeg dataset, 24 subjects">NM000264</a></td>
       <td>BrainInvaders2013</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12343,7 +12343,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000265.html" title="NM000265 — eeg dataset, 31 subjects">NM000265</a></td>
       <td>GuttmannFlury2025_MI</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12360,7 +12360,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000266.html" title="NM000266 — eeg dataset, 13 subjects">NM000266</a></td>
       <td>Sosulski2019</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -12377,7 +12377,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000267.html" title="NM000267 — eeg dataset, 29 subjects">NM000267</a></td>
       <td>Shin2017_Shin2017A</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12394,7 +12394,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000268.html" title="NM000268 — eeg dataset, 29 subjects">NM000268</a></td>
       <td>Shin2017_Shin2017B</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12411,7 +12411,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000270.html" title="NM000270 — eeg dataset, 27 subjects">NM000270</a></td>
       <td>Liu2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td></td>
@@ -12428,7 +12428,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000271.html" title="NM000271 — eeg dataset, 28 subjects">NM000271</a></td>
       <td>Chang2025_2</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12445,7 +12445,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000272.html" title="NM000272 — eeg dataset, 22 subjects">NM000272</a></td>
       <td>Romani2025_BF_ERP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12462,7 +12462,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000277.html" title="NM000277 — eeg dataset, 20 subjects">NM000277</a></td>
       <td>Mainsah2025_G</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12479,7 +12479,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000301.html" title="NM000301 — eeg dataset, 17 subjects">NM000301</a></td>
       <td>Mainsah2025_D</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12496,7 +12496,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000303.html" title="NM000303 — eeg dataset, 18 subjects">NM000303</a></td>
       <td>Mainsah2025_O</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12513,7 +12513,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000310.html" title="NM000310 — eeg dataset, 11 subjects">NM000310</a></td>
       <td>GuttmannFlury2025_SSVEP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12547,7 +12547,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000313.html" title="NM000313 — eeg dataset, 24 subjects">NM000313</a></td>
       <td>Mainsah2025_S2</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12564,7 +12564,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000321.html" title="NM000321 — eeg dataset, 36 subjects">NM000321</a></td>
       <td>Mainsah2025_Q</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12581,7 +12581,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000323.html" title="NM000323 — eeg dataset, 54 subjects">NM000323</a></td>
       <td>Lee2019_ERP</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12598,7 +12598,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000326.html" title="NM000326 — eeg dataset, 19 subjects">NM000326</a></td>
       <td>Mainsah2025_C</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12615,7 +12615,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000329.html" title="NM000329 — eeg dataset, 16 subjects">NM000329</a></td>
       <td>Brandl2020</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -12632,7 +12632,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000336.html" title="NM000336 — eeg dataset, 20 subjects">NM000336</a></td>
       <td>Mainsah2025_R</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12649,7 +12649,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000338.html" title="NM000338 — eeg dataset, 54 subjects">NM000338</a></td>
       <td>Lee2019_MI</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12666,7 +12666,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000339.html" title="NM000339 — eeg dataset, 62 subjects">NM000339</a></td>
       <td>Stieger2021</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12683,7 +12683,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000340.html" title="NM000340 — eeg dataset, 20 subjects">NM000340</a></td>
       <td>Mainsah2025_J</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12700,7 +12700,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000341.html" title="NM000341 — eeg dataset, 12 subjects">NM000341</a></td>
       <td>Cattan2019_PHMD</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="auditory" data-tag-label="Auditory" title="Modality: Auditory" aria-label="Modality: Auditory">Auditory</span></td>
@@ -12717,7 +12717,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000342.html" title="NM000342 — eeg dataset, 12 subjects">NM000342</a></td>
       <td>Castillos2023_CastillosCVEP40</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12734,7 +12734,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000343.html" title="NM000343 — eeg dataset, 15 subjects">NM000343</a></td>
       <td>Hinss2021</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12751,7 +12751,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000344.html" title="NM000344 — eeg dataset, 12 subjects">NM000344</a></td>
       <td>Castillos2023_CastillosBurstVEP100</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12768,7 +12768,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000345.html" title="NM000345 — eeg dataset, 12 subjects">NM000345</a></td>
       <td>Castillos2023_CastillosBurstVEP40</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12785,7 +12785,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000346.html" title="NM000346 — eeg dataset, 12 subjects">NM000346</a></td>
       <td>Castillos2023_CastillosCVEP100</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12802,7 +12802,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000347.html" title="NM000347 — eeg dataset, 37 subjects">NM000347</a></td>
       <td>HefmiIch2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="multisensory" data-tag-label="Multisensory" title="Modality: Multisensory" aria-label="Modality: Multisensory">Multisensory</span></td>
@@ -12819,7 +12819,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000348.html" title="NM000348 — eeg dataset, 51 subjects">NM000348</a></td>
       <td>Yang2025</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="healthy" data-tag-label="Healthy" title="Pathology: Healthy" aria-label="Pathology: Healthy">Healthy</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>
@@ -12836,7 +12836,7 @@ which contributes BIDS-formatted M/EEG datasets to the catalog.
       <td><a href="/api/dataset/eegdash.dataset.NM000351.html" title="NM000351 — eeg dataset, 19 subjects">NM000351</a></td>
       <td>Mainsah2025_P</td>
       <td></td>
-      <td>openneuro</td>
+      <td>nemar</td>
       <td><span class="tag tag-kind-dataset-record-modality" data-tag-kind="dataset-record-modality" data-tag-value="eeg" data-tag-label="EEG" title="Recording: EEG" aria-label="Recording: EEG">EEG</span></td>
       <td><span class="tag tag-kind-dataset-pathology" data-tag-kind="dataset-pathology" data-tag-value="other" data-tag-label="Other" title="Pathology: Other" aria-label="Pathology: Other">Other</span></td>
       <td><span class="tag tag-kind-dataset-modality" data-tag-kind="dataset-modality" data-tag-value="visual" data-tag-label="Visual" title="Modality: Visual" aria-label="Modality: Visual">Visual</span></td>

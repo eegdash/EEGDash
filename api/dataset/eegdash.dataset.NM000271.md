@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Wenwen Chang, Weixuan Kong, Guanghui Yan, Renjie Lv, Kaiyue Du, Muhammad Tariq Sadiq, Bin Guo, Rong Yin, Xuan Liu (—). *Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University)*. [10.1038/s41597-025-06147-6](https://doi.org/10.1038/s41597-025-06147-6)
 
-Modality: eeg Subjects: 28 Recordings: 113 License: CC-BY-4.0 Source: openneuro
+Modality: eeg Subjects: 28 Recordings: 113 License: CC-BY-4.0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -125,7 +125,7 @@ No README content is available for this dataset.
 - License: CC-BY-4.0
 - DOI: doi:10.1038/s41597-025-06147-6
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000271](https://openneuro.org/datasets/nm000271)
 - NeMAR: [nm000271](https://nemar.org/dataexplorer/detail?dataset_id=nm000271)
 
@@ -154,7 +154,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University)
 
 * **Study:**
-  `nm000271` (OpenNeuro)
+  `nm000271` (NeMAR)
 * **Author (year):**
   `Chang2025_2`
 * **Canonical:**

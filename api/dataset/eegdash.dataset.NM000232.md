@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy (2022). *THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition*. [10.17605/OSF.IO/3JK45](https://doi.org/10.17605/OSF.IO/3JK45)
 
-Modality: eeg Subjects: 10 Recordings: 638 License: CC-BY 4.0 Source: openneuro
+Modality: eeg Subjects: 10 Recordings: 638 License: CC-BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -224,7 +224,7 @@ OSF:  [https://osf.io/3jk45/](https://osf.io/3jk45/)
 - License: CC-BY 4.0
 - DOI: doi:10.17605/OSF.IO/3JK45
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000232](https://openneuro.org/datasets/nm000232)
 - NeMAR: [nm000232](https://nemar.org/dataexplorer/detail?dataset_id=nm000232)
 
@@ -253,7 +253,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition
 
 * **Study:**
-  `nm000232` (OpenNeuro)
+  `nm000232` (NeMAR)
 * **Author (year):**
   `Gifford2019`
 * **Canonical:**

@@ -142,13 +142,13 @@ References:
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 112 sensors — 112 channels</summary>
+  <summary>Electrode layout — iEEG · 88 sensors — 88 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=6fee0c7f7f72c94a&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=489bd44bc5cb7291&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 112 sensors"
+    title="Topomap of iEEG · 88 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

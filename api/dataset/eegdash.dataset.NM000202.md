@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** G.F.P. Van Veen, A. Barachant, A. Andreev, G. Cattan, P. Rodrigues, M. Congedo (2019). *P300 dataset BI2012 from a “Brain Invaders” experiment*.
 
-Modality: eeg Subjects: 25 Recordings: 25 License: CC-BY-4.0 Source: openneuro
+Modality: eeg Subjects: 25 Recordings: 25 License: CC-BY-4.0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -275,7 +275,7 @@ https://github.com/NeuroTechX/moabb
 - License: CC-BY-4.0
 - DOI: —
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000202](https://openneuro.org/datasets/nm000202)
 - NeMAR: [nm000202](https://nemar.org/dataexplorer/detail?dataset_id=nm000202)
 
@@ -304,7 +304,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2012 from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000202` (OpenNeuro)
+  `nm000202` (NeMAR)
 * **Author (year):**
   `nan`
 * **Canonical:**

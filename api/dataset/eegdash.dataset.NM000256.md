@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Jens Madsen, Nikhil Kuppa, Lucas Parra (—). *The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 3*.
 
-Modality: eeg Subjects: 29 Recordings: 332 License: CC BY 4.0 Source: openneuro
+Modality: eeg Subjects: 29 Recordings: 332 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -233,7 +233,7 @@ The table below is a breakdown on the total minutes of raw data available for ea
 - License: CC BY 4.0
 - DOI: —
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000256](https://openneuro.org/datasets/nm000256)
 - NeMAR: [nm000256](https://nemar.org/dataexplorer/detail?dataset_id=nm000256)
 
@@ -262,7 +262,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 3
 
 * **Study:**
-  `nm000256` (OpenNeuro)
+  `nm000256` (NeMAR)
 * **Author (year):**
   `Madsen2024_E3`
 * **Canonical:**

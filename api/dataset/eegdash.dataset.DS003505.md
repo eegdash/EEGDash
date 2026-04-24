@@ -142,7 +142,7 @@ All code supporting the dataset can be found in the `code/` folder.
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 128 sensors — 128 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=92a0ad436ba1372a&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=70fea3a8b284b6d5&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

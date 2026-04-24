@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Tianyu He, Mingyi Wei, Ruicong Wang, Renzhi Wang, Shiwei Du, Siqi Cai, Wei Tao, Haizhou Li (2019). *He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language*. [10.1038/s41597-025-04741-2](https://doi.org/10.1038/s41597-025-04741-2)
 
-Modality: ieeg Subjects: 1 Recordings: 6 License: CC BY 4.0 Source: openneuro
+Modality: ieeg Subjects: 1 Recordings: 6 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -128,7 +128,7 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - License: CC BY 4.0
 - DOI: doi:10.1038/s41597-025-04741-2
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000251](https://openneuro.org/datasets/nm000251)
 - NeMAR: [nm000251](https://nemar.org/dataexplorer/detail?dataset_id=nm000251)
 
@@ -149,7 +149,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language
 
 * **Study:**
-  `nm000251` (OpenNeuro)
+  `nm000251` (NeMAR)
 * **Author (year):**
   `He2025`
 * **Canonical:**

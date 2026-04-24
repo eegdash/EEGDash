@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Jonathan R. Brennan, John T. Hale (2019). *Brennan2019: EEG during Alice in Wonderland Listening*. [10.1371/journal.pone.0207741](https://doi.org/10.1371/journal.pone.0207741)
 
-Modality: eeg Subjects: 45 Recordings: 45 License: CC BY 4.0 Source: openneuro
+Modality: eeg Subjects: 45 Recordings: 45 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -165,7 +165,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: CC BY 4.0
 - DOI: doi:10.1371/journal.pone.0207741
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000180](https://openneuro.org/datasets/nm000180)
 - NeMAR: [nm000180](https://nemar.org/dataexplorer/detail?dataset_id=nm000180)
 
@@ -194,7 +194,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Brennan2019: EEG during Alice in Wonderland Listening
 
 * **Study:**
-  `nm000180` (OpenNeuro)
+  `nm000180` (NeMAR)
 * **Author (year):**
   `Brennan2019`
 * **Canonical:**

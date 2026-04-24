@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** E. Vaineau, A. Barachant, A. Andreev, P. Rodrigues, G. Cattan, M. Congedo (2019). *Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a)*. [10.5281/zenodo.1494163](https://doi.org/10.5281/zenodo.1494163)
 
-Modality: eeg Subjects: 24 Recordings: 292 License: CC-BY-1.0 Source: openneuro
+Modality: eeg Subjects: 24 Recordings: 292 License: CC-BY-1.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -291,7 +291,7 @@ https://github.com/NeuroTechX/moabb
 - License: CC-BY-1.0
 - DOI: doi:10.5281/zenodo.1494163
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000264](https://openneuro.org/datasets/nm000264)
 - NeMAR: [nm000264](https://nemar.org/dataexplorer/detail?dataset_id=nm000264)
 
@@ -320,7 +320,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a)
 
 * **Study:**
-  `nm000264` (OpenNeuro)
+  `nm000264` (NeMAR)
 * **Author (year):**
   `BrainInvaders2013`
 * **Canonical:**

@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Mante S. Nieuwland, Stephen Politzer-Ahles, Evelien Heyselaar, Katrien Segaert, Emily Darley, Nina Kazanina, Sarah Von Grebmer Zu Wolfsthurn, Federica Bartolozzi, Vita Kogan, Aine Ito, Diane Mézière, Dale J. Barr, Guillaume A. Rousselet, Heather J. Ferguson, Simon Busch-Moreno, Xiao Fu, Jyrki Tuomainen, Eugenia Kulakova, E. Matthew Husband, David I. Donaldson, Zdenko Kohút, Shirley-Ann Rueschemeyer, Falk Huettig (2005). *Nieuwland et al. 2018: Multi-site N400 Replication Study*. [10.7554/eLife.33468](https://doi.org/10.7554/eLife.33468)
 
-Modality: eeg Subjects: 356 Recordings: 397 License: CC-BY 4.0 Source: openneuro
+Modality: eeg Subjects: 356 Recordings: 397 License: CC-BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -268,7 +268,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: CC-BY 4.0
 - DOI: doi:10.7554/eLife.33468
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000228](https://openneuro.org/datasets/nm000228)
 - NeMAR: [nm000228](https://nemar.org/dataexplorer/detail?dataset_id=nm000228)
 
@@ -297,7 +297,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Nieuwland et al. 2018: Multi-site N400 Replication Study
 
 * **Study:**
-  `nm000228` (OpenNeuro)
+  `nm000228` (NeMAR)
 * **Author (year):**
   `Nieuwland2018`
 * **Canonical:**

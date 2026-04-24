@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Robert Luke, Eric Larson, Alexandre Gramfort, Macquarie University (—). *fNIRS Finger Tapping*.
 
-Modality: fnirs Subjects: 5 Recordings: 5 License: CC0 Source: openneuro
+Modality: fnirs Subjects: 5 Recordings: 5 License: CC0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -154,7 +154,7 @@ Branches `00` and `01` are only included for interested researchers. To generate
 - License: CC0
 - DOI: —
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000175](https://openneuro.org/datasets/nm000175)
 - NeMAR: [nm000175](https://nemar.org/dataexplorer/detail?dataset_id=nm000175)
 
@@ -183,7 +183,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 fNIRS Finger Tapping
 
 * **Study:**
-  `nm000175` (OpenNeuro)
+  `nm000175` (NeMAR)
 * **Author (year):**
   `Luke2024`
 * **Canonical:**

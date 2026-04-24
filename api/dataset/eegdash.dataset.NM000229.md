@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Laura Gwilliams, Graham Flick, Alec Marantz, Liina Pylkkänen, David Poeppel, Jean-Rémi King (2019). *Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing*. [10.1038/s41597-023-02752-5](https://doi.org/10.1038/s41597-023-02752-5)
 
-Modality: meg Subjects: 27 Recordings: 196 License: CC0 Source: openneuro
+Modality: meg Subjects: 27 Recordings: 196 License: CC0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -230,7 +230,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
 - License: CC0
 - DOI: doi:10.1038/s41597-023-02752-5
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000229](https://openneuro.org/datasets/nm000229)
 - NeMAR: [nm000229](https://nemar.org/dataexplorer/detail?dataset_id=nm000229)
 
@@ -251,7 +251,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing
 
 * **Study:**
-  `nm000229` (OpenNeuro)
+  `nm000229` (NeMAR)
 * **Author (year):**
   `Gwilliams2023`
 * **Canonical:**

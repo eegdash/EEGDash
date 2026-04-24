@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Yuan Liu, Zhuolan Gui, De Yan, Zhuang Wang, Ruisi Gao, Ningxin Han, Junying Chen, Jialing Wu, Dong Ming (—). *Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University)*. [10.1038/s41597-025-04618-4](https://doi.org/10.1038/s41597-025-04618-4)
 
-Modality: eeg Subjects: 27 Recordings: 110 License: CC-BY-NC-ND-4.0 Source: openneuro
+Modality: eeg Subjects: 27 Recordings: 110 License: CC-BY-NC-ND-4.0 Source: nemar
 
 Metadata: Complete (90%)
 
@@ -125,7 +125,7 @@ No README content is available for this dataset.
 - License: CC-BY-NC-ND-4.0
 - DOI: doi:10.1038/s41597-025-04618-4
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000270](https://openneuro.org/datasets/nm000270)
 - NeMAR: [nm000270](https://nemar.org/dataexplorer/detail?dataset_id=nm000270)
 
@@ -154,7 +154,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University)
 
 * **Study:**
-  `nm000270` (OpenNeuro)
+  `nm000270` (NeMAR)
 * **Author (year):**
   `Liu2025`
 * **Canonical:**

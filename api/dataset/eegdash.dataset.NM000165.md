@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda, Dario Farina (20). *MUniverse Grison et al 2025*. [https://doi.org/10.7910/DVN/ID1WNQ](https://doi.org/https://doi.org/10.7910/DVN/ID1WNQ)
 
-Modality: emg Subjects: 1 Recordings: 10 License: CC0 BY 4.0 Source: openneuro
+Modality: emg Subjects: 1 Recordings: 10 License: CC0 BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -182,7 +182,7 @@ See *dataset_description.json* for further details.
 - License: CC0 BY 4.0
 - DOI: [https://doi.org/10.7910/DVN/ID1WNQ](https://doi.org/10.7910/DVN/ID1WNQ)
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000165](https://openneuro.org/datasets/nm000165)
 - NeMAR: [nm000165](https://nemar.org/dataexplorer/detail?dataset_id=nm000165)
 
@@ -203,7 +203,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Grison et al 2025
 
 * **Study:**
-  `nm000165` (OpenNeuro)
+  `nm000165` (NeMAR)
 * **Author (year):**
   `Grison2025`
 * **Canonical:**

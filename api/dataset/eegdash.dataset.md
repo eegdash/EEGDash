@@ -42936,7 +42936,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Nakanishi2015 – SSVEP Nakanishi 2015 dataset
 
 * **Study:**
-  `nm000118` (OpenNeuro)
+  `nm000118` (NeMAR)
 * **Author (year):**
   `Nakanishi2015`
 * **Canonical:**
@@ -43006,7 +43006,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 1 dataset
 
 * **Study:**
-  `nm000119` (OpenNeuro)
+  `nm000119` (NeMAR)
 * **Author (year):**
   `Oikonomou2016_MAMEM1`
 * **Canonical:**
@@ -43076,7 +43076,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 2 dataset
 
 * **Study:**
-  `nm000120` (OpenNeuro)
+  `nm000120` (NeMAR)
 * **Author (year):**
   `Oikonomou2016_MAMEM2`
 * **Canonical:**
@@ -43146,7 +43146,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Oikonomou2016 – SSVEP MAMEM 3 dataset
 
 * **Study:**
-  `nm000121` (OpenNeuro)
+  `nm000121` (NeMAR)
 * **Author (year):**
   `Oikonomou2016_MAMEM3`
 * **Canonical:**
@@ -43216,7 +43216,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Chen2017 – Single-flicker online SSVEP BCI dataset
 
 * **Study:**
-  `nm000122` (OpenNeuro)
+  `nm000122` (NeMAR)
 * **Author (year):**
   `Chen2017`
 * **Canonical:**
@@ -43286,7 +43286,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kalunga2016 – SSVEP Exo dataset
 
 * **Study:**
-  `nm000123` (OpenNeuro)
+  `nm000123` (NeMAR)
 * **Author (year):**
   `Kalunga2016`
 * **Canonical:**
@@ -43356,7 +43356,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Han2024 – SSVEP fatigue dataset with two frequency paradigms
 
 * **Study:**
-  `nm000124` (OpenNeuro)
+  `nm000124` (NeMAR)
 * **Author (year):**
   `Han2024`
 * **Canonical:**
@@ -43426,7 +43426,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lee2021 – SSVEP paradigm of the Mobile BCI dataset
 
 * **Study:**
-  `nm000125` (OpenNeuro)
+  `nm000125` (NeMAR)
 * **Author (year):**
   `Lee2021_SSVEP`
 * **Canonical:**
@@ -43496,7 +43496,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang2016 – SSVEP Wang 2016 dataset
 
 * **Study:**
-  `nm000126` (OpenNeuro)
+  `nm000126` (NeMAR)
 * **Author (year):**
   `Wang2016`
 * **Canonical:**
@@ -43566,7 +43566,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kim2025 – 40-class beta-range SSVEP speller dataset
 
 * **Study:**
-  `nm000127` (OpenNeuro)
+  `nm000127` (NeMAR)
 * **Author (year):**
   `Kim2025_SSVEP`
 * **Canonical:**
@@ -43636,7 +43636,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Dong2023 – 59-subject 40-class SSVEP dataset
 
 * **Study:**
-  `nm000128` (OpenNeuro)
+  `nm000128` (NeMAR)
 * **Author (year):**
   `Dong2023`
 * **Canonical:**
@@ -43706,7 +43706,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu2020 – BETA SSVEP benchmark dataset
 
 * **Study:**
-  `nm000129` (OpenNeuro)
+  `nm000129` (NeMAR)
 * **Author (year):**
   `Liu2020`
 * **Canonical:**
@@ -43776,7 +43776,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu2022 – eldBETA SSVEP benchmark dataset for elderly population
 
 * **Study:**
-  `nm000130` (OpenNeuro)
+  `nm000130` (NeMAR)
 * **Author (year):**
   `Liu2022`
 * **Canonical:**
@@ -43846,7 +43846,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang2021 – Combined SSVEP dataset with single stimulus location for two inputs
 
 * **Study:**
-  `nm000131` (OpenNeuro)
+  `nm000131` (NeMAR)
 * **Author (year):**
   `Wang2021`
 * **Canonical:**
@@ -44839,7 +44839,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Munich Motor Imagery dataset
 
 * **Study:**
-  `nm000145` (OpenNeuro)
+  `nm000145` (NeMAR)
 * **Author (year):**
   `GrosseWentrup2009`
 * **Canonical:**
@@ -44909,7 +44909,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery dataset from Weibo et al 2014
 
 * **Study:**
-  `nm000146` (OpenNeuro)
+  `nm000146` (NeMAR)
 * **Author (year):**
   `Yi2014`
 * **Canonical:**
@@ -45050,7 +45050,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery BCI dataset with pupillometry augmentation
 
 * **Study:**
-  `nm000148` (OpenNeuro)
+  `nm000148` (NeMAR)
 * **Author (year):**
   `Rozado2015`
 * **Canonical:**
@@ -45120,7 +45120,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2019-001 Motor Imagery dataset for Spinal Cord Injury patients
 
 * **Study:**
-  `nm000149` (OpenNeuro)
+  `nm000149` (NeMAR)
 * **Author (year):**
   `Ofner2019`
 * **Canonical:**
@@ -45331,7 +45331,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Upper-limb elbow-centered motor imagery dataset (10 classes)
 
 * **Study:**
-  `nm000152` (OpenNeuro)
+  `nm000152` (NeMAR)
 * **Author (year):**
   `Zhang2017`
 * **Canonical:**
@@ -45401,7 +45401,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Caillet et al 2023
 
 * **Study:**
-  `nm000155` (OpenNeuro)
+  `nm000155` (NeMAR)
 * **Author (year):**
   `Caillet2023`
 * **Canonical:**
@@ -45472,7 +45472,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Hybrid EEG-fNIRS MI dataset for ICH from Shi et al 2025
 
 * **Study:**
-  `nm000156` (OpenNeuro)
+  `nm000156` (NeMAR)
 * **Author (year):**
   `nan`
 * **Canonical:**
@@ -45542,7 +45542,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah2025-B
 
 * **Study:**
-  `nm000157` (OpenNeuro)
+  `nm000157` (NeMAR)
 * **Author (year):**
   `Mainsah2025`
 * **Canonical:**
@@ -45613,7 +45613,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu, Lv et al. 2023 — EEG datasets of stroke patients (motor imagery)
 
 * **Study:**
-  `nm000158` (OpenNeuro)
+  `nm000158` (NeMAR)
 * **Author (year):**
   `Liu2024`
 * **Canonical:**
@@ -45683,7 +45683,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Avrillon et al 2024
 
 * **Study:**
-  `nm000159` (OpenNeuro)
+  `nm000159` (NeMAR)
 * **Author (year):**
   `Avrillon2024`
 * **Canonical:**
@@ -45754,7 +45754,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Multi-joint upper-limb MI dataset from Yi et al. 2025
 
 * **Study:**
-  `nm000160` (OpenNeuro)
+  `nm000160` (NeMAR)
 * **Author (year):**
   `Yi2025`
 * **Canonical:**
@@ -45824,7 +45824,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2024-001 Handwritten Character Classification dataset
 
 * **Study:**
-  `nm000161` (OpenNeuro)
+  `nm000161` (NeMAR)
 * **Author (year):**
   `Crell2024`
 * **Canonical:**
@@ -45894,7 +45894,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2025-001 Motor Kinematics Reaching dataset
 
 * **Study:**
-  `nm000162` (OpenNeuro)
+  `nm000162` (NeMAR)
 * **Author (year):**
   `Srisrisawang2025`
 * **Canonical:**
@@ -45964,7 +45964,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP and Burst-VEP dataset from Castillos et al. (2023)
 
 * **Study:**
-  `nm000163` (OpenNeuro)
+  `nm000163` (NeMAR)
 * **Author (year):**
   `Castillos2023_VEP`
 * **Canonical:**
@@ -46034,7 +46034,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Grison et al 2025
 
 * **Study:**
-  `nm000165` (OpenNeuro)
+  `nm000165` (NeMAR)
 * **Author (year):**
   `Grison2025`
 * **Canonical:**
@@ -46105,7 +46105,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 M3CV: Multi-subject, Multi-session, Multi-task EEG Database
 
 * **Study:**
-  `nm000166` (OpenNeuro)
+  `nm000166` (NeMAR)
 * **Author (year):**
   `Huang2018`
 * **Canonical:**
@@ -46176,7 +46176,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery dataset from Ma et al. 2020
 
 * **Study:**
-  `nm000167` (OpenNeuro)
+  `nm000167` (NeMAR)
 * **Author (year):**
   `Ma2020`
 * **Canonical:**
@@ -46246,7 +46246,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-013 Error-Related Potentials dataset
 
 * **Study:**
-  `nm000168` (OpenNeuro)
+  `nm000168` (NeMAR)
 * **Author (year):**
   `Chavarriaga2015`
 * **Canonical:**
@@ -46316,7 +46316,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-008 P300 dataset (ALS patients)
 
 * **Study:**
-  `nm000169` (OpenNeuro)
+  `nm000169` (NeMAR)
 * **Author (year):**
   `Riccio2014`
 * **Canonical:**
@@ -46386,7 +46386,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2025-002 Continuous 2D Trajectory Decoding dataset
 
 * **Study:**
-  `nm000170` (OpenNeuro)
+  `nm000170` (NeMAR)
 * **Author (year):**
   `Pulferer2025`
 * **Canonical:**
@@ -46456,7 +46456,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-002 Motor Imagery dataset
 
 * **Study:**
-  `nm000171` (OpenNeuro)
+  `nm000171` (NeMAR)
 * **Author (year):**
   `Steyrl2014`
 * **Canonical:**
@@ -46526,7 +46526,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 High-gamma dataset described in Schirrmeister et al. 2017
 
 * **Study:**
-  `nm000172` (OpenNeuro)
+  `nm000172` (NeMAR)
 * **Author (year):**
   `Schirrmeister2017`
 * **Canonical:**
@@ -46596,7 +46596,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery ataset from Ofner et al 2017
 
 * **Study:**
-  `nm000173` (OpenNeuro)
+  `nm000173` (NeMAR)
 * **Author (year):**
   `Ofner2017`
 * **Canonical:**
@@ -46666,7 +46666,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 fNIRS Finger Tapping
 
 * **Study:**
-  `nm000175` (OpenNeuro)
+  `nm000175` (NeMAR)
 * **Author (year):**
   `Luke2024`
 * **Canonical:**
@@ -46736,7 +46736,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study K — 9x8 adaptive/checkerboard, 2 sessions (5 healthy subjects)
 
 * **Study:**
-  `nm000176` (OpenNeuro)
+  `nm000176` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI`
 * **Canonical:**
@@ -46806,7 +46806,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State)
 
 * **Study:**
-  `nm000179` (OpenNeuro)
+  `nm000179` (NeMAR)
 * **Author (year):**
   `Babayan2018`
 * **Canonical:**
@@ -46877,7 +46877,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Brennan2019: EEG during Alice in Wonderland Listening
 
 * **Study:**
-  `nm000180` (OpenNeuro)
+  `nm000180` (NeMAR)
 * **Author (year):**
   `Brennan2019`
 * **Canonical:**
@@ -46948,7 +46948,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 NMT: Neurodiagnostic Montage Template Scalp EEG
 
 * **Study:**
-  `nm000181` (OpenNeuro)
+  `nm000181` (NeMAR)
 * **Author (year):**
   `Khan2019`
 * **Canonical:**
@@ -47019,7 +47019,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Sleep-EDF Expanded: Whole-Night PSG Recordings
 
 * **Study:**
-  `nm000185` (OpenNeuro)
+  `nm000185` (NeMAR)
 * **Author (year):**
   `Kemp2000`
 * **Canonical:**
@@ -47090,7 +47090,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study E — 6x6 checkerboard (8 healthy subjects)
 
 * **Study:**
-  `nm000186` (OpenNeuro)
+  `nm000186` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_E`
 * **Canonical:**
@@ -47160,7 +47160,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study N — 9x8 dry/wet electrode comparison (8 ALS subjects)
 
 * **Study:**
-  `nm000187` (OpenNeuro)
+  `nm000187` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_N`
 * **Canonical:**
@@ -47230,7 +47230,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2014-009 P300 dataset
 
 * **Study:**
-  `nm000188` (OpenNeuro)
+  `nm000188` (NeMAR)
 * **Author (year):**
   `Arico2014`
 * **Canonical:**
@@ -47300,7 +47300,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-003 P300 dataset
 
 * **Study:**
-  `nm000189` (OpenNeuro)
+  `nm000189` (NeMAR)
 * **Author (year):**
   `Schreuder2015_P300`
 * **Canonical:**
@@ -47370,7 +47370,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-012 PASS2D P300 dataset
 
 * **Study:**
-  `nm000190` (OpenNeuro)
+  `nm000190` (NeMAR)
 * **Author (year):**
   `Hohne2015`
 * **Canonical:**
@@ -47440,7 +47440,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study F — 6x6 multi-paradigm, 3 sessions (10 healthy subjects)
 
 * **Study:**
-  `nm000191` (OpenNeuro)
+  `nm000191` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_F`
 * **Canonical:**
@@ -47510,7 +47510,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-006 Music BCI dataset
 
 * **Study:**
-  `nm000192` (OpenNeuro)
+  `nm000192` (NeMAR)
 * **Author (year):**
   `Treder2015_BNCI_006_Music`
 * **Canonical:**
@@ -47580,7 +47580,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kojima et al. 2024 (Dataset A) — An auditory brain-computer interface based on selective attention to multiple tone streams
 
 * **Study:**
-  `nm000193` (OpenNeuro)
+  `nm000193` (NeMAR)
 * **Author (year):**
   `Kojima2024A_P300`
 * **Canonical:**
@@ -47650,7 +47650,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-010 RSVP P300 dataset
 
 * **Study:**
-  `nm000194` (OpenNeuro)
+  `nm000194` (NeMAR)
 * **Author (year):**
   `Acqualagna2015`
 * **Canonical:**
@@ -47720,7 +47720,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mixture of LLP and EM for a visual matrix speller (ERP) dataset from
 
 * **Study:**
-  `nm000195` (OpenNeuro)
+  `nm000195` (NeMAR)
 * **Author (year):**
   `Hubner2018`
 * **Canonical:**
@@ -47790,7 +47790,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP dataset from Thielen et al. (2015)
 
 * **Study:**
-  `nm000196` (OpenNeuro)
+  `nm000196` (NeMAR)
 * **Author (year):**
   `Thielen2015`
 * **Canonical:**
@@ -47860,7 +47860,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study M — 9x8 adaptive/checkerboard (21 ALS subjects)
 
 * **Study:**
-  `nm000197` (OpenNeuro)
+  `nm000197` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_M`
 * **Canonical:**
@@ -47930,7 +47930,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-008 Center Speller P300 dataset
 
 * **Study:**
-  `nm000198` (OpenNeuro)
+  `nm000198` (NeMAR)
 * **Author (year):**
   `Treder2015_P300`
 * **Canonical:**
@@ -48000,7 +48000,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Learning from label proportions for a visual matrix speller (ERP)
 
 * **Study:**
-  `nm000199` (OpenNeuro)
+  `nm000199` (NeMAR)
 * **Author (year):**
   `Hubner2017`
 * **Canonical:**
@@ -48070,7 +48070,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study I — 9x8 checkerboard/performance-based (13 healthy subjects)
 
 * **Study:**
-  `nm000200` (OpenNeuro)
+  `nm000200` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_I`
 * **Canonical:**
@@ -48140,7 +48140,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 ERP paradigm of the Mobile BCI dataset
 
 * **Study:**
-  `nm000201` (OpenNeuro)
+  `nm000201` (NeMAR)
 * **Author (year):**
   `Lee2021_ERP`
 * **Canonical:**
@@ -48210,7 +48210,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2012 from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000202` (OpenNeuro)
+  `nm000202` (NeMAR)
 * **Author (year):**
   `nan`
 * **Canonical:**
@@ -48280,7 +48280,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset from initial spot study
 
 * **Study:**
-  `nm000203` (OpenNeuro)
+  `nm000203` (NeMAR)
 * **Author (year):**
   `nan`
 * **Canonical:**
@@ -48350,7 +48350,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Bluetooth speaker experiment (14 subjects, 6 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000204` (OpenNeuro)
+  `nm000204` (NeMAR)
 * **Author (year):**
   `Lee2024_Bluetooth_speaker_14`
 * **Canonical:**
@@ -48420,7 +48420,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 RSVP collaborative BCI dataset from Zheng et al 2020
 
 * **Study:**
-  `nm000205` (OpenNeuro)
+  `nm000205` (NeMAR)
 * **Author (year):**
   `Zheng2020`
 * **Canonical:**
@@ -48490,7 +48490,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Neuroergonomic 2021 dataset
 
 * **Study:**
-  `nm000206` (OpenNeuro)
+  `nm000206` (NeMAR)
 * **Author (year):**
   `Hinss2021_Neuroergonomic`
 * **Canonical:**
@@ -48560,7 +48560,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Kojima et al. 2024 (Dataset B) — Four-class ASME BCI: investigation of the feasibility and comparison of two strategies for multiclassing
 
 * **Study:**
-  `nm000207` (OpenNeuro)
+  `nm000207` (NeMAR)
 * **Author (year):**
   `Kojima2024B_P300`
 * **Canonical:**
@@ -48630,7 +48630,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Door lock control experiment (15 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000208` (OpenNeuro)
+  `nm000208` (NeMAR)
 * **Author (year):**
   `Lee2024_Door_lock_control`
 * **Canonical:**
@@ -48700,7 +48700,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor imagery + spatial attention dataset from Forenzo & He 2023
 
 * **Study:**
-  `nm000209` (OpenNeuro)
+  `nm000209` (NeMAR)
 * **Author (year):**
   `Forenzo2023`
 * **Canonical:**
@@ -48770,7 +48770,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BCIAUT-P300 dataset for autism from Simoes et al 2020
 
 * **Study:**
-  `nm000210` (OpenNeuro)
+  `nm000210` (NeMAR)
 * **Author (year):**
   `Simoes2020`
 * **Canonical:**
@@ -48840,7 +48840,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 RSVP ERP dataset for authentication from Zhang et al 2025
 
 * **Study:**
-  `nm000211` (OpenNeuro)
+  `nm000211` (NeMAR)
 * **Author (year):**
   `Zhang2025_RSVP`
 * **Canonical:**
@@ -48910,7 +48910,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-007 Motion VEP (mVEP) Speller dataset
 
 * **Study:**
-  `nm000212` (OpenNeuro)
+  `nm000212` (NeMAR)
 * **Author (year):**
   `Schaeff2015`
 * **Canonical:**
@@ -48980,7 +48980,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Television control experiment (30 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000213` (OpenNeuro)
+  `nm000213` (NeMAR)
 * **Author (year):**
   `Lee2024_Television_control_30`
 * **Canonical:**
@@ -49050,7 +49050,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 c-VEP dataset from Thielen et al. (2021)
 
 * **Study:**
-  `nm000214` (OpenNeuro)
+  `nm000214` (NeMAR)
 * **Author (year):**
   `Thielen2021`
 * **Canonical:**
@@ -49120,7 +49120,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2014b from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000215` (OpenNeuro)
+  `nm000215` (NeMAR)
 * **Author (year):**
   `Korczowski2014_P300`
 * **Canonical:**
@@ -49190,7 +49190,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2015a from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000216` (OpenNeuro)
+  `nm000216` (NeMAR)
 * **Author (year):**
   `Korczowski2015_P300`
 * **Canonical:**
@@ -49260,7 +49260,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2015b from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000217` (OpenNeuro)
+  `nm000217` (NeMAR)
 * **Author (year):**
   `Korczowski2015_P300_BI2015b`
 * **Canonical:**
@@ -49330,7 +49330,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study H — 9x8 checkerboard with gaze conditions (16 healthy subjects)
 
 * **Study:**
-  `nm000218` (OpenNeuro)
+  `nm000218` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_H`
 * **Canonical:**
@@ -49400,7 +49400,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2020-002 Attention Shift (Covert Spatial Attention) dataset
 
 * **Study:**
-  `nm000219` (OpenNeuro)
+  `nm000219` (NeMAR)
 * **Author (year):**
   `Reichert2020`
 * **Canonical:**
@@ -49470,7 +49470,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Alphawaves dataset
 
 * **Study:**
-  `nm000221` (OpenNeuro)
+  `nm000221` (NeMAR)
 * **Author (year):**
   `Cattan2017`
 * **Canonical:**
@@ -49540,7 +49540,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Air conditioner control experiment (10 subjects, 4 classes, 25 EEG ch)
 
 * **Study:**
-  `nm000222` (OpenNeuro)
+  `nm000222` (NeMAR)
 * **Author (year):**
   `Lee2024_Air_conditioner_control`
 * **Canonical:**
@@ -49610,7 +49610,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Electric light control experiment (15 subjects, 4 classes, 31 EEG ch)
 
 * **Study:**
-  `nm000223` (OpenNeuro)
+  `nm000223` (NeMAR)
 * **Author (year):**
   `Lee2024_Electric_light_control`
 * **Canonical:**
@@ -49680,7 +49680,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training)
 
 * **Study:**
-  `nm000225` (OpenNeuro)
+  `nm000225` (NeMAR)
 * **Author (year):**
   `Ghassemi2018`
 * **Canonical:**
@@ -49751,7 +49751,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Zhou2016
 
 * **Study:**
-  `nm000226` (OpenNeuro)
+  `nm000226` (NeMAR)
 * **Author (year):**
   `Zhou2016_226`
 * **Canonical:**
@@ -49822,7 +49822,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Eye-BCI Motor Execution dataset from Guttmann-Flury et al 2025
 
 * **Study:**
-  `nm000227` (OpenNeuro)
+  `nm000227` (NeMAR)
 * **Author (year):**
   `GuttmannFlury2025_Eye`
 * **Canonical:**
@@ -49892,7 +49892,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Nieuwland et al. 2018: Multi-site N400 Replication Study
 
 * **Study:**
-  `nm000228` (OpenNeuro)
+  `nm000228` (NeMAR)
 * **Author (year):**
   `Nieuwland2018`
 * **Canonical:**
@@ -49963,7 +49963,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing
 
 * **Study:**
-  `nm000229` (OpenNeuro)
+  `nm000229` (NeMAR)
 * **Author (year):**
   `Gwilliams2023`
 * **Canonical:**
@@ -50034,7 +50034,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lower-limb MI dataset for knee pain patients from Zuo et al. 2025
 
 * **Study:**
-  `nm000230` (OpenNeuro)
+  `nm000230` (NeMAR)
 * **Author (year):**
   `Zuo2025`
 * **Canonical:**
@@ -50104,7 +50104,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset from Hoffmann et al 2008
 
 * **Study:**
-  `nm000231` (OpenNeuro)
+  `nm000231` (NeMAR)
 * **Author (year):**
   `Hoffmann2008`
 * **Canonical:**
@@ -50174,7 +50174,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition
 
 * **Study:**
-  `nm000232` (OpenNeuro)
+  `nm000232` (NeMAR)
 * **Author (year):**
   `Gifford2019`
 * **Canonical:**
@@ -50245,7 +50245,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2015-009 AMUSE (Auditory Multi-class Spatial ERP) dataset
 
 * **Study:**
-  `nm000234` (OpenNeuro)
+  `nm000234` (NeMAR)
 * **Author (year):**
   `Schreuder2015_ERP`
 * **Canonical:**
@@ -50315,7 +50315,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Eye-BCI multimodal MI/ME dataset from Guttmann-Flury et al 2025
 
 * **Study:**
-  `nm000235` (OpenNeuro)
+  `nm000235` (NeMAR)
 * **Author (year):**
   `GuttmannFlury2025_Eye_BCI`
 * **Canonical:**
@@ -50385,7 +50385,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Dataset of an EEG-based BCI experiment in Virtual Reality using P300
 
 * **Study:**
-  `nm000236` (OpenNeuro)
+  `nm000236` (NeMAR)
 * **Author (year):**
   `Cattan2019_P300`
 * **Canonical:**
@@ -50455,7 +50455,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 7-day motor imagery BCI EEG dataset from Zhou et al 2021
 
 * **Study:**
-  `nm000237` (OpenNeuro)
+  `nm000237` (NeMAR)
 * **Author (year):**
   `Zhou2021`
 * **Canonical:**
@@ -50596,7 +50596,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P-ary m-sequence-based c-VEP dataset from Martínez-Cagigal et al. (2023)
 
 * **Study:**
-  `nm000239` (OpenNeuro)
+  `nm000239` (NeMAR)
 * **Author (year):**
   `MartinezCagigal2023`
 * **Canonical:**
@@ -50666,7 +50666,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Checkerboard m-sequence-based c-VEP dataset from
 
 * **Study:**
-  `nm000240` (OpenNeuro)
+  `nm000240` (NeMAR)
 * **Author (year):**
   `FernandezRodriguez2025`
 * **Canonical:**
@@ -50736,7 +50736,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CerebroVoice: Bilingual sEEG Speech Dataset
 
 * **Study:**
-  `nm000241` (OpenNeuro)
+  `nm000241` (NeMAR)
 * **Author (year):**
   `Zhang2019`
 * **Canonical:**
@@ -50807,7 +50807,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Visual imagery EEG dataset from Gao et al 2026
 
 * **Study:**
-  `nm000242` (OpenNeuro)
+  `nm000242` (NeMAR)
 * **Author (year):**
   `Gao2026_Visual_imagery_et`
 * **Canonical:**
@@ -50877,7 +50877,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2016-002 Emergency Braking during Simulated Driving dataset
 
 * **Study:**
-  `nm000243` (OpenNeuro)
+  `nm000243` (NeMAR)
 * **Author (year):**
   `Haufe2016`
 * **Canonical:**
@@ -50947,7 +50947,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 P300 dataset BI2014a from a “Brain Invaders” experiment
 
 * **Study:**
-  `nm000244` (OpenNeuro)
+  `nm000244` (NeMAR)
 * **Author (year):**
   `Korczowski2014_P300_BI2014a`
 * **Canonical:**
@@ -51017,7 +51017,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Motor Imagery dataset from Cho et al 2017
 
 * **Study:**
-  `nm000245` (OpenNeuro)
+  `nm000245` (NeMAR)
 * **Author (year):**
   `Cho2017`
 * **Canonical:**
@@ -51087,7 +51087,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Multi-day MI-BCI dataset (WBCIC-SHU) from Yang et al 2025
 
 * **Study:**
-  `nm000246` (OpenNeuro)
+  `nm000246` (NeMAR)
 * **Author (year):**
   `Yang2025_Multi`
 * **Canonical:**
@@ -51157,7 +51157,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study S1 — 9x8 face/house paradigm (10 healthy subjects)
 
 * **Study:**
-  `nm000247` (OpenNeuro)
+  `nm000247` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_S1`
 * **Canonical:**
@@ -51227,7 +51227,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BigP3BCI Study L — 6x6 multi-paradigm (11 ALS subjects)
 
 * **Study:**
-  `nm000248` (OpenNeuro)
+  `nm000248` (NeMAR)
 * **Author (year):**
   `Mainsah2025_BigP3BCI_L`
 * **Canonical:**
@@ -51297,7 +51297,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 BNCI 2022-001 EEG Correlates of Difficulty Level dataset
 
 * **Study:**
-  `nm000249` (OpenNeuro)
+  `nm000249` (NeMAR)
 * **Author (year):**
   `Jao2022`
 * **Canonical:**
@@ -51367,7 +51367,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Dreyer et al. 2023 — A large EEG database with users’ profile information for motor imagery brain-computer interface research
 
 * **Study:**
-  `nm000250` (OpenNeuro)
+  `nm000250` (NeMAR)
 * **Author (year):**
   `Dreyer2023`
 * **Canonical:**
@@ -51437,7 +51437,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language
 
 * **Study:**
-  `nm000251` (OpenNeuro)
+  `nm000251` (NeMAR)
 * **Author (year):**
   `He2025`
 * **Canonical:**
@@ -51508,7 +51508,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli
 
 * **Study:**
-  `nm000253` (OpenNeuro)
+  `nm000253` (NeMAR)
 * **Author (year):**
   `Wang2024_et_al_Brain`
 * **Canonical:**
@@ -51579,7 +51579,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Naturalistic viewing: An open-access dataset using simultaneous EEG-fMRI
 
 * **Study:**
-  `nm000254` (OpenNeuro)
+  `nm000254` (NeMAR)
 * **Author (year):**
   `Telesford2024`
 * **Canonical:**
@@ -51649,7 +51649,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 2
 
 * **Study:**
-  `nm000255` (OpenNeuro)
+  `nm000255` (NeMAR)
 * **Author (year):**
   `Madsen2024_E2`
 * **Canonical:**
@@ -51719,7 +51719,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 3
 
 * **Study:**
-  `nm000256` (OpenNeuro)
+  `nm000256` (NeMAR)
 * **Author (year):**
   `Madsen2024_E3`
 * **Canonical:**
@@ -51789,7 +51789,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Speier et al. 2017 — A comparison of stimulus types in online classification of the P300 speller using language models
 
 * **Study:**
-  `nm000259` (OpenNeuro)
+  `nm000259` (NeMAR)
 * **Author (year):**
   `Speier2017`
 * **Canonical:**
@@ -51860,7 +51860,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012)
 
 * **Study:**
-  `nm000260` (OpenNeuro)
+  `nm000260` (NeMAR)
 * **Author (year):**
   `BrainInvaders2012`
 * **Canonical:**
@@ -51931,7 +51931,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a)
 
 * **Study:**
-  `nm000264` (OpenNeuro)
+  `nm000264` (NeMAR)
 * **Author (year):**
   `BrainInvaders2013`
 * **Canonical:**
@@ -52002,7 +52002,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Guttmann-Flury et al. 2025 (Motor Imagery) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms
 
 * **Study:**
-  `nm000265` (OpenNeuro)
+  `nm000265` (NeMAR)
 * **Author (year):**
   `GuttmannFlury2025_MI`
 * **Canonical:**
@@ -52073,7 +52073,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints
 
 * **Study:**
-  `nm000266` (OpenNeuro)
+  `nm000266` (NeMAR)
 * **Author (year):**
   `Sosulski2019`
 * **Canonical:**
@@ -52144,7 +52144,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Shin et al. 2017 (Experiment A) — Open Access Dataset for EEG+NIRS Single-Trial Classification
 
 * **Study:**
-  `nm000267` (OpenNeuro)
+  `nm000267` (NeMAR)
 * **Author (year):**
   `Shin2017_Shin2017A`
 * **Canonical:**
@@ -52215,7 +52215,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Shin et al. 2017 (Experiment B) — Open Access Dataset for EEG+NIRS Single-Trial Classification
 
 * **Study:**
-  `nm000268` (OpenNeuro)
+  `nm000268` (NeMAR)
 * **Author (year):**
   `Shin2017_Shin2017B`
 * **Canonical:**
@@ -52286,7 +52286,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University)
 
 * **Study:**
-  `nm000270` (OpenNeuro)
+  `nm000270` (NeMAR)
 * **Author (year):**
   `Liu2025`
 * **Canonical:**
@@ -52357,7 +52357,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University)
 
 * **Study:**
-  `nm000271` (OpenNeuro)
+  `nm000271` (NeMAR)
 * **Author (year):**
   `Chang2025_2`
 * **Canonical:**
@@ -52428,7 +52428,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento)
 
 * **Study:**
-  `nm000272` (OpenNeuro)
+  `nm000272` (NeMAR)
 * **Author (year):**
   `Romani2025_BF_ERP`
 * **Canonical:**
@@ -52499,7 +52499,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study G)
 
 * **Study:**
-  `nm000277` (OpenNeuro)
+  `nm000277` (NeMAR)
 * **Author (year):**
   `Mainsah2025_G`
 * **Canonical:**
@@ -52570,7 +52570,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study D)
 
 * **Study:**
-  `nm000301` (OpenNeuro)
+  `nm000301` (NeMAR)
 * **Author (year):**
   `Mainsah2025_D`
 * **Canonical:**
@@ -52641,7 +52641,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study O)
 
 * **Study:**
-  `nm000303` (OpenNeuro)
+  `nm000303` (NeMAR)
 * **Author (year):**
   `Mainsah2025_O`
 * **Canonical:**
@@ -52712,7 +52712,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Guttmann-Flury et al. 2025 (SSVEP) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms
 
 * **Study:**
-  `nm000310` (OpenNeuro)
+  `nm000310` (NeMAR)
 * **Author (year):**
   `GuttmannFlury2025_SSVEP`
 * **Canonical:**
@@ -52854,7 +52854,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study S2)
 
 * **Study:**
-  `nm000313` (OpenNeuro)
+  `nm000313` (NeMAR)
 * **Author (year):**
   `Mainsah2025_S2`
 * **Canonical:**
@@ -52925,7 +52925,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study Q)
 
 * **Study:**
-  `nm000321` (OpenNeuro)
+  `nm000321` (NeMAR)
 * **Author (year):**
   `Mainsah2025_Q`
 * **Canonical:**
@@ -52996,7 +52996,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lee et al. 2019 (ERP) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy
 
 * **Study:**
-  `nm000323` (OpenNeuro)
+  `nm000323` (NeMAR)
 * **Author (year):**
   `Lee2019_ERP`
 * **Canonical:**
@@ -53067,7 +53067,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study C)
 
 * **Study:**
-  `nm000326` (OpenNeuro)
+  `nm000326` (NeMAR)
 * **Author (year):**
   `Mainsah2025_C`
 * **Canonical:**
@@ -53138,7 +53138,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Brandl et al. 2020 — Motor Imagery Under Distraction: An Open Access BCI Dataset
 
 * **Study:**
-  `nm000329` (OpenNeuro)
+  `nm000329` (NeMAR)
 * **Author (year):**
   `Brandl2020`
 * **Canonical:**
@@ -53209,7 +53209,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study R)
 
 * **Study:**
-  `nm000336` (OpenNeuro)
+  `nm000336` (NeMAR)
 * **Author (year):**
   `Mainsah2025_R`
 * **Canonical:**
@@ -53280,7 +53280,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Lee et al. 2019 (Motor Imagery) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy
 
 * **Study:**
-  `nm000338` (OpenNeuro)
+  `nm000338` (NeMAR)
 * **Author (year):**
   `Lee2019_MI`
 * **Canonical:**
@@ -53351,7 +53351,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Stieger et al. 2021 — Continuous sensorimotor rhythm based brain computer interface learning in a large population
 
 * **Study:**
-  `nm000339` (OpenNeuro)
+  `nm000339` (NeMAR)
 * **Author (year):**
   `Stieger2021`
 * **Canonical:**
@@ -53422,7 +53422,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study J)
 
 * **Study:**
-  `nm000340` (OpenNeuro)
+  `nm000340` (NeMAR)
 * **Author (year):**
   `Mainsah2025_J`
 * **Canonical:**
@@ -53493,7 +53493,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Cattan, Rodrigues & Congedo 2019 — Passive Head-Mounted Display Music-Listening EEG dataset (PHMD)
 
 * **Study:**
-  `nm000341` (OpenNeuro)
+  `nm000341` (NeMAR)
 * **Author (year):**
   `Cattan2019_PHMD`
 * **Canonical:**
@@ -53564,7 +53564,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosCVEP40
 
 * **Study:**
-  `nm000342` (OpenNeuro)
+  `nm000342` (NeMAR)
 * **Author (year):**
   `Castillos2023_CastillosCVEP40`
 * **Canonical:**
@@ -53635,7 +53635,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Hinss et al. 2021 — Open multi-session and multi-task EEG cognitive Dataset for passive brain-computer Interface Applications
 
 * **Study:**
-  `nm000343` (OpenNeuro)
+  `nm000343` (NeMAR)
 * **Author (year):**
   `Hinss2021`
 * **Canonical:**
@@ -53706,7 +53706,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosBurstVEP100
 
 * **Study:**
-  `nm000344` (OpenNeuro)
+  `nm000344` (NeMAR)
 * **Author (year):**
   `Castillos2023_CastillosBurstVEP100`
 * **Canonical:**
@@ -53777,7 +53777,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosBurstVEP40
 
 * **Study:**
-  `nm000345` (OpenNeuro)
+  `nm000345` (NeMAR)
 * **Author (year):**
   `Castillos2023_CastillosBurstVEP40`
 * **Canonical:**
@@ -53848,7 +53848,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 CastillosCVEP100
 
 * **Study:**
-  `nm000346` (OpenNeuro)
+  `nm000346` (NeMAR)
 * **Author (year):**
   `Castillos2023_CastillosCVEP100`
 * **Canonical:**
@@ -53919,7 +53919,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Shi et al. 2025 — HEFMI-ICH: a hybrid EEG-fNIRS motor imagery dataset for brain-computer interface in intracerebral hemorrhage
 
 * **Study:**
-  `nm000347` (OpenNeuro)
+  `nm000347` (NeMAR)
 * **Author (year):**
   `HefmiIch2025`
 * **Canonical:**
@@ -53990,7 +53990,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Yang et al. 2025 — A multi-day and high-quality EEG dataset for motor imagery brain-computer interface
 
 * **Study:**
-  `nm000348` (OpenNeuro)
+  `nm000348` (NeMAR)
 * **Author (year):**
   `Yang2025`
 * **Canonical:**
@@ -54061,7 +54061,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study P)
 
 * **Study:**
-  `nm000351` (OpenNeuro)
+  `nm000351` (NeMAR)
 * **Author (year):**
   `Mainsah2025_P`
 * **Canonical:**

@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Mohammad M. Ghassemi, Benjamin E. Moody, Li-wei H. Lehman, Christopher Song, Qiao Li, Haoqi Sun, Roger G. Mark, M. Brandon Westover, Gari D. Clifford (2018). *PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training)*. [10.13026/6phb-r450](https://doi.org/10.13026/6phb-r450)
 
-Modality: eeg Subjects: 1983 Recordings: 1983 License: Open Data Commons Attribution License v1.0 Source: openneuro
+Modality: eeg Subjects: 1983 Recordings: 1983 License: Open Data Commons Attribution License v1.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -208,7 +208,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: Open Data Commons Attribution License v1.0
 - DOI: doi:10.13026/6phb-r450
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000225](https://openneuro.org/datasets/nm000225)
 - NeMAR: [nm000225](https://nemar.org/dataexplorer/detail?dataset_id=nm000225)
 
@@ -229,7 +229,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training)
 
 * **Study:**
-  `nm000225` (OpenNeuro)
+  `nm000225` (NeMAR)
 * **Author (year):**
   `Ghassemi2018`
 * **Canonical:**

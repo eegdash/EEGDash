@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Qawi K Telesford, Eduardo Gonzalez-Moreira, Ting Xu, Yiwen Tian, Stanley Colcombe, Jessica Cloud, Brian Edward Russ, Arnaud Falchier, Maximilian Nentwich, Jens Madsen, Lucas Parra, Charles Schroeder, Michael Milham, Alexandre Rosa Franco (—). *Naturalistic viewing: An open-access dataset using simultaneous EEG-fMRI*.
 
-Modality: eeg Subjects: 22 Recordings: 942 License: — Source: openneuro
+Modality: eeg Subjects: 22 Recordings: 942 License: — Source: nemar
 
 Metadata: Good (80%)
 
@@ -112,7 +112,7 @@ This dataset is comprised of neuroimaging data collected at the Nathan Kline Ins
 - License: See source
 - DOI: —
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000254](https://openneuro.org/datasets/nm000254)
 - NeMAR: [nm000254](https://nemar.org/dataexplorer/detail?dataset_id=nm000254)
 
@@ -141,7 +141,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 Naturalistic viewing: An open-access dataset using simultaneous EEG-fMRI
 
 * **Study:**
-  `nm000254` (OpenNeuro)
+  `nm000254` (NeMAR)
 * **Author (year):**
   `Telesford2024`
 * **Canonical:**

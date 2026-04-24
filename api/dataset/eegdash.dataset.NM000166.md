@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang, Linling Li, Li Zhang, Zhiguo Zhang (2022). *M3CV: Multi-subject, Multi-session, Multi-task EEG Database*. [10.1016/j.neuroimage.2022.119666](https://doi.org/10.1016/j.neuroimage.2022.119666)
 
-Modality: eeg Subjects: 95 Recordings: 2469 License: CC BY 4.0 Source: openneuro
+Modality: eeg Subjects: 95 Recordings: 2469 License: CC BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -257,7 +257,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 - License: CC BY 4.0
 - DOI: doi:10.1016/j.neuroimage.2022.119666
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000166](https://openneuro.org/datasets/nm000166)
 - NeMAR: [nm000166](https://nemar.org/dataexplorer/detail?dataset_id=nm000166)
 
@@ -286,7 +286,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 M3CV: Multi-subject, Multi-session, Multi-task EEG Database
 
 * **Study:**
-  `nm000166` (OpenNeuro)
+  `nm000166` (NeMAR)
 * **Author (year):**
   `Huang2018`
 * **Canonical:**

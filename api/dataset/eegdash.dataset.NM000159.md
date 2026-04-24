@@ -11,7 +11,7 @@ Access recordings and metadata through EEGDash.
 
 **Citation:** Simon Avrillon, Francois Hug, Roger M. Enoka, Arnault H. Caillet, Dario Farina (20). *MUniverse Avrillon et al 2024*. [https://doi.org/10.7910/DVN/L9OQY7](https://doi.org/https://doi.org/10.7910/DVN/L9OQY7)
 
-Modality: emg Subjects: 16 Recordings: 124 License: CC0 BY 4.0 Source: openneuro
+Modality: emg Subjects: 16 Recordings: 124 License: CC0 BY 4.0 Source: nemar
 
 Metadata: Complete (100%)
 
@@ -195,7 +195,7 @@ See *dataset_description.json* for further details.
 - License: CC0 BY 4.0
 - DOI: [https://doi.org/10.7910/DVN/L9OQY7](https://doi.org/10.7910/DVN/L9OQY7)
 
-- Source: openneuro
+- Source: nemar
 - OpenNeuro: [nm000159](https://openneuro.org/datasets/nm000159)
 - NeMAR: [nm000159](https://nemar.org/dataexplorer/detail?dataset_id=nm000159)
 
@@ -216,7 +216,7 @@ Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 MUniverse Avrillon et al 2024
 
 * **Study:**
-  `nm000159` (OpenNeuro)
+  `nm000159` (NeMAR)
 * **Author (year):**
   `Avrillon2024`
 * **Canonical:**

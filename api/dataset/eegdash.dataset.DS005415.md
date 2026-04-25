@@ -132,13 +132,13 @@ Welcome to the numbers dataset. These data were collected using stereoelectroenc
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 238 sensors — 238 channels</summary>
+  <summary>Electrode layout — iEEG · 164 sensors — 164 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=f4255faf6b47469a&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=d068abd9732afd1f&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 238 sensors"
+    title="Topomap of iEEG · 164 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

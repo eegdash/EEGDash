@@ -82,7 +82,7 @@ function drops to zero.
 * **Parameters:**
   **x** (*ndarray*) – The input signal.
 * **Returns:**
-  The time (in seconds or samples) until the signal decorrelates.
+  The time (in seconds) until the signal decorrelates.
   Shape is `x.shape[:-1]`.
 * **Return type:**
   ndarray

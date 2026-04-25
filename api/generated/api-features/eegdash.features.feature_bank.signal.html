@@ -707,7 +707,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_decorrelation_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/signal.py#L441-L473"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_decorrelation_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/signal.py#L441-L471"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate the Decorrelation Time of the signal.</p>
 <p>This function computes the time it takes for the signal to
 decorrelate, defined as the first time lag where the autocorrelation
@@ -717,7 +717,7 @@ function drops to zero.</p>
 <dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The time (in seconds or samples) until the signal decorrelates.
+<dd class="field-even"><p>The time (in seconds) until the signal decorrelates.
 Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

@@ -114,6 +114,7 @@ docs = [
   "numpydoc",
   "lightgbm",
   "plotly",
+  "seaborn",
 ]
 
 digestion = [

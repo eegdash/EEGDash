@@ -142,13 +142,13 @@ MNE-BIDS was used to convert the dataset into BIDS format.
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 106 sensors — 106 channels</summary>
+  <summary>Electrode layout — iEEG · 113 sensors — 113 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=e1731b01d063930b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=a335fde3cbf50318&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 106 sensors"
+    title="Topomap of iEEG · 113 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

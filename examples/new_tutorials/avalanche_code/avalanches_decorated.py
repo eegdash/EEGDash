@@ -25,8 +25,7 @@ def _nll(exponent: float,
          x_vals_logs: np.ndarray, 
          sum_log_data: float, 
          n: int) -> float:
-    r"""
-    Calculate the Negative Log-Likelihood (NLL) for a discrete truncated power-law distribution.
+    r"""Calculate the Negative Log-Likelihood (NLL) for a discrete truncated power-law distribution.
 
     The NLL is derived from the probability mass function (PMF):
     $$P(x) = \frac{x^{-\gamma}}{Z(\gamma, x_{min}, x_{max})}$$
@@ -50,10 +49,11 @@ def _nll(exponent: float,
     Returns
     -------
     float
-        The negative log-likelihood value. Returns infinity if the exponent $\le 1$ 
+        The negative log-likelihood value. Returns infinity if the exponent $\le 1$.
         or if the normalization factor $Z$ is non-finite.
-"""
-    if exponent <= 1: 
+
+    """
+    if exponent <= 1:
         return np.inf
     Z = np.sum(np.exp(-exponent * x_vals_logs)) # np.sum(x_vals ** (-exponent))
     if Z <= 0 or not np.isfinite(Z): 

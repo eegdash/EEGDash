@@ -41,7 +41,7 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
-from _file_utils import get_annex_file_size
+from _file_utils import get_annex_file_key, get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _montage import extract_layout
@@ -58,11 +58,14 @@ from eegdash.schemas import Storage, create_dataset, create_record
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
-# Storage configuration per source
-# Each source has a backend type and base URL pattern
+# Storage configuration per source. Keep aligned with
+# ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
+# dedicated ``"nemar"`` backend because direct fetches against
+# ``s3://nemar/<id>/<bidspath>`` don't work (filenames are SHA-resolved by
+# git-annex); the runtime resolves BIDS paths to SHA keys at fetch time.
 STORAGE_CONFIGS = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "s3", "base": "s3://nemar"},  # NEMAR uses S3 too
+    "nemar": {"backend": "nemar", "base": "s3://nemar"},
     "gin": {"backend": "https", "base": "https://gin.g-node.org"},
     "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
     "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
@@ -153,22 +156,48 @@ def _source_from_dataset_id(dataset_id: str) -> str:
     return "unknown"
 
 
+def _reconcile_source(
+    manifest_src: str | None, dataset_id: str, *, context: str
+) -> str:
+    """Resolve the authoritative source for a dataset.
+
+    When the manifest carries a source but the dataset_id pattern implies
+    a different one (the bug behind the NEMAR mislabel — manifests said
+    ``openneuro`` for ``nm*`` ids), trust the pattern and warn loudly.
+    Without this guardrail the bad value flows straight into Mongo and we
+    get records pointing at the wrong S3 bucket.
+    """
+    pattern_src = _source_from_dataset_id(dataset_id)
+    if (
+        manifest_src
+        and pattern_src not in (None, "unknown")
+        and manifest_src != pattern_src
+    ):
+        print(
+            f"WARNING [{context}]: {dataset_id} manifest source={manifest_src!r} "
+            f"disagrees with id-pattern source={pattern_src!r}; using pattern.",
+            file=sys.stderr,
+        )
+        return pattern_src
+    if manifest_src:
+        return manifest_src
+    return pattern_src
+
+
 def detect_source(dataset_dir: Path) -> str:
     """Detect source from manifest.json or dataset structure."""
     dataset_id = dataset_dir.name
     manifest_path = dataset_dir / "manifest.json"
+    manifest_src: str | None = None
     if manifest_path.exists():
         try:
             with open(manifest_path) as f:
                 manifest = json.load(f)
-            src = manifest.get("source")
-            if src:
-                return src
+            manifest_src = manifest.get("source")
         except Exception:
-            pass
+            manifest_src = None
 
-    # Fallback: check dataset_id pattern
-    return _source_from_dataset_id(dataset_id)
+    return _reconcile_source(manifest_src, dataset_id, context="detect_source")
 
 
 def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
@@ -1212,6 +1241,19 @@ def extract_record(
                 bids_relpath,
             )
 
+    # Stored at digest time so the runtime can skip the GitHub-raw
+    # round-trip when fetching SHA-keyed objects from the NEMAR bucket.
+    annex_keys: dict[str, str] = {}
+    if source == "nemar":
+        bids_root_path = bids_dataset.bidsdir  # already a Path
+        raw_annex_key = get_annex_file_key(Path(bids_file))
+        if raw_annex_key:
+            annex_keys[bids_relpath] = raw_annex_key
+        for dep in dep_keys:
+            dep_annex_key = get_annex_file_key(bids_root_path / dep)
+            if dep_annex_key:
+                annex_keys[dep] = dep_annex_key
+
     # Create record using the schema
     record = create_record(
         dataset=dataset_id,
@@ -1232,6 +1274,7 @@ def extract_record(
         nchans=nchans,
         ntimes=ntimes,
         digested_at=digested_at,
+        annex_keys=annex_keys or None,
     )
 
     # Restore participant_tsv metadata if available
@@ -1681,7 +1724,9 @@ def digest_from_manifest(
             "error": f"Failed to load manifest: {e}",
         }
 
-    source = manifest.get("source") or _source_from_dataset_id(dataset_id)
+    source = _reconcile_source(
+        manifest.get("source"), dataset_id, context="digest_from_manifest"
+    )
     digested_at = datetime.now(timezone.utc).isoformat()
 
     # Get file list from manifest
@@ -1725,6 +1770,21 @@ def digest_from_manifest(
         else:
             # Default: use base/dataset_id pattern
             storage_base = f"{base}/{dataset_id}"
+    else:
+        # Sanity-check explicit storage_base against the resolved source.
+        # 2_clone.py used to write ``s3://openneuro.org/<id>`` for any
+        # git-cloned dataset, including NEMAR — that value reached MongoDB
+        # as ``storage.base`` and we'd 404 on download. Reject the mismatch
+        # here so the bad value never gets written again.
+        expected_prefix = get_storage_config(source).get("base", "")
+        if expected_prefix and not str(storage_base).startswith(expected_prefix):
+            print(
+                f"WARNING [digest]: {dataset_id} manifest storage_base="
+                f"{storage_base!r} does not start with {expected_prefix!r} "
+                f"for source={source!r}; rebuilding from source config.",
+                file=sys.stderr,
+            )
+            storage_base = f"{expected_prefix}/{dataset_id}"
 
     # Collect BIDS entities from file paths (both direct files and ZIP contents)
     subjects = set()

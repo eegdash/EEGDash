@@ -560,6 +560,13 @@ def list_datarn_files(source_url: str) -> list[dict]:
 
 
 _ANNEX_SIZE_RE = re.compile(r"-s(\d+)--")
+# Anchored to the start of the basename. The trailing ``\.`` is enough to
+# reject garbage like ``garbage-not-a-key.set`` because the regex demands
+# the SHA-key shape *before* the extension dot.
+_ANNEX_KEY_BASENAME_RE = re.compile(
+    r"^(?:SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE
+)
+_ANNEX_POINTER_MAX_SIZE = 256
 
 
 def parse_annex_size(text: str) -> int | None:
@@ -572,38 +579,58 @@ def parse_annex_size(text: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def get_annex_file_size(path: Path) -> int:
-    """Get file size, resolving git-annex pointers and symlinks.
+def _read_annex_pointer_text(path: Path) -> str | None:
+    """Return the symlink target / smudged-pointer content for *path*.
 
-    After a shallow clone with ``GIT_LFS_SKIP_SMUDGE=1``, git-annex data
-    files are small text pointers whose content encodes the real size in
-    the annex key (e.g. ``/annex/objects/MD5E-s128356352--…``).
-
-    Returns the real data size for annex-managed files, the stat size for
-    regular files, or 0 for broken symlinks without annex keys.
+    For both symlinks and small regular files (≤256B). Returns ``None``
+    for missing paths, large files, OS errors, and non-decodable content.
     """
     if path.is_symlink():
         try:
-            annex_size = parse_annex_size(str(path.readlink()))
-            if annex_size is not None:
-                return annex_size
-        except (OSError, ValueError):
-            pass
-        return 0
-
+            return str(path.readlink())
+        except OSError:
+            return None
     if path.is_file():
-        stat_size = path.stat().st_size
-        if stat_size < 256:
-            try:
-                content = path.read_text(encoding="utf-8", errors="ignore").strip()
-                if "/annex/" in content:
-                    annex_size = parse_annex_size(content)
-                    if annex_size is not None:
-                        return annex_size
-            except (OSError, UnicodeDecodeError):
-                pass
-        return stat_size
+        try:
+            if path.stat().st_size > _ANNEX_POINTER_MAX_SIZE:
+                return None
+            return path.read_text(encoding="utf-8", errors="ignore")
+        except (OSError, UnicodeDecodeError):
+            return None
+    return None
 
+
+def get_annex_file_key(path: Path) -> str | None:
+    """Return the git-annex SHA key for *path*, or ``None``.
+
+    Git-annex tracks binaries as either a symlink ending in
+    ``.git/annex/objects/<X>/<Y>/<KEY>/<KEY>`` or a smudged pointer
+    file whose content is a line like ``/annex/objects/<KEY>``. In both
+    cases the SHA key is the final path segment. Returns ``None`` for
+    regular git-tracked sidecars and real binaries.
+    """
+    text = _read_annex_pointer_text(path)
+    if text is None or "/annex/objects/" not in text:
+        return None
+    candidate = text.strip().rsplit("/", 1)[-1]
+    return candidate if _ANNEX_KEY_BASENAME_RE.match(candidate) else None
+
+
+def get_annex_file_size(path: Path) -> int:
+    """Get file size, resolving git-annex pointers and symlinks.
+
+    Returns the real data size for annex-managed files, the stat size
+    for regular files, or 0 for broken symlinks without annex keys.
+    """
+    text = _read_annex_pointer_text(path)
+    if text is not None and "/annex/" in text:
+        annex_size = parse_annex_size(text)
+        if annex_size is not None:
+            return annex_size
+    if path.is_symlink():
+        return 0
+    if path.is_file():
+        return path.stat().st_size
     return 0
 
 

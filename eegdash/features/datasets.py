@@ -952,9 +952,12 @@ class FeaturesConcatDataset(BaseConcatDataset):
         _, mean, var = _pooled_var(counts, means, variances, ddof, ddof_in=0)
         std = np.sqrt(var + eps)
         for ds in self.datasets:
-            ds.features.loc[:, self._numeric_columns()] = (
-                ds.features.loc[:, self._numeric_columns()] - mean
-            ) / std
+            cols = self._numeric_columns()
+            # Whole-column replacement, not ``.loc[:, cols] =``: pandas 2.2+
+            # refuses to silently downcast a float result into an int64
+            # column and raises TypeError; replacing the columns wholesale
+            # adopts the float dtype of the right-hand side.
+            ds.features[cols] = (ds.features[cols] - mean) / std
 
     @staticmethod
     def _enforce_inplace_operations(func_name: str, kwargs: dict):

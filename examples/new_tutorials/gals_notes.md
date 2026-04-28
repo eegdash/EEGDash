@@ -41,3 +41,4 @@ File at: examples/new_tutorials/tutorial_1_basic_pipeline.ipynb
 ### General Thoughts
 - show how to use metedata (`bin_avalanches`): recive & change
 - explain why we splitted the standartization itno two funcions and the use of `StandardizedSignalType`
+- explain we we didn't need `preprocessor_output_type` for other preprocessors (generity)

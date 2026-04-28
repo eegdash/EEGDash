@@ -528,7 +528,7 @@ def tau_exponent(
         elif t_max_method == "lab":
             sizes = np.array([binned_array[i, s[j] : e[j] + 1].sum() for j in range(n)])
             mean_activity = binned_array[i].sum() / n_bins_meta
-            t_max = max(1, int(np.sqrt(sizes.max() / max(mean_activity, EPSILON))))
+            t_max = max(1, int(np.sqrt(sizes.max() / max(mean_activity, 1e-10))))
         else:
             raise ValueError(f"Unsupported t_max_method: {t_max_method!r}")
 

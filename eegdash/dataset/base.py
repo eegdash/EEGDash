@@ -31,8 +31,8 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import validate_record
-from .bids_dataset import _COMPANION_FILES
 from ._source_inference import correct_storage_inplace
+from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
@@ -234,7 +234,9 @@ def _make_tolerant_get_sample_info(orig_fn):
 # stores by content hash). The BIDS-path → SHA-key mapping lives in the
 # dataset's git-annex pointer file, fetched here from GitHub raw.
 
-_NEMAR_RAW_URL = "https://raw.githubusercontent.com/NEMARDatasets/{dataset_id}/HEAD/{relpath}"
+_NEMAR_RAW_URL = (
+    "https://raw.githubusercontent.com/NEMARDatasets/{dataset_id}/HEAD/{relpath}"
+)
 _NEMAR_POINTER_TIMEOUT = 30  # seconds — pointer files are tiny
 _NEMAR_USER_AGENT = "eegdash-runtime/nemar-resolver"
 

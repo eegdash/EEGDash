@@ -115,6 +115,7 @@ def correct_storage_inplace(
         ``corrected`` is ``True`` when *either* field was rewritten.
         ``old_base`` is the previous ``storage.base`` value when it was
         rewritten, otherwise ``None`` (even if backend was rewritten).
+
     """
     dsid = dataset_id or record.get("dataset")
     if not dsid:
@@ -156,10 +157,7 @@ def correct_storage_inplace(
         storage["base"] = expected_base
         old_base = current_base
 
-    if (
-        expected_backend_value is not None
-        and current_backend != expected_backend_value
-    ):
+    if expected_backend_value is not None and current_backend != expected_backend_value:
         storage["backend"] = expected_backend_value
 
     return True, old_base

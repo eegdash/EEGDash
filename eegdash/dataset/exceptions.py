@@ -308,6 +308,7 @@ class StorageAccessError(EEGDashError):
     ----------
     dataset_id, backend, logical_uri, cache_path : str | None
         Optional context attached to the error for downstream handlers.
+
     """
 
     def __init__(

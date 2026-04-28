@@ -168,7 +168,11 @@ def _reconcile_source(
     get records pointing at the wrong S3 bucket.
     """
     pattern_src = _source_from_dataset_id(dataset_id)
-    if manifest_src and pattern_src not in (None, "unknown") and manifest_src != pattern_src:
+    if (
+        manifest_src
+        and pattern_src not in (None, "unknown")
+        and manifest_src != pattern_src
+    ):
         print(
             f"WARNING [{context}]: {dataset_id} manifest source={manifest_src!r} "
             f"disagrees with id-pattern source={pattern_src!r}; using pattern.",

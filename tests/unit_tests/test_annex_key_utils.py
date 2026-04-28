@@ -21,9 +21,7 @@ def get_annex_file_key():
     return fn
 
 
-_REAL_KEY = (
-    "SHA256E-s121363992--47368a490fb602d7ed40698bcf062fa9ff938b8dd03d5ce25d30a64d11c5dace.set"
-)
+_REAL_KEY = "SHA256E-s121363992--47368a490fb602d7ed40698bcf062fa9ff938b8dd03d5ce25d30a64d11c5dace.set"
 
 
 def test_extracts_key_from_smudged_pointer(tmp_path, get_annex_file_key):

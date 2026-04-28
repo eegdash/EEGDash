@@ -410,7 +410,9 @@ class FeatureExtractor(TrainableFeature):
                 f_und, FeatureExtractor
             ):
                 r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
-            if not isinstance(fname, str) or not fname:
+            if (not isinstance(fname, str) or not fname) and not isinstance(
+                f, FeatureExtractor
+            ):
                 fname = _get_func_name(f_und)
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""

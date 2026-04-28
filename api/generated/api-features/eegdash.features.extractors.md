@@ -116,6 +116,12 @@ Fit all trainable sub-features.
 
 <!-- !! processed by numpydoc !! -->
 
+#### *property* feature_names *: list[str]*
+
+A list of full feature names (without the channel names).
+
+<!-- !! processed by numpydoc !! -->
+
 #### to_dict() → dict
 
 Dumps the feature extractor to a dictionary.

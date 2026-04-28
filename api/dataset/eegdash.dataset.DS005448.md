@@ -148,13 +148,13 @@ We thank the SEIN-UMCU RESPect database group (C.J.J. van Asch, L. van de Berg, 
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 112 sensors — 112 channels</summary>
+  <summary>Electrode layout — iEEG · 80 sensors — 80 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=0f77fb455f72a809&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=40e2f74e43f556ba&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 112 sensors"
+    title="Topomap of iEEG · 80 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

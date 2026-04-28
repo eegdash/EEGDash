@@ -18,29 +18,10 @@ Playing with eegdash!
 </div>
 <!-- thumbnail-parent-div-close --></div>
 
-# EEG 2025 Foundation Challenge
-
-1. Cross-Task Transfer Learning: Developing models that can effectively transfer knowledge from passive EEG tasks to active tasks
-2. Subject Invariant Representation: Creating robust representations that generalize across different subjects while predicting clinical factors
-
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
-<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Challenge 1: Cross-Task Transfer Learning!">  <div class="sphx-glr-thumbnail-title">Challenge 1: Cross-Task Transfer Learning!</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Challenge 2: Predicting the p-factor from EEG">  <div class="sphx-glr-thumbnail-title">Challenge 2: Predicting the p-factor from EEG</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use /api/dataset/eegdash.dataset.EEGChallengeDataset offline once a dataset is present on disk.">  <div class="sphx-glr-thumbnail-title">Working Offline with EEGDash</div>
-</div>
-<!-- thumbnail-parent-div-close --></div>
-
 # Dev scripts for EEGDash
 
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
 <!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids">  <div class="sphx-glr-thumbnail-title">Exploring Braindecode's BIDSDataset</div>
-</div>
-<!-- thumbnail-parent-div-close --></div>
-
-# HPC tutorials
-
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
-<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>
 
@@ -58,5 +39,24 @@ Playing with eegdash!
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to summarize and visualize the distribution of clinical vs. healthy datasets across different recording modalities.">  <div class="sphx-glr-thumbnail-title">Clinical Dataset Summary</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to use the EEGDash API to query and explore EEG recording metadata without downloading any data files.">  <div class="sphx-glr-thumbnail-title">EEGDash API Tutorial</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Objective: Learn how to fine-tune a pre-trained EEG model on a new small dataset.">  <div class="sphx-glr-thumbnail-title">Transfer Learning with EEGDash</div>
+</div>
+<!-- thumbnail-parent-div-close --></div>
+
+# EEG 2025 Foundation Challenge
+
+1. Cross-Task Transfer Learning: Developing models that can effectively transfer knowledge from passive EEG tasks to active tasks
+2. Subject Invariant Representation: Creating robust representations that generalize across different subjects while predicting clinical factors
+
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
+<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Challenge 1: Cross-Task Transfer Learning!">  <div class="sphx-glr-thumbnail-title">Challenge 1: Cross-Task Transfer Learning!</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Challenge 2: Predicting the p-factor from EEG">  <div class="sphx-glr-thumbnail-title">Challenge 2: Predicting the p-factor from EEG</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Many HPC clusters restrict or block network access. It&#x27;s common to have dedicated queues for internet-enabled jobs that differ from GPU queues. This tutorial shows how to use /api/dataset/eegdash.dataset.EEGChallengeDataset offline once a dataset is present on disk.">  <div class="sphx-glr-thumbnail-title">Working Offline with EEGDash</div>
+</div>
+<!-- thumbnail-parent-div-close --></div>
+
+# HPC tutorials
+
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
+<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>

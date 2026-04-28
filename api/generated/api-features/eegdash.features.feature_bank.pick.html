@@ -647,15 +647,13 @@ is -2.</p></li>
 </p>
 </dd>
 </dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="rubric">Notes</p>
 <p>Picking by index pair, e.g., <code class="docutils literal notranslate"><span class="pre">x[i,</span> <span class="pre">j]</span></code>, is not directly supported because
 the result may not be an <cite>numpy.ndarray</cite>. It is preferred to use a pair
 axis. It is possible, however, to pick just by <code class="docutils literal notranslate"><span class="pre">x_index</span></code> with
 <code class="docutils literal notranslate"><span class="pre">c_axis=0</span></code>, then pick again just by <code class="docutils literal notranslate"><span class="pre">y_index</span></code> with <code class="docutils literal notranslate"><span class="pre">c_index=1</span></code> (or
 vice versa) to effectively pick the indices intersection of such an
 <cite>numpy.ndarray</cite>.</p>
-</div>
 </dd></dl>
 
 <dl class="py function">

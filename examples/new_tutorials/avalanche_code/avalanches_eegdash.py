@@ -482,6 +482,7 @@ def tau_exponent(
     /,
     *,
     t_max_method: str = "max",
+    epsilon: float = 1e-10,
     ks_threshold: float = 0.1,
     _metadata: dict = None,
 ):
@@ -513,7 +514,7 @@ def tau_exponent(
     """
     batch_size = binned_array.shape[0]
     taus = np.full(batch_size, np.nan, dtype=float)
-    n_bins_meta = _metadata.get("n_bins", binned_array.shape[1]) if _metadata else binned_array.shape[1]
+    n_bins_meta = _metadata.get("n_bins")
 
     for i in range(batch_size):
         n = int(counts[i])
@@ -528,7 +529,7 @@ def tau_exponent(
         elif t_max_method == "lab":
             sizes = np.array([binned_array[i, s[j] : e[j] + 1].sum() for j in range(n)])
             mean_activity = binned_array[i].sum() / n_bins_meta
-            t_max = max(1, int(np.sqrt(sizes.max() / max(mean_activity, 1e-10))))
+            t_max = max(1, int(np.sqrt(sizes.max() / max(mean_activity, epsilon))))
         else:
             raise ValueError(f"Unsupported t_max_method: {t_max_method!r}")
 
@@ -583,8 +584,8 @@ def gamma_exponent(
             continue
 
         avg_sizes = np.array([sizes[durations == t].mean() for t in unique_dur])
-        if np.any(avg_sizes <= 0):
-            continue  # log10 of non-positive values is undefined
+        if np.any(avg_sizes == 0):
+            continue  # log10 of zero is undefined
 
         log_t = np.log10(unique_dur.astype(float))
         log_s = np.log10(avg_sizes)
@@ -601,7 +602,9 @@ def gamma_exponent(
 # ── Post-processing utility ───────────────────────────────────────────────────
 
 
-def dcc(alphas: np.ndarray, taus: np.ndarray, gammas: np.ndarray) -> np.ndarray:
+def dcc(alphas: np.ndarray,
+        taus: np.ndarray,
+        gammas: np.ndarray,) -> np.ndarray:
     r"""Deviation from Criticality Coefficient.
 
     Quantifies how close the system is to a critical state by comparing

@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-04-28
+
+### Added
+- Pick-channels feature for feature extractors (#302)
+- Canonical-name aliases for dataset class registry (#306)
+- Feature-as-preprocessor wrapper, including `preprocessor_as_feature` (#308)
+- Montage registry pipeline with S3 FIF header fallback (#325)
+- Embedded electrode-explorer iframe on each dataset documentation page (#326)
+- Feature dataset and extractor improvements (#323)
+- Feature extractor addons (#331)
+
+### Fixed
+- Reconcile `source` / `storage.base` against `dataset_id` pattern in ingest (#329)
+- Feature column-naming consistency in extractor output (#330)
+- `signal_decorrelation_time` logic correction (#328)
+- NEMAR source detection and removal of three redirecting OpenNeuro IDs (#327)
+- Dataset hero badge row alignment by pinning each `:width:` to SVG natural size (#324)
+- `requestIdleCallback` signature plus shield-badge aspect ratio (#322)
+- Restore `_rewrite_sitemap_index` dropped during #318 rebase (#321)
+- Rewrite homepage entry to canonical bare-host URL in sitemap (#319)
+- SEO batch-2: short/missing metas, duplicate tags, plus local validator and audit log (#318)
+- Cap long meta descriptions broken by an apostrophe regex (#317)
+- P0+P1 figure fixes — Sankey SVG export, clinical split, growth log, bubble labels
+
+### Changed
+- Refactor bivariate iterator to enforce directed/undirected logic on metrics (#309, #310)
+- Convert feature class decorators to functions (#305)
+- Minimize runtime dependencies; replace parquet with safetensors for feature serialization
+
+### Performance
+- Drop 2.2 MiB per-page payload, recover 1.1K+ 404s, add GSC/Bing/IndexNow hooks (#315)
+- Vendor Fuse.js plus post-build asset fingerprinting (#320)
+
+### Documentation
+- Polish catalog charts, table, intro and extend author-year alias resolution (#307)
+- Structured data, Open Graph cards, meta descriptions, JS gating (#311)
+- Agent-readiness, library-first hero, paper-accurate citation block (#312)
+- `llms.txt` coverage, `dataset_summary.md` shrink, directive hints (#314)
+- Remove AI-isms across user-facing documentation (#316)
+- Redesigned social card with brand identity and code snippet
+
 ## [0.6.0] - 2026-04-06
 
 ### Added
@@ -296,7 +337,8 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICE
 
 | Version | Release Date | Key Features |
 |---------|-------------|--------------|
-| 0.6.0 | 2026-04-06 | Robust loading across 522 datasets, publication charts, API tutorial, fNIRS support |
+| 0.7.0 | 2026-04-28 | Montage registry, electrode-explorer integration, feature-as-preprocessor, parquet→safetensors, SEO/perf overhaul |
+| 0.6.0 | 2026-04-06 | Reliable loading across 522 datasets, publication charts, API tutorial, fNIRS support |
 | 0.5.0 | 2026-01-07 | New branding, digestion pipeline v2, preprocessors as functions, BSD-3 license |
 | 0.4.1 | 2025-10-21 | Performance optimizations, visualization tools, comprehensive documentation |
 | 0.4.0 | 2025-10-11 | Dataset registry, feature preprocessing refactor, multi-release support |

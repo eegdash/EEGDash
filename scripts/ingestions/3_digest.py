@@ -41,7 +41,7 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
-from _file_utils import get_annex_file_size
+from _file_utils import get_annex_file_key, get_annex_file_size
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _montage import extract_layout
@@ -58,11 +58,14 @@ from eegdash.schemas import Storage, create_dataset, create_record
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
-# Storage configuration per source
-# Each source has a backend type and base URL pattern
+# Storage configuration per source. Keep aligned with
+# ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
+# dedicated ``"nemar"`` backend because direct fetches against
+# ``s3://nemar/<id>/<bidspath>`` don't work (filenames are SHA-resolved by
+# git-annex); the runtime resolves BIDS paths to SHA keys at fetch time.
 STORAGE_CONFIGS = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "s3", "base": "s3://nemar"},  # NEMAR uses S3 too
+    "nemar": {"backend": "nemar", "base": "s3://nemar"},
     "gin": {"backend": "https", "base": "https://gin.g-node.org"},
     "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
     "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
@@ -1234,6 +1237,19 @@ def extract_record(
                 bids_relpath,
             )
 
+    # Stored at digest time so the runtime can skip the GitHub-raw
+    # round-trip when fetching SHA-keyed objects from the NEMAR bucket.
+    annex_keys: dict[str, str] = {}
+    if source == "nemar":
+        bids_root_path = bids_dataset.bidsdir  # already a Path
+        raw_annex_key = get_annex_file_key(Path(bids_file))
+        if raw_annex_key:
+            annex_keys[bids_relpath] = raw_annex_key
+        for dep in dep_keys:
+            dep_annex_key = get_annex_file_key(bids_root_path / dep)
+            if dep_annex_key:
+                annex_keys[dep] = dep_annex_key
+
     # Create record using the schema
     record = create_record(
         dataset=dataset_id,
@@ -1254,6 +1270,7 @@ def extract_record(
         nchans=nchans,
         ntimes=ntimes,
         digested_at=digested_at,
+        annex_keys=annex_keys or None,
     )
 
     # Restore participant_tsv metadata if available

@@ -49,8 +49,32 @@ def test_correct_storage_reroutes_misrouted_nemar_record():
     assert corrected is True
     assert old == "s3://openneuro.org/nm000237"
     assert rec["storage"]["base"] == "s3://nemar/nm000237"
-    assert rec["storage"]["backend"] == "s3"
+    # NEMAR records use the dedicated ``"nemar"`` backend tag because
+    # direct S3 fetches against ``s3://nemar/<id>/<bidspath>`` don't work
+    # (filenames are SHA-resolved); the runtime resolver converts BIDS
+    # paths to SHA-keyed objects via the dataset's git-annex pointers.
+    assert rec["storage"]["backend"] == "nemar"
     # Idempotent: a second call leaves the record untouched.
+    assert correct_storage_inplace(rec) == (False, None)
+
+
+def test_correct_storage_fixes_stale_backend_on_canonical_nemar_base():
+    # Records ingested between PR #327 and the nemar-backend split sit in
+    # the DB with the right base but the wrong backend tag. Self-heal
+    # should still fire so the runtime takes the NEMAR resolution path.
+    rec = {
+        "dataset": "nm000237",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://nemar/nm000237",
+            "raw_key": "sub-13/ses-3/eeg/sub-13_ses-3_task-imagery_run-5_eeg.bdf",
+        },
+    }
+    corrected, old = correct_storage_inplace(rec)
+    assert corrected is True
+    assert old is None  # base wasn't rewritten, only backend
+    assert rec["storage"]["base"] == "s3://nemar/nm000237"
+    assert rec["storage"]["backend"] == "nemar"
     assert correct_storage_inplace(rec) == (False, None)
 
 

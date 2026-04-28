@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
-"""Patch NEMAR records whose ``storage.base`` still points at OpenNeuro.
+"""Patch NEMAR records whose ``storage`` is misrouted or stale.
 
 Companion to ``patch_nemar_source.py``. That script fixes the
 ``Dataset.source`` field for nm-prefixed datasets that were mislabeled by
 the pre-PR-#327 ``detect_source()`` bug. Records, however, also encode a
-``storage.base`` (e.g. ``s3://openneuro.org/nm000237``) — and they were
-left untouched by the dataset-document patch.
+``storage.base`` (e.g. ``s3://openneuro.org/nm000237``) and a
+``storage.backend`` — and the prior fixes left both fields stale for some
+cohorts of records.
 
-This script flips ``storage.base`` from ``s3://openneuro.org/<id>`` to
-``s3://nemar/<id>`` (the value the digest pipeline writes today, see
-``STORAGE_CONFIGS`` in ``3_digest.py``) for every record under each
-nm-prefixed dataset. Without this fix, ``EEGDashRaw._raw_uri`` resolves to
-the OpenNeuro mirror and downloads 404 with::
+This script applies two independent corrections:
 
-    DataIntegrityError: Primary data file not found on S3:
-    s3://openneuro.org/nm000237/sub-13/.../sub-13_..._eeg.bdf
+1. **Base** — flip ``storage.base`` from ``s3://openneuro.org/<id>`` to
+   ``s3://nemar/<id>`` for any record that still points at OpenNeuro
+   despite belonging to an ``nm*`` dataset. Without this, the runtime
+   would resolve ``_raw_uri`` to the OpenNeuro mirror and 404.
+2. **Backend** — flip ``storage.backend`` from ``"s3"`` to ``"nemar"`` for
+   any NEMAR record. The runtime now uses ``"nemar"`` as a non-fetchable
+   marker so it can fail loud with actionable guidance (git-annex / nemar
+   CLI / NEMAR API) instead of opaquely failing on a closed S3 bucket.
+   Records carrying ``backend="s3"`` would attempt anonymous S3 fetches
+   that always fail because NEMAR's ``s3:ListBucket`` /
+   ``s3:GetObject`` are closed by design.
 
 Usage
 -----
@@ -48,6 +54,8 @@ from eegdash.http_api_client import get_client
 NM_PATTERN = re.compile(r"^nm\d+$")
 WRONG_BASE_PREFIX = "s3://openneuro.org/"
 RIGHT_BASE_PREFIX = "s3://nemar/"
+WRONG_BACKEND = "s3"
+RIGHT_BACKEND = "nemar"
 
 
 def discover_nm_dataset_ids(client, page_size: int = 1000) -> list[str]:
@@ -75,24 +83,45 @@ def discover_nm_dataset_ids(client, page_size: int = 1000) -> list[str]:
 
 
 def patch_dataset_records(client, dataset_id: str, apply: bool) -> tuple[int, int]:
-    """Flip ``storage.base`` for one dataset's records.
+    """Apply both the base and backend corrections to one dataset's records.
+
+    Two cohorts are healed:
+
+    * **base + backend** — records where ``storage.base`` still points at
+      ``s3://openneuro.org/<id>``. Both ``base`` and ``backend`` get
+      rewritten to the canonical NEMAR values.
+    * **backend only** — records that already have the canonical
+      ``s3://nemar/<id>`` base but stale ``storage.backend = "s3"``. Only
+      ``backend`` is flipped to ``"nemar"``.
 
     Returns ``(matched, modified)``. In dry-run mode ``modified`` is the
-    count of records that *would* change.
+    count of records that *would* change across both phases.
     """
     wrong_base = f"{WRONG_BASE_PREFIX}{dataset_id}"
     right_base = f"{RIGHT_BASE_PREFIX}{dataset_id}"
 
-    query = {"dataset": dataset_id, "storage.base": wrong_base}
+    base_query = {"dataset": dataset_id, "storage.base": wrong_base}
+    backend_query = {
+        "dataset": dataset_id,
+        "storage.base": right_base,
+        "storage.backend": WRONG_BACKEND,
+    }
 
     if not apply:
-        matched = client.count_documents(query)
-        return matched, matched
+        base_matched = client.count_documents(base_query)
+        backend_matched = client.count_documents(backend_query)
+        total = base_matched + backend_matched
+        return total, total
 
-    return client.update_many(
-        query,
-        {"storage.base": right_base, "storage.backend": "s3"},
+    base_matched, base_modified = client.update_many(
+        base_query,
+        {"storage.base": right_base, "storage.backend": RIGHT_BACKEND},
     )
+    backend_matched, backend_modified = client.update_many(
+        backend_query,
+        {"storage.backend": RIGHT_BACKEND},
+    )
+    return base_matched + backend_matched, base_modified + backend_modified
 
 
 def main() -> int:

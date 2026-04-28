@@ -301,4 +301,29 @@ class DataIntegrityError(EEGDashError):
         return error
 
 
-__all__ = ["EEGDashError", "DataIntegrityError"]
+class StorageAccessError(EEGDashError):
+    """Raised when a record's storage backend cannot be reached.
+
+    Attributes
+    ----------
+    dataset_id, backend, logical_uri, cache_path : str | None
+        Optional context attached to the error for downstream handlers.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        dataset_id: str | None = None,
+        backend: str | None = None,
+        logical_uri: str | None = None,
+        cache_path: str | None = None,
+    ):
+        self.dataset_id = dataset_id
+        self.backend = backend
+        self.logical_uri = logical_uri
+        self.cache_path = cache_path
+        super().__init__(message)
+
+
+__all__ = ["EEGDashError", "DataIntegrityError", "StorageAccessError"]

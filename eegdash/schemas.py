@@ -749,8 +749,10 @@ class Storage(TypedDict):
 
     Attributes
     ----------
-    backend : {'s3', 'https', 'local'}
-        Storage backend protocol.
+    backend : {'s3', 'https', 'local', 'nemar'}
+        Storage backend protocol. ``"nemar"`` is a non-fetchable marker
+        for NEMAR-hosted datasets — see ``StorageAccessError`` for the
+        out-of-band access paths (git-annex / nemar CLI / NEMAR API).
     base : str
         Base URI (e.g., "s3://openneuro.org/ds000001").
     raw_key : str
@@ -760,7 +762,7 @@ class Storage(TypedDict):
 
     """
 
-    backend: Literal["s3", "https", "local"]
+    backend: Literal["s3", "https", "local", "nemar"]
     base: str
     raw_key: str
     dep_keys: list[str]
@@ -974,13 +976,14 @@ def create_record(
     dep_keys: list[str] | None = None,
     datatype: str = "eeg",
     suffix: str = "eeg",
-    storage_backend: Literal["s3", "https", "local"] = "s3",
+    storage_backend: Literal["s3", "https", "local", "nemar"] = "s3",
     recording_modality: list[str] | None = None,
     ch_names: list[str] | None = None,
     sampling_frequency: float | None = None,
     nchans: int | None = None,
     ntimes: int | None = None,
     digested_at: str | None = None,
+    annex_keys: dict[str, str] | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -1050,6 +1053,16 @@ def create_record(
     entities_mne: Entities = dict(entities)  # type: ignore[assignment]
     entities_mne["run"] = _sanitize_run_for_mne(run)
 
+    storage_block: dict[str, Any] = {
+        "backend": storage_backend,
+        "base": storage_base.rstrip("/"),
+        "raw_key": bids_relpath,
+        "dep_keys": dep_keys,
+    }
+    # Sparse map (relpath → SHA-key) — annex-managed files only.
+    if annex_keys:
+        storage_block["annex_keys"] = dict(annex_keys)
+
     return Record(
         dataset=dataset,
         data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
@@ -1061,12 +1074,7 @@ def create_record(
         recording_modality=recording_modality or [datatype],
         entities=entities,
         entities_mne=entities_mne,
-        storage=Storage(
-            backend=storage_backend,
-            base=storage_base.rstrip("/"),
-            raw_key=bids_relpath,
-            dep_keys=dep_keys,
-        ),
+        storage=storage_block,  # type: ignore[arg-type]
         ch_names=ch_names,
         sampling_frequency=sampling_frequency,
         nchans=nchans,

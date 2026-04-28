@@ -99,10 +99,17 @@ def build_s3_url(dataset_id: str, relative_path: str, source: str = "openneuro")
     """
     encoded_path = quote(relative_path, safe="/")
     if source == "openneuro":
+        # OpenNeuro's git-annex remote uses ``exporttree=yes``, so files on
+        # S3 are addressed by their BIDS path directly.
         return f"https://s3.amazonaws.com/openneuro.org/{dataset_id}/{encoded_path}"
     if source == "nemar":
-        # NEMAR mirrors datasets under s3://nemar/<id>/ with the same path
-        # scheme as OpenNeuro's bucket.
+        # NOTE: NEMAR's public README documents this same BIDS-path layout
+        # (``aws s3 cp s3://nemar/<id>/path/to/file --no-sign-request``),
+        # but in practice the bucket only serves files at
+        # ``s3://nemar/<id>/objects/<git-annex-key>`` — anonymous GETs on
+        # BIDS paths return 403, and ListObjectsV2 is denied. ``relative_path``
+        # here must already be the ``objects/<annex-key>`` form; callers
+        # cannot pass a BIDS path. See _resolve_nemar_annex_key (TODO).
         return f"https://s3.amazonaws.com/nemar/{dataset_id}/{encoded_path}"
     raise ValueError(f"Unsupported source for S3 URL: {source}")
 

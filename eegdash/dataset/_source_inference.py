@@ -10,6 +10,13 @@ centralises the pattern-based recovery rules so:
 * the digestion pipeline can refuse to commit a source that disagrees
   with the dataset_id pattern.
 
+The ``"nemar"`` backend identifier is *logical only* — NEMAR's S3 bucket
+has ``s3:ListBucket`` and ``s3:GetObject`` closed by design and filenames
+are SHA-resolved by git-annex, so the URI ``s3://nemar/<id>/<file>`` is
+never directly fetchable. EEGDash treats ``backend="nemar"`` as a marker
+that means "do not attempt a public S3 fetch; surface an actionable
+``StorageAccessError`` if the file is not already in cache."
+
 Keep ``STORAGE_CONFIGS`` aligned with ``scripts/ingestions/3_digest.py``.
 """
 
@@ -20,7 +27,10 @@ from __future__ import annotations
 # scripts/ingestions/_validate.py::SOURCE_STORAGE_PATTERNS.
 STORAGE_CONFIGS: dict[str, dict[str, str]] = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "s3", "base": "s3://nemar"},
+    # NEMAR uses a dedicated, non-fetchable backend tag. The ``base`` is
+    # kept for traceability/error messages; the actual data must be
+    # obtained via git-annex / nemar CLI / NEMAR API.
+    "nemar": {"backend": "nemar", "base": "s3://nemar"},
     "gin": {"backend": "https", "base": "https://gin.g-node.org"},
     "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
     "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
@@ -28,6 +38,13 @@ STORAGE_CONFIGS: dict[str, dict[str, str]] = {
     "scidb": {"backend": "https", "base": "https://www.scidb.cn"},
     "datarn": {"backend": "webdav", "base": "https://webdav.data.ru.nl"},
 }
+
+# Hot-path: a record is "misrouted" only when its base sits under one of
+# these known foreign buckets. Frozen at module load; consulted in
+# ``correct_storage_inplace`` on every record.
+_FOREIGN_PREFIXES: frozenset[str] = frozenset(
+    cfg["base"] for cfg in STORAGE_CONFIGS.values()
+)
 
 
 def infer_source_from_dataset_id(dataset_id: str) -> str | None:
@@ -75,37 +92,74 @@ def expected_backend(dataset_id: str) -> str | None:
 def correct_storage_inplace(
     record: dict, dataset_id: str | None = None
 ) -> tuple[bool, str | None]:
-    """Rewrite a record's ``storage.base``/``backend`` if it is misrouted.
+    """Rewrite a record's ``storage.base`` / ``storage.backend`` if misrouted.
 
-    A record is "misrouted" when its dataset_id pattern (e.g. ``nm*``)
-    implies one source but ``storage.base`` points at a different source's
-    bucket (e.g. ``s3://openneuro.org/...``). This is the residual fallout
-    from the pre-PR-#327 ingestion bug.
+    Two distinct corrections happen here:
+
+    1. **Base mismatch** — when the dataset_id pattern (e.g. ``nm*``)
+       implies one source but ``storage.base`` points at a different
+       known foreign bucket (e.g. ``s3://openneuro.org/...``). Residual
+       fallout from the pre-PR-#327 ingestion bug.
+    2. **Backend mismatch** — when the dataset_id pattern implies a
+       backend (e.g. ``"nemar"``) that differs from what was stored
+       (e.g. ``"s3"``). Records ingested between the source fix
+       (PR #327) and the nemar-backend split still claim ``s3``.
+
+    The two corrections are independent: a record with the right base
+    but the wrong backend (very common for already-digested NEMAR
+    records) still gets fixed.
 
     Returns
     -------
     (corrected, old_base)
-        ``corrected`` is ``True`` when ``storage.base`` was rewritten.
-        ``old_base`` is the previous value (only when corrected).
+        ``corrected`` is ``True`` when *either* field was rewritten.
+        ``old_base`` is the previous ``storage.base`` value when it was
+        rewritten, otherwise ``None`` (even if backend was rewritten).
     """
     dsid = dataset_id or record.get("dataset")
-    expected = expected_storage_base(dsid) if dsid else None
-    if expected is None:
+    if not dsid:
+        return False, None
+
+    expected_base = expected_storage_base(dsid)
+    expected_backend_value = expected_backend(dsid)
+    if expected_base is None:
+        # Source can't be derived unambiguously from the dataset_id —
+        # be conservative and leave both fields alone.
         return False, None
 
     storage = record.setdefault("storage", {})
     current_base = (storage.get("base") or "").rstrip("/")
-    if not current_base or current_base == expected:
+    current_backend = storage.get("backend")
+
+    if not current_base:
+        # No base to reason about — don't flip backend in isolation.
         return False, None
 
-    # Only auto-correct when the current base matches a *known* foreign
-    # bucket — never silently rewrite arbitrary user-supplied URIs.
-    foreign_prefixes = {
-        cfg["base"] for src, cfg in STORAGE_CONFIGS.items() if src != "local"
-    }
-    if not any(current_base.startswith(p + "/") for p in foreign_prefixes):
+    # Hot-path early-out for the dominant case (canonical base + correct
+    # backend). Avoids the foreign-prefix scan on every healthy record.
+    if current_base == expected_base and current_backend == expected_backend_value:
         return False, None
 
-    storage["base"] = expected
-    storage["backend"] = expected_backend(dsid) or storage.get("backend") or "s3"
-    return True, current_base
+    # We rewrite only when the base is canonical (legacy backend may
+    # still be stale) or a known foreign bucket (mis-routed by the
+    # pre-PR-#327 ingestion bug). User-supplied bases are left alone.
+    is_canonical = current_base == expected_base
+    is_known_foreign = not is_canonical and any(
+        current_base.startswith(p + "/") for p in _FOREIGN_PREFIXES
+    )
+
+    if not is_canonical and not is_known_foreign:
+        return False, None
+
+    old_base: str | None = None
+    if is_known_foreign:
+        storage["base"] = expected_base
+        old_base = current_base
+
+    if (
+        expected_backend_value is not None
+        and current_backend != expected_backend_value
+    ):
+        storage["backend"] = expected_backend_value
+
+    return True, old_base

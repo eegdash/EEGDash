@@ -1,14 +1,143 @@
 {% extends "!layout.html" %}
 
+{#
+  Theme-coupling notice
+  ---------------------
+  This template overrides ``extrahead`` from pydata-sphinx-theme **without**
+  calling ``{{ super() }}``, to remove a duplicate ``<meta name="viewport">``
+  the theme emits on top of Sphinx's own. The tradeoff: any new essential
+  tags a future theme release adds to its ``extrahead`` block will be
+  silently lost.
+
+  If you upgrade pydata-sphinx-theme (currently pinned at 0.16.1 in
+  ``pyproject.toml``), re-audit the upstream ``extrahead`` block — see
+  ``<theme-path>/pydata_sphinx_theme/theme/pydata_sphinx_theme/layout.html``.
+  Anything new and load-bearing there should be mirrored here.
+#}
+
+{# Override the pydata-sphinx-theme extrahead block to avoid emitting a
+   duplicate `<meta name="viewport">` — the Sphinx base layout already
+   emits one. We keep the docsearch/docbuild tags the theme relies on. #}
 {% block extrahead %}
-  {{ super() }}
-  <!-- Google Tag Manager -->
+  <meta name="docsearch:language" content="{{ language }}"/>
+  <meta name="docsearch:version" content="{{ version }}" />
+  {%- if last_updated %}
+  <meta name="docbuild:last-update" content="{{ last_updated | e }}"/>
+  {%- endif %}
+
+  {# Search engine ownership verification. Survives every Sphinx build.
+     Replace the placeholder strings with the tokens from Google Search
+     Console and Bing Webmaster Tools. See docs/deploy/search-consoles.md
+     (if present) for setup, or paste the tokens here directly. #}
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  {# Preconnect to the third-party CDNs that still load on interactive
+     pages. `cdn.jsdelivr.net` is gone now that Fuse.js is vendored;
+     jQuery + DataTables are kept because they're pulled from the
+     dataset_summary table include and self-hosting the full DataTables
+     bundle would add ~260 KB of vendored code for a single page. #}
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  {# Preload the Google Fonts stylesheet asynchronously. The `@import`
+     that was previously the first line of custom.css blocked CSS
+     parsing until the font CSS arrived; this pattern downloads it in
+     parallel and applies it as soon as it lands (swap behaviour is
+     preserved by the `display=swap` query param). #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  {# JSON-LD structured data (Organization on homepage, Dataset on
+     dataset pages). Populated from conf.py via html-page-context. #}
+  {%- if jsonld %}
+  <script type="application/ld+json">{{ jsonld | safe }}</script>
+  {%- endif %}
+
+  {# Agent / LLM discovery hints. Point automated clients at the curated
+     markdown index (llmstxt.org), the Agent Skills manifest, and the
+     RFC 9727 API catalog so they don't have to guess the well-known
+     paths. Cheap to emit on every page and load-bearing for scanners
+     like buildwithfern Agent Score and orank.ai.
+
+     Emit every hint variant we've seen scanners look for — some only
+     parse `rel="llms"`, some only parse `<meta name>`, some only parse
+     `rel="alternate"` + a markdown mime-type. Redundancy is cheaper
+     than a missed detection. #}
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  {# Page-specific script gating. Previously jQuery + the full DataTables
+     stack + fuse.js + the hero-search bundle were loaded on every page
+     (~260 KB transferred, plus a CDN fan-out of 3 hosts). Now they only
+     load on the pages that actually use them. The DataTables stack used
+     by dataset_summary is inlined by `prepare_summary_tables.py` into
+     the table include, so we don't need to re-emit it here. #}
+  {%- if pagename == "index" %}
+  {# Warm the search-index fetch so it overlaps first paint — the hero
+     search box parses this JSON in requestIdleCallback and the extra
+     ~150-200 ms saved here shows up as TBT reduction on PageSpeed. #}
+  <link rel="preload" as="fetch" crossorigin="anonymous"
+        href="{{ pathto('_static/dataset_generated/search_index.json', 1) }}">
+  {# Vendored copy of Fuse.js 7.0.0 (Apache-2.0). Self-hosting removes a
+     third-party DNS hop + aligns the asset with our own cache-control,
+     and preserves a single `?v=` hash Sphinx appends for cache-busting. #}
+  <script defer src="{{ pathto('_static/lib/fuse.min.js', 1) }}"></script>
+  <script defer src="{{ pathto('_static/js/hero-search.js', 1) }}"></script>
+  {%- endif %}
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
   <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
   </script>
   <!-- End Google Tag Manager -->
 {% endblock %}
@@ -19,6 +148,24 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   {{ super() }}
+
+  {# Visible discovery anchor for scanners that only look at rendered
+     text (Fern's sampler in particular). Kept to the footer area and
+     deliberately minimal so it doesn't clutter the human UX. #}
+  <nav aria-label="Agent and LLM resources" class="eegdash-agent-nav"
+       style="margin:2rem auto 1rem;max-width:60em;padding:0 1.5rem;font-size:0.85em;color:var(--pst-color-text-muted,#64748b);text-align:center;">
+    <a href="/llms.txt" rel="llms"
+       style="color:inherit;text-decoration:underline;">llms.txt</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/llms-full.txt" rel="llms-full"
+       style="color:inherit;text-decoration:underline;">llms-full.txt</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/.well-known/agent-skills/index.json"
+       style="color:inherit;text-decoration:underline;">agent skills</a>
+    <span aria-hidden="true"> · </span>
+    <a href="/.well-known/api-catalog"
+       style="color:inherit;text-decoration:underline;">API catalog</a>
+  </nav>
 {% endblock %}
 
 

@@ -1,6 +1,9 @@
-.. title:: Dataset landscape
 
-.. rubric:: Dataset landscape
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Dataset map: subjects × records × duration</h3>
+   </header>
 
 .. raw:: html
 
@@ -12,7 +15,7 @@
 .. raw:: html
 
    <figcaption class="eegdash-caption">
-     Figure: Dataset landscape. Each bubble represents a dataset: x-axis shows the number of subjects,
+     Figure: Dataset map. Each bubble represents a dataset: x-axis shows the number of subjects,
      y-axis the number of records, bubble size encodes recording duration per subject, and color indicates
      experiment modality. Hover for details, click to open a dataset page, and use the legend to filter.
    </figcaption>

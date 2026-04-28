@@ -349,6 +349,12 @@ class Dataset(TypedDict, total=False):
         Unique identifier (e.g., "ds001785").
     name : str
         Descriptive title of the dataset.
+    canonical_name : list[str] | None
+        Canonical / community-recognised name(s) for the dataset, each a valid
+        Python identifier (e.g. ``["BrainTreeBank"]``, ``["SleepEDF",
+        "SleepEDFPlus"]``). Used to register importable class aliases alongside
+        the ``DS…``-style ID. Empty list or ``None`` means no alias is
+        registered.
     source : str
         Origin source (e.g., "openneuro", "nemar").
     readme : str | None
@@ -413,6 +419,7 @@ class Dataset(TypedDict, total=False):
     # Identity
     dataset_id: str
     name: str
+    canonical_name: list[str] | None
     source: str
     readme: str | None
     ingestion_fingerprint: str | None
@@ -480,6 +487,7 @@ def create_dataset(
     *,
     dataset_id: str,
     name: str | None = None,
+    canonical_name: list[str] | None = None,
     source: str = "openneuro",
     readme: str | None = None,
     recording_modality: list[str] | None = None,
@@ -546,6 +554,11 @@ def create_dataset(
         Dataset identifier (e.g., "ds001785").
     name : str, optional
         Dataset title/name.
+    canonical_name : list[str], optional
+        Canonical / community-recognised name(s) for the dataset (each a valid
+        Python identifier, e.g. ``["BrainTreeBank"]`` or ``["SleepEDF",
+        "SleepEDFPlus"]``). Used by the dataset class registry to expose
+        importable aliases. Empty list or ``None`` registers no aliases.
     source : str, default "openneuro"
         Data source ("openneuro", "nemar", "gin").
     recording_modality : list[str], optional
@@ -650,9 +663,16 @@ def create_dataset(
         handedness_distribution=handedness_distribution,
     )
 
+    _canonical = (
+        [n.strip() for n in canonical_name if isinstance(n, str) and n.strip()]
+        if canonical_name
+        else []
+    )
+
     dataset = Dataset(
         dataset_id=dataset_id,
         name=name or dataset_id,
+        canonical_name=_canonical or None,
         source=source,
         readme=readme,
         recording_modality=recording_modality or ["eeg"],
@@ -729,8 +749,10 @@ class Storage(TypedDict):
 
     Attributes
     ----------
-    backend : {'s3', 'https', 'local'}
-        Storage backend protocol.
+    backend : {'s3', 'https', 'local', 'nemar'}
+        Storage backend protocol. ``"nemar"`` is a non-fetchable marker
+        for NEMAR-hosted datasets — see ``StorageAccessError`` for the
+        out-of-band access paths (git-annex / nemar CLI / NEMAR API).
     base : str
         Base URI (e.g., "s3://openneuro.org/ds000001").
     raw_key : str
@@ -740,7 +762,7 @@ class Storage(TypedDict):
 
     """
 
-    backend: Literal["s3", "https", "local"]
+    backend: Literal["s3", "https", "local", "nemar"]
     base: str
     raw_key: str
     dep_keys: list[str]
@@ -811,6 +833,11 @@ class Record(TypedDict, total=False):
         Number of time points.
     digested_at : str
         Timestamp of when this record was processed.
+    montage_hash : str | None
+        Foreign key into the ``montages`` collection, pointing at the BIDS
+        ``*_electrodes.tsv`` layout this record was recorded with. ``None``
+        when the dataset publishes no scalp electrode positions (e.g.
+        iEEG depth-electrode datasets or MEG-only recordings).
 
     """
 
@@ -830,6 +857,96 @@ class Record(TypedDict, total=False):
     nchans: int | None
     ntimes: int | None
     digested_at: str
+    montage_hash: str | None
+
+
+class MontageChannel(TypedDict, total=False):
+    """A single entry inside :attr:`Montage.channels`.
+
+    BIDS ``electrodes.tsv`` requires ``name, x, y, z`` (in the coordinate
+    system declared by the sibling ``coordsystem.json``). The optional
+    columns are preserved as-is when present.
+    """
+
+    name: str
+    x: float
+    y: float
+    z: float
+    type: str
+    material: str
+    impedance: str
+
+
+class Montage(TypedDict, total=False):
+    """TypedDict schema for a Montage document (polymorphic by modality).
+
+    A Montage captures the sensor layout used by one or more Records.
+    Identical layouts (same channel names + same positions to 1 mm)
+    collapse to a single document via :attr:`hash`; every Record that
+    uses them carries the hash as a foreign key.
+
+    **Modalities.** The collection is polymorphic — a :attr:`modality`
+    tag discriminates between layouts. Coordinate semantics vary by
+    modality, so viewers must branch on :attr:`modality` before
+    interpreting :attr:`space_declared` / :attr:`units_declared`:
+
+    - ``"eeg"``  — scalp electrodes on a fitted sphere.
+    - ``"ieeg"`` — intracranial contacts in MRI / ACPC / MNI space.
+    - ``"meg"``  — sensor helmet (device or head frame, both accepted).
+    - ``"emg"``  — surface electrodes with body-landmark frames.
+    - ``"nirs"`` — fNIRS optodes (sources + detectors).
+
+    The document is populated during Phase 3 digestion by the
+    per-modality extractors in ``scripts.ingestions._montage``. The
+    provenance fields (``first_seen``, ``representative_dataset``,
+    ``representative_subject``) are set by the admin bulk-upsert endpoint
+    when a new hash is first inserted; subsequent upserts don't overwrite
+    them.
+
+    Attributes
+    ----------
+    hash : str
+        16-char SHA1-prefix over sorted ``(modality, name, x_mm, y_mm,
+        z_mm, type?)`` tuples. Stable under row-order changes and sub-mm
+        jitter; modality is included so an EEG cap and a MEG helmet
+        cannot alias by name + position.
+    modality : str
+        One of ``"eeg" | "ieeg" | "meg" | "emg" | "nirs"``.
+    n_channels : int
+        Number of channels with finite coordinates (rows with ``n/a``
+        positions are excluded).
+    space_declared : str | None
+        Raw value of ``<modality>CoordinateSystem`` from the companion
+        ``coordsystem.json`` (or the FIF-derived frame label for MEG:
+        ``"device" | "head" | "mixed" | "unknown"``). Preserved even
+        when known to be wrong — client-side viewers infer the actual
+        space from the data.
+    units_declared : str | None
+        Raw value of ``<modality>CoordinateUnits``: ``"m" | "cm" | "mm"``
+        (or ``"percent"`` for EMG body-landmark frames). Client-side
+        viewers infer actual units from the fitted sphere radius.
+    channels : list[MontageChannel]
+        The full sensor list, preserving BIDS row order after ``n/a``
+        drops.
+    first_seen : str
+        ISO 8601 timestamp of the first ingest that saw this hash.
+    representative_dataset : str
+        Dataset ID that first introduced this hash.
+    representative_subject : str
+        Subject ID within ``representative_dataset`` used to extract
+        the canonical channel list.
+
+    """
+
+    hash: str
+    modality: str
+    n_channels: int
+    space_declared: str | None
+    units_declared: str | None
+    channels: list[MontageChannel]
+    first_seen: str
+    representative_dataset: str
+    representative_subject: str
 
 
 def _sanitize_run_for_mne(value: Any) -> str | None:
@@ -859,13 +976,14 @@ def create_record(
     dep_keys: list[str] | None = None,
     datatype: str = "eeg",
     suffix: str = "eeg",
-    storage_backend: Literal["s3", "https", "local"] = "s3",
+    storage_backend: Literal["s3", "https", "local", "nemar"] = "s3",
     recording_modality: list[str] | None = None,
     ch_names: list[str] | None = None,
     sampling_frequency: float | None = None,
     nchans: int | None = None,
     ntimes: int | None = None,
     digested_at: str | None = None,
+    annex_keys: dict[str, str] | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -935,6 +1053,16 @@ def create_record(
     entities_mne: Entities = dict(entities)  # type: ignore[assignment]
     entities_mne["run"] = _sanitize_run_for_mne(run)
 
+    storage_block: dict[str, Any] = {
+        "backend": storage_backend,
+        "base": storage_base.rstrip("/"),
+        "raw_key": bids_relpath,
+        "dep_keys": dep_keys,
+    }
+    # Sparse map (relpath → SHA-key) — annex-managed files only.
+    if annex_keys:
+        storage_block["annex_keys"] = dict(annex_keys)
+
     return Record(
         dataset=dataset,
         data_name=f"{dataset}_{PurePosixPath(bids_relpath).name}",
@@ -946,12 +1074,7 @@ def create_record(
         recording_modality=recording_modality or [datatype],
         entities=entities,
         entities_mne=entities_mne,
-        storage=Storage(
-            backend=storage_backend,
-            base=storage_base.rstrip("/"),
-            raw_key=bids_relpath,
-            dep_keys=dep_keys,
-        ),
+        storage=storage_block,  # type: ignore[arg-type]
         ch_names=ch_names,
         sampling_frequency=sampling_frequency,
         nchans=nchans,

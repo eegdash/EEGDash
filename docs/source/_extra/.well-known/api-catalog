@@ -1,0 +1,66 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://eegdash.org/",
+      "service-desc": [
+        {
+          "href": "https://data.eegdash.org/openapi.json",
+          "type": "application/openapi+json;version=3.1"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://data.eegdash.org/docs",
+          "type": "text/html",
+          "title": "EEGDash API — Swagger UI"
+        },
+        {
+          "href": "https://data.eegdash.org/redoc",
+          "type": "text/html",
+          "title": "EEGDash API — ReDoc"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://data.eegdash.org/health",
+          "type": "application/json",
+          "title": "Service health check"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://data.eegdash.org/health",
+          "type": "application/json"
+        }
+      ],
+      "item": [
+        {
+          "href": "https://data.eegdash.org/api/eegdash/records",
+          "type": "application/json",
+          "title": "Query catalog records with BIDS filters (rate-limited to 100 req/min)"
+        },
+        {
+          "href": "https://data.eegdash.org/api/eegdash/count",
+          "type": "application/json",
+          "title": "Count catalog records matching a filter"
+        },
+        {
+          "href": "https://data.eegdash.org/api/eegdash/datasets",
+          "type": "application/json",
+          "title": "List all unique datasets in the catalog"
+        },
+        {
+          "href": "https://data.eegdash.org/api/eegdash/metadata/{dataset}",
+          "type": "application/json",
+          "title": "Get BIDS metadata for a single dataset"
+        }
+      ],
+      "license": [
+        {
+          "href": "https://github.com/eegdash/EEGDash/blob/main/LICENSE",
+          "title": "EEGDash project license"
+        }
+      ]
+    }
+  ]
+}

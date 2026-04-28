@@ -1,6 +1,21 @@
+# EEGDash is an open scientific dataset catalog. We welcome indexing by
+# search engines and grounding/retrieval by AI agents so researchers can
+# find and reuse EEG datasets, but we do not authorize the site content
+# itself to be used for AI model training. Individual datasets linked
+# from this catalog are governed by their own upstream licenses.
+# See https://eegdash.org for project details.
+#
+# Content-Signals policy (search=yes, ai-input=yes, ai-train=no) —
+# currently kept as a comment because Lighthouse's robots.txt validator
+# does not yet recognise the Cloudflare Content-Signal directive and
+# flags it as an "unknown directive", dragging the PSI SEO score.
+# Reinstate as a live directive once Lighthouse ships the parser update,
+# or move in front of a reverse proxy (see docs/deploy/cloudflare-proxy)
+# that can emit a Content-Signal HTTP response header instead.
+#   Content-Signal: search=yes, ai-input=yes, ai-train=no
+
 User-agent: *
 Allow: /
 
 # Point crawlers to the generated sitemap
-Sitemap: https://sccn.github.io/eegdash/sitemap.xml
-
+Sitemap: https://eegdash.org/sitemap.xml

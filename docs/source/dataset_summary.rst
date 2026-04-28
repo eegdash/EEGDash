@@ -1,22 +1,55 @@
 :hide_sidebar: true
 :html_theme.sidebar_secondary.remove: true
 :html_theme.sidebar_primary.remove: true
+:og:description: Browse 700+ BIDS-first EEG/MEG datasets in the EEGDash Python catalog. Filter by modality, task, subjects, and licence; load any row with a single line of Python.
+
+.. meta::
+   :description: Browse 700+ BIDS-first EEG/MEG datasets in the EEGDash Python catalog. Filter by modality, task, subjects, and licence; load any row with a single line of Python.
 
 .. _data_summary:
 
-.. raw:: html
+.. only:: html
 
-   <script>document.documentElement.classList.add('dataset-summary-page');</script>
+   .. raw:: html
+
+      <script>
+        document.documentElement.classList.add('dataset-summary-page');
+        // Augment sphinx-design tabs with ARIA semantics. sphinx-design renders
+        // a <input type="radio"> + <label> pattern where the input is visually
+        // hidden but still tabindex=0, and neither element gets ARIA roles.
+        // Screen readers announce the radios as unlabelled. Wire up role="tab",
+        // aria-label, aria-selected, and the containing tablist role so they're
+        // discoverable as a real tab panel.
+        window.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('.sd-tab-set').forEach(function (set) {
+            set.setAttribute('role', 'tablist');
+            var inputs = set.querySelectorAll('input[type="radio"]');
+            inputs.forEach(function (input) {
+              var label = set.querySelector('label[for="' + input.id + '"]');
+              if (!label) return;
+              var name = label.textContent.trim();
+              input.setAttribute('role', 'tab');
+              input.setAttribute('aria-label', name);
+              input.setAttribute('aria-selected', input.checked ? 'true' : 'false');
+              input.addEventListener('change', function () {
+                inputs.forEach(function (i) {
+                  i.setAttribute('aria-selected', i.checked ? 'true' : 'false');
+                });
+              });
+            });
+          });
+        });
+      </script>
 
 .. rst-class:: dataset-summary-article
 
 Datasets Catalog
 ================
 
-To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications.
+EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by collaborating labs. It preserves publicly funded research data and exposes it in a form that machine learning and deep learning workflows can use directly.
 
 
-.. grid:: 1 2 3 5
+.. grid:: 1 2 2 4
     :gutter: 3
     :margin: 4 4 0 0
 
@@ -52,51 +85,63 @@ To leverage recent and ongoing advancements in large-scale computational methods
 
         **|modalities_total|**
 
-    .. grid-item-card::  Sources
-        :class-card: dataset-counter-card
-        :text-align: center
 
-        :octicon:`globe;2em;sd-text-warning`
+.. only:: html
 
-        **|sources_total|**
+   .. raw:: html
 
+      <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
 
-.. raw:: html
+   .. tab-set::
 
-   <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+      .. tab-item:: Dataset Table
 
-.. tab-set::
+         .. include:: dataset_summary/table.rst
 
-   .. tab-item:: Dataset Table
+      .. tab-item:: Participant Distribution
 
-      .. include:: dataset_summary/table.rst
+         .. include:: dataset_summary/kde.rst
 
-   .. tab-item:: Participant Distribution
+      .. tab-item:: Dataset Flow
 
-      .. include:: dataset_summary/kde.rst
+         .. include:: dataset_summary/sankey.rst
 
-   .. tab-item:: Dataset Flow
+      .. tab-item:: Dataset Treemap
 
-      .. include:: dataset_summary/sankey.rst
+         .. include:: dataset_summary/treemap.rst
 
-   .. tab-item:: Dataset Treemap
+      .. tab-item:: Clinical Breakdown
 
-      .. include:: dataset_summary/treemap.rst
+         .. include:: dataset_summary/clinical.rst
 
-   .. tab-item:: Clinical Breakdown
+      .. tab-item:: Dataset Growth
 
-      .. include:: dataset_summary/clinical.rst
+         .. include:: dataset_summary/growth.rst
 
-   .. tab-item:: Dataset Growth
+      .. tab-item:: Dataset Map
 
-      .. include:: dataset_summary/growth.rst
+         .. include:: dataset_summary/bubble.rst
 
-   .. tab-item:: Dataset Landscape
+      .. tab-item:: Subject Distribution
 
-      .. include:: dataset_summary/bubble.rst
+         .. include:: dataset_summary/moabb.rst
 
-   .. tab-item:: Subject Distribution
+.. only:: not html
 
-      .. include:: dataset_summary/moabb.rst
+   Browse the catalog interactively at
+   `eegdash.org/dataset_summary.html <https://eegdash.org/dataset_summary.html>`__.
+   The same data is available programmatically in Python::
 
-The archive is currently still in :bdg-danger:`beta testing` mode, so be kind. 
+       from eegdash import EEGDashDataset
+
+       # List every dataset
+       records = EEGDashDataset.list_datasets()
+
+       # Filter by task, modality, subject count, …
+       rest_datasets = EEGDashDataset.list_datasets(task="rest")
+
+   Or via the HTTP API at ``https://data.eegdash.org``
+   (see the ``/docs`` Swagger UI and the
+   `api catalog </.well-known/api-catalog>`__).
+
+The archive is still in :bdg-danger:`beta testing` mode, so be kind.

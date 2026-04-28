@@ -432,3 +432,230 @@ def test_register_api_success():
     with patch("eegdash.dataset.registry.fetch_datasets_from_api", return_value=df):
         registered = register_openneuro_datasets(from_api=True)
         assert "DS002" in registered
+
+
+# ---------------------------------------------------------------------------
+# Canonical-name aliases
+# ---------------------------------------------------------------------------
+import logging
+import math
+
+import pandas as pd
+import pytest
+
+from eegdash.dataset.registry import (
+    _parse_canonical_names,
+    register_openneuro_datasets,
+)
+
+
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        (None, []),
+        ("", []),
+        ("   ", []),
+        ("nan", []),
+        ("null", []),
+        ("[]", []),
+        ("<NA>", []),
+        (math.nan, []),
+        (pd.NA, []),
+        (pd.NaT, []),
+        ([], []),
+        (["A", " B ", ""], ["A", "B"]),
+        (["Foo", "Foo", "Bar"], ["Foo", "Bar"]),
+        ('["BrainTreeBank"]', ["BrainTreeBank"]),
+        ('["SleepEDF", "SleepEDFPlus"]', ["SleepEDF", "SleepEDFPlus"]),
+        ('["Foo", "Foo"]', ["Foo"]),
+        ('"OnlyOne"', ["OnlyOne"]),
+        ("Foo, Bar", ["Foo", "Bar"]),
+    ],
+)
+def test_parse_canonical_names(raw, expected):
+    assert _parse_canonical_names(raw) == expected
+
+
+def _register(tmp_path, rows, namespace=None):
+    csv_path = tmp_path / "summary.csv"
+    pd.DataFrame(rows).to_csv(csv_path, index=False)
+    ns = {} if namespace is None else namespace
+    register_openneuro_datasets(
+        summary_file=csv_path, namespace=ns, base_class=DummyBase
+    )
+    return ns
+
+
+@pytest.mark.parametrize(
+    "canonical_field, expected_aliases",
+    [
+        ('["BrainTreeBank"]', ["BrainTreeBank"]),
+        ('["SleepEDF", "SleepEDFPlus"]', ["SleepEDF", "SleepEDFPlus"]),
+        ('["Sleep-EDF+", "ValidName"]', ["ValidName"]),
+        ('["class", "None", "True", "GoodName"]', ["GoodName"]),
+        ('["Foo", "Foo", "Bar"]', ["Foo", "Bar"]),
+        ('["   ", "Ok"]', ["Ok"]),
+        ("[]", []),
+        ("", []),
+    ],
+    ids=[
+        "single",
+        "multiple",
+        "bad-ident",
+        "kw",
+        "dup",
+        "blank-entry",
+        "empty",
+        "blank",
+    ],
+)
+def test_canonical_name_registration(tmp_path, canonical_field, expected_aliases):
+    ns = _register(tmp_path, [{"dataset": "ds1", "canonical_name": canonical_field}])
+    assert ns["DS1"].canonical_name == expected_aliases
+    for alias in expected_aliases:
+        assert ns[alias] is ns["DS1"]
+        assert alias in ns["__all__"]
+
+
+def test_canonical_name_column_absent(tmp_path):
+    (tmp_path / "s.csv").write_text("dataset\nds_nocol\n")
+    ns = {}
+    register_openneuro_datasets(
+        summary_file=tmp_path / "s.csv", namespace=ns, base_class=DummyBase
+    )
+    assert ns["DS_NOCOL"].canonical_name == []
+
+
+@pytest.mark.parametrize(
+    "seed, rows, taken, winner_ds",
+    [
+        # Alias-vs-alias: first row wins.
+        (
+            None,
+            [
+                {"dataset": "ds_a", "canonical_name": '["Shared"]'},
+                {"dataset": "ds_b", "canonical_name": '["Shared"]'},
+            ],
+            "Shared",
+            "ds_a",
+        ),
+        # Alias collides with another row's DS class name → DS class keeps it.
+        (
+            None,
+            [
+                {"dataset": "ds_a", "canonical_name": '["DS_B"]'},
+                {"dataset": "ds_b", "canonical_name": "[]"},
+            ],
+            "DS_B",
+            "ds_b",
+        ),
+        # Alias collides with a pre-existing module global → global untouched.
+        (
+            "EEGDashDataset",
+            [{"dataset": "ds1", "canonical_name": '["EEGDashDataset", "Good"]'}],
+            "EEGDashDataset",
+            None,  # None ⇒ expect the seeded object to remain
+        ),
+    ],
+    ids=["alias-vs-alias", "alias-vs-ds-class", "alias-vs-module-global"],
+)
+def test_canonical_name_reserved_names_skipped(
+    tmp_path, caplog, seed, rows, taken, winner_ds
+):
+    seed_obj = object()
+    ns = {seed: seed_obj} if seed else {}
+    with caplog.at_level(logging.WARNING, logger="eegdash.dataset.registry"):
+        _register(tmp_path, rows, namespace=ns)
+
+    if winner_ds is None:
+        assert ns[taken] is seed_obj
+    else:
+        assert ns[taken]._dataset == winner_ds
+    assert any(
+        "already registered" in r.message or "reserved" in r.message
+        for r in caplog.records
+    )
+
+
+def test_canonical_name_in_docstring(tmp_path):
+    ns = _register(
+        tmp_path, [{"dataset": "ds_doc", "canonical_name": '["Foo", "Bar"]'}]
+    )
+    doc = ns["DS_DOC"].__doc__ or ""
+    assert "Also importable as" in doc and "``Foo``" in doc and "``Bar``" in doc
+
+
+# ---------------------------------------------------------------------------
+# _resolve_author_year: shared precedence rule for the author-year column
+# ---------------------------------------------------------------------------
+from eegdash.dataset.registry import _resolve_author_year  # noqa: E402
+
+
+@pytest.mark.parametrize(
+    "name_source, raw_aliases, explicit, expected",
+    [
+        # Explicit column value always wins.
+        ("author_year", ["Smith2023"], "Jones2024", "Jones2024"),
+        ("canonical", ["BrainTreeBank"], "Smith2023", "Smith2023"),
+        # No explicit → fall back to first alias ONLY when source=author_year.
+        ("author_year", ["Smith2023", "Smith2023_exp2"], None, "Smith2023"),
+        ("author_year", ["Smith2023"], "", "Smith2023"),
+        # Canonical source: no fallback to alias.
+        ("canonical", ["BrainTreeBank"], None, None),
+        # No inputs → None.
+        ("none", [], None, None),
+        ("", None, None, None),
+        # Explicit whitespace-only is treated as empty.
+        ("author_year", ["Smith2023"], "   ", "Smith2023"),
+        # Strips whitespace on alias fallback.
+        ("author_year", ["  Smith2023  "], None, "Smith2023"),
+    ],
+)
+def test_resolve_author_year(name_source, raw_aliases, explicit, expected):
+    assert (
+        _resolve_author_year(
+            name_source=name_source, raw_aliases=raw_aliases, explicit=explicit
+        )
+        == expected
+    )
+
+
+def test_identity_block_rendered_in_docstring(tmp_path):
+    """3-line :Study:/:Author (year):/:Canonical: field block shows up."""
+    ns = _register(
+        tmp_path,
+        [
+            {
+                "dataset": "ds_id",
+                "dataset_title": "Example Study",
+                "source": "openneuro",
+                "canonical_name": '["Foo"]',
+                "name_source": "canonical",
+                "author_year": "Smith2023",
+            }
+        ],
+    )
+    doc = ns["DS_ID"].__doc__ or ""
+    assert "Example Study" in doc.splitlines()[0]
+    assert ":Study: ``ds_id`` (OpenNeuro)" in doc
+    assert ":Author (year): ``Smith2023``" in doc
+    assert ":Canonical: ``Foo``" in doc
+
+
+def test_identity_block_suppresses_author_year_in_canonical(tmp_path):
+    """When canonical equals the author_year, the Canonical row is em-dash."""
+    ns = _register(
+        tmp_path,
+        [
+            {
+                "dataset": "ds_same",
+                "dataset_title": "T",
+                "source": "openneuro",
+                "canonical_name": '["Smith2023"]',
+                "name_source": "author_year",
+            }
+        ],
+    )
+    doc = ns["DS_SAME"].__doc__ or ""
+    assert ":Author (year): ``Smith2023``" in doc
+    assert ":Canonical: —" in doc

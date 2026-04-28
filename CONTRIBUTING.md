@@ -1,6 +1,6 @@
 # Contributing to EEG-Dash
 
-Thank you for your interest in contributing to EEG-Dash! This document provides guidelines and instructions for contributing to the project.
+Thanks for taking the time to contribute. This document covers the conventions, workflows, and tooling for working on EEG-Dash.
 
 ## Table of Contents
 
@@ -81,7 +81,7 @@ This will automatically run code quality checks (ruff, codespell) before each co
 pytest tests/ -v
 
 # Check that you can import eegdash
-python -c "from eegdash import EEGDash; print('Setup successful!')"
+python -c "import eegdash; print(eegdash.__version__)"
 ```
 
 ## Coding Standards
@@ -244,7 +244,7 @@ xdg-open build/html/index.html  # Linux
 
 Reviewers will check:
 - ✓ Code follows project style and conventions
-- ✓ Tests are comprehensive and passing
+- ✓ Tests cover the change and pass
 - ✓ Documentation is clear and complete
 - ✓ Commit messages follow conventions
 - ✓ No breaking changes (or properly documented)

@@ -1,6 +1,9 @@
-.. title:: Dataset treemap
 
-.. rubric:: Dataset treemap
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Dataset treemap</h3>
+   </header>
 
 .. raw:: html
 

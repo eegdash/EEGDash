@@ -181,6 +181,42 @@ def _tree_to_str(d: dict, s=None, prefix: str = "") -> str:
     return "\n".join(out_str)
 
 
+def _call_with_metadata(func: Callable, *x, _metadata: dict) -> Tuple[tuple, dict]:
+    if (
+        isinstance(func, FeatureExtractor)
+        or "_metadata" in inspect.signature(func).parameters
+    ):
+        if hasattr(get_underlying_func(func), "metadata_preprocessor"):
+            *z, _metadata = func(*x, _metadata=_metadata.copy())
+            z = (*z,)
+        else:
+            z = func(*x, _metadata=_metadata)
+    else:
+        z = func(*x)
+    return z, _metadata
+
+
+def _concat_calls(funcs: list[Callable], *x, _metadata: dict) -> tuple:
+    z = x
+    for func in funcs:
+        z, _metadata = _call_with_metadata(func, *z, _metadata=_metadata)
+    if "_metadata" in inspect.signature(funcs[-1]).parameters and hasattr(
+        get_underlying_func(funcs[-1]), "metadata_preprocessor"
+    ):
+        return z, _metadata
+    return z
+
+
+def _merge_call_list(funcs: list[Callable]) -> list[Callable]:
+    func_list = []
+    for f in funcs:
+        if isinstance(f, partial) and f.func is _concat_calls:
+            func_list.extend(f.args[0])
+        else:
+            func_list.append(f)
+    return func_list
+
+
 class FeatureExtractor(TrainableFeature):
     r"""Pipeline for multi-stage feature extraction.
 
@@ -351,14 +387,10 @@ class FeatureExtractor(TrainableFeature):
         """
         if self.preprocessor is None:
             z = (*x,)
-        elif "_metadata" in inspect.signature(self.preprocessor).parameters:
-            if hasattr(get_underlying_func(self.preprocessor), "metadata_preprocessor"):
-                *z, _metadata = self.preprocessor(*x, _metadata=_metadata.copy())
-                z = (*z,)
-            else:
-                z = self.preprocessor(*x, _metadata=_metadata)
         else:
-            z = self.preprocessor(*x)
+            z, _metadata = _call_with_metadata(
+                self.preprocessor, *x, _metadata=_metadata
+            )
         if not isinstance(z, tuple):
             z = (z,)
         return z, _metadata
@@ -396,13 +428,7 @@ class FeatureExtractor(TrainableFeature):
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
         preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
-            if (
-                isinstance(f, FeatureExtractor)
-                or "_metadata" in inspect.signature(f).parameters
-            ):
-                r = f(*z, _metadata=_metadata)
-            else:
-                r = f(*z)
+            r, _ = _call_with_metadata(f, *z, _metadata=_metadata)
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
                 r = f_und.feature_kind(r, _metadata=_metadata)
@@ -505,7 +531,11 @@ class FeatureExtractor(TrainableFeature):
     def __getitem__(self, key) -> Callable:
         """Get a feature/extractor by its key."""
         if key in self.feature_extractors_dict:
-            return self.feature_extractors_dict[key]
+            func = self.feature_extractors_dict[key]
+            if self.preprocessor is None:
+                return func
+            else:
+                return partial(_concat_calls, [self.preprocessor, func])
         if not isinstance(key, str):
             raise ValueError(
                 "Non-string keys are supported only for direct keys.\n"
@@ -516,21 +546,43 @@ class FeatureExtractor(TrainableFeature):
         for k, f in self.feature_extractors_dict.items():
             if not isinstance(f, FeatureExtractor):
                 continue
-            if not isinstance(k, str):
+            if not isinstance(k, str) or k == "":
                 kk = key
             elif key.startswith(k + "_"):
                 kk = key[len(k) + 1 :]
             else:
                 continue
             try:
-                return f[kk]
+                func = f[kk]
             except ValueError:
-                pass
+                continue
+            if self.preprocessor is None:
+                return func
+            else:
+                return partial(
+                    _concat_calls, _merge_call_list([self.preprocessor, func])
+                )
+
         raise ValueError(
             f"Key {key} not found in FeatureExtractor.\n"
             + "Possible direct keys are: "
             + f"{self.feature_extractors_dict.keys()}"
         )
+
+    @property
+    def feature_names(self) -> list[str]:
+        fnames = []
+        for fname, f in self.feature_extractors_dict.items():
+            if (not isinstance(fname, str) or not fname) and not isinstance(
+                f, FeatureExtractor
+            ):
+                fname = _get_func_name(get_underlying_func(f))
+            if isinstance(f, FeatureExtractor):
+                prefix = f"{fname}_" if fname else ""
+                fnames.extend([prefix + fn for fn in f.feature_names])
+            else:
+                fnames.append(fname)
+        return fnames
 
     def to_dict(self) -> dict:
         r"""Dumps the feature extractor to a dictionary.

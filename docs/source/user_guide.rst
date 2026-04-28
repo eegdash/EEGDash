@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
+
+.. meta::
+   :description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
 
 .. currentmodule:: eegdash.api
 
@@ -6,17 +10,17 @@
 User Guide
 ==========
 
-This guide provides a comprehensive overview of the :mod:`eegdash` library, focusing on its core data access object, :class:`~eegdash.api.EEGDashDataset`. You will learn how to use this object to find, access, and manage EEG data for your research and analysis tasks.
+This guide walks through the :mod:`eegdash` library and its main data access object, :class:`~eegdash.api.EEGDashDataset`. You will see how to find, access, and manage EEG data for research and analysis.
 
 The EEGDash Object
 ------------------
 
-While :class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning, the :class:`~eegdash.api.EEGDash` object provides a lower-level interface for directly interacting with the metadata database. It is useful for exploring the available data, performing complex queries, or managing metadata records.
+:class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning. For direct access to the metadata database, use the lower-level :class:`~eegdash.api.EEGDash` object. It is the right choice for exploring what is available, running ad-hoc queries, or managing records.
 
 Initializing EEGDash
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can create a client to connect to the public database like this:
+Create a client that connects to the public database:
 
 .. code-block:: python
 
@@ -28,7 +32,7 @@ You can create a client to connect to the public database like this:
 Finding Records
 ~~~~~~~~~~~~~~~
 
-The ``find()`` method allows you to query the database for records matching specific criteria. You can pass keyword arguments for simple filters or a full MongoDB query dictionary for more advanced searches.
+Use ``find()`` to query the database for records matching specific criteria. Pass keyword arguments for simple filters, or a full MongoDB query dictionary for more advanced searches.
 
 .. code-block:: python
 
@@ -44,27 +48,27 @@ The ``find()`` method allows you to query the database for records matching spec
 EEGDash vs. EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's important to understand the distinction between these two objects:
+These two objects do different jobs:
 
--   :class:`~eegdash.api.EEGDash`: Use this for querying and managing metadata. It returns a list of dictionaries, where each dictionary is a record from the database.
--   :class:`~eegdash.api.EEGDashDataset`: Use this when you need to load EEG data for analysis or machine learning. It returns a PyTorch-compatible dataset object where each item can load the actual EEG signal.
+-   :class:`~eegdash.api.EEGDash`: query and manage metadata. Returns a list of dictionaries, one per record.
+-   :class:`~eegdash.api.EEGDashDataset`: load EEG data for analysis or machine learning. Returns a PyTorch-compatible dataset where each item can load the underlying EEG signal.
 
-In general, you will use :class:`~eegdash.api.EEGDashDataset` for most of your data loading needs.
+For most data loading work, use :class:`~eegdash.api.EEGDashDataset`.
 
 The EEGDashDataset Object
 -------------------------
 
-The :class:`~eegdash.api.EEGDashDataset` is the primary entry point for working with EEG recordings in :mod:`eegdash`. It acts as a high-level interface that allows you to query a metadata database and load corresponding EEG data, either from a remote source or from a local cache.
+:class:`~eegdash.api.EEGDashDataset` is the main entry point for working with EEG recordings in :mod:`eegdash`. It is a high-level interface that queries the metadata database and loads matching EEG data, either from a remote source or from a local cache.
 
 Initializing EEGDashDataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To get started, you need to create an instance of :class:`~eegdash.api.EEGDashDataset`. The two most important parameters are ``cache_dir`` and ``dataset``.
+Create an instance of :class:`~eegdash.api.EEGDashDataset`. The two main parameters are ``cache_dir`` and ``dataset``.
 
-- ``cache_dir``: This is the local directory where ``eegdash`` will store downloaded data.
-- ``dataset``: The identifier of the dataset you want to work with (e.g., ``"ds002718"``).
+- ``cache_dir``: local directory where ``eegdash`` stores downloaded data.
+- ``dataset``: identifier of the dataset (e.g., ``"ds002718"``).
 
-Here's a basic example of how to initialize the dataset:
+A basic example:
 
 .. code-block:: python
 
@@ -78,17 +82,17 @@ Here's a basic example of how to initialize the dataset:
 
     print(f"Found {len(dataset)} recordings in the dataset.")
 
-This will create a dataset object containing all recordings from ``ds002718``. The data files will be downloaded to the ``./eeg_data/ds002718/`` directory when accessed.
+The resulting object holds every recording in ``ds002718``. Files are downloaded to ``./eeg_data/ds002718/`` on first access.
 
 Querying for Specific Data
 --------------------------
 
-:class:`~eegdash.api.EEGDashDataset` offers powerful filtering capabilities, allowing you to select a subset of recordings based on various criteria. You can filter by task, subject, session, or run.
+:class:`~eegdash.api.EEGDashDataset` lets you select a subset of recordings by task, subject, session, or run.
 
 Filtering by Task
 ~~~~~~~~~~~~~~~~~
 
-You can easily select recordings associated with a specific experimental task. For example, to get all resting-state recordings:
+You can select recordings tied to a specific experimental task. For example, to get all resting-state recordings:
 
 .. code-block:: python
 
@@ -104,7 +108,7 @@ You can easily select recordings associated with a specific experimental task. F
 Filtering by Subject
 ~~~~~~~~~~~~~~~~~~~~
 
-You can also filter the data to get recordings from one or more subjects.
+Filter by one or more subjects:
 
 .. code-block:: python
 
@@ -130,7 +134,7 @@ You can also filter the data to get recordings from one or more subjects.
 Combining Filters
 ~~~~~~~~~~~~~~~~~
 
-You can combine multiple filters to create more specific queries. For instance, to get the resting-state recordings for a specific set of subjects:
+Combine filters for narrower queries. For example, to get resting-state recordings from a specific set of subjects:
 
 .. code-block:: python
 
@@ -147,7 +151,7 @@ You can combine multiple filters to create more specific queries. For instance, 
 Advanced Querying with MongoDB Syntax
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For more complex queries, you can pass a MongoDB-style query dictionary directly using the ``query`` parameter. This allows for advanced filtering, such as using operators like ``$in``.
+For more complex queries, pass a MongoDB-style query dictionary directly to the ``query`` parameter. Operators such as ``$in`` work here.
 
 .. code-block:: python
 
@@ -165,11 +169,11 @@ For more complex queries, you can pass a MongoDB-style query dictionary directly
 Working with Local Data (Offline Mode)
 --------------------------------------
 
-:mod:`eegdash` also supports working with local data that you have already downloaded or manage separately. By setting ``download=False``, you can instruct :class:`~eegdash.api.EEGDashDataset` to use local BIDS-compliant data instead of accessing the database or remote storage.
+:mod:`eegdash` also works with local data you have already downloaded or manage yourself. Pass ``download=False`` and :class:`~eegdash.api.EEGDashDataset` reads BIDS-compliant files from disk instead of hitting the database or remote storage.
 
-To use this feature, your data must be organized in a BIDS-like structure within your ``cache_dir``. For example, if your ``cache_dir`` is ``./eeg_data`` and your dataset is ``ds002718``, the files should be located at ``./eeg_data/ds002718/``.
+The data must follow a BIDS-like layout inside your ``cache_dir``. If ``cache_dir`` is ``./eeg_data`` and the dataset is ``ds002718``, the files belong under ``./eeg_data/ds002718/``.
 
-Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
+Offline mode in practice:
 
 .. code-block:: python
 
@@ -182,12 +186,12 @@ Here is how to use :class:`~eegdash.api.EEGDashDataset` in offline mode:
 
     print(f"Found {len(local_dataset)} local recordings.")
 
-When ``download=False``, :mod:`eegdash` will scan the specified directory for EEG files and construct the dataset from the local file system. This is useful for environments without internet access or when you want to work with your own curated datasets.
+With ``download=False``, :mod:`eegdash` scans ``cache_dir`` for EEG files and builds the dataset from the local file system. Use this for offline environments, air-gapped machines, or your own curated datasets.
 
 Accessing Data from the Dataset
 -------------------------------
 
-Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access individual recordings as if it were a list. Each item in the dataset is an :class:`~eegdash.data_utils.EEGDashBaseDataset` object, which contains the metadata and methods to load the actual EEG data.
+The :class:`~eegdash.api.EEGDashDataset` object behaves like a list: index into it to access individual recordings. Each item is an :class:`~eegdash.data_utils.EEGDashBaseDataset` that carries the metadata and loads the EEG data on demand.
 
 .. code-block:: python
 
@@ -197,30 +201,28 @@ Once you have your :class:`~eegdash.api.EEGDashDataset` object, you can access i
         
         print(f"Loaded recording for subject: {recording.description['subject']}")
 
-This provides a powerful and flexible way to integrate ``eegdash`` into your data analysis pipelines, whether you are working with remote or local data. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
+This is how ``eegdash`` plugs into a data analysis pipeline, whether the data is remote or local. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
 
 
 API Configuration
 -----------------
 
 By default, :mod:`eegdash` connects to the public REST API at ``https://data.eegdash.org``.
-You can customize this behavior using environment variables:
+Override it through environment variables:
 
 .. code-block:: bash
 
    # Override the default API URL (e.g., for testing)
    export EEGDASH_API_URL="https://data.eegdash.org"
-   
-   # For admin write operations (required for dataset ingestion)
+
+   # Admin write operations (required for dataset ingestion)
    export EEGDASH_API_TOKEN="your-admin-token"
 
-The API provides the following features:
+Public endpoints are rate-limited to 100 requests per minute per IP. Service
+status is available at ``/health``, and every response carries an
+``X-Request-ID`` header you can use for debugging.
 
-- **Rate Limiting**: Public endpoints are limited to 100 requests/minute per IP
-- **Health Checks**: Service status available at ``/health``
-- **Request Tracing**: All responses include ``X-Request-ID`` for debugging
-
-For more details about the API architecture, see :doc:`API Core </api/api_core>`.
+For more on the API architecture, see :doc:`API Core </api/api_core>`.
 
 
 .. seealso::

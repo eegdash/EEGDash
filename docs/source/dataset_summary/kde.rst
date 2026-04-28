@@ -1,4 +1,3 @@
-.. title:: Participant Distribution by Modality
 
 .. rubric:: Distribution of Sample Sizes Varies by Experimental Modality
 

@@ -1,5 +1,6 @@
 import concurrent.futures
 import csv
+import html
 import importlib
 import inspect
 import json
@@ -18,6 +19,8 @@ from sphinx.util import logging
 from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 
 sys.path.insert(0, os.path.abspath(".."))
+if os.environ.get("SPHINX_BUILD", "") == "":
+    os.environ["SPHINX_BUILD"] = "1"
 
 import eegdash
 import eegdash.dataset as dataset_module
@@ -52,9 +55,29 @@ extensions = [
     "numpydoc",
     "sphinx_gallery.gen_gallery",
     "sphinx_sitemap",
+    "sphinxext.opengraph",
     "sphinx_copybutton",
-    "sphinx.ext.graphviz",
     "sphinx_time_estimation",
+]
+
+# -- Open Graph / Twitter Card configuration --------------------------------
+# Populates <meta property="og:*"> and <meta name="twitter:*"> tags per page.
+# Per-page overrides live in each RST file as `.. meta::` directives or via
+# sphinxext-opengraph's `:og:...:` field lists.
+ogp_site_url = "https://eegdash.org/"
+ogp_site_name = "EEG Dash"
+# PNG (1200x630) for social previews; X/Twitter and LinkedIn don't render
+# SVG cards, so the earlier `eegdash_long.svg` was silently blank there.
+# See `_static/eegdash_social_card.png` — generated from `eegdash_long.svg`
+# with the logo centered on a white canvas.
+ogp_image = "https://eegdash.org/_static/eegdash_social_card.png"
+ogp_image_alt = "EEG Dash — data-sharing interface for M/EEG datasets"
+ogp_description_length = 200
+ogp_enable_meta_description = True
+ogp_type = "website"
+ogp_custom_meta_tags = [
+    '<meta name="twitter:card" content="summary_large_image" />',
+    '<meta name="twitter:site" content="@eegdash" />',
 ]
 
 templates_path = ["_templates"]
@@ -90,27 +113,27 @@ html_logo = "_static/eegdash_image_only.svg"
 html_favicon = "_static/favicon.ico"
 html_title = "EEG Dash"
 html_short_title = "EEG Dash"
+# Only truly-global stylesheets are loaded here. The DataTables CSS bundle
+# used by `dataset_summary.html` is already inlined into that page via the
+# generated `_static/dataset_generated/dataset_summary_table.html` include,
+# so keeping it in `html_css_files` would duplicate ~40 KB of CSS on every
+# other page of the site for no benefit.
 html_css_files = [
-    "https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.css",
-    "https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css",
-    "https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css",
-    "https://cdn.datatables.net/searchpanes/2.3.1/css/searchPanes.dataTables.min.css",
     "custom.css",
     "css/treemap.css",
     "css/custom.css",
 ]
+# Only truly-global JS is loaded here; page-specific scripts (homepage hero
+# search, dataset-summary DataTables stack) are gated in `_templates/layout.html`
+# by `pagename`. The DataTables stack that dataset_summary depends on is
+# inlined into `_static/dataset_generated/dataset_summary_table.html` by the
+# generator, so we avoid double-loading by not listing it globally.
 html_js_files = [
-    "https://code.jquery.com/jquery-3.7.1.min.js",
-    "https://cdn.datatables.net/v/bm/dt-1.13.4/datatables.min.js",
-    "https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js",
-    "https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js",
-    "https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js",
-    # Fuse.js for fuzzy search autocomplete (24KB minified, 8KB gzipped)
-    "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js",
-    "js/tag-palette.js",
-    "js/datatables-init.js",
-    "js/hero-search.js",
-    "js/search-as-you-type.js",  # Live search in PyData theme search modal
+    ("js/tag-palette.js", {"defer": "defer"}),
+    # Live search in PyData theme search modal (rendered on every page).
+    ("js/search-as-you-type.js", {"defer": "defer"}),
+    # Lazy-load the electrode-explorer iframe on <details> expansion.
+    ("js/lazy-embed.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -137,30 +160,28 @@ html_theme_options = {
     "external_links": [
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
+    # Local SVG icons instead of FontAwesome. Pydata-sphinx-theme only
+    # loads fontawesome.js (~540 KiB) when at least one icon_links entry
+    # has type="fontawesome"; switching to local SVGs removes that
+    # dependency from every page load.
     "icon_links": [
         {
             "name": "GitHub",
             "url": "https://github.com/eegdash/EEGDash",
-            "icon": "fa-brands fa-github",
-            "type": "fontawesome",
+            "icon": "_static/icons/github.svg",
+            "type": "local",
         },
         {
             "name": "PyPI",
             "url": "https://pypi.org/project/eegdash/",
-            "icon": "fa-solid fa-box",
-            "type": "fontawesome",
-        },
-        {
-            "name": "Docs (Stable)",
-            "url": "https://eegdash.org/EEGDash",
-            "icon": "fa-solid fa-book",
-            "type": "fontawesome",
+            "icon": "_static/icons/pypi.svg",
+            "type": "local",
         },
         {
             "name": "Discord",
             "url": "https://discord.gg/8jd7nVKwsc",
-            "icon": "fa-brands fa-discord",
-            "type": "fontawesome",
+            "icon": "_static/icons/discord.svg",
+            "type": "local",
         },
     ],
 }
@@ -170,6 +191,15 @@ html_sidebars = {
     "dataset_summary": [],
     "api": [],
     "installation": [],
+    # sphinx-gallery pages render a large code preview; the sidebar adds
+    # ~15 KB of chrome above the fold for no navigation gain (gallery
+    # pages already have their own previous/next nav injected).
+    "generated/auto_examples/*": [],
+    "generated/auto_examples/core/*": [],
+    "generated/auto_examples/tutorials/*": [],
+    "generated/auto_examples/dev_scripts/*": [],
+    "generated/auto_examples/eeg2025/*": [],
+    "generated/auto_examples/hpc/*": [],
 }
 
 # Copy extra files (e.g., robots.txt) to the output root
@@ -341,9 +371,14 @@ AUTOGEN_NOTICE = """..
 
 
 DATASET_PAGE_TEMPLATE = """{notice}:html_theme.sidebar_secondary.remove:
+{og_description_field}
+
+{meta_section}
 
 {title}
 {underline}
+
+{jsonld_section}
 
 {hero_section}
 
@@ -369,6 +404,8 @@ Technical Details
 
 {highlights_section}
 
+{electrodes_section}
+
 API Reference
 -------------
 
@@ -387,16 +424,17 @@ DATASET_INDEX_TEMPLATE = """{notice}.. _api/dataset/api_dataset:
 Datasets API
 =======================
 
-The :mod:`eegdash.dataset` package exposes dynamically registered dataset
-classes. See :doc:`eegdash.dataset` for the module-level API, including
-:class:`~eegdash.dataset.EEGChallengeDataset` and helper utilities.
+The :mod:`eegdash.dataset` package exposes dataset classes that are
+registered dynamically at import time. See :doc:`eegdash.dataset` for the
+module-level API, including :class:`~eegdash.dataset.EEGChallengeDataset`
+and helper utilities.
 
-Dataset Overview
-----------------
+What's in the registry
+----------------------
 
-EEGDash currently exposes **{dataset_count} OpenNeuro EEG datasets** that are
-registered dynamically from mongo database. The table below summarises
-the distribution by experimental type as tracked in the summary file.
+EEGDash exposes **700+ OpenNeuro EEG datasets**, registered dynamically
+from MongoDB. The table below summarises the breakdown by experimental
+type ({dataset_count} datasets in this build).
 
 Base Dataset API
 ----------------
@@ -937,6 +975,15 @@ def _build_dataset_context(
     if not s3_item_count or s3_item_count == "0":
         s3_item_count = _clean_value(details.get("total_files"))
 
+    # Canonical / author-year identifiers — populated from the CSV (or API
+    # response) when the name_suggester pipeline has run, else empty.
+    # Reuses the registry's parser so the rendered docs match the
+    # aliases the runtime catalog registers.
+    from eegdash.dataset.registry import _parse_canonical_names  # noqa: WPS433
+
+    canonical_names = _parse_canonical_names((row or {}).get("canonical_name"))
+    author_year_name = _clean_value((row or {}).get("author_year"))
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
@@ -946,6 +993,8 @@ def _build_dataset_context(
         "authors": details.get("authors", []),
         "license": license_text,
         "doi": doi,
+        "canonical_names": canonical_names,
+        "author_year_name": author_year_name,
         "source_url": _clean_value(details.get("source_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
@@ -1296,9 +1345,19 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
         source_links.append(f"`Source URL <{source_url}>`__")
 
     year = _value_or_unknown(_clean_value(context.get("year")))
+
+    author_year_cell, canonical_cell, importable_cell = _render_identity_cells(
+        dataset_upper=dataset_upper,
+        author_year_name=_clean_value(context.get("author_year_name")),
+        canonical_names=context.get("canonical_names") or [],
+    )
+
     rows = [
         ("Dataset ID", f"``{dataset_upper}``"),
         ("Title", title),
+        ("Author (year)", author_year_cell),
+        ("Canonical", canonical_cell),
+        ("Importable as", importable_cell),
         ("Year", year),
         ("Authors", authors_text),
         ("License", license_text),
@@ -1317,6 +1376,42 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
         lines.append(bibtex_dropdown)
 
     return "\n".join(lines).rstrip()
+
+
+def _render_identity_cells(
+    *,
+    dataset_upper: str,
+    author_year_name: str,
+    canonical_names: object,
+) -> tuple[str, str, str]:
+    """Build the three identity cells (Author year / Canonical / Importable as).
+
+    Falls back to an em-dash for empty columns so the table stays
+    regular. The ``author_year_name`` is stripped from the Canonical
+    list so the same token isn't shown on two rows.
+    """
+    em_dash = "—"
+    author_year_cell = f"``{author_year_name}``" if author_year_name else em_dash
+
+    names_list = canonical_names if isinstance(canonical_names, (list, tuple)) else []
+    canonical_display = [n for n in names_list if n and n != author_year_name]
+    canonical_cell = (
+        ", ".join(f"``{n}``" for n in canonical_display)
+        if canonical_display
+        else em_dash
+    )
+
+    importable = [dataset_upper] if dataset_upper else []
+    if author_year_name and author_year_name not in importable:
+        importable.append(author_year_name)
+    for n in names_list:
+        if n and n not in importable:
+            importable.append(n)
+    importable_cell = (
+        ", ".join(f"``{n}``" for n in importable) if importable else em_dash
+    )
+
+    return author_year_cell, canonical_cell, importable_cell
 
 
 def _format_bibtex_dropdown(dataset_id: str, context: Mapping[str, object]) -> str:
@@ -1378,6 +1473,24 @@ def _convert_readme_to_rst(text: str) -> str:
     text = text.lstrip("\ufeff")
     # Normalize HTML line breaks to newlines
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    # Downgrade literal HTML headers so they don't collide with the
+    # page's own `<h1>`. Upstream dataset READMEs (e.g. DS004100)
+    # sometimes contain raw `<h1>HUP iEEG dataset</h1>` which Sphinx
+    # passes through verbatim and Ahrefs then flags as "Multiple H1
+    # tags". `<h2>` is the highest level that can safely sit inside the
+    # "About this dataset" section which is already H2.
+    text = re.sub(
+        r"<(/?)h1(\b[^>]*)>",
+        r"<\g<1>h3\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r"<(/?)h2(\b[^>]*)>",
+        r"<\g<1>h4\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
     # Replace leading tabs with spaces (tabs cause RST block-quote interpretation)
     text = re.sub(r"^\t+", lambda m: "  " * len(m.group(0)), text, flags=re.MULTILINE)
 
@@ -1977,18 +2090,149 @@ def _format_api_section(class_name: str) -> str:
     )
 
 
-def _format_see_also_section(dataset_id: str) -> str:
+# ---------------------------------------------------------------------------
+# Electrode-explorer embed (Step 5 of the electrodes integration plan).
+#
+# `_static/dataset_generated/electrode-layouts.json` maps dataset_id →
+# {label, n_channels, tsv_url, coords_url}. It is eventually populated
+# by the eegdash backend montage registry; while that's being built we
+# maintain a curated subset here as a fallback.
+#
+# Each dataset page gets a collapsed <details> block. Expanding it swaps
+# the iframe's `data-src` onto `src` (see lazy-embed.js), so zero bytes
+# are fetched from electrodes.eegdash.org until a reader opts in.
+# ---------------------------------------------------------------------------
+
+_ELECTRODE_EXPLORER_BASE = "https://electrodes.eegdash.org/"
+
+_electrode_layouts_cache: dict[str, object] | None = None
+
+
+def _load_electrode_layouts() -> Mapping[str, Mapping[str, object]]:
+    """Read the curated electrode-layouts manifest (cached across calls).
+
+    Missing file or malformed JSON degrades silently to empty — dataset
+    pages then render a 'no scalp layout published' placeholder instead
+    of the iframe.
+    """
+    global _electrode_layouts_cache
+    if _electrode_layouts_cache is not None:
+        return _electrode_layouts_cache  # type: ignore[return-value]
+    path = (
+        Path(__file__).parent
+        / "_static"
+        / "dataset_generated"
+        / "electrode-layouts.json"
+    )
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        layouts = doc.get("layouts", {})
+        if not isinstance(layouts, dict):
+            layouts = {}
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        LOGGER.info(
+            "[electrode-layouts] manifest unavailable (%s); placeholders only", exc
+        )
+        layouts = {}
+    _electrode_layouts_cache = layouts
+    return layouts
+
+
+def _format_electrodes_section(context: Mapping[str, object]) -> str:
+    """Render a lazy <details><iframe> block for this dataset's montage.
+
+    If the manifest doesn't have an entry for this dataset_id, we still
+    emit the section but with a short note — keeps the page layout
+    consistent across the catalog.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    layouts = _load_electrode_layouts()
+    entry = layouts.get(dataset_id)
+
+    heading = "Electrode Layout\n----------------\n\n"
+
+    if not entry or not (entry.get("montage_id") or entry.get("tsv_url")):
+        # Placeholder — keeps the section visible so readers know the
+        # catalog intends to show it, just that this particular dataset
+        # hasn't been indexed yet. Either shape of URL is acceptable:
+        # schema v2 carries ``montage_id`` (the registry hash), schema
+        # v1 carried ``tsv_url`` + optional ``coords_url``.
+        body = (
+            "No scalp electrode layout is currently indexed for this\n"
+            "dataset. Once the eegdash montage registry ingests it,\n"
+            "the interactive viewer will appear here automatically.\n"
+        )
+        return heading + body
+
+    # Build the iframe URL. Prefer the registry id shape if present;
+    # otherwise fall back to direct tsv/coords URLs so pages work even
+    # before the registry endpoint is live.
+    label = str(entry.get("label") or "Electrodes").strip()
+    n_channels = entry.get("n_channels")
+    montage_id = str(entry.get("montage_id") or "").strip()
+
+    if montage_id:
+        query = f"montage={montage_id}"
+    else:
+        from urllib.parse import quote
+
+        tsv_q = quote(str(entry["tsv_url"]), safe="")
+        parts = [f"tsv={tsv_q}"]
+        coords_url = entry.get("coords_url")
+        if coords_url:
+            parts.append(f"coords={quote(str(coords_url), safe='')}")
+        query = "&".join(parts)
+
+    iframe_src = f"{_ELECTRODE_EXPLORER_BASE}?{query}&embed=1"
+
+    title_bits = [label]
+    if n_channels:
+        title_bits.append(f"{n_channels} channels")
+    summary_text = " — ".join(title_bits)
+
+    # Keep the HTML block compact; Sphinx renders it as-is.
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="electrode-explorer">\n'
+        f"     <summary>Electrode layout — {summary_text}</summary>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"\n'
+        f'       title="Topomap of {label}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
+def _format_see_also_section(
+    dataset_id: str,
+    class_name: str = "",
+    related: Sequence[str] = (),
+) -> str:
     dataset_lower = dataset_id.lower()
     nemar_url = f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_lower}"
     openneuro_url = f"https://openneuro.org/datasets/{dataset_lower}"
-    return "\n".join(
-        [
-            "* :class:`eegdash.dataset.EEGDashDataset`",
-            "* :mod:`eegdash.dataset`",
-            f"* `OpenNeuro dataset page <{openneuro_url}>`__",
-            f"* `NeMAR dataset page <{nemar_url}>`__",
-        ]
-    )
+    lines = [
+        "* :class:`eegdash.dataset.EEGDashDataset`",
+        "* :mod:`eegdash.dataset`",
+        f"* `OpenNeuro dataset page <{openneuro_url}>`__",
+        f"* `NeMAR dataset page <{nemar_url}>`__",
+    ]
+    # Cross-link up to 5 related datasets (same modality) to improve
+    # internal link density across the 1,114 dataset pages.
+    for rel_name in related[:5]:
+        if rel_name != class_name:
+            lines.append(
+                f"* :doc:`eegdash.dataset.{rel_name} <eegdash.dataset.{rel_name}>`"
+            )
+    return "\n".join(lines)
 
 
 def _format_feedback_section(dataset_id: str, title: str) -> str:
@@ -2024,6 +2268,214 @@ def _format_feedback_section(dataset_id: str, title: str) -> str:
       Report an Issue on GitHub"""
 
 
+def _format_dataset_meta_section(
+    context: Mapping[str, object],
+) -> tuple[str, str]:
+    """Build per-dataset SEO markup for the dataset page template.
+
+    Returns a ``(og_description_field, meta_directive)`` pair:
+
+    * ``og_description_field`` is a top-of-file field list line
+      (``:og:description: ...``) consumed by sphinxext-opengraph. It
+      must sit in the same contiguous field list as other directives
+      like ``:html_theme.sidebar_secondary.remove:`` — any blank line
+      between them would demote it to regular text.
+    * ``meta_directive`` is the ``.. meta::`` block with the
+      ``:description:`` and ``:keywords:`` fields used by the
+      ``<meta name="description">`` / ``<meta name="keywords">`` tags.
+    """
+    class_name = str(context.get("class_name", "")).strip()
+    dataset_title = _collapse_whitespace(
+        _clean_value(context.get("title")) or class_name
+    )
+    modality = _clean_value(context.get("modality")) or "EEG"
+    n_subjects = _clean_value(context.get("n_subjects"))
+    n_records = _clean_value(context.get("n_records"))
+    source = _clean_value(context.get("source")) or "OpenNeuro"
+
+    parts = [f"{modality} dataset"]
+    if n_subjects and n_subjects not in ("—", "0"):
+        parts.append(f"{n_subjects} subjects")
+    if n_records and n_records not in ("—", "0"):
+        parts.append(f"{n_records} recordings")
+    stats = ", ".join(parts)
+
+    description = (
+        f"{dataset_title} — {stats}. Access via EEGDash with standardized "
+        f"BIDS metadata. Source: {source}."
+    )
+    # Single-line for RST directive safety.
+    description = _collapse_whitespace(description)
+
+    keywords = ", ".join(
+        filter(
+            None,
+            [
+                class_name,
+                modality,
+                "BIDS",
+                "EEG dataset",
+                source,
+            ],
+        )
+    )
+
+    og_description_field = f":og:description: {description}"
+    meta_directive = (
+        f".. meta::\n   :description: {description}\n   :keywords: {keywords}"
+    )
+    return og_description_field, meta_directive
+
+
+_LICENSE_URL_MAP: dict[str, str] = {
+    # Keyed on the uppercased license string we receive from the dataset
+    # registry. Mapping is intentionally narrow — anything not listed
+    # falls back to the raw text (still valid per Google, just rendered
+    # with a warning). See
+    # https://developers.google.com/search/docs/appearance/structured-data/dataset
+    "CC0": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC BY": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-SA": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-NC": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-NC-SA": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "ODC-BY": "https://opendatacommons.org/licenses/by/1-0/",
+    "ODC-BY 1.0": "https://opendatacommons.org/licenses/by/1-0/",
+    "ODBL": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "ODC-ODBL": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "PDDL": "https://opendatacommons.org/licenses/pddl/1-0/",
+    "BSD-3-CLAUSE": "https://opensource.org/licenses/BSD-3-Clause",
+    "MIT": "https://opensource.org/licenses/MIT",
+    "APACHE-2.0": "https://www.apache.org/licenses/LICENSE-2.0",
+    "PUBLIC DOMAIN": "https://creativecommons.org/publicdomain/mark/1.0/",
+}
+
+
+def _license_text_to_url(text: str) -> str | None:
+    """Map a free-form license string to a canonical URL if we can.
+
+    Google's Rich Results validator prefers license URLs over names.
+    We normalise by stripping whitespace and uppercasing; everything
+    we can't match falls through so the caller keeps the raw text.
+    """
+    if not text:
+        return None
+    key = re.sub(r"\s+", " ", text.strip()).upper()
+    return _LICENSE_URL_MAP.get(key)
+
+
+def _format_dataset_jsonld_section(
+    class_name: str, context: Mapping[str, object]
+) -> str:
+    """Emit a ``<script type="application/ld+json">`` Dataset block.
+
+    The resulting block is placed into the page body (valid per the
+    JSON-LD spec — Google Dataset Search reads either head or body).
+    """
+    dataset_upper = str(context.get("dataset_upper", "")).strip() or class_name
+    title = _collapse_whitespace(_clean_value(context.get("title")) or dataset_upper)
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+    authors = [a for a in (context.get("authors") or []) if a]
+    license_text = _clean_value(context.get("license"))
+    year = _clean_value(context.get("year"))
+    modality = _clean_value(context.get("modality")) or "EEG"
+    source_url = _clean_value(context.get("source_url"))
+    openneuro_url = str(context.get("openneuro_url", "")).strip()
+    nemar_url = str(context.get("nemar_url", "")).strip()
+
+    page_url = f"https://eegdash.org/api/dataset/eegdash.dataset.{class_name}.html"
+
+    # Skip the leading title when it duplicates `dataset_upper` — the
+    # trailing "...as ``class_name``..." already names the dataset, and
+    # "{title}. {modality} dataset accessible via EEGDash as ``{title}``"
+    # reads "ABSEQMEG. EEG dataset accessible via EEGDash as ``ABSEQMEG``"
+    # which is triple-redundant for the common case where title is
+    # just the uppercased class name.
+    title_differs_from_class = title and title.strip().upper() not in {
+        dataset_upper.strip().upper(),
+        class_name.strip().upper(),
+    }
+    description_parts = [f"{title}."] if title_differs_from_class else []
+    description_parts.append(
+        f"{modality} dataset accessible via EEGDash as "
+        f"``{class_name}`` with standardized BIDS metadata."
+    )
+    description = " ".join(description_parts)
+
+    # Order-preserving dedupe: when `modality` is already "EEG" or "MEG",
+    # it would otherwise duplicate entries in the published JSON-LD.
+    keywords = list(dict.fromkeys([modality, "BIDS", "neuroscience", "EEG", "MEG"]))
+    jsonld: dict[str, object] = {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": title or dataset_upper,
+        "alternateName": dataset_upper,
+        "description": description,
+        "url": page_url,
+        "keywords": keywords,
+        "isAccessibleForFree": True,
+        "includedInDataCatalog": {
+            "@type": "DataCatalog",
+            "name": "EEG Dash",
+            "url": "https://eegdash.org/",
+        },
+    }
+
+    if doi_clean:
+        jsonld["identifier"] = f"doi:{doi_clean}"
+        jsonld["sameAs"] = f"https://doi.org/{doi_clean}"
+
+    same_as_urls = [u for u in (openneuro_url, nemar_url, source_url) if u]
+    if same_as_urls:
+        existing_same_as = jsonld.get("sameAs")
+        all_same_as = (
+            [existing_same_as] if isinstance(existing_same_as, str) else []
+        ) + same_as_urls
+        # Deduplicate while preserving order
+        seen: set[str] = set()
+        jsonld["sameAs"] = [u for u in all_same_as if not (u in seen or seen.add(u))]
+
+    if authors:
+        jsonld["creator"] = [{"@type": "Person", "name": a} for a in authors]
+
+    if license_text:
+        jsonld["license"] = _license_text_to_url(license_text) or license_text
+
+    # schema.org/Dataset expects `datePublished` as an ISO 8601 date.
+    # Google's Rich Results validator emits a warning for bare years
+    # like "2024". Pin to January 1st when we only have a year.
+    if year and re.fullmatch(r"\d{4}", year):
+        jsonld["datePublished"] = f"{year}-01-01"
+
+    payload = json.dumps(jsonld, ensure_ascii=False, separators=(",", ":"))
+    # HTML-parser safety: the only byte sequence that can terminate a
+    # `<script>` block is `</` followed by any ASCII letter. `json.dumps`
+    # escapes `"` and control chars, but lets `/` through, so a dataset
+    # author whose metadata happens to contain `</script>` (or even
+    # `</anything`) would escape the script element and inject arbitrary
+    # HTML into the page. Escaping `</` → `<\/` is valid JSON *and* safe
+    # inside `<script>` per the HTML spec.
+    payload = payload.replace("</", "<\\/")
+
+    return f'.. raw:: html\n\n   <script type="application/ld+json">{payload}</script>'
+
+
 def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None:
     for path in dataset_dir.glob("eegdash.dataset.DS*.rst"):
         if path in expected:
@@ -2037,24 +2489,42 @@ def _cleanup_stale_dataset_pages(dataset_dir: Path, expected: set[Path]) -> None
 
 
 def _process_dataset_item(
-    name: str, dataset_dir: Path, row: Mapping[str, str] | None, srcdir: Path
+    name: str,
+    dataset_dir: Path,
+    row: Mapping[str, str] | None,
+    srcdir: Path,
+    related: Sequence[str] = (),
 ) -> Path:
-    # Use simplified title: just the dataset ID (e.g., "DS001787")
-    title = name  # Dataset class name is already uppercase ID like DS001787
     context = _build_dataset_context(name, row)
+
+    # Build a descriptive page title for better SERP snippets:
+    #   "ABSeqMEG: EEG dataset, 20 subjects"  instead of bare  "ABSeqMEG"
+    modality = _clean_value(context.get("modality")) or "EEG"
+    n_sub = _clean_value(context.get("n_subjects"))
+    title_parts = [name]
+    suffix_parts = [f"{modality} dataset"]
+    if n_sub and n_sub not in ("—", "0"):
+        suffix_parts.append(f"{n_sub} subjects")
+    title_parts.append(", ".join(suffix_parts))
+    title = ": ".join(title_parts)
     dataset_id = str(context.get("dataset_id", ""))
     dataset_title = str(context.get("title", ""))
+    og_description_field, meta_section = _format_dataset_meta_section(context)
     page_content = DATASET_PAGE_TEMPLATE.format(
         notice=AUTOGEN_NOTICE,
         title=title,
         underline="=" * len(title),
+        og_description_field=og_description_field,
+        meta_section=meta_section,
+        jsonld_section=_format_dataset_jsonld_section(name, context),
         hero_section=_format_hero_section(context),
         dataset_info_section=_format_dataset_info_section(context),
         readme_section=_format_readme_section(context),
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
+        electrodes_section=_format_electrodes_section(context),
         api_section=_format_api_section(name),
-        see_also_section=_format_see_also_section(dataset_id),
+        see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
     )
     # Keep the file name with full prefix for URL stability
@@ -2134,13 +2604,41 @@ def _generate_dataset_docs(app) -> None:
     if _write_if_changed(primary_path, primary_content):
         LOGGER.info("[dataset-docs] Updated %s", primary_path.relative_to(app.srcdir))
 
+    # Build a modality index so each dataset page can cross-link to related
+    # datasets (same recording modality). Read-only after construction, so
+    # thread-safe for the parallel generator below.
+    datasets_by_modality: dict[str, list[str]] = defaultdict(list)
+    for name in dataset_names:
+        row = dataset_rows.get(name) or {}
+        mod = _clean_value(row.get("record_modality")) or _clean_value(
+            row.get("modality of exp")
+        )
+        if mod:
+            datasets_by_modality[mod.lower()].append(name)
+
+    def _related_for(name: str) -> list[str]:
+        """Return up to 6 sibling datasets sharing the same modality."""
+        row = dataset_rows.get(name) or {}
+        mod = _clean_value(row.get("record_modality")) or _clean_value(
+            row.get("modality of exp")
+        )
+        if not mod:
+            return []
+        siblings = datasets_by_modality.get(mod.lower(), [])
+        return [s for s in siblings if s != name][:6]
+
     generated_paths: set[Path] = set()
     srcdir = Path(app.srcdir)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         futures = {
             executor.submit(
-                _process_dataset_item, name, dataset_dir, dataset_rows.get(name), srcdir
+                _process_dataset_item,
+                name,
+                dataset_dir,
+                dataset_rows.get(name),
+                srcdir,
+                _related_for(name),
             ): name
             for name in dataset_names
         }
@@ -2263,6 +2761,52 @@ _DATASET_COUNTER_PLACEHOLDERS = {
 }
 
 
+def _assert_dataset_table_inlines_datatables(app) -> None:
+    """Fail fast if the generated dataset-summary table lost its inline JS.
+
+    ``html_css_files`` and ``html_js_files`` deliberately no longer load
+    the DataTables/jQuery stack globally; the contract is that
+    ``prepare_summary_tables.py`` inlines those CDN ``<script>`` tags
+    directly into
+    ``_static/dataset_generated/dataset_summary_table.html``. If the
+    generator changes and drops the inlining, the dataset_summary page
+    silently loses its interactivity — the HTML renders as a plain
+    ``<table>`` with no sorting or filtering, and the build still passes.
+
+    This hook verifies the marker scripts are present. Raise (not warn)
+    so the failure is loud: a silent loss of the flagship page's UI is
+    much worse than a build error.
+    """
+    table_path = (
+        Path(app.srcdir)
+        / "_static"
+        / "dataset_generated"
+        / "dataset_summary_table.html"
+    )
+    if not table_path.is_file():
+        # File missing entirely — `prepare_summary_tables.py` hasn't run
+        # yet (common on partial local rebuilds). Soft-warn rather than
+        # block the build; `make html`/`html-noplot` already run the
+        # generator before sphinx-build.
+        LOGGER.warning(
+            "Expected %s to exist; dataset_summary interactivity may be "
+            "disabled until prepare_summary_tables.py runs.",
+            table_path,
+        )
+        return
+    content = table_path.read_text(encoding="utf-8", errors="replace")
+    required_markers = ("datatables.min.js", "jquery-3.7.1.min.js")
+    missing = [m for m in required_markers if m not in content]
+    if missing:
+        raise RuntimeError(
+            f"{table_path.name} is missing expected inline CDN scripts: "
+            f"{missing}. The global `html_js_files` in conf.py was slimmed "
+            "on the assumption that prepare_summary_tables.py inlines the "
+            "DataTables stack. Either restore the inlining in the "
+            "generator, or re-add the scripts to `html_js_files`."
+        )
+
+
 def _copy_dataset_summary(app, exception) -> None:
     if exception is not None or not getattr(app, "builder", None):
         return
@@ -2282,6 +2826,65 @@ def _copy_dataset_summary(app, exception) -> None:
         LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
 
 
+def _rewrite_sitemap_index(app, exception) -> None:
+    """Rewrite the homepage entry in ``sitemap.xml`` to the canonical
+    bare-host URL.
+
+    ``sphinx-sitemap`` emits ``https://eegdash.org/index.html`` for the
+    homepage because that's the page's filename. We set a
+    ``<link rel="canonical">`` override to ``https://eegdash.org/`` in
+    ``_inject_seo_context``, which creates a mismatch Ahrefs flags as
+    "Non-canonical page in sitemap". The two fixes must stay in sync —
+    so we patch the emitted sitemap here at ``build-finished`` rather
+    than fighting sphinx-sitemap's URL-construction logic.
+
+    Originally shipped in #319 but silently dropped during the #318
+    rebase conflict resolution (``git checkout --theirs`` on conf.py
+    took the pre-#319 branch version). Re-adding here so the sitemap
+    emitted on each deploy stays canonical.
+
+    Safe no-op on: missing sitemap, non-HTML builder, already-canonical
+    sitemap.
+    """
+    if exception is not None:
+        return
+    builder = getattr(app, "builder", None)
+    if builder is None or builder.name != "html":
+        return
+
+    sitemap_path = Path(app.outdir) / "sitemap.xml"
+    if not sitemap_path.exists():
+        return
+
+    try:
+        text = sitemap_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        LOGGER.warning("Unable to read %s: %s", sitemap_path, exc)
+        return
+
+    base = getattr(app.config, "html_baseurl", "") or ""
+    if not base.endswith("/"):
+        base += "/"
+    index_url = f"{base}index.html"
+    canonical = base
+
+    if index_url not in text:
+        return
+
+    updated = text.replace(f"<loc>{index_url}</loc>", f"<loc>{canonical}</loc>")
+    if updated == text:
+        return
+    try:
+        sitemap_path.write_text(updated, encoding="utf-8")
+        LOGGER.info(
+            "sitemap.xml: rewrote %s -> %s for canonical alignment",
+            index_url,
+            canonical,
+        )
+    except OSError as exc:
+        LOGGER.warning("Unable to write %s: %s", sitemap_path, exc)
+
+
 def _inject_counter_values(app, docname, source) -> None:
     if docname != "dataset_summary":
         return
@@ -2292,6 +2895,587 @@ def _inject_counter_values(app, docname, source) -> None:
     source[0] = text
 
 
+_HOMEPAGE_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EEG Dash",
+    "alternateName": "EEGDash",
+    "url": "https://eegdash.org/",
+    "logo": "https://eegdash.org/_static/eegdash_social_card.png",
+    "description": (
+        "EEGDash is a Python library and catalog for 700+ BIDS-first EEG, "
+        "MEG, fNIRS, EMG, and iEEG datasets, providing PyTorch-ready data "
+        "access for machine learning and reproducible neuroscience research."
+    ),
+    "sameAs": [
+        "https://github.com/eegdash/EEGDash",
+        "https://pypi.org/project/eegdash/",
+        "https://registry.opendata.aws/eegdash/",
+    ],
+}
+
+_SOFTWARE_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EEGDash",
+    "alternateName": "EEG-DaSh",
+    "applicationCategory": "ScienceApplication",
+    "applicationSubCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "url": "https://eegdash.org/",
+    "softwareVersion": eegdash.__version__,
+    "codeRepository": "https://github.com/eegdash/EEGDash",
+    "programmingLanguage": "Python",
+    "runtimePlatform": "Python 3.11+",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "downloadUrl": "https://pypi.org/project/eegdash/",
+    "installUrl": "https://pypi.org/project/eegdash/",
+    "description": (
+        "Python library for discovering, loading, and preprocessing 700+ "
+        "BIDS-first EEG/MEG datasets. Integrates with MNE-Python, "
+        "braindecode, and PyTorch for machine-learning workflows on "
+        "open neuroelectromagnetic data."
+    ),
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+}
+
+_WEBSITE_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://eegdash.org/dataset_summary.html?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+    },
+}
+
+
+# Per-page descriptions for pages that sphinx-gallery regenerates (and thus
+# wipe any inline `.. meta::` edits). Keyed by Sphinx pagename (no suffix).
+_AUTO_PAGE_DESCRIPTIONS: dict[str, str] = {
+    "generated/auto_examples/index": (
+        "EEGDash tutorials and runnable examples — dataset loading, feature "
+        "extraction, transfer learning, and the EEG2025 Competition challenges."
+    ),
+}
+
+
+# schema.org/DataCatalog for the dataset catalog page. Lets Google Dataset
+# Search treat eegdash.org as an aggregator. Per-dataset Dataset JSON-LD is
+# still emitted on each /api/dataset/eegdash.dataset.*.html page, which
+# Google reaches through the sitemap; this wrapper just declares the
+# catalog identity.
+_DATACATALOG_JSONLD = {
+    "@context": "https://schema.org",
+    "@type": "DataCatalog",
+    "name": "EEGDash dataset catalog",
+    "alternateName": "EEG-DaSh catalog",
+    "url": "https://eegdash.org/dataset_summary.html",
+    "description": (
+        "Searchable catalog of 700+ BIDS-first EEG, MEG, fNIRS, EMG, and "
+        "iEEG datasets aggregated from OpenNeuro, NEMAR, Zenodo, Figshare, "
+        "SciDB, OSF, DataRN, and EEGManyLabs. Each row loads in Python via "
+        "the EEGDash library (pip install eegdash)."
+    ),
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "keywords": (
+        "EEG, MEG, iEEG, fNIRS, EMG, BIDS, neuroscience, machine learning, "
+        "Python, PyTorch, MNE-Python, braindecode, OpenNeuro, NEMAR"
+    ),
+    "provider": {
+        "@type": "Organization",
+        "name": "EEGDash",
+        "url": "https://eegdash.org/",
+    },
+    "isAccessibleForFree": True,
+    "inLanguage": "en",
+}
+
+
+# HowTo JSON-LD for install pages. Marks the install as a structured
+# procedure so Google can surface it in rich results.
+def _install_howto_jsonld(page_title: str, step_names: Sequence[str]) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": page_title,
+        "description": (
+            "Install the EEGDash Python library to load 700+ BIDS-first "
+            "EEG/MEG datasets with PyTorch."
+        ),
+        "totalTime": "PT2M",
+        "supply": [
+            {"@type": "HowToSupply", "name": "Python 3.11+"},
+            {"@type": "HowToSupply", "name": "pip or uv"},
+        ],
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": i + 1,
+                "name": name,
+            }
+            for i, name in enumerate(step_names)
+        ],
+    }
+
+
+_INSTALL_HOWTO: Mapping[str, dict] = {
+    "install/install": _install_howto_jsonld(
+        "Install EEGDash",
+        [
+            "Check Python 3.11+ is available (python --version).",
+            "Run pip install eegdash (or uv pip install eegdash).",
+            "Import the library: from eegdash import EEGDashDataset.",
+            "Load a dataset: EEGDashDataset(dataset='ds002718').",
+        ],
+    ),
+    "install/install_pip": _install_howto_jsonld(
+        "Install EEGDash with pip",
+        [
+            "Create or activate a Python 3.11+ environment.",
+            "Run pip install eegdash (upgrade pip first on older Pythons).",
+            "Verify with python -c 'import eegdash; print(eegdash.__version__)'.",
+        ],
+    ),
+    "install/install_source": _install_howto_jsonld(
+        "Install EEGDash from source",
+        [
+            "Clone https://github.com/eegdash/EEGDash.git.",
+            "Create a Python 3.11+ virtual environment.",
+            "Run pip install -e .[docs,tests] from the repository root.",
+            "Run pytest to confirm the install works.",
+        ],
+    ),
+}
+
+
+# Article JSON-LD for narrative docs. Helps search engines treat the user
+# guide and developer notes as primary reference content.
+def _article_jsonld(title: str, description: str, url: str) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": title,
+        "description": description,
+        "url": url,
+        "author": {
+            "@type": "Organization",
+            "name": "EEGDash",
+            "url": "https://eegdash.org/",
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "EEGDash",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://eegdash.org/_static/eegdash_social_card.png",
+            },
+        },
+        "inLanguage": "en",
+        "isAccessibleForFree": True,
+    }
+
+
+_ARTICLE_JSONLD: Mapping[str, dict] = {
+    "user_guide": _article_jsonld(
+        "EEGDash user guide",
+        (
+            "Narrative walkthrough of the EEGDash Python library — query "
+            "datasets, load BIDS records, and build reproducible ML pipelines."
+        ),
+        "https://eegdash.org/user_guide.html",
+    ),
+    "developer_notes": _article_jsonld(
+        "EEGDash developer notes",
+        (
+            "Architecture, BIDS ingestion pipeline, test suite, and "
+            "contributor workflows for the EEGDash Python library."
+        ),
+        "https://eegdash.org/developer_notes.html",
+    ),
+}
+
+
+def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
+    """Inject per-page SEO context (canonical override, JSON-LD, description).
+
+    - Homepage: rewrite canonical to the bare host and emit Organization +
+      SoftwareApplication JSON-LD.
+    - Dataset pages: Dataset JSON-LD is written directly into the RST body
+      via ``_format_jsonld_section`` (see ``DATASET_PAGE_TEMPLATE``).
+    - Sphinx-gallery-regenerated pages (``auto_examples/index``): inject
+      description via ``metatags`` since the RST is overwritten on every
+      build.
+    """
+    if pagename == "index":
+        # Keep canonical, OG URL, and sphinxext-opengraph's `og:url` all
+        # pointing at `eegdash.org/` (bare host) — not `/index.html` —
+        # so external scrapers and search engines see a consistent URL.
+        context["pageurl"] = "https://eegdash.org/"
+        # sphinxext-opengraph hardcodes og:url via
+        # ``urljoin(ogp_site_url, builder.get_target_uri(pagename))``
+        # which yields `/index.html` for the homepage. Its hook runs
+        # before ours, so we fix the result in-place.
+        metatags = context.get("metatags", "")
+        context["metatags"] = metatags.replace(
+            'content="https://eegdash.org/index.html"',
+            'content="https://eegdash.org/"',
+        )
+        context["jsonld"] = json.dumps(
+            [_HOMEPAGE_JSONLD, _SOFTWARE_JSONLD, _WEBSITE_JSONLD],
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+
+    # DataCatalog JSON-LD for the dataset_summary page. Google Dataset
+    # Search uses this to recognise the page as a catalog aggregator; the
+    # per-row Dataset JSON-LD lives on individual
+    # `api/dataset/eegdash.dataset.*.html` pages and is reached via the
+    # sitemap.
+    if pagename == "dataset_summary":
+        context["jsonld"] = json.dumps(
+            _DATACATALOG_JSONLD, ensure_ascii=False, separators=(",", ":")
+        )
+
+    # HowTo JSON-LD on install pages. Eligible for Google's "How-to" rich
+    # result and reinforces to LLM-driven assistants that pip install
+    # eegdash is the canonical way to start using the library.
+    howto = _INSTALL_HOWTO.get(pagename)
+    if howto is not None:
+        context["jsonld"] = json.dumps(howto, ensure_ascii=False, separators=(",", ":"))
+
+    # TechArticle JSON-LD on the narrative docs. Signals "this is reference
+    # content, not marketing" to search engines and LLM retrievers.
+    article = _ARTICLE_JSONLD.get(pagename)
+    if article is not None:
+        context["jsonld"] = json.dumps(
+            article, ensure_ascii=False, separators=(",", ":")
+        )
+
+    # BreadcrumbList JSON-LD on dataset pages. The visual breadcrumb nav
+    # already exists (pydata-sphinx-theme's `<nav aria-label="Breadcrumb">`),
+    # but without structured data Google can't use it for rich results.
+    _ds_prefix = "api/dataset/eegdash.dataset."
+    if pagename.startswith(_ds_prefix) and pagename != "api/dataset/eegdash.dataset":
+        ds_name = pagename[len(_ds_prefix) :]
+        breadcrumb = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://eegdash.org/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Datasets",
+                    "item": "https://eegdash.org/api/dataset/api_dataset.html",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": ds_name,
+                },
+            ],
+        }
+        # Dataset JSON-LD (the `Dataset` schema) is already embedded in the
+        # RST page body. BreadcrumbList goes in <head> via layout.html's
+        # `{% if jsonld %}` block.
+        context["jsonld"] = json.dumps(
+            breadcrumb, ensure_ascii=False, separators=(",", ":")
+        )
+
+    description = _AUTO_PAGE_DESCRIPTIONS.get(pagename)
+    if description:
+        # Cap before HTML-escaping so the visible budget is what the
+        # scanner counts.
+        description = _cap_meta_description(description)
+        # Escape attribute-unsafe chars (`"`, `<`, `&`) before interpolating
+        # into the HTML. Current descriptions are trusted constants, but any
+        # future addition containing a quote or ampersand would otherwise
+        # silently produce broken markup.
+        escaped = html.escape(description, quote=True)
+        tag = (
+            f'<meta name="description" content="{escaped}" />'
+            f'<meta property="og:description" content="{escaped}" />'
+        )
+        existing = context.get("metatags") or ""
+        context["metatags"] = existing + tag
+
+    # Backstop meta descriptions for the auto-generated reference pages
+    # (per-dataset, per-module). These pages ship either no description
+    # at all or a very short first-paragraph excerpt that Ahrefs flags
+    # as "too short" (< 50 chars). The hook fires in BOTH cases:
+    # - no description  -> append our template
+    # - short description (<50 chars) -> replace it with our template
+    synth = _synthesize_description(pagename)
+    if synth:
+        existing = context.get("metatags") or ""
+        current = _extract_first_description(existing)
+        if current is None:
+            # No description yet: append.
+            escaped = html.escape(_cap_meta_description(synth), quote=True)
+            tag = (
+                f'<meta name="description" content="{escaped}" />'
+                f'<meta property="og:description" content="{escaped}" />'
+            )
+            context["metatags"] = existing + tag
+        elif len(current) < _MIN_META_DESC_CHARS:
+            # Too short: swap in the synth text, preserving the surrounding
+            # `<meta>` tag shape so nothing else in the pipeline gets
+            # surprised by the edit.
+            context["metatags"] = _replace_descriptions_in_metatags(
+                existing, _cap_meta_description(synth)
+            )
+
+    # Dataset-summary chart fragments (`dataset_summary/table`,
+    # `.../treemap`, etc.) are partial `.. include::` sources; Sphinx
+    # builds them as standalone pages as a side-effect but they render
+    # the same chart twice when someone lands on them directly. Tag
+    # them `noindex` so search engines don't show them as orphan hits.
+    # Also noindex Sphinx's own utility pages that ship without a
+    # sitemap entry (genindex, search, sg_api_usage) — otherwise
+    # scanners flag them as "indexable page with missing description".
+    _NOINDEX_PAGENAMES = {"genindex", "search", "sg_api_usage"}
+    noindex_needed = pagename in _NOINDEX_PAGENAMES or (
+        pagename.startswith("dataset_summary/") and pagename != "dataset_summary"
+    )
+    if noindex_needed:
+        existing = context.get("metatags") or ""
+        if 'name="robots"' not in existing:
+            context["metatags"] = (
+                existing + '<meta name="robots" content="noindex,follow" />'
+            )
+
+    # NOTE: description capping runs from a separate late-priority hook
+    # (``_cap_descriptions_hook`` below). Doing it here would miss any
+    # descriptions that sphinxext-opengraph adds later in the same
+    # ``html-page-context`` phase — its handler runs after ours at the
+    # default priority.
+
+
+_MIN_META_DESC_CHARS = 50  # Ahrefs' "too short" threshold
+
+
+def _cap_meta_description(text: str, limit: int = 160) -> str:
+    """Trim a meta description to at most ``limit`` characters on a word
+    boundary, appending an ellipsis. Google displays ~155-160 chars in
+    the SERP and Ahrefs flags anything longer as "too long"; anything
+    under 50 is flagged "too short" (we don't pad, caller is
+    responsible for generating enough content).
+    """
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) <= limit:
+        return text
+    trimmed = text[: limit - 1].rsplit(" ", 1)[0]
+    return trimmed.rstrip(",. ") + "…"
+
+
+# 8 narrow regexes (4 attribute orderings x 2 quote styles) covering
+# every shape we've seen in the built HTML. One compound alternation
+# with `[^"']*` fails when the content carries a different quote char
+# (e.g. an apostrophe inside a double-quoted attribute — that silently
+# broke a prior cap that shipped in #315 and was fixed in #317).
+_META_DESC_PATTERNS = [
+    # <meta name="description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?name="description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?name='description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … name="description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?name="description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?name='description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta property="og:description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?property="og:description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?property='og:description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … property="og:description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?property="og:description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?property='og:description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+]
+
+
+def _extract_first_description(metatags: str) -> str | None:
+    """Return the first description content found in ``metatags``, or
+    ``None`` if no description tag is present. Used to decide whether
+    the backstop needs to fire (missing) or override (too short).
+    """
+    if not metatags:
+        return None
+    for pattern in _META_DESC_PATTERNS:
+        m = pattern.search(metatags)
+        if m:
+            return html.unescape(m.group("v"))
+    return None
+
+
+def _replace_descriptions_in_metatags(metatags: str, new_text: str) -> str:
+    """Rewrite the `content` attribute of every description /
+    og:description tag in ``metatags`` to ``new_text``. The surrounding
+    tag structure is preserved so extensions parsing the string later
+    still see well-formed markup.
+    """
+    escaped = html.escape(new_text, quote=True)
+
+    def _swap(m: re.Match) -> str:
+        original = m.group(0)
+        return original.replace(m.group("v"), escaped)
+
+    for pattern in _META_DESC_PATTERNS:
+        metatags = pattern.sub(_swap, metatags)
+    return metatags
+
+
+def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
+    """Cap every description / og:description content value in
+    ``metatags`` at ``limit`` chars. HTML-entity-decodes before
+    comparing so the visible budget is what the SERP renders.
+    """
+    if not metatags:
+        return metatags
+
+    def _trim(m: re.Match) -> str:
+        value = m.group("v")
+        decoded = html.unescape(value)
+        if len(decoded) <= limit:
+            return m.group(0)
+        capped = _cap_meta_description(decoded, limit=limit)
+        return m.group(0).replace(value, html.escape(capped, quote=True))
+
+    for pattern in _META_DESC_PATTERNS:
+        metatags = pattern.sub(_trim, metatags)
+    return metatags
+
+
+def _page_still_lacks_description(context) -> bool:
+    """True if neither a `.. meta::` description nor an auto-page hook
+    has produced a `<meta name="description" …>` tag for this page.
+    """
+    current = context.get("metatags") or ""
+    return 'name="description"' not in current
+
+
+def _synthesize_description(pagename: str) -> str | None:
+    """Generate a short, keyword-appropriate description for Sphinx
+    auto-generated pages (per-dataset, per-module API reference).
+    Returns ``None`` if no template matches — the page already has one.
+    """
+    ds_prefix = "api/dataset/eegdash.dataset."
+    if pagename.startswith(ds_prefix) and pagename != ds_prefix.rstrip("."):
+        ds_id = pagename[len(ds_prefix) :].upper()
+        return (
+            f"{ds_id} — BIDS-first EEG/MEG dataset accessible via the "
+            f"EEGDash Python library. Load in a single line of code with "
+            f"MNE-Python and braindecode. Full metadata, channels, and "
+            f"citation on this page."
+        )
+    # Module pages that landed under api/dataset/eegdash.* (not
+    # .dataset.*) — e.g. http_api_client, EEGDashDataset, bids_metadata.
+    # Sphinx-apidoc puts them here but they lack their own descriptions.
+    other_ds_prefix = "api/dataset/eegdash."
+    if pagename.startswith(other_ds_prefix) and not pagename.startswith(ds_prefix):
+        module = pagename[len(other_ds_prefix) :]
+        return (
+            f"EEGDash Python API reference for `eegdash.{module}` — "
+            f"classes, functions, and schemas used to discover, load, "
+            f"and preprocess BIDS-first EEG/MEG datasets for PyTorch "
+            f"machine-learning workflows."
+        )
+    # Per-module API reference under api/generated/api-core/* or api-features/*
+    if pagename.startswith("api/generated/api-core/"):
+        module = pagename.rsplit("/", 1)[-1]
+        return (
+            f"EEGDash Python API reference for `{module}` — classes, "
+            f"functions, and schemas used to load BIDS-first EEG/MEG "
+            f"datasets, preprocess them, and feed them to PyTorch."
+        )
+    if pagename.startswith("api/generated/api-features/"):
+        module = pagename.rsplit("/", 1)[-1]
+        return (
+            f"EEGDash feature-extraction API reference for `{module}` — "
+            f"spectral, connectivity, complexity, and spatial feature "
+            f"extractors for EEG/MEG machine-learning pipelines."
+        )
+    # Sphinx-gallery tutorial pages — sphinxext-opengraph picks the
+    # first paragraph from the gallery-generated RST, which is usually
+    # a one-liner ("This is a minimal tutorial demonstrating…") that
+    # Ahrefs flags as too short. Pad with keywords that match the
+    # tutorial's purpose.
+    if pagename.startswith("generated/auto_examples/"):
+        slug = pagename.rsplit("/", 1)[-1].replace("_", " ").removeprefix("noplot ")
+        slug = slug.replace("tutorial ", "").strip() or "tutorial"
+        return (
+            f"EEGDash tutorial — {slug}. Runnable Python example showing "
+            f"how to load BIDS-first EEG/MEG datasets, preprocess them "
+            f"with MNE-Python, and train a model end-to-end."
+        )
+    # Source-aggregator pages under api/dataset/source_* (one per
+    # upstream archive: OpenNeuro, NEMAR, Figshare, Zenodo, …). These
+    # are generated by `_generate_dataset_docs` and don't carry their
+    # own meta description.
+    src_prefix = "api/dataset/source_"
+    if pagename.startswith(src_prefix):
+        source = pagename[len(src_prefix) :].replace("_", " ").title()
+        return (
+            f"EEG, MEG, and iEEG datasets from {source} wrapped by the "
+            f"EEGDash Python library. Load any record with a single "
+            f"call; preprocess with MNE-Python; train with braindecode."
+        )
+    return None
+
+
+def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
+    """Late-priority ``html-page-context`` handler that caps every
+    description / og:description tag added by any earlier handler.
+
+    Sphinx delivers events to connected callbacks in priority order
+    (higher priority == later execution; default 500). sphinxext-
+    opengraph registers at the default priority and writes its own
+    description into ``context['metatags']`` during this phase, so
+    any capping we do inside our own default-priority handler misses
+    those insertions. Running at priority 900 guarantees we see the
+    final value regardless of load order.
+    """
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
+
+
 def setup(app):
     """Create the back-references directory and setup Sphinx events."""
     backreferences_dir = os.path.join(
@@ -2300,13 +3484,50 @@ def setup(app):
     if not os.path.exists(backreferences_dir):
         os.makedirs(backreferences_dir)
 
+    app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
     app.connect("build-finished", _copy_dataset_summary)
+    # Align sitemap homepage entry with the canonical emitted in
+    # `_inject_seo_context`. Must run after `sphinx-sitemap` writes
+    # the file; using `build-finished` is the safest hook for that.
+    app.connect("build-finished", _rewrite_sitemap_index)
     app.connect("source-read", _inject_counter_values)
+    app.connect("html-page-context", _inject_seo_context)
+    # Must run last — see docstring on ``_cap_descriptions_hook``.
+    app.connect("html-page-context", _cap_descriptions_hook, priority=900)
 
 
 # Configure sitemap URL format (omit .html where possible)
 sitemap_url_scheme = "{link}"
+
+# Exclude low-value / auto-generated pages that dilute the index.
+sitemap_excludes = [
+    # `index.html` is NOT excluded here: with the default
+    # `sphinx-sitemap` URL format, excluding it drops the homepage
+    # from the sitemap entirely (no `/` entry is emitted in its place).
+    # Duplicate URLs (`/` vs `/index.html`) are instead deduped by the
+    # canonical-link override in `_inject_seo_context`.
+    "genindex.html",
+    "search.html",
+    "sg_execution_times.html",
+    "sg_api_usage.html",
+    "*/sg_execution_times.html",
+    # Dataset-summary chart fragments (`dataset_summary/table.html`,
+    # `.../treemap.html`, etc.). These are `.. include::` sources that
+    # Sphinx builds as their own pages as a side-effect; the useful
+    # rendered output is `dataset_summary.html`. Keeping them in the
+    # sitemap would dilute crawl budget and Ahrefs was flagging them as
+    # orphan pages. Paired with a noindex meta tag below so external
+    # backlinks don't bring them into the search index anyway.
+    "dataset_summary/*.html",
+]
+# Sphinx-gallery tutorial pages stay in the sitemap — they're narrative,
+# keyword-rich content that matches our library-discoverability goal;
+# excluding them was the source of Ahrefs' "indexable page not in
+# sitemap" warning on `generated/auto_examples/hpc/tutorial_eoec.html`.
+
+# Emit <lastmod> per URL so crawlers can prioritise recently updated pages.
+sitemap_show_lastmod = True
 
 # Copy button configuration: strip common interactive prompts when copying
 copybutton_prompt_text = r">>> |\\$ |# "

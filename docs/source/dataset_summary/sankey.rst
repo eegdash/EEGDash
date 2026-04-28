@@ -1,6 +1,9 @@
-.. title:: Dataset flow
 
-.. rubric:: Sankey diagrams of EEGDash Datasets by Population, Modality, and Cognitive Domain
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Dataset flow by population, modality, and task</h3>
+   </header>
 
 .. raw:: html
 

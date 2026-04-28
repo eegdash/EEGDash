@@ -8,32 +8,40 @@
 [![Downloads](https://pepy.tech/badge/eegdash)](https://pepy.tech/project/eegdash)
 [![Coverage](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Feegdash%2FEEGDash%2Fmain%2Fcoverage.json&query=%24.totals.percent_covered_display&suffix=%25&label=coverage)](https://github.com/eegdash/EEGDash/blob/main/coverage.json)
 
-To leverage recent and ongoing advancements in large-scale computational methods and to ensure the preservation of scientific data generated from publicly funded research, the EEG-DaSh data archive will create a data-sharing resource for MEEG (EEG, MEG) data contributed by collaborators for machine learning (ML) and deep learning (DL) applications
+EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by collaborating labs. It preserves publicly funded research data and exposes it in a form that machine learning and deep learning workflows can use directly.
 
 ## Data source
 
-The data in EEG-DaSh originates from a collaboration involving 25 laboratories, encompassing 27,053 participants. This extensive collection includes MEEG data, which is a combination of EEG and MEG signals. The data is sourced from various studies conducted by these labs, involving both healthy subjects and clinical populations with conditions such as ADHD, depression, schizophrenia, dementia, autism, and psychosis. Additionally, data spans different mental states like sleep, meditation, and cognitive tasks. In addition, EEG-DaSh will incorporate a subset of the data converted from NEMAR, which includes 330 MEEG BIDS-formatted datasets, further expanding the archive with well-curated, standardized neuroelectromagnetic data.
+The archive draws on 25 labs and 27,053 participants, with recordings covering both EEG and MEG. Subjects include healthy controls and clinical groups: ADHD, depression, schizophrenia, dementia, autism, and psychosis. Tasks range across sleep, meditation, and cognitive paradigms. EEG-DaSh also pulls in 330 BIDS-formatted MEEG datasets converted from NEMAR.
 
 ## Data format
 
-EEGDash queries return a **Pytorch Dataset** formatted to facilitate machine learning (ML) and deep learning (DL) applications. PyTorch Datasets are the best format for EEGDash queries because they provide an efficient, scalable, and flexible structure for machine learning (ML) and deep learning (DL) applications. They allow seamless integration with PyTorch’s DataLoader, enabling efficient batching, shuffling, and parallel data loading, which is essential for training deep learning models on large EEG datasets.
+EEGDash queries return a **PyTorch Dataset**. The format plugs directly into PyTorch's `DataLoader` for batching, shuffling, and parallel loading, which matters when training models on large EEG corpora.
 
 ## Data preprocessing
 
-EEGDash datasets are processed using the popular [braindecode](https://braindecode.org/stable/index.html) library. In fact, EEGDash datasets are braindecode datasets, which are themselves PyTorch datasets. This means that any preprocessing possible on braindecode datasets is also possible on EEGDash datasets. Refer to [braindecode](https://braindecode.org/stable/index.html) tutorials for guidance on preprocessing EEG data.
+EEGDash datasets are [braindecode](https://braindecode.org/stable/index.html) datasets, which are themselves PyTorch datasets. Any preprocessing that works on a braindecode dataset works on an EEGDash dataset. See the braindecode tutorials for the available options.
 
 ## EEG-Dash usage
 
 ### Install
-Use your preferred Python environment manager with Python > 3.10 to install the package.
-* To install the eegdash package, use the following command: `pip install eegdash`
-* To verify the installation, start a Python session and type: `from eegdash import EEGDash`
+Requires Python 3.10 or higher. Use whichever environment manager you prefer.
 
-Please check our tutorial webpages to explore what you can do with [eegdash](https://eegdash.org/)! 
+```bash
+pip install eegdash
+```
 
-## Education -- Coming soon...
+Verify the install in a Python session:
 
-We organize workshops and educational events to foster cross-cultural education and student training, offering both online and in-person opportunities in collaboration with US and Israeli partners. Events for 2025 will be announced via the EEGLABNEWS mailing list. Be sure to [subscribe](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
+```python
+from eegdash import EEGDash
+```
+
+See the tutorials at [eegdash.org](https://eegdash.org/) for end-to-end examples.
+
+## Education (coming soon)
+
+We run workshops and student training events with US and Israeli partners, online and in person. 2025 dates will go out on the EEGLABNEWS mailing list. [Subscribe here](https://sccn.ucsd.edu/mailman/listinfo/eeglabnews).
 
 ## About EEG-DaSh
 

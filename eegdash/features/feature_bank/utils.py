@@ -7,14 +7,22 @@ This module provides the following helper functions:
 - `reduce_freq_bands`: Reduces spectral data into discrete frequency bands by aggregating bins
 """
 
+import inspect
+from collections.abc import Callable
+
 import numpy as np
+
+from ..decorators import preprocessor_output_type, wraps
+from ..output_types import AsInputOutputType
 
 __all__ = [
     "DEFAULT_FREQ_BANDS",
     "get_valid_freq_band",
+    "preprocessor_as_feature",
     "reduce_freq_bands",
+    "set_spectral_default_kwargs",
     "slice_freq_band",
-    "spectral_default_kwargs",
+    "spectral_kwargs",
 ]
 
 
@@ -26,7 +34,30 @@ DEFAULT_FREQ_BANDS = {
 }
 
 
-def spectral_default_kwargs(kwargs, metadata):
+@preprocessor_output_type(AsInputOutputType)
+def preprocessor_as_feature(*x):
+    """A pass-through feature, returning its preprocessor output as is.
+
+    Use if the preprocessor is a feature by itself, and it should also be treated as a
+    feature.
+
+    Parameters
+    ----------
+    *x: tuple
+        Any preprocessor output.
+
+    Returns
+    -------
+    *x: tuple
+        The input (as is).
+
+    """
+    if len(x) == 1:
+        return x[0]
+    return x
+
+
+def set_spectral_default_kwargs(kwargs, metadata):
     r"""Sets default parameters for spectral preprocecssors.
 
     - Set the default frequency limits to the bandpass frequencies (if available).
@@ -67,14 +98,14 @@ def spectral_default_kwargs(kwargs, metadata):
         if "lowpass" in metadata["info"]
         else None
     )
-    if "fs" not in kwargs:
+    if "fs" not in kwargs or kwargs["fs"] is None:
         kwargs["fs"] = metadata["info"]["sfreq"]
-    if "nperseg" not in kwargs:
+    if "nperseg" not in kwargs or kwargs["nperseg"] is None:
         window_size_in_sec = (
             kwargs.pop("window_size_in_sec") if "window_size_in_sec" in kwargs else 4
         )
         kwargs["nperseg"] = int(window_size_in_sec * kwargs["fs"])
-        if "noverlap" not in kwargs:
+        if "noverlap" not in kwargs or kwargs["noverlap"] is None:
             overlap_in_sec = (
                 kwargs.pop("overlap_in_sec")
                 if "overlap_in_sec" in kwargs
@@ -83,6 +114,85 @@ def spectral_default_kwargs(kwargs, metadata):
             kwargs["noverlap"] = int(overlap_in_sec * kwargs["fs"])
     kwargs["axis"] = -1
     return f_min, f_max, kwargs
+
+
+def spectral_kwargs(func: Callable):
+    r"""A decorator for functions receiving spectral-like parameters.
+
+    Parameters
+    ----------
+    func: Callable
+        A function receiving spectral-like parameters.
+
+    Returns
+    -------
+    Callable
+        A wrapped function with extra parameters and a suitable docstring.
+
+    """
+    new_params = [
+        {
+            "signature": inspect.Parameter(
+                name="fs",
+                kind=inspect.Parameter.KEYWORD_ONLY,
+                default=None,
+                annotation=int | None,
+            ),
+            "doc": r"Sampling frequency. Defaults to `sfreq` in MNE's info. "
+            + r"Do not use unless you know what you are doing.",
+        },
+        {
+            "signature": inspect.Parameter(
+                name="f_min",
+                kind=inspect.Parameter.KEYWORD_ONLY,
+                default=None,
+                annotation=float | None,
+            ),
+            "doc": r"The minimum frequency. Use `None` for half the window"
+            + r" length. Defaults to the highpass frequency used to MNE's"
+            + r":meth:`~mne.io.Raw.filter`.",
+        },
+        {
+            "signature": inspect.Parameter(
+                name="f_max",
+                kind=inspect.Parameter.KEYWORD_ONLY,
+                default=None,
+                annotation=float | None,
+            ),
+            "doc": r"The maximum frequency. Use `None` for Nyquist. "
+            + r"Defaults to the lowpass frequency used to MNE's "
+            + r":meth:`~mne.io.Raw.filter`.",
+        },
+        {
+            "signature": inspect.Parameter(
+                name="window_size_in_sec",
+                kind=inspect.Parameter.KEYWORD_ONLY,
+                default=4,
+                annotation=float | None,
+            ),
+            "doc": r"Window size in seconds, replacing `nperseg`. "
+            + r"Only used if `nperseg` is not provided. "
+            r"Defaults to 4 seconds.",
+        },
+        {
+            "signature": inspect.Parameter(
+                name="overlap_in_sec",
+                kind=inspect.Parameter.KEYWORD_ONLY,
+                default=None,
+                annotation=float | None,
+            ),
+            "doc": r"Window overlap in seconds, replacing `noverlap`. "
+            + r"Only used if `nperseg` and `noverlap` are not provided."
+            + r"defaults to half of `window_size_in_sec`.",
+        },
+    ]
+
+    @wraps(func, new_args=new_params)
+    def spectral_wrapper(*args, _metadata, **kwargs):
+        f_min, f_max, kwargs = set_spectral_default_kwargs(kwargs, _metadata)
+        return func(*args, _metadata=_metadata, f_min=f_min, f_max=f_max, **kwargs)
+
+    return spectral_wrapper
 
 
 def get_valid_freq_band(fs, n, f_min=None, f_max=None):

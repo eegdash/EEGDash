@@ -1,6 +1,9 @@
-.. title:: Dataset Growth
 
-.. rubric:: Dataset Growth over Time
+.. raw:: html
+
+   <header class="eegdash-fig-title">
+     <h3>Cumulative growth of EEG-DaSh datasets</h3>
+   </header>
 
 .. raw:: html
 

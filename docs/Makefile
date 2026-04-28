@@ -10,7 +10,7 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
-.PHONY: help clean apidoc html html-noplot html-fast
+.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown electrode-layouts
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -21,23 +21,50 @@ apidoc:
 	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
 		python -m sphinx.ext.apidoc -f -e -T -o "$(APIDIR)/dataset" "../$(PKG)" "../$(PKG)/features"
 
+# Regenerate $(SOURCEDIR)/_extra/llms.txt from the current source tree.
+# Runs after `apidoc` so the per-dataset pages that drive the sitemap
+# coverage metric are already materialised.
+llms-txt: apidoc
+	@python generate_llms_txt.py --source "$(SOURCEDIR)" --output "$(SOURCEDIR)/_extra/llms.txt"
+
+# Refresh source/_static/dataset_generated/electrode-layouts.json from the
+# live montage registry. The script fails soft (zero layouts → warning
+# but exit 0) so a transient API outage never blocks the docs build;
+# the --keep-existing-on-empty flag preserves the last good manifest.
+electrode-layouts:
+	@python build_electrode_layouts.py --keep-existing-on-empty || true
 
 # Standard build runs examples
-html: apidoc
+html: apidoc llms-txt electrode-layouts
 	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-html-noplot: apidoc
+html-noplot: apidoc llms-txt electrode-layouts
 	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
-# Very fast build: limit datasets to 5
-html-fast: apidoc
+# Very fast build: limit datasets to 5 (skip the electrode registry leg;
+# manifest stays at whatever was last generated)
+html-fast: apidoc llms-txt
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
+
+# Markdown sibling build. Run *after* `make html` — we reuse the already
+# generated apidoc/summary tables and only build the markdown tree, then
+# mirror .md files into the html output and emit `llms-full.txt`. Gallery
+# execution is disabled here: the markdown corpus is for LLM/agent
+# consumption, and re-running the examples would double the build time
+# with no textual gain.
+markdown:
+	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M markdown "$(SOURCEDIR)" "$(BUILDDIR)" \
+		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O) || true
+	@python build_markdown_assets.py --source "$(BUILDDIR)/markdown" --target "$(BUILDDIR)/html"
 
 # Custom clean target to remove generated API docs and build files
 clean:

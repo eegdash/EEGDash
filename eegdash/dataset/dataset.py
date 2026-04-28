@@ -27,6 +27,7 @@ from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
 from ..schemas import validate_record
+from ._source_inference import correct_storage_inplace
 from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
@@ -457,8 +458,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         This method performs several normalizations:
         1. Filters out records with invalid extensions (e.g., .json, .tsv sidecar files)
-        2. Updates storage backend/base if s3_bucket is specified
-        3. Deduplicates records if _dedupe_records is enabled
+        2. Self-heals records whose ``storage.base`` is misrouted for the
+           dataset_id pattern (residual fallout from the pre-PR-#327 NEMAR
+           ingestion bug — ``nm*`` records pointing at ``s3://openneuro.org``).
+        3. Updates storage backend/base if s3_bucket is specified
+        4. Deduplicates records if _dedupe_records is enabled
         """
         # Filter out records that are not valid EEG data files
         # (e.g., filter out .json, .tsv sidecar files that may be in the database)
@@ -471,6 +475,24 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             filtered_records.append(record)
 
         records = filtered_records
+
+        # Self-heal misrouted storage.base before any user override applies.
+        # The pre-PR-#327 NEMAR mislabel has since been patched in the DB, so
+        # this is now a defensive net for stale caches / third-party records.
+        seen_corrections: set[tuple[str, str, str]] = set()
+        for record in records:
+            corrected, old_base = correct_storage_inplace(record)
+            if corrected:
+                key = (record.get("dataset", ""), old_base, record["storage"]["base"])
+                if key not in seen_corrections:
+                    seen_corrections.add(key)
+                    logger.info(
+                        "Auto-corrected misrouted storage.base for dataset %s: "
+                        "%s -> %s",
+                        record.get("dataset"),
+                        old_base,
+                        record["storage"]["base"],
+                    )
 
         if self.s3_bucket:
             for record in records:

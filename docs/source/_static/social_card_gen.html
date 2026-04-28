@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    background: #f8fafc;
+    position: relative;
+  }
+
+  /* Deep blue band on left */
+  .band {
+    position: absolute;
+    top: 0; left: 0;
+    width: 480px; height: 100%;
+    background: linear-gradient(165deg, #004a76 0%, #006ca3 55%, #0084c7 100%);
+    clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+  }
+
+  /* Subtle line pattern overlay */
+  .wave-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 480px; height: 100%;
+    clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+    opacity: 0.06;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.5) 18px,
+      rgba(255,255,255,0.5) 19px
+    );
+  }
+
+  /* Grid dots pattern on white side */
+  .grid-dots {
+    position: absolute;
+    top: 0; right: 0;
+    width: 750px; height: 100%;
+    background-image: radial-gradient(circle, #cbd5e1 0.8px, transparent 0.8px);
+    background-size: 28px 28px;
+    opacity: 0.35;
+  }
+
+  /* Orange accent line */
+  .accent-line {
+    position: absolute;
+    top: 0; left: 400px;
+    width: 5px; height: 100%;
+    background: #f7941d;
+    transform: skewX(-8deg);
+  }
+
+  /* Logo area on the blue side */
+  .logo-area {
+    position: absolute;
+    top: 50%; left: 48px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .logo-icon {
+    width: 80px;
+    height: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+  }
+
+  .logo-wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .logo-wordmark .eeg {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    color: #ffffff;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .logo-wordmark .dash {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    color: #f7941d;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .tagline-blue {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.3px;
+    line-height: 1.55;
+    max-width: 300px;
+  }
+
+  /* Content on the white side */
+  .content {
+    position: absolute;
+    top: 46%; right: 64px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    max-width: 600px;
+  }
+
+  .headline {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .headline em {
+    font-style: normal;
+    color: #006ca3;
+  }
+
+  /* Code snippet */
+  .code-snippet {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 14px 20px;
+    border-radius: 8px;
+    line-height: 1.6;
+    width: 100%;
+    border-left: 3px solid #f7941d;
+  }
+
+  .code-snippet .kw { color: #7dd3fc; }
+  .code-snippet .fn { color: #fbbf24; }
+  .code-snippet .cm { color: #64748b; }
+  .code-snippet .st { color: #86efac; }
+  .code-snippet .op { color: #94a3b8; }
+
+  /* Stats row */
+  .stats {
+    display: flex;
+    gap: 32px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 28px;
+    color: #f7941d;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* Modality pills */
+  .pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 5px;
+    background: rgba(0, 108, 163, 0.07);
+    color: #006ca3;
+    border: 1px solid rgba(0, 108, 163, 0.14);
+  }
+
+  .pill.accent {
+    background: rgba(247, 148, 29, 0.07);
+    color: #d67a0e;
+    border-color: rgba(247, 148, 29, 0.18);
+  }
+
+  /* URL bottom right */
+  .url {
+    position: absolute;
+    bottom: 28px; right: 64px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: #006ca3;
+    letter-spacing: 0.5px;
+  }
+
+  /* Bottom left on blue */
+  .url-left {
+    position: absolute;
+    bottom: 28px; left: 48px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="grid-dots"></div>
+  <div class="band"></div>
+  <div class="wave-overlay"></div>
+  <div class="accent-line"></div>
+
+  <div class="logo-area">
+    <img class="logo-icon" src="eegdash_image_only.svg" alt="EEG Dash">
+    <div class="logo-wordmark">
+      <span class="eeg">EEG</span><span class="dash">DASH</span>
+    </div>
+    <div class="tagline-blue">Load BIDS datasets as PyTorch Datasets. Feature extraction, transfer learning, and reproducible pipelines.</div>
+  </div>
+
+  <div class="content">
+    <div class="headline">
+      <em>700+</em> BIDS-first EEG &amp; MEG datasets as PyTorch Datasets
+    </div>
+    <div class="code-snippet">
+      <span class="kw">from</span> eegdash <span class="kw">import</span> <span class="fn">EEGDashDataset</span><br>
+      <span class="cm"># BIDS &rarr; PyTorch Dataset in two lines</span><br>
+      ds <span class="op">=</span> <span class="fn">EEGDashDataset</span><span class="op">(</span><span class="st">"./data"</span><span class="op">,</span> dataset<span class="op">=</span><span class="st">"ds004504"</span><span class="op">)</span>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-number">736</span>
+        <span class="stat-label">Datasets</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">40k+</span>
+        <span class="stat-label">Subjects</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">85k+</span>
+        <span class="stat-label">Hours</span>
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill">EEG</span>
+      <span class="pill">MEG</span>
+      <span class="pill">iEEG</span>
+      <span class="pill">fNIRS</span>
+      <span class="pill">EMG</span>
+      <span class="pill accent">BIDS</span>
+      <span class="pill accent">PyTorch</span>
+      <span class="pill accent">Python</span>
+    </div>
+  </div>
+
+  <div class="url-left">BSD-3 &middot; Open Source</div>
+  <div class="url">eegdash.org</div>
+</body>
+</html>

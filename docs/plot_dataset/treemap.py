@@ -560,11 +560,13 @@ def generate_dataset_treemap(
     # smaller tiles don't get crowded, while the higher top margin combined
     # with the raised legend keeps it clear of the pathbar.
     fig.update_layout(
+        font=dict(family="Inter, system-ui, sans-serif"),
         uniformtext=dict(minsize=20, mode="hide"),
-        margin=dict(t=132, l=28, r=28, b=36),
+        margin=dict(t=60, l=28, r=28, b=36),
         hoverlabel=dict(font=dict(size=14), align="left"),
         height=880,
         autosize=True,
+        paper_bgcolor="#ffffff",
     )
 
     return build_and_export_html(

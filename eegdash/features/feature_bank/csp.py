@@ -19,9 +19,8 @@ import numpy as np
 import scipy
 import scipy.linalg
 
-from ..decorators import FeaturePredecessor, multivariate_feature
-from ..extractors import TrainableFeature
-from .signal import SIGNAL_PREDECESSORS
+from ..decorators import feature_predecessor, multivariate_feature
+from ..trainable import TrainableFeature
 
 __all__ = [
     "CommonSpatialPattern",
@@ -65,7 +64,7 @@ def _update_mean_cov(count, mean, cov, x_count, x_mean, x_cov):
     cov[:] -= np.outer(mean, mean)
 
 
-@FeaturePredecessor(*SIGNAL_PREDECESSORS)
+@feature_predecessor()
 @multivariate_feature
 class CommonSpatialPattern(TrainableFeature):
     r"""Common Spatial Pattern (CSP) for binary signal classification.
@@ -94,9 +93,6 @@ class CommonSpatialPattern(TrainableFeature):
     `Wikipedia entry <https://en.wikipedia.org/wiki/Common_spatial_pattern>`_.
 
     """
-
-    def __init__(self):
-        super().__init__()
 
     def clear(self):
         r"""Reset the internal state of the feature extractor.

@@ -1,5 +1,6 @@
 import mne
 import pandas as pd
+from safetensors.numpy import save_file as _save_safetensors
 
 from eegdash.features.datasets import (
     FeaturesConcatDataset,
@@ -33,7 +34,8 @@ def test_load_features_concat_dataset_auto_discovery(tmp_path):
 
     # Create minimal required files
     features_df = pd.DataFrame({"feat1": [1, 2, 3], "feat2": [4, 5, 6]})
-    features_df.to_parquet(sub_dir / "0-feat.parquet")
+    tensors = {col: features_df[col].values for col in features_df.columns}
+    _save_safetensors(tensors, str(sub_dir / "0-feat.safetensors"))
 
     description = pd.Series({"name": "test"})
     description.to_json(sub_dir / "description.json")
@@ -59,9 +61,10 @@ def test_load_features_with_raw_info(tmp_path):
     sub_dir = tmp_path / "0"
     sub_dir.mkdir()
 
-    # Create parquet file
+    # Create safetensors file
     features_df = pd.DataFrame({"feat1": [1, 2], "feat2": [3, 4]})
-    features_df.to_parquet(sub_dir / "0-feat.parquet")
+    tensors = {col: features_df[col].values for col in features_df.columns}
+    _save_safetensors(tensors, str(sub_dir / "0-feat.safetensors"))
 
     # Create description
     description = pd.Series({"name": "test"})

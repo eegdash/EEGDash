@@ -90,7 +90,7 @@ def test_features_concat_dataset_save(tmp_path, sample_feature_dataset):
 
     # Verify files
     assert (save_dir / "0").is_dir()
-    assert (save_dir / "0" / "0-feat.parquet").exists()
+    assert (save_dir / "0" / "0-feat.safetensors").exists()
     assert (save_dir / "0" / "metadata_df.pkl").exists()
     assert (save_dir / "0" / "description.json").exists()
 

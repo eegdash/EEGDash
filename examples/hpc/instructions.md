@@ -1,6 +1,6 @@
-# EEGDash on Expanse — Concise End-to-End Guide
+# EEGDash on Expanse: end-to-end guide
 
-This document captures the **working, minimal, reproducible workflow** for running EEGDash experiments on **SDSC Expanse**, from **local macOS development** to **CPU/GPU Slurm jobs**, using **Docker + Singularity (Apptainer)**.
+This page documents a minimal, reproducible workflow for running EEGDash experiments on SDSC Expanse. It covers local development on macOS, CPU and GPU Slurm jobs, and the Docker plus Singularity (Apptainer) toolchain that links them.
 
 ---
 
@@ -57,13 +57,13 @@ apptainer build eegdash-tutorial.sif docker-daemon://eegdash-tutorial:latest
 scp eegdash-tutorial.sif <username>@login.expanse.sdsc.edu:/path/to/destination/
 ```
 
-This approach can be faster than pulling from Docker Hub on Expanse, especially for large images or slow network connections.
+This is often faster than pulling from Docker Hub on Expanse, especially for large images or slow network connections.
 
 ---
 
-## Additional Notes
+## Tips
 
-- Ensure your Dockerfile includes all Python dependencies and system libraries required by EEGDash
-- Test your Docker image locally before pushing to Docker Hub
-- Allocate appropriate resources (CPU/GPU, memory, time) in your Slurm job scripts
-- Monitor your jobs using `squeue -u $USER` on Expanse
+- Make sure the Dockerfile pulls in every Python dependency and system library EEGDash needs.
+- Test the image locally before pushing to Docker Hub.
+- In your Slurm scripts, request realistic CPU/GPU, memory, and wall-time limits.
+- Track running jobs with `squeue -u $USER` on Expanse.

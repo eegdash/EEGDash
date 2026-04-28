@@ -2,13 +2,14 @@ r"""Feature bank public API exports.
 
 This module consolidates and re-exports the feature extractors and
 feature functions so users can import them directly from
-``eegdash.features.feature_bank``.
+:mod:`eegdash.features.feature_bank`.
 """
 
 from .complexity import (
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
+    complexity_multiscale_entropy,
     complexity_sample_entropy,
     complexity_svd_entropy,
 )
@@ -26,8 +27,11 @@ from .dimensionality import (
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
 )
+from .pick import (
+    pick_channel_pairs_preprocessor,
+    pick_channels_preprocessor,
+)
 from .signal import (
-    SignalOutputType,
     signal_decorrelation_time,
     signal_filter_preprocessor,
     signal_hilbert_preprocessor,
@@ -59,11 +63,13 @@ from .spectral import (
     spectral_root_total_power,
     spectral_slope,
 )
+from .utils import preprocessor_as_feature
 
 __all__ = [
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
+    "complexity_multiscale_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
@@ -80,8 +86,10 @@ __all__ = [
     "dimensionality_katz_fractal_dim",
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
+    # Pick
+    "pick_channel_pairs_preprocessor",
+    "pick_channels_preprocessor",
     # Signal
-    "SignalOutputType",
     "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",
@@ -111,4 +119,6 @@ __all__ = [
     "spectral_hjorth_activity",
     "spectral_hjorth_mobility",
     "spectral_hjorth_complexity",
+    # Utils
+    "preprocessor_as_feature",
 ]

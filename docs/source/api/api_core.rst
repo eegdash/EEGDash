@@ -1,4 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
+:og:description: EEGDash Core API — dataset loading, BIDS integration, cloud storage, metadata schemas, and HTTP client for the EEG Dash platform.
+
+.. meta::
+   :description: EEGDash Core API — dataset loading, BIDS integration, cloud storage, metadata schemas, and HTTP client for the EEG Dash platform.
 
 Core API
 ========

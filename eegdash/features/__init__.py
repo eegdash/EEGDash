@@ -1,27 +1,31 @@
+r"""Feature Extraction Module.
+
+This module provides tools for feature extraction from :mode:`braindecode`
+datasets, as well as a bank of predefined features.
+
+"""
+
+from .base_utils import BivariateIterator
 from .datasets import FeaturesConcatDataset, FeaturesDataset
 from .decorators import (
-    FeatureKind,
-    FeaturePredecessor,
-    PreprocessorOutputType,
     bivariate_feature,
+    channel_pairer,
+    channel_pairer_directed,
+    channel_pairer_undirected,
+    feature_kind,
+    feature_predecessor,
+    metadata_preprocessor,
     multivariate_feature,
+    preprocessor_output_type,
     univariate_feature,
 )
-from .extractors import (
-    BasePreprocessorOutputType,
-    BivariateFeature,
-    DirectedBivariateFeature,
-    FeatureExtractor,
-    MultivariateFeature,
-    TrainableFeature,
-    UnivariateFeature,
-)
+from .extractors import FeatureExtractor
 from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
-    SignalOutputType,
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
+    complexity_multiscale_entropy,
     complexity_sample_entropy,
     complexity_svd_entropy,
     connectivity_coherency_preprocessor,
@@ -33,6 +37,9 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
+    pick_channel_pairs_preprocessor,
+    pick_channels_preprocessor,
+    preprocessor_as_feature,
     signal_decorrelation_time,
     signal_filter_preprocessor,
     signal_hilbert_preprocessor,
@@ -70,6 +77,16 @@ from .inspect import (
     get_feature_kind,
     get_feature_predecessors,
 )
+from .kinds import (
+    BivariateFeature,
+    MultivariateFeature,
+    UnivariateFeature,
+)
+from .output_types import (
+    AsInputOutputType,
+    BasePreprocessorOutputType,
+    SignalOutputType,
+)
 from .serialization import (
     feature_extractor_from_dict,
     load_feature_extractor_from_hocon,
@@ -77,41 +94,49 @@ from .serialization import (
     load_feature_extractor_from_yaml,
     load_features_concat_dataset,
 )
+from .trainable import TrainableFeature
 from .utils import extract_features, fit_feature_extractors
 
 __all__ = [
-    "BasePreprocessorOutputType",
+    "BivariateIterator",
     "FeaturesConcatDataset",
     "FeaturesDataset",
-    "FeatureKind",
-    "FeaturePredecessor",
-    "PreprocessorOutputType",
     "bivariate_feature",
+    "channel_pairer",
+    "channel_pairer_directed",
+    "channel_pairer_undirected",
+    "feature_kind",
+    "feature_predecessor",
+    "metadata_preprocessor",
     "multivariate_feature",
+    "preprocessor_output_type",
     "univariate_feature",
-    "BivariateFeature",
-    "DirectedBivariateFeature",
     "FeatureExtractor",
-    "MultivariateFeature",
-    "TrainableFeature",
-    "UnivariateFeature",
     "get_all_feature_preprocessors",
     "get_all_feature_kinds",
     "get_all_features",
     "get_all_preprocessor_output_types",
     "get_feature_kind",
     "get_feature_predecessors",
+    "BivariateFeature",
+    "MultivariateFeature",
+    "UnivariateFeature",
+    "AsInputOutputType",
+    "BasePreprocessorOutputType",
+    "SignalOutputType",
     "feature_extractor_from_dict",
     "load_feature_extractor_from_hocon",
     "load_feature_extractor_from_json",
     "load_feature_extractor_from_yaml",
     "load_features_concat_dataset",
+    "TrainableFeature",
     "extract_features",
     "fit_feature_extractors",
     # Feature part
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",
+    "complexity_multiscale_entropy",
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
@@ -128,8 +153,10 @@ __all__ = [
     "dimensionality_katz_fractal_dim",
     "dimensionality_hurst_exp",
     "dimensionality_detrended_fluctuation_analysis",
+    # Pick
+    "pick_channel_pairs_preprocessor",
+    "pick_channels_preprocessor",
     # Signal
-    "SignalOutputType",
     "signal_filter_preprocessor",
     "signal_hilbert_preprocessor",
     "signal_mean",
@@ -159,4 +186,6 @@ __all__ = [
     "spectral_hjorth_activity",
     "spectral_hjorth_mobility",
     "spectral_hjorth_complexity",
+    # Utils
+    "preprocessor_as_feature",
 ]

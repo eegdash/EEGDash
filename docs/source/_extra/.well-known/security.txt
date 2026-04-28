@@ -1,0 +1,12 @@
+# EEGDash security policy (RFC 9116)
+# If you have found a security or privacy issue with the EEGDash Python
+# library, the catalog website at eegdash.org, or the API at
+# data.eegdash.org, please report it privately via one of the channels
+# below. Public GitHub issues are fine for bugs that do not expose user
+# data or infrastructure risk.
+
+Contact: mailto:b.aristimunha@gmail.com
+Contact: https://github.com/eegdash/EEGDash/security/advisories/new
+Expires: 2027-04-18T00:00:00.000Z
+Preferred-Languages: en, fr, pt
+Canonical: https://eegdash.org/.well-known/security.txt

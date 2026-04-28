@@ -2,7 +2,6 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
-import pytest
 
 from eegdash.features.extractors import (
     FeatureExtractor,
@@ -14,7 +13,8 @@ from eegdash.features.utils import (
 
 
 def test_utils_gaps(features_dataset):
-    from eegdash.features.extractors import _get_underlying_func
+    from eegdash.features.base_utils import get_underlying_func
+    from eegdash.features.output_types import SignalOutputType
 
     # 52-85: extract_features
     mock_ds = MagicMock()
@@ -26,7 +26,7 @@ def test_utils_gaps(features_dataset):
     mock_ds.datasets[0].raw.info = {"sfreq": 100}
 
     fe = FeatureExtractor({"f": lambda x: {"f1": [1.0]}})
-    fe.parent_extractor_type = [None]
+    fe.parent_extractor_type = [SignalOutputType]
     # We must patch where FeaturesConcatDataset is used
     with patch("eegdash.features.utils.FeaturesConcatDataset"):
         extract_features(mock_ds, fe)
@@ -60,7 +60,7 @@ def test_utils_gaps(features_dataset):
     fit_feature_extractors(mock_ds, {"f": lambda x: x})
 
     # TrainableFeature gaps (62, 76)
-    from eegdash.features.extractors import TrainableFeature
+    from eegdash.features.trainable import TrainableFeature
 
     class MyRawTrainable(TrainableFeature):
         def clear(self):
@@ -84,25 +84,22 @@ def test_utils_gaps(features_dataset):
     # Let's check extractors.py again.
 
     # 295-302: MultivariateFeature.__call__ errors/edge cases
-    from eegdash.features.extractors import (
-        BivariateFeature,
-        DirectedBivariateFeature,
+    from eegdash.features.base_utils import BivariateIterator
+    from eegdash.features.kinds import (
         MultivariateFeature,
     )
 
     mv = MultivariateFeature()
-    with pytest.raises(AssertionError):
-        mv(np.array([1]))  # _ch_names is None
 
     # 309-316: _array_to_dict
     mv._array_to_dict(np.array([1]), [])
 
     # 361, 377: pair indices
-    BivariateFeature.get_pair_iterators(3)
-    DirectedBivariateFeature.get_pair_iterators(3)
+    BivariateIterator(3).get_pair_iterators()
+    BivariateIterator(3, directed=True).get_pair_iterators()
 
     # 178, 183-192: fit_feature_extractors
-    from eegdash.features.extractors import UnivariateFeature
+    from eegdash.features.kinds import UnivariateFeature
 
     class MyTrainable(FeatureExtractor):
         def __init__(self, *args, **kwargs):
@@ -122,7 +119,7 @@ def test_utils_gaps(features_dataset):
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
+    feat.parent_extractor_type = [SignalOutputType]
     trainable_fe = MyTrainable({"f": feat})
 
     mock_batch_2 = MagicMock()
@@ -146,8 +143,8 @@ def test_utils_gaps(features_dataset):
     def f_kind(x):
         return x
 
-    f_kind.feature_kind = lambda r, _ch_names: r
-    f_kind.parent_extractor_type = [None]
+    f_kind.feature_kind = lambda r, _metadata: r
+    f_kind.parent_extractor_type = [SignalOutputType]
     fe_kind = FeatureExtractor({"f": f_kind})
     fe_kind(
         np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
@@ -170,7 +167,7 @@ def test_utils_gaps(features_dataset):
 
     mock_dispatcher = MagicMock(spec=Dispatcher)
     mock_dispatcher.py_func = lambda x: x
-    _get_underlying_func(mock_dispatcher)
+    get_underlying_func(mock_dispatcher)
 
     # 205: call trainable fe
     trainable_fe(
@@ -190,7 +187,7 @@ def test_utils_gaps(features_dataset):
 
     # 296-302, 312-316: MultivariateFeature branches
     mv._ch_names = ["ch1"]
-    mv(np.array([[[1.0]]]), _ch_names=["ch1"])
+    mv(np.array([[[1.0]]]), _metadata={"info": {"ch_names": ["ch1"]}})
     mv._array_to_dict(np.array([[1.0]]), ["ch1"])
 
     # 240-243, 247-255, 259-265: loops
@@ -200,11 +197,15 @@ def test_utils_gaps(features_dataset):
     fe_outer.fit()
 
     # 340, 365: feature_channel_names
-    from eegdash.features.extractors import BivariateFeature, DirectedBivariateFeature
+    from eegdash.features.kinds import BivariateFeature
 
-    UnivariateFeature().feature_channel_names(["ch1"])
-    BivariateFeature().feature_channel_names(["ch1", "ch2"])
-    DirectedBivariateFeature().feature_channel_names(["ch1", "ch2"])
+    UnivariateFeature().feature_channel_names(_metadata={"info": {"ch_names": ["ch1"]}})
+    BivariateFeature().feature_channel_names(
+        _metadata={
+            "info": {"ch_names": ["ch1", "ch2"]},
+            "ch_pair_iterator": BivariateIterator(2),
+        }
+    )
 
     pass
 
@@ -213,14 +214,14 @@ def test_extract_features_list_input():
     """Test extract_features with list of feature functions."""
     import numpy as np
 
-    from eegdash.features import extractors
+    from eegdash.features import kinds
 
     # Create a simple feature function
     def mean_feature(x):
         return np.mean(x, axis=-1, keepdims=True)
 
     mean_feature.parent_extractor_type = [None]
-    mean_feature.feature_kind = extractors.UnivariateFeature()
+    mean_feature.feature_kind = kinds.UnivariateFeature()
 
     # Test that list conversion works
     # This tests line 132 and 134

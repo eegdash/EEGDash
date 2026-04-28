@@ -87,6 +87,43 @@ def _slugify(value: str) -> str:
     return slug or "tag"
 
 
+# Human-readable category label used in tag tooltips / aria-label. Maps the
+# raw ``kind`` argument passed to ``wrap_tags`` into the column-header wording
+# the reader actually sees in the table. Unknown kinds fall back to Title case.
+_TAG_KIND_LABELS = {
+    "dataset-record-modality": "Recording",
+    "record-modality": "Recording",
+    "dataset-pathology": "Pathology",
+    "pathology": "Pathology",
+    "dataset-modality": "Modality",
+    "modality": "Modality",
+    "dataset-type": "Type",
+    "type": "Type",
+    "categorization": "Category",
+}
+
+
+def _pretty_kind(kind_slug: str) -> str:
+    if kind_slug in _TAG_KIND_LABELS:
+        return _TAG_KIND_LABELS[kind_slug]
+    return kind_slug.replace("-", " ").title()
+
+
+# Known acronym-style recording modalities. Title() would mangle them
+# ("Meg" instead of "MEG"), so map explicitly.
+_TAG_VALUE_FORMATTERS = {
+    "eeg": "EEG",
+    "meg": "MEG",
+    "ieeg": "iEEG",
+    "ecog": "ECoG",
+    "emg": "EMG",
+    "ecg": "ECG",
+    "fnirs": "fNIRS",
+    "fmri": "fMRI",
+    "mri": "MRI",
+}
+
+
 def wrap_tags(
     cell: object,
     *,
@@ -130,18 +167,34 @@ def wrap_tags(
         value = str(value).strip()
         if not value:
             continue
-        token_text = escape(value)
         token_slug = _slugify(value)
         classes = ["tag", f"tag-kind-{kind_slug}"]
         if include_slug_class:
             classes.append(f"tag-value-{token_slug}")
         class_attr = " ".join(classes)
+        kind_label = _pretty_kind(kind_slug)
+        # Raw values arrive as-is from the CSV (e.g. "meg", "eeg"). Render
+        # acronyms in their canonical case (MEG, iEEG, fNIRS, ECoG) and
+        # first-letter-capitalise the rest. The CSS `text-transform` hook
+        # for this tag family is set to `none` so the renderer-supplied
+        # casing wins — otherwise "iEEG" would render as "IEEG" etc.
+        display_value = _TAG_VALUE_FORMATTERS.get(value.lower()) or (
+            value[:1].upper() + value[1:] if value else value
+        )
+        token_text = escape(display_value)
+        # Keep the original for the data-* attribute (still raw) + for the
+        # aria-label text.
+        raw_text = escape(value)
+        tooltip = f"{kind_label}: {display_value}"
+        tooltip_attr = escape(tooltip, quote=True)
         spans.append(
             (
                 f'<span class="{class_attr}" '
                 f'data-tag-kind="{kind_slug}" '
                 f'data-tag-value="{token_slug}" '
-                f'data-tag-label="{token_text}">{token_text}</span>'
+                f'data-tag-label="{raw_text}" '
+                f'title="{tooltip_attr}" '
+                f'aria-label="{tooltip_attr}">{token_text}</span>'
             )
         )
     return joiner.join(spans)

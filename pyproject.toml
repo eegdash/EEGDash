@@ -6,34 +6,50 @@ build-backend = "setuptools.build_meta"
 dynamic = ["version"]
 name = "eegdash"
 authors = [
-  { name = "Young Truong",    email = "dt.young112@gmail.com" },
-  { name = "Arnaud Delorme",  email = "adelorme@ucsd.edu" },
-  { name = "Aviv Dotan",  email = "avivdot@bgu.post.ac.il" },
-  { name = "Oren Shriki",  email = "shrikio@bgu.ac.il" },
-  { name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}
+  { name = "Bruno Aristimunha",   email = "b.aristimunha@gmail.com" },
+  { name = "Aviv Dotan",          email = "avivdot@bgu.post.ac.il" },
+  { name = "Pierre Guetschel",    email = "pierre.guetschel@donders.ru.nl" },
+  { name = "Dung Truong",         email = "dt.young112@gmail.com" },
+  { name = "Kuntal Kokate" },
+  { name = "Aman Jaiswal",        email = "aman.jaiswal.1503@gmail.com" },
+  { name = "Amitrava Majumdar" },
+  { name = "Seyed Yahya Shirazi" },
+  { name = "Oren Shriki",         email = "shrikio@bgu.ac.il" },
+  { name = "Arnaud Delorme",      email = "adelorme@ucsd.edu" },
 ]
-description     = "EEG data for machine learning"
+description     = "EEG-DaSh: an open data, tool, and compute resource — a Python library and catalog for 700+ BIDS-first EEG, MEG, fNIRS, EMG, and iEEG datasets, ML-ready via PyTorch"
 readme          = "README.md"
 license         = "BSD-3-Clause"
 requires-python = ">=3.11"
+keywords        = [
+    "eeg",
+    "electroencephalography",
+    "brain-computer-interface",
+    "bci",
+    "neuroscience",
+    "machine-learning",
+    "deep-learning",
+    "bids",
+    "mne",
+    "signal-processing",
+    "feature-extraction",
+    "dataset",
+]
 
 classifiers = [
-    "Operating System :: OS Independent",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Developers",
-    "Programming Language :: Python",
-    "Topic :: Software Development",
-    "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
-    "Operating System :: Unix",
-    "Operating System :: MacOS",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 
 dependencies = [
@@ -41,19 +57,14 @@ dependencies = [
   "eeglabio",
   "mne>=1.11.0",
   "mne_bids>=0.18.0",
-  "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
-  "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "pandas",
-  "pyarrow",
   "pydantic",
   "pymatreader",
   "requests>=2.25.0",
   "rich",
   "s3fs",
-  "tabulate",
-  "torch<2.3; sys_platform == 'darwin' and platform_machine == 'x86_64'",
-  "torch;     sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "tqdm",
+  "eegdash[features]",
 ]
 
 [tool.uv]
@@ -65,47 +76,45 @@ required-environments = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/sccn/EEG-Dash-Data"
-Issues   = "https://github.com/sccn/EEG-Dash-Data/issues"
+Homepage      = "https://eegdash.org"
+Documentation = "https://eegdash.org"
+Repository    = "https://github.com/eegdash/EEGDash"
+Source        = "https://github.com/eegdash/EEGDash"
+Issues        = "https://github.com/eegdash/EEGDash/issues"
+"Bug Tracker" = "https://github.com/eegdash/EEGDash/issues"
+Changelog     = "https://github.com/eegdash/EEGDash/releases"
+Discussions   = "https://github.com/eegdash/EEGDash/discussions"
+Chat          = "https://discord.gg/8jd7nVKwsc"
 
 
 [project.optional-dependencies]
+features = [
+  "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+  "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
+  "safetensors",
+]
 tests = [
     'pytest',
     'pytest-cov',
-    'pytest-sugar',
-    'codecov',
-    'pytest_cases',
     'pytest-benchmark',
-    'pytest-xdist',
 ]
 dev = [
   "pre-commit",
-  "ipykernel",
-  "lightning>=2.0",
-  "torchmetrics>=0.7",
-  "scikit-learn",
-  "tensorboard"
 ]
 
 docs = [
   "sphinx",
   "sphinx_design",
   "sphinx_gallery",
-  "sphinx_rtd_theme",
   "pydata-sphinx-theme",
-  "sphinx-autobuild",
   "sphinx-copybutton",
   "sphinx-sitemap",
+  "sphinxext-opengraph",
+  "sphinx-markdown-builder",
   "numpydoc",
-  "memory_profiler",
-  "ipython",
   "lightgbm",
   "plotly",
-  "nbformat",
-  "graphviz",
-  "neato",
-  "moabb", # remove when all the moabb datasets are digested
+  "seaborn",
 ]
 
 digestion = [

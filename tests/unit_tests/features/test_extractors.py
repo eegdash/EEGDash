@@ -170,62 +170,15 @@ def test_features_pipeline_basic():
     assert "mean" in feats
 
 
-def test_extractors_gaps():
-    from functools import partial
-
-    from eegdash.features.extractors import (
-        FeatureExtractor,
-        TrainableFeature,
-        _get_underlying_func,
-    )
-
-    # _get_underlying_func gaps
-    def dummy():
-        pass
-
-    p = partial(dummy)
-    assert _get_underlying_func(p) == dummy
-
-    # TrainableFeature gaps
-    class MyTrainable(TrainableFeature):
-        def clear(self):
-            pass
-
-        def partial_fit(self, *x, y=None):
-            pass
-
-    mt = MyTrainable()
-    with pytest.raises(RuntimeError, match="trained first"):
-        mt()
-    mt.fit()
-    # Now it shouldn't raise RuntimeError, but maybe it fails because it's an ABC without __call__ implementation in parent?
-    # Actually TrainableFeature.__call__ is implemented in extractors.py as we saw.
-
-    # FeatureExtractor validate logic (142-150)
-    # We need a mismatched preprocessor
-    def pre1(x):
-        return x
-
-    def pre2(x):
-        return x
-
-    def feat(x):
-        return x
-
-    # mock parent_extractor_type
-    feat.parent_extractor_type = [pre1]
-
-    with pytest.raises(TypeError, match="cannot be a child of"):
-        FeatureExtractor({"f": feat}, preprocessor=pre2)
-
-
 def test_extractors_more():
     from eegdash.features.extractors import (
-        BivariateFeature,
-        DirectedBivariateFeature,
         FeatureExtractor,
+    )
+    from eegdash.features.kinds import (
+        BivariateFeature,
         MultivariateFeature,
     )
+    from eegdash.features.output_types import SignalOutputType
 
     mv = MultivariateFeature()
     # verify it has feature_channel_names
@@ -233,11 +186,7 @@ def test_extractors_more():
 
     # bivariate
     bv = BivariateFeature()
-    assert bv.channel_pair_format == "{}<>{}"
-
-    # directed bivariate
-    dbv = DirectedBivariateFeature()
-    assert dbv.channel_pair_format == "{}<>{}"
+    assert bv.channel_pair_format is None
 
     # FeatureExtractor more gaps
     from functools import partial
@@ -245,30 +194,34 @@ def test_extractors_more():
     def f1(x, a=1):
         return {"f1": x.mean(axis=(-1, -2))}
 
-    f1.parent_extractor_type = [None]
+    f1.parent_extractor_type = [SignalOutputType]
 
     # 127, 130, 132: features_kwargs
     fe = FeatureExtractor({"feat": partial(f1, a=2)})
-    assert "feat" in fe.features_kwargs
-    assert fe.features_kwargs["feat"] == {"a": 2}
+    assert "feature_extractors" in fe.features_kwargs
+    assert "feat" in fe.features_kwargs["feature_extractors"]
+    assert fe.features_kwargs["feature_extractors"]["feat"]["kwargs"] == {"a": 2}
 
     def pre(x, a=1):
         return x
 
-    f1.parent_extractor_type = [None, pre]  # add pre to parent types
+    f1.parent_extractor_type = [SignalOutputType, pre]  # add pre to parent types
     fe_pre = FeatureExtractor({"feat": f1}, preprocessor=partial(pre, a=2))
-    assert "preprocess_kwargs" in fe_pre.features_kwargs
+    assert "preprocessor" in fe_pre.features_kwargs
     # 181: call with preprocessor
     fe_pre(
         np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
     )
     fe_inner = FeatureExtractor({"inner": f1})
     fe_outer = FeatureExtractor({"outer": fe_inner})
-    assert "outer" in fe_outer.features_kwargs
-    assert fe_outer.features_kwargs["outer"] == fe_inner.features_kwargs
+    assert "outer" in fe_outer.features_kwargs["feature_extractors"]
+    assert (
+        fe_outer.features_kwargs["feature_extractors"]["outer"]
+        == fe_inner.features_kwargs
+    )
 
     # 159, 161: _check_is_trainable
-    fe_outer._check_is_trainable({"f": fe_inner})
+    fe_outer._check_is_trainable()
 
     class MyTrainable(FeatureExtractor):
         def __init__(self, *args, **kwargs):
@@ -282,14 +235,13 @@ def test_extractors_more():
             pass
 
         def fit(self):
-            self._is_fitted = True
+            self._is_trained = True
 
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
-    trainable_fe = MyTrainable({"f": feat})
-    fe_outer._check_is_trainable({"f": trainable_fe})
+    feat.parent_extractor_type = [SignalOutputType]
+    fe_outer._check_is_trainable()
 
     # 158-159, 161, 181 ...
     # circular import check bypass usually works
@@ -302,44 +254,13 @@ def test_extractors_more():
     def jitted(x):
         return x
 
-    from eegdash.features.extractors import _get_underlying_func
+    from eegdash.features.base_utils import get_underlying_func
 
     # If NUMBA_DISABLE_JIT=1, jitted is not a Dispatcher
     if isinstance(jitted, Dispatcher):
-        assert _get_underlying_func(jitted) == jitted.py_func
+        assert get_underlying_func(jitted) == jitted.py_func
     else:
-        assert _get_underlying_func(jitted) == jitted
-
-
-def test_trainable_feature_interface():
-    """Test TrainableFeature clear and partial_fit methods."""
-    import numpy as np
-
-    from eegdash.features.extractors import TrainableFeature
-
-    class ConcreteTrainable(TrainableFeature):
-        def __init__(self):
-            self._is_fitted = False
-            self._is_trained = False
-
-        def clear(self):
-            self._is_trained = False
-
-        def partial_fit(self, *x, y=None):
-            self._is_trained = True
-
-    tf = ConcreteTrainable()
-    # Test clear method
-    tf.clear()
-    assert not tf._is_trained
-
-    # Test partial_fit
-    tf.partial_fit(np.array([1, 2, 3]))
-    assert tf._is_trained
-
-    # Test fit method
-    tf.fit()
-    assert tf._is_trained
+        assert get_underlying_func(jitted) == jitted
 
 
 def test_feature_extractor_with_trainable():
@@ -347,63 +268,28 @@ def test_feature_extractor_with_trainable():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def dummy_feature(x):
         return np.mean(x, axis=-1, keepdims=True)
 
     # Add parent_extractor_type attribute
-    dummy_feature.parent_extractor_type = [None]
+    dummy_feature.parent_extractor_type = [SignalOutputType]
     dummy_feature.feature_kind = None
 
     fe = FeatureExtractor({"dummy": dummy_feature})
     assert not fe._is_trainable
 
 
-def test_multivariate_feature_dict_input():
-    """Test MultivariateFeature with dict input."""
-    import numpy as np
-
-    from eegdash.features.extractors import UnivariateFeature
-
-    uf = UnivariateFeature()
-    ch_names = ["ch1", "ch2"]
-
-    # Create dict input
-    x = {"key": np.array([[1, 2], [3, 4]])}
-    result = uf(x, _ch_names=ch_names)
-    assert isinstance(result, dict)
-
-
-def test_bivariate_feature_channel_names():
-    """Test BivariateFeature channel name generation."""
-    from eegdash.features.extractors import BivariateFeature
-
-    bf = BivariateFeature()
-    ch_names = ["A", "B", "C"]
-    result = bf.feature_channel_names(ch_names)
-    # Should have 3 pairs: A<>B, A<>C, B<>C
-    assert len(result) == 3
-    assert "A<>B" in result
-
-
-def test_directed_bivariate_feature():
-    """Test DirectedBivariateFeature pair iterators."""
-    from eegdash.features.extractors import DirectedBivariateFeature
-
-    dbf = DirectedBivariateFeature()
-    result = dbf.get_pair_iterators(3)
-    # Should have 6 directed pairs for 3 channels
-    assert len(result) == 2
-
-
 def test_feature_extractor_clear_non_trainable():
     """Test that clear() on non-trainable extractor does nothing."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -415,11 +301,12 @@ def test_feature_extractor_partial_fit_non_trainable():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -429,11 +316,12 @@ def test_feature_extractor_partial_fit_non_trainable():
 def test_feature_extractor_fit_non_trainable():
     """Test that fit on non-trainable extractor does nothing."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def simple_feature(x):
         return x
 
-    simple_feature.parent_extractor_type = [None]
+    simple_feature.parent_extractor_type = [SignalOutputType]
 
     fe = FeatureExtractor({"simple": simple_feature})
     # Should not raise
@@ -445,11 +333,12 @@ def test_feature_extractor_with_partial_preprocessor():
     from functools import partial
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def preprocessor(x, scale=1.0):
         return x * scale
 
-    preprocessor.parent_extractor_type = [None]
+    preprocessor.parent_extractor_type = [SignalOutputType]
 
     def simple_feature(x):
         return x
@@ -459,39 +348,29 @@ def test_feature_extractor_with_partial_preprocessor():
     partial_preproc = partial(preprocessor, scale=2.0)
 
     fe = FeatureExtractor({"simple": simple_feature}, preprocessor=partial_preproc)
-    assert "preprocess_kwargs" in fe.features_kwargs
-
-
-def test_array_to_dict_empty_channels():
-    """Test _array_to_dict with empty channel list."""
-    import numpy as np
-
-    from eegdash.features.extractors import MultivariateFeature
-
-    x = np.array([[1, 2, 3]])
-    result = MultivariateFeature._array_to_dict(x, [], "test")
-    assert "test" in result
+    assert "preprocessor" in fe.features_kwargs
 
 
 def test_feature_extractor_nested_check_trainable():
     """Test _check_is_trainable with nested FeatureExtractor."""
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def inner_feat(x):
         return x
 
-    inner_feat.parent_extractor_type = [None]
+    inner_feat.parent_extractor_type = [SignalOutputType]
 
     inner_extractor = FeatureExtractor({"inner": inner_feat})
 
     def outer_preproc(x):
         return x
 
-    outer_preproc.parent_extractor_type = [None]
+    outer_preproc.parent_extractor_type = [SignalOutputType]
 
     # Mark inner extractor's preprocessor
     inner_extractor.preprocessor = None
-    inner_extractor.parent_extractor_type = [None]
+    inner_extractor.parent_extractor_type = [SignalOutputType]
 
     outer_extractor = FeatureExtractor({"nested": inner_extractor})
     assert not outer_extractor._is_trainable
@@ -502,11 +381,12 @@ def test_feature_extractor_preprocess_none():
     import numpy as np
 
     from eegdash.features.extractors import FeatureExtractor
+    from eegdash.features.output_types import SignalOutputType
 
     def feat(x):
         return x
 
-    feat.parent_extractor_type = [None]
+    feat.parent_extractor_type = [SignalOutputType]
 
     extractor = FeatureExtractor({"feat": feat}, preprocessor=None)
     result = extractor.preprocess(np.array([1, 2, 3]), _metadata={})

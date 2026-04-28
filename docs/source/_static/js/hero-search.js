@@ -305,8 +305,15 @@
     input.setAttribute('aria-autocomplete', 'list');
     input.setAttribute('aria-expanded', 'false');
 
-    // Load search index
-    loadSearchIndex();
+    // Load the search index off the critical path. The JSON can be up
+    // to ~220 KB and Fuse's constructor is synchronous over every row,
+    // so running it inline adds ~70-100 ms of Total Blocking Time and
+    // delays the first interaction with the search box. `requestIdleCallback`
+    // (with a `setTimeout` fallback for Safari) schedules the work
+    // only once the browser has settled after first paint.
+    const scheduleIdle = window.requestIdleCallback
+      || function (fn) { return setTimeout(fn, 1); };
+    scheduleIdle(loadSearchIndex, { timeout: 2000 });
   }
 
   // Start initialization

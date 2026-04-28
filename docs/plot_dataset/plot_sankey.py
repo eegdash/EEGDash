@@ -226,10 +226,11 @@ def build_sankey(
     fig = go.Figure(sankey)
 
     fig.update_layout(
-        font=dict(size=14),
+        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0f172a"),
         height=height,
         autosize=True,
-        margin=dict(t=50, b=60, l=40, r=40),
+        margin=dict(t=60, b=60, l=40, r=40),
+        paper_bgcolor="#ffffff",
         annotations=[
             dict(
                 x=0,

@@ -110,8 +110,8 @@ def test_get_all_feature_kinds():
 
 def test_get_feature_kind():
     """Test get_feature_kind function."""
-    from eegdash.features.extractors import UnivariateFeature
     from eegdash.features.inspect import get_feature_kind
+    from eegdash.features.kinds import UnivariateFeature
 
     # Create a function with feature_kind attribute
     def mock_feature():

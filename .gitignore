@@ -14,6 +14,8 @@
 *.json
 !coverage.json
 !coverage.xml
+!codemeta.json
+!docs/source/_extra/**/*.json
 eegdash_cache/
 *.npy
 *Hugging*

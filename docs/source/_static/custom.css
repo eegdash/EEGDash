@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+/* Google Fonts are loaded via `<link rel="preload" as="style" onload="…">`
+   in docs/source/_templates/layout.html so the stylesheet fetch happens
+   in parallel with CSS parsing instead of blocking it. Keeping the
+   @import here would re-introduce the blocking chain PSI flagged. */
 
 /* --------------------------------------------------------------------------
    1. Global Variable & Typography Overrides
@@ -22,6 +25,11 @@
   --hf-surface: rgba(255, 255, 255, 0.7);
   --hf-surface-strong: rgba(15, 23, 42, 0.95);
   --hf-text-muted: rgba(15, 23, 42, 0.7);
+
+  /* Editorial display pairing: a variable serif for section rubrics and
+     catalogue headings, paired with the existing Source Sans for body. */
+  --eegdash-display: "Fraunces", "Source Serif 4", "Cambria", Georgia, serif;
+  --eegdash-mono: "IBM Plex Mono", "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
 
   /* Fonts */
   --pst-font-family-base: "Source Sans 3", "Noto Sans", "Helvetica Neue", "Segoe UI", sans-serif;
@@ -562,6 +570,72 @@ table.dataTable thead th {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
+/* ------------------------------------------------------------------------
+   Dataset summary page tab strip — replace the wrapping pill row with a
+   compact underline-style horizontal rail. The pill design works for 3-4
+   tabs but breaks down at 8 (it wraps to two rows and the active "filled"
+   pill draws too much attention). The underline pattern keeps every tab on
+   one row with a thin primary-blue underline marking the active section,
+   which scales gracefully and stays editorial.
+   ------------------------------------------------------------------------ */
+.dataset-summary-page .sd-tab-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  margin-bottom: 1.5rem;
+}
+.dataset-summary-page .sd-tab-set > .sd-tab-content {
+  flex-basis: 100%;
+  border-top: none;
+  margin-top: 0.25rem;
+}
+.dataset-summary-page .sd-tab-set > label.sd-tab-label,
+.dataset-summary-page .sd-tab-set > label {
+  flex: 0 0 auto !important;
+  font-family: var(--pst-font-family-heading) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  padding: 0.7rem 1rem !important;
+  margin-bottom: -1px !important; /* sit on the bottom rule */
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  color: var(--pst-color-text-muted, #64748b) !important;
+  box-shadow: none !important;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dataset-summary-page .sd-tab-set > label:hover {
+  color: var(--eegdash-primary, #006ca3) !important;
+  background: rgba(0, 108, 163, 0.04) !important;
+  transform: none !important;
+}
+.dataset-summary-page .sd-tab-set > input:checked + label {
+  color: var(--eegdash-primary, #006ca3) !important;
+  border-bottom-color: var(--eegdash-primary, #006ca3) !important;
+  background: transparent !important;
+  background-image: none !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+html[data-theme="dark"].dataset-summary-page .sd-tab-set {
+  border-bottom-color: rgba(148, 163, 184, 0.2);
+}
+html[data-theme="dark"].dataset-summary-page .sd-tab-set > label {
+  color: rgba(206, 214, 221, 0.7) !important;
+}
+html[data-theme="dark"].dataset-summary-page .sd-tab-set > input:checked + label {
+  color: var(--eegdash-primary, #3aa3d9) !important;
+  border-bottom-color: var(--eegdash-primary, #3aa3d9) !important;
+}
+
 /* Charts sizing constraints */
 .plotly-graph-div {
   width: 100% !important;
@@ -616,15 +690,992 @@ table.dataTable thead th {
    13. Dataset Summary Tweaks
    -------------------------------------------------------------------------- */
 
-/* Maximize width for dataset summary */
+/* ==========================================================================
+   Dataset-summary page — "Scientific Index" table redesign
+   --------------------------------------------------------------------------
+   Goal: a calm, airy editorial catalogue instead of a squeezed DataTables
+   default. Full-viewport breakout, tabular-number alignment, monospace
+   dataset IDs, thin rule-based header.
+   ========================================================================== */
+
+/* Full-viewport canvas for the table — keep the surrounding text at normal
+   reading width but let the data grid use the whole screen. */
 .dataset-summary-page .bd-container {
-  max-width: 95% !important;
+  max-width: 100% !important;
+  padding-left: clamp(1rem, 2.5vw, 2.5rem);
+  padding-right: clamp(1rem, 2.5vw, 2.5rem);
 }
 
 .dataset-summary-page .bd-sidebar-primary,
 .dataset-summary-page .bd-sidebar-secondary {
   display: none !important;
-  /* Force hide sidebars to ensure full width */
+}
+
+/* The raw HTML table block is itself rendered inside a .bd-article column
+   capped by the theme. Break the wrapper out to full width so the DataTables
+   horizontal scroll only kicks in on very narrow viewports. */
+.dataset-summary-page #datasets-table_wrapper,
+.dataset-summary-page .dataTables_wrapper {
+  width: 100%;
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+/* On narrow viewports the Type column pushes the table past the wrapper.
+   A thin fade on the right edge signals "scroll to see more". It lives
+   on the outer <figure>, NOT on the overflow-x:auto wrapper itself —
+   putting it on the wrapper would make position:absolute move with the
+   scrolled content, so the hint disappears exactly when users need it.
+   The is-overflowing class is toggled by the JS sync helper. */
+.dataset-summary-page .eegdash-figure::after {
+  content: "";
+  position: absolute;
+  top: 6rem;
+  right: 0;
+  bottom: 3rem;
+  width: 1.75rem;
+  background: linear-gradient(to left, var(--pst-color-background, #fff) 20%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+.dataset-summary-page .eegdash-figure.is-overflowing::after,
+.dataset-summary-page .eegdash-figure:has(.dataTables_wrapper.is-overflowing)::after {
+  opacity: 1;
+}
+html[data-theme="dark"].dataset-summary-page .eegdash-figure::after {
+  background: linear-gradient(to left, var(--pst-color-background, #0f172a) 20%, transparent);
+}
+
+/* Sticky first column attempt — kept for browsers where it works, but
+   current measurements show Chromium drops sticky inside a DataTables
+   `<table>` + wrapper `overflow-x: auto` + `border-collapse: separate`
+   combo when the table has dt-bulma/DataTables UI in place. The visual
+   cue relied on by users is the right-edge fade gradient plus the
+   natural scrollbar — that affordance is enough. Leaving the rules in
+   place so sticky engages where supported. */
+.dataset-summary-page #datasets-table thead th:first-child,
+.dataset-summary-page #datasets-table tbody td:first-child,
+.dataset-summary-page #datasets-table tfoot td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--pst-color-background, #fff);
+  z-index: 3;
+}
+.dataset-summary-page #datasets-table thead th:first-child {
+  z-index: 4;
+}
+.dataset-summary-page #datasets-table tfoot td:first-child {
+  z-index: 3;
+  background: var(--pst-color-background, #fff) !important;
+  border-top: 2px solid var(--pst-color-text-base) !important;
+}
+html[data-theme="dark"].dataset-summary-page #datasets-table tfoot td:first-child {
+  background: var(--pst-color-background, #0f172a) !important;
+}
+.dataset-summary-page #datasets-table tbody tr:nth-child(even) td:first-child {
+  background: #fafafa;
+}
+.dataset-summary-page #datasets-table tbody tr:hover td:first-child {
+  background: #e6f1f6;
+}
+html[data-theme="dark"].dataset-summary-page #datasets-table thead th:first-child,
+html[data-theme="dark"].dataset-summary-page #datasets-table tbody td:first-child {
+  background: var(--pst-color-background, #0f172a);
+}
+html[data-theme="dark"].dataset-summary-page #datasets-table tbody tr:nth-child(even) td:first-child {
+  background: #162033;
+}
+
+/* Header row — thin-rule editorial treatment. Sentence-case, tracked
+   semibold sans for headers; numerics in a tabular variant. */
+.dataset-summary-page table.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--pst-color-background, #fff) !important;
+  color: var(--pst-color-text-base, #111) !important;
+  font-family: var(--pst-font-family-heading);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0.9rem 0.85rem !important;
+  border-bottom: 1px solid var(--pst-color-text-base, #111) !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-theme="dark"].dataset-summary-page table.dataTable thead th {
+  background: var(--pst-color-background, #0f172a) !important;
+  color: #e2e8f0 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+/* Sort indicators — minimalist chevrons next to the header label. */
+.dataset-summary-page table.dataTable thead th.sorting,
+.dataset-summary-page table.dataTable thead th.sorting_asc,
+.dataset-summary-page table.dataTable thead th.sorting_desc {
+  background-image: none !important;
+  padding-right: 1.6rem !important;
+  position: sticky;
+  cursor: pointer;
+}
+/* DataTables' CDN theme (dt-1.13.4/bm) paints its own up-triangle in the
+   ::before pseudo-element. It shows up alongside our ::after arrow and
+   reads as a duplicate sort icon. Suppress it. */
+.dataset-summary-page table.dataTable thead th.sorting::before,
+.dataset-summary-page table.dataTable thead th.sorting_asc::before,
+.dataset-summary-page table.dataTable thead th.sorting_desc::before {
+  content: none !important;
+  display: none !important;
+}
+.dataset-summary-page table.dataTable thead th.sorting::after,
+.dataset-summary-page table.dataTable thead th.sorting_asc::after,
+.dataset-summary-page table.dataTable thead th.sorting_desc::after {
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--pst-color-text-muted, #64748b);
+  opacity: 0.4;
+  line-height: 1;
+}
+.dataset-summary-page table.dataTable thead th.sorting:not(.sorting_asc):not(.sorting_desc)::after {
+  content: "\2195"; /* up-down arrow, low contrast */
+}
+.dataset-summary-page table.dataTable thead th.sorting_asc::after {
+  content: "\25B2"; /* solid up triangle */
+  color: var(--eegdash-primary, #006ca3);
+  opacity: 1;
+}
+.dataset-summary-page table.dataTable thead th.sorting_desc::after {
+  content: "\25BC";
+  color: var(--eegdash-primary, #006ca3);
+  opacity: 1;
+}
+
+/* Body rows — airy vertical rhythm, thin dividers only.
+   Target row height ~48px: short enough to scan many datasets at once,
+   tall enough that the tag chips and sparkbars breathe. */
+.dataset-summary-page table.dataTable tbody td {
+  padding: 0.4rem 0.75rem !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: middle;
+  font-size: 0.82rem !important;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "kern", "liga", "tnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tokens like HBN_r7_bdf_mini need to break inside their cells so that
+   toggling the Canonical column doesn't spill into the next column. The
+   Dataset ID column is explicitly exempted below. */
+.dataset-summary-page table.dataTable tbody td:not(:first-child) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.dataset-summary-page table.dataTable tbody tr {
+  transition: box-shadow 0.15s ease;
+}
+.dataset-summary-page table.dataTable tbody tr:hover td {
+  background-color: rgba(0, 108, 163, 0.04);
+}
+.dataset-summary-page table.dataTable tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--eegdash-primary, #006ca3);
+}
+
+/* Canonical column (hidden by default, revealed via ColVis) carries a
+   comma-separated list of machine-generated identifiers. Render in the
+   same monospace as the Dataset ID column so the two read as a
+   continuous family of "catalogue shelf-marks". */
+.dataset-summary-page #datasets-table tbody [data-col-key="canonical"] {
+  font-family: var(--eegdash-mono);
+  font-size: 0.78rem;
+  letter-spacing: -0.01em;
+  color: var(--pst-color-text-muted, #64748b);
+}
+
+/* Author (year) column gets a slightly heavier identity — still sans, so
+   it reads as a byline rather than an identifier. */
+.dataset-summary-page #datasets-table tbody [data-col-key="author-year"] {
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+/* Dataset ID (first column) — mono, primary text colour with a muted
+   underline that shifts to primary blue on hover. Reads as catalogue
+   shelf-marks, not as decorative links. */
+.dataset-summary-page table.dataTable tbody td:first-child,
+.dataset-summary-page table.dataTable tbody td:first-child a {
+  font-family: var(--eegdash-mono);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--pst-color-text-base, #0f172a);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.15);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.dataset-summary-page table.dataTable tbody td:first-child a:hover {
+  color: var(--eegdash-primary, #006ca3);
+  text-decoration-color: var(--eegdash-primary, #006ca3);
+  text-decoration-thickness: 2px;
+}
+.dataset-summary-page table.dataTable tbody td:first-child a:focus-visible {
+  outline: 2px solid var(--eegdash-primary, #006ca3);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Browsers lock :visited link colour for privacy; match the unvisited
+   palette so the Dataset ID reads consistently regardless of history. */
+.dataset-summary-page table.dataTable tbody td:first-child a:visited {
+  color: var(--pst-color-text-base, #0f172a);
+}
+.dataset-summary-page table.dataTable tbody td:first-child a:visited:hover {
+  color: var(--eegdash-primary, #006ca3);
+}
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td:first-child a,
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td:first-child a:visited {
+  color: #e2e8f0;
+  text-decoration-color: rgba(255, 255, 255, 0.25);
+}
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td:first-child a:hover,
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td:first-child a:visited:hover {
+  color: #4fb5e2;
+  text-decoration-color: #4fb5e2;
+}
+
+/* Numeric/size columns: right-align for easy magnitude comparison.
+   Reserve the same 1.6rem right padding across thead / tbody / tfoot so
+   the header label, body numbers, and Total-row sums share one right
+   edge. Without matching padding on tfoot the Records sum
+   "222,745" hung 16 px left of its own column.
+   Target last 6 columns (Records, Subjects, Tasks, Channels, Sampling
+   rate, Size); Type is a tag column and must stay left-aligned. */
+.dataset-summary-page table.dataTable tbody td:nth-last-child(-n+6),
+.dataset-summary-page table.dataTable thead th:nth-last-child(-n+6),
+.dataset-summary-page table.dataTable tfoot td:nth-last-child(-n+6) {
+  text-align: right;
+}
+.dataset-summary-page table.dataTable tbody td:nth-last-child(-n+6),
+.dataset-summary-page table.dataTable tfoot td:nth-last-child(-n+6) {
+  padding-right: 1.6rem !important;
+}
+
+/* Empty cells read as em-dash for a cleaner table feel.
+   Scoped to <tbody> only so the <tfoot> Total row (whose blank cells are
+   "not applicable" rather than "missing data") stays clean. */
+.dataset-summary-page #datasets-table tbody td:empty::after {
+  content: "—";
+  color: rgba(0, 0, 0, 0.25);
+  font-weight: 400;
+}
+html[data-theme="dark"].dataset-summary-page #datasets-table tbody td:empty::after {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* "Clear filters" chip — appears only when a filter narrows the view.
+   Shares the FILTERS / COLUMNS chip styling but in a warm undo tint.
+   The generic `html[data-theme="dark"] .dt-button` rule is more specific
+   than the plain class in dark mode, so we also need a dark-mode rule
+   here that still wins. */
+.dataset-summary-page .dataTables_wrapper .dt-button.dt-clear-filters {
+  border-color: rgba(215, 80, 30, 0.35) !important;
+  color: rgb(180, 60, 15) !important;
+  background: rgba(247, 148, 29, 0.06) !important;
+  margin-left: 0.5rem;
+}
+.dataset-summary-page .dataTables_wrapper .dt-button.dt-clear-filters:hover {
+  border-color: rgb(215, 80, 30) !important;
+  background: rgba(247, 148, 29, 0.14) !important;
+  color: rgb(160, 50, 10) !important;
+}
+html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dt-button.dt-clear-filters {
+  border-color: rgba(247, 148, 29, 0.4) !important;
+  color: rgb(255, 196, 120) !important;
+  background: rgba(247, 148, 29, 0.12) !important;
+}
+html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dt-button.dt-clear-filters:hover {
+  border-color: rgb(247, 148, 29) !important;
+  color: rgb(255, 220, 170) !important;
+  background: rgba(247, 148, 29, 0.22) !important;
+}
+
+/* Empty-state messages inside the tbody (DataTables "zeroRecords" /
+   "emptyTable"). Presented as a centred editorial notice with an icon
+   glyph and a soft background, instead of a bare "No matching records". */
+.dataset-summary-page #datasets-table tbody td.dataTables_empty {
+  text-align: center !important;
+  padding: 3rem 1rem !important;
+  color: var(--pst-color-text-muted, #64748b) !important;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent 0 8px,
+    rgba(0, 108, 163, 0.03) 8px 9px
+  ) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55;
+}
+.dataset-summary-page #datasets-table tbody td.dataTables_empty .no-match {
+  display: inline-block;
+  max-width: 40ch;
+}
+.dataset-summary-page #datasets-table tbody td.dataTables_empty .no-match::before {
+  content: "∅";
+  display: block;
+  font-family: var(--eegdash-display);
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: var(--eegdash-primary, #006ca3);
+  margin-bottom: 0.35rem;
+  line-height: 1;
+}
+.dataset-summary-page #datasets-table tbody td.dataTables_empty strong {
+  color: var(--pst-color-text-base);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------------
+   Sparkbars on #of subjects / records / size — the perceptual scale cue.
+   Position encoding is more accurate than reading integers across a
+   many-row table, and a thin bar under the number lets users compare
+   orders-of-magnitude at a glance. The ``--pct`` variable is written on
+   the span by the Python renderer.
+   ------------------------------------------------------------------------ */
+.dataset-summary-page .sparkbar {
+  display: inline-block;
+  position: relative;
+  min-width: 8rem;
+  padding: 0.3rem 0.7rem;
+  /* Three-layer background:
+     1. The filled portion (0 -> --pct)
+     2. A faint track behind the remainder so empty bars still read as scale
+     3. A 1px 50% reference tick for quick comparison */
+  background:
+    linear-gradient(to right, rgba(0, 108, 163, 0) calc(50% - 1px), rgba(0, 0, 0, 0.08) 50%, rgba(0, 108, 163, 0) calc(50% + 1px)),
+    linear-gradient(to right,
+      rgba(0, 108, 163, 0.18) 0%,
+      rgba(0, 108, 163, 0.18) var(--pct, 0%),
+      rgba(0, 108, 163, 0.04) var(--pct, 0%)
+    );
+  border-radius: 4px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+}
+
+.dataset-summary-page .sparkbar .sparkbar-label {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+  color: var(--pst-color-text-base);
+}
+
+/* Missing-data sparkbars: drop the blue fill + track tick, just show the
+   em-dash at muted colour. */
+.dataset-summary-page .sparkbar[style*="--pct:0%"] {
+  background: none;
+}
+.dataset-summary-page .sparkbar[style*="--pct:0%"] .sparkbar-label {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 400;
+}
+html[data-theme="dark"].dataset-summary-page .sparkbar[style*="--pct:0%"] .sparkbar-label {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* The bar gets bolder on row hover so the selected row reads as primary. */
+.dataset-summary-page table.dataTable tbody tr:hover .sparkbar {
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 108, 163, 0.32) 0%,
+      rgba(0, 108, 163, 0.32) var(--pct, 0%),
+      transparent var(--pct, 0%)
+    );
+}
+
+html[data-theme="dark"].dataset-summary-page .sparkbar {
+  background:
+    linear-gradient(to right, rgba(86, 180, 233, 0) calc(50% - 1px), rgba(255, 255, 255, 0.12) 50%, rgba(86, 180, 233, 0) calc(50% + 1px)),
+    linear-gradient(to right,
+      rgba(86, 180, 233, 0.3) 0%,
+      rgba(86, 180, 233, 0.3) var(--pct, 0%),
+      rgba(86, 180, 233, 0.08) var(--pct, 0%)
+    );
+}
+html[data-theme="dark"].dataset-summary-page .sparkbar .sparkbar-label {
+  color: #e2e8f0;
+}
+html[data-theme="dark"].dataset-summary-page .sparkbar[style*="--pct:0%"] {
+  background: none;
+}
+
+/* ------------------------------------------------------------------------
+   Subtle column-group separator after the Dataset ID column so the
+   identity anchor is visually distinct from the descriptive + numeric
+   columns.
+   ------------------------------------------------------------------------ */
+.dataset-summary-page table.dataTable tbody td:first-child,
+.dataset-summary-page table.dataTable thead th:first-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  padding-right: 1rem !important;
+}
+.dataset-summary-page table.dataTable tbody td:nth-child(2),
+.dataset-summary-page table.dataTable thead th:nth-child(2) {
+  padding-left: 1rem !important;
+}
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody td:first-child,
+html[data-theme="dark"].dataset-summary-page table.dataTable thead th:first-child {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Subtle zebra striping for longer scan sessions. Opaque colours so the
+   sticky first column can match exactly (rgba over transparent renders
+   differently on the sticky cell than on its neighbours otherwise). */
+.dataset-summary-page table.dataTable tbody tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+.dataset-summary-page table.dataTable tbody tr:nth-child(even):hover td {
+  background-color: rgba(0, 108, 163, 0.05);
+}
+html[data-theme="dark"].dataset-summary-page table.dataTable tbody tr:nth-child(even) td {
+  background-color: #162033;
+}
+
+/* DataTables toolbar — chips on the left, search on the right, consistent
+   heights. A thin rule underneath anchors the toolbar to the table. */
+.dataset-summary-page .dataTables_wrapper {
+  display: grid;
+  /* minmax(0, 1fr) lets the 1fr column shrink below its content's min-size,
+     which is critical here because the grid contains the 2372 px table
+     (spanning all columns). With plain `1fr` the 1fr column stretched to
+     the table's width, pushing the chips and filter input hundreds of
+     pixels off-screen on narrow viewports. */
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: 1.25rem;
+  row-gap: 0.75rem;
+}
+.dataset-summary-page .dataTables_wrapper .dt-buttons {
+  grid-column: 1;
+  grid-row: 1;
+  display: inline-flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0 0 0.75rem 0 !important;
+}
+.dataset-summary-page .dataTables_wrapper .dataTables_filter {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0 0 0.75rem 0 !important;
+  text-align: right;
+}
+.dataset-summary-page .dataTables_wrapper > table {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+.dataset-summary-page .dataTables_wrapper tfoot,
+.dataset-summary-page .dataTables_wrapper thead {
+  grid-column: 1 / -1;
+}
+
+/* Narrow viewports (phones / split panes): stack the toolbar vertically
+   so the filter input doesn't push chips off-screen. The filter input's
+   18rem min-width alone is wider than ~500 px; single-column grid fixes
+   this cleanly without shrinking either control. */
+@media (max-width: 720px) {
+  .dataset-summary-page .dataTables_wrapper {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dataset-summary-page .dataTables_wrapper .dt-buttons,
+  .dataset-summary-page .dataTables_wrapper .dataTables_filter {
+    grid-column: 1;
+    text-align: left;
+  }
+  .dataset-summary-page .dataTables_wrapper .dataTables_filter {
+    grid-row: 2;
+    margin-bottom: 1rem !important;
+  }
+  .dataset-summary-page .dataTables_wrapper .dataTables_filter {
+    display: block;
+  }
+  .dataset-summary-page .dataTables_wrapper .dataTables_filter label {
+    display: flex;
+    width: 100%;
+  }
+  .dataset-summary-page .dataTables_wrapper .dataTables_filter input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+  }
+  .dataset-summary-page .dataTables_wrapper > table {
+    grid-row: 3;
+  }
+}
+
+.dataset-summary-page .dataTables_wrapper .dt-button {
+  padding: 0.4rem 0.95rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  background: var(--pst-color-background, #fff) !important;
+  border-radius: 999px !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pst-color-text-base) !important;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.dataset-summary-page .dataTables_wrapper .dt-button:hover {
+  border-color: var(--eegdash-primary, #006ca3) !important;
+  color: var(--eegdash-primary, #006ca3) !important;
+  background: rgba(0, 108, 163, 0.04) !important;
+  box-shadow: 0 1px 0 rgba(0, 108, 163, 0.08);
+}
+.dataset-summary-page .dataTables_wrapper .dt-button:focus-visible {
+  outline: none;
+  border-color: var(--eegdash-primary, #006ca3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 108, 163, 0.2);
+}
+
+.dataset-summary-page .dataTables_wrapper .dt-button.buttons-colvis::before {
+  content: "\2630"; /* trigram: compact icon */
+  margin-right: 0.45rem;
+  font-weight: 400;
+  opacity: 0.7;
+  display: inline-block;
+  transform: translateY(-1px);
+}
+.dataset-summary-page .dataTables_wrapper .dt-button.buttons-searchPanes::before {
+  content: "\26B2"; /* neuter/filter-ish glyph, small */
+  margin-right: 0.45rem;
+  font-weight: 400;
+  opacity: 0.65;
+}
+
+/* Filter input — modest width, search-icon suffix via background. */
+.dataset-summary-page .dataTables_wrapper .dataTables_filter label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pst-color-text-muted);
+  font-weight: 700;
+  margin: 0;
+}
+.dataset-summary-page .dataTables_wrapper .dataTables_filter input {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 999px;
+  width: 16rem;
+  font-size: 0.82rem;
+  margin: 0;
+  background: var(--pst-color-background, #fff);
+  color: var(--pst-color-text-base);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dataset-summary-page .dataTables_wrapper .dataTables_filter input:focus {
+  outline: none;
+  border-color: var(--eegdash-primary, #006ca3);
+  box-shadow: 0 0 0 3px rgba(0, 108, 163, 0.14);
+}
+
+/* Give the native webkit clear button a visible, brand-tinted glyph so
+   users can see at a glance that a typed query can be cleared. Default is
+   almost invisible on a styled input. */
+.dataset-summary-page .dataTables_wrapper .dataTables_filter input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 0.4rem;
+  cursor: pointer;
+  background-color: currentColor;
+  color: var(--pst-color-text-muted, #64748b);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M6 6l8 8M14 6l-8 8' stroke='black' stroke-width='2' stroke-linecap='round' fill='none'/></svg>") center / contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M6 6l8 8M14 6l-8 8' stroke='black' stroke-width='2' stroke-linecap='round' fill='none'/></svg>") center / contain no-repeat;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.dataset-summary-page .dataTables_wrapper .dataTables_filter input[type="search"]::-webkit-search-cancel-button:hover {
+  opacity: 1;
+  color: var(--eegdash-primary, #006ca3);
+}
+.dataset-summary-page .dataTables_wrapper .dataTables_filter input::placeholder {
+  color: var(--pst-color-text-muted);
+  opacity: 0.6;
+}
+
+html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dt-button {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+html[data-theme="dark"].dataset-summary-page .dataTables_wrapper .dataTables_filter input {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Tag chips in body cells — consistent 24px height, legible at-a-glance.
+   Keep the variant-specific pastel fills (defined far below, per
+   modality/pathology/type) so the colour-encoded data survives; the
+   editorial change is shape (4px radius, not pill) + tight type.
+   NOTE: `text-transform` is intentionally `none`. The renderer already
+   supplies properly-cased text (e.g. "Healthy", "MEG", "iEEG") via
+   _TAG_VALUE_FORMATTERS; forcing uppercase here would mangle acronyms
+   ("iEEG" → "IEEG"). Cursor is pointer because tags are clickable —
+   each one filters the column to its value. */
+.dataset-summary-page #datasets-table tbody .tag {
+  display: inline-block;
+  padding: 0 9px !important;
+  margin: 1px 3px !important;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-feature-settings: "kern", "liga";
+  white-space: nowrap;
+  line-height: 22px;
+  height: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+.dataset-summary-page #datasets-table tbody .tag:hover {
+  filter: brightness(0.96);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+/* The tag currently driving a column filter — all matching tags in that
+   column get a subtle primary-blue ring so users see which value is live. */
+.dataset-summary-page #datasets-table tbody .tag.tag-filter-active {
+  box-shadow: 0 0 0 2px var(--eegdash-primary, #006ca3);
+  filter: brightness(1.02) saturate(1.15);
+}
+
+/* Header of a column with an active filter — thin primary-blue top rule
+   + left ruby dot so the filter state is visible even when tags scroll
+   off-screen. Clicking the header still just sorts (existing behaviour). */
+.dataset-summary-page #datasets-table thead th.dt-col-filtered {
+  border-top: 2px solid var(--eegdash-primary, #006ca3);
+  background: rgba(0, 108, 163, 0.04) !important;
+}
+.dataset-summary-page #datasets-table thead th.dt-col-filtered::before {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--eegdash-primary, #006ca3);
+}
+
+/* Multi-tag cells (Type column "Clinical Intervention") — flex so the
+   chips wrap with tidy gaps instead of collapsing on a single baseline. */
+.dataset-summary-page #datasets-table tbody td:has(.tag + .tag) {
+  display: table-cell;
+  line-height: 1.8;
+}
+
+/* Type column carries multi-word compound values ("Clinical Intervention",
+   "Resting-state") as 2+ chips. Without a floor width it squeezes to 81px
+   and every such row wraps to 73px. Reserve room for two chips in one row. */
+.dataset-summary-page #datasets-table [data-col-key="type"] {
+  min-width: 12rem;
+}
+
+/* Total row — editorial closure. Strong upper rule, display serif on
+   the summary label. The row is moved into <tfoot> by the init JS; we
+   target <tfoot> exclusively so the legitimate last <tbody> row (just
+   another dataset) keeps the regular row styling. */
+.dataset-summary-page table.dataTable tfoot tr td {
+  border-top: 2px solid var(--pst-color-text-base);
+  font-weight: 700;
+  font-size: 0.84rem !important;
+  background: transparent !important;
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
+}
+.dataset-summary-page table.dataTable tfoot tr td:first-child {
+  font-family: var(--eegdash-display);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pst-color-text-base);
+  text-decoration: none;
+}
+
+/* Figure/caption frame around the table: more margin + drop the heavy
+   border, rely on whitespace. */
+.dataset-summary-page .eegdash-figure {
+  margin: 1rem 0 3rem 0 !important;
+  border: none;
+  padding: 0;
+  position: relative; /* anchor for the scroll-fade ::after */
+}
+
+/* Editorial figure-title block (above each chart). Replaces the old
+   sphinx-design `.. rubric::` rendering — supports a real <h3> headline
+   plus a muted subtitle paragraph, matching the styled titles we used to
+   draw inside Plotly. The richer markup lives in the .rst now so it's
+   editable from the docs source instead of buried in Python. */
+.dataset-summary-page .eegdash-fig-title {
+  margin: 0 0 0.85rem 0;
+  padding: 0;
+  border: none;
+}
+.dataset-summary-page .eegdash-fig-title h3 {
+  margin: 0 0 0.25rem 0;
+  font-family: var(--pst-font-family-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--pst-color-text-base);
+}
+.dataset-summary-page .eegdash-fig-title p {
+  margin: 0;
+  max-width: none;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--pst-color-text-muted, #64748b);
+}
+html[data-theme="dark"].dataset-summary-page .eegdash-fig-title h3 {
+  color: #e2e8f0;
+}
+
+/* ------------------------------------------------------------------------
+   Print / PDF export — optimise for a plain black-on-white catalogue.
+   Strip interactive chrome (filters / search / tabs / navbar / footer),
+   drop the editorial drop-cap, expand the scroll wrapper so rows don't
+   get clipped, and keep the table as one unbroken unit.
+   ------------------------------------------------------------------------ */
+@media print {
+  .dataset-summary-page .dt-buttons,
+  .dataset-summary-page .dataTables_filter,
+  .dataset-summary-page .sd-tab-set > input,
+  .dataset-summary-page .sd-tab-set > label,
+  .dataset-summary-page .bd-sidebar-primary,
+  .dataset-summary-page .bd-sidebar-secondary,
+  .dataset-summary-page .bd-header,
+  .dataset-summary-page .bd-footer,
+  .dataset-summary-page .eegdash-figure::after {
+    display: none !important;
+  }
+
+  /* Table: full contents on paper; no overflow clipping. */
+  .dataset-summary-page #datasets-table_wrapper,
+  .dataset-summary-page .dataTables_wrapper {
+    overflow: visible !important;
+    width: 100% !important;
+    display: block !important;
+  }
+  .dataset-summary-page #datasets-table {
+    width: 100% !important;
+    font-size: 9pt !important;
+  }
+  .dataset-summary-page #datasets-table thead {
+    display: table-header-group; /* repeat on each printed page */
+  }
+  .dataset-summary-page #datasets-table thead th {
+    position: static !important; /* kill sticky for paper */
+    background: transparent !important;
+    color: #000 !important;
+    border-bottom: 2px solid #000 !important;
+  }
+  .dataset-summary-page #datasets-table tbody tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .dataset-summary-page #datasets-table tbody td:first-child,
+  .dataset-summary-page #datasets-table thead th:first-child {
+    position: static !important; /* unset sticky left column */
+    border-right: 1px solid #000 !important;
+    background: transparent !important;
+  }
+  .dataset-summary-page #datasets-table tbody tr:nth-child(even) td {
+    background-color: #f3f3f3 !important; /* lighter zebra for ink */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Sparkbars: keep the fill so scale encoding survives printing. */
+  .dataset-summary-page .sparkbar {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Tags: flatten gradient to a solid border so they still read on ink. */
+  .dataset-summary-page #datasets-table tbody .tag {
+    background-image: none !important;
+    background-color: transparent !important;
+    border: 1px solid #333 !important;
+    color: #000 !important;
+  }
+  /* Drop the editorial ornament — it doesn't survive a B/W print. */
+  .dataset-summary-page .sd-tab-content > p.rubric + p::first-letter {
+    font-size: inherit !important;
+    float: none !important;
+    padding: 0 !important;
+    color: inherit !important;
+  }
+  /* Total row: keep its top rule prominent on paper. */
+  .dataset-summary-page #datasets-table tfoot tr td {
+    border-top: 2px solid #000 !important;
+    background: transparent !important;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Intro block above the table — "Scientific Index" editorial treatment.
+   A refined serif rubric with a thin hairline above; a lede paragraph
+   with looser leading and slightly larger size; the rest of the intro
+   capped at a 70ch reading width.
+   ------------------------------------------------------------------------ */
+.dataset-summary-page .sd-tab-content > p {
+  /* Span the same width as the data table. Earlier iterations used a
+     72ch cap for "readability" but it rendered the prose as a narrow
+     column orphaned above a 1500px-wide table — the wider the data, the
+     wider the intro should feel. */
+  max-width: none;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--pst-color-text-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern", "liga", "onum";
+}
+
+/* Lede: the first non-rubric paragraph after the rubric — slightly larger,
+   looser leading; subsequent paragraphs default to the rule above. */
+.dataset-summary-page .sd-tab-content > p.rubric + p {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--pst-color-text-base);
+  max-width: none;
+}
+.dataset-summary-page .sd-tab-content > p.rubric + p::first-letter {
+  font-family: var(--eegdash-display);
+  font-size: 2.6em;
+  font-weight: 600;
+  float: left;
+  line-height: 0.95;
+  padding-right: 0.5rem;
+  padding-top: 0.4rem;
+  color: var(--eegdash-primary, #006ca3);
+}
+
+.dataset-summary-page .sd-tab-content > p.rubric {
+  font-family: var(--eegdash-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  font-style: italic;
+  color: var(--pst-color-text-muted, #64748b);
+  margin: 1.5rem 0 1.25rem 0 !important;
+  padding: 0.75rem 0 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.14);
+  border-bottom: none;
+  max-width: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[data-theme="dark"].dataset-summary-page .sd-tab-content > p.rubric {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Keep the intro text + toolbar apart from each other. */
+.dataset-summary-page .eegdash-figure > .dataTables_wrapper,
+.dataset-summary-page .eegdash-figure > #datasets-table_wrapper {
+  margin-top: 1.75rem;
+}
+.dataset-summary-page .eegdash-caption {
+  font-size: 0.85rem;
+  color: var(--pst-color-text-muted);
+  margin-top: 0.9rem;
+  /* Full width (same as the data table above). Narrow captions orphan
+     themselves beneath a wide figure. */
+  max-width: none;
+  line-height: 1.55;
+  text-align: left;
+}
+
+/* SearchPanes popup — match the editorial theme. */
+.dataset-summary-page div.dtsp-panesContainer {
+  background: var(--pst-color-background, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+/* Colvis dropdown — clean, aligned.
+   Cap the dropdown height AND recompute the available space from its top
+   edge at render time (the menu opens below the chip, which may sit low
+   on short viewports). Without --dtc-top-offset the 14-item list overflowed
+   off the bottom of the screen with most items unreachable. */
+.dataset-summary-page div.dt-button-collection {
+  background: var(--pst-color-background, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 0.4rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-height: calc(100vh - var(--dtc-top-offset, 4rem) - 1.5rem) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+}
+.dataset-summary-page div.dt-button-collection .dt-button {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  border: none !important;
+  border-radius: 6px !important;
+  padding-left: 2rem !important;
+  position: relative;
+}
+/* Visible (active) column: prepend a checkmark, keep the primary-tint bg. */
+.dataset-summary-page div.dt-button-collection .dt-button.dt-button-active {
+  color: var(--eegdash-primary, #006ca3) !important;
+  background: rgba(0, 108, 163, 0.1) !important;
+  font-weight: 600;
+}
+.dataset-summary-page div.dt-button-collection .dt-button.dt-button-active::before {
+  content: "✓";
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--eegdash-primary, #006ca3);
+  font-weight: 700;
+}
+/* Hidden column: calm, dim. */
+.dataset-summary-page div.dt-button-collection .dt-button:not(.dt-button-active) {
+  color: var(--pst-color-text-muted, #64748b) !important;
+  background: transparent !important;
+}
+.dataset-summary-page div.dt-button-collection .dt-button:not(.dt-button-active):hover {
+  background: rgba(0, 108, 163, 0.06) !important;
+  color: var(--pst-color-text-base) !important;
 }
 
 /* Bigger Stats Cards */
@@ -1074,7 +2125,8 @@ html[data-theme="dark"] .hf-search-submit {
 }
 
 .hf-badges img {
-  height: 26px;
+  /* height + width are set inline per-badge in index.rst (SEO/CLS);
+     do not override here, or the browser will stretch SVGs off-ratio. */
   filter: saturate(0.9);
 }
 
@@ -1931,10 +2983,29 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
 /* --------------------------------------------------------------------------
    16. Homepage Motion
    -------------------------------------------------------------------------- */
+
+/* Isolate layout recomputation inside each revealed block so the
+   animation can't push other content down. `contain: layout` scopes
+   the browser's layout pass to this subtree, which is what kills the
+   Cumulative Layout Shift penalty PageSpeed flagged. */
 body[data-page="index"] .hf-reveal {
   opacity: 0;
   transform: translateY(12px);
   animation: hf-fade-up 0.8s ease forwards;
+  will-change: opacity, transform;
+  contain: layout;
+}
+
+/* Pre-reserve min-heights so the grid items don't collapse to zero
+   before their content paints. Matches the typical rendered height of
+   each block so visual layout is stable from FCP onwards. */
+body[data-page="index"] .hf-hero-copy { min-height: 460px; }
+body[data-page="index"] .hf-hero-panel { min-height: 380px; }
+body[data-page="index"] .hf-stat-card { min-height: 160px; }
+
+@media (max-width: 768px) {
+  body[data-page="index"] .hf-hero-copy { min-height: 520px; }
+  body[data-page="index"] .hf-hero-panel { min-height: 340px; }
 }
 
 body[data-page="index"] .hf-delay-1 {
@@ -2038,7 +3109,7 @@ html[data-theme="dark"] .dataset-summary-article h1 {
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
-html[data-theme="dark"] .dataset-summary-page .dataset-counter-card {
+html[data-theme="dark"].dataset-summary-page .dataset-counter-card {
   background: rgba(30, 41, 59, 0.75) !important;
   border: 1px solid rgba(148, 163, 184, 0.2) !important;
   box-shadow:
@@ -2068,7 +3139,7 @@ html[data-theme="dark"] .dataset-summary-page .dataset-counter-card {
   border-color: rgba(0, 108, 163, 0.2) !important;
 }
 
-html[data-theme="dark"] .dataset-summary-page .sd-tab-set>label {
+html[data-theme="dark"].dataset-summary-page .sd-tab-set>label {
   background: rgba(79, 140, 255, 0.1);
 }
 
@@ -2324,20 +3395,17 @@ html[data-theme="dark"] .tag[data-tag-value="emg"] {
   color: #6ee7b7;
 }
 
-/* 8. Page Fade-in Animation */
-.dataset-summary-article {
-  animation: dataset-fade-up 0.6s ease-out;
-}
-
+/* 8. Page Fade-in Animation
+   Intentionally NOT applied to .dataset-summary-article or .sd-tab-set:
+   their translateY(20px → 0) keyframe leaves a lingering `transform:
+   matrix(…)` on the element even after the animation ends, which makes
+   those ancestors a new containing block for `position: sticky`. That
+   silently broke the sticky first column of the catalogue table. Keep
+   the animation only on the lightweight stats-card container, which is
+   not an ancestor of the sticky sparkline cells. */
 .dataset-summary-page .sd-container-fluid {
   animation: dataset-fade-up 0.5s ease-out;
   animation-delay: 0.1s;
-  animation-fill-mode: both;
-}
-
-.dataset-summary-page .sd-tab-set {
-  animation: dataset-fade-up 0.5s ease-out;
-  animation-delay: 0.2s;
   animation-fill-mode: both;
 }
 
@@ -2364,12 +3432,15 @@ html[data-theme="dark"] .tag[data-tag-value="emg"] {
   }
 }
 
-/* 9. Modern DataTables Buttons */
+/* 9. Modern DataTables Buttons
+   bg + border use color-mix() on --eegdash-primary so they adapt between
+   light (#006ca3) and dark (#3aa3d9) themes. Hard-coded rgba(0,108,163,…)
+   left dark-mode chips reading as near-black on near-black. */
 .dataTables_wrapper .dt-buttons .dt-button {
   border-radius: 8px !important;
   padding: 0.5rem 1rem !important;
-  background: rgba(0, 108, 163, 0.08) !important;
-  border: 1px solid rgba(0, 108, 163, 0.2) !important;
+  background: color-mix(in srgb, var(--eegdash-primary) 10%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--eegdash-primary) 22%, transparent) !important;
   color: var(--eegdash-primary) !important;
   font-weight: 600;
   transition: all 0.2s ease !important;
@@ -2379,7 +3450,7 @@ html[data-theme="dark"] .tag[data-tag-value="emg"] {
   background: var(--eegdash-primary) !important;
   color: #fff !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 108, 163, 0.25);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--eegdash-primary) 28%, transparent);
 }
 
 .dataTables_wrapper .dataTables_filter input {
@@ -2435,7 +3506,7 @@ html[data-theme="dark"] .tag[data-tag-value="emg"] {
   background: #fff;
 }
 
-html[data-theme="dark"] .dataset-summary-page .plotly-graph-div {
+html[data-theme="dark"].dataset-summary-page .plotly-graph-div {
   background: rgba(15, 23, 42, 0.6);
   border-color: rgba(148, 163, 184, 0.25);
 }
@@ -2494,21 +3565,6 @@ html[data-theme="dark"] .dataset-summary-page .plotly-graph-div {
   }
 }
 
-/* 13. Table Header Gradient */
-#datasets-table thead th {
-  background: linear-gradient(135deg, var(--eegdash-primary) 0%, var(--eegdash-primary-dark) 100%) !important;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-#datasets-table thead th:first-child {
-  border-top-left-radius: 12px;
-}
-
-#datasets-table thead th:last-child {
-  border-top-right-radius: 12px;
-}
-
 /* 14. Sticky Stats Bar on Scroll */
 @media (min-width: 1024px) {
   .dataset-summary-page .sd-container-fluid:first-of-type {
@@ -2532,14 +3588,14 @@ html[data-theme="dark"] .dataset-summary-page .plotly-graph-div {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
-  html[data-theme="dark"] .dataset-summary-page .sd-container-fluid:first-of-type {
+  html[data-theme="dark"].dataset-summary-page .sd-container-fluid:first-of-type {
     background: rgba(15, 23, 42, 0.92);
     border-bottom-color: rgba(148, 163, 184, 0.15);
   }
 }
 
 /* 15. Dark Mode Refinements */
-html[data-theme="dark"] .dataset-summary-page .dataset-counter-card:hover {
+html[data-theme="dark"].dataset-summary-page .dataset-counter-card:hover {
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -2553,7 +3609,7 @@ html[data-theme="dark"] #datasets-table tbody td {
   border-bottom-color: rgba(148, 163, 184, 0.1);
 }
 
-html[data-theme="dark"] .dataset-summary-page .sd-tab-set>input:checked+label {
+html[data-theme="dark"].dataset-summary-page .sd-tab-set>input:checked+label {
   background: linear-gradient(135deg, var(--hf-sky-strong), var(--hf-mint)) !important;
   box-shadow: 0 4px 15px rgba(79, 140, 255, 0.4);
 }
@@ -2561,7 +3617,18 @@ html[data-theme="dark"] .dataset-summary-page .sd-tab-set>input:checked+label {
 html[data-theme="dark"] .dataTables_wrapper .dt-buttons .dt-button {
   background: rgba(79, 140, 255, 0.15) !important;
   border-color: rgba(79, 140, 255, 0.3) !important;
-  color: var(--hf-sky) !important;
+  color: #4f8cff !important;
+}
+/* DataTables renders the chip label inside a nested <span>; on Chromium
+   the <button> itself keeps a user-agent-ish color even under author
+   !important (observed: "color: red !important" on the button resolves
+   to #006ca3 on dark macOS). Setting the span's color directly actually
+   sticks, so ensure the visible text carries the dark-mode primary. */
+html[data-theme="dark"] .dataTables_wrapper .dt-buttons .dt-button > * {
+  color: #4f8cff !important;
+}
+.dataTables_wrapper .dt-buttons .dt-button > * {
+  color: inherit;
 }
 
 html[data-theme="dark"] .dataTables_wrapper .dt-buttons .dt-button:hover {

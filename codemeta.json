@@ -1,0 +1,197 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "eegdash",
+  "name": "EEG-DaSh",
+  "alternateName": "EEGDash",
+  "description": "An open-access Python library and catalog that makes 700+ MEEG (EEG, MEG, iEEG, fNIRS, EMG) datasets immediately usable for machine learning. Aggregates recordings from OpenNeuro, NEMAR, Zenodo, Figshare, SciDB, OSF, DataRN, and EEGManyLabs behind a single searchable catalog and a uniform EEGDashDataset interface compatible with MNE-Python, braindecode, and PyTorch. Features automated BIDS repair, PyTorch-native data access, 44 feature extractors across six categories, and HED event annotations for cross-study aggregation.",
+  "codeRepository": "https://github.com/eegdash/EEGDash",
+  "issueTracker": "https://github.com/eegdash/EEGDash/issues",
+  "url": "https://eegdash.org",
+  "relatedLink": [
+    "https://pypi.org/project/eegdash/",
+    "https://eegdash.org/.well-known/api-catalog",
+    "https://eegdash.org/.well-known/agent-skills/index.json",
+    "https://data.eegdash.org/openapi.json"
+  ],
+  "license": "https://spdx.org/licenses/BSD-3-Clause",
+  "version": "0.6.0",
+  "softwareVersion": "0.6.0",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Python",
+    "url": "https://www.python.org"
+  },
+  "runtimePlatform": "Python 3.11+",
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows"
+  ],
+  "applicationCategory": "Scientific/Engineering :: Bio-Informatics",
+  "developmentStatus": "active",
+  "keywords": [
+    "EEG",
+    "MEG",
+    "iEEG",
+    "fNIRS",
+    "EMG",
+    "electroencephalography",
+    "magnetoencephalography",
+    "BIDS",
+    "HED",
+    "Hierarchical Event Descriptors",
+    "neuroscience",
+    "brain-computer interface",
+    "BCI",
+    "machine learning",
+    "deep learning",
+    "PyTorch",
+    "Python",
+    "MNE-Python",
+    "braindecode",
+    "OpenNeuro",
+    "NEMAR",
+    "dataset catalog",
+    "reproducibility",
+    "feature extraction"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0001-5258-2995",
+      "givenName": "Bruno",
+      "familyName": "Aristimunha",
+      "email": "b.aristimunha@gmail.com",
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+        },
+        {
+          "@type": "Organization",
+          "name": "LISN-CNRS, Universit\u00e9 Paris-Saclay and Inria, France"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0003-4515-9333",
+      "givenName": "Aviv",
+      "familyName": "Dotan",
+      "email": "avivdot@bgu.post.ac.il",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Department of Industrial Engineering and School of Brain Sciences and Cognition, Ben-Gurion University of the Negev, Israel"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-8933-7640",
+      "givenName": "Pierre",
+      "familyName": "Guetschel",
+      "email": "pierre.guetschel@donders.ru.nl",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Donders Institute, Radboud University, The Netherlands"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0003-4540-3551",
+      "givenName": "Dung",
+      "familyName": "Truong",
+      "email": "dt.young112@gmail.com",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Kuntal",
+      "familyName": "Kokate",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Aman",
+      "familyName": "Jaiswal",
+      "email": "aman.jaiswal.1503@gmail.com",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Amitrava",
+      "familyName": "Majumdar",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "San Diego Supercomputer Center, UCSD, USA"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0001-5557-259X",
+      "givenName": "Seyed Yahya",
+      "familyName": "Shirazi",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0003-1129-4799",
+      "givenName": "Oren",
+      "familyName": "Shriki",
+      "email": "shrikio@bgu.ac.il",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Department of Industrial Engineering and School of Brain Sciences and Cognition, Ben-Gurion University of the Negev, Israel"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-0799-3557",
+      "givenName": "Arnaud",
+      "familyName": "Delorme",
+      "email": "adelorme@ucsd.edu",
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "name": "SCCN, Institute of Neural Computation, University of California, San Diego, USA"
+        },
+        {
+          "@type": "Organization",
+          "name": "CerCo, CNRS UMR 5549, Universit\u00e9 Toulouse III, France"
+        }
+      ]
+    }
+  ],
+  "softwareRequirements": [
+    "Python >= 3.11",
+    "braindecode >= 1.4.0",
+    "mne >= 1.11.0",
+    "mne_bids >= 0.18.0",
+    "numpy",
+    "pandas",
+    "pydantic",
+    "s3fs"
+  ],
+  "softwareSuggestions": [
+    "plotly",
+    "lightgbm",
+    "sphinx",
+    "pydata-sphinx-theme"
+  ],
+  "readme": "https://github.com/eegdash/EEGDash/blob/main/README.md",
+  "downloadUrl": "https://pypi.org/project/eegdash/",
+  "installUrl": "https://pypi.org/project/eegdash/",
+  "releaseNotes": "https://github.com/eegdash/EEGDash/releases"
+}

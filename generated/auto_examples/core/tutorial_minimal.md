@@ -29,20 +29,25 @@ This is a minimal tutorial demonstrating how to use EEGDash with BrainDecode.
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+[04/28/26 21:48:17] INFO     Auto-corrected misrouted             dataset.py:489
+                             storage.base for dataset
+                             EEG2025r1mini: None ->
+                             s3://nemar/EEG2025r1mini
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.8B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.6B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.2B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.4B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.5B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.7B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.16B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.06B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.06B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 24099  =      0.000 ...   240.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -61,16 +66,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.4B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.6B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.3B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.0B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.6B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.90B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.59B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23899  =      0.000 ...   238.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -89,16 +94,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.5B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.9B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.1B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.1B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.7B/s]
 
 Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.71B/s]
+Downloading sub-NDARAC904DMU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.57B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23499  =      0.000 ...   234.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -117,16 +122,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.3B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.9B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.2B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.60B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.30B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 42799  =      0.000 ...   427.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -145,17 +150,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 33.1B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.6B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.6B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.7B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.7B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.0B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.32B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.32B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.14B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.13B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 64599  =      0.000 ...   645.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -174,16 +179,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.5B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.4B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.7B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.6B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.0B/s]
 
 Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.89B/s]
+Downloading sub-NDARAM704GKZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.33B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23699  =      0.000 ...   236.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -202,17 +207,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.0B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.7B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.5B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.2B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.4B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.6B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.37B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.36B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.81B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.80B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 42399  =      0.000 ...   423.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -231,17 +236,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.1B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.1B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.0B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.6B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.1B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.63B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.62B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.47B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.47B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 67699  =      0.000 ...   676.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -260,16 +265,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.2B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.6B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.5B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.7B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.9B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.8B/s]
 
 Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.95B/s]
+Downloading sub-NDARAP359UM6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.80B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23699  =      0.000 ...   236.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -288,17 +293,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.3B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.1B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.8B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.4B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.0B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.2B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.37B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.37B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 72999  =      0.000 ...   729.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -317,16 +322,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.5B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.2B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.5B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.5B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.8B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.7B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.23B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.26B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 28099  =      0.000 ...   280.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -345,16 +350,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.1B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.1B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 34.0B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.7B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.6B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.6B/s]
 
 Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.71B/s]
+Downloading sub-NDARBD879MBX_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.50B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 30399  =      0.000 ...   303.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -373,17 +378,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.5B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.8B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.9B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.7B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.9B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.18B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.17B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.77B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 45399  =      0.000 ...   453.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -402,16 +407,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.2B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.2B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.7B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.1B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.08B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.69B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 25499  =      0.000 ...   254.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -430,17 +435,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 34.2B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.0B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.8B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.9B/s]
 
 Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.53B/s]
-Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.53B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.10B/s]
+Downloading sub-NDARBH024NH2_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.10B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 70099  =      0.000 ...   700.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -459,16 +464,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.4B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.0B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.5B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.6B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.0B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.15B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.58B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 25099  =      0.000 ...   250.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -487,17 +492,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.0B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.4B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.76B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.76B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.63B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.63B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 90199  =      0.000 ...   901.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -516,16 +521,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.8B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.7B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.6B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.3B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.6B/s]
 
 Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.71B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.21B/s]
+Downloading sub-NDARBK082PDD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.20B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 42199  =      0.000 ...   421.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -544,17 +550,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.25B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.0B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.1B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.1B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.9B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.50B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.49B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.96B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.96B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 34499  =      0.000 ...   344.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -573,16 +579,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.0B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.0B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.7B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.9B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.1B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.31B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.72B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 27499  =      0.000 ...   274.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -601,16 +607,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.5B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.3B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.3B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.2B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.4B/s]
 
 Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.37B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.18B/s]
+Downloading sub-NDARCA153NKE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.18B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 44799  =      0.000 ...   447.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -629,16 +636,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.2B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.7B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.9B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.3B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.7B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.04B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.53B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.53B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 39299  =      0.000 ...   392.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -657,16 +665,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.2B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.4B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.4B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.2B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.03B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.17B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 28799  =      0.000 ...   287.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -685,16 +693,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.9B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.0B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.4B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.7B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.35B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.12B/s]
+Downloading sub-NDARCE721YB5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.11B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 44899  =      0.000 ...   448.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -713,17 +722,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.5B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.0B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.6B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.6B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.81B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.80B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.28B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.27B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 64399  =      0.000 ...   643.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -742,16 +751,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.6B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.7B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.9B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.1B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.0B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.5B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.71B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.74B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.74B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23599  =      0.000 ...   235.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -770,16 +780,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.7B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.4B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.8B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 34.2B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
 
 Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.26B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.68B/s]
+Downloading sub-NDARCJ594BWQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.67B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 45899  =      0.000 ...   458.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -798,16 +809,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.7B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.8B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.4B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.7B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.3B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.0B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 11.2B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.91B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 19899  =      0.000 ...   198.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -826,16 +837,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.2B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.5B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.3B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.0B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.5B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.2B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.12B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.26B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 28499  =      0.000 ...   284.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -854,16 +865,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.0B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.6B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.1B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.2B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.7B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.0B/s]
 
 Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.49B/s]
+Downloading sub-NDARCN669XPR_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.01B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 36399  =      0.000 ...   363.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -882,16 +893,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.2B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.4B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.3B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.3B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.7B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.2B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.08B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.01B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 33199  =      0.000 ...   331.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -910,16 +921,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.7B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.2B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.4B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.0B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 33.8B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.6B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.36B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.11B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.11B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23899  =      0.000 ...   238.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -938,17 +950,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.4B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.8B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.0B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.7B/s]
 
 Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]
-Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.35B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.94B/s]
+Downloading sub-NDARCW094JCG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.94B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 73799  =      0.000 ...   737.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -967,17 +979,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.8B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.4B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.2B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.7B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.74B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.74B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.36B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.36B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 65899  =      0.000 ...   658.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -996,16 +1008,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.6B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.4B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.4B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.5B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.4B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.50B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.55B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 25099  =      0.000 ...   250.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1024,16 +1036,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.3B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.1B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.3B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.8B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.23B/s]
+Downloading sub-NDARCZ947WU5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.35B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 24599  =      0.000 ...   245.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1052,17 +1064,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.0B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.6B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.6B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.8B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.59B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.58B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.09B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.09B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 68399  =      0.000 ...   683.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1081,17 +1093,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.9B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.4B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.5B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.91B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.91B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.87B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 1.87B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 41099  =      0.000 ...   410.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1110,17 +1122,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.8B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.6B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.5B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.85B/s]
-Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.84B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.60B/s]
+Downloading sub-NDARDH670PXH_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.60B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 87499  =      0.000 ...   874.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1139,16 +1151,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 24.7B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.4B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.9B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.9B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 33.5B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.0B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.51B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.30B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 27199  =      0.000 ...   271.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1167,16 +1179,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 15.4B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.4B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.6B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.7B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.3B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.54B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.06B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 20499  =      0.000 ...   204.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1195,16 +1207,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.5B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.8B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.1B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.4B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
 
 Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.24B/s]
+Downloading sub-NDARDL511UND_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.42B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 28099  =      0.000 ...   280.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1223,17 +1235,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.4B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.6B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.0B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.8B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.4B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.23B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.22B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.05B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.05B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 76999  =      0.000 ...   769.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1252,17 +1264,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.3B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.4B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.4B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.7B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.7B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.75B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.74B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.07B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.07B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 25399  =      0.000 ...   253.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1281,16 +1293,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.5B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.7B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.6B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.0B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.7B/s]
 
 Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.90B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.83B/s]
+Downloading sub-NDARDU986RBM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.82B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 34099  =      0.000 ...   340.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1309,16 +1322,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.7B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.3B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.6B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.4B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.1B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.18B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.91B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.90B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 32499  =      0.000 ...   324.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1337,16 +1351,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 25.7B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.6B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.5B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.3B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.1B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.77B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.94B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 24499  =      0.000 ...   244.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1365,16 +1379,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.3B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.2B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.4B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.9B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.0B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.0B/s]
 
 Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.43B/s]
+Downloading sub-NDAREM731BYM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.43B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 31299  =      0.000 ...   312.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1393,17 +1407,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.5B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.7B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 17.9B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.3B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.5B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.85B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.84B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.23B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 3.22B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 63799  =      0.000 ...   637.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1422,17 +1436,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.8B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.2B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 12.8B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 10.1B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.0B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.2B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.94B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.94B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.72B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.72B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 84299  =      0.000 ...   842.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1451,17 +1465,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.0B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.6B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 26.0B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.5B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 27.6B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.2B/s]
 
 Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.35B/s]
-Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.34B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.63B/s]
+Downloading sub-NDAREN519BLJ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.63B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 37799  =      0.000 ...   377.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1480,16 +1494,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.2B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.5B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.1B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.8B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.5B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.0B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.07B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.39B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 24199  =      0.000 ...   241.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1508,16 +1522,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.6B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.4B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.4B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.5B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.5B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.39B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.96B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23399  =      0.000 ...   233.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1536,16 +1550,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.8B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.9B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.0B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.4B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.6B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.0B/s]
 
 Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.80B/s]
+Downloading sub-NDARFK610GY5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.91B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23899  =      0.000 ...   238.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1564,16 +1578,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.4B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.5B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.7B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.4B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.9B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.6B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.27B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.94B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.93B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 37899  =      0.000 ...   378.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1592,16 +1607,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 32.2B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.8B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.5B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.9B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.2B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.2B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 9.17B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.43B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 25099  =      0.000 ...   250.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1620,17 +1635,17 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.9B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 13.7B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 18.9B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.9B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 30.9B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.2B/s]
 
 Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.35B/s]
-Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 4.34B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.50B/s]
+Downloading sub-NDARFT581ZW5_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 2.50B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 24899  =      0.000 ...   248.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1649,16 +1664,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 16.6B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.4B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.8B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.1B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 31.5B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.8B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 7.23B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.96B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23299  =      0.000 ...   232.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1677,16 +1692,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 28.3B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 21.6B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 23.6B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 22.2B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.50B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 6.12B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23499  =      0.000 ...   234.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1705,16 +1720,16 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 29.0B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.1B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 19.0B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.7B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 14.0B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 1.00/1.00 [00:00<00:00, 20.1B/s]
 
 Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/1.00 [00:00<?, ?B/s]
-Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 8.64B/s]
+Downloading sub-NDARFW972KFQ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 1.00/1.00 [00:00<00:00, 5.89B/s]
 Sampling frequency of the instance is already 100.0, returning unmodified.
 Reading 0 ... 23299  =      0.000 ...   232.990 secs...
 Filtering raw data in 1 contiguous segment
@@ -1733,125 +1748,125 @@ Designing a one-pass, zero-phase, non-causal bandpass filter:
 
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/models/eegconformer.py:227: UserWarning: This model has only been tested on no more than 64 channels. no guarantee to work with more channels.
   warnings.warn(
-Epoch 0, Train Loss: 0.6597360372543335
-Epoch 0, Train Loss: 0.6070406436920166
-Epoch 0, Train Loss: 0.623511791229248
-Epoch 0, Train Loss: 0.5646636486053467
-Epoch 0, Train Loss: 0.5605955719947815
-Epoch 0, Train Loss: 0.5406372547149658
-Epoch 0, Train Loss: 0.5407398343086243
-Epoch 0, Train Loss: 0.4498695135116577
-Epoch 0, Train Loss: 0.412004292011261
-Epoch 0, Train Loss: 0.427747905254364
-Epoch 0, Train Loss: 0.4367704689502716
-Epoch 0, Train Loss: 0.44228774309158325
-Epoch 0, Train Loss: 0.399208664894104
-Epoch 0, Train Loss: 0.34017181396484375
-Epoch 0, Train Loss: 0.37377166748046875
-Epoch 0, Train Loss: 0.42016467452049255
-Epoch 0, Train Loss: 0.4259796142578125
-Epoch 0, Train Loss: 0.38227012753486633
-Epoch 0, Train Loss: 0.3479851484298706
-Epoch 0, Train Loss: 0.3590855300426483
-Epoch 0, Train Loss: 0.372324138879776
-Epoch 0, Train Loss: 0.30158913135528564
-Epoch 0, Train Loss: 0.277883380651474
-Epoch 0, Train Loss: 0.3177049160003662
-Epoch 0, Train Loss: 0.3314236104488373
-Epoch 0, Train Loss: 0.2750100791454315
-Epoch 0, Train Loss: 0.2517929971218109
-Epoch 0, Train Loss: 0.27334097027778625
-Epoch 0, Train Loss: 0.28309404850006104
-Epoch 0, Train Loss: 0.2743934690952301
-Epoch 0, Train Loss: 0.24971820414066315
-Epoch 0, Train Loss: 0.2403714805841446
-Epoch 0, Train Loss: 0.20090381801128387
-Epoch 0, Train Loss: 0.19430066645145416
-Epoch 0, Train Loss: 0.20876017212867737
-Epoch 0, Train Loss: 0.16130943596363068
-Epoch 0, Train Loss: 0.20260925590991974
-Epoch 0, Train Loss: 0.15052954852581024
-Epoch 0, Train Loss: 0.19927406311035156
-Epoch 0, Train Loss: 0.1866021752357483
-Epoch 0, Train Loss: 0.14960385859012604
-Epoch 0, Train Loss: 0.153614804148674
-Epoch 0, Train Loss: 0.1346585899591446
-Epoch 0, Train Loss: 0.14991480112075806
-Epoch 0, Train Loss: 0.1148664653301239
-Epoch 0, Train Loss: 0.12305539846420288
-Epoch 0, Train Loss: 0.14657434821128845
-Epoch 0, Train Loss: 0.12858501076698303
-Epoch 0, Train Loss: 0.13061285018920898
-Epoch 0, Train Loss: 0.12403354793787003
-Epoch 0, Train Loss: 0.10999086499214172
-Epoch 0, Train Loss: 0.09960480034351349
-Epoch 0, Train Loss: 0.09962470084428787
-Epoch 0, Train Loss: 0.14549468457698822
-Epoch 0, Train Loss: 0.09580245614051819
-Epoch 0, Train Loss: 0.11654838919639587
-Epoch 0, Train Loss: 0.07798571139574051
-Epoch 0, Train Loss: 0.08266979455947876
-Epoch 0, Train Loss: 0.10137319564819336
-Epoch 0, Train Loss: 0.11759278178215027
-Epoch 0, Train Loss: 0.10748832672834396
-Epoch 0, Train Loss: 0.08643804490566254
-Epoch 0, Train Loss: 0.08248713612556458
-Epoch 0, Train Loss: 0.08888543397188187
-Epoch 0, Train Loss: 0.08745534718036652
-Epoch 0, Train Loss: 0.09844300895929337
-Epoch 0, Train Loss: 0.09965385496616364
-Epoch 0, Train Loss: 0.09714050590991974
-Epoch 0, Train Loss: 0.08649145066738129
-Epoch 0, Train Loss: 0.08027029037475586
-Epoch 0, Train Loss: 0.08974064141511917
-Epoch 0, Train Loss: 0.10118918120861053
-Epoch 0, Train Loss: 0.11017113924026489
-Epoch 0, Train Loss: 0.0938270315527916
-Epoch 0, Train Loss: 0.08316066116094589
-Epoch 0, Train Loss: 0.09023868292570114
-Epoch 0, Train Loss: 0.08549880981445312
-Epoch 0, Train Loss: 0.07265347987413406
-Epoch 0, Train Loss: 0.08395560085773468
-Epoch 0, Train Loss: 0.07276130467653275
-Epoch 0, Train Loss: 0.08746916800737381
-Epoch 0, Train Loss: 0.10609334707260132
-Epoch 0, Train Loss: 0.059715691953897476
-Epoch 0, Train Loss: 0.08141425997018814
-Epoch 0, Train Loss: 0.09526123851537704
-Epoch 0, Train Loss: 0.0961378738284111
-Epoch 0, Train Loss: 0.07396376878023148
-Epoch 0, Train Loss: 0.07591180503368378
-Epoch 0, Train Loss: 0.10190632939338684
-Epoch 0, Train Loss: 0.09465854614973068
-Epoch 0, Train Loss: 0.08133003115653992
-Epoch 0, Train Loss: 0.09057751297950745
-Epoch 0, Train Loss: 0.06973543018102646
-Epoch 0, Train Loss: 0.07731851935386658
-Epoch 0, Train Loss: 0.07720412313938141
-Epoch 0, Test Loss: 0.00036431290209293365
-Epoch 0, Test Loss: 0.00018135969003196806
-Epoch 0, Test Loss: 0.00012285260891076177
-Epoch 0, Test Loss: 6.448403291869909e-05
-Epoch 0, Test Loss: 0.00020047066209372133
-Epoch 0, Test Loss: 0.0003286508144810796
-Epoch 0, Test Loss: 0.00027982101892121136
-Epoch 0, Test Loss: 0.00021723390091210604
-Epoch 0, Test Loss: 0.00025600154185667634
-Epoch 0, Test Loss: 0.00029029647703282535
-Epoch 0, Test Loss: 0.00028961495263502
-Epoch 0, Test Loss: 0.0003623065713327378
-Epoch 0, Test Loss: 7.368189108092338e-05
-Epoch 0, Test Loss: 7.133069448173046e-05
-Epoch 0, Test Loss: 0.00010968097194563597
-Epoch 0, Test Loss: 0.0014218968572095037
-Epoch 0, Test Loss: 0.00013684715668205172
-Epoch 0, Test Loss: 0.00032821681816130877
-Epoch 0, Test Loss: 0.0015692200977355242
-Epoch 0, Test Loss: 7.59928225306794e-05
-Epoch 0, Test Loss: 0.0005413674516603351
-Epoch 0, Test Loss: 8.332270954269916e-05
-Epoch 0, Test Loss: 0.000624277803581208
-Epoch 0, Test Loss: 0.00019126870029140264
+Epoch 0, Train Loss: 0.9679644703865051
+Epoch 0, Train Loss: 0.8921031355857849
+Epoch 0, Train Loss: 0.849151074886322
+Epoch 0, Train Loss: 0.8439958691596985
+Epoch 0, Train Loss: 0.7785032391548157
+Epoch 0, Train Loss: 0.6439814567565918
+Epoch 0, Train Loss: 0.8139665722846985
+Epoch 0, Train Loss: 0.7177555561065674
+Epoch 0, Train Loss: 0.6848160624504089
+Epoch 0, Train Loss: 0.7088982462882996
+Epoch 0, Train Loss: 0.5866825580596924
+Epoch 0, Train Loss: 0.656911313533783
+Epoch 0, Train Loss: 0.62745600938797
+Epoch 0, Train Loss: 0.6201995611190796
+Epoch 0, Train Loss: 0.5437533855438232
+Epoch 0, Train Loss: 0.5202212333679199
+Epoch 0, Train Loss: 0.5641738772392273
+Epoch 0, Train Loss: 0.5559564828872681
+Epoch 0, Train Loss: 0.5279741287231445
+Epoch 0, Train Loss: 0.44319313764572144
+Epoch 0, Train Loss: 0.47026365995407104
+Epoch 0, Train Loss: 0.48361530900001526
+Epoch 0, Train Loss: 0.45760565996170044
+Epoch 0, Train Loss: 0.4191645681858063
+Epoch 0, Train Loss: 0.3658750653266907
+Epoch 0, Train Loss: 0.3718827962875366
+Epoch 0, Train Loss: 0.4073079228401184
+Epoch 0, Train Loss: 0.4027576148509979
+Epoch 0, Train Loss: 0.3633304834365845
+Epoch 0, Train Loss: 0.33228179812431335
+Epoch 0, Train Loss: 0.3149203360080719
+Epoch 0, Train Loss: 0.346628874540329
+Epoch 0, Train Loss: 0.2923716604709625
+Epoch 0, Train Loss: 0.25961795449256897
+Epoch 0, Train Loss: 0.2600626051425934
+Epoch 0, Train Loss: 0.25003546476364136
+Epoch 0, Train Loss: 0.2974083423614502
+Epoch 0, Train Loss: 0.23388975858688354
+Epoch 0, Train Loss: 0.24133805930614471
+Epoch 0, Train Loss: 0.23634371161460876
+Epoch 0, Train Loss: 0.21605560183525085
+Epoch 0, Train Loss: 0.207214817404747
+Epoch 0, Train Loss: 0.21125225722789764
+Epoch 0, Train Loss: 0.2294277548789978
+Epoch 0, Train Loss: 0.2026420384645462
+Epoch 0, Train Loss: 0.19489146769046783
+Epoch 0, Train Loss: 0.17918914556503296
+Epoch 0, Train Loss: 0.15126442909240723
+Epoch 0, Train Loss: 0.1530677080154419
+Epoch 0, Train Loss: 0.17365451157093048
+Epoch 0, Train Loss: 0.14585493505001068
+Epoch 0, Train Loss: 0.13838805258274078
+Epoch 0, Train Loss: 0.16423428058624268
+Epoch 0, Train Loss: 0.1701347678899765
+Epoch 0, Train Loss: 0.17438624799251556
+Epoch 0, Train Loss: 0.16735567152500153
+Epoch 0, Train Loss: 0.14590606093406677
+Epoch 0, Train Loss: 0.12571404874324799
+Epoch 0, Train Loss: 0.1400178074836731
+Epoch 0, Train Loss: 0.12966258823871613
+Epoch 0, Train Loss: 0.17775529623031616
+Epoch 0, Train Loss: 0.11948881298303604
+Epoch 0, Train Loss: 0.15703994035720825
+Epoch 0, Train Loss: 0.14076770842075348
+Epoch 0, Train Loss: 0.15396569669246674
+Epoch 0, Train Loss: 0.14290080964565277
+Epoch 0, Train Loss: 0.13138242065906525
+Epoch 0, Train Loss: 0.1185741126537323
+Epoch 0, Train Loss: 0.13480868935585022
+Epoch 0, Train Loss: 0.13691693544387817
+Epoch 0, Train Loss: 0.12852129340171814
+Epoch 0, Train Loss: 0.12147456407546997
+Epoch 0, Train Loss: 0.13725121319293976
+Epoch 0, Train Loss: 0.11373895406723022
+Epoch 0, Train Loss: 0.09391383081674576
+Epoch 0, Train Loss: 0.13199786841869354
+Epoch 0, Train Loss: 0.11445124447345734
+Epoch 0, Train Loss: 0.11710852384567261
+Epoch 0, Train Loss: 0.15299315750598907
+Epoch 0, Train Loss: 0.09594841301441193
+Epoch 0, Train Loss: 0.13457626104354858
+Epoch 0, Train Loss: 0.10883072018623352
+Epoch 0, Train Loss: 0.1314234882593155
+Epoch 0, Train Loss: 0.1067039892077446
+Epoch 0, Train Loss: 0.12025930732488632
+Epoch 0, Train Loss: 0.14685828983783722
+Epoch 0, Train Loss: 0.13076792657375336
+Epoch 0, Train Loss: 0.11947646737098694
+Epoch 0, Train Loss: 0.14975133538246155
+Epoch 0, Train Loss: 0.12320507317781448
+Epoch 0, Train Loss: 0.13587673008441925
+Epoch 0, Train Loss: 0.11331874877214432
+Epoch 0, Train Loss: 0.11118576675653458
+Epoch 0, Train Loss: 0.14853011071681976
+Epoch 0, Train Loss: 0.1203271746635437
+Epoch 0, Test Loss: 0.23042696714401245
+Epoch 0, Test Loss: 0.2303001433610916
+Epoch 0, Test Loss: 0.2327008843421936
+Epoch 0, Test Loss: 0.23307712376117706
+Epoch 0, Test Loss: 0.23079842329025269
+Epoch 0, Test Loss: 0.23053455352783203
+Epoch 0, Test Loss: 0.2321237176656723
+Epoch 0, Test Loss: 0.23232343792915344
+Epoch 0, Test Loss: 0.2327950894832611
+Epoch 0, Test Loss: 0.23113606870174408
+Epoch 0, Test Loss: 0.2322867214679718
+Epoch 0, Test Loss: 0.23242607712745667
+Epoch 0, Test Loss: 0.23104973137378693
+Epoch 0, Test Loss: 0.23304609954357147
+Epoch 0, Test Loss: 0.23079894483089447
+Epoch 0, Test Loss: 0.23119741678237915
+Epoch 0, Test Loss: 0.2319776862859726
+Epoch 0, Test Loss: 0.22980712354183197
+Epoch 0, Test Loss: 0.2309442013502121
+Epoch 0, Test Loss: 0.2320765107870102
+Epoch 0, Test Loss: 0.23106777667999268
+Epoch 0, Test Loss: 0.2335919886827469
+Epoch 0, Test Loss: 0.22923682630062103
+Epoch 0, Test Loss: 0.232705757021904
 ```
 
 <br/>
@@ -1933,6 +1948,6 @@ for epoch in range(1):
             print(f"Epoch {epoch}, Test Loss: {loss.item()}")
 ```
 
-**Total running time of the script:** (1 minutes 46.174 seconds)
+**Total running time of the script:** (2 minutes 1.141 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-core-tutorial-minimal-py"></a>

@@ -118,3 +118,18 @@ Bases: `Exception`
 Base exception for all EEGDash errors.
 
 <!-- !! processed by numpydoc !! -->
+
+### *exception* eegdash.dataset.exceptions.StorageAccessError(message: str, , dataset_id: str | None = None, backend: str | None = None, logical_uri: str | None = None, cache_path: str | None = None)
+
+Bases: `EEGDashError`
+
+Raised when a record’s storage backend cannot be reached.
+
+### dataset_id, backend, logical_uri, cache_path
+
+Optional context attached to the error for downstream handlers.
+
+* **Type:**
+  str | None
+
+<!-- !! processed by numpydoc !! -->

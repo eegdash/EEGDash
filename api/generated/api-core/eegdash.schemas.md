@@ -771,10 +771,12 @@ Remote storage location details.
 
 #### backend
 
-Storage backend protocol.
+Storage backend protocol. `"nemar"` is a non-fetchable marker
+for NEMAR-hosted datasets — see `StorageAccessError` for the
+out-of-band access paths (git-annex / nemar CLI / NEMAR API).
 
 * **Type:**
-  {‘s3’, ‘https’, ‘local’}
+  {‘s3’, ‘https’, ‘local’, ‘nemar’}
 
 #### base
 
@@ -799,7 +801,7 @@ Paths relative to base for sidecar files (e.g., .json, .vhdr).
 
 <!-- !! processed by numpydoc !! -->
 
-#### backend *: Literal['s3', 'https', 'local']*
+#### backend *: Literal['s3', 'https', 'local', 'nemar']*
 
 #### base *: str*
 
@@ -1143,7 +1145,7 @@ external links.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.schemas.create_record(, dataset: str, storage_base: str, bids_relpath: str, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, dep_keys: list[str] | None = None, datatype: str = 'eeg', suffix: str = 'eeg', storage_backend: Literal['s3', 'https', 'local'] = 's3', recording_modality: list[str] | None = None, ch_names: list[str] | None = None, sampling_frequency: float | None = None, nchans: int | None = None, ntimes: int | None = None, digested_at: str | None = None) → Record
+### eegdash.schemas.create_record(, dataset: str, storage_base: str, bids_relpath: str, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, dep_keys: list[str] | None = None, datatype: str = 'eeg', suffix: str = 'eeg', storage_backend: Literal['s3', 'https', 'local', 'nemar'] = 's3', recording_modality: list[str] | None = None, ch_names: list[str] | None = None, sampling_frequency: float | None = None, nchans: int | None = None, ntimes: int | None = None, digested_at: str | None = None, annex_keys: dict[str, str] | None = None) → Record
 
 Create an EEGDash record.
 

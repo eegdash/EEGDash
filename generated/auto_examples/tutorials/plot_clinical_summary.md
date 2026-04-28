@@ -59,6 +59,10 @@ if "dataset_id" not in df.columns and "dataset" in df.columns:
     df["dataset_id"] = df["dataset"]
 ```
 
+```none
+Fetched 751 datasets from API.
+```
+
 <!-- GENERATED FROM PYTHON SOURCE LINES 55-59 -->
 
 ## Augmenting with Local Metadata (For Demonstration)
@@ -179,6 +183,13 @@ print(f"Plotting {len(plot_df)} studies.")
 print("Subject Types:", plot_df["Subject Type"].unique())
 ```
 
+```none
+Plotting 721 studies.
+Subject Types: <StringArray>
+['Healthy']
+Length: 1, dtype: str
+```
+
 <!-- GENERATED FROM PYTHON SOURCE LINES 169-171 -->
 
 ## Plotting
@@ -213,5 +224,7 @@ if not plot_df.empty:
 else:
     print("No data to plot.")
 ```
+
+**Total running time of the script:** (0 minutes 1.664 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-plot-clinical-summary-py"></a>

@@ -137,7 +137,7 @@ We have included the indices of all good channels for each participant in EEG.et
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 133 sensors — 133 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=8898560ab06ffc3e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=c876d0f2a04a2e81&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

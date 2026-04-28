@@ -160,7 +160,7 @@ The Paper repository ([https://github.com/V-Marco/FT-bursting-WM](https://github
 <details class="electrode-explorer">
   <summary>Electrode layout — iEEG · 6 sensors — 6 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=29f80aa4a2953e7b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=ca2cbfda0360962f&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

@@ -528,14 +528,18 @@ class FeatureExtractor(TrainableFeature):
             ]
         )
 
+    def _concat_preprocessor_to_child_func(self, func):
+        if self.preprocessor is None:
+            return func
+        else:
+            return partial(_concat_calls, _merge_call_list([self.preprocessor, func]))
+
     def __getitem__(self, key) -> Callable:
         """Get a feature/extractor by its key."""
         if key in self.feature_extractors_dict:
-            func = self.feature_extractors_dict[key]
-            if self.preprocessor is None:
-                return func
-            else:
-                return partial(_concat_calls, [self.preprocessor, func])
+            return self._concat_preprocessor_to_child_func(
+                self.feature_extractors_dict[key]
+            )
         if not isinstance(key, str):
             raise ValueError(
                 "Non-string keys are supported only for direct keys.\n"
@@ -556,12 +560,8 @@ class FeatureExtractor(TrainableFeature):
                 func = f[kk]
             except ValueError:
                 continue
-            if self.preprocessor is None:
-                return func
             else:
-                return partial(
-                    _concat_calls, _merge_call_list([self.preprocessor, func])
-                )
+                return self._concat_preprocessor_to_child_func(func)
 
         raise ValueError(
             f"Key {key} not found in FeatureExtractor.\n"

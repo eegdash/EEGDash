@@ -30,7 +30,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
-from ..schemas import validate_record
+from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
 from ._source_inference import correct_storage_inplace
 from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError, StorageAccessError
@@ -277,41 +277,56 @@ def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, b
     return None, raw
 
 
+def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | None]:
+    """Return ``(annex SHA key, inline sidecar text)`` for *relpath*.
+
+    Either or both may be ``None``. They are mutually exclusive by
+    schema invariant; ``_resolve_one_nemar_entry`` prefers the SHA key
+    when both are present.
+    """
+    return (
+        (storage.get("annex_keys") or {}).get(relpath),
+        (storage.get("sidecar_inline") or {}).get(relpath),
+    )
+
+
 def _resolve_nemar_uris(
     record: dict, raw_dest: Path, dep_keys: list[str], dep_dests: list[Path]
 ) -> tuple[str | None, list[str]]:
     """Resolve SHA-keyed S3 URIs for a NEMAR record.
 
-    Direct-git sidecars are written to disk as a side effect and excluded
-    from the returned URI list. When ``storage.annex_keys[<relpath>]`` is
-    populated at digest time we use it and skip the GitHub round-trip.
+    Per-entry resolution is delegated to ``_resolve_one_nemar_entry``
+    which honors the digest-time fast paths.
     """
     storage = record.get("storage") or {}
     base = (storage.get("base") or "").rstrip("/")
     raw_key = storage.get("raw_key", "")
     dataset_id = record.get("dataset", "")
-    stored_annex_keys: dict[str, str] = storage.get("annex_keys") or {}
     if not (base and raw_key and dataset_id):
         return None, []
 
+    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
     raw_uri = _resolve_one_nemar_entry(
         dataset_id=dataset_id,
         relpath=raw_key,
         base=base,
         dest=raw_dest,
-        stored_key=stored_annex_keys.get(raw_key),
+        stored_key=stored_key,
+        stored_sidecar=stored_sidecar,
         is_required=True,
     )
 
     dep_uris: list[str] = []
     for dep_key, dep_dest in zip(dep_keys, dep_dests, strict=False):
+        dep_stored_key, dep_stored_sidecar = _nemar_fast_paths(storage, dep_key)
         try:
             uri = _resolve_one_nemar_entry(
                 dataset_id=dataset_id,
                 relpath=dep_key,
                 base=base,
                 dest=dep_dest,
-                stored_key=stored_annex_keys.get(dep_key),
+                stored_key=dep_stored_key,
+                stored_sidecar=dep_stored_sidecar,
                 is_required=False,
             )
         except (urllib.error.HTTPError, urllib.error.URLError) as e:
@@ -337,16 +352,30 @@ def _resolve_one_nemar_entry(
     base: str,
     dest: Path,
     stored_key: str | None,
+    stored_sidecar: str | None,
     is_required: bool,
 ) -> str | None:
     """Return the S3 URI for one entry, or ``None`` if it was inlined.
 
-    When ``stored_key`` is provided (digest-time fast path) we trust it
-    and skip the GitHub raw fetch entirely. Otherwise we fall back to
-    the pointer-resolution path.
+    Two digest-time fast paths take precedence over the GitHub fetch:
+    ``stored_key`` (annex SHA key) yields the SHA-addressed S3 URI
+    directly; ``stored_sidecar`` (inline UTF-8 bytes) is written to disk
+    and we return ``None`` to signal "no remote URI needed". Both fast
+    paths are populated only at digest time and are never set together
+    for the same relpath. When neither is present we fall back to the
+    original ``_resolve_nemar_pointer`` GitHub-raw path.
     """
     if stored_key:
         return f"{base}/objects/{stored_key}"
+
+    if stored_sidecar is not None:
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            # Atomic write so concurrent loaders never see a partial file.
+            tmp = dest.with_suffix(dest.suffix + ".tmp")
+            tmp.write_text(stored_sidecar, encoding="utf-8", newline="")
+            tmp.replace(dest)
+        return None
 
     try:
         annex_key, payload = _resolve_nemar_pointer(dataset_id, relpath)
@@ -609,16 +638,8 @@ class EEGDashRaw(RawDataset):
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).
-    _NEMAR_ROOT_METADATA_FILES = (
-        "dataset_description.json",
-        "participants.tsv",
-        "participants.json",
-        "README",
-        "README.md",
-        "CHANGES",
-        "LICENSE",
-        ".bidsignore",
-    )
+    # Source of truth lives in eegdash.schemas to keep digest + runtime aligned.
+    _NEMAR_ROOT_METADATA_FILES = NEMAR_ROOT_METADATA_FILES
 
     def _fetch_nemar_root_metadata(self) -> None:
         storage = self.record.get("storage") or {}
@@ -627,18 +648,30 @@ class EEGDashRaw(RawDataset):
         if not (dataset_id and base and self.bids_root):
             return
         self.bids_root.mkdir(parents=True, exist_ok=True)
-        annex_keys = storage.get("annex_keys") or {}
-        for relname in self._NEMAR_ROOT_METADATA_FILES:
+        # If the digest enriched this record (sidecar_inline non-empty),
+        # trust the inlined apex map as authoritative: skip GitHub probes
+        # for files not present in it. Legacy un-enriched records keep
+        # the original full-iteration GitHub-fallback behavior.
+        sidecar_inline = storage.get("sidecar_inline") or {}
+        if sidecar_inline:
+            candidates = tuple(
+                n for n in self._NEMAR_ROOT_METADATA_FILES if n in sidecar_inline
+            )
+        else:
+            candidates = self._NEMAR_ROOT_METADATA_FILES
+        for relname in candidates:
             dest = self.bids_root / relname
             if dest.exists():
                 continue
+            stored_key, stored_sidecar = _nemar_fast_paths(storage, relname)
             try:
                 _resolve_one_nemar_entry(
                     dataset_id=dataset_id,
                     relpath=relname,
                     base=base,
                     dest=dest,
-                    stored_key=annex_keys.get(relname),
+                    stored_key=stored_key,
+                    stored_sidecar=stored_sidecar,
                     is_required=False,
                 )
             except urllib.error.URLError as e:
@@ -733,13 +766,15 @@ class EEGDashRaw(RawDataset):
         base = (storage.get("base") or "").rstrip("/")
         if not (dataset_id and base):
             return
+        stored_key, stored_sidecar = _nemar_fast_paths(storage, companion_relpath)
         try:
             companion_uri = _resolve_one_nemar_entry(
                 dataset_id=dataset_id,
                 relpath=companion_relpath,
                 base=base,
                 dest=local_path,
-                stored_key=(storage.get("annex_keys") or {}).get(companion_relpath),
+                stored_key=stored_key,
+                stored_sidecar=stored_sidecar,
                 is_required=False,
             )
         except (urllib.error.HTTPError, urllib.error.URLError) as e:

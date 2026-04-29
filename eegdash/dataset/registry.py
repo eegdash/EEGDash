@@ -229,6 +229,7 @@ def register_openneuro_datasets(
     reserved_names: set[str] = set(namespace.keys())
 
     taken_aliases: set[str] = set()
+    collision_count = 0
 
     for dataset_id, row_series in rows:
         class_name = dataset_id.upper()
@@ -256,7 +257,12 @@ def register_openneuro_datasets(
                 or alias in taken_aliases
                 or alias in reserved_names
             ):
-                logger.warning(
+                # Canonical aliases routinely overlap across dataset variants
+                # (e.g. several BNCI2015 entries). Surface the detail at DEBUG
+                # and emit a single aggregate count at INFO so the import-time
+                # log stays quiet by default.
+                collision_count += 1
+                logger.debug(
                     "Skipping canonical_name %r for dataset %s: name already "
                     "registered or reserved in the target namespace.",
                     alias,
@@ -309,6 +315,15 @@ def register_openneuro_datasets(
             registered[alias] = cls
             if add_to_all and isinstance(ns_all, list) and alias not in ns_all:
                 ns_all.append(alias)
+
+    if collision_count:
+        logger.info(
+            "Skipped %d canonical_name alias%s already registered or reserved "
+            "(enable DEBUG logging on %s for per-dataset details).",
+            collision_count,
+            "" if collision_count == 1 else "es",
+            __name__,
+        )
 
     return registered
 

@@ -226,7 +226,9 @@ def _filesystem_get(
         The local path to the downloaded file.
 
     """
-    filename = Path(s3path).name
+    # Show the BIDS-named local destination, not the SHA-keyed S3 object,
+    # so the progress bar matches what the user expects on disk.
+    filename = Path(filepath).name
     description = f"Downloading {filename}"
 
     # Check if we should use Rich
@@ -260,7 +262,14 @@ def _filesystem_get(
         )
 
     try:
-        filesystem.get(s3path, str(filepath), callback=callback, recursive=True)
+        # NEMAR denies anonymous ListBucket but allows GetObject. Both
+        # ``filesystem.get`` and ``filesystem.get(..., recursive=True)`` call
+        # ``_isdir`` / ``_lsdir`` (ListObjectsV2) before issuing GetObject and
+        # 403 on those buckets. ``get_file`` is the single-object primitive
+        # (HEAD + GET only), and all callers here pass single object URIs —
+        # the CTF directory case in base.py pre-expands via ``filesystem.ls``
+        # into per-file pairs.
+        filesystem.get_file(s3path, str(filepath), callback=callback)
     finally:
         # Ensure callback is closed properly (important for Rich to clean up display)
         if hasattr(callback, "close"):

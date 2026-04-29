@@ -38,7 +38,28 @@ File at: examples/new_tutorials/tutorial_1_basic_pipeline.ipynb
 
 ## Tutorial 3:
 
-### General Thoughts
+### Code
 - show how to use metedata (`bin_avalanches`): recive & change
 - explain why we splitted the standartization itno two funcions and the use of `StandardizedSignalType`
 - explain we we didn't need `preprocessor_output_type` for other preprocessors (generity)
+
+- Replace `_fit_truncated_power_law` with a simpler function/logic.
+- `starts` and `ends` are switched from list to nparray multipile time - should decide on one representation.
+
+- for `tau_exponent`: review the "lab" t-max metho. probably remove this.
+- in `gamma_exponent`: consider changing to base e. and change to linear fit instead of poly.
+
+### Tutorial notes
+1. change to intro for part 0. (Gal will rewrite). we need to explain what are avalanches, and about the power law distributions they create. no need to dive deeply into criticality.
+2. chnage to "original" code, or remove it completely.
+3. in part 2 - we dont need to "imagine" a ds - we need some real data (meg?)
+4. remove the "caching issue" - the package is not suitable for this.
+5. note: the funtions/features names changed.
+6. shape fix: i want a real example form the avalanche code. also, we need the emphasize the ue of -1,-2 indexing for ch, time.
+7. for part 5: remove all refrences to the "old api".
+8. for part 5: does position really matter? emphaszie that we can USE metadata without `metadat_preprocessor`, but not CHANGE it.
+9. feature names in the dict will be neglected for `""` and non-string keys. change example to ints.
+10. talk about the use of `partial`.
+11. change featureExtractor order of preprocessors and dict.
+12. for part 7: change the explanation - we cannot use 2 NODES as predecessors for one feature.
+13. to use DDC - chnage to DataFrame instead of looping.

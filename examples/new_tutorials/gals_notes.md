@@ -10,20 +10,27 @@ File at: examples/new_tutorials/tutorial_1_basic_pipeline.ipynb
 
 ### General Thoughts
 
-- ~~The `RestingState` trials contain eyes open/close markers compatible with MNE, with regular cycle - 20sec open and 40sec close. Should we aknowledge it? if so - maybe exclude alpha bands?~~ → **Done:** added eyes-open/closed note to data loading section.
-- Should we increase the dataset's size? curretly it's ~280 subjects. → **Open:** team decision.
 - ICA pipline - consult Tom and Oren → **Open:** pending.
-
-- ~~Features - we need more feature from the spectral and connectivity families.~~ → **Done:** added `spectral_entropy` and `spectral_slope` to extractor.
-- Features - we need a more complicated features tree. optimally we'll use another sub-type of spetral features and the `pick_channels` option. → **Open:** needs team input on exact intent.
-
-- Should we do hyper-parameter search? if so, we need to add validation sets. → **Open:** pending.
 
 ### Notes
 
-1. ~~the headline say part of the tutorial is too learn "Why subject-level train/test splitting is essential to avoid data leakage". This could be unrelated to the topic since our main goal is the teach ml and dl engeineers how to use brain-data. NWEVERMIND! this is actualy important here.~~ → **Resolved:** `[?]_1` marker removed; text kept as-is.
-2. ~~in the 'data loading' panel, we use the line `ds = BaseConcatDataset(ds1.datasets + ds2.datasets)`, need to make sure it is correct.~~ → **Resolved:** verified correct (standard braindecode pattern); `[?]_2` marker removed.
-3. ~~The windows-overlap is currently 50%. We need to make sure it's the right approach here.~~ → **Resolved:** 50% overlap is appropriate for feature-based ML; added explanation to windowing markdown.
+### New changes needed (R2 corrections applied: 2026-04-29)
+- ~~we need all the windows to be eather eyes open or close. use the MNE markers `instructed_toOpenEyes` and `instructed_toCloseEyes`. Each trial follows the structure:~~
+
+~~resting_start ->~~
+~~[ instructed_toOpenEyes -> 20sec -> instructed_toCloseEyes -> 40 sec ]~~
+
+→ **Done:** windowing cell now uses `create_windows_from_events` with `mapping={"instructed_toCloseEyes": 0}` and `trial_stop_offset_samples = 40 * sfreq`; markdown explains the eyes-closed protocol.
+
+- ~~remove the currect eyes open/close explanation.~~ → **Done:** R1 blockquote removed from data loading cell.
+
+- ~~for picking channels: i want to show at least one use of the `pick_channel` preprocessor. because we have an eyes open/close recording, we will "split" the extraction as follows:~~
+~~- the current extractors will work the same, but teh alpha band will not be extracted.~~
+~~- another branch will pick *only occipital channels*, and calculate the alpha power from them alone.~~
+
+→ **Done:** feature extraction cell split into three branches — non-alpha spectral (all channels), occipital alpha (`pick_channels_preprocessor` + nested spectral extractor), connectivity. `OCCIPITAL_CHS = []` — **Open:** user must fill with HBN EGI-128 occipital channel names.
+
+- ~~i have chnaged the order of the `preprocessor` and `extract_features` arguments of `FeatureExtractor`, keep with this typing from now on.~~ → **Done:** `preprocessor=` listed before `feature_extractors=` in all three tutorials (T1, T2, T3).
 
 ## Tutorial 2: custom features
 

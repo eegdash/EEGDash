@@ -4,7 +4,7 @@
 
 | Tutorial | Status | Notes |
 |---|---|---|
-| T1 — Basic Pipeline | **Draft complete** | R1 corrections applied (2026-04-29) |
+| T1 — Basic Pipeline | **Draft complete** | R1 + R2 corrections applied (2026-04-29) |
 | T2 — Custom Features | **Draft complete** | R1 corrections applied (2026-04-29) |
 | T3 — Avalanche Toolbox | **Draft complete** | R1 corrections applied (2026-04-29); dataset TBD |
 | T4 — Non-BIDS Data | **Structure only** (no dataset yet) | Dataset TBD |
@@ -89,10 +89,16 @@ def my_preprocessor(x, /):
 - Justified 50% windowing overlap for feature-based ML
 - Added `spectral_entropy` and `spectral_slope` to extractor; updated markdown and inspect cell
 
+**R2 corrections applied (2026-04-29):**
+- Removed R1 eyes-open/closed blockquote from data loading cell
+- Windowing cell: replaced `create_fixed_length_windows` with `create_windows_from_events`; extracts only eyes-closed intervals via `mapping={"instructed_toCloseEyes": 0}` and `trial_stop_offset_samples = 40 * sfreq`
+- Feature extraction cell: split into three branches — non-alpha spectral (all channels), occipital alpha (`pick_channels_preprocessor` + nested spectral extractor with `ALPHA_BAND`), connectivity (MSC)
+- Applied `preprocessor=` before `feature_extractors=` convention throughout (also applied to T2, T3)
+
 **Remaining open:**
+- `OCCIPITAL_CHS = []` — must be filled with HBN EGI-128 occipital channel names
 - Train/test split strategy (random subject split vs. age-stratified)
 - Whether SHAP extension is a runnable cell or a stub
-- "More complicated features tree with `pick_channels`" — needs team input on exact intent
 - Dataset size (~280 subjects) — team decision
 - ICA pipeline — consult Tom and Oren
 

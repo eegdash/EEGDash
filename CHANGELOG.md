@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-04-29
+
+### Fixed
+- NEMAR anonymous S3 + GitHub access end-to-end: stop probing with `ListBucket`, use `s3fs.get_file()` for direct anonymous `GetObject`, and route via GitHub-pointer-first with the largefiles annex rule (#332)
+
 ## [0.7.0] - 2026-04-28
 
 ### Added
@@ -337,6 +342,7 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICE
 
 | Version | Release Date | Key Features |
 |---------|-------------|--------------|
+| 0.7.1 | 2026-04-29 | NEMAR anonymous S3 access fix (GitHub-pointer-first, anonymous GetObject) |
 | 0.7.0 | 2026-04-28 | Montage registry, electrode-explorer integration, feature-as-preprocessor, parquet→safetensors, SEO/perf overhaul |
 | 0.6.0 | 2026-04-06 | Reliable loading across 522 datasets, publication charts, API tutorial, fNIRS support |
 | 0.5.0 | 2026-01-07 | New branding, digestion pipeline v2, preprocessors as functions, BSD-3 license |

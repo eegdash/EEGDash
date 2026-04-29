@@ -177,6 +177,6 @@ else:
 19 subjects. 19 recordings. 17.51 hours.
 ```
 
-**Total running time of the script:** (0 minutes 0.457 seconds)
+**Total running time of the script:** (0 minutes 0.281 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-tutorial-api-py"></a>

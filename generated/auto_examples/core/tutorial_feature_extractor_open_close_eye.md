@@ -166,7 +166,7 @@ windows_ds = create_windows_from_events(
 ```none
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[04/29/26 22:30:15] WARNING  File not found on S3, skipping:   downloader.py:146
+[04/29/26 22:57:14] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
@@ -298,8 +298,8 @@ features_ds = extract_features(windows_ds, features_dict, batch_size=512)
 
 ```none
 Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.38it/s]
-Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.38it/s]
+Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.44it/s]
+Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.44it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 235-237 -->
@@ -2659,7 +2659,7 @@ print(f"Train accuracy: {correct_train:.2f}, Validation accuracy: {correct_val:.
 
 ```none
 [LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000260 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000287 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2787,6 +2787,6 @@ plot_importance(clf, importance_type="gain", max_num_features=10)
 <Axes: title={'center': 'Feature importance'}, xlabel='Feature importance', ylabel='Features'>
 ```
 
-**Total running time of the script:** (0 minutes 2.717 seconds)
+**Total running time of the script:** (0 minutes 2.926 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py"></a>

@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:46.282** total execution time for 1 file **from generated/auto_examples/hpc**:
+**00:41.988** total execution time for 1 file **from generated/auto_examples/hpc**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,4 +19,4 @@ $(document).ready( function () {
 
 | Example                                                                                                                            | Time      |   Mem (MB) |
 |------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Eyes Open vs. Closed Classification](tutorial_eoec.md#sphx-glr-generated-auto-examples-hpc-tutorial-eoec-py) (`tutorial_eoec.py`) | 00:46.282 |          0 |
+| [Eyes Open vs. Closed Classification](tutorial_eoec.md#sphx-glr-generated-auto-examples-hpc-tutorial-eoec-py) (`tutorial_eoec.py`) | 00:41.988 |          0 |

@@ -166,7 +166,7 @@ windows_ds = create_windows_from_events(
 ```none
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[04/29/26 12:04:29] WARNING  File not found on S3, skipping:   downloader.py:146
+[04/29/26 12:59:23] WARNING  File not found on S3, skipping:   downloader.py:146
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
@@ -298,8 +298,8 @@ features_ds = extract_features(windows_ds, features_dict, batch_size=512)
 
 ```none
 Extracting features:   0%|          | 0/1 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s]
-Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s]
+Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.41it/s]
+Extracting features: 100%|██████████| 1/1 [00:00<00:00,  1.41it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 235-237 -->
@@ -328,8 +328,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th></th>
       <th>i_dataset</th>
       <th>i_start_in_trial</th>
-      <th>i_window_in_trial</th>
       <th>i_stop_in_trial</th>
+      <th>i_window_in_trial</th>
       <th>sig_mean_E22</th>
       <th>sig_mean_E9</th>
       <th>sig_mean_E33</th>
@@ -414,8 +414,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>0</th>
       <td>0</td>
       <td>8092</td>
-      <td>0</td>
       <td>8348</td>
+      <td>0</td>
       <td>5.647381e-07</td>
       <td>-2.509246e-06</td>
       <td>8.135321e-06</td>
@@ -498,8 +498,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>1</th>
       <td>0</td>
       <td>8348</td>
-      <td>0</td>
       <td>8604</td>
+      <td>0</td>
       <td>1.130721e-06</td>
       <td>1.416919e-07</td>
       <td>-6.768836e-07</td>
@@ -582,8 +582,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>2</th>
       <td>0</td>
       <td>8604</td>
-      <td>0</td>
       <td>8860</td>
+      <td>0</td>
       <td>-8.737620e-07</td>
       <td>2.451451e-07</td>
       <td>3.854794e-07</td>
@@ -666,8 +666,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>3</th>
       <td>0</td>
       <td>8860</td>
-      <td>0</td>
       <td>9116</td>
+      <td>0</td>
       <td>3.482372e-07</td>
       <td>-5.419446e-07</td>
       <td>-7.257668e-08</td>
@@ -750,8 +750,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>4</th>
       <td>0</td>
       <td>9116</td>
-      <td>0</td>
       <td>9372</td>
+      <td>0</td>
       <td>1.078094e-06</td>
       <td>2.234204e-06</td>
       <td>8.322080e-07</td>
@@ -918,8 +918,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>65</th>
       <td>0</td>
       <td>43163</td>
-      <td>0</td>
       <td>43419</td>
+      <td>0</td>
       <td>2.604641e-06</td>
       <td>2.696607e-06</td>
       <td>3.207271e-07</td>
@@ -1002,8 +1002,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>66</th>
       <td>0</td>
       <td>43419</td>
-      <td>0</td>
       <td>43675</td>
+      <td>0</td>
       <td>-1.158709e-06</td>
       <td>-9.353611e-07</td>
       <td>6.243006e-07</td>
@@ -1086,8 +1086,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>67</th>
       <td>0</td>
       <td>43675</td>
-      <td>0</td>
       <td>43931</td>
+      <td>0</td>
       <td>9.350503e-07</td>
       <td>7.273056e-07</td>
       <td>-3.974258e-07</td>
@@ -1170,8 +1170,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>68</th>
       <td>0</td>
       <td>43931</td>
-      <td>0</td>
       <td>44187</td>
+      <td>0</td>
       <td>-1.334396e-04</td>
       <td>-4.969487e-05</td>
       <td>-2.251352e-06</td>
@@ -1254,8 +1254,8 @@ features_ds.to_dataframe(include_crop_inds=True)
       <th>69</th>
       <td>0</td>
       <td>44187</td>
-      <td>0</td>
       <td>44443</td>
+      <td>0</td>
       <td>1.370442e-04</td>
       <td>3.529626e-05</td>
       <td>3.354098e-06</td>
@@ -2659,7 +2659,7 @@ print(f"Train accuracy: {correct_train:.2f}, Validation accuracy: {correct_val:.
 
 ```none
 [LightGBM] [Info] Number of positive: 28, number of negative: 28
-[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000289 seconds.
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000255 seconds.
 You can set `force_col_wise=true` to remove the overhead.
 [LightGBM] [Info] Total Bins 9205
 [LightGBM] [Info] Number of data points in the train set: 56, number of used features: 460
@@ -2787,6 +2787,6 @@ plot_importance(clf, importance_type="gain", max_num_features=10)
 <Axes: title={'center': 'Feature importance'}, xlabel='Feature importance', ylabel='Features'>
 ```
 
-**Total running time of the script:** (0 minutes 3.033 seconds)
+**Total running time of the script:** (0 minutes 2.944 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py"></a>

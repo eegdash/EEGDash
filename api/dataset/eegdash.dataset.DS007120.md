@@ -138,13 +138,13 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 128 sensors — 128 channels</summary>
+  <summary>Electrode layout — iEEG · 112 sensors — 112 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=0039c793b7d72bb3&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=e7c1db00c8d5df0e&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 128 sensors"
+    title="Topomap of iEEG · 112 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

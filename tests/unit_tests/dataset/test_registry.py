@@ -564,7 +564,9 @@ def test_canonical_name_reserved_names_skipped(
 ):
     seed_obj = object()
     ns = {seed: seed_obj} if seed else {}
-    with caplog.at_level(logging.WARNING, logger="eegdash.dataset.registry"):
+    # Per-collision message lives at DEBUG (alias overlaps are routine);
+    # an aggregate INFO summary surfaces the count to operators.
+    with caplog.at_level(logging.DEBUG, logger="eegdash.dataset.registry"):
         _register(tmp_path, rows, namespace=ns)
 
     if winner_ds is None:
@@ -574,6 +576,9 @@ def test_canonical_name_reserved_names_skipped(
     assert any(
         "already registered" in r.message or "reserved" in r.message
         for r in caplog.records
+    )
+    assert any(
+        r.levelno == logging.INFO and "Skipped" in r.message for r in caplog.records
     )
 
 

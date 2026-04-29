@@ -41,7 +41,11 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
-from _file_utils import get_annex_file_key, get_annex_file_size
+from _file_utils import (
+    get_annex_file_key,
+    get_annex_file_size,
+    read_inline_sidecar,
+)
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
 from _montage import extract_layout
@@ -52,7 +56,12 @@ from tqdm import tqdm
 
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
 from eegdash.dataset.io import _repair_participants_tsv_ids
-from eegdash.schemas import Storage, create_dataset, create_record
+from eegdash.schemas import (
+    NEMAR_ROOT_METADATA_FILES,
+    Storage,
+    create_dataset,
+    create_record,
+)
 
 # Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
@@ -833,6 +842,7 @@ def extract_record(
     dataset_id: str,
     source: str,
     digested_at: str,
+    apex_sidecar_inline: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Extract Record metadata for a single BIDS file.
 
@@ -1241,18 +1251,45 @@ def extract_record(
                 bids_relpath,
             )
 
-    # Stored at digest time so the runtime can skip the GitHub-raw
-    # round-trip when fetching SHA-keyed objects from the NEMAR bucket.
+    # NEMAR fast-path enrichment for the runtime; see Storage TypedDict
+    # in eegdash/schemas.py for the contract.
+    #
+    # Apex BIDS files (participants.tsv, dataset_description.json, README,
+    # …) live once per dataset but mne-bids/braindecode expects them on
+    # disk per recording. We get them via the caller-provided
+    # apex_sidecar_inline (computed once per dataset; see digest_dataset)
+    # rather than re-reading from disk per record. They're stored on every
+    # record so each load is self-contained, at the cost of duplicated
+    # bytes in MongoDB.
+    #
+    # TODO(scale): two known sources of byte duplication in MongoDB:
+    #   (1) session-level sidecars (events.json shared across runs in a
+    #       session) — multi-KB × N runs in same session;
+    #   (2) apex sidecars (dataset_description.json, README, etc.)
+    #       duplicated across every record in a dataset.
+    # The structurally-correct fix is to move both classes into a per-
+    # dataset side-collection (`nemar_dataset_sidecars` keyed by
+    # (dataset_id, relpath)) referenced by record. Trigger to revisit:
+    # >100 MB inline payload for a single dataset, OR an HBN/M3CV-style
+    # ingest with a >500 KB participants.tsv.
     annex_keys: dict[str, str] = {}
+    sidecar_inline: dict[str, str] = dict(apex_sidecar_inline or {})
     if source == "nemar":
         bids_root_path = bids_dataset.bidsdir  # already a Path
         raw_annex_key = get_annex_file_key(Path(bids_file))
         if raw_annex_key:
             annex_keys[bids_relpath] = raw_annex_key
         for dep in dep_keys:
-            dep_annex_key = get_annex_file_key(bids_root_path / dep)
+            dep_path = bids_root_path / dep
+            dep_annex_key = get_annex_file_key(dep_path)
             if dep_annex_key:
                 annex_keys[dep] = dep_annex_key
+                continue
+            if dep in sidecar_inline:
+                continue
+            inline = read_inline_sidecar(dep_path)
+            if inline is not None:
+                sidecar_inline[dep] = inline
 
     # Create record using the schema
     record = create_record(
@@ -1275,6 +1312,7 @@ def extract_record(
         ntimes=ntimes,
         digested_at=digested_at,
         annex_keys=annex_keys or None,
+        sidecar_inline=sidecar_inline or None,
     )
 
     # Restore participant_tsv metadata if available
@@ -2436,6 +2474,18 @@ def digest_dataset(
     errors = []
     montages: dict[str, dict[str, Any]] = {}
 
+    # NEMAR-only: read apex BIDS files once per dataset and reuse the
+    # decoded text across every record (Python str is immutable so the
+    # values are shared by reference). Cuts ~N × len(NEMAR_ROOT_METADATA_FILES)
+    # stat+read+decode calls per dataset.
+    apex_sidecar_inline: dict[str, str] = {}
+    if source == "nemar":
+        bids_root_path = bids_dataset.bidsdir
+        for root_name in NEMAR_ROOT_METADATA_FILES:
+            inline = read_inline_sidecar(bids_root_path / root_name)
+            if inline is not None:
+                apex_sidecar_inline[root_name] = inline
+
     for bids_file in files:
         # Filter out non-neuro data files (sidecars, etc.)
         if not is_neuro_data_file(str(bids_file)):
@@ -2443,7 +2493,12 @@ def digest_dataset(
 
         try:
             record = extract_record(
-                bids_dataset, bids_file, dataset_id, source, digested_at
+                bids_dataset,
+                bids_file,
+                dataset_id,
+                source,
+                digested_at,
+                apex_sidecar_inline=apex_sidecar_inline,
             )
             # Skip records for split FIF files with missing continuations
             if any(

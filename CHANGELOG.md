@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-04-29
+
+### Added
+- NEMAR digest-time sidecar inlining: `storage.sidecar_inline` carries small text BIDS sidecars (TSV/JSON/README) so the runtime never round-trips to GitHub for an enriched record (#334)
+
+### Changed
+- Quieted canonical-alias collision logs in the dataset registry; refreshed `uv.lock` (#333)
+
 ## [0.7.1] - 2026-04-29
 
 ### Fixed
@@ -342,6 +350,7 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICE
 
 | Version | Release Date | Key Features |
 |---------|-------------|--------------|
+| 0.7.2 | 2026-04-29 | NEMAR digest-time sidecar inlining; runtime never round-trips to GitHub for enriched records |
 | 0.7.1 | 2026-04-29 | NEMAR anonymous S3 access fix (GitHub-pointer-first, anonymous GetObject) |
 | 0.7.0 | 2026-04-28 | Montage registry, electrode-explorer integration, feature-as-preprocessor, parquet→safetensors, SEO/perf overhaul |
 | 0.6.0 | 2026-04-06 | Reliable loading across 522 datasets, publication charts, API tutorial, fNIRS support |

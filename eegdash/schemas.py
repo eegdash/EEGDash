@@ -69,7 +69,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import PurePosixPath
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, NotRequired, TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -112,6 +112,14 @@ class StorageModel(BaseModel):
     raw_key: str = Field(min_length=1, description="Relative path key to the raw file")
     dep_keys: list[str] = Field(
         default_factory=list, description="List of dependency file keys"
+    )
+    annex_keys: dict[str, str] | None = Field(
+        default=None,
+        description="Sparse map relpath -> SHA-key (NEMAR digest fast path).",
+    )
+    sidecar_inline: dict[str, str] | None = Field(
+        default=None,
+        description="Sparse map relpath -> UTF-8 text (NEMAR digest fast path).",
     )
 
 
@@ -759,6 +767,16 @@ class Storage(TypedDict):
         Path relative to `base` to reach the file.
     dep_keys : list[str]
         Paths relative to `base` for sidecar files (e.g., .json, .vhdr).
+    annex_keys : dict[str, str], optional
+        Sparse map ``relpath -> SHA-key`` populated at digest time for
+        NEMAR records so the runtime can build the SHA-addressed S3 URI
+        directly without a GitHub-pointer round-trip. Mutually exclusive
+        with ``sidecar_inline`` for any given relpath.
+    sidecar_inline : dict[str, str], optional
+        Sparse map ``relpath -> UTF-8 text`` populated at digest time
+        for small git-tracked NEMAR sidecars (TSV/JSON/README) so the
+        runtime can write them directly to disk without a GitHub fetch.
+        Mutually exclusive with ``annex_keys`` for any given relpath.
 
     """
 
@@ -766,6 +784,8 @@ class Storage(TypedDict):
     base: str
     raw_key: str
     dep_keys: list[str]
+    annex_keys: NotRequired[dict[str, str]]
+    sidecar_inline: NotRequired[dict[str, str]]
 
 
 class Entities(TypedDict, total=False):
@@ -963,6 +983,28 @@ def _sanitize_run_for_mne(value: Any) -> str | None:
     return None
 
 
+# Headroom under MongoDB's 16 MB BSON document limit for the inline
+# sidecar payload, leaving ~4 MB for the rest of the record.
+_MAX_INLINE_TOTAL_BYTES = 12 * 1024 * 1024
+
+
+# BIDS apex files that aren't in dep_keys but mne-bids / braindecode
+# still expect to find on disk. The NEMAR digest pipeline inlines these
+# into each record's storage.sidecar_inline, and the runtime reads them
+# back via _fetch_nemar_root_metadata. Source of truth shared with
+# eegdash/dataset/base.py:_NEMAR_ROOT_METADATA_FILES.
+NEMAR_ROOT_METADATA_FILES: tuple[str, ...] = (
+    "dataset_description.json",
+    "participants.tsv",
+    "participants.json",
+    "README",
+    "README.md",
+    "CHANGES",
+    "LICENSE",
+    ".bidsignore",
+)
+
+
 def create_record(
     *,
     dataset: str,
@@ -984,6 +1026,7 @@ def create_record(
     ntimes: int | None = None,
     digested_at: str | None = None,
     annex_keys: dict[str, str] | None = None,
+    sidecar_inline: dict[str, str] | None = None,
 ) -> Record:
     """Create an EEGDash record.
 
@@ -1059,9 +1102,31 @@ def create_record(
         "raw_key": bids_relpath,
         "dep_keys": dep_keys,
     }
-    # Sparse map (relpath → SHA-key) — annex-managed files only.
+    if annex_keys and sidecar_inline:
+        # Mutually exclusive: a single relpath is either annex-managed
+        # (binary on S3) or directly committed to git (text inline),
+        # never both. Surface the violation at write time.
+        overlap = annex_keys.keys() & sidecar_inline.keys()
+        if overlap:
+            raise ValueError(
+                f"annex_keys and sidecar_inline overlap on {sorted(overlap)} "
+                f"for dataset={dataset!r}; each relpath must be in at most one map"
+            )
     if annex_keys:
         storage_block["annex_keys"] = dict(annex_keys)
+    if sidecar_inline:
+        # Headroom under MongoDB's 16 MB BSON document limit, leaving
+        # room for the rest of the record (entities, ch_names, etc.).
+        total_inline_bytes = sum(
+            len(v.encode("utf-8")) for v in sidecar_inline.values()
+        )
+        if total_inline_bytes > _MAX_INLINE_TOTAL_BYTES:
+            raise ValueError(
+                f"sidecar_inline payload for dataset={dataset!r} is "
+                f"{total_inline_bytes} bytes (> {_MAX_INLINE_TOTAL_BYTES}); "
+                "drop oversized entries and let the runtime fetch them on demand"
+            )
+        storage_block["sidecar_inline"] = dict(sidecar_inline)
 
     return Record(
         dataset=dataset,

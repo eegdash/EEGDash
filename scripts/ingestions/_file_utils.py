@@ -9,6 +9,7 @@ Uses fsspec for unified filesystem access where possible.
 """
 
 import json
+import logging
 import os
 import re
 import struct
@@ -19,6 +20,8 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
 from _http import HTTPStatusError, RequestError, request_response
+
+logger = logging.getLogger(__name__)
 
 
 def _fetch_scidb_path(
@@ -614,6 +617,77 @@ def get_annex_file_key(path: Path) -> str | None:
         return None
     candidate = text.strip().rsplit("/", 1)[-1]
     return candidate if _ANNEX_KEY_BASENAME_RE.match(candidate) else None
+
+
+# Cap chosen to keep inlined sidecars well under MongoDB's 16 MB BSON
+# document limit while still covering the long tail of legitimate
+# events.tsv / participants.tsv files (typical: 1–10 KB; outlier: 1–2 MB).
+_INLINE_SIDECAR_MAX_BYTES = 5 * 1024 * 1024  # 5 MB
+_INLINE_SIDECAR_SUFFIXES = (".tsv", ".json", ".md", ".txt")
+_INLINE_SIDECAR_BASENAMES = frozenset({"README", "CHANGES", "LICENSE", ".bidsignore"})
+
+
+def read_inline_sidecar(path: Path) -> str | None:
+    """Return UTF-8 contents of *path* if it's eligible for digest-time inlining.
+
+    Intended **only** for the NEMAR digest pipeline's
+    ``storage.sidecar_inline`` enrichment — not as a general text
+    reader. Returns ``None`` for symlinks (annex pointers in this
+    tree), oversized files, NUL-byte content, or anything outside the
+    allowlist of small text sidecars. Empty files return ``""``.
+
+    Files that don't decode as UTF-8 are intentionally normalized: we
+    try ``latin-1`` then ``windows-1252`` and log a warning. BIDS spec
+    mandates UTF-8 for sidecars, so non-UTF-8 inputs are pre-existing
+    data quality issues that we silently fix on the way into Mongo.
+
+    Note: callers in the digest pipeline are expected to filter out
+    annex-managed files (via ``get_annex_file_key``) before invoking
+    this; we don't re-check here. The basename allowlist below mirrors
+    the apex-file enumeration ``NEMAR_ROOT_METADATA_FILES`` in
+    ``eegdash/schemas.py`` — keep them aligned when adding entries.
+    See also ``BIDS_ROOT_FILES``/``BIDS_REQUIRED_FILES`` in this module
+    and ``_bids.py`` for the case-folded matching used at fetch time.
+    """
+    if not path.is_file() or path.is_symlink():
+        return None
+    try:
+        size = path.stat().st_size
+    except OSError:
+        return None
+    if size > _INLINE_SIDECAR_MAX_BYTES:
+        return None
+
+    if (
+        path.suffix.lower() not in _INLINE_SIDECAR_SUFFIXES
+        and path.name not in _INLINE_SIDECAR_BASENAMES
+    ):
+        return None
+
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    if b"\x00" in data:
+        return None
+    if not data:
+        return ""
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError:
+        for enc in ("latin-1", "windows-1252"):
+            try:
+                decoded = data.decode(enc)
+            except UnicodeDecodeError:
+                continue
+            logger.warning(
+                "Inlining %s via %s fallback (file is not valid UTF-8); "
+                "BIDS spec mandates UTF-8 — consider fixing upstream.",
+                path,
+                enc,
+            )
+            return decoded
+        return None
 
 
 def get_annex_file_size(path: Path) -> int:

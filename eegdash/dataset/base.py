@@ -610,8 +610,14 @@ class EEGDashRaw(RawDataset):
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).
     _NEMAR_ROOT_METADATA_FILES = (
-        "dataset_description.json", "participants.tsv", "participants.json",
-        "README", "README.md", "CHANGES", "LICENSE", ".bidsignore",
+        "dataset_description.json",
+        "participants.tsv",
+        "participants.json",
+        "README",
+        "README.md",
+        "CHANGES",
+        "LICENSE",
+        ".bidsignore",
     )
 
     def _fetch_nemar_root_metadata(self) -> None:
@@ -628,8 +634,11 @@ class EEGDashRaw(RawDataset):
                 continue
             try:
                 _resolve_one_nemar_entry(
-                    dataset_id=dataset_id, relpath=relname, base=base,
-                    dest=dest, stored_key=annex_keys.get(relname),
+                    dataset_id=dataset_id,
+                    relpath=relname,
+                    base=base,
+                    dest=dest,
+                    stored_key=annex_keys.get(relname),
                     is_required=False,
                 )
             except urllib.error.URLError as e:
@@ -637,7 +646,9 @@ class EEGDashRaw(RawDataset):
                 if not (isinstance(e, urllib.error.HTTPError) and e.code == 404):
                     logger.warning(
                         "Could not fetch NEMAR root metadata %s for %s: %s",
-                        relname, dataset_id, e,
+                        relname,
+                        dataset_id,
+                        e,
                     )
 
     def _download_companion_files(self, filesystem) -> None:

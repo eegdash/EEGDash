@@ -2,7 +2,7 @@
 
 # Computation times
 
-**02:04.562** total execution time for 4 files **from generated/auto_examples/core**:
+**01:47.013** total execution time for 4 files **from generated/auto_examples/core**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,7 +19,7 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                                       | Time      |   Mem (MB) |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Minimal Tutorial](tutorial_minimal.md#sphx-glr-generated-auto-examples-core-tutorial-minimal-py) (`tutorial_minimal.py`)                                                                                     | 01:55.530 |          0 |
-| [Eyes Open vs. Closed Classification](tutorial_eoec.md#sphx-glr-generated-auto-examples-core-tutorial-eoec-py) (`tutorial_eoec.py`)                                                                           | 00:06.088 |          0 |
-| [EEGDash Feature Extractor](tutorial_feature_extractor_open_close_eye.md#sphx-glr-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py) (`tutorial_feature_extractor_open_close_eye.py`) | 00:02.944 |          0 |
+| [Minimal Tutorial](tutorial_minimal.md#sphx-glr-generated-auto-examples-core-tutorial-minimal-py) (`tutorial_minimal.py`)                                                                                     | 01:38.507 |          0 |
+| [Eyes Open vs. Closed Classification](tutorial_eoec.md#sphx-glr-generated-auto-examples-core-tutorial-eoec-py) (`tutorial_eoec.py`)                                                                           | 00:05.789 |          0 |
+| [EEGDash Feature Extractor](tutorial_feature_extractor_open_close_eye.md#sphx-glr-generated-auto-examples-core-tutorial-feature-extractor-open-close-eye-py) (`tutorial_feature_extractor_open_close_eye.py`) | 00:02.717 |          0 |
 | [EEG P3 Transfer Learning with AS-MMD](p300_transfer_learning.md#sphx-glr-generated-auto-examples-core-p300-transfer-learning-py) (`p300_transfer_learning.py`)                                               | 00:00.000 |          0 |

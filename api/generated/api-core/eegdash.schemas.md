@@ -166,7 +166,7 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 #### entities *: EntitiesModel | dict[str, Any] | None*
 
-### *class* eegdash.schemas.StorageModel(\*, backend: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], base: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], raw_key: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], dep_keys: list[str] = <factory>, \*\*extra_data: ~typing.Any)
+### *class* eegdash.schemas.StorageModel(\*, backend: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], base: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], raw_key: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], dep_keys: list[str] = <factory>, annex_keys: dict[str, str] | None = None, sidecar_inline: dict[str, str] | None = None, \*\*extra_data: ~typing.Any)
 
 Bases: `BaseModel`
 
@@ -196,6 +196,10 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 #### raw_key *: str*
 
 #### dep_keys *: list[str]*
+
+#### annex_keys *: dict[str, str] | None*
+
+#### sidecar_inline *: dict[str, str] | None*
 
 ### *class* eegdash.schemas.EntitiesModel(, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, \*\*extra_data: Any)
 
@@ -799,6 +803,26 @@ Paths relative to base for sidecar files (e.g., .json, .vhdr).
 * **Type:**
   list[str]
 
+#### annex_keys
+
+Sparse map `relpath -> SHA-key` populated at digest time for
+NEMAR records so the runtime can build the SHA-addressed S3 URI
+directly without a GitHub-pointer round-trip. Mutually exclusive
+with `sidecar_inline` for any given relpath.
+
+* **Type:**
+  dict[str, str], optional
+
+#### sidecar_inline
+
+Sparse map `relpath -> UTF-8 text` populated at digest time
+for small git-tracked NEMAR sidecars (TSV/JSON/README) so the
+runtime can write them directly to disk without a GitHub fetch.
+Mutually exclusive with `annex_keys` for any given relpath.
+
+* **Type:**
+  dict[str, str], optional
+
 <!-- !! processed by numpydoc !! -->
 
 #### backend *: Literal['s3', 'https', 'local', 'nemar']*
@@ -808,6 +832,10 @@ Paths relative to base for sidecar files (e.g., .json, .vhdr).
 #### raw_key *: str*
 
 #### dep_keys *: list[str]*
+
+#### annex_keys *: NotRequired[dict[str, str]]*
+
+#### sidecar_inline *: NotRequired[dict[str, str]]*
 
 ### *class* eegdash.schemas.Entities
 
@@ -1145,7 +1173,7 @@ external links.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.schemas.create_record(, dataset: str, storage_base: str, bids_relpath: str, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, dep_keys: list[str] | None = None, datatype: str = 'eeg', suffix: str = 'eeg', storage_backend: Literal['s3', 'https', 'local', 'nemar'] = 's3', recording_modality: list[str] | None = None, ch_names: list[str] | None = None, sampling_frequency: float | None = None, nchans: int | None = None, ntimes: int | None = None, digested_at: str | None = None, annex_keys: dict[str, str] | None = None) → Record
+### eegdash.schemas.create_record(, dataset: str, storage_base: str, bids_relpath: str, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, dep_keys: list[str] | None = None, datatype: str = 'eeg', suffix: str = 'eeg', storage_backend: Literal['s3', 'https', 'local', 'nemar'] = 's3', recording_modality: list[str] | None = None, ch_names: list[str] | None = None, sampling_frequency: float | None = None, nchans: int | None = None, ntimes: int | None = None, digested_at: str | None = None, annex_keys: dict[str, str] | None = None, sidecar_inline: dict[str, str] | None = None) → Record
 
 Create an EEGDash record.
 

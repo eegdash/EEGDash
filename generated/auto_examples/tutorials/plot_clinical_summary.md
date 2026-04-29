@@ -225,6 +225,6 @@ else:
     print("No data to plot.")
 ```
 
-**Total running time of the script:** (0 minutes 1.316 seconds)
+**Total running time of the script:** (0 minutes 1.949 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-plot-clinical-summary-py"></a>

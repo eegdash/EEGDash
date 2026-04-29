@@ -4,9 +4,9 @@
 
 | Tutorial | Status | Notes |
 |---|---|---|
-| T1 — Basic Pipeline | **Ready to draft** | Datasets confirmed |
-| T2 — Custom Features | **Ready to draft** | No blockers |
-| T3 — Avalanche Toolbox | **Structure only** (no dataset yet) | Dataset TBD; decorated file is a draft |
+| T1 — Basic Pipeline | **Draft complete** | R1 corrections applied (2026-04-29) |
+| T2 — Custom Features | **Draft complete** | R1 corrections applied (2026-04-29) |
+| T3 — Avalanche Toolbox | **Draft complete** | R1 corrections applied (2026-04-29); dataset TBD |
 | T4 — Non-BIDS Data | **Structure only** (no dataset yet) | Dataset TBD |
 
 ---
@@ -83,9 +83,18 @@ def my_preprocessor(x, /):
 
 **Datasets:** `ds005505` (release 1) + `ds005506` (release 2), resting state only.
 
+**R1 corrections applied (2026-04-29):**
+- Removed all `[?]_#` review markers (notes 1–3 resolved)
+- Added eyes-open/eyes-closed note to data loading section
+- Justified 50% windowing overlap for feature-based ML
+- Added `spectral_entropy` and `spectral_slope` to extractor; updated markdown and inspect cell
+
 **Remaining open:**
 - Train/test split strategy (random subject split vs. age-stratified)
 - Whether SHAP extension is a runnable cell or a stub
+- "More complicated features tree with `pick_channels`" — needs team input on exact intent
+- Dataset size (~280 subjects) — team decision
+- ICA pipeline — consult Tom and Oren
 
 ---
 
@@ -111,7 +120,16 @@ def my_preprocessor(x, /):
 | `my_spectral_preprocessor` | preprocessor | raw signal | thin welch wrapper |
 | `my_spectral_mean_frequency` | univariate | `my_spectral_preprocessor` | new feature |
 
-**Pending:**
+**R1 corrections applied (2026-04-29):**
+- Rewrote intro: fixed "seven features" → "six features + one preprocessor"; added explicit learning goals
+- Rewrote decorator system section: converted to a table, added mandatory-order callout, added axis=-1 diagram
+- Changed `my_zero_crossings` implementation to product-sign approach (pedagogically distinct from bank)
+- Changed `my_line_length` to two-step explicit form with geometric explanation
+- Emphasised `axis=-1` and decorator order throughout sections 1 and 2
+
+**Remaining open:**
+- Note [?]_5 ("rephrase the sentence") — marker absent from notebook; sentence not identified. Team needs to locate and mark the target sentence.
+- "Tutorials from different types of variation" — currently only univariate features; consider adding one bivariate example in a future pass.
 - Confirm whether to show custom `BasePreprocessorOutputType` subclass (advanced) or reuse `SignalOutputType`
 
 ---
@@ -134,8 +152,27 @@ def my_preprocessor(x, /):
 - `@feat.FeaturePredecessor(...)` → `@feature_predecessor(avalanche_preprocessor)`
 - Strip all `save_dir` / `save_prefix` parameters — saving is out of scope for the tutorial
 
-**Status:** Build full notebook structure and decorated code now; leave dataset-dependent cells (sections 2 and 8)
-as clearly marked stubs. Dataset TBD.
+**R1 corrections applied (2026-04-29):**
+- Note 4: Removed "No caching" row from The Scaling Problem table; updated "solves all four" → "all three"
+- Note 6: Shape fix section updated to use `axis=-1`/`axis=-2` with real avalanche code snippet and rule-of-thumb explanation
+- Note 7: Removed OLD API code block from section 5 decorator cheat-sheet
+- Note 8: `@metadata_preprocessor` description now distinguishes reading (no decorator needed) from writing (decorator required)
+- Note 9: Changed `""` intermediate keys to `0`; updated diagram and extractor code; explained non-string keys suppress name prefixing
+- Note 10: Added `partial()` explanation block in extractor cell
+- Note 12: DCC explanation updated — "each node has exactly one predecessor; feature nodes cannot take other feature nodes as input"
+- Note 13: DCC computation changed from a loop to a single `pd.concat` + vectorised column operation
+- Code: Removed `t_max_method="lab"` option from `tau_exponent` (simplification as noted)
+
+**Remaining open (deferred to team):**
+- Note 1: Section 0 intro — Gal will rewrite
+- Note 2: Section 1 original code — "change to original or remove" — decision needed
+- Note 3: Part 2 needs real dataset (MEG?)
+- Note 5: Function/feature name changes — team to confirm current vs. desired names
+- Note 11: "Change FeatureExtractor order of preprocessors and dict" — unclear intent
+- Code: `StandardizedSignalType` / split standardization — not in current code; source unclear
+- Code: `_fit_power_law` simplification — no simpler replacement identified yet
+- Code: `starts`/`ends` list vs array representation — decision needed
+- Code: `gamma_exponent` base-e / linear fit — marked as "consider"; deferred
 
 ---
 

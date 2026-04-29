@@ -272,7 +272,7 @@ def test_download_file_incomplete(tmp_path):
     def mock_get(rpath, lpath, **kwargs):
         Path(lpath).write_text("short")  # Write less than expected
 
-    mock_fs.get = mock_get
+    mock_fs.get_file = mock_get
 
     with pytest.raises(OSError, match="Incomplete download"):
         download_s3_file("s3://bucket/key", local_path, filesystem=mock_fs)
@@ -366,7 +366,7 @@ def test_downloader_download_s3_file_exists_match(tmp_path):
 
     res = downloader.download_s3_file("s3://b/test.txt", f, filesystem=mock_fs)
     assert res == f
-    mock_fs.get.assert_not_called()
+    mock_fs.get_file.assert_not_called()
 
 
 def test_downloader_download_s3_file_incomplete(tmp_path):
@@ -383,11 +383,11 @@ def test_downloader_download_s3_file_incomplete(tmp_path):
     mock_fs = MagicMock()
     mock_fs.info.return_value = {"size": 100}
 
-    # Mock get to recreate file but with wrong size
+    # Mock get_file to recreate file but with wrong size
     def mock_get(s3, local, **kwargs):
         Path(local).write_text("b" * 50)  # only 50 bytes, expected 100
 
-    mock_fs.get.side_effect = mock_get
+    mock_fs.get_file.side_effect = mock_get
 
     with pytest.raises(OSError, match="Incomplete download"):
         downloader.download_s3_file("s3://b/f", f, filesystem=mock_fs)
@@ -409,11 +409,11 @@ def test_downloader_batch_skip_existing(tmp_path):
     # f1 size 1 (matches "a"), f2 size 10 (needs DL)
     mock_fs.info.side_effect = [{"size": 1}, {"size": 10}]
 
-    # For f2, assume 'get' writes the file
+    # For f2, assume 'get_file' writes the file
     def mock_get(s3, local, **kwargs):
         Path(local).write_text("b" * 10)
 
-    mock_fs.get.side_effect = mock_get
+    mock_fs.get_file.side_effect = mock_get
 
     files = [("s3://b/f1", f1), ("s3://b/f2", f2)]
     downloaded = downloader.download_files(
@@ -456,8 +456,8 @@ def test_download_files_skip_existing_check_explicit(tmp_path):
         downloader.download_files(
             [("s3://b/f", dest)], filesystem=mock_fs, skip_existing=True
         )
-        # Should NOT call get
-        mock_fs.get.assert_not_called()
+        # Should NOT call get_file
+        mock_fs.get_file.assert_not_called()
 
 
 def test_rich_callback_methods():
@@ -495,7 +495,7 @@ def test_filesystem_get_with_rich_console(tmp_path):
             mock_rich.return_value.close = MagicMock()
             downloader._filesystem_get(mock_fs, "s3://b/f", dest, size=100)
             mock_rich.assert_called_once()
-            mock_fs.get.assert_called_once()
+            mock_fs.get_file.assert_called_once()
 
 
 def test_filesystem_get_rich_exception_fallback(tmp_path):

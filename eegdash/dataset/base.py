@@ -597,6 +597,8 @@ class EEGDashRaw(RawDataset):
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
             self._download_companion_files(filesystem)
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_root_metadata()
 
         # CTF MEG .ds directories require internal files (.meg4, .res4, etc.)
         if self.filecache and self.filecache.suffix == ".ds":
@@ -604,6 +606,50 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    # BIDS root files not enumerated in dep_keys but expected by mne-bids /
+    # braindecode. All are direct-git on NEMAR (excluded from annex).
+    _NEMAR_ROOT_METADATA_FILES = (
+        "dataset_description.json",
+        "participants.tsv",
+        "participants.json",
+        "README",
+        "README.md",
+        "CHANGES",
+        "LICENSE",
+        ".bidsignore",
+    )
+
+    def _fetch_nemar_root_metadata(self) -> None:
+        storage = self.record.get("storage") or {}
+        dataset_id = self.record.get("dataset", "")
+        base = (storage.get("base") or "").rstrip("/")
+        if not (dataset_id and base and self.bids_root):
+            return
+        self.bids_root.mkdir(parents=True, exist_ok=True)
+        annex_keys = storage.get("annex_keys") or {}
+        for relname in self._NEMAR_ROOT_METADATA_FILES:
+            dest = self.bids_root / relname
+            if dest.exists():
+                continue
+            try:
+                _resolve_one_nemar_entry(
+                    dataset_id=dataset_id,
+                    relpath=relname,
+                    base=base,
+                    dest=dest,
+                    stored_key=annex_keys.get(relname),
+                    is_required=False,
+                )
+            except urllib.error.URLError as e:
+                # 404 = file simply absent; everything else is worth a warning.
+                if not (isinstance(e, urllib.error.HTTPError) and e.code == 404):
+                    logger.warning(
+                        "Could not fetch NEMAR root metadata %s for %s: %s",
+                        relname,
+                        dataset_id,
+                        e,
+                    )
 
     def _download_companion_files(self, filesystem) -> None:
         """Download companion files for formats that require them.
@@ -613,26 +659,41 @@ class EEGDashRaw(RawDataset):
         ``.vmrk``).  When the ingestion pipeline does not list these in
         ``dep_keys``, they are never fetched.  This method inspects
         ``_COMPANION_FILES`` and attempts to download any missing
-        companions from S3.
+        companions, routed appropriately per backend.
         """
         suffix = self.filecache.suffix.lower()
         companions = _COMPANION_FILES.get(suffix)
         if not companions:
             return
 
-        # Use BIDS-named base URI when the raw URI has a git-annex key,
-        # so companion URIs also resolve to real S3 objects.
-        base_uri = self._raw_uri
-        if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
-            bids_filename = PurePosixPath(self.record["bids_relpath"]).name
-            base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
+        storage = self.record.get("storage") or {}
+        dep_keys = set(storage.get("dep_keys") or [])
+        raw_relpath = storage.get("raw_key") or self.record.get("bids_relpath") or ""
 
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
             if local_path.exists():
                 continue
 
-            # Derive S3 URI by replacing the primary file's extension
+            # Skip companions already declared at digest time — they were
+            # resolved through the backend's dep_keys path (success or
+            # legitimate 404). Re-fetching them here either duplicates work
+            # or re-issues the same failing request.
+            companion_relpath = (
+                raw_relpath.rsplit(".", 1)[0] + ext if raw_relpath else ""
+            )
+            if companion_relpath and companion_relpath in dep_keys:
+                continue
+
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_companion(local_path, companion_relpath, filesystem)
+                continue
+
+            # Other backends (OpenNeuro etc.) store under BIDS-named keys.
+            base_uri = self._raw_uri
+            if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
+                bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+                base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
             companion_uri = base_uri.rsplit(".", 1)[0] + ext
 
             try:
@@ -651,6 +712,48 @@ class EEGDashRaw(RawDataset):
                         base_uri,
                     )
                 continue
+
+    def _fetch_nemar_companion(
+        self, local_path: Path, companion_relpath: str, filesystem
+    ) -> None:
+        """Resolve a NEMAR companion file via the GitHub-annex pointer path.
+
+        The git-annex pointer at ``raw.githubusercontent.com/.../<relpath>``
+        is authoritative for whether the file exists and where its bytes
+        live: a directly-tracked file (typically <100 KB metadata) returns
+        its content inline, an annexed file returns a SHA-keyed pointer
+        that resolves to ``s3://nemar/<id>/objects/<KEY>``. A 404 from
+        GitHub is the genuine "missing" answer (S3 by itself can't tell
+        us, since anonymous ListBucket is denied).
+        """
+        if not companion_relpath:
+            return
+        storage = self.record.get("storage") or {}
+        dataset_id = self.record.get("dataset", "")
+        base = (storage.get("base") or "").rstrip("/")
+        if not (dataset_id and base):
+            return
+        try:
+            companion_uri = _resolve_one_nemar_entry(
+                dataset_id=dataset_id,
+                relpath=companion_relpath,
+                base=base,
+                dest=local_path,
+                stored_key=(storage.get("annex_keys") or {}).get(companion_relpath),
+                is_required=False,
+            )
+        except (urllib.error.HTTPError, urllib.error.URLError) as e:
+            logger.warning(
+                "Companion %s not available on NEMAR for %s: %s",
+                companion_relpath,
+                dataset_id,
+                e,
+            )
+            return
+        if companion_uri:
+            downloader.download_s3_file(
+                companion_uri, local_path, filesystem=filesystem
+            )
 
     def _download_embedded_fdt(self, filesystem) -> None:
         """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.
@@ -686,7 +789,9 @@ class EEGDashRaw(RawDataset):
         try:
             downloader.download_s3_file(fdt_uri, local_path, filesystem=filesystem)
             logger.info("Downloaded embedded .fdt companion: %s", datfile)
-        except FileNotFoundError:
+        except (FileNotFoundError, PermissionError):
+            # NEMAR returns 403 (PermissionError) for missing keys when
+            # anonymous ListBucket is denied — see _download_companion_files.
             logger.warning(
                 "Embedded .fdt %s not found on S3 for %s",
                 datfile,

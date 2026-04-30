@@ -182,7 +182,7 @@ were used in analysis (0.0 +/- 0.0 were removed from analysis).
 - Recordings: 686
 - Tasks: 1
 
-- Channels: 23 (306), 28 (259), 38 (39), 22 (36), 24 (30), 29 (14), 31, 25
+- Channels: 23 (306), 28 (259), 38 (39), 22 (36), 24 (30), 29 (14), 25, 31
 - Sampling rate (Hz): 256.0
 - Duration (hours): 982.9345334201388
 

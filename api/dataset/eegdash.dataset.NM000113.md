@@ -182,7 +182,7 @@ analysis).
 - Modality: —
 - Type: —
 
-- Size on disk: 585.2 MB
+- Size on disk: 585.4 MB
 - File count: 45
 - Format: BIDS
 
@@ -198,7 +198,7 @@ analysis).
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=3276f399d0bc5397&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=f42a0c07dc8cfc19&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

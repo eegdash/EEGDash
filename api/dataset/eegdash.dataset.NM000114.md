@@ -203,7 +203,7 @@ on average 21.24 (std = 0.97) recording channels per scan, out of which 21.24
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 19 sensors — 19 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=973deff327fccc75&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=14de5bc08b36b18e&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

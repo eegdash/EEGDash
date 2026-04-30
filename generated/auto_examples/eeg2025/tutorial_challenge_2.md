@@ -207,7 +207,7 @@ sub_rm = ["NDARWV769JM7"]
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[04/29/26 23:03:34] INFO     Auto-corrected misrouted             dataset.py:489
+[04/30/26 15:10:51] INFO     Auto-corrected misrouted             dataset.py:489
                              storage.base for dataset
                              EEG2025r5mini: None ->
                              s3://nemar/EEG2025r5mini
@@ -535,74 +535,74 @@ Forward/backward pass size (MB): 16.65
 Params size (MB): 0.22
 Estimated Total Size (MB): 16.97
 ================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.6155970692634583
-Epoch 0 - step 1, loss: 0.6753451824188232
-Epoch 0 - step 2, loss: 0.703825056552887
-Epoch 0 - step 3, loss: 0.6826386451721191
-Epoch 0 - step 4, loss: 0.6406289935112
-Epoch 0 - step 5, loss: 0.6462658643722534
-Epoch 0 - step 6, loss: 0.6683968305587769
-Epoch 0 - step 7, loss: 0.6363405585289001
-Epoch 0 - step 8, loss: 0.652084231376648
-Epoch 0 - step 9, loss: 0.6555909514427185
-Epoch 0 - step 10, loss: 0.6519713997840881
-Epoch 0 - step 11, loss: 0.6518717408180237
-Epoch 0 - step 12, loss: 0.6488514542579651
-Epoch 0 - step 13, loss: 0.643298864364624
-Epoch 0 - step 14, loss: 0.6437215805053711
-Epoch 0 - step 15, loss: 0.6533476114273071
-Epoch 0 - step 16, loss: 0.6143129467964172
-Epoch 0 - step 17, loss: 0.6236446499824524
-Epoch 0 - step 18, loss: 0.5621854066848755
-Epoch 0 - step 19, loss: 0.5978698134422302
-Epoch 0 - step 20, loss: 0.5646897554397583
-Epoch 0 - step 21, loss: 0.6797385215759277
-Epoch 0 - step 22, loss: 0.6334639191627502
-Epoch 0 - step 23, loss: 0.6807884573936462
-Epoch 0 - step 24, loss: 0.6435281038284302
-Epoch 0 - step 25, loss: 0.6151502132415771
-Epoch 0 - step 26, loss: 0.7782602310180664
-Epoch 0 - step 27, loss: 0.6150022149085999
-Epoch 0 - step 28, loss: 0.7531132102012634
-Epoch 0 - step 29, loss: 0.7180895805358887
-Epoch 0 - step 30, loss: 0.607756495475769
-Epoch 0 - step 31, loss: 0.5816150903701782
-Epoch 0 - step 32, loss: 0.6299366354942322
-Epoch 0 - step 33, loss: 0.6041427254676819
-Epoch 0 - step 34, loss: 0.6538376212120056
-Epoch 0 - step 35, loss: 0.6770544052124023
-Epoch 0 - step 36, loss: 0.6584827899932861
-Epoch 0 - step 37, loss: 0.6613398194313049
-Epoch 0 - step 38, loss: 0.612102210521698
-Epoch 0 - step 39, loss: 0.5351433753967285
-Epoch 0 - step 40, loss: 0.626910924911499
-Epoch 0 - step 41, loss: 0.7229291796684265
-Epoch 0 - step 42, loss: 0.6473212242126465
-Epoch 0 - step 43, loss: 0.5326437950134277
-Epoch 0 - step 44, loss: 0.677246630191803
-Epoch 0 - step 45, loss: 0.6433389186859131
-Epoch 0 - step 46, loss: 0.6821590662002563
-Epoch 0 - step 47, loss: 0.6298712491989136
-Epoch 0 - step 48, loss: 0.653029203414917
-Epoch 0 - step 49, loss: 0.6343061923980713
-Epoch 0 - step 50, loss: 0.6602648496627808
-Epoch 0 - step 51, loss: 0.5700211524963379
-Epoch 0 - step 52, loss: 0.6559465527534485
-Epoch 0 - step 53, loss: 0.5929703712463379
-Epoch 0 - step 54, loss: 0.6306698322296143
-Epoch 0 - step 55, loss: 0.6422415375709534
-Epoch 0 - step 56, loss: 0.676188051700592
-Epoch 0 - step 57, loss: 0.7293766140937805
-Epoch 0 - step 58, loss: 0.6792573928833008
-Epoch 0 - step 59, loss: 0.6321446895599365
-Epoch 0 - step 60, loss: 0.6365858316421509
-Epoch 0 - step 61, loss: 0.5872780680656433
-Epoch 0 - step 62, loss: 0.6982258558273315
-Epoch 0 - step 63, loss: 0.6877052187919617
-Epoch 0 - step 64, loss: 0.6191876530647278
+Epoch 0 - step 0, loss: 0.611984133720398
+Epoch 0 - step 1, loss: 0.6657369136810303
+Epoch 0 - step 2, loss: 0.6916190981864929
+Epoch 0 - step 3, loss: 0.6786438226699829
+Epoch 0 - step 4, loss: 0.6291381120681763
+Epoch 0 - step 5, loss: 0.6615518927574158
+Epoch 0 - step 6, loss: 0.6777956485748291
+Epoch 0 - step 7, loss: 0.6602196097373962
+Epoch 0 - step 8, loss: 0.6640776991844177
+Epoch 0 - step 9, loss: 0.6719391942024231
+Epoch 0 - step 10, loss: 0.6742202043533325
+Epoch 0 - step 11, loss: 0.646258533000946
+Epoch 0 - step 12, loss: 0.6566349864006042
+Epoch 0 - step 13, loss: 0.6509981155395508
+Epoch 0 - step 14, loss: 0.6539784669876099
+Epoch 0 - step 15, loss: 0.6396991610527039
+Epoch 0 - step 16, loss: 0.6090474724769592
+Epoch 0 - step 17, loss: 0.6221663355827332
+Epoch 0 - step 18, loss: 0.5718128681182861
+Epoch 0 - step 19, loss: 0.612005352973938
+Epoch 0 - step 20, loss: 0.5693565607070923
+Epoch 0 - step 21, loss: 0.6696382164955139
+Epoch 0 - step 22, loss: 0.6349790692329407
+Epoch 0 - step 23, loss: 0.6885015964508057
+Epoch 0 - step 24, loss: 0.6461009979248047
+Epoch 0 - step 25, loss: 0.6254713535308838
+Epoch 0 - step 26, loss: 0.7858807444572449
+Epoch 0 - step 27, loss: 0.6263236403465271
+Epoch 0 - step 28, loss: 0.743126392364502
+Epoch 0 - step 29, loss: 0.7218499779701233
+Epoch 0 - step 30, loss: 0.6111187934875488
+Epoch 0 - step 31, loss: 0.5818692445755005
+Epoch 0 - step 32, loss: 0.6352681517601013
+Epoch 0 - step 33, loss: 0.6097952127456665
+Epoch 0 - step 34, loss: 0.6562556624412537
+Epoch 0 - step 35, loss: 0.6784461736679077
+Epoch 0 - step 36, loss: 0.6438025236129761
+Epoch 0 - step 37, loss: 0.6561667323112488
+Epoch 0 - step 38, loss: 0.6076349020004272
+Epoch 0 - step 39, loss: 0.5451250076293945
+Epoch 0 - step 40, loss: 0.6228519678115845
+Epoch 0 - step 41, loss: 0.7147925496101379
+Epoch 0 - step 42, loss: 0.6507596969604492
+Epoch 0 - step 43, loss: 0.539480984210968
+Epoch 0 - step 44, loss: 0.6785860061645508
+Epoch 0 - step 45, loss: 0.6530618071556091
+Epoch 0 - step 46, loss: 0.6873277425765991
+Epoch 0 - step 47, loss: 0.6310828328132629
+Epoch 0 - step 48, loss: 0.6616128087043762
+Epoch 0 - step 49, loss: 0.6378971934318542
+Epoch 0 - step 50, loss: 0.6752146482467651
+Epoch 0 - step 51, loss: 0.5814309120178223
+Epoch 0 - step 52, loss: 0.6543735265731812
+Epoch 0 - step 53, loss: 0.620032787322998
+Epoch 0 - step 54, loss: 0.6350317001342773
+Epoch 0 - step 55, loss: 0.6508941054344177
+Epoch 0 - step 56, loss: 0.6804993748664856
+Epoch 0 - step 57, loss: 0.7269083857536316
+Epoch 0 - step 58, loss: 0.6827145218849182
+Epoch 0 - step 59, loss: 0.641973614692688
+Epoch 0 - step 60, loss: 0.6320768594741821
+Epoch 0 - step 61, loss: 0.5698134899139404
+Epoch 0 - step 62, loss: 0.7033475637435913
+Epoch 0 - step 63, loss: 0.6967686414718628
+Epoch 0 - step 64, loss: 0.6308680772781372
 Model saved as 'weights_challenge_2.pt'
 ```
 
-**Total running time of the script:** (6 minutes 33.236 seconds)
+**Total running time of the script:** (6 minutes 29.357 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></a>

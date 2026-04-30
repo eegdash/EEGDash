@@ -43585,6 +43585,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000130](https://openneuro.org/datasets/nm000130)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000130](https://nemar.org/dataexplorer/detail?dataset_id=nm000130)
+DOI: [https://doi.org/10.82901/nemar.nm000130](https://doi.org/10.82901/nemar.nm000130)
 
 ### Examples
 
@@ -43655,6 +43656,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000131](https://openneuro.org/datasets/nm000131)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000131](https://nemar.org/dataexplorer/detail?dataset_id=nm000131)
+DOI: [https://doi.org/10.82901/nemar.nm000131](https://doi.org/10.82901/nemar.nm000131)
 
 ### Examples
 
@@ -44648,6 +44650,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000145](https://openneuro.org/datasets/nm000145)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000145](https://nemar.org/dataexplorer/detail?dataset_id=nm000145)
+DOI: [https://doi.org/10.82901/nemar.nm000145](https://doi.org/10.82901/nemar.nm000145)
 
 ### Examples
 
@@ -44718,6 +44721,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000146](https://openneuro.org/datasets/nm000146)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000146](https://nemar.org/dataexplorer/detail?dataset_id=nm000146)
+DOI: [https://doi.org/10.82901/nemar.nm000146](https://doi.org/10.82901/nemar.nm000146)
 
 ### Examples
 
@@ -44743,12 +44747,12 @@ RomaniBF2025ERP
 * **Author (year):**
   `RomaniBF2025`
 * **Canonical:**
-  `Romani2025`
+  —
 
-Also importable as: `NM000147`, `RomaniBF2025`, `Romani2025`.
+Also importable as: `NM000147`, `RomaniBF2025`.
 
 Modality: `eeg`; Experiment type: `Learning`; Subject type: `Healthy`.
-Subjects: 22; recordings: 120; tasks: 1.
+Subjects: 44; recordings: 7782; tasks: 14.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -44788,7 +44792,6 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000147](https://openneuro.org/datasets/nm000147)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000147](https://nemar.org/dataexplorer/detail?dataset_id=nm000147)
-DOI: [https://doi.org/10.48550/arXiv.2510.10169](https://doi.org/10.48550/arXiv.2510.10169)
 
 ### Examples
 
@@ -44801,7 +44804,7 @@ DOI: [https://doi.org/10.48550/arXiv.2510.10169](https://doi.org/10.48550/arXiv.
 
 <!-- !! processed by numpydoc !! -->
 
-#### canonical_name *= ['Romani2025']*
+#### canonical_name *= []*
 
 ### *class* eegdash.dataset.dataset.NM000148(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
 
@@ -44859,6 +44862,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000148](https://openneuro.org/datasets/nm000148)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000148](https://nemar.org/dataexplorer/detail?dataset_id=nm000148)
+DOI: [https://doi.org/10.82901/nemar.nm000148](https://doi.org/10.82901/nemar.nm000148)
 
 ### Examples
 
@@ -44929,6 +44933,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000149](https://openneuro.org/datasets/nm000149)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000149](https://nemar.org/dataexplorer/detail?dataset_id=nm000149)
+DOI: [https://doi.org/10.82901/nemar.nm000149](https://doi.org/10.82901/nemar.nm000149)
 
 ### Examples
 
@@ -49731,8 +49736,8 @@ Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalo
 
 Also importable as: `NM000229`, `Gwilliams2023`.
 
-Modality: `meg`.
-Subjects: 27; recordings: 196; tasks: 4.
+Modality: `eeg`.
+Subjects: 29; recordings: 1360; tasks: 79.
 
 * **Parameters:**
   * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
@@ -49772,7 +49777,6 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000229](https://openneuro.org/datasets/nm000229)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000229](https://nemar.org/dataexplorer/detail?dataset_id=nm000229)
-DOI: [https://doi.org/10.1038/s41597-023-02752-5](https://doi.org/10.1038/s41597-023-02752-5)
 
 ### Examples
 
@@ -50334,7 +50338,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000238](https://openneuro.org/datasets/nm000238)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000238](https://nemar.org/dataexplorer/detail?dataset_id=nm000238)
-DOI: [https://doi.org/10.48804/K3VSND](https://doi.org/10.48804/K3VSND)
+DOI: [https://doi.org/10.82901/nemar.nm000238](https://doi.org/10.82901/nemar.nm000238)
 
 ### Examples
 
@@ -53884,7 +53888,3 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 <!-- !! processed by numpydoc !! -->
 
 #### canonical_name *= []*
-
-### eegdash.dataset.dataset.Romani2025
-
-alias of [`NM000147`](eegdash.dataset.NM000147.md#eegdash.dataset.NM000147)

@@ -622,6 +622,35 @@ class EEGDashRaw(RawDataset):
                         record=self.record,
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
+            except PermissionError as exc:
+                # NEMAR returns HTTP 403 (rendered as PermissionError by
+                # s3fs) for two reasons that look identical from the
+                # outside: ListBucket is denied for everyone, and
+                # GetObject is denied when the blob simply isn't on the
+                # public bucket yet. The first is fine here (we don't
+                # list — we GET a known key). The second is what users
+                # hit on private-repo NEMAR datasets where the binary
+                # hasn't been published on S3 yet (only the git-annex
+                # pointer lives on GitHub). Surface it as a clear
+                # DataIntegrityError instead of a raw AccessDenied so
+                # the cause is unambiguous.
+                if self._storage_backend == "nemar":
+                    raise DataIntegrityError(
+                        message=(
+                            "NEMAR has not yet published this recording's binary "
+                            "to public S3 (only metadata + sidecars are available). "
+                            "This is common for datasets whose GitHub repository is "
+                            "still private; the data will become accessible once "
+                            "NEMAR mirrors the blob to "
+                            f"{self._raw_uri}."
+                        ),
+                        record=self.record,
+                        issues=[
+                            f"S3 GetObject denied: {self._raw_uri}",
+                            f"Underlying error: {exc}",
+                        ],
+                    ) from exc
+                raise
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.

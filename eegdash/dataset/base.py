@@ -99,6 +99,42 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
 
+# `mne.create_info` rejects unknown channel types (e.g. ``ieeg``, ``fnirs``,
+# ``meg``); BIDS ``datatype`` doesn't always overlap. The lazy
+# :meth:`EEGDashRaw._make_mne_info` falls back to ``misc`` for the rest.
+_MNE_CHANNEL_TYPES = frozenset(
+    {
+        "eeg",
+        "seeg",
+        "dbs",
+        "ecog",
+        "eog",
+        "emg",
+        "ecg",
+        "resp",
+        "bio",
+        "misc",
+        "stim",
+        "exci",
+        "syst",
+        "ias",
+        "gof",
+        "dipole",
+        "chpi",
+        "fnirs_cw_amplitude",
+        "fnirs_fd_ac_amplitude",
+        "fnirs_fd_phase",
+        "fnirs_od",
+        "hbo",
+        "hbr",
+        "csd",
+        "temperature",
+        "gsr",
+        "eyegaze",
+        "pupil",
+    }
+)
+
 
 def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
     """Clamp any negative annotation durations to zero on a loaded Raw.
@@ -623,17 +659,11 @@ class EEGDashRaw(RawDataset):
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
             except PermissionError as exc:
-                # NEMAR returns HTTP 403 (rendered as PermissionError by
-                # s3fs) for two reasons that look identical from the
-                # outside: ListBucket is denied for everyone, and
-                # GetObject is denied when the blob simply isn't on the
-                # public bucket yet. The first is fine here (we don't
-                # list — we GET a known key). The second is what users
-                # hit on private-repo NEMAR datasets where the binary
-                # hasn't been published on S3 yet (only the git-annex
-                # pointer lives on GitHub). Surface it as a clear
-                # DataIntegrityError instead of a raw AccessDenied so
-                # the cause is unambiguous.
+                # NEMAR S3 returns 403 on GetObject when the blob isn't on
+                # the public bucket yet — common for private-repo datasets
+                # whose git-annex pointer lives on GitHub but whose binary
+                # NEMAR hasn't mirrored. Re-raise with a message that names
+                # the cause instead of leaking the raw AccessDenied.
                 if self._storage_backend == "nemar":
                     raise DataIntegrityError(
                         message=(
@@ -641,8 +671,7 @@ class EEGDashRaw(RawDataset):
                             "to public S3 (only metadata + sidecars are available). "
                             "This is common for datasets whose GitHub repository is "
                             "still private; the data will become accessible once "
-                            "NEMAR mirrors the blob to "
-                            f"{self._raw_uri}."
+                            f"NEMAR mirrors the blob to {self._raw_uri}."
                         ),
                         record=self.record,
                         issues=[
@@ -1923,23 +1952,24 @@ class EEGDashRaw(RawDataset):
 
         Once :attr:`raw` has been materialized this returns ``raw.info``.
         Before that, we build a minimal :class:`mne.Info` from the record
-        metadata so that :meth:`braindecode.datasets.RawDataset._build_repr`
-        and any other consumer of ``info`` can run without forcing a download.
+        metadata so callers (including :meth:`braindecode.datasets.RawDataset._build_repr`)
+        don't have to force a download.
         """
         if self._raw is not None:
             return self._raw.info
         import mne
 
-        record = self.record
-        ch_names = list(record.get("channel_names") or [])
-        if not ch_names:
-            nchans = int(record.get("nchans") or 0)
-            ch_names = [f"ch{i}" for i in range(nchans)] or ["ch0"]
-        sfreq = float(record.get("sampling_frequency") or 1.0)
-        modality = (record.get("recording_modality") or ["misc"])[0]
-        ch_type = modality.lower() if modality else "misc"
-        ch_types = [ch_type] * len(ch_names)
-        return mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+        ch_names = list(self.record.get("channel_names") or []) or [
+            f"ch{i}" for i in range(int(self.record.get("nchans") or 1))
+        ]
+        ch_type = (self.record.get("datatype") or "misc").lower()
+        if ch_type not in _MNE_CHANNEL_TYPES:
+            ch_type = "misc"
+        return mne.create_info(
+            ch_names=ch_names,
+            sfreq=float(self.record.get("sampling_frequency") or 1.0),
+            ch_types=[ch_type] * len(ch_names),
+        )
 
     def _build_repr(self):
         """Render a :class:`braindecode._ReprBuilder` from record metadata.
@@ -1956,11 +1986,9 @@ class EEGDashRaw(RawDataset):
         record = self.record
         n_ch = int(record.get("nchans") or len(record.get("channel_names") or []) or 0)
         sfreq = float(record.get("sampling_frequency") or 0.0)
-        type_str = (record.get("recording_modality") or ["?"])[0].upper()
+        type_str = (record.get("datatype") or "?").upper()
         n_times = int(record.get("ntimes") or 0)
         duration = float(record.get("duration") or (n_times / sfreq if sfreq else 0.0))
-        if n_times == 0 and duration and sfreq:
-            n_times = int(duration * sfreq)
         b = _ReprBuilder(type(self).__name__)
         b.add_header(f"{n_ch} ch ({type_str})", "Channels", f"{n_ch} ({type_str})")
         b.add_header(f"{sfreq:.1f} Hz", "Sfreq", f"{sfreq:.1f} Hz")

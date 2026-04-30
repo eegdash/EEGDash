@@ -1889,6 +1889,63 @@ class EEGDashRaw(RawDataset):
             # Clean up lock file
             lock_path.unlink(missing_ok=True)
 
+    def _make_mne_info(self):
+        """Return :class:`mne.Info` for the recording without loading the data.
+
+        Once :attr:`raw` has been materialized this returns ``raw.info``.
+        Before that, we build a minimal :class:`mne.Info` from the record
+        metadata so that :meth:`braindecode.datasets.RawDataset._build_repr`
+        and any other consumer of ``info`` can run without forcing a download.
+        """
+        if self._raw is not None:
+            return self._raw.info
+        import mne
+
+        record = self.record
+        ch_names = list(record.get("channel_names") or [])
+        if not ch_names:
+            nchans = int(record.get("nchans") or 0)
+            ch_names = [f"ch{i}" for i in range(nchans)] or ["ch0"]
+        sfreq = float(record.get("sampling_frequency") or 1.0)
+        modality = (record.get("recording_modality") or ["misc"])[0]
+        ch_type = modality.lower() if modality else "misc"
+        ch_types = [ch_type] * len(ch_names)
+        return mne.create_info(ch_names=ch_names, sfreq=sfreq, ch_types=ch_types)
+
+    def _build_repr(self):
+        """Render a :class:`braindecode._ReprBuilder` from record metadata.
+
+        The parent ``RawDataset._build_repr`` reads ``self._zarr_data.shape[1]``
+        when ``self._raw`` is ``None``; that path is for zarr-backed datasets
+        only. EEGDashRaw is lazy on a remote object instead, so we read the
+        same headers (channels, sfreq, samples) directly from the record.
+        """
+        if self._raw is not None:
+            return super()._build_repr()
+        from braindecode.datasets.base import _ReprBuilder
+
+        record = self.record
+        n_ch = int(record.get("nchans") or len(record.get("channel_names") or []) or 0)
+        sfreq = float(record.get("sampling_frequency") or 0.0)
+        type_str = (record.get("recording_modality") or ["?"])[0].upper()
+        n_times = int(record.get("ntimes") or 0)
+        duration = float(record.get("duration") or (n_times / sfreq if sfreq else 0.0))
+        if n_times == 0 and duration and sfreq:
+            n_times = int(duration * sfreq)
+        b = _ReprBuilder(type(self).__name__)
+        b.add_header(f"{n_ch} ch ({type_str})", "Channels", f"{n_ch} ({type_str})")
+        b.add_header(f"{sfreq:.1f} Hz", "Sfreq", f"{sfreq:.1f} Hz")
+        b.add_header(
+            f"{n_times} samples ({duration:.1f} s)",
+            "Samples",
+            f"{n_times} ({duration:.1f} s)",
+        )
+        if self.description is not None:
+            desc_items = ", ".join(f"{k}={v}" for k, v in self.description.items())
+            b.add_row("description", desc_items)
+        b.add_footnote("Data not loaded yet — info derived from record metadata.")
+        return b
+
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""
         if self._skipped:

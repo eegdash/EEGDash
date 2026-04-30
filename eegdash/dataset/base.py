@@ -99,6 +99,42 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
 
+# `mne.create_info` rejects unknown channel types (e.g. ``ieeg``, ``fnirs``,
+# ``meg``); BIDS ``datatype`` doesn't always overlap. The lazy
+# :meth:`EEGDashRaw._make_mne_info` falls back to ``misc`` for the rest.
+_MNE_CHANNEL_TYPES = frozenset(
+    {
+        "eeg",
+        "seeg",
+        "dbs",
+        "ecog",
+        "eog",
+        "emg",
+        "ecg",
+        "resp",
+        "bio",
+        "misc",
+        "stim",
+        "exci",
+        "syst",
+        "ias",
+        "gof",
+        "dipole",
+        "chpi",
+        "fnirs_cw_amplitude",
+        "fnirs_fd_ac_amplitude",
+        "fnirs_fd_phase",
+        "fnirs_od",
+        "hbo",
+        "hbr",
+        "csd",
+        "temperature",
+        "gsr",
+        "eyegaze",
+        "pupil",
+    }
+)
+
 
 def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
     """Clamp any negative annotation durations to zero on a loaded Raw.
@@ -622,6 +658,28 @@ class EEGDashRaw(RawDataset):
                         record=self.record,
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
+            except PermissionError as exc:
+                # NEMAR S3 returns 403 on GetObject when the blob isn't on
+                # the public bucket yet — common for private-repo datasets
+                # whose git-annex pointer lives on GitHub but whose binary
+                # NEMAR hasn't mirrored. Re-raise with a message that names
+                # the cause instead of leaking the raw AccessDenied.
+                if self._storage_backend == "nemar":
+                    raise DataIntegrityError(
+                        message=(
+                            "NEMAR has not yet published this recording's binary "
+                            "to public S3 (only metadata + sidecars are available). "
+                            "This is common for datasets whose GitHub repository is "
+                            "still private; the data will become accessible once "
+                            f"NEMAR mirrors the blob to {self._raw_uri}."
+                        ),
+                        record=self.record,
+                        issues=[
+                            f"S3 GetObject denied: {self._raw_uri}",
+                            f"Underlying error: {exc}",
+                        ],
+                    ) from exc
+                raise
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -1888,6 +1946,62 @@ class EEGDashRaw(RawDataset):
                     src.rename(dst)
             # Clean up lock file
             lock_path.unlink(missing_ok=True)
+
+    def _make_mne_info(self):
+        """Return :class:`mne.Info` for the recording without loading the data.
+
+        Once :attr:`raw` has been materialized this returns ``raw.info``.
+        Before that, we build a minimal :class:`mne.Info` from the record
+        metadata so callers (including :meth:`braindecode.datasets.RawDataset._build_repr`)
+        don't have to force a download.
+        """
+        if self._raw is not None:
+            return self._raw.info
+        import mne
+
+        ch_names = list(self.record.get("channel_names") or []) or [
+            f"ch{i}" for i in range(int(self.record.get("nchans") or 1))
+        ]
+        ch_type = (self.record.get("datatype") or "misc").lower()
+        if ch_type not in _MNE_CHANNEL_TYPES:
+            ch_type = "misc"
+        return mne.create_info(
+            ch_names=ch_names,
+            sfreq=float(self.record.get("sampling_frequency") or 1.0),
+            ch_types=[ch_type] * len(ch_names),
+        )
+
+    def _build_repr(self):
+        """Render a :class:`braindecode._ReprBuilder` from record metadata.
+
+        The parent ``RawDataset._build_repr`` reads ``self._zarr_data.shape[1]``
+        when ``self._raw`` is ``None``; that path is for zarr-backed datasets
+        only. EEGDashRaw is lazy on a remote object instead, so we read the
+        same headers (channels, sfreq, samples) directly from the record.
+        """
+        if self._raw is not None:
+            return super()._build_repr()
+        from braindecode.datasets.base import _ReprBuilder
+
+        record = self.record
+        n_ch = int(record.get("nchans") or len(record.get("channel_names") or []) or 0)
+        sfreq = float(record.get("sampling_frequency") or 0.0)
+        type_str = (record.get("datatype") or "?").upper()
+        n_times = int(record.get("ntimes") or 0)
+        duration = float(record.get("duration") or (n_times / sfreq if sfreq else 0.0))
+        b = _ReprBuilder(type(self).__name__)
+        b.add_header(f"{n_ch} ch ({type_str})", "Channels", f"{n_ch} ({type_str})")
+        b.add_header(f"{sfreq:.1f} Hz", "Sfreq", f"{sfreq:.1f} Hz")
+        b.add_header(
+            f"{n_times} samples ({duration:.1f} s)",
+            "Samples",
+            f"{n_times} ({duration:.1f} s)",
+        )
+        if self.description is not None:
+            desc_items = ", ".join(f"{k}={v}" for k, v in self.description.items())
+            b.add_row("description", desc_items)
+        b.add_footnote("Data not loaded yet — info derived from record metadata.")
+        return b
 
     def __len__(self) -> int:
         """Return the number of samples in the dataset."""

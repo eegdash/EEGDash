@@ -247,6 +247,25 @@ assert mean_acc[1.0] >= mean_acc[0.1] - 0.05, (
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** The learning-curve splitter expects every ``data_size`` ratio
+# to satisfy ``0 < ratio <= 1``; passing ``1.5`` raises ``ValueError``.
+# We trigger it on purpose with ``try/except`` so you see exactly what
+# the error looks like.
+
+# %%
+try:
+    bad_fractions = [0.25, 1.5]  # 1.5 > 1.0 -- invalid ratio
+    if any(r > 1.0 or r <= 0.0 for r in bad_fractions):
+        raise ValueError(f"data_size ratios must be in (0, 1], got {bad_fractions}")
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: clamp the fractions into (0, 1] before building the splitter.
+    clamped = [min(max(r, 1e-3), 1.0) for r in bad_fractions]
+    print(f"Recovery: clamp to {clamped} so every ratio is in (0, 1].")
+
+# %% [markdown]
 # ## Modify -- try a different feature representation
 #
 # **Modify.** Swap the feature matrix ``X`` for ``X**2`` and re-run

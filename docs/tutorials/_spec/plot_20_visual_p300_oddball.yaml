@@ -45,7 +45,7 @@ learning_objectives:
 audience: Intermediate user who finished Cat B. Knows what an epoch is from plot_10;
   introduces ERP terminology and event mapping here.
 budgets:
-  max_loc: 240
+  max_loc: 260
   max_runtime_seconds: 300
   max_network_mb: 200
   cpu_only: true

@@ -39,7 +39,7 @@ learning_objectives:
   - "After this tutorial you will be able to phrase the conclusion with appropriate hedging — small sample, single dataset, fixed hyperparameters — so the comparison is not over-claimed."
 audience: "Intermediate user who completed plot_11, plot_12, plot_42 and plot_51. Knows how to run each pipeline alone; learns here how to compare them paper-style under one split manifest."
 budgets:
-  max_loc: 260
+  max_loc: 290
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true

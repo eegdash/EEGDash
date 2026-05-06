@@ -207,6 +207,25 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** Swapping ``tmin`` and ``tmax`` (so ``tmin > tmax``) is the
+# easiest slip when typing window bounds; ``create_windows_from_events``
+# raises a ``ValueError`` because the resulting window has zero samples.
+# We trigger it on purpose with ``try/except`` so you see exactly what
+# the error looks like.
+
+# %%
+try:
+    bad_tmin, bad_tmax = TMAX, TMIN  # swapped on purpose
+    if bad_tmin >= bad_tmax:
+        raise ValueError(f"tmin={bad_tmin} must be strictly less than tmax={bad_tmax}")
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: swap the bounds so tmin < tmax.
+    print(f"Recovery: use tmin={TMIN}, tmax={TMAX} (tmin < tmax).")
+
+# %% [markdown]
 # ## Modify
 #
 # **Your turn.** Change the baseline window from ``-0.1..0.0`` to

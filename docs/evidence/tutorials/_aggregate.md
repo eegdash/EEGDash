@@ -1,11 +1,12 @@
 # Tutorial audit aggregate
 
-Tutorials audited: **18**
+Tutorials audited: **23**
 
-Totals: **0 error(s)**, **0 warn(s)**, **90 info(s)** across 18 dossiers.
+Totals: **3 error(s)**, **11 warn(s)**, **115 info(s)** across 23 dossiers.
 
 | Tutorial | State | Difficulty | Errors | Warns | Infos |
 | --- | :---: | :---: | ---: | ---: | ---: |
+| how_to_parallelize_feature_extraction | proposed | 2 | 1 | 11 | 5 |
 | plot_00_first_search | proposed | 1 | 0 | 0 | 5 |
 | plot_01_first_recording | proposed | 1 | 0 | 0 | 5 |
 | plot_02_dataset_to_dataloader | proposed | 1 | 0 | 0 | 5 |
@@ -20,8 +21,12 @@ Totals: **0 error(s)**, **0 warn(s)**, **90 info(s)** across 18 dossiers.
 | plot_41_feature_trees | proposed | 2 | 0 | 0 | 5 |
 | plot_42_features_to_sklearn | proposed | 2 | 0 | 0 | 5 |
 | plot_50_within_subject_evaluation | proposed | 2 | 0 | 0 | 5 |
-| plot_51_cross_subject_evaluation | proposed | 1 | 0 | 0 | 5 |
-| plot_52_cross_session_evaluation | proposed | 2 | 0 | 0 | 5 |
+| plot_51_cross_subject_evaluation | proposed | 1 | 1 | 0 | 5 |
+| plot_52_cross_session_evaluation | proposed | 2 | 1 | 0 | 5 |
 | plot_53_learning_curves | proposed | 2 | 0 | 0 | 5 |
 | plot_54_compare_two_pipelines | proposed | 2 | 0 | 0 | 5 |
+| plot_70_challenge_dataset_basics | proposed | 2 | 0 | 0 | 5 |
+| plot_71_cross_task_transfer | proposed | 3 | 0 | 0 | 5 |
+| plot_72_subject_invariant_regression | proposed | 3 | 0 | 0 | 5 |
+| plot_73_finetune_pretrained_model | proposed | 3 | 0 | 0 | 5 |
 

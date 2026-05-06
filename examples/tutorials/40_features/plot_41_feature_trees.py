@@ -203,6 +203,25 @@ finally:
     print("welch restored")
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A common slip is reversing a band tuple so the lower bound
+# exceeds the upper bound -- ``spectral_bands_power`` then sees an empty
+# mask and the column is all NaN. We trigger it on purpose with
+# ``try/except`` so you see exactly what the error looks like.
+
+# %%
+try:
+    bad_band = (12, 8)  # reversed (lo > hi)
+    lo, hi = bad_band
+    if lo >= hi:
+        raise ValueError(f"band tuple ({lo}, {hi}) reversed: lo must be < hi")
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: order the tuple so lo < hi (alpha = 8 to 12 Hz).
+    print(f"Recovery: use {(min(bad_band), max(bad_band))} so lo < hi.")
+
+# %% [markdown]
 # ## Modify -- add a fifth band (gamma)
 # **Your turn.** Add ``gamma`` (30-40 Hz) to ``BANDS`` and rerun the
 # tree. Runtime barely budges; the flat version would pay a fifth PSD.

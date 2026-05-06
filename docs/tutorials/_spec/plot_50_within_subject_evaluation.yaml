@@ -35,7 +35,7 @@ learning_objectives:
   - "After this tutorial you will be able to report per-subject accuracy with chance level and a class-balance check, and explain why the resulting score does not generalise to new subjects."
 audience: "Intermediate user with plot_11 and plot_12 done. Knows that subject leakage is bad in cross-subject setups; this lesson contrasts that pitfall with the legitimate case where staying within a subject is the scientific question."
 budgets:
-  max_loc: 260
+  max_loc: 285
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true

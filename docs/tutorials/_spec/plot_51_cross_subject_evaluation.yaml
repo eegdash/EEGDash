@@ -1,6 +1,6 @@
 id: plot_51_cross_subject_evaluation
 category: F-evaluation
-title: "Evaluate cross-subject generalisation with leave-subjects-out"
+title: Evaluate cross-subject generalisation with leave-subjects-out
 state: proposed
 assignee: null
 difficulty: 1
@@ -8,34 +8,41 @@ estimated_runtime_minutes: 4
 hardware: cpu
 network: cached_first_run
 prerequisites:
-  - plot_11_leakage_safe_split
-  - plot_12_train_a_baseline
+- plot_11_leakage_safe_split
+- plot_12_train_a_baseline
 cites:
   plan:
-    - "tutorial_restructure_plan.md#L25-L50"
-    - "tutorial_restructure_plan.md#L425-L442"
-    - "tutorial_restructure_plan.md#L484-L510"
-    - "tutorial_restructure_plan.md#L1158-L1178"
+  - tutorial_restructure_plan.md#L25-L50
+  - tutorial_restructure_plan.md#L425-L442
+  - tutorial_restructure_plan.md#L484-L510
+  - tutorial_restructure_plan.md#L1158-L1178
   rubric:
-    - "compass_artifact.md#E2.13"
-    - "compass_artifact.md#E2.16"
-    - "compass_artifact.md#E2.17"
-    - "compass_artifact.md#E2.20"
-    - "compass_artifact.md#E3.21"
-    - "compass_artifact.md#E3.23"
-    - "compass_artifact.md#E3.27"
-    - "compass_artifact.md#E5.42"
-    - "compass_artifact.md#E5.43"
-    - "compass_artifact.md#E5.44"
-    - "compass_artifact.md#E5.46"
+  - compass_artifact.md#E2.13
+  - compass_artifact.md#E2.16
+  - compass_artifact.md#E2.17
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.27
+  - compass_artifact.md#E5.42
+  - compass_artifact.md#E5.43
+  - compass_artifact.md#E5.44
+  - compass_artifact.md#E5.46
 learning_objectives:
-  - "After this tutorial you will be able to explain why cross-subject evaluation is the gold standard for generalisation claims in EEG decoding."
-  - "After this tutorial you will be able to build a 5-fold cross-subject split with `eegdash.splits.get_splitter(\"cross_subject\", n_folds=5)` and verify subject disjointness with `assert_no_leakage`."
-  - "After this tutorial you will be able to report mean and standard deviation across folds and compare against the chance level computed from class balance."
-  - "After this tutorial you will be able to read the `describe_split` summary and translate it into one English sentence about generalisation scope."
-audience: "Beginner ML user who completed plot_11 (leakage-safe split) and plot_12 (baseline). This is the most common evaluation in EEG decoding and is intentionally kept very accessible."
+- After this tutorial you will be able to explain why cross-subject evaluation is
+  the gold standard for generalisation claims in EEG decoding.
+- After this tutorial you will be able to build a 5-fold cross-subject split with
+  `eegdash.splits.get_splitter("cross_subject", n_folds=5)` and verify subject disjointness
+  with `assert_no_leakage`.
+- After this tutorial you will be able to report mean and standard deviation across
+  folds and compare against the chance level computed from class balance.
+- After this tutorial you will be able to read the `describe_split` summary and translate
+  it into one English sentence about generalisation scope.
+audience: Beginner ML user who completed plot_11 (leakage-safe split) and plot_12
+  (baseline). This is the most common evaluation in EEG decoding and is intentionally
+  kept very accessible.
 budgets:
-  max_loc: 260
+  max_loc: 300
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true
@@ -43,34 +50,34 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_51.png
   figures:
-    - figure_cross_subject_score_box.png
-    - figure_fold_accuracy_bar.png
-    - figure_split_audit.png
+  - figure_cross_subject_score_box.png
+  - figure_fold_accuracy_bar.png
+  - figure_split_audit.png
 asserted_invariants:
-  - "subject_overlap(train, test) == 0   # the defining property"
-  - "n_folds >= 5"
-  - "n_test_subjects_per_fold >= 1"
-  - "abs(class_balance_train - class_balance_test) < 0.10"
-  - "fold_accuracy_mean reported with chance_level from majority_baseline"
-  - "fold_accuracy_std reported alongside the mean (no naked point estimate)"
-  - "leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0"
+- 'subject_overlap(train, test) == 0   # the defining property'
+- n_folds >= 5
+- n_test_subjects_per_fold >= 1
+- abs(class_balance_train - class_balance_test) < 0.10
+- fold_accuracy_mean reported with chance_level from majority_baseline
+- fold_accuracy_std reported alongside the mean (no naked point estimate)
+- leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0
 sections_required:
-  - title
-  - opening
-  - learning_objectives
-  - requirements
-  - setup
-  - lesson_steps:
-      min: 5
-      labelled_subgoals: true
-  - checkpoints:
-      min: 4
-  - result
-  - wrapup
-  - links
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 5
+    labelled_subgoals: true
+- checkpoints:
+    min: 4
+- result
+- wrapup
+- links
 primm_required:
   predict: 1
-  run: ">=2"
+  run: '>=2'
   investigate: 1
   modify: 1
   make: 1
@@ -80,24 +87,25 @@ faded_scaffolding:
 viz_compliance:
   palette: eegdash-rail
   required_elements:
-    - chance_level_line
-    - subject_count_in_subtitle
-    - source_provenance_footer
+  - chance_level_line
+  - subject_count_in_subtitle
+  - source_provenance_footer
 links:
   concept: docs/source/concepts/leakage_and_evaluation.rst
   api: eegdash.splits
   related_how_to:
-    - how_to_use_moabb_splitters
+  - how_to_use_moabb_splitters
   related_papers:
-    - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319) — cross-subject evaluation as the de-facto standard"
-    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips (Tip 9)"
+  - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319)\
+    \ \u2014 cross-subject evaluation as the de-facto standard"
+  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips (Tip 9)"
 requires_api:
-  - "eegdash.splits.get_splitter"
-  - "eegdash.splits.make_split_manifest"
-  - "eegdash.splits.apply_split_manifest"
-  - "eegdash.splits.assert_no_leakage"
-  - "eegdash.splits.describe_split"
-  - "eegdash.splits.majority_baseline"
-  - "sklearn.linear_model.LogisticRegression"
-  - "sklearn.metrics.accuracy_score"
+- eegdash.splits.get_splitter
+- eegdash.splits.make_split_manifest
+- eegdash.splits.apply_split_manifest
+- eegdash.splits.assert_no_leakage
+- eegdash.splits.describe_split
+- eegdash.splits.majority_baseline
+- sklearn.linear_model.LogisticRegression
+- sklearn.metrics.accuracy_score
 review_rubric_overrides: {}

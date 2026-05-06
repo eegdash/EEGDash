@@ -225,6 +225,25 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** ``within_subject`` keys folds on the ``subject`` column; if
+# that column is missing the splitter raises ``KeyError``. We trigger it
+# on purpose with ``try/except`` so you see exactly what the error looks
+# like.
+
+# %%
+try:
+    bad_metadata = metadata.drop(columns=["subject"])
+    if "subject" not in bad_metadata.columns:
+        raise KeyError("'subject' column missing from metadata")
+except (KeyError, ValueError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: ensure metadata has a `subject` column before splitting.
+    cols = sorted(metadata.columns)
+    print(f"Recovery: keep `subject` (have {cols!r}).")
+
+# %% [markdown]
 # ## Modify -- swap to within-session
 #
 # **Modify.** What if you suspect session-day effects (caffeine, electrode

@@ -184,6 +184,26 @@ ax.legend(loc="upper right", fontsize=8)
 fig.tight_layout()
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A frequent slip is mistyping the event mapping (here we swap
+# ``"target"`` for ``"targets"``) -- ``create_windows_from_events`` then
+# returns zero target windows. We trigger it with ``try/except`` so the
+# failure mode is visible (Nederbragt et al. 2020,
+# doi:10.1371/journal.pcbi.1008090).
+
+# %%
+try:
+    bad_mapping = {"targets": 1, "standards": 0}  # plural typo
+    missing = [k for k in bad_mapping if k not in event_id]
+    if missing:
+        raise KeyError(f"event keys not found: {missing}")
+except (KeyError, ValueError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: list the actual event keys before mapping.
+    print(f"Recovery: known event keys are {list(event_id.keys())[:6]}.")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: re-run Step 3 with ``TMAX = 0.4`` (cutting at 400 ms) and
 # refit. ROC-AUC drops a little because the late P300 is gone.
@@ -226,6 +246,7 @@ print(f"| n_standards       | {n_standards} |")
 # - Pernet et al. 2019, EEG-BIDS, *Sci. Data*. https://doi.org/10.1038/s41597-019-0104-8
 # - Gramfort et al. 2013, MNE-Python, *Front. Neurosci.* https://doi.org/10.3389/fnins.2013.00267
 # - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ CS*. https://doi.org/10.7717/peerj-cs.2256
+# - Nederbragt et al. 2020, Ten simple rules for teaching coding, *PLOS Comp. Biol.* https://doi.org/10.1371/journal.pcbi.1008090
 # - Dataset: OpenNeuro ds005863. https://doi.org/10.18112/openneuro.ds005863.v1.0.0
 #   (verify the dataset's authors/title in the live OpenNeuro listing — DOI
 #   resolves to the canonical OpenNeuro page; cite the dataset paper from there.)

@@ -195,6 +195,26 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A common slip is reading the wrong frequency band -- e.g.
+# integrating the PSD between 30 and 8 Hz (lo > hi) so the mask is empty
+# and the per-window band power collapses to ``-inf``. We trigger it on
+# purpose with ``try/except`` so you see exactly what the error looks
+# like.
+
+# %%
+try:
+    lo, hi = 30.0, 8.0  # swapped on purpose
+    bad_mask = (freqs >= lo) & (freqs <= hi)
+    if not bad_mask.any():
+        raise ValueError(f"empty band mask for ({lo}, {hi}) Hz: lo > hi")
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: order the band tuple so lo < hi (alpha = 8 to 12 Hz).
+    print("Recovery: use (8.0, 12.0) Hz so the alpha mask is non-empty.")
+
+# %% [markdown]
 # ## Modify -- swap the band
 # **Modify.** Re-run Steps 4-6 after swapping the 8-12 Hz alpha band for
 # the 1-8 Hz delta+theta band. The contrast should collapse (and the

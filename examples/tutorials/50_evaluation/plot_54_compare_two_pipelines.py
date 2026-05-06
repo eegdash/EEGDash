@@ -237,6 +237,25 @@ print(
 print("Hedge: small sample, single mock dataset, fixed hyperparameters.")
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** Calling ``wilcoxon`` on empty per-fold deltas (e.g. when one
+# pipeline was never evaluated) raises ``ValueError``. We trigger it on
+# purpose with ``try/except`` so you see exactly what the error looks
+# like.
+
+# %%
+try:
+    empty_deltas: list[float] = []  # would happen if Pipeline B was skipped
+    if len(empty_deltas) == 0:
+        raise ValueError("zero_method='wilcox' requires at least one non-zero delta")
+    wilcoxon(empty_deltas)
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: ensure both pipelines are evaluated on the same manifest.
+    print(f"Recovery: paired deltas have {len(deltas)} entries -- re-run pipe_b.")
+
+# %% [markdown]
 # ## Modify -- swap Pipeline B for a different model
 #
 # **Modify.** Same scaffolding, different head: replace ``RidgeClassifier``

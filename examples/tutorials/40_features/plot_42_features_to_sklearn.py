@@ -171,6 +171,27 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A common slip is calling ``.fit`` on a bare classifier with
+# un-scaled features -- ``LogisticRegression`` then warns about
+# convergence (or in stricter mode raises ``ConvergenceWarning`` as an
+# error). We trigger it with ``try/except`` so you see exactly what the
+# failure mode looks like.
+
+# %%
+try:
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        bare = LogisticRegression(random_state=SEED, max_iter=10)
+        bare.fit(X_train * 1e9, y_train)  # un-scaled, tiny max_iter
+    print("Caught nothing (already-scaled features?).")
+except (Warning, ValueError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:80]}")
+    # Recovery: wrap the classifier in a Pipeline that scales first.
+    print("Recovery: wrap StandardScaler -> LogisticRegression in a Pipeline.")
+
+# %% [markdown]
 # ## Modify -- swap LogisticRegression for RidgeClassifier
 # **Modify.** Same Pipeline, different head: ``RidgeClassifier`` is the
 # closed-form L2 alternative.

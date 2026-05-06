@@ -103,6 +103,37 @@ def test_metadata_query_uses_hbn_release_9() -> None:
     assert "subject" in query
 
 
+def test_eyes_open_closed_public_properties() -> None:
+    """``EyesOpenClosed`` exposes ``dataset``, ``subjects`` and ``bandpass``.
+
+    These are the public properties the resting-state tutorial reads to
+    surface dataset/subject/filter parameters in its result block. They
+    are declared on the :class:`~eegdash.tasks.base.EEGTask` interface
+    and concretely populated in :class:`~eegdash.tasks.EyesOpenClosed`.
+    """
+    from eegdash.tasks import EyesOpenClosed, get_task
+    from eegdash.tasks.base import EEGTask
+
+    task = get_task("eyes-open-closed")
+
+    # Type contract on the abstract base class.
+    assert hasattr(EEGTask, "dataset")
+    assert hasattr(EEGTask, "subjects")
+    assert hasattr(EEGTask, "bandpass")
+
+    # Concrete values on the EyesOpenClosed instance.
+    assert isinstance(task, EyesOpenClosed)
+    assert isinstance(task.dataset, str) and task.dataset == "ds005514"
+    assert isinstance(task.subjects, list)
+    assert all(isinstance(s, str) for s in task.subjects)
+    assert task.subjects, "subjects list must not be empty"
+    assert isinstance(task.bandpass, tuple) and len(task.bandpass) == 2
+    assert all(isinstance(v, float) for v in task.bandpass)
+    assert task.bandpass == (1.0, 55.0)
+    # ``name`` is the registry key documented on the base class.
+    assert task.name == "eyes-open-closed"
+
+
 def test_split_definitions_metrics_baseline_present() -> None:
     """Splits / metrics / baseline structures must have the documented keys."""
     from eegdash.tasks import get_task

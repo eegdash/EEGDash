@@ -62,6 +62,8 @@ def _counting_welch(*a, **k):
     return _orig_welch(*a, **k)
 
 
+# Sphinx-gallery executes many tutorials in one process, so we patch in
+# a try/finally so ``_spec.welch`` is always restored after Run #2.
 _spec.welch = _counting_welch
 
 # %% [markdown]
@@ -182,17 +184,23 @@ psds_tree = PSD_CALLS["tree"]
 # ## Step 6 -- Investigate the speedup
 # **Investigate.** Same row count, identical band columns, but the PSD
 # counter dropped 4x. :func:`~eegdash.features.get_feature_predecessors`
-# gives the same dependency view programmatically.
+# gives the same dependency view programmatically. After Run #1 and
+# Run #2 we restore ``_spec.welch`` (try/finally) so any subsequent
+# tutorial in the same sphinx-gallery process sees the original Welch.
 
 # %%
-speedup = max(runtime_flat / max(runtime_tree, 1e-6), 1.0)
-assert tree_table.shape[0] == flat_table.shape[0]
-assert tree_table.shape[1] >= flat_table.shape[1]
-assert psds_tree * len(BANDS) == psds_flat
-print(
-    f"tree: shape={tree_table.shape} | runtime={runtime_tree:.4f} s | "
-    f"PSDs={psds_tree} | speedup={speedup:.2f}x"
-)
+try:
+    speedup = max(runtime_flat / max(runtime_tree, 1e-6), 1.0)
+    assert tree_table.shape[0] == flat_table.shape[0]
+    assert tree_table.shape[1] >= flat_table.shape[1]
+    assert psds_tree * len(BANDS) == psds_flat
+    print(
+        f"tree: shape={tree_table.shape} | runtime={runtime_tree:.4f} s | "
+        f"PSDs={psds_tree} | speedup={speedup:.2f}x"
+    )
+finally:
+    _spec.welch = _orig_welch
+    print("welch restored")
 
 # %% [markdown]
 # ## Modify -- add a fifth band (gamma)

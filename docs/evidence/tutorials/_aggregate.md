@@ -1,8 +1,8 @@
 # Tutorial audit aggregate
 
-Tutorials audited: **14**
+Tutorials audited: **13**
 
-Totals: **9 error(s)**, **5 warn(s)**, **70 info(s)** across 14 dossiers.
+Totals: **0 error(s)**, **0 warn(s)**, **65 info(s)** across 13 dossiers.
 
 | Tutorial | State | Difficulty | Errors | Warns | Infos |
 | --- | :---: | :---: | ---: | ---: | ---: |
@@ -19,5 +19,4 @@ Totals: **9 error(s)**, **5 warn(s)**, **70 info(s)** across 14 dossiers.
 | plot_40_first_features | proposed | 1 | 0 | 0 | 5 |
 | plot_41_feature_trees | proposed | 2 | 0 | 0 | 5 |
 | plot_42_features_to_sklearn | proposed | 2 | 0 | 0 | 5 |
-| plot_clinical_summary | proposed | 1 | 9 | 5 | 5 |
 

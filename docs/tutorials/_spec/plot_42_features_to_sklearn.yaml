@@ -1,6 +1,6 @@
 id: plot_42_features_to_sklearn
 category: E-feature-engineering
-title: "Train a scikit-learn baseline on EEGDash features"
+title: Train a scikit-learn baseline on EEGDash features
 state: proposed
 assignee: null
 difficulty: 2
@@ -8,34 +8,39 @@ estimated_runtime_minutes: 5
 hardware: cpu
 network: cached_first_run
 prerequisites:
-  - plot_40_first_features
-  - plot_11_leakage_safe_split
+- plot_40_first_features
+- plot_11_leakage_safe_split
 cites:
   plan:
-    - "tutorial_restructure_plan.md#L410-L423"
-    - "tutorial_restructure_plan.md#L502-L510"
-    - "tutorial_restructure_plan.md#L1009-L1019"
-    - "tutorial_restructure_plan.md#L1158-L1178"
+  - tutorial_restructure_plan.md#L410-L423
+  - tutorial_restructure_plan.md#L502-L510
+  - tutorial_restructure_plan.md#L1009-L1019
+  - tutorial_restructure_plan.md#L1158-L1178
   rubric:
-    - "compass_artifact.md#E1.2"
-    - "compass_artifact.md#E2.13"
-    - "compass_artifact.md#E2.20"
-    - "compass_artifact.md#E3.21"
-    - "compass_artifact.md#E3.23"
-    - "compass_artifact.md#E3.29"
-    - "compass_artifact.md#E4.33"
-    - "compass_artifact.md#E4.36"
-    - "compass_artifact.md#E5.42"
-    - "compass_artifact.md#E5.43"
-    - "compass_artifact.md#E5.45"
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.13
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.29
+  - compass_artifact.md#E4.33
+  - compass_artifact.md#E4.36
+  - compass_artifact.md#E5.42
+  - compass_artifact.md#E5.43
+  - compass_artifact.md#E5.45
 learning_objectives:
-  - "After this tutorial you will be able to load the saved feature table from plot_40 and split it by subject using `eegdash.splits`."
-  - "After this tutorial you will be able to fit a `StandardScaler` on the train fold only and apply it to the test fold (no train/test contamination)."
-  - "After this tutorial you will be able to train logistic regression and a random forest (and optionally LightGBM) on the same features and compare metric tables."
-  - "After this tutorial you will be able to plot the top-k feature importances and interpret them in EEG terms (channel × band)."
-audience: "Intermediate user who finished plot_40 and plot_11. Knows scikit-learn pipelines; learns leakage-safe scaling and EEG-specific feature interpretation here."
+- After this tutorial you will be able to load the saved feature table from plot_40
+  and split it by subject using `eegdash.splits`.
+- After this tutorial you will be able to fit a `StandardScaler` on the train fold
+  only and apply it to the test fold (no train/test contamination).
+- After this tutorial you will be able to train logistic regression and a random forest
+  (and optionally LightGBM) on the same features and compare metric tables.
+- "After this tutorial you will be able to plot the top-k feature importances and\
+  \ interpret them in EEG terms (channel \xD7 band)."
+audience: Intermediate user who finished plot_40 and plot_11. Knows scikit-learn pipelines;
+  learns leakage-safe scaling and EEG-specific feature interpretation here.
 budgets:
-  max_loc: 220
+  max_loc: 280
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true
@@ -43,32 +48,32 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_42.png
   figures:
-    - figure_metric_table_compare.png
-    - figure_confusion_matrix.png
-    - figure_top_feature_importance.png
+  - figure_metric_table_compare.png
+  - figure_confusion_matrix.png
+  - figure_top_feature_importance.png
 asserted_invariants:
-  - "scaler fitted only on X_train (no test data accessed before split)"
-  - "leakage_report['overlap'] == 0"
-  - "model_accuracy_test reported with chance level from class balance"
-  - "logistic_regression_accuracy and random_forest_accuracy both reported"
-  - "top_feature_importances annotated with channel × band labels"
+- scaler fitted only on X_train (no test data accessed before split)
+- leakage_report['overlap'] == 0
+- model_accuracy_test reported with chance level from class balance
+- logistic_regression_accuracy and random_forest_accuracy both reported
+- "top_feature_importances annotated with channel \xD7 band labels"
 sections_required:
-  - title
-  - opening
-  - learning_objectives
-  - requirements
-  - setup
-  - lesson_steps:
-      min: 6
-      labelled_subgoals: true
-  - checkpoints:
-      min: 4
-  - result
-  - wrapup
-  - links
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 6
+    labelled_subgoals: true
+- checkpoints:
+    min: 4
+- result
+- wrapup
+- links
 primm_required:
   predict: 1
-  run: ">=2"
+  run: '>=2'
   investigate: 1
   modify: 1
 faded_scaffolding:
@@ -77,22 +82,22 @@ faded_scaffolding:
 viz_compliance:
   palette: eegdash-rail
   required_elements:
-    - chance_level_line
-    - subject_count_in_subtitle
-    - source_provenance_footer
+  - chance_level_line
+  - subject_count_in_subtitle
+  - source_provenance_footer
 links:
   concept: docs/source/concepts/features_vs_deep_learning.rst
   api: eegdash.features
   related_how_to: []
   related_papers:
-    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
-    - "Pedregosa et al. 2011, JMLR — scikit-learn"
+  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Pedregosa et al. 2011, JMLR \u2014 scikit-learn"
 requires_api:
-  - "eegdash.features.extract_features"
-  - "eegdash.splits.get_splitter"
-  - "eegdash.splits.apply_split_manifest"
-  - "eegdash.splits.assert_no_leakage"
-  - "sklearn.preprocessing.StandardScaler"
-  - "sklearn.linear_model.LogisticRegression"
-  - "sklearn.ensemble.RandomForestClassifier"
+- eegdash.features.extract_features
+- eegdash.splits.get_splitter
+- eegdash.splits.apply_split_manifest
+- eegdash.splits.assert_no_leakage
+- sklearn.preprocessing.StandardScaler
+- sklearn.linear_model.LogisticRegression
+- sklearn.ensemble.RandomForestClassifier
 review_rubric_overrides: {}

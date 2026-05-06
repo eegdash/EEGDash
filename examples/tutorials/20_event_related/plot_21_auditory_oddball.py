@@ -39,15 +39,17 @@ from eegdash.splits import assert_no_leakage, majority_baseline
 
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
-SEED, SFREQ, DATASET = 42, 256.0, "ds003061"  # matches plot_20 reference
+SEED, SFREQ, DATASET = 42, 128.0, "ds003061"  # resampled to match plot_20
 TMIN, TMAX = -0.1, 0.5  # auditory ERP window: pre-stim baseline + N100/P300
 
 # %% [markdown]
 # ## Step 1 -- Pick an auditory-oddball dataset
 #
 # OpenNeuro ``ds003061`` (Delorme 2020) is BIDS-formatted (Pernet et al.
-# 2019, doi:10.1038/s41597-019-0104-8): 79 EEG channels, 256 Hz, 13
-# subjects. Live workflow: ``EEGDashDataset(dataset="ds003061")`` plus
+# 2019, doi:10.1038/s41597-019-0104-8): 79 EEG channels, recorded at
+# 256 Hz, 13 subjects. We resample to 128 Hz to match ``plot_20`` so the
+# same flattened-window classifier can ingest either tutorial's epochs.
+# Live workflow: ``EEGDashDataset(dataset="ds003061")`` plus
 # ``create_windows_from_events`` (Gramfort et al. 2013,
 # doi:10.3389/fnins.2013.00267); we synthesise the same shape below.
 #

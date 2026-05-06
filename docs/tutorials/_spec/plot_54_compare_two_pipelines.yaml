@@ -1,0 +1,110 @@
+id: plot_54_compare_two_pipelines
+category: F-evaluation
+title: "Compare a feature baseline against a neural model on the same split"
+state: proposed
+assignee: null
+difficulty: 2
+estimated_runtime_minutes: 5
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_11_leakage_safe_split
+  - plot_12_train_a_baseline
+  - plot_42_features_to_sklearn
+  - plot_51_cross_subject_evaluation
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L25-L50"
+    - "tutorial_restructure_plan.md#L425-L442"
+    - "tutorial_restructure_plan.md#L484-L510"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+  rubric:
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.16"
+    - "compass_artifact.md#E2.17"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.27"
+    - "compass_artifact.md#E3.29"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+    - "compass_artifact.md#E5.46"
+learning_objectives:
+  - "After this tutorial you will be able to evaluate a feature-based scikit-learn pipeline and a small Braindecode neural model on the *exact same* cross-subject folds, by reusing one split manifest."
+  - "After this tutorial you will be able to produce a paired per-fold score table and run a paired Wilcoxon signed-rank test to ask whether the difference is significant."
+  - "After this tutorial you will be able to plot a paired-comparison figure (per-fold lines + box/violin) with the chance level on the same axes."
+  - "After this tutorial you will be able to phrase the conclusion with appropriate hedging — small sample, single dataset, fixed hyperparameters — so the comparison is not over-claimed."
+audience: "Intermediate user who completed plot_11, plot_12, plot_42 and plot_51. Knows how to run each pipeline alone; learns here how to compare them paper-style under one split manifest."
+budgets:
+  max_loc: 260
+  max_runtime_seconds: 300
+  max_network_mb: 50
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_54.png
+  figures:
+    - figure_paired_comparison.png
+    - figure_per_fold_score_table.png
+    - figure_split_audit.png
+asserted_invariants:
+  - "fold_ids_pipeline_a == fold_ids_pipeline_b   # same split manifest reused"
+  - "subject_overlap(train, test) == 0"
+  - "len(per_fold_scores_a) == len(per_fold_scores_b) and len(per_fold_scores_a) >= 5"
+  - "wilcoxon_signed_rank_p_value reported alongside median delta"
+  - "chance_level reported on the same axes for BOTH pipelines"
+  - "abs(class_balance_train - class_balance_test) < 0.10"
+  - "leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - chance_level_line
+    - subject_count_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.splits
+  related_how_to:
+    - how_to_use_moabb_splitters
+  related_papers:
+    - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319) — paired pipeline comparison and meta-analysis"
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+    - "Schirrmeister et al. 2017, HBM — Braindecode for EEG deep learning"
+requires_api:
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.make_split_manifest"
+  - "eegdash.splits.apply_split_manifest"
+  - "eegdash.splits.assert_no_leakage"
+  - "eegdash.splits.describe_split"
+  - "eegdash.splits.majority_baseline"
+  - "eegdash.features.extract_features"
+  - "sklearn.pipeline.Pipeline"
+  - "sklearn.linear_model.LogisticRegression"
+  - "scipy.stats.wilcoxon"
+  - "braindecode.models.ShallowFBCSPNet"
+review_rubric_overrides: {}

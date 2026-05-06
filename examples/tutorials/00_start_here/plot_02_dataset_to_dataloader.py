@@ -170,6 +170,28 @@ print(
 # and ``EEGNetv4`` consume.
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Picking a window larger than the recording silently returns
+# zero windows -- the most common slip when scaling this code to a new
+# dataset. We trigger it with ``try/except`` so you see the failure.
+
+# %%
+huge = int(raw_pp.times[-1] * TARGET_SFREQ * 10)  # 10x recording length
+try:
+    bad_windows = create_fixed_length_windows(
+        dataset,
+        window_size_samples=huge,
+        window_stride_samples=huge,
+        drop_last_window=True,
+        preload=True,
+    )
+    print(f"Oversize window produced len={len(bad_windows)} (expected 0).")
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+# Recovery: pick a window smaller than the recording.
+print(f"Recovery: keep window_size_samples={window_size_samples} (<< recording).")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: edit ``WINDOW_SECONDS`` to 4 seconds, rerun Step 3 and
 # Step 4, and predict before you run: how should the per-window time axis

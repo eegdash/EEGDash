@@ -46,3 +46,33 @@ def test_import_features_submodules():
             # Some imports might fail due to missing dependencies, that's ok
             # We only care about SyntaxError
             pass
+
+
+def test_fit_feature_extractor_alias_warns_and_forwards():
+    """Singular ``fit_feature_extractor`` is a deprecated alias for the plural API."""
+    import warnings
+    from unittest.mock import patch
+
+    import eegdash.features as features_mod
+
+    # Both the singular and plural names must be importable.
+    assert hasattr(features_mod, "fit_feature_extractor")
+    assert hasattr(features_mod, "fit_feature_extractors")
+    assert "fit_feature_extractor" in features_mod.__all__
+
+    sentinel = object()
+    feature_list = [lambda x: x]
+    with patch.object(
+        features_mod, "fit_feature_extractors", return_value=sentinel
+    ) as plural:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            result = features_mod.fit_feature_extractor(
+                "dataset", feature_list, batch_size=64
+            )
+        # Forwards positional + keyword args verbatim.
+        plural.assert_called_once_with("dataset", feature_list, batch_size=64)
+        assert result is sentinel
+    deprecations = [w for w in caught if issubclass(w.category, DeprecationWarning)]
+    assert deprecations, "fit_feature_extractor must emit a DeprecationWarning"
+    assert "fit_feature_extractors" in str(deprecations[0].message)

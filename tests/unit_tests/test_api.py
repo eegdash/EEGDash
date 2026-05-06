@@ -128,3 +128,104 @@ def test_simple_passthrough_methods(mocked_client, method, args, expected_return
 def test_module_getattr_invalid_name_raises():
     with pytest.raises(AttributeError, match="has no attribute"):
         api_module.__getattr__("does_not_exist")
+
+
+def test_search_datasets_no_filters_returns_dataframe(mocked_client):
+    """No filters -> query is None and find_datasets is called with limit only."""
+    eeg, client = mocked_client
+    client.find_datasets.return_value = [
+        {
+            "dataset_id": "ds002718",
+            "name": "Face perception",
+            "modality": "eeg",
+            "task": "FacePerception",
+            "n_subjects": 18,
+            "source": "openneuro",
+            "license": "CC0",
+            "dataset_doi": "10.1038/sdata.2015.1",
+        }
+    ]
+
+    df = eeg.search_datasets()
+
+    client.find_datasets.assert_called_once_with(None, limit=100)
+    assert df is not None
+    assert len(df) == 1
+    # Summary columns are present even when records omit some keys.
+    for col in (
+        "dataset_id",
+        "name",
+        "modality",
+        "task",
+        "n_subjects",
+        "source",
+        "license",
+        "dataset_doi",
+    ):
+        assert col in df.columns
+    assert df.iloc[0]["dataset_id"] == "ds002718"
+    assert df.iloc[0]["task"] == "FacePerception"
+
+
+def test_search_datasets_combines_filters_into_and_query(mocked_client):
+    """Multiple filters compose as $and; modality wraps in $or for casing."""
+    eeg, client = mocked_client
+    client.find_datasets.return_value = []
+
+    eeg.search_datasets(
+        modality="EEG",
+        task="rest",
+        clinical_group="adhd",
+        source="openneuro",
+        n_subjects_min=10,
+        license="CC0",
+        limit=25,
+    )
+
+    client.find_datasets.assert_called_once()
+    args, kwargs = client.find_datasets.call_args
+    query = args[0]
+    assert kwargs == {"limit": 25}
+    assert "$and" in query
+    clauses = query["$and"]
+    # modality clause uses $or to handle case variants.
+    assert {"$or": [{"modality": "EEG"}, {"modality": "eeg"}]} in clauses
+    assert {"task": "rest"} in clauses
+    assert {"$or": [{"clinical.group": "adhd"}, {"clinical_group": "adhd"}]} in clauses
+    assert {"$or": [{"source": "openneuro"}, {"provider": "openneuro"}]} in clauses
+    assert {"n_subjects": {"$gte": 10}} in clauses
+    assert {"license": "CC0"} in clauses
+
+
+def test_search_datasets_handles_legacy_schemas(mocked_client):
+    """Records using ``dataset`` or ``provider`` instead of ``dataset_id``/``source``."""
+    eeg, client = mocked_client
+    client.find_datasets.return_value = [
+        {"dataset": "ds_legacy", "provider": "nemar", "name": "legacy entry"},
+    ]
+
+    df = eeg.search_datasets(source="nemar")
+
+    assert df.iloc[0]["dataset_id"] == "ds_legacy"
+    assert df.iloc[0]["source"] == "nemar"
+    # missing fields surface as None, not KeyError.
+    assert df.iloc[0]["modality"] is None
+
+
+def test_search_datasets_returns_empty_dataframe_when_no_match(mocked_client):
+    eeg, client = mocked_client
+    client.find_datasets.return_value = []
+
+    df = eeg.search_datasets(task="nonexistent_task")
+
+    assert len(df) == 0
+    assert list(df.columns) == [
+        "dataset_id",
+        "name",
+        "modality",
+        "task",
+        "n_subjects",
+        "source",
+        "license",
+        "dataset_doi",
+    ]

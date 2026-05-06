@@ -157,6 +157,21 @@ ax.text(
 plt.show()
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Asking for a recording index past the end is the most common
+# slip when iterating; we trigger it on purpose with ``try/except`` so
+# the failure mode is visible.
+
+# %%
+try:
+    _ = dataset.preview(index=999)
+except (IndexError, KeyError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: clamp to a valid index.
+    safe_idx = min(999, len(dataset) - 1)
+    print(f"Recovery: preview(index={safe_idx}) instead of 999.")
+
+# %% [markdown]
 # ## Modify
 #
 # **Your turn**: change ``SUBJECT`` to ``"003"`` and re-run Steps 2 and 3.

@@ -1,6 +1,6 @@
 id: plot_13_save_and_reuse_prepared_data
 category: B-core-workflow
-title: "Save and reuse prepared windows and features"
+title: Save and reuse prepared windows and features
 state: proposed
 assignee: null
 difficulty: 1
@@ -8,32 +8,37 @@ estimated_runtime_minutes: 3
 hardware: cpu
 network: cached_first_run
 prerequisites:
-  - plot_12_train_a_baseline
+- plot_12_train_a_baseline
 cites:
   plan:
-    - "tutorial_restructure_plan.md#L372-L385"
-    - "tutorial_restructure_plan.md#L489-L501"
-    - "tutorial_restructure_plan.md#L1158-L1178"
-    - "tutorial_restructure_plan.md#L1198-L1206"
+  - tutorial_restructure_plan.md#L372-L385
+  - tutorial_restructure_plan.md#L489-L501
+  - tutorial_restructure_plan.md#L1158-L1178
+  - tutorial_restructure_plan.md#L1198-L1206
   rubric:
-    - "compass_artifact.md#E1.2"
-    - "compass_artifact.md#E2.13"
-    - "compass_artifact.md#E2.16"
-    - "compass_artifact.md#E2.20"
-    - "compass_artifact.md#E3.22"
-    - "compass_artifact.md#E3.23"
-    - "compass_artifact.md#E3.24"
-    - "compass_artifact.md#E3.27"
-    - "compass_artifact.md#E3.28"
-    - "compass_artifact.md#E5.45"
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.13
+  - compass_artifact.md#E2.16
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.22
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.24
+  - compass_artifact.md#E3.27
+  - compass_artifact.md#E3.28
+  - compass_artifact.md#E5.45
 learning_objectives:
-  - "After this tutorial you will be able to serialise a prepared windows or features dataset to disk with metadata and version stamps."
-  - "After this tutorial you will be able to reload the saved artifact in a new kernel and verify shape, label, and subject parity."
-  - "After this tutorial you will be able to record the package versions, random seed, and split manifest hash alongside the saved data."
-  - "After this tutorial you will be able to consume the saved artifact from a downstream tutorial without re-running preprocessing."
-audience: "Beginner who finished plot_10/11/12. Knows that preprocessing is expensive; this lesson shows how to stop paying that cost on every iteration."
+- After this tutorial you will be able to serialise a prepared windows or features
+  dataset to disk with metadata and version stamps.
+- After this tutorial you will be able to reload the saved artifact in a new kernel
+  and verify shape, label, and subject parity.
+- After this tutorial you will be able to record the package versions, random seed,
+  and split manifest hash alongside the saved data.
+- After this tutorial you will be able to consume the saved artifact from a downstream
+  tutorial without re-running preprocessing.
+audience: Beginner who finished plot_10/11/12. Knows that preprocessing is expensive;
+  this lesson shows how to stop paying that cost on every iteration.
 budgets:
-  max_loc: 220
+  max_loc: 260
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true
@@ -41,31 +46,32 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_13.png
   figures:
-    - figure_save_reload_roundtrip.png
-    - figure_artifact_manifest.png
+  - figure_save_reload_roundtrip.png
+  - figure_artifact_manifest.png
 asserted_invariants:
-  - "saved_artifact_path exists"
-  - "reloaded_dataset.shape == original_dataset.shape"
-  - "reloaded_dataset.metadata == original_dataset.metadata"
-  - "manifest contains: eegdash_version, mne_version, braindecode_version, random_seed, split_manifest_hash"
-  - "second_run_runtime_seconds < first_run_runtime_seconds  # demonstrate cache reuse"
+- saved_artifact_path exists
+- reloaded_dataset.shape == original_dataset.shape
+- reloaded_dataset.metadata == original_dataset.metadata
+- 'manifest contains: eegdash_version, mne_version, braindecode_version, random_seed,
+  split_manifest_hash'
+- 'second_run_runtime_seconds < first_run_runtime_seconds  # demonstrate cache reuse'
 sections_required:
-  - title
-  - opening
-  - learning_objectives
-  - requirements
-  - setup
-  - lesson_steps:
-      min: 5
-      labelled_subgoals: true
-  - checkpoints:
-      min: 4
-  - result
-  - wrapup
-  - links
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 5
+    labelled_subgoals: true
+- checkpoints:
+    min: 4
+- result
+- wrapup
+- links
 primm_required:
   predict: 1
-  run: ">=2"
+  run: '>=2'
   investigate: 1
   modify: 1
   make: 1
@@ -75,17 +81,18 @@ faded_scaffolding:
 viz_compliance:
   palette: eegdash-rail
   required_elements:
-    - source_provenance_footer
+  - source_provenance_footer
 links:
   concept: docs/source/concepts/eegdash_objects.rst
   api: eegdash.dataset
   related_how_to:
-    - how_to_work_offline
+  - how_to_work_offline
   related_papers:
-    - "Rule et al. 2019, PLOS Comput Biol — ten simple rules for reproducible notebooks"
+  - "Rule et al. 2019, PLOS Comput Biol \u2014 ten simple rules for reproducible notebooks"
 requires_api:
-  - "eegdash.EEGDashDataset"
-  - "braindecode.datasets.WindowsDataset.save"
-  - "braindecode.datasets.load_concat_dataset"
+- braindecode.datasets.BaseConcatDataset
+- braindecode.datasets.BaseConcatDataset.save
+- braindecode.datasets.load_concat_dataset
+- braindecode.preprocessing.create_fixed_length_windows
 review_rubric_overrides:
   E2.17: warn

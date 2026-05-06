@@ -193,6 +193,21 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Mistyping the splitter name is the single most common slip
+# in this API; ``get_splitter`` raises ``KeyError`` with the valid
+# names. We trigger it with ``try/except`` so the error is visible.
+
+# %%
+try:
+    _ = get_splitter("subject_split", n_folds=5, random_state=42)
+except (KeyError, ValueError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: use the canonical name.
+    fixed = get_splitter("cross_subject", n_folds=5, random_state=42)
+    print(f"Recovery: get_splitter('cross_subject') -> {type(fixed).__name__}")
+
+# %% [markdown]
 # ## Modify -- try a session-aware split
 #
 # **Modify.** Swap ``"cross_subject"`` for ``"cross_session"`` and re-run

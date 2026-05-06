@@ -76,6 +76,144 @@ class EEGDash:
         """
         return self._client.find_datasets(query, limit=limit)
 
+    def search_datasets(
+        self,
+        *,
+        modality: str | None = None,
+        task: str | None = None,
+        clinical_group: str | None = None,
+        source: str | None = None,
+        n_subjects_min: int | None = None,
+        license: str | None = None,
+        limit: int = 100,
+    ):
+        """Search the dataset catalogue with friendly keyword filters.
+
+        Convenience wrapper around :meth:`find_datasets` that translates a
+        small set of human-friendly keyword arguments into a MongoDB-style
+        query and returns a tidy summary :class:`pandas.DataFrame`. This is
+        the metadata-only entry point used by tutorials such as
+        ``plot_00_first_search``.
+
+        Parameters
+        ----------
+        modality : str, optional
+            Filter by recording modality (e.g., ``"eeg"``, ``"meeg"``).
+            Matched case-insensitively against the ``modality`` field.
+        task : str, optional
+            Filter by BIDS task name (e.g., ``"rest"``, ``"FacePerception"``).
+        clinical_group : str, optional
+            Filter by clinical cohort label (e.g., ``"healthy"``, ``"adhd"``).
+            Matched against ``clinical.group`` (nested) and falls back to the
+            flat ``clinical_group`` field.
+        source : str, optional
+            Filter by data source (e.g., ``"openneuro"``, ``"nemar"``,
+            ``"hbn"``). Matched against ``source`` and ``provider`` fields.
+        n_subjects_min : int, optional
+            Minimum number of subjects in the dataset. Maps to
+            ``{"n_subjects": {"$gte": n_subjects_min}}``.
+        license : str, optional
+            Filter by data license (e.g., ``"CC0"``, ``"CC-BY-4.0"``).
+            Matched against the ``license`` field.
+        limit : int, default 100
+            Maximum number of datasets to return.
+
+        Returns
+        -------
+        pandas.DataFrame
+            One row per matching dataset with summary columns:
+            ``dataset_id``, ``name``, ``modality``, ``task``, ``n_subjects``,
+            ``source``, ``license``, ``dataset_doi``. Missing fields surface
+            as ``None``. The frame is empty (zero rows) when nothing matches.
+
+        Notes
+        -----
+        ``search_datasets`` does not download any signal bytes; only small
+        JSON catalogue documents are transferred. Pair with
+        :class:`~eegdash.EEGDashDataset` once a candidate dataset is chosen.
+
+        Examples
+        --------
+        >>> client = EEGDash()
+        >>> df = client.search_datasets(modality="eeg", n_subjects_min=10)
+        >>> df = client.search_datasets(task="rest", source="openneuro")
+
+        """
+        # Lazy import: keep the top-level surface light for users who only
+        # call ``find`` / ``find_datasets``.
+        try:
+            import pandas as pd
+        except ImportError as exc:  # pragma: no cover - pandas is a hard dep
+            raise ImportError(
+                "search_datasets returns a pandas DataFrame; install pandas "
+                "to use it (already a hard dependency of eegdash)."
+            ) from exc
+
+        # Build a MongoDB-style query from the friendly kwargs. We use $or
+        # for fields with multiple plausible storage shapes (flat vs nested)
+        # so the helper survives v1/v2 record formats.
+        and_clauses: list[dict[str, Any]] = []
+        if modality is not None:
+            and_clauses.append(
+                {"$or": [{"modality": modality}, {"modality": modality.lower()}]}
+            )
+        if task is not None:
+            and_clauses.append({"task": task})
+        if clinical_group is not None:
+            and_clauses.append(
+                {
+                    "$or": [
+                        {"clinical.group": clinical_group},
+                        {"clinical_group": clinical_group},
+                    ]
+                }
+            )
+        if source is not None:
+            and_clauses.append({"$or": [{"source": source}, {"provider": source}]})
+        if n_subjects_min is not None:
+            and_clauses.append({"n_subjects": {"$gte": int(n_subjects_min)}})
+        if license is not None:
+            and_clauses.append({"license": license})
+
+        query: dict[str, Any] | None
+        if not and_clauses:
+            query = None
+        elif len(and_clauses) == 1:
+            query = and_clauses[0]
+        else:
+            query = {"$and": and_clauses}
+
+        records = self._client.find_datasets(query, limit=limit) or []
+
+        summary_keys = (
+            "dataset_id",
+            "name",
+            "modality",
+            "task",
+            "n_subjects",
+            "source",
+            "license",
+            "dataset_doi",
+        )
+        rows: list[dict[str, Any]] = []
+        for rec in records:
+            if not isinstance(rec, Mapping):
+                continue
+            row: dict[str, Any] = {}
+            for key in summary_keys:
+                # ``dataset_id`` may surface as ``dataset`` or ``_id`` in
+                # older schemas; ``source`` may live under ``provider``.
+                if key == "dataset_id":
+                    row[key] = (
+                        rec.get("dataset_id") or rec.get("dataset") or rec.get("_id")
+                    )
+                elif key == "source":
+                    row[key] = rec.get("source") or rec.get("provider")
+                else:
+                    row[key] = rec.get(key)
+            rows.append(row)
+        return pd.DataFrame(rows, columns=list(summary_keys))
+
     def find(
         self, query: dict[str, Any] = None, /, **kwargs
     ) -> list[Mapping[str, Any]]:

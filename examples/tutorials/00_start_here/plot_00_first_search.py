@@ -169,6 +169,20 @@ else:
     subset = []
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** A frequent slip is passing an unknown task name and then
+# debugging the empty list. We trigger it with ``try/except`` so the
+# error is visible (Nederbragt et al. 2020).
+
+# %%
+BAD_TASK = "FacePerceptionXYZ"
+bad = client.find(task=BAD_TASK, limit=5)
+print(f"records for unknown task {BAD_TASK!r}: {len(bad)}")
+# Recovery: list known tasks from the records we already have.
+known = sorted({r.get("task") for r in records if r.get("task")})
+print(f"Known tasks for {DATASET_ID}: {known}")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: change ``ALT_TASK`` and rerun. The face dataset has one
 # task, but the catalogue also exposes resting-state and go/no-go families.
@@ -234,4 +248,5 @@ print(f"{len(shortlist)} EEG datasets pass the filter; first 10: {shortlist[:10]
 # - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
 # - Wakeman & Henson 2015, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
 # - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
+# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials, *PLOS Comp Bio*. https://doi.org/10.1371/journal.pcbi.1008090
 # - Concept page: ``docs/source/concepts/eegdash_objects.rst`` (forthcoming).

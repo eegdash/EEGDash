@@ -192,6 +192,20 @@ print(f"| model (logistic)   | {model_acc:0.3f}   |")
 print(f"| chance (majority)  | {chance:0.3f}   |")
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Aligning ``X`` and ``y`` slices wrong is the most common
+# slip when stitching features to labels; sklearn raises ``ValueError``.
+# We trigger it with ``try/except`` so the failure mode is visible.
+
+# %%
+try:
+    LogisticRegression(random_state=SEED).fit(F_train, y_train[:-1])
+except ValueError as exc:
+    print(f"Caught ValueError: {str(exc)[:90]}")
+    # Recovery: realign slice lengths.
+    print(f"Recovery: ensure len(X)={len(F_train)} == len(y)={len(y_train)}.")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: swap band-power for a flattened raw window
 # (``X.reshape(len(X), -1)``) before fitting. The accuracy will drop -

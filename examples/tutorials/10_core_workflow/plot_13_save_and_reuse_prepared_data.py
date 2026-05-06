@@ -163,6 +163,22 @@ print(
 )
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Forgetting ``overwrite=True`` is the single most common slip
+# on the second run of this tutorial; we trigger it on purpose so you
+# see the ``FileExistsError`` first-hand.
+
+# %%
+try:
+    windows.save(str(windows_path), overwrite=False)
+except (FileExistsError, OSError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:80]}")
+    # Recovery: drop the old artifact and write fresh.
+    shutil.rmtree(windows_path)
+    windows.save(str(windows_path), overwrite=False)
+    print("Recovery: rmtree + save without overwrite=True succeeded.")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: serialise the windows as **Zarr** instead of FIF. Zarr is
 # chunked, supports parallel reads, and can sit on cloud object stores

@@ -211,6 +211,21 @@ assert x0.shape[1] == window_samples
 assert raw.info["sfreq"] == TARGET_SFREQ
 
 # %% [markdown]
+# **A common mistake -- and how to recover.**
+# **Run.** Swapping the high-pass and low-pass cutoffs is the most
+# common slip when tuning this filter. MNE catches it with a
+# ``ValueError``; we trigger it with ``try/except`` so you see the
+# error first-hand.
+
+# %%
+try:
+    raw.copy().filter(l_freq=H_FREQ, h_freq=L_FREQ, verbose=False)
+except (ValueError, RuntimeError) as exc:
+    print(f"Caught {type(exc).__name__}: {exc}")
+    # Recovery: l_freq must be below h_freq.
+    print(f"Recovery: l_freq={L_FREQ} < h_freq={H_FREQ}.")
+
+# %% [markdown]
 # **Modify.** Re-run Step 4 with ``L_FREQ, H_FREQ = 1.0, 8.0`` to
 # isolate the delta-theta band. The alpha bump in the PSD should
 # disappear; explain why in one sentence.

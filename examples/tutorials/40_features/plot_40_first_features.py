@@ -211,6 +211,21 @@ assert dict(roundtrip.dtypes) == dict(feature_table.dtypes)
 print(f"saved {parquet_path.name}; reload shape={roundtrip.shape}")
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+# **Run.** Passing an unknown feature key (e.g. ``"varience"`` typo) is
+# the most common slip; the extractor raises ``KeyError`` /
+# ``AttributeError``. We trigger it with ``try/except`` so the failure
+# mode is visible.
+
+# %%
+try:
+    extract_features(windows, {"varience": "not_a_callable"}, batch_size=64)
+except (KeyError, TypeError, AttributeError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:80]}")
+    # Recovery: list known feature keys we already registered.
+    print(f"Recovery: known feature keys -> {list(features_dict)}")
+
+# %% [markdown]
 # ## Modify
 # **Your turn.** Add Hjorth complexity to ``features_dict``: import
 # ``signal_hjorth_complexity``, register ``"hjorth_comp": signal_hjorth_complexity``,

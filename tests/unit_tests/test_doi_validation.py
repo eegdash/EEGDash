@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from eegdash.doi_utils import (
+from scripts.citations.doi_utils import (
     extract_surnames,
     is_valid_doi,
     load_cache,

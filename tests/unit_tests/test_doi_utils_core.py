@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-import eegdash.doi_utils as doi_utils
+from scripts.citations import doi_utils
 
 
 @pytest.mark.parametrize(

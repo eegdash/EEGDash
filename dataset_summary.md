@@ -14,7 +14,7 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
 <svg version="1.1" width="2.0em" height="2.0em" class="sd-octicon sd-octicon-clock sd-text-info" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 7.25a.75.75 0 0 0-1.5 0v5.5c0 .27.144.518.378.651l3.5 2a.75.75 0 0 0 .744-1.302L12.5 12.315V7.25Z"></path><path d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"></path></svg>
 
-**78,563**
+**78,571**
 
 <svg version="1.1" width="2.0em" height="2.0em" class="sd-octicon sd-octicon-pulse sd-text-success" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.002 2.5a.75.75 0 0 1 .691.464l6.302 15.305 2.56-6.301a.75.75 0 0 1 .695-.468h4a.75.75 0 0 1 0 1.5h-3.495l-3.06 7.532a.75.75 0 0 1-1.389.004L8.997 5.21l-3.054 7.329A.75.75 0 0 1 5.25 13H.75a.75.75 0 0 1 0-1.5h4l3.558-8.538a.75.75 0 0 1 .694-.462Z"></path></svg>
 

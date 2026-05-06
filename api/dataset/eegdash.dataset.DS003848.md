@@ -159,13 +159,13 @@ Please cite Demuru M, van Blooijs D, Zweiphenning W, Hermes D, Leijten F, Zijlma
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 110 sensors — 110 channels</summary>
+  <summary>Electrode layout — iEEG · 67 sensors — 67 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=29fb4605584e921a&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=3c3edb568361ce1d&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 110 sensors"
+    title="Topomap of iEEG · 67 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

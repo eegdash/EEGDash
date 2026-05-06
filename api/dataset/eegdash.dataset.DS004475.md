@@ -132,13 +132,13 @@ This mobile brain body imaging (MoBI) experiment investigates brain activity cor
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 122 sensors — 122 channels</summary>
+  <summary>Electrode layout — EEG · 127 sensors — 127 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=41bf18addabac157&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=a0025ebe9f1fdd38&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 122 sensors"
+    title="Topomap of EEG · 127 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

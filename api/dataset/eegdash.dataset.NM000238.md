@@ -13,7 +13,7 @@ Access recordings and metadata through EEGDash.
 
 Modality: eeg Subjects: 87 Recordings: 4088 License: Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0) for the EEG data. Stimuli can only be used for non-commercial purposes. Source: nemar
 
-Metadata: Complete (100%)
+Metadata: Good (80%)
 
 ## Quickstart
 
@@ -159,8 +159,8 @@ Due to mistakes during recording, following recordings do not have an adequate n
 - Recordings: 4088
 - Tasks: 366
 
-- Channels: 64
-- Sampling rate (Hz): 8192
+- Channels: Varies
+- Sampling rate (Hz): Varies
 - Duration (hours): Not calculated
 
 - Pathology: Not specified

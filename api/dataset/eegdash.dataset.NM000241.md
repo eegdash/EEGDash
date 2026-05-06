@@ -131,7 +131,7 @@ Holdgraf, C., Appelhoff, S., Bickel, S., Bouchard, K., D’Ambrosio, S., David, 
 - Recordings: 18
 - Tasks: 9
 
-- Channels: 158 (6), 114 (6), 316 (3), 228 (3)
+- Channels: 114 (6), 158 (6), 316 (3), 228 (3)
 - Sampling rate (Hz): 200.0
 - Duration (hours): 3.836216666666667
 

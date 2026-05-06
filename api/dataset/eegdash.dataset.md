@@ -44980,7 +44980,7 @@ DOI: [https://doi.org/10.82901/nemar.nm000146](https://doi.org/10.82901/nemar.nm
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-RomaniBF2025ERP
+The Brain, Body, and Behaviour Dataset (1.0.0) - Experiment 4 - NEMAR Dataset
 
 * **Study:**
   `nm000147` (NeMAR)
@@ -49965,7 +49965,7 @@ DOI: [https://doi.org/10.7554/eLife.33468](https://doi.org/10.7554/eLife.33468)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-Gwilliams et al. 2023 — Introducing MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing
+MEG-MASC: a high-quality magneto-encephalography dataset for evaluating natural speech processing - NEMAR Dataset
 
 * **Study:**
   `nm000229` (NeMAR)

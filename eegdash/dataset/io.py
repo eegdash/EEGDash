@@ -2383,7 +2383,9 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
 
     # --- patch header fields ---
     srate = float(eeg.get("srate", 1.0)) or 1.0
-    repaired = dict(eeg)
+    repaired = {
+        key: value for key, value in dict(eeg).items() if not str(key).startswith("__")
+    }
 
     # Always fix the datfile/data reference to point at the BIDS-named .fdt
     repaired["datfile"] = bids_fdt_name

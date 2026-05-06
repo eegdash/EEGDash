@@ -1,10 +1,12 @@
 import json
+import warnings
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
 from scipy.io import loadmat, savemat
+from scipy.io.matlab import MatWriteWarning
 
 from eegdash.dataset.io import (
     _convert_time_with_numeric_dash,
@@ -30,6 +32,12 @@ from eegdash.dataset.io import (
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
+
+
+def _savemat_without_matwritewarning(path: Path, data: dict) -> None:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", MatWriteWarning)
+        savemat(str(path), data, do_compression=False)
 
 
 def test_convert_time_with_numeric_dash_dd_mm_yyyy():
@@ -836,7 +844,6 @@ def test_repair_events_tsv_mixed_nan_types(tmp_path):
 def _create_minimal_set_fdt(tmp_path, n_channels=3, n_samples=100, sfreq=256.0):
     """Helper: create a minimal .set + .fdt pair for testing."""
     import numpy as np
-    import scipy.io
 
     set_path = tmp_path / "test.set"
     fdt_path = tmp_path / "test.fdt"
@@ -854,7 +861,7 @@ def _create_minimal_set_fdt(tmp_path, n_channels=3, n_samples=100, sfreq=256.0):
         "data": np.array(["test.fdt"]),
     }
 
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
     return set_path, fdt_path, data
 
 
@@ -898,7 +905,6 @@ def test_load_raw_eeglab_fallback_with_bids_channels(tmp_path):
 def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
     """Raises ValueError when no .fdt and no embedded data."""
     import numpy as np
-    import scipy.io
 
     from eegdash.dataset.io import _load_raw_eeglab_fallback
 
@@ -911,7 +917,7 @@ def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
         "datfile": np.array([""]),
         "data": np.array(["test.fdt"]),
     }
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
 
     with pytest.raises(ValueError, match="No data source"):
         _load_raw_eeglab_fallback(set_path)
@@ -920,7 +926,6 @@ def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
 def test_load_raw_eeglab_fallback_size_mismatch_raises(tmp_path):
     """Raises ValueError when .fdt size doesn't match metadata."""
     import numpy as np
-    import scipy.io
 
     from eegdash.dataset.io import _load_raw_eeglab_fallback
 
@@ -937,7 +942,7 @@ def test_load_raw_eeglab_fallback_size_mismatch_raises(tmp_path):
         "datfile": np.array(["test.fdt"]),
         "data": np.array(["test.fdt"]),
     }
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
 
     with pytest.raises(ValueError, match="FDT size mismatch"):
         _load_raw_eeglab_fallback(set_path)
@@ -1107,7 +1112,7 @@ def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
         "xmax": (pnts_orig - 1) / 250.0,
         "data": "test.fdt",
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
 
     result = _repair_eeglab_fdt(set_path)
     assert result is True
@@ -1141,7 +1146,7 @@ def test_eeglab_load_first_eeg_returns_eeg_when_valid_set(tmp_path):
 
     set_path = tmp_path / "valid.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "valid.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     out = _eeglab_load_first_eeg(set_path)
     assert out is not None
     assert int(out["nbchan"]) == 2 and int(out["pnts"]) == 10
@@ -1158,7 +1163,7 @@ def test_repair_eeglab_fdt_no_fdt_file_returns_false(tmp_path):
 
     set_path = tmp_path / "nofdt.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "nofdt.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1171,7 +1176,7 @@ def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
     nbchan, pnts = 2, 10
     fdt_path.write_bytes(b"\x00" * (nbchan * pnts * 4))
     eeg = {"nbchan": nbchan, "pnts": pnts, "srate": 250.0, "data": "full.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1183,7 +1188,7 @@ def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
     fdt_path = tmp_path / "tiny.fdt"
     fdt_path.write_bytes(b"\x00" * 4)  # 4 bytes, 2 channels -> 0 samples
     eeg = {"nbchan": 2, "pnts": 100, "srate": 250.0, "data": "tiny.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1208,7 +1213,7 @@ def test_load_raw_eeglab_alleeg_success(tmp_path):
         "data": "raw.fdt",
         "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan
@@ -1231,7 +1236,7 @@ def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
         "data": "trunc.fdt",
         "chanlocs": [{"labels": "A"}, {"labels": "B"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan
@@ -1252,7 +1257,7 @@ def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
         "data": data,
         "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan

@@ -1,196 +1,221 @@
-from eegdash.local_bids import _normalize_modalities, discover_local_bids_records
+from types import SimpleNamespace
+
+import pytest
+
+from eegdash.local_bids import (
+    _get_file_metadata,
+    _normalize_modalities,
+    discover_local_bids_records,
+)
 
 
-def test_normalize_modalities():
-    assert _normalize_modalities(None) == ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
-    assert _normalize_modalities("eeg") == ["eeg"]
-    assert _normalize_modalities(["eeg", "fmri"]) == ["eeg", "fmri"]
-    assert _normalize_modalities("fnirs") == ["nirs"]  # Check alias
+@pytest.mark.parametrize(
+    "modality_filter,expected",
+    [
+        (None, ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]),
+        ("fnirs", ["nirs"]),
+        ([" eeg ", "fnirs"], ["eeg", "nirs"]),
+        ([], ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]),
+    ],
+)
+def test_normalize_modalities(modality_filter, expected):
+    assert _normalize_modalities(modality_filter) == expected
 
 
-def test_discover_local_bids_records(tmp_path):
-    # Create dummy structure
-    # ds1/
-    #   sub-01/
-    #     eeg/
-    #       sub-01_task-rest_eeg.set
-    #       sub-01_task-rest_eeg.json
-    ds_root = tmp_path / "ds1"
-    sub_dir = ds_root / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
+class _Helper:
+    def __init__(self, *, fail_attr=False, fail_channels=False):
+        self.fail_attr = fail_attr
+        self.fail_channels = fail_channels
 
-    k = sub_dir / "sub-01_task-rest_eeg.set"
-    k.touch()
-    (sub_dir / "sub-01_task-rest_eeg.json").touch()
+    def get_bids_file_attribute(self, name, _path):
+        if self.fail_attr:
+            raise RuntimeError("attr fail")
+        return {"sfreq": 128.0, "nchans": 64, "ntimes": 1024}[name]
 
-    # Filters
-    filters = {"dataset": "ds1", "subject": "01", "modality": "eeg"}
-
-    records = discover_local_bids_records(ds_root, filters)
-
-    assert len(records) == 1
-    rec = records[0]
-    # Entities are nested
-    assert rec["entities"]["subject"] == "01"
-    assert rec["entities"]["task"] == "rest"
-    assert rec["suffix"] == "eeg"
-    assert rec["dataset"] == "ds1"
-    # storage backend should be local
-    assert rec["storage"]["backend"] == "local"
+    def channel_labels(self, _path):
+        if self.fail_channels:
+            raise RuntimeError("ch fail")
+        return ["C3", "C4"]
 
 
-def test_discover_local_bids_records_filtering(tmp_path):
-    # Setup: sub-01 (rest), sub-02 (task)
-    ds_root = tmp_path / "ds2"
-    (ds_root / "sub-01" / "eeg").mkdir(parents=True)
-    (ds_root / "sub-02" / "eeg").mkdir(parents=True)
+@pytest.mark.parametrize(
+    "helper,expected",
+    [
+        (
+            None,
+            {
+                "sampling_frequency": None,
+                "nchans": None,
+                "ntimes": None,
+                "ch_names": None,
+            },
+        ),
+        (
+            _Helper(),
+            {
+                "sampling_frequency": 128.0,
+                "nchans": 64,
+                "ntimes": 1024,
+                "ch_names": ["C3", "C4"],
+            },
+        ),
+        (
+            _Helper(fail_channels=True),
+            {
+                "sampling_frequency": 128.0,
+                "nchans": 64,
+                "ntimes": 1024,
+                "ch_names": None,
+            },
+        ),
+        (
+            _Helper(fail_attr=True),
+            {
+                "sampling_frequency": None,
+                "nchans": None,
+                "ntimes": None,
+                "ch_names": None,
+            },
+        ),
+    ],
+)
+def test_get_file_metadata(helper, expected):
+    assert _get_file_metadata(helper, "dummy-file") == expected
 
-    (ds_root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.vhdr").touch()
-    (ds_root / "sub-02" / "eeg" / "sub-02_task-task_eeg.vhdr").touch()
 
-    # Filter for sub-01 only
-    records = discover_local_bids_records(ds_root, {"dataset": "ds2", "subject": "01"})
+def test_discover_builds_matching_args(monkeypatch, tmp_path):
+    captured = {}
+
+    def fake_find_matching_paths(**kwargs):
+        captured.update(kwargs)
+        return []
+
+    monkeypatch.setattr(
+        "eegdash.local_bids.find_matching_paths", fake_find_matching_paths
+    )
+    records = discover_local_bids_records(
+        tmp_path,
+        {
+            "dataset": "ds1",
+            "modality": "eeg",
+            "subject": ["01", "02"],
+            "session": "01",
+            "run": [],
+        },
+    )
+
+    assert records == []
+    assert captured["subjects"] == ["01", "02"]
+    assert captured["sessions"] == ["01"]
+    assert "runs" not in captured
+
+
+def test_discover_filters_missing_derivative_and_invalid_extensions(
+    monkeypatch, tmp_path
+):
+    root = tmp_path / "ds1"
+    valid = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.vhdr"
+    derivative = root / "derivatives" / "sub-01" / "eeg" / "sub-01_task-rest_eeg.vhdr"
+    invalid = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.json"
+
+    valid.parent.mkdir(parents=True)
+    derivative.parent.mkdir(parents=True)
+    valid.touch()
+    derivative.touch()
+    invalid.touch()
+
+    outside = tmp_path / "outside_task-rest_eeg.vhdr"
+    outside.touch()
+
+    paths = [
+        SimpleNamespace(
+            fpath=str(valid),
+            datatype="eeg",
+            suffix="eeg",
+            subject="01",
+            session=None,
+            task="rest",
+            run=None,
+            acquisition=None,
+        ),
+        SimpleNamespace(
+            fpath=str(derivative),
+            datatype="eeg",
+            suffix="eeg",
+            subject="01",
+            session=None,
+            task="rest",
+            run=None,
+            acquisition=None,
+        ),
+        SimpleNamespace(
+            fpath=str(invalid),
+            datatype="eeg",
+            suffix="eeg",
+            subject="01",
+            session=None,
+            task="rest",
+            run=None,
+            acquisition=None,
+        ),
+        SimpleNamespace(
+            fpath=str(outside),
+            datatype="eeg",
+            suffix="eeg",
+            subject="09",
+            session=None,
+            task="rest",
+            run=None,
+            acquisition=None,
+        ),
+    ]
+
+    monkeypatch.setattr("eegdash.local_bids.find_matching_paths", lambda **_: paths)
+    monkeypatch.setattr(
+        "eegdash.local_bids.EEGBIDSDataset", lambda **_: None, raising=False
+    )
+
+    records = discover_local_bids_records(root, {"dataset": "ds1", "modality": "eeg"})
+
+    assert len(records) == 2
+    assert {record["entities"]["subject"] for record in records} == {"01", "09"}
+    # outside path cannot be made relative, so fallback is basename-only
+    outside_record = [r for r in records if r["entities"]["subject"] == "09"][0]
+    assert outside_record["bids_relpath"] == "outside_task-rest_eeg.vhdr"
+
+
+def test_discover_fallback_glob_after_valueerror(monkeypatch, tmp_path):
+    root = tmp_path / "ds1"
+    eeg_dir = root / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    (eeg_dir / "sub-01_task-rest_run-01_eeg.vhdr").touch()
+    (eeg_dir / "sub-01_task-rest_eeg.json").touch()
+
+    def fail_find_matching_paths(**_kwargs):
+        raise ValueError("bad entity")
+
+    monkeypatch.setattr(
+        "eegdash.local_bids.find_matching_paths", fail_find_matching_paths
+    )
+
+    records = discover_local_bids_records(root, {"dataset": "ds1", "modality": "eeg"})
+
     assert len(records) == 1
     assert records[0]["entities"]["subject"] == "01"
+    assert records[0]["entities"]["run"] == "01"
+    assert records[0]["storage"]["backend"] == "local"
 
-    # Filter for task=task
-    records = discover_local_bids_records(ds_root, {"dataset": "ds2", "task": "task"})
+
+def test_discover_directory_format_fallback(monkeypatch, tmp_path):
+    root = tmp_path / "ds1"
+    ds_dir = root / "sub-01" / "meg" / "sub-01_task-rest_run-01_meg.ds"
+    ds_dir.mkdir(parents=True)
+
+    monkeypatch.setattr("eegdash.local_bids.find_matching_paths", lambda **_: [])
+
+    records = discover_local_bids_records(root, {"dataset": "ds1", "modality": "meg"})
+
     assert len(records) == 1
-    assert records[0]["entities"]["subject"] == "02"
-
-
-def test_load_local_bids_with_list_filters(tmp_path):
-    """Test discover_local_bids_records with list-type filters."""
-    from unittest.mock import patch
-
-    from eegdash.local_bids import discover_local_bids_records
-
-    # Create minimal BIDS structure
-    (tmp_path / "dataset_description.json").write_text('{"Name": "Test"}')
-
-    # Lines 74-77: handle list/tuple/set filters
-    with patch("eegdash.local_bids.find_matching_paths", return_value=[]):
-        records = discover_local_bids_records(
-            dataset_root=str(tmp_path),
-            filters={
-                "dataset": "test_ds",
-                "modality": "eeg",
-                "subject": ["01", "02"],
-                "task": ("rest",),
-            },
-        )
-        assert records == []
-
-
-def test_local_bids_empty_list_filter(tmp_path):
-    """Test filter with empty list is ignored."""
-    from unittest.mock import patch
-
-    from eegdash.local_bids import discover_local_bids_records
-
-    # Line 76: empty entity_vals means continue
-    with patch("eegdash.local_bids.find_matching_paths", return_value=[]):
-        records = discover_local_bids_records(
-            dataset_root=str(tmp_path),
-            filters={
-                "dataset": "test_ds",
-                "modality": "eeg",
-                "subject": [],  # Empty list should be skipped
-            },
-        )
-        assert records == []
-
-
-def test_local_bids_relative_to_fails(tmp_path):
-    """Test bids_relpath fallback when resolve().relative_to() fails."""
-    from unittest.mock import MagicMock, patch
-
-    from eegdash.local_bids import discover_local_bids_records
-
-    # Create a mock BIDSPath whose file is outside dataset_root
-    mock_bidspath = MagicMock()
-    mock_bidspath.fpath = "/other/location/sub-01_eeg.vhdr"
-    mock_bidspath.datatype = "eeg"
-    mock_bidspath.suffix = "eeg"
-    mock_bidspath.subject = "01"
-    mock_bidspath.session = None
-    mock_bidspath.task = "rest"
-    mock_bidspath.run = None
-
-    # If discover_local_bids_records is called, it iterates over find_matching_paths results
-    # We need to simulate that the file path is not relative to dataset_root
-    with patch("eegdash.local_bids.find_matching_paths", return_value=[mock_bidspath]):
-        # Also need to mock Path.relative_to to raise ValueError
-        with patch("pathlib.Path.relative_to", side_effect=ValueError):
-            # This test is tricky because discover_local_bids_records relies heavily on Path objects
-            # and we are mocking BIDSPath return.
-            # The line 124-125 catch the ValueError and use name
-            records = discover_local_bids_records(
-                str(tmp_path), filters={"dataset": "ds_root"}
-            )
-            # If it doesn't crash, it's good (though records might be empty or specific)
-            # Actually if relative_to fails it uses fpath.name.
-            # We just assert no crash
-            assert isinstance(records, list)
-
-
-def test_normalize_modalities_none():
-    """Test _normalize_modalities with None."""
-    from eegdash.local_bids import _normalize_modalities
-
-    result = _normalize_modalities(None)
-    assert result == ["eeg", "meg", "ieeg", "nirs", "fnirs", "emg"]
-
-
-def test_normalize_modalities_list():
-    """Test _normalize_modalities with list."""
-    from eegdash.local_bids import _normalize_modalities
-
-    result = _normalize_modalities(["eeg", "fnirs"])
-    assert "eeg" in result
-    assert "nirs" in result  # fnirs aliased to nirs
-
-
-def test_normalize_modalities_string():
-    """Test _normalize_modalities with string."""
-    from eegdash.local_bids import _normalize_modalities
-
-    result = _normalize_modalities("meg")
-    assert result == ["meg"]
-
-
-def test_discover_local_bids_records_invalid_extension(tmp_path):
-    """Test that invalid extensions are skipped (lines 120, 124-125)."""
-    from unittest.mock import MagicMock, patch
-
-    from eegdash.local_bids import discover_local_bids_records
-
-    # Create minimal BIDS structure
-    ds = tmp_path / "ds001234"
-    ds.mkdir()
-    (ds / "dataset_description.json").write_text('{"Name": "Test"}')
-    sub_dir = ds / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
-    # Create a .json file (should be skipped)
-    (sub_dir / "sub-01_task-rest_eeg.json").write_text("{}")
-    # Create a valid .set file
-    (sub_dir / "sub-01_task-rest_eeg.set").touch()
-
-    with patch("eegdash.local_bids.find_matching_paths") as mock_find:
-        mock_bp_json = MagicMock()
-        mock_bp_json.fpath = str(sub_dir / "sub-01_task-rest_eeg.json")
-        mock_bp_set = MagicMock()
-        mock_bp_set.fpath = str(sub_dir / "sub-01_task-rest_eeg.set")
-        mock_bp_set.datatype = "eeg"
-        mock_bp_set.suffix = "eeg"
-        mock_bp_set.subject = "01"
-        mock_bp_set.session = None
-        mock_bp_set.task = "rest"
-        mock_bp_set.run = None
-
-        mock_find.return_value = [mock_bp_json, mock_bp_set]
-
-        records = discover_local_bids_records(ds, {"dataset": "ds001234"})
-        # Only .set file should be included
-        assert len(records) == 1
-        assert records[0]["extension"] == ".set"
+    assert records[0]["entities"]["subject"] == "01"
+    assert records[0]["datatype"] == "meg"
+    assert records[0]["suffix"] == "meg"

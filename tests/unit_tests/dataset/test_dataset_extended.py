@@ -225,3 +225,195 @@ def test_eegchallenge_mini_subject_validation(toy_bids_dataset):
                     subject="99",
                     mini=True,
                 )
+
+
+@pytest.mark.parametrize(
+    ("query", "records", "kwargs", "expected_dataset"),
+    [
+        (
+            {"dataset": "ds_query"},
+            [
+                {
+                    "dataset": "ds_query",
+                    "bidspath": "ds_query/a.set",
+                    "bids_relpath": "a.set",
+                }
+            ],
+            {"task": "RestingState"},
+            "ds_query",
+        ),
+        (
+            None,
+            [
+                {
+                    "dataset": "ds_kwargs",
+                    "bidspath": "ds_kwargs/a.set",
+                    "bids_relpath": "a.set",
+                }
+            ],
+            {"dataset": "ds_kwargs", "subject": "01"},
+            "ds_kwargs",
+        ),
+        (
+            {},
+            [
+                {
+                    "dataset": "ds_inferred",
+                    "bidspath": "ds_inferred/a.set",
+                    "bids_relpath": "a.set",
+                }
+            ],
+            {},
+            "ds_inferred",
+        ),
+    ],
+)
+def test_eegdashdataset_constructor_dataset_resolution(
+    tmp_path, query, records, kwargs, expected_dataset
+):
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            query=query,
+            records=records,
+            download=True,
+            **kwargs,
+        )
+    assert ds.query["dataset"] == expected_dataset
+
+
+@pytest.mark.parametrize(
+    "query,records,kwargs",
+    [
+        (None, [], {}),
+        ({}, [{"bidspath": "no-dataset/a.set", "bids_relpath": "a.set"}], {}),
+    ],
+)
+def test_eegdashdataset_constructor_missing_dataset_raises(
+    tmp_path, query, records, kwargs
+):
+    with pytest.raises(ValueError, match="You must provide a 'dataset' argument"):
+        EEGDashDataset(
+            cache_dir=tmp_path,
+            query=query,
+            records=records,
+            download=True,
+            **kwargs,
+        )
+
+
+@pytest.mark.parametrize("cache_input", ["", None])
+def test_eegdashdataset_constructor_uses_default_cache_dir(tmp_path, cache_input):
+    records = [
+        {"dataset": "ds_cache", "bidspath": "ds_cache/a.set", "bids_relpath": "a.set"}
+    ]
+    with (
+        patch(
+            "eegdash.dataset.dataset.get_default_cache_dir", return_value=str(tmp_path)
+        ),
+        patch("eegdash.dataset.dataset.logger") as mock_logger,
+        patch("eegdash.dataset.dataset.EEGDashRaw"),
+    ):
+        _ = EEGDashDataset(
+            cache_dir=cache_input,
+            records=records,
+            download=True,
+        )
+    assert mock_logger.warning.call_count >= 1
+
+
+def test_eegdashdataset_constructor_creates_missing_cache_dir(tmp_path):
+    missing_cache = tmp_path / "new-cache-dir"
+    records = [
+        {"dataset": "ds_cache", "bidspath": "ds_cache/a.set", "bids_relpath": "a.set"}
+    ]
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        _ = EEGDashDataset(cache_dir=missing_cache, records=records, download=True)
+    assert missing_cache.exists()
+
+
+@pytest.mark.parametrize("on_error", ["raise", "warn", "skip"])
+def test_eegdashdataset_constructor_passes_on_error_to_raw(tmp_path, on_error):
+    records = [
+        {
+            "dataset": "ds_on_error",
+            "bidspath": "ds_on_error/a.set",
+            "bids_relpath": "a.set",
+        }
+    ]
+    with patch("eegdash.dataset.dataset.EEGDashRaw") as mock_raw:
+        _ = EEGDashDataset(
+            cache_dir=tmp_path,
+            records=records,
+            download=True,
+            on_error=on_error,
+        )
+    assert mock_raw.call_args.kwargs["on_error"] == on_error
+
+
+@pytest.mark.parametrize(
+    ("database", "auth_token", "expected_kwargs"),
+    [
+        (None, None, {}),
+        ("eegdash_staging", None, {"database": "eegdash_staging"}),
+        (None, "token-123", {"auth_token": "token-123"}),
+        (
+            "eegdash_staging",
+            "token-123",
+            {"database": "eegdash_staging", "auth_token": "token-123"},
+        ),
+    ],
+)
+def test_eegdashdataset_constructor_builds_eegdash_client_kwargs(
+    tmp_path, database, auth_token, expected_kwargs
+):
+    with (
+        patch("eegdash.api.EEGDash") as mock_eegdash,
+        patch(
+            "eegdash.dataset.dataset.EEGDashDataset._find_datasets",
+            return_value=[MagicMock()],
+        ),
+        patch(
+            "eegdash.dataset.dataset.downloader.get_s3_filesystem",
+            return_value=MagicMock(),
+        ),
+    ):
+        _ = EEGDashDataset(
+            cache_dir=tmp_path,
+            dataset="ds_remote",
+            database=database,
+            auth_token=auth_token,
+            download=True,
+        )
+
+    mock_eegdash.assert_called_once_with(**expected_kwargs)
+
+
+@pytest.mark.parametrize(
+    ("s3_bucket", "expected_backend"),
+    [(None, "https"), ("s3://mirror-bucket", "s3")],
+)
+def test_eegdashdataset_constructor_source_override_with_s3_bucket(
+    tmp_path, s3_bucket, expected_backend
+):
+    records = [
+        {
+            "dataset": "ds_source",
+            "bidspath": "ds_source/a.set",
+            "bids_relpath": "a.set",
+            "storage": {"backend": "https", "base": "https://original.example"},
+        }
+    ]
+    with patch("eegdash.dataset.dataset.EEGDashRaw"):
+        ds = EEGDashDataset(
+            cache_dir=tmp_path,
+            records=records,
+            download=True,
+            s3_bucket=s3_bucket,
+        )
+
+    if s3_bucket:
+        assert ds.records[0]["storage"]["base"] == s3_bucket
+    else:
+        assert ds.records[0]["storage"]["base"] == "https://original.example"
+    assert ds.records[0]["storage"]["backend"] == expected_backend

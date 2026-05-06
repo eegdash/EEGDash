@@ -18,6 +18,7 @@ parameter.
 from typing import Iterable, Tuple
 
 import mne
+import numpy as np
 
 from ..base_utils import BivariateIterator, channel_names_to_indices
 from ..decorators import (
@@ -133,7 +134,7 @@ def pick_channel_pairs_preprocessor(
     `numpy.ndarray`.
 
     """
-    assert index or c_index or x_index or y_index
+    assert any(v is not None for v in (index, c_index, x_index, y_index))
     if index is None:
         index = []
     elif isinstance(index, int):
@@ -168,7 +169,8 @@ def pick_channel_pairs_preprocessor(
     for i in index:
         y[i] = x[i].take(pick_idx, axis=axis)
     for i in c_index:
-        y[i] = x[i].take(list(set(x_it[pick_idx] + y_it[pick_idx])), axis=c_axis)
+        ch_idx = np.unique(np.concatenate((x_it[pick_idx], y_it[pick_idx]))).tolist()
+        y[i] = x[i].take(ch_idx, axis=c_axis)
     for i in x_index:
         y[i] = x[i].take(list(set(x_it[pick_idx])), axis=c_axis)
     for i in y_index:

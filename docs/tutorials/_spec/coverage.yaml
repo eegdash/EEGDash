@@ -1,0 +1,189 @@
+# EEGDash tutorial coverage map
+# Maps the plan's §New User Questions To Answer onto the 13 in-scope tutorials
+# (Release 1 + Release 2). Questions quoted verbatim from
+# docs/tutorial_restructure_plan.md, lines 649-768.
+#
+# In-scope tutorials only:
+#   plot_00_first_search, plot_01_first_recording, plot_02_dataset_to_dataloader,
+#   plot_10_preprocess_and_window, plot_11_leakage_safe_split,
+#   plot_12_train_a_baseline, plot_13_save_and_reuse_prepared_data,
+#   plot_20_visual_p300_oddball, plot_21_auditory_oddball,
+#   plot_30_eyes_open_closed, plot_40_first_features, plot_41_feature_trees,
+#   plot_42_features_to_sklearn.
+#
+# Questions not answered by any of the 13 tutorials in this release window are
+# collected under `unanswered:` to flag work that must land in a future
+# release, a how-to, or a concept page.
+
+installation_and_setup:
+  unanswered_only: true
+
+dataset_discovery:
+  - tutorial: plot_00_first_search
+    answers:
+      - "What datasets exist for my task?"
+      - "How do I find datasets by modality, task, subject count, clinical group, or sampling rate?"
+      - "How do I inspect dataset-level metadata before downloading files?"
+      - "How do I inspect record-level metadata?"
+      - "What is the difference between dataset documents and record documents?"
+      - "Which fields can I query with keyword arguments?"
+      - "When should I use MongoDB-style queries?"
+      - "How do I avoid accidentally querying too much?"
+
+loading_and_caching:
+  - tutorial: plot_01_first_recording
+    answers:
+      - "When is data downloaded?"
+      - "Where is data cached?"
+      - "How do I change the cache directory?"
+      - "How do I load only one subject/task/session/run?"
+  - tutorial: plot_02_dataset_to_dataloader
+    answers:
+      - "What is the difference between `EEGDash`, `EEGDashDataset`, and `EEGChallengeDataset`?"
+
+eeg_data_inspection:
+  - tutorial: plot_01_first_recording
+    answers:
+      - "How do I print channel names, channel types, sample rate, and duration?"
+      - "How do I plot a short signal segment?"
+      - "How do I inspect annotations/events?"
+      - "How do I see BIDS entities?"
+  - tutorial: plot_20_visual_p300_oddball
+    answers:
+      - "How do I verify that labels are present and sane?"
+
+preprocessing:
+  - tutorial: plot_10_preprocess_and_window
+    answers:
+      - "Should I use MNE directly or braindecode preprocessors?"
+      - "How do I select channels?"
+      - "How do I resample?"
+      - "How do I filter?"
+      - "What should be saved after preprocessing?"
+  - tutorial: plot_11_leakage_safe_split
+    answers:
+      - "How do I ensure preprocessing is applied consistently across train/test?"
+      - "Which preprocessing steps can leak information if fit on all data?"
+
+windowing_and_labels:
+  - tutorial: plot_10_preprocess_and_window
+    answers:
+      - "How do I create fixed-length windows?"
+      - "What is the shape of one sample?"
+  - tutorial: plot_20_visual_p300_oddball
+    answers:
+      - "How do I create event-based windows?"
+      - "How do I map event annotations to labels?"
+  - tutorial: plot_30_eyes_open_closed
+    answers:
+      - "What is the difference between recording-level labels and window-level labels?"
+  - tutorial: plot_11_leakage_safe_split
+    answers:
+      - "Why are windows from the same subject not independent?"
+
+evaluation:
+  - tutorial: plot_11_leakage_safe_split
+    answers:
+      - "What split should I use for my scientific question?"
+      - "How do I split by subject?"
+      - "How do I stratify without leakage?"
+  - tutorial: plot_12_train_a_baseline
+    answers:
+      - "What metrics should I report for classification and regression?"
+      - "What is a meaningful baseline?"
+
+modeling:
+  - tutorial: plot_12_train_a_baseline
+    answers:
+      - "How do I train a scikit-learn baseline?"
+      - "How do I train a braindecode model?"
+      - "How do I use a plain PyTorch loop?"
+      - "Which models are good first baselines?"
+      - "When should I use raw signals, spectral features, CSP, or deep learning?"
+  - tutorial: plot_42_features_to_sklearn
+    answers:
+      - "How do I normalize data?"
+      - "How do I avoid normalizing using validation/test information?"
+  - tutorial: plot_13_save_and_reuse_prepared_data
+    answers:
+      - "How do I save and load models?"
+
+feature_extraction:
+  - tutorial: plot_40_first_features
+    answers:
+      - "What features are included in `eegdash.features`?"
+      - "How do I list available features?"
+      - "How do I extract signal, spectral, complexity, connectivity, and CSP features?"
+  - tutorial: plot_41_feature_trees
+    answers:
+      - "How do feature preprocessors work?"
+      - "How do I avoid recomputing Welch spectra repeatedly?"
+  - tutorial: plot_42_features_to_sklearn
+    answers:
+      - "How do I save and reload feature datasets?"
+
+scaling_and_reproducibility:
+  - tutorial: plot_13_save_and_reuse_prepared_data
+    answers:
+      - "How do I make a reproducible experiment directory?"
+      - "How do I pin dataset versions?"
+  - tutorial: plot_12_train_a_baseline
+    answers:
+      - "How do I log query, preprocessing, split, model, and metrics?"
+
+interoperability:
+  - tutorial: plot_10_preprocess_and_window
+    answers:
+      - "How does EEGDash relate to MNE?"
+  - tutorial: plot_12_train_a_baseline
+    answers:
+      - "How does EEGDash relate to braindecode?"
+
+# ---------------------------------------------------------------------------
+# Unanswered questions
+# ---------------------------------------------------------------------------
+# These questions appear in §New User Questions but are NOT answered by any of
+# the 13 in-scope tutorials. They must land in:
+#   - a future release (Categories F/G/H/I in the plan), or
+#   - a how-to (e.g., how_to_work_offline.py, how_to_handle_bad_records.py), or
+#   - a concept/reference page (Documentation Pages To Add §Concepts).
+unanswered:
+  installation_and_setup:
+    - "Which Python versions are supported?"
+    - "Should I use pip, uv, conda, or source install?"
+    - "What optional extras do I need for tutorials, features, docs, and tests?"
+    - "Can I run tutorials on CPU?"
+    - "Which tutorials require a GPU?"
+    - "What do I do if MNE, PyTorch, or braindecode installation fails?"
+  loading_and_caching:
+    - "How do I download all files ahead of time?"
+    - "How do I use EEGDash offline?"
+    - "How do I know whether my cache is complete?"
+    - "How do I handle records that fail to load?"
+    - "What does `on_error=\"warn\"` or `on_error=\"skip\"` do?"
+    - "When should I call `drop_bad` or `drop_short`?"
+  eeg_data_inspection:
+    - "How do I detect missing or inconsistent metadata?"
+  preprocessing:
+    - "How do I set references?"
+    - "How do I handle artifacts?"
+  windowing_and_labels:
+    - "How do I attach metadata labels such as age, sex, or p-factor?"
+  evaluation:
+    - "How do I split by session?"
+    - "How do I do cross-dataset evaluation?"
+    - "How do I compute confidence intervals or chance-level checks?"
+    - "How do I compare pipelines fairly?"
+  feature_extraction:
+    - "How do I write a custom feature?"
+  scaling_and_reproducibility:
+    - "How do I run this on a cluster?"
+    - "How do I choose `n_jobs`, batch sizes, and cache location?"
+    - "How do I cite EEGDash and the source datasets?"
+  interoperability:
+    - "How does EEGDash relate to MOABB?"
+    - "Can I convert EEGDash datasets into MOABB-style evaluations?"
+    - "Can I use local BIDS datasets?"
+    - "Can I export features or windows for other tools?"
+
+# generated 2026-05-06; sourced from tutorial_restructure_plan.md §New User Questions

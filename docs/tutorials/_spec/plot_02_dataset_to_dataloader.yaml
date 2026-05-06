@@ -1,0 +1,93 @@
+id: plot_02_dataset_to_dataloader
+category: A-start-here
+title: "From EEGDashDataset to a PyTorch DataLoader"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 2
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_01_first_recording
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L360-L370"
+    - "tutorial_restructure_plan.md#L489-L501"
+    - "tutorial_restructure_plan.md#L865-L881"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.16"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.24"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+learning_objectives:
+  - "After this tutorial you will be able to chain a small EEGDash dataset, one or two safe preprocessors, and a fixed-length window step."
+  - "After this tutorial you will be able to inspect a single `(X, y)` window and predict its tensor shape from `n_channels`, `window_size`, and `sfreq`."
+  - "After this tutorial you will be able to wrap windows in a PyTorch `DataLoader` and read one batch shape without training a model."
+  - "After this tutorial you will be able to seed RNGs (`np.random`, `torch`) so a teammate gets the same first batch."
+audience: "Beginner familiar with plot_00 and plot_01. Has used PyTorch tensors but not necessarily Braindecode; no model-training expected here."
+budgets:
+  max_loc: 220
+  max_runtime_seconds: 60
+  max_network_mb: 100
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_02.png
+  figures:
+    - figure_window_layout.png
+    - figure_batch_shape.png
+asserted_invariants:
+  - "len(windows) >= batch_size"
+  - "X.ndim == 3  # (batch, channels, time)"
+  - "X.shape[0] == batch_size"
+  - "X.shape[1] == n_channels"
+  - "X.shape[2] == int(window_size_seconds * sfreq)"
+  - "len(set(y_batch.tolist())) >= 1"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 5
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+  make: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - channel_count_in_subtitle
+    - sample_rate_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/eegdash_objects.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_work_offline
+  related_papers:
+    - "Schirrmeister et al. 2017, Hum. Brain Mapp. — Braindecode"
+    - "Gramfort et al. 2013, Front. Neurosci. — MNE software"
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "braindecode.preprocessing.create_fixed_length_windows"
+  - "torch.utils.data.DataLoader"
+review_rubric_overrides: {}

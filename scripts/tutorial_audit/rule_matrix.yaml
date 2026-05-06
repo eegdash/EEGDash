@@ -1,0 +1,34 @@
+# Difficulty-aware rule activation for the EEGDash tutorial audit.
+#
+# Source: docs/tutorial_implementation_strategy.md, Appendix A.
+# Each rule has a default severity. Difficulty-specific overrides relax or
+# tighten the level for a given star tier (1 = beginner, 2 = intermediate,
+# 3 = advanced/project). The level "exempt" means the rule is not applied.
+#
+# Levels: error | warn | info | exempt
+defaults:
+  E1.*: error
+  E2.*: warn
+  E3.*: error
+  E4.*: warn
+  E5.*: error
+  E6.*: warn
+  DV.*: warn
+overrides:
+  difficulty_1:
+    E2.13: error
+    E2.16: error
+    E2.20: error
+    E5.42: error
+    E5.43: error
+  difficulty_2:
+    E2.13: warn
+    E2.16: warn
+    E5.42: error
+    E5.43: error
+  difficulty_3:
+    E2.13: exempt
+    E2.16: exempt
+    E2.18: info
+    E5.42: error      # leakage is non-negotiable at any level
+    E5.43: error

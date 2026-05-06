@@ -1,0 +1,97 @@
+# Tutorial audit (Day-0, static stage only).
+#
+# This workflow enforces the spec-first tutorial rubric described in
+# `docs/tutorial_implementation_strategy.md`. It runs the static stage of the
+# pipeline (E.1 structural, E.2 pedagogical, E.3 technical, E.4 engagement,
+# E.5 domain, E.6 Diataxis) on every pull request that touches tutorial
+# sources or specs, on `develop` pushes, and nightly. The runtime matrix
+# (clean-kernel execution, budgets, leakage, palette) is intentionally
+# omitted at Day-0 and will be added once the first three Release-1
+# tutorials are drafted (see strategy doc, "Bootstrap (Day-0)" section).
+#
+# Notebook lint via `nbqa ruff` runs warn-only at first to gather signal
+# before promotion to error. Spec coherence is checked first because it is
+# the cheapest gate and catches most authoring mistakes before any per-file
+# rubric runs.
+
+name: tutorial-audit
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - "examples/tutorials/**"
+      - "docs/tutorials/_spec/**"
+      - "scripts/tutorial_audit/**"
+      - ".github/workflows/tutorial-audit.yml"
+  push:
+    branches: [develop]
+    paths:
+      - "examples/tutorials/**"
+      - "docs/tutorials/_spec/**"
+      - "scripts/tutorial_audit/**"
+      - ".github/workflows/tutorial-audit.yml"
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  static:
+    name: static-rubric
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Validate workflow YAML
+        run: |
+          python -c "import yaml; yaml.safe_load(open('.github/workflows/tutorial-audit.yml'))"
+
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pyyaml ruff black nbqa pillow
+
+      - name: Spec coherence check
+        run: python -m scripts.tutorial_audit.validate_spec
+
+      - name: Structural rubric (static stage)
+        run: |
+          python -m scripts.tutorial_audit.pipeline \
+            --stage static \
+            --pattern "examples/tutorials/**/plot_*.py"
+
+      - name: Notebook lint (warn-only)
+        run: |
+          nbqa ruff examples/tutorials/**/plot_*.py || true
+
+      - name: Aggregate evidence report
+        if: always()
+        run: python -m scripts.tutorial_audit.report --aggregate
+
+      - name: Gate on error-level findings
+        if: always()
+        run: python -m scripts.tutorial_audit.report --gate
+
+      - name: Upload evidence dossiers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-evidence-py${{ matrix.python-version }}
+          path: docs/evidence/tutorials/
+          if-no-files-found: warn
+          retention-days: 30

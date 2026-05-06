@@ -1,0 +1,98 @@
+id: plot_11_leakage_safe_split
+category: B-core-workflow
+title: "Split EEG data without subject leakage"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 3
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_10_preprocess_and_window
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L372-L385"
+    - "tutorial_restructure_plan.md#L489-L501"
+    - "tutorial_restructure_plan.md#L902-L919"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L2814-L2851"
+  rubric:
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.16"
+    - "compass_artifact.md#E2.17"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.27"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+learning_objectives:
+  - "After this tutorial you will be able to build a leakage-safe train/test split on EEG records using `eegdash.splits.get_splitter` and a MOABB-backed cross-subject scheme."
+  - "After this tutorial you will be able to run `assert_no_leakage` and read its emitted JSON report."
+  - "After this tutorial you will be able to compare a naive window-level random split (which leaks subjects) against a subject-aware split on the same windows."
+  - "After this tutorial you will be able to print a split summary that names the splitter, fold count, subjects per fold, and class balance."
+audience: "Beginner ML user with one prior EEGDash tutorial (plot_10). Has heard of train/test splits; the leakage pitfall is introduced in this lesson."
+budgets:
+  max_loc: 220
+  max_runtime_seconds: 180
+  max_network_mb: 50
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_11.png
+  figures:
+    - figure_split_audit.png
+    - figure_leaky_vs_safe_confusion.png
+asserted_invariants:
+  - "n_subjects_total > 10"
+  - "subject_overlap(train, test) == 0"
+  - "n_folds >= 5"
+  - "abs(class_balance_train - class_balance_test) < 0.10"
+  - "leakage_report['overlap'] == 0"
+  - "naive_random_split_overlap > 0  # demonstrated as the bad case"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 5
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+  make: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - chance_level_line
+    - subject_count_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.splits
+  related_how_to:
+    - how_to_handle_bad_records
+  related_papers:
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips (Tip 9)"
+    - "Aristimunha et al. 2023, MOABB benchmark — cross-subject evaluation"
+requires_api:
+  - "eegdash.splits.to_split_metadata"
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.make_split_manifest"
+  - "eegdash.splits.apply_split_manifest"
+  - "eegdash.splits.assert_no_leakage"
+  - "eegdash.splits.describe_split"
+review_rubric_overrides: {}

@@ -1,0 +1,85 @@
+id: plot_00_first_search
+category: A-start-here
+title: "Find EEG datasets and records with EEGDash"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 1
+hardware: cpu
+network: metadata_only
+prerequisites: []
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L360-L370"
+    - "tutorial_restructure_plan.md#L489-L501"
+    - "tutorial_restructure_plan.md#L819-L844"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E4.32"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+learning_objectives:
+  - "After this tutorial you will be able to instantiate the `EEGDash` client and run a metadata-only query without downloading raw signals."
+  - "After this tutorial you will be able to interpret the returned record fields, distinguish dataset documents from record documents, and pick a candidate dataset for follow-up tutorials."
+  - "After this tutorial you will be able to filter records by BIDS entities (`dataset`, `subject`, `task`, `session`, `run`) and surface them in prose."
+  - "After this tutorial you will be able to compute simple metadata statistics across results (subject count, sampling rates, total duration)."
+audience: "Brand-new EEGDash user; no prior EEG-DaSh tutorials. Comfortable running Python in a notebook."
+budgets:
+  max_loc: 220
+  max_runtime_seconds: 60
+  max_network_mb: 5
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_00.png
+  figures:
+    - figure_record_count_by_task.png
+    - figure_dataset_vs_record_summary.png
+asserted_invariants:
+  - "n_records_returned > 0"
+  - "n_records_returned <= search_limit"
+  - "all returned records carry BIDS entity keys (`dataset`, `subject`, `task`)"
+  - "no raw signal bytes downloaded during the tutorial"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 5
+      labelled_subgoals: true
+  - checkpoints:
+      min: 3
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+  make: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - subject_count_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/eegdash_objects.rst
+  api: eegdash.api
+  related_how_to:
+    - how_to_work_offline
+  related_papers:
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+requires_api:
+  - "eegdash.EEGDash"
+  - "eegdash.EEGDash.find"
+  - "eegdash.EEGDash.search_datasets"
+review_rubric_overrides: {}

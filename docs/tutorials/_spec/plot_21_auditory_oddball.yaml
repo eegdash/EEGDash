@@ -1,0 +1,101 @@
+id: plot_21_auditory_oddball
+category: C-event-related
+title: "Auditory oddball: contrast with the visual P300 tutorial"
+state: proposed
+assignee: null
+difficulty: 2
+estimated_runtime_minutes: 5
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_20_visual_p300_oddball
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L387-L397"
+    - "tutorial_restructure_plan.md#L502-L510"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L1212-L1216"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E4.33"
+    - "compass_artifact.md#E4.36"
+    - "compass_artifact.md#E5.37"
+    - "compass_artifact.md#E5.41"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+learning_objectives:
+  - "After this tutorial you will be able to query an auditory oddball dataset and reuse the event-mapping pattern from plot_20 with modality-specific adjustments."
+  - "After this tutorial you will be able to compare auditory vs. visual P300 latency and topography on matching epoch windows."
+  - "After this tutorial you will be able to retrain the same baseline classifier under a subject-aware split and contrast its metric table with the visual P300 result."
+  - "After this tutorial you will be able to articulate which preprocessing/epoching choices changed between modalities and which stayed constant."
+audience: "Intermediate user who has completed plot_20. The lesson is framed as a contrast, not a duplicate, per plan §Phase 3 step 3."
+budgets:
+  max_loc: 220
+  max_runtime_seconds: 300
+  max_network_mb: 200
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_21.png
+  figures:
+    - figure_auditory_vs_visual_erp.png
+    - figure_latency_comparison.png
+    - figure_metric_table_compare.png
+asserted_invariants:
+  - "n_target_epochs > 0 and n_standard_epochs > 0"
+  - "epochs.info['sfreq'] == reference_sfreq_from_plot_20"
+  - "epochs.tmin == reference_tmin and epochs.tmax == reference_tmax"
+  - "leakage_report['overlap'] == 0"
+  - "auditory_p300_peak_latency_ms reported with hedged language"
+  - "metric_table contains both auditory and visual rows for direct comparison"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - chance_level_line
+    - subject_count_in_subtitle
+    - sample_rate_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.dataset
+  related_how_to: []
+  related_papers:
+    - "Polich 2007, Clin. Neurophysiol. — Updating P300"
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "braindecode.preprocessing.create_windows_from_events"
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.assert_no_leakage"
+review_rubric_overrides:
+  E2.16: warn
+notes:
+  extrapolation: "Plan does not provide a §Detailed Tutorial Proposal for tutorial_21; spec extrapolated from plan §Cat C item 2 (L394-L395), §Phase 3 step 3 (L1212-L1216), and the plot_20 detailed proposal."

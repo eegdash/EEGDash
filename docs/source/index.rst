@@ -320,3 +320,9 @@
    Install <install/install>
    Examples <generated/auto_examples/index>
    Docs <api/api>
+
+.. toctree::
+   :hidden:
+   :caption: Contributing
+
+   Tutorial Evidence <contributing/tutorial_evidence>

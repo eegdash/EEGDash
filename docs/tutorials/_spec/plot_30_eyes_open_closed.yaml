@@ -1,0 +1,103 @@
+id: plot_30_eyes_open_closed
+category: D-resting-state
+title: "Decode eyes-open vs. eyes-closed from resting-state EEG"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 3
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_11_leakage_safe_split
+  - plot_12_train_a_baseline
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L399-L408"
+    - "tutorial_restructure_plan.md#L502-L510"
+    - "tutorial_restructure_plan.md#L960-L975"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.13"
+    - "compass_artifact.md#E2.16"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E4.31"
+    - "compass_artifact.md#E4.33"
+    - "compass_artifact.md#E4.36"
+    - "compass_artifact.md#E5.37"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+learning_objectives:
+  - "After this tutorial you will be able to load HBN eyes-open / eyes-closed resting-state recordings via `EEGDashDataset` (or the `mini=True` HBN release for CI)."
+  - "After this tutorial you will be able to reannotate EO/EC intervals from session annotations and create balanced fixed-length windows."
+  - "After this tutorial you will be able to inspect one signal segment and a PSD that shows the textbook posterior alpha bump in eyes-closed."
+  - "After this tutorial you will be able to train a simple classifier on a subject-aware split and report accuracy and chance level."
+audience: "Beginner who has worked through Cat A and Cat B. Knows about windows, splits, and baselines; learns about annotations and resting-state framing here."
+budgets:
+  max_loc: 220
+  max_runtime_seconds: 180
+  max_network_mb: 200
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_30.png
+  figures:
+    - figure_signal_eo_vs_ec.png
+    - figure_psd_alpha_bump.png
+    - figure_confusion_matrix.png
+asserted_invariants:
+  - "n_subjects_total >= 10"
+  - "abs(n_windows_eo - n_windows_ec) / max(n_windows_eo, n_windows_ec) < 0.20  # balanced"
+  - "leakage_report['overlap'] == 0"
+  - "psd_alpha_power_ec >= psd_alpha_power_eo  # textbook expectation, hedged in prose"
+  - "model_accuracy_test reported with chance level computed from class balance"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 5
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+  modify: 1
+  make: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - chance_level_line
+    - subject_count_in_subtitle
+    - sample_rate_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/preprocessing_decisions.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_handle_bad_records
+  related_papers:
+    - "Barry et al. 2007, Clin. Neurophysiol. — EEG differences in EO vs EC"
+    - "Alexander et al. 2017, Sci. Data — HBN dataset"
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "braindecode.preprocessing.Preprocessor"
+  - "braindecode.preprocessing.create_fixed_length_windows"
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.assert_no_leakage"
+review_rubric_overrides: {}

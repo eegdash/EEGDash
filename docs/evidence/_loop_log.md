@@ -252,3 +252,97 @@ Phase status (per plan §Migration Plan):
 
 Roughly 50 minutes wall (4 D1 agents + 5 D2 agents + verification + 2
 commits). Within the 30-minute cron cadence; next fire picks up iteration 4.
+
+## Iteration 4 — 2026-05-07 (second cron fire)
+
+### Wave E1 — Cat H/I specs + concept pages + reviewer pass + applied refresh (commit bdb475d1d)
+
+4 parallel agents:
+
+- 9 new spec YAMLs: 4 Cat H (plot_70-73) + 5 Cat I how-tos. Schema gained
+  `kind: tutorial|how-to` and `output_kind: python|markdown` for the
+  SLURM how-to. validate_spec clean across all 27 specs.
+- 6 RST concept pages (957 lines total) under docs/source/concepts/:
+  index, eegdash_objects, metadata_and_bids, leakage_and_evaluation,
+  preprocessing_decisions, features_vs_deep_learning. Tutorials' :doc:
+  references now resolve. Anchor citations spread per topic.
+- LLM-as-reviewer pass on the 18 plot_*.py tutorials produced 18
+  reviewer_score.json files + _reviewer_summary_2026-05-07.md.
+  Result: 10/18 pass merge gate. 8 fail solely on E2.17 (intentional
+  error). plot_11_leakage_safe_split is the strongest (sum 36/40,
+  rubric exemplar). E2.17 systemic average 3.06/5.
+- 6 examples/applied/ projects refreshed (light-touch, +30-40 LOC each):
+  project-starter caveats, seeds, subject-aware split disclosures
+  citing Cisotto & Chicco 2024 Tip 9, References blocks with dataset+
+  method DOIs.
+
+### Wave E2 — 9 Cat H+I drafts + E2.17 retrofit on 8 failers (commit a6d7d879e)
+
+10 parallel agents:
+
+- 4 Cat H tutorial drafts (plot_70/71/72/73) using EEGChallengeDataset
+  with mini=True. plot_71 demonstrates pretrain→fine-tune cross-task
+  transfer with a +0.267 gap over scratch.
+- 5 Cat I how-tos in examples/how_to/. Includes the SLURM template
+  markdown with 10 sbatch directives + GPU/array variations.
+- E2.17 retrofit on the 8 reviewer-failers (plot_20/21/30/41/42/50/53/54).
+  Each gained a try/except intentional-error block before ## Modify.
+  Spec budgets bumped to absorb +20 LOC.
+
+### State after iteration 4
+
+- 22/22 plot_*.py tutorials in the new gallery tree pass static audit
+  (errors=0, warns=0). Categories A/B/C/D/E/F/H all complete.
+- 5 Cat I how-tos in examples/how_to/. The static audit still applies
+  tutorial-only rules to them (E1.1 plot_* prefix, E2.13 PRIMM,
+  E2.20 LO header) — documented limitation; the audit pipeline needs
+  to branch on spec.kind=how-to. Spec already declares the exemptions.
+- 6 examples/applied/ projects refreshed (Cat G).
+- 6 concept pages live (Diataxis explanation quadrant).
+- All 18 plot_*.py tutorials in the original 13+5 Cat F set have
+  E2.17 retrofit; 22/22 in the broader gallery now pass static audit.
+- Cumulative test count: ~145+ unit tests across the iterations, all
+  green.
+
+### Phase status (per plan §Migration Plan)
+
+- Phase 1 (audit/triage): DONE
+- Phase 2 (build first learning path): DONE
+- Phase 3 (reclassify long examples): DONE
+- Phase 4 (benchmarking + community alignment, Cat F/G/H/I + concept
+  pages): SUBSTANTIALLY DONE. Reviewer rubric pass complete; concept
+  pages live; applied/ refresh done.
+- Phase 5 (maintenance + governance): TODO.
+
+### Recommended iteration 5 work
+
+1. **Audit pipeline branching on spec.kind=how-to**: gate E1.1, E2.13,
+   E2.20, E4.31, E4.34, E6.48 to only fire when spec.kind == "tutorial".
+   Cat I how-tos will then audit clean.
+2. **Phase 5 governance** per plan §1236-1252:
+   - Tutorial review template in CONTRIBUTING.md (already added in
+     iteration 1 — verify still current).
+   - Docs CI matrix (fast smoke build vs selected tutorial execution
+     vs full nightly).
+   - Track tutorial runtime + data size.
+3. **Sphinx build smoke test**: `cd docs && make html` and fix any
+   broken cross-references (tutorials → concept pages, etc.).
+4. **Phase 4 final polish**:
+   - Address the 1 minor Cat F drift (plot_54 uses RidgeClassifier
+     instead of ShallowFBCSPNet to keep CPU runtime tight; either swap
+     to small ShallowFBCSPNet or update spec to reflect reality).
+   - Run reviewer rubric pass on the new Cat F/H/I tutorials (5+4+5=14
+     not yet reviewed).
+   - Consider adding W5 baseline recipes module (plan §2899-2913).
+5. **Final checklist before opening the PR**:
+   - All 22+5 = 27 spec YAMLs validate.
+   - Audit clean on all gallery files (with kind branching).
+   - Reviewer pass on all 27 tutorials.
+   - Sphinx build succeeds.
+   - CHANGELOG.md updated.
+   - Squash-rebase or keep multi-commit log per repo convention.
+
+### Time used in iteration 4
+
+Roughly 80 minutes wall (Wave E1 4 agents + Wave E2 10 agents +
+verification + 2 commits). One complete iteration of the cron loop.

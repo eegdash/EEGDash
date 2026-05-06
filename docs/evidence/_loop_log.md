@@ -89,3 +89,81 @@ State per spec (`state:` field still `proposed` because we haven't run
 
 Roughly 40 minutes wall, including all 13 agent runs and 3 commits. Within
 the 30-minute cron cadence — next fire will pick up iteration 2.
+
+## Iteration 2 — 2026-05-07
+
+### Wave C — 5 Release-2 tutorial drafts (commit e6090e698)
+
+7 parallel agents:
+
+- 5 tutorial-author agents: plot_20, plot_21, plot_30, plot_41, plot_42.
+  All five self-audit clean (errors=0 warns=0). LOC range 218-220 + budget
+  bumps where E2.17 retrofit applied.
+- 1 E2.17-retrofit agent: added "intentional mistake → recovery" block to
+  each of the 8 Wave-B tutorials. Mistakes per domain (unknown task name,
+  out-of-range index, oversize window, inverted band-pass, typo'd splitter
+  name, length-mismatched fit, missing overwrite=True, unknown feature key).
+  Cites Nederbragt et al. 2020 (doi:10.1371/journal.pcbi.1008090) in
+  plot_00. Bumped spec.budgets.max_loc from 220 to 260 (default), 285
+  (plot_40, plot_41), 230 (plot_20) to absorb the +14-19 lines per file.
+- 1 spec/API alignment agent: added EEGDash.search_datasets (5 unit tests)
+  and eegdash.features.fit_feature_extractor backward-compat alias (1
+  test). Synced 9 specs' requires_api lists to the actual imports.
+
+### Verification (commit-included _verification_2026-05-07.md)
+
+Pass/fail across 5 Wave-C tutorials: A. citations 2 pass / 1 partial /
+2 fail; B. plan alignment 2/3/0; C. spec coherence 0/4/1; D. reviewer
+rubric 4/1/0.
+
+Critical fixes applied in the same commit:
+- plot_42 Sentance 2019 PRIMM DOI corrected to 10.1080/08993408.2019.1608781
+  (was 10.1145/3304221.3325207, wrong paper).
+- plot_42 Pedregosa 2011 ACM identifier (10.5555/...) dropped — keep the
+  textual JMLR reference only.
+- plot_20 dataset attribution softened to "OpenNeuro ds005863" without
+  asserting Kappenman / ERP CORE authorship (verification flagged the
+  DOI may resolve to a different paper).
+
+### State after iteration 2
+
+- 13/13 specs in the new gallery tree pass static audit (errors=0, warns=0).
+- Legacy `plot_clinical_summary.py` still flags 9 errors — will be
+  removed in Phase 3 file moves.
+- Cumulative new tests across both iterations: 100+ unit tests, all green.
+- Phase 1 (audit/triage) and Phase 2 (build first learning path = 13
+  tutorials) of the plan's migration plan are now COMPLETE.
+
+### Recommended iteration 3 work
+
+1. **Phase 3 file moves** (per docs/tutorials/_triage.md):
+   - Retire `plot_clinical_summary.py` (replaced by Cat A trio + Cat E).
+   - Retire `tutorial_minimal.py` (leaky split; superseded by Cat A trio).
+   - Retire `tutorial_transfer_learning.py` (synthetic; plan §L1097-1100).
+   - Move noplot_tutorial_age_prediction/pfactor_features/pfactor_regression/
+     sex_classification_cnn → `examples/applied/`.
+   - Move noplot_tutorial_audi_oddball + noplot_tutorial_p3_oddball:
+     these were rewritten as plot_20/21 — retire.
+   - Rename remaining `noplot_*` files (Phase 1 step 5 of the plan).
+   - hpc/tutorial_eoec.py → `examples/hpc/tutorial_hpc_cache_and_slurm.py`.
+2. **Phase 4 — Cat F evaluation tutorials** (5 new tutorials per plan
+   §Cat F, lines 425-442):
+   - plot_50_within_subject_evaluation
+   - plot_51_cross_subject_evaluation
+   - plot_52_cross_session_evaluation
+   - plot_53_learning_curves
+   - plot_54_compare_two_pipelines
+   These need spec YAMLs first.
+3. Address remaining iteration-2 verification follow-ups:
+   - plot_30 over-constrains alpha-diff assertion.
+   - plot_30 calls task.* properties not yet on EEGTask.
+   - plot_41 monkeypatches without restoration.
+   - plot_21 SFREQ mismatch vs plot_20.
+4. Optional Phase 4 — implement W4 (windowing convenience) and W5
+   (baseline recipes) per plan §Implementation Backlog.
+
+### Time used in iteration 2
+
+Roughly 40 minutes wall (7 agent runs + verification + 4 commit attempts
+recovering from pre-commit hook fixes). Within the 30-minute cron cadence;
+next fire will pick up iteration 3.

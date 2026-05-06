@@ -1,25 +1,45 @@
 # %% [markdown]
 """.. _pfactor-features:
 
-Predicting p-factor from EEG
-============================
+Predicting p-factor from EEG: Feature-Based Pipeline (Project Starter)
+======================================================================
 
-The code below provides an example of using the *braindecode* and *EEGDash* libraries in combination with LightGBM to predict a subject's p-factor.
+This is the **feature-based variant** of the p-factor regression project. It
+combines ``eegdash.features`` with a LightGBM regressor on resting-state EEG.
+The companion file ``project_pfactor_deep.py`` implements the **deep-learning
+variant** (EEGConformer end-to-end). The two projects answer different
+questions: this one asks what hand-crafted spectral and signal features
+explain p-factor variance, while the deep version asks whether a
+transformer can learn the same target from raw windows.
 
-1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve resting state data. At this step, only the metadata is transferred.
+This is a **project starter, not a first-week tutorial**. It expects users
+to be comfortable with feature engineering, LightGBM, and clinical labels.
+The "p-factor" is a transdiagnostic mental-health summary score derived from
+parent/child psychiatric questionnaires. **Treat it as an outcome with
+genuine clinical interpretation caveats**: do not over-state effects from
+small samples, and report uncertainty alongside MSE.
 
-2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by selecting specific channels, resampling, filtering, and extracting 10-second epochs.
+Pipeline overview:
 
-3. **Extracting EEG Features Using EEGDash.features**: Building a feature extraction tree and extracting features per EEG window.
-
-4. **Model Training and Evaluation Process**: This section normalizes input data, trains a LightGBM model, and evaluates regression MSE.
+1. **Data retrieval** with ``EEGDashDataset`` (metadata-only first pass).
+2. **Subject-level train/validation split** before windowing.
+3. **Preprocessing** with Braindecode (channel pick, resample, filter).
+4. **Feature extraction** via ``eegdash.features`` (signal + spectral trees).
+5. **LightGBM regression** with early stopping on validation MSE.
 """
+
+# Difficulty: 3-star (advanced applied project)
+
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
 
 # %%
 from pathlib import Path
+import numpy as np
 import pandas as pd
+
+# Reproducibility: set a single global seed for numpy operations.
+np.random.seed(42)
 
 
 from eegdash import EEGDashDataset
@@ -78,6 +98,11 @@ raw_all = BaseConcatDataset(filtered_datasets)
 # %%
 from braindecode.datasets import BaseConcatDataset
 
+# Subject-aware split disclosure: we split on *unique subjects* before any
+# windowing or feature extraction, so no subject's data appears in both
+# train and validation. Subject leakage is one of the most common failure
+# modes for EEG ML; see Cisotto & Chicco 2024 (Tip 9),
+# https://doi.org/10.7717/peerj-cs.2256 for a checklist of related pitfalls.
 subjects = raw_all.description["subject"].unique()
 train_subj, valid_subj = train_test_split(
     subjects, train_size=0.8, random_state=42, shuffle=True
@@ -253,8 +278,6 @@ features_train.to_dataframe()
 # Replace Inf and NaN values:
 
 # %%
-import numpy as np
-
 features_train.replace([-np.inf, +np.inf], np.nan)
 features_train.fillna(0)
 
@@ -333,3 +356,20 @@ plot_importance(model, importance_type="split", max_num_features=10)
 
 # %%
 plot_importance(model, importance_type="gain", max_num_features=10)
+
+# %% [markdown]
+# ## References
+#
+# - EEG2025 release (`EEG2025r5`): see the EEG2025 Challenge documentation and
+#   the underlying Healthy Brain Network EEG release
+#   (https://doi.org/10.18112/openneuro.ds005505.v1.0.0).
+# - Caspi, A. et al. (2014). "The p factor: One general psychopathology factor
+#   in the structure of psychiatric disorders". *Clinical Psychological
+#   Science*, https://doi.org/10.1177/2167702613497473
+# - LightGBM: Ke, G. et al. (2017). "LightGBM: A Highly Efficient Gradient
+#   Boosting Decision Tree". NeurIPS,
+#   https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree
+# - Subject-aware splits and EEG ML pitfalls: Cisotto, G. & Chicco, D. (2024).
+#   "Ten quick tips for clinical electroencephalographic (EEG) data acquisition
+#   and signal processing", PeerJ Computer Science (Tip 9),
+#   https://doi.org/10.7717/peerj-cs.2256

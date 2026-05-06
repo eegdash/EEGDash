@@ -1,0 +1,114 @@
+id: plot_72_subject_invariant_regression
+category: H-transfer-foundation
+kind: tutorial
+output_kind: python
+title: "Subject-invariant p-factor regression (EEG2025 Challenge 2)"
+state: proposed
+assignee: null
+difficulty: 3
+estimated_runtime_minutes: 25
+hardware: gpu
+network: cached_first_run
+prerequisites:
+  - plot_70_challenge_dataset_basics
+  - plot_11_leakage_safe_split
+  - plot_42_features_to_sklearn
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L458-L470"
+    - "tutorial_restructure_plan.md#L1068-L1080"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L1220-L1229"
+    - "tutorial_restructure_plan.md#L1354-L1366"
+    - "tutorial_restructure_plan.md#L1577-L1612"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.29"
+    - "compass_artifact.md#E4.32"
+    - "compass_artifact.md#E4.33"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+    - "compass_artifact.md#E5.46"
+learning_objectives:
+  - "After this tutorial you will be able to load EEG2025 Challenge 2 recordings via `EEGChallengeDataset` with the p-factor target attached through `description_fields`."
+  - "After this tutorial you will be able to construct a strict cross-subject split with `eegdash.splits.get_splitter('cross_subject')` and verify that no subject appears in both train and test."
+  - "After this tutorial you will be able to fit a regression head (ridge baseline plus a small Braindecode encoder) and report `r2`, MAE, and median-baseline residuals."
+  - "After this tutorial you will be able to phrase the result in clinical-cautious language: small N, single dataset, p-factor as a derived score not a diagnosis."
+audience: "Advanced user; prior plot_42 (features-to-sklearn) and plot_70 (challenge dataset). Project-tier scaffolding rules apply."
+budgets:
+  max_loc: 320
+  max_runtime_seconds: 1500
+  max_network_mb: 1500
+  cpu_only: false
+  gpu_required: true
+artifacts:
+  thumbnail: thumbnails/plot_72.png
+  figures:
+    - figure_pred_vs_true_scatter.png
+    - figure_residual_by_subject.png
+    - figure_split_audit.png
+asserted_invariants:
+  - "subject_overlap(train, test) == 0   # the defining property of cross-subject regression"
+  - "leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0"
+  - "n_test_subjects_per_fold >= 1 and n_folds >= 5"
+  - "r2_test reported alongside mae_test and median_baseline_mae"
+  - "model_mae_test < median_baseline_mae   # a well-trained model beats predicting the median"
+  - "p_factor_label_dtype is float and not nan-only"
+  - "no_clinical_diagnosis_claim_in_prose   # reviewer hedging gate"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - subject_count_in_subtitle
+    - sample_rate_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_use_hpc_cache
+  related_papers:
+    - "EEG2025 Challenge — Challenge 2 (subject-invariant p-factor)"
+    - "Alexander et al. 2017, Sci. Data — HBN dataset"
+    - "Caspi et al. 2014, Clin. Psychol. Sci. — the p-factor"
+    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+requires_api:
+  - "eegdash.EEGChallengeDataset"
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.make_split_manifest"
+  - "eegdash.splits.apply_split_manifest"
+  - "eegdash.splits.assert_no_leakage"
+  - "eegdash.features.extract_features"
+  - "sklearn.linear_model.Ridge"
+  - "sklearn.metrics.mean_absolute_error"
+  - "sklearn.metrics.r2_score"
+  - "braindecode.models.ShallowFBCSPNet"
+review_rubric_overrides:
+  E2.13: exempt
+  E2.16: exempt
+  E2.18: info

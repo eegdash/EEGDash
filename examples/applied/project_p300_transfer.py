@@ -1,32 +1,43 @@
 """.. _tutorial-p3-transfer-learning:
 
-EEG P3 Transfer Learning with AS-MMD
-====================================
+EEG P3 Transfer Learning with AS-MMD (Project Starter)
+=======================================================
 
-This tutorial demonstrates how to train a domain-adaptive deep learning model for
-EEG P3 component classification across two different datasets using Adaptive
-Symmetric Maximum Mean Discrepancy (AS-MMD).
+A domain-adaptive deep-learning recipe for cross-dataset P300 classification
+using Adaptive Symmetric Maximum Mean Discrepancy (AS-MMD).
 
-**Paper:** Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample
-Cross-Dataset P300 EEG Classification. arXiv: `2510.21969 <https://arxiv.org/abs/2510.21969>`_
+This is a **project starter, not a first-week tutorial**. It is the most
+advanced applied example in the gallery: it assumes confident use of
+PyTorch, multi-loss training, and cross-validation, and it demonstrates a
+specific paper recipe rather than a general-purpose workflow. New users
+should first work through the EEG2025 transfer tutorials,
+``tutorial_70_challenge_dataset_basics.py``, ``tutorial_71_cross_task_transfer.py``,
+and ``tutorial_72_subject_invariant_regression.py`` (Category H), which
+introduce transfer concepts in a more controlled setting.
+
+**Paper:** Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for
+Small-Sample Cross-Dataset P300 EEG Classification.
+arXiv: `2510.21969 <https://arxiv.org/abs/2510.21969>`_
 
 Key Concepts
 ============
 
-This tutorial covers:
+This project covers:
 
 - **Domain Adaptation**: Training on multiple datasets with different recording setups
 - **Deep Learning**: Using EEGConformer, a transformer-based model for EEG
 - **AS-MMD**: A technique that aligns feature distributions across datasets
 - **Cross-Validation**: Robust evaluation using nested stratified folds
 
-By the end, you'll understand how to:
+By the end, you should understand how to:
 
 1. Load and preprocess multi-dataset EEG recordings
 2. Build a domain-adaptive classifier
 3. Evaluate performance across domains
 4. Apply the method to your own datasets
 """
+
+# Difficulty: 3-star (advanced applied project)
 
 # %%
 # Part 1: Loading and Preprocessing Data
@@ -108,6 +119,10 @@ from braindecode.preprocessing import (
 )
 
 mne.set_log_level("ERROR")
+
+# Reproducibility: set a single global seed before any sampling.
+np.random.seed(42)
+torch.manual_seed(42)
 
 # Preprocessing parameters
 LOW_FREQ = 0.5
@@ -542,6 +557,18 @@ def train_asmmd_model(
 # - **Outer folds (5)**: For test set evaluation
 # - **Inner split**: Train/val split for hyperparameter tuning
 # - **Repeats (5)**: Multiple random seeds for stability
+#
+# .. warning::
+#    **Subject-aware split disclosure.** The CV loop below operates on the
+#    *trial* index (after windowing), not on subjects. This is faithful to
+#    the original AS-MMD paper recipe but it does not protect against
+#    subject leakage when subjects contribute many trials each. When you
+#    adapt this code to your own data, replace the trial-level
+#    ``StratifiedKFold`` with a subject-grouped CV (e.g.
+#    ``GroupKFold``/``StratifiedGroupKFold`` keyed on subject) and verify
+#    that no subject appears in both train and test partitions of any
+#    fold. See Cisotto & Chicco 2024 (Tip 9),
+#    https://doi.org/10.7717/peerj-cs.2256
 
 from sklearn.model_selection import StratifiedKFold, train_test_split
 import pandas as pd
@@ -714,9 +741,22 @@ print("\nResults saved to: asmmd_results.csv")
 #
 # **References:**
 #
-# - Chen, W., Delorme, A. (2025). Adaptive Split-MMD Training for Small-Sample Cross-Dataset P300 Classification.
-# - Song et al. (2019). "EEGConformer: Convolutional Transformer for EEG Decoding"
-# - Long et al. (2015). "Learning Transferable Features with Deep Adaptation Networks"
+# - Chen, W., Delorme, A. (2025). "Adaptive Split-MMD Training for
+#   Small-Sample Cross-Dataset P300 Classification." arXiv:2510.21969,
+#   https://arxiv.org/abs/2510.21969
+# - Song, Y. et al. (2023). "EEG Conformer: Convolutional Transformer
+#   for EEG Decoding and Visualization". IEEE TNSRE,
+#   https://doi.org/10.1109/TNSRE.2022.3230250
+# - Long, M. et al. (2015). "Learning Transferable Features with Deep
+#   Adaptation Networks". ICML,
+#   https://proceedings.mlr.press/v37/long15.html
+# - ERP CORE (ds003061): Kappenman, E. S. et al. (2021). "ERP CORE: An
+#   open resource for human event-related potential research".
+#   *NeuroImage* 225, https://doi.org/10.1016/j.neuroimage.2020.117465
+# - Subject-aware splits and EEG ML pitfalls: Cisotto, G. & Chicco, D.
+#   (2024). "Ten quick tips for clinical electroencephalographic (EEG)
+#   data acquisition and signal processing", PeerJ Computer Science (Tip
+#   9), https://doi.org/10.7717/peerj-cs.2256
 
 # %%
 # Next Steps

@@ -1,0 +1,82 @@
+id: how_to_work_offline
+category: I-scaling-hpc
+kind: how-to
+output_kind: python
+title: "Use EEGDash with download=False against a local cache"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 4
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - how_to_download_a_dataset
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L471-L483"
+    - "tutorial_restructure_plan.md#L495-L496"
+    - "tutorial_restructure_plan.md#L1021-L1036"
+    - "tutorial_restructure_plan.md#L1131-L1144"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L1198-L1206"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.22"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.24"
+    - "compass_artifact.md#E3.28"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E6.49"
+learning_objectives:
+  - "After this how-to you will be able to instantiate `EEGDashDataset(download=False, cache_dir=...)` and load the same records as the online path."
+  - "After this how-to you will be able to filter offline by BIDS entities (subject, session, task, run) and explain which fields are unavailable without the database."
+  - "After this how-to you will be able to compare online vs. offline shapes and descriptions to confirm the cache is complete."
+  - "After this how-to you will be able to recover from common offline errors: missing files, partial cache, mismatched release suffix."
+audience: "User on an HPC compute node, an air-gapped workstation, or a CI runner without internet. Already populated the cache via how_to_download_a_dataset."
+budgets:
+  max_loc: 200
+  max_runtime_seconds: 240
+  max_network_mb: 0
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/how_to_work_offline.png
+  figures:
+    - figure_offline_record_count.png
+asserted_invariants:
+  - "ds_offline.records_count == ds_online.records_count   # cache is complete"
+  - "ds_offline.datasets[0].raw.get_data().shape == ds_online.datasets[0].raw.get_data().shape"
+  - "ds_offline.description.equals(ds_online.description)   # offline parses the same metadata"
+  - "no network call observed during offline load (network_mb == 0)"
+  - "filter-by-subject offline returns a strict subset of records"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - recipe_steps:
+      min: 4
+  - result
+  - links
+primm_required: {}
+faded_scaffolding:
+  required: true
+  pattern: how_to_recipe
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/lazy_loading_and_cache.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_download_a_dataset
+    - how_to_use_hpc_cache
+  related_papers: []
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "eegdash.EEGChallengeDataset"
+  - "eegdash.paths.get_default_cache_dir"
+review_rubric_overrides: {}

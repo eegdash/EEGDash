@@ -1,8 +1,22 @@
 """========================================================================================
-P-Factor Regression Tutorial
+Predicting p-factor from EEG: Deep-Learning Pipeline (Project Starter)
 ========================================================================================
-A tutorial for training an EEG Conformer model to predict the "p-factor" (a psychometric score) from EEG data.
+
+This is the **deep-learning variant** of the p-factor regression project: an
+EEGConformer trained end-to-end on raw resting-state windows. The companion
+file ``project_pfactor_features.py`` covers the **feature-based variant**
+(LightGBM on hand-crafted spectral and signal features). The two projects
+answer different questions: this one asks whether a transformer can learn
+the p-factor target from raw EEG, while the feature variant asks which
+hand-crafted descriptors carry the signal.
+
+This is a **project starter, not a first-week tutorial**. Treat the p-factor
+as a transdiagnostic mental-health summary derived from psychiatric
+questionnaires; report uncertainty, do not over-interpret small-sample
+effects, and respect the clinical context of the labels.
 """
+
+# Difficulty: 3-star (advanced applied project)
 
 from pathlib import Path
 import numpy as np
@@ -137,7 +151,12 @@ else:
 # ============================================================================
 # Splitting and Loading
 # ============================================================================
-# Basic split by subject
+# Subject-aware split disclosure: the split below operates on *unique
+# subjects* (not raw windows or epochs), so no subject's data appears in
+# both the train and validation halves. This matters for clinical
+# regression in particular, where subject leakage will inflate validation
+# performance and erase the very effect we are trying to estimate. See
+# Cisotto & Chicco 2024 (Tip 9), https://doi.org/10.7717/peerj-cs.2256
 subjects = np.array([ds.description["subject"] for ds in windows_ds.datasets])
 unique_subs = np.unique(subjects)
 train_subs, val_subs = train_test_split(
@@ -256,3 +275,19 @@ plt.title("P-Factor Regression Training")
 plt.legend()
 plt.tight_layout()
 plt.show()  # In a real script we might save it, but here we show
+
+# ============================================================================
+# References
+# ============================================================================
+# - Healthy Brain Network EEG (ds005505):
+#   https://doi.org/10.18112/openneuro.ds005505.v1.0.0
+# - Caspi, A. et al. (2014). "The p factor: One general psychopathology factor
+#   in the structure of psychiatric disorders". *Clinical Psychological
+#   Science*, https://doi.org/10.1177/2167702613497473
+# - EEGConformer architecture: Song, Y. et al. (2023). "EEG Conformer:
+#   Convolutional Transformer for EEG Decoding and Visualization", IEEE
+#   TNSRE, https://doi.org/10.1109/TNSRE.2022.3230250
+# - Subject-aware splits and EEG ML pitfalls: Cisotto, G. & Chicco, D.
+#   (2024). "Ten quick tips for clinical electroencephalographic (EEG) data
+#   acquisition and signal processing", PeerJ Computer Science (Tip 9),
+#   https://doi.org/10.7717/peerj-cs.2256

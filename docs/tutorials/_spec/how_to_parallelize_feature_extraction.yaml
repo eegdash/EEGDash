@@ -1,0 +1,85 @@
+id: how_to_parallelize_feature_extraction
+category: I-scaling-hpc
+kind: how-to
+output_kind: python
+title: "Parallelise EEGDash feature extraction with n_jobs, batch size, and persistence"
+state: proposed
+assignee: null
+difficulty: 2
+estimated_runtime_minutes: 8
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_40_first_features
+  - how_to_use_hpc_cache
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L471-L483"
+    - "tutorial_restructure_plan.md#L741-L758"
+    - "tutorial_restructure_plan.md#L1131-L1144"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L2718-L2735"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.22"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.24"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E6.49"
+learning_objectives:
+  - "After this how-to you will be able to call `eegdash.features.extract_features(..., n_jobs=...)` with a value matched to the node's CPU/IO profile, and explain why `n_jobs=-1` is rarely the right default on a shared node."
+  - "After this how-to you will be able to choose a batch size for the feature pipeline that keeps each worker busy without exhausting memory, using one observed runtime as evidence."
+  - "After this how-to you will be able to persist the resulting feature table once and reload it across tutorials/jobs, avoiding repeated Welch spectra."
+  - "After this how-to you will be able to read a small scaling table (n_jobs vs. wall-clock time) and pick the regime where adding workers no longer pays."
+audience: "User comfortable with plot_40 (first features) who now needs to scale feature extraction across hundreds of recordings on one node or one SLURM array shard."
+budgets:
+  max_loc: 200
+  max_runtime_seconds: 600
+  max_network_mb: 200
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/how_to_parallelize_feature_extraction.png
+  figures:
+    - figure_n_jobs_scaling_curve.png
+    - figure_batch_size_memory_profile.png
+asserted_invariants:
+  - "n_jobs is taken from an environment variable (e.g., $SLURM_CPUS_PER_TASK) or argument, never hard-coded to -1"
+  - "extracted_feature_table.shape[0] == n_windows_total   # no rows dropped silently"
+  - "feature_table_persistence_path exists after the first run and is reloaded on the second"
+  - "second_run_wall_clock < first_run_wall_clock   # persistence reused"
+  - "scaling_table reports wall_clock and peak_memory_mb for at least 3 n_jobs settings"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - recipe_steps:
+      min: 4
+  - result
+  - links
+primm_required: {}
+faded_scaffolding:
+  required: true
+  pattern: how_to_recipe
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/features_vs_deep_learning.rst
+  api: eegdash.features
+  related_how_to:
+    - how_to_use_hpc_cache
+    - how_to_run_preprocessing_on_slurm
+    - how_to_work_offline
+  related_papers:
+    - "Pedregosa et al. 2011, JMLR — joblib-style parallelism in scikit-learn"
+requires_api:
+  - "eegdash.features.extract_features"
+  - "eegdash.features.FeaturesConcatDataset"
+  - "eegdash.EEGDashDataset"
+review_rubric_overrides: {}

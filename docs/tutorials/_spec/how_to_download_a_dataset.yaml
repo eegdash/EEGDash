@@ -1,0 +1,83 @@
+id: how_to_download_a_dataset
+category: I-scaling-hpc
+kind: how-to
+output_kind: python
+title: "Download an EEGDash dataset in advance and validate the local cache"
+state: proposed
+assignee: null
+difficulty: 1
+estimated_runtime_minutes: 6
+hardware: cpu
+network: required_first_run
+prerequisites:
+  - plot_00_first_search
+  - plot_01_first_recording
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L471-L483"
+    - "tutorial_restructure_plan.md#L673-L685"
+    - "tutorial_restructure_plan.md#L751-L758"
+    - "tutorial_restructure_plan.md#L1131-L1144"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L2718-L2735"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.22"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.24"
+    - "compass_artifact.md#E3.28"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+    - "compass_artifact.md#E6.49"
+learning_objectives:
+  - "After this how-to you will be able to call `EEGDashDataset.download_all(n_jobs=...)` to prefetch every record for a query before any training run."
+  - "After this how-to you will be able to estimate the on-disk footprint and decide whether to use the full release or `mini=True` for CI."
+  - "After this how-to you will be able to validate the local cache by re-instantiating the dataset with `download=False` and checking record counts."
+  - "After this how-to you will be able to redirect the cache to a chosen storage tier via `cache_dir` or the EEGDASH_CACHE environment variable."
+audience: "User who has loaded one recording and is now staging data for a longer experiment, an HPC job, or an air-gapped session."
+budgets:
+  max_loc: 200
+  max_runtime_seconds: 600
+  max_network_mb: 2000
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/how_to_download_a_dataset.png
+  figures:
+    - figure_download_progress_summary.png
+asserted_invariants:
+  - "downloaded_record_count == queried_record_count   # every queried file is on disk"
+  - "all(Path(rec.local_path).exists() for rec in ds.records)"
+  - "offline_dataset.records_count == online_dataset.records_count"
+  - "cache_dir is parametrised (env var or argument), never hard-coded"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - recipe_steps:
+      min: 4
+  - result
+  - links
+primm_required: {}
+faded_scaffolding:
+  required: true
+  pattern: how_to_recipe
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/lazy_loading_and_cache.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_work_offline
+    - how_to_use_hpc_cache
+  related_papers: []
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "eegdash.EEGDashDataset.download_all"
+  - "eegdash.paths.get_default_cache_dir"
+review_rubric_overrides: {}

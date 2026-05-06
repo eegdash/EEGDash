@@ -1,10 +1,20 @@
 """================================
-Clinical Dataset Summary
+Clinical Dataset Summary (Project Starter)
 ================================
 
-This example demonstrates how to summarize and visualize the distribution of
-clinical vs. healthy datasets across different recording modalities.
+A single advanced figure example demonstrating catalog exploration: it
+summarizes the distribution of clinical vs. healthy datasets across the
+EEG / MEG / iEEG modalities exposed by ``EEGDash``.
+
+This is a **project starter, not a first-week tutorial**, and unlike the
+other Category G files it does not train a model: the plan moves it out of
+the model-training tutorial path because it is a catalog-coverage
+visualization. It is kept here as the canonical example of how to query
+``EEGDash`` for high-level metadata, normalize messy curation fields, and
+plot the resulting summary.
 """
+
+# Difficulty: 3-star (advanced applied project)
 
 # %%
 # Loading the data
@@ -15,11 +25,16 @@ clinical vs. healthy datasets across different recording modalities.
 # to demonstrate the visualization capabilities with the latest categorized metadata.
 
 import json
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
 from eegdash import EEGDash
+
+# Reproducibility: not strictly needed for this catalog-summary script, but
+# we set a global seed so any downstream sampling is deterministic.
+np.random.seed(42)
 
 # Initialize client (public read access)
 client = EEGDash()
@@ -196,3 +211,20 @@ if not plot_df.empty:
     plt.show()
 else:
     print("No data to plot.")
+
+# %%
+# References
+# ----------
+# - EEGDash catalog (the source of the metadata aggregated here): see
+#   ``eegdash.EEGDash.find_datasets`` and the EEGDash documentation.
+# - BIDS specification for EEG, MEG, and iEEG modality conventions:
+#   Pernet, C. R. et al. (2019). "EEG-BIDS, an extension to the brain
+#   imaging data structure for electroencephalography". *Scientific Data*
+#   6, https://doi.org/10.1038/s41597-019-0104-8
+# - Niso, G. et al. (2018). "MEG-BIDS, the brain imaging data structure
+#   extended to magnetoencephalography". *Scientific Data* 5,
+#   https://doi.org/10.1038/sdata.2018.110
+# - Holdgraf, C. et al. (2019). "iEEG-BIDS, extending the Brain Imaging
+#   Data Structure specification to human intracranial
+#   electrophysiology". *Scientific Data* 6,
+#   https://doi.org/10.1038/s41597-019-0105-7

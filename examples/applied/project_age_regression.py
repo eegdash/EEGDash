@@ -1,19 +1,29 @@
-"""Age Prediction from EEG
-===========================
+"""Age Regression from EEG (Project Starter)
+============================================
 
-**Objective**: Learn how to predict a continuous variable (Subject Age) from raw EEG data using a Convolutional Neural Network (Conformer).
+**Objective**: predict a continuous target (subject age) from raw EEG using a
+transformer-based decoder (EEGConformer).
 
-**What you will learn**:
+This is a **project starter, not a first-week tutorial**. It expects familiarity
+with PyTorch, BIDS metadata, and supervised learning evaluation. New users
+should work through the Category A "Start Here" tutorials and
+``tutorial_42_features_to_sklearn.py`` before adapting this file.
 
-1.  **Data Retrieval**: How to fetch specific datasets (e.g., Healthy Brain Network) using `EEGDash`.
-2.  **Preprocessing**: Applying standard EEG cleaning techniques (filtering, resampling) with `BrainDecode`.
-3.  **Windowing**: cutting continuous EEG into fixed-length training windows.
-4.  **Modeling**: Training a Conformer model (Transformer-based) using PyTorch.
-5.  **Interpretation**: Visualizing training progress (MAE/RMSE).
+**What this project demonstrates**:
 
-.. tip::
-    This tutorial assumes basic familiarity with PyTorch. If you are new to EEG, check out the `Minimal Tutorial` first.
+1. Querying Healthy Brain Network (``ds005505``) with ``EEGDash``.
+2. Subject-level filtering on the ``age`` covariate.
+3. A subject-aware train/validation split.
+4. Median/mean baselines plus EEGConformer regression metrics (MAE/RMSE).
+
+.. warning::
+    Age regression from EEG needs a much larger sample than the 10 subjects
+    used here for tutorial speed. Do **not** read the headline numbers as a
+    scientific result. To get stable estimates, scale up the subject count,
+    use cross-validation, and compare against the median baseline.
 """
+
+# Difficulty: 3-star (advanced applied project)
 
 from pathlib import Path
 import os
@@ -49,7 +59,7 @@ BATCH_SIZE = 64
 LEARNING_RATE = 0.00002
 WEIGHT_DECAY = 1e-2
 NUM_EPOCHS = 5
-RANDOM_SEED = 41
+RANDOM_SEED = 42
 RECORD_LIMIT = 60
 
 # Set random seeds for reproducibility
@@ -247,6 +257,13 @@ for ds in windows_ds.datasets:
 # ============================================================================
 # Train/Validation Split (80/20)
 # ============================================================================
+# Subject-aware split disclosure: the split below partitions *unique subjects*
+# (not raw windows) before any windows are fed into the loaders. This avoids
+# subject leakage, where the same subject's windows leak into both train and
+# validation. Subject leakage is a well-known failure mode for EEG ML and
+# routinely produces optimistic accuracies. See Cisotto & Chicco 2024,
+# "Ten quick tips for clinical electroencephalographic (EEG) data acquisition
+# and signal processing" (Tip 9), https://doi.org/10.7717/peerj-cs.2256
 unique_subjects = np.unique(windows_ds.description["subject"])
 train_subj, val_subj = train_test_split(
     unique_subjects, train_size=0.8, random_state=RANDOM_SEED
@@ -461,3 +478,16 @@ plt.tight_layout()
 plt.savefig("training_results.png", dpi=150)
 print("\nTraining complete! Results saved to 'training_results.png'")
 plt.show()
+
+# %%
+# References
+# ----------
+# - Healthy Brain Network EEG (ds005505):
+#   https://doi.org/10.18112/openneuro.ds005505.v1.0.0
+# - EEGConformer architecture: Song, Y., Zheng, Q., Liu, B., Gao, X. (2023).
+#   "EEG Conformer: Convolutional Transformer for EEG Decoding and
+#   Visualization", IEEE TNSRE, https://doi.org/10.1109/TNSRE.2022.3230250
+# - Subject-aware splits and EEG ML pitfalls: Cisotto, G. & Chicco, D. (2024).
+#   "Ten quick tips for clinical electroencephalographic (EEG) data acquisition
+#   and signal processing", PeerJ Computer Science,
+#   https://doi.org/10.7717/peerj-cs.2256

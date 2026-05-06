@@ -1,21 +1,39 @@
 # %% [markdown]
 """.. _sex-classification:
 
-Sex Classification Tutorial
-===========================
+Sex Classification from Resting-State EEG (Project Starter)
+===========================================================
 
-The code below provides an example of using the *EEGDash* library in combination with PyTorch to develop a deep learning model for detecting sex in a collection of subjects.
+A workflow demonstration of training a CNN classifier on resting-state EEG
+to predict the BIDS ``sex`` (or ``gender``) metadata field. This is a
+**project starter, not a first-week tutorial**, and it is **not a scientific
+claim**. Read the framing block below before running anything.
 
-1. **Data Retrieval Using EEGDash**: An instance of *EEGDashDataset* is created to search and retrieve resting state data for 136 subjects (dataset ds005505). At this step, only the metadata is transferred.
+.. warning::
+    **Treat this as a workflow example, not a result.** The plan
+    (``docs/tutorial_restructure_plan.md`` §"Sex Classification") explicitly
+    requires that this file foreground three caveats:
 
-2. **Data Preprocessing Using BrainDecode**: This process preprocesses EEG data using Braindecode by selecting specific channels, resampling, filtering, and extracting 2-second epochs. This takes about 2 minutes.
+    1. **Labels are metadata, not biological ground truth.** The ``sex`` /
+       ``gender`` BIDS fields are subject self-report or sponsor-coded
+       categorical labels. They do not, on their own, license claims about
+       biological sex, neurobiology, or chromosomal status.
+    2. **Confounds can dominate.** Recording site, acquisition system,
+       cap density, age distribution, and within-dataset sampling can all
+       correlate with the label. Cross-site or cross-dataset validation is
+       required before any inference about EEG-vs-sex is supportable.
+    3. **Use this as a workflow example, not as evidence.** The numbers
+       printed by this script are diagnostic for the pipeline, not for the
+       underlying scientific question. Headline accuracies on a single
+       dataset with a balanced split will routinely overstate transferable
+       performance.
 
-3. **Creating a train and testing sets**: The dataset is split into training (80%) and testing (20%) sets with balanced labels--making sure also that we have as many males as females--converted into PyTorch tensors, and wrapped in DataLoader objects for efficient mini-batch training.
-
-4. **Model Definition**: The model is a custom convolutional neural network with 24 input channels (EEG channels), 2 output classes (male and female).
-
-5. **Model Training and Evaluation Process**: This section trains the neural network, normalizes input data, computes cross-entropy loss, updates model parameters, and evaluates classification accuracy over a few epochs. This takes less than 10 seconds to a couple of minutes, depending on the device you use.
+This file deliberately keeps the original VGG-style CNN to demonstrate the
+pipeline. For a more carefully framed classification baseline see
+``tutorial_42_features_to_sklearn.py`` (Cat E).
 """
+
+# Difficulty: 3-star (advanced applied project)
 
 # %% [markdown]
 # ## Data Retrieval Using EEGDash
@@ -203,8 +221,15 @@ from torch.utils.data import DataLoader
 # %%
 from braindecode.datasets import BaseConcatDataset
 
-# random seed for reproducibility
-random_state = 0
+# Subject-aware split disclosure: the split below selects *unique subjects*
+# (not raw windows) before any DataLoader is built. The balanced-subject
+# logic that follows preserves the same property: a subject's windows
+# never appear on both sides of the split. Subject leakage at this step is
+# a routine source of overstated accuracy in EEG ML; see Cisotto & Chicco
+# 2024 (Tip 9), https://doi.org/10.7717/peerj-cs.2256
+#
+# Reproducibility: seed numpy + torch with a single value (42).
+random_state = 42
 np.random.seed(random_state)
 torch.manual_seed(random_state)
 
@@ -385,3 +410,17 @@ for e in range(epochs):
     print(
         f"Epoch {e}, Train accuracy: {correct_train:.2f}, Test accuracy: {correct_test:.2f}\n"
     )
+
+# %% [markdown]
+# ## References
+#
+# - Healthy Brain Network EEG (ds005505):
+#   https://doi.org/10.18112/openneuro.ds005505.v1.0.0
+# - Truong, D., Milham, M., Makeig, S., & Delorme, A. (2021). "Deep
+#   Convolutional Neural Network Applied to Electroencephalography: Raw
+#   Data vs Spectral Features", IEEE EMBC 2021,
+#   https://doi.org/10.1109/EMBC46164.2021.9630708
+# - Subject-aware splits and EEG ML pitfalls: Cisotto, G. & Chicco, D.
+#   (2024). "Ten quick tips for clinical electroencephalographic (EEG)
+#   data acquisition and signal processing", PeerJ Computer Science (Tip
+#   9), https://doi.org/10.7717/peerj-cs.2256

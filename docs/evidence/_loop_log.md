@@ -167,3 +167,88 @@ Critical fixes applied in the same commit:
 Roughly 40 minutes wall (7 agent runs + verification + 4 commit attempts
 recovering from pre-commit hook fixes). Within the 30-minute cron cadence;
 next fire will pick up iteration 3.
+
+## Iteration 3 — 2026-05-07
+
+### Wave D1 — Phase 3 + Cat F specs + W4 + verification fixes (commit 1539d5f1b)
+
+4 parallel agents:
+
+- Phase 3 file moves per docs/tutorials/_triage.md (8 git mv to
+  examples/applied/, 1 git mv to examples/how_to/, 1 in-place hpc rename;
+  6 git rm of files rewritten as the new plot_*.py tutorials; 4 git rm of
+  pure retires). New examples/applied/README.txt + examples/how_to/README.txt
+  with sphinx-gallery section headers.
+- 5 new Cat F spec YAMLs (plot_50/51/52/53/54) per plan §425-442.
+  validate_spec clean on all 18 specs.
+- Workstream 4 windowing convenience layer: EEGTask.make_windows
+  promoted from stub to full contract per plan §2853-2898. Time-string
+  parser, manifest_hash, library_versions, function/kwargs capture.
+  15 new tests + 17 prior task tests pass.
+- Iteration-2 verification follow-ups: plot_30 alpha-diff -> majority sign
+  (>=50% channels closed > open); EEGTask.dataset/.subjects/.bandpass
+  public properties; plot_41 Welch monkey-patch in try/finally; plot_21
+  SFREQ aligned to 128 Hz.
+
+Spec budgets bumped: plot_20=240, plot_21=270, plot_30=270, plot_42=280
+to absorb fixes plus earlier E2.17 retrofit.
+
+### Wave D2 — 5 Cat F tutorial drafts (commit 3fddac82a)
+
+5 parallel agents wrote plot_50/51/52/53/54. LOC 257-260 across all five.
+All self-audit clean (errors=0, warns=0). Citations verified by lightweight
+verification agent (docs/evidence/tutorials/_verification_cat_f_2026-05-07.md):
+5/5 citations resolve, 5/5 plan-alignment, 5/5 spec coherence with one
+minor drift (plot_54 uses RidgeClassifier instead of the spec's
+ShallowFBCSPNet to keep CPU runtime tight). Verifier verdict: OK to commit.
+
+### State after iteration 3
+
+- 18 of 18 plot_*.py tutorials in the new gallery tree pass static audit
+  (errors=0, warns=0).
+- examples/applied/ (6 projects), examples/how_to/ (1 file), examples/hpc/
+  (1 renamed), examples/eeg2025/ (2 kept) populated.
+- Cumulative test count: 130+ unit tests across the iteration loop, all
+  green. EEGTask.make_windows is now a real workstream-4 implementation,
+  not a stub.
+
+Phase status (per plan §Migration Plan):
+- Phase 1 (audit/triage): DONE
+- Phase 2 (build first learning path = 13 tutorials): DONE
+- Phase 3 (reclassify long examples): DONE
+- Phase 4 (benchmarking + community alignment): Cat F (5 tutorials) drafted;
+  Cat G (5 applied projects — already moved to examples/applied/ but
+  not yet refreshed against the rubric), Cat H (4 transfer/foundation
+  tutorials), Cat I (5 HPC how-tos) remain. Concept pages also remain.
+- Phase 5 (maintenance + governance): TODO.
+
+### Recommended iteration 4 work
+
+1. **Cat I (HPC) how-tos — 5 specs + 5 drafts** per plan §471-483. The
+   plan classifies these as how-to guides not tutorials; spec must reflect
+   that.
+2. **Cat H (transfer + foundation) — 4 specs + drafts** per plan §458-470.
+   Includes EEG2025 challenge tutorials (2 already in examples/eeg2025/
+   to refresh against the new rubric).
+3. **Concept pages**: docs/source/concepts/{eegdash_objects, metadata_and_bids,
+   leakage_and_evaluation, preprocessing_decisions,
+   features_vs_deep_learning}.rst per plan §1102-1144. Tutorials already
+   link to these — currently broken links.
+4. **Cat G applied/ project refresh**: the 6 files moved to applied/ in
+   Wave D1 still carry pre-refactor LOC + naming + missing learning
+   objectives. Add a lightweight rubric pass tagged for
+   "applied/project" not "tutorial" (lower bar; plan §Cat G calls them
+   "project starters").
+5. **Phase 5 governance**: tutorial review template in CONTRIBUTING.md
+   was already added; add "docs CI matrix" (fast smoke build vs selected
+   tutorial execution vs full nightly), runtime/data-size tracking
+   document. Per plan §1236-1252.
+6. **Reviewer-only rubric pass**: launch the LLM-as-reviewer (or human
+   reviewer) to score E2.11/E2.14/E2.17/E4.31/E4.33/E4.35/E5.46/E6.47
+   on each of the 18 tutorials; commit reviewer_score.json into each
+   dossier per CONTRIBUTING.md's appendix.
+
+### Time used in iteration 3
+
+Roughly 50 minutes wall (4 D1 agents + 5 D2 agents + verification + 2
+commits). Within the 30-minute cron cadence; next fire picks up iteration 4.

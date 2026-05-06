@@ -1,0 +1,134 @@
+# Eyes-open / eyes-closed task manifest for the Healthy Brain Network (HBN)
+# resting-state recordings.
+#
+# Schema reference: docs/tutorial_restructure_plan.md, Workstream 2 (Task API).
+#
+# This manifest hard-codes the choices used by the eyes-open-closed tutorial.
+# It is intentionally narrow: per the plan we hard-code a few excellent task
+# manifests first and only abstract once two or three tasks are stable.
+name: eyes-open-closed
+version: 1
+display_name: "Eyes Open vs. Eyes Closed (HBN resting-state)"
+short_description: >
+  Two-class resting-state classification of eyes-open versus eyes-closed
+  segments extracted from the HBN RestingState recordings.
+
+datasets:
+  - source: openneuro
+    dataset: ds005514            # HBN Release 9 -- a small, well-curated slice
+    release: R9
+    task: RestingState
+    # Default to a single subject so the tutorial runs in seconds; the tutorial
+    # author can override at task instantiation time.
+    default_subjects:
+      - NDARDB033FW5
+    mini: true                   # honour eegdash mini-release semantics
+
+filters:
+  modality: eeg
+  task: RestingState
+  # Only recordings that contain the HBN eyes-open / eyes-closed instruction
+  # markers expose the labels this task needs.
+  required_event_descriptions:
+    - instructed_toCloseEyes
+    - instructed_toOpenEyes
+
+labels:
+  type: classification
+  num_classes: 2
+  mapping:
+    eyes_open: 0
+    eyes_closed: 1
+  source: events                 # labels come from MNE event annotations
+  # The HBN reannotation step turns the original instruction markers into
+  # repeated 2-second `eyes_open` / `eyes_closed` annotations.
+  reannotation: hbn_ec_ec_reannotation
+
+preprocessing:
+  channels:
+    pick:
+      - E22
+      - E9
+      - E33
+      - E24
+      - E11
+      - E124
+      - E122
+      - E29
+      - E6
+      - E111
+      - E45
+      - E36
+      - E104
+      - E108
+      - E42
+      - E55
+      - E93
+      - E58
+      - E52
+      - E62
+      - E92
+      - E96
+      - E70
+      - Cz
+  resample_hz: 128
+  bandpass_hz: [1.0, 55.0]
+
+windowing:
+  engine: braindecode
+  kind: events
+  trial_start_offset_samples: 0
+  trial_stop_offset_samples: 256   # 2 s at 128 Hz
+  preload: true
+
+splits:
+  - name: stratified_holdout
+    strategy: stratified_train_test
+    test_size: 0.2
+    random_state: 42
+    stratify_on: target
+  - name: cross_subject
+    strategy: leave_subjects_out
+    notes: >
+      Use this split when more than one subject is requested; default split
+      reduces to stratified hold-out for the single-subject tutorial run.
+
+metrics:
+  primary: balanced_accuracy
+  secondary:
+    - accuracy
+    - roc_auc_ovr
+  reporting:
+    - confusion_matrix
+
+baseline:
+  model: braindecode.ShallowFBCSPNet
+  hyperparameters:
+    n_chans: 24
+    n_outputs: 2
+    n_times: 256
+    final_conv_length: auto
+  reference_accuracy: 0.85
+  reference_subjects:
+    - NDARDB033FW5
+
+citations:
+  - id: alexander2017hbn
+    text: >
+      Alexander, L. M. et al. (2017). An open resource for transdiagnostic
+      research in pediatric mental health and learning disorders. Scientific
+      Data, 4, 170181.
+    doi: 10.1038/sdata.2017.181
+  - id: eegdash_tutorial
+    text: >
+      EEGDash contributors. tutorial_30_eyes_open_closed: Eyes-open vs
+      eyes-closed classification using HBN resting-state data.
+
+licensing:
+  data_license: CC-BY-4.0
+  data_use_terms: >
+    HBN data are released under CC-BY-4.0 via OpenNeuro. Users must cite
+    Alexander et al. 2017 and respect HBN data-use guidelines.
+  notes: >
+    Subject IDs (NDAR*) are pseudonymous identifiers; do not attempt
+    re-identification.

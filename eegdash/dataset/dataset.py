@@ -1,4 +1,7 @@
+import copy
 import os
+from collections import Counter
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -30,10 +33,80 @@ from ..schemas import validate_record
 from ._source_inference import correct_storage_inplace
 from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
+from .exceptions import PreviewError
 from .registry import register_openneuro_datasets
 
 # Valid extensions for EEG data files (from MNE-BIDS reader configuration)
 _VALID_DATA_EXTENSIONS = frozenset(reader.keys())
+
+
+@dataclass
+class RecordingPreview:
+    """Compact view of a single recording produced by :meth:`EEGDashDataset.preview`.
+
+    Attributes
+    ----------
+    raw : mne.io.BaseRaw
+        Loaded continuous data for the previewed recording.
+    metadata : dict
+        Description metadata for the recording (entities, demographics, etc.).
+    snippet : numpy.ndarray
+        The first 5 seconds of data with shape ``(n_channels, n_samples)``.
+        If the recording is shorter than 5 seconds, the full recording is
+        returned.
+    annotations : list[dict]
+        Annotations extracted from ``raw.annotations`` as a list of dicts
+        with keys ``onset``, ``duration``, and ``description``.
+    record : dict
+        The underlying record metadata used to materialize ``raw``.
+    index : int
+        Index of the previewed recording within the parent dataset.
+
+    """
+
+    raw: Any
+    metadata: dict[str, Any]
+    snippet: Any
+    annotations: list[dict[str, Any]]
+    record: dict[str, Any] = field(default_factory=dict)
+    index: int = 0
+
+    def plot(self, **kwargs: Any) -> Any:
+        """Plot the previewed recording via :meth:`mne.io.Raw.plot`.
+
+        Parameters
+        ----------
+        **kwargs
+            Passed through to :meth:`mne.io.Raw.plot`. ``show=False`` is
+            recommended in non-interactive contexts to receive the
+            ``matplotlib`` figure rather than blocking on a viewer.
+
+        Returns
+        -------
+        matplotlib.figure.Figure
+            The figure produced by ``raw.plot()``.
+
+        """
+        return self.raw.plot(**kwargs)
+
+
+def _format_counter_compact(counter: Counter) -> str:
+    """Render a ``Counter`` as ``key1xN, key2xM`` ordered by descending count."""
+    if not counter:
+        return "-"
+    items = sorted(counter.items(), key=lambda kv: (-kv[1], kv[0]))
+    return ", ".join(f"{key}x{count}" for key, count in items)
+
+
+def _record_field_with_fallback(record: dict[str, Any], name: str) -> Any:
+    """Read ``record[name]`` falling back to ``entities``/``entities_mne``."""
+    if name in record and record.get(name) is not None:
+        return record[name]
+    for src_key in ("entities", "entities_mne"):
+        src = record.get(src_key)
+        if isinstance(src, dict) and src.get(name) is not None:
+            return src[name]
+    return None
 
 
 class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
@@ -428,6 +501,411 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.records = valid_records
         return dropped
 
+    def summary(self, verbose: bool = False) -> dict[str, Any]:
+        """Summarize the dataset's records without touching the network.
+
+        Aggregates fields available on ``self.records`` (and the dataset's
+        description metadata when present) into a compact dictionary
+        suitable for first-contact exploration. Optionally prints a
+        formatted text report.
+
+        Parameters
+        ----------
+        verbose : bool, default False
+            If True, print a human-readable report in addition to
+            returning the dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary with the following keys:
+
+            - ``n_records`` (int): Number of recordings.
+            - ``n_subjects`` (int): Distinct subject identifiers.
+            - ``n_tasks`` (int): Distinct task identifiers.
+            - ``n_sessions`` (int): Distinct session identifiers.
+            - ``n_runs`` (int): Distinct run identifiers.
+            - ``modalities`` (set[str]): Modality codes (e.g. ``{"eeg"}``).
+            - ``channel_counts`` (collections.Counter): Channel count
+              histogram across recordings.
+            - ``sampling_rates`` (collections.Counter): Sampling rate
+              histogram (in Hz) across recordings.
+            - ``total_duration_seconds`` (float): Sum of recording
+              durations in seconds.
+            - ``cache_path`` (str): The dataset's local cache directory.
+            - ``estimated_size_bytes`` (int | None): Sum of known byte
+              sizes across records. ``None`` when no record exposes a
+              size.
+
+        Notes
+        -----
+        Empty datasets are handled gracefully — counters are empty and
+        scalar counts are zero.
+
+        """
+        records: list[dict[str, Any]] = list(getattr(self, "records", []) or [])
+
+        n_records = len(records)
+        modalities: set[str] = set()
+        subjects: set[str] = set()
+        tasks: set[str] = set()
+        sessions: set[str] = set()
+        runs: set[str] = set()
+        channel_counts: Counter[int] = Counter()
+        sampling_rates: Counter[float] = Counter()
+        total_duration = 0.0
+        total_size_bytes = 0
+        size_seen = False
+
+        for record in records:
+            entities = record.get("entities") or record.get("entities_mne") or {}
+
+            subject = record.get("subject") or entities.get("subject")
+            if subject is not None:
+                subjects.add(str(subject))
+            task = record.get("task") or entities.get("task")
+            if task is not None:
+                tasks.add(str(task))
+            session = record.get("session") or entities.get("session")
+            if session is not None:
+                sessions.add(str(session))
+            run = record.get("run") or entities.get("run")
+            if run is not None:
+                runs.add(str(run))
+
+            modality = record.get("modality")
+            if modality is None:
+                rec_mod = record.get("recording_modality")
+                if isinstance(rec_mod, list):
+                    modalities.update(str(m) for m in rec_mod if m)
+                    modality = None
+                else:
+                    modality = rec_mod
+            if isinstance(modality, str) and modality:
+                modalities.add(modality)
+            if not modalities:
+                # Fall back to BIDS datatype when no explicit modality is set.
+                datatype = record.get("datatype")
+                if isinstance(datatype, str) and datatype:
+                    modalities.add(datatype)
+
+            nchans = record.get("nchans")
+            if nchans is None:
+                ch_names = record.get("ch_names")
+                if isinstance(ch_names, list):
+                    nchans = len(ch_names)
+            if isinstance(nchans, (int, float)) and nchans > 0:
+                channel_counts[int(nchans)] += 1
+
+            sfreq = record.get("sampling_frequency") or record.get("sfreq")
+            if isinstance(sfreq, (int, float)) and sfreq > 0:
+                sampling_rates[float(sfreq)] += 1
+
+            duration = record.get("duration")
+            ntimes = record.get("ntimes")
+            if duration is None and isinstance(sfreq, (int, float)) and sfreq:
+                if isinstance(ntimes, (int, float)) and ntimes > 0:
+                    duration = float(ntimes) / float(sfreq)
+            if isinstance(duration, (int, float)) and duration > 0:
+                total_duration += float(duration)
+
+            size_val = (
+                record.get("size_bytes")
+                or record.get("file_size_bytes")
+                or (record.get("storage") or {}).get("size_bytes")
+            )
+            if isinstance(size_val, (int, float)) and size_val > 0:
+                total_size_bytes += int(size_val)
+                size_seen = True
+
+        cache_path = str(getattr(self, "cache_dir", "") or "")
+        estimated_size: int | None = total_size_bytes if size_seen else None
+
+        result: dict[str, Any] = {
+            "n_records": n_records,
+            "n_subjects": len(subjects),
+            "n_tasks": len(tasks),
+            "n_sessions": len(sessions),
+            "n_runs": len(runs),
+            "modalities": modalities,
+            "channel_counts": channel_counts,
+            "sampling_rates": sampling_rates,
+            "total_duration_seconds": float(total_duration),
+            "cache_path": cache_path,
+            "estimated_size_bytes": estimated_size,
+        }
+
+        if verbose:
+            self._print_summary(result)
+
+        return result
+
+    @staticmethod
+    def _print_summary(report: dict[str, Any]) -> None:
+        """Render a summary dict as a human-readable text block."""
+        modalities = sorted(report["modalities"]) or ["-"]
+
+        size = report["estimated_size_bytes"]
+        size_str = f"{size:,} bytes" if isinstance(size, int) else "unknown"
+
+        lines = [
+            "EEGDashDataset summary",
+            "----------------------",
+            f"records:       {report['n_records']}",
+            f"subjects:      {report['n_subjects']}",
+            f"tasks:         {report['n_tasks']}",
+            f"sessions:      {report['n_sessions']}",
+            f"runs:          {report['n_runs']}",
+            f"modalities:    {', '.join(modalities)}",
+            f"channels:      {_format_counter_compact(report['channel_counts'])}",
+            f"sampling rate: {_format_counter_compact(report['sampling_rates'])}",
+            f"duration (s):  {report['total_duration_seconds']:.1f}",
+            f"cache path:    {report['cache_path'] or '-'}",
+            f"size on disk:  {size_str}",
+        ]
+        print("\n".join(lines))
+
+    def preview(self, index: int = 0) -> RecordingPreview:
+        """Load one recording and return a compact preview object.
+
+        Useful as a first inspection step before building a full
+        preprocessing pipeline. Only the recording at ``index`` is
+        materialized; the remaining recordings stay lazy.
+
+        Parameters
+        ----------
+        index : int, default 0
+            Position of the recording within the dataset.
+
+        Returns
+        -------
+        RecordingPreview
+            Dataclass exposing ``raw``, ``metadata``, ``snippet``,
+            ``annotations``, and a ``plot()`` helper.
+
+        Raises
+        ------
+        PreviewError
+            If the dataset is empty, the index is out of range, or the
+            recording fails to load. The original exception is chained
+            via ``__cause__``.
+
+        """
+        if not self.datasets:
+            raise PreviewError(
+                "Cannot preview: dataset is empty (no recordings).",
+                index=index,
+            )
+        if index < 0:
+            index += len(self.datasets)
+        if index < 0 or index >= len(self.datasets):
+            raise PreviewError(
+                f"Preview index {index} is out of range "
+                f"for a dataset with {len(self.datasets)} recordings.",
+                index=index,
+            )
+
+        ds = self.datasets[index]
+        record = (
+            self.records[index]
+            if getattr(self, "records", None) and index < len(self.records)
+            else getattr(ds, "record", {}) or {}
+        )
+
+        try:
+            raw = ds.raw
+        except Exception as exc:  # pragma: no cover - exercised via tests
+            raise PreviewError(
+                f"Failed to load recording at index {index}: {exc}",
+                index=index,
+                record=record if isinstance(record, dict) else {},
+            ) from exc
+
+        if raw is None:
+            raise PreviewError(
+                f"Failed to load recording at index {index}: "
+                f"raw is None (record may be flagged as integrity-bad).",
+                index=index,
+                record=record if isinstance(record, dict) else {},
+            )
+
+        # Build snippet of the first 5 seconds (or whole recording).
+        try:
+            sfreq = float(raw.info["sfreq"])
+        except Exception:
+            sfreq = 0.0
+        n_samples = getattr(raw, "n_times", None) or len(raw)
+        if sfreq > 0:
+            stop = min(int(round(5.0 * sfreq)), int(n_samples))
+        else:
+            stop = int(n_samples)
+        stop = max(stop, 0)
+        try:
+            snippet, _ = raw[:, :stop]
+        except Exception as exc:  # pragma: no cover - defensive
+            raise PreviewError(
+                f"Failed to slice recording at index {index}: {exc}",
+                index=index,
+                record=record if isinstance(record, dict) else {},
+            ) from exc
+
+        annotations: list[dict[str, Any]] = []
+        annots = getattr(raw, "annotations", None)
+        if annots is not None and len(annots) > 0:
+            for onset, duration, description in zip(
+                annots.onset, annots.duration, annots.description
+            ):
+                annotations.append(
+                    {
+                        "onset": float(onset),
+                        "duration": float(duration),
+                        "description": str(description),
+                    }
+                )
+
+        # Build metadata dict from the dataset description (per-row).
+        metadata: dict[str, Any] = {}
+        ds_desc = getattr(ds, "description", None)
+        if isinstance(ds_desc, dict):
+            metadata.update(ds_desc)
+        else:
+            try:
+                metadata.update(dict(ds_desc))  # pandas.Series support
+            except Exception:
+                pass
+        # Surface a few canonical record fields if missing.
+        for key in ("dataset", "subject", "task", "session", "run"):
+            if key not in metadata and isinstance(record, dict) and key in record:
+                metadata[key] = record[key]
+
+        return RecordingPreview(
+            raw=raw,
+            metadata=metadata,
+            snippet=snippet,
+            annotations=annotations,
+            record=record if isinstance(record, dict) else {},
+            index=index,
+        )
+
+    def filter(self, **kwargs: Any) -> "EEGDashDataset":
+        """Return a new dataset whose records match all keyword filters.
+
+        Performs an in-memory filter over ``self.records`` without
+        touching the network. The same kwargs accepted by the constructor
+        are supported (``subject``, ``session``, ``task``, ``run``,
+        ``dataset``, ``modality``, ...). A list value matches with OR
+        semantics; multiple kwargs combine with AND semantics.
+
+        Parameters
+        ----------
+        **kwargs
+            Field/value pairs limited to
+            :data:`eegdash.const.ALLOWED_QUERY_FIELDS`. Each value may be
+            a scalar or a list/tuple/set of acceptable values.
+
+        Returns
+        -------
+        EEGDashDataset
+            A new instance whose ``.datasets`` and ``.records`` are the
+            subset matching all filters. ``self`` is not mutated.
+
+        Raises
+        ------
+        ValueError
+            If a kwarg references a field outside
+            :data:`eegdash.const.ALLOWED_QUERY_FIELDS`.
+
+        """
+        if not kwargs:
+            return self._clone_with(
+                datasets=list(self.datasets),
+                records=list(getattr(self, "records", []) or []),
+            )
+
+        unknown = set(kwargs) - set(ALLOWED_QUERY_FIELDS)
+        if unknown:
+            raise ValueError(
+                f"Unknown filter field(s): {sorted(unknown)}. "
+                f"Allowed fields are: {', '.join(sorted(ALLOWED_QUERY_FIELDS))}"
+            )
+
+        # Normalize each kwarg into a set of acceptable string values.
+        normalized: dict[str, set[str]] = {}
+        for field_name, value in kwargs.items():
+            if value is None:
+                continue
+            if isinstance(value, (list, tuple, set)):
+                values = {str(v) for v in value if v is not None}
+            else:
+                values = {str(value)}
+            if values:
+                normalized[field_name] = values
+
+        records = list(getattr(self, "records", []) or [])
+        kept_pairs: list[tuple[Any, dict[str, Any]]] = []
+        for ds, record in zip(self.datasets, records):
+            keep = True
+            for field_name, accepted in normalized.items():
+                rv = _record_field_with_fallback(record, field_name)
+                if rv is None or str(rv) not in accepted:
+                    keep = False
+                    break
+            if keep:
+                kept_pairs.append((ds, record))
+
+        kept_datasets = [ds for ds, _ in kept_pairs]
+        kept_records = [rec for _, rec in kept_pairs]
+
+        return self._clone_with(datasets=kept_datasets, records=kept_records)
+
+    def _clone_with(
+        self,
+        datasets: list[Any],
+        records: list[dict[str, Any]],
+    ) -> "EEGDashDataset":
+        """Construct a new ``EEGDashDataset`` view sharing this instance's config.
+
+        Skips re-running the constructor (no DB or filesystem access) by
+        instantiating via ``__new__`` and copying over the relevant
+        attributes. Used by :meth:`filter`.
+        """
+        clone = self.__class__.__new__(self.__class__)
+        # Copy lightweight scalar / metadata attributes.
+        for attr in (
+            "_dedupe_records",
+            "_on_error",
+            "s3_bucket",
+            "database",
+            "auth_token",
+            "download",
+            "n_jobs",
+            "eeg_dash_instance",
+            "cache_dir",
+            "data_dir",
+            "dataset_doc",
+        ):
+            if hasattr(self, attr):
+                setattr(clone, attr, getattr(self, attr))
+        # Avoid sharing mutable state by deep-copying the query dict.
+        clone.query = copy.deepcopy(getattr(self, "query", {}) or {})
+        # Filesystem handle is reused if present.
+        if hasattr(self, "filesystem"):
+            clone.filesystem = self.filesystem
+        clone.records = list(records)
+
+        if datasets:
+            # Initialize the BaseConcatDataset machinery without re-running
+            # our own __init__ (which would re-query / re-discover).
+            BaseConcatDataset.__init__(clone, list(datasets), lazy=True)
+        else:
+            # BaseConcatDataset rejects empty lists. Set the minimal state
+            # needed for downstream helpers (summary, len, repr) to work.
+            clone.datasets = []
+            clone.cumulative_sizes_cache = []
+            clone.target_transform = None
+
+        return clone
+
     @property
     def cumulative_sizes(self) -> list[int]:
         """Recompute cumulative sizes from current dataset lengths.
@@ -726,10 +1204,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
             description: dict[str, Any] = {}
             # Requested fields first (normalized matching)
-            for field in description_fields:
-                value = self._find_key_in_nested_dict(record, field)
+            for field_name in description_fields:
+                value = self._find_key_in_nested_dict(record, field_name)
                 if value is not None:
-                    description[field] = value
+                    description[field_name] = value
             # Merge all participants.tsv columns generically
             part = self._find_key_in_nested_dict(record, "participant_tsv")
             if isinstance(part, dict):

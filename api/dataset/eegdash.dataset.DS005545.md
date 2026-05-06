@@ -138,13 +138,13 @@ Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda, Riyo Ueda
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 144 sensors — 144 channels</summary>
+  <summary>Electrode layout — iEEG · 127 sensors — 127 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=ba3195119e1ea343&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=7bc5a31d15e5fd18&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 144 sensors"
+    title="Topomap of iEEG · 127 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

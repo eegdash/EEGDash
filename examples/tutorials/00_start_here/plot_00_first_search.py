@@ -2,9 +2,9 @@
 ======================================
 
 EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets,
-served by the public REST API at https://data.eegdash.org. Before downloading
-a single sample, the :class:`~eegdash.api.EEGDash` client lets us search,
-filter, and summarise what is available — a full cohort survey on JSON only.
+served by the public REST API at https://data.eegdash.org. The
+:class:`~eegdash.api.EEGDash` client searches, filters, and summarises that
+index without downloading a single sample.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_00_first_search.png'
 """
@@ -25,8 +25,7 @@ filter, and summarise what is available — a full cohort survey on JSON only.
 #   ``https://data.eegdash.org``. No authentication is needed for read access.
 
 # %%
-# Setup. No randomness in this tutorial -- only a deterministic API survey,
-# so no seed is required.
+# Setup. No randomness here, so no seed.
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -38,13 +37,12 @@ use_eegdash_style()
 print(f"eegdash {eegdash.__version__}")
 
 # %% [markdown]
-# Step 1 -- Discover the EEGDash client
+# Step 1: Discover the EEGDash client
 # -------------------------------------
-# ``EEGDash()`` wraps the REST endpoint. Before reading the docs, *ask the
-# object itself* what it can do.
+# ``EEGDash()`` wraps the REST endpoint. ``dir()`` is faster than the docs.
 #
 # **Predict.** A read-only catalogue client should expose at least three
-# verbs: count, find, get. How many of each does ``EEGDash`` actually have?
+# verbs: count, find, get. How many does ``EEGDash`` actually have?
 #
 # **Run.** Print the public method list.
 
@@ -60,11 +58,11 @@ for m in public_methods:
 # %% [markdown]
 # **Investigate.** ``count``, ``exists``, ``find``, ``find_one``,
 # ``find_datasets``, ``search_datasets``, ``get_dataset``, plus three
-# admin verbs. The read paths -- ``find`` and ``find_datasets`` -- are the
-# two we will use throughout the gallery.
+# admin verbs. ``find`` and ``find_datasets`` are the read paths we use
+# throughout the gallery.
 
 # %% [markdown]
-# Step 2 -- How big is the catalogue?
+# Step 2: How big is the catalogue?
 # -----------------------------------
 # ``count`` runs server-side and is the cheapest call we can make.
 
@@ -73,11 +71,11 @@ n_records = client.count({})
 print(f"records in the index: {n_records:,}")
 
 # %% [markdown]
-# Step 3 -- A broad scan vs. a targeted query
+# Step 3: A broad scan vs. a targeted query
 # -------------------------------------------
-# Unfiltered ``find({})`` returns a lightweight projection -- BIDS entities
-# only, no signal-shape fields. To get the full envelope (sampling rate,
-# channel count, duration in samples), pass a dataset filter.
+# Unfiltered ``find({})`` returns a lightweight projection: BIDS entities
+# only, no signal-shape fields. A dataset filter unlocks the full record
+# (sampling rate, channel count, duration in samples).
 #
 # **Run** both and compare the columns.
 
@@ -95,14 +93,14 @@ extra = sorted(set(focused.columns) - set(broad.columns))
 print(f"extra columns when filtered: {extra}")
 
 # %% [markdown]
-# Step 4 -- What does one record actually contain?
+# Step 4: What does one record actually contain?
 # -------------------------------------------------
-# A record is a *metadata document* -- one row per BIDS file -- not the
+# A record is a *metadata document*, one row per BIDS file, not the
 # samples themselves. The fields cover BIDS entities (subject, task,
 # session, run), scientific metadata (sampling rate, channel count,
 # duration in samples) and storage hints (relative path, datatype). Per
-# the EEG-BIDS spec (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8)
-# every recording carries this minimal envelope.
+# the EEG-BIDS spec (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8),
+# every recording exposes these fields.
 
 # %%
 sample = focused.iloc[0]
@@ -122,11 +120,10 @@ duration_s = sample["ntimes"] / sample["sampling_frequency"]
 print(f"  duration (s)          : {duration_s:.1f}")
 
 # %% [markdown]
-# Step 5 -- Cohort analysis on the DataFrame
+# Step 5: Cohort analysis on the DataFrame
 # ------------------------------------------
-# Now we can ask the questions that matter for an ML project. ``pandas``
-# carries the vocabulary -- ``value_counts``, ``groupby``, ``describe`` --
-# so the EEGDash client stays minimal.
+# ``value_counts``, ``groupby``, and ``describe`` cover most catalogue
+# questions; the EEGDash client stays out of the way.
 
 # %%
 print("Records per dataset:")
@@ -139,10 +136,9 @@ print("\nTop tasks:")
 print(focused["task"].value_counts().head(8).to_string())
 
 # %% [markdown]
-# Step 6 -- Visualise the cohort
+# Step 6: Visualise the cohort
 # ------------------------------
-# A horizontal bar of "records per dataset" reads at a glance. The
-# pulse-style colour split mirrors the EEGDash Data Rail.
+# A horizontal bar of "records per dataset" reads at a glance.
 
 # %%
 counts = focused["dataset"].value_counts().iloc[::-1]
@@ -161,11 +157,11 @@ style_figure(
 plt.show()
 
 # %% [markdown]
-# Step 7 -- Dataset-level documents
+# Step 7: Dataset-level documents
 # ---------------------------------
-# ``find_datasets`` returns the *catalogue* documents -- one per dataset --
-# each carrying DOI, BIDS version, demographics, and citation counts.
-# Promote them to a DataFrame and shortlist by subject count.
+# ``find_datasets`` returns the *catalogue* documents (one per dataset)
+# with DOI, BIDS version, demographics, and citation counts. Promote
+# them to a DataFrame and shortlist by subject count.
 
 # %%
 catalogue = pd.DataFrame(client.find_datasets({}, limit=300))
@@ -181,8 +177,8 @@ print("Top 10 EEG datasets with >= 5 subjects:")
 print(shortlist.to_string(index=False))
 
 # %% [markdown]
-# A common mistake -- and how to recover
-# --------------------------------------
+# A common mistake, and how to recover
+# -------------------------------------
 # **Run.** Passing an unknown task name returns an empty list, not an
 # error. The recovery is to surface what tasks the catalogue actually
 # carries (Nederbragt et al. 2020).
@@ -210,7 +206,7 @@ print(f"records for task=RestingState: {len(combined)}")
 # ----
 # **Mini-project.** Build a candidate cohort: pick a sampling-rate range
 # and a minimum subject count, then return a DataFrame with
-# ``[dataset_id, n_subjects, sampling_rates_seen]``. We get you started.
+# ``[dataset_id, n_subjects, sampling_rates_seen]``. Starter below.
 
 
 # %%
@@ -243,9 +239,8 @@ print(candidate_cohort(min_subjects=5, sfreq_min=200.0).to_string(index=False))
 # %% [markdown]
 # Result
 # ------
-# We surveyed the EEGDash index without pulling a single sample, surfaced
-# the rich client API, ran multi-field queries, and turned the results
-# into pandas DataFrames for cohort analysis.
+# We surveyed the EEGDash index without pulling a single sample, ran
+# multi-field queries, and shortlisted candidate datasets in a DataFrame.
 
 # %% [markdown]
 # Wrap-up

@@ -2,9 +2,11 @@
 ======================================
 
 EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets,
-served by the public REST API at https://data.eegdash.org. The
-:class:`~eegdash.api.EEGDash` client searches, filters, and summarises that
-index without downloading a single sample.
+served by the public REST API at https://data.eegdash.org. The same
+catalogue powers `NEMAR <https://nemar.org>`_, the EEGLAB-ecosystem portal
+that hosts EEG/MEG datasets with browsing, compute, and provenance tools
+(Delorme et al., 2022). The :class:`~eegdash.api.EEGDash` client searches,
+filters, and summarises that index without downloading a single sample.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_00_first_search.png'
 """
@@ -103,8 +105,7 @@ print(f"extra columns when filtered: {extra}")
 # every recording exposes these fields.
 
 # %%
-sample = focused.iloc[0]
-for f in [
+fields = [
     "dataset",
     "subject",
     "task",
@@ -114,10 +115,13 @@ for f in [
     "nchans",
     "ntimes",
     "datatype",
-]:
-    print(f"  {f:<22s}: {sample.get(f)!r}")
-duration_s = sample["ntimes"] / sample["sampling_frequency"]
-print(f"  duration (s)          : {duration_s:.1f}")
+]
+sample = focused.iloc[0]
+record_view = sample[fields].to_frame("value")
+record_view.loc["duration (s)"] = round(
+    sample["ntimes"] / sample["sampling_frequency"], 1
+)
+record_view
 
 # %% [markdown]
 # Step 5: Cohort analysis on the DataFrame
@@ -126,14 +130,16 @@ print(f"  duration (s)          : {duration_s:.1f}")
 # questions; the EEGDash client stays out of the way.
 
 # %%
-print("Records per dataset:")
-print(focused["dataset"].value_counts().to_string())
+# Records per dataset.
+focused["dataset"].value_counts().to_frame("records")
 
-print("\nSampling rates (Hz):")
-print(focused["sampling_frequency"].value_counts().head(8).to_string())
+# %%
+# Sampling-rate distribution.
+focused["sampling_frequency"].value_counts().head(8).to_frame("records")
 
-print("\nTop tasks:")
-print(focused["task"].value_counts().head(8).to_string())
+# %%
+# Top tasks.
+focused["task"].value_counts().head(8).to_frame("records")
 
 # %% [markdown]
 # Step 6: Visualise the cohort
@@ -172,9 +178,9 @@ shortlist = (
     catalogue.loc[catalogue["n_subjects"] >= 5, ["dataset_id", "n_subjects", "license"]]
     .sort_values("n_subjects", ascending=False)
     .head(10)
+    .reset_index(drop=True)
 )
-print("Top 10 EEG datasets with >= 5 subjects:")
-print(shortlist.to_string(index=False))
+shortlist
 
 # %% [markdown]
 # A common mistake, and how to recover
@@ -234,7 +240,7 @@ def candidate_cohort(min_subjects: int = 5, sfreq_min: float = 200.0) -> pd.Data
     )
 
 
-print(candidate_cohort(min_subjects=5, sfreq_min=200.0).to_string(index=False))
+candidate_cohort(min_subjects=5, sfreq_min=200.0)
 
 # %% [markdown]
 # Result
@@ -259,6 +265,8 @@ print(candidate_cohort(min_subjects=5, sfreq_min=200.0).to_string(index=False))
 # %% [markdown]
 # References
 # ----------
+# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
+# - Delorme & Makeig 2004, EEGLAB: an open source toolbox for analysis of single-trial EEG dynamics, *J Neurosci Methods* 134(1):9-21. https://doi.org/10.1016/j.jneumeth.2003.10.009
 # - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
 # - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
 # - Nederbragt et al. 2020, Ten simple rules for live coding tutorials, *PLOS Comp Bio*. https://doi.org/10.1371/journal.pcbi.1008090

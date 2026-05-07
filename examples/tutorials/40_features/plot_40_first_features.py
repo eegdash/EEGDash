@@ -52,7 +52,9 @@ from eegdash.features import (
     spectral_preprocessor,
     univariate_feature,
 )
+from eegdash.viz import style_figure, use_eegdash_style
 
+use_eegdash_style()
 np.random.seed(42)
 cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
@@ -187,23 +189,26 @@ for j, fn in enumerate(feat_names):
         else [f"spec_band_power_{fn}_{ch}" for ch in CH_NAMES]
     )
     heat[:, j] = np.log10(np.maximum(example[cols].to_numpy(dtype=float), 1e-30))
-fig, ax = plt.subplots(figsize=(5.5, 3.0), dpi=120)
+fig, ax = plt.subplots(figsize=(6.0, 3.4), dpi=120)
 im = ax.imshow(heat, cmap="viridis", aspect="auto")
 ax.set_xticks(range(len(feat_names)), feat_names)
 ax.set_yticks(range(len(CH_NAMES)), CH_NAMES)
-ax.set_title("First eyes-closed window: log10(feature value)")
 ax.set_xlabel("feature")
 ax.set_ylabel("channel")
-fig.colorbar(im, ax=ax, label="log10 value")
-fig.text(
-    0.01,
-    0.01,
-    f"source: ds005514 mock | n_chans={len(CH_NAMES)} | sfreq={SFREQ} Hz | "
-    "filter: 1-40 Hz FIR (firwin)",
-    fontsize=6,
-    ha="left",
+fig.colorbar(im, ax=ax, label="log10(feature value)")
+fig.subplots_adjust(top=0.74, bottom=0.18)
+style_figure(
+    fig,
+    title="First eyes-closed window: per-channel feature heatmap",
+    subtitle=(
+        f"ds005514 mock | n_chans={len(CH_NAMES)}, n_features={len(feat_names)} | "
+        f"sfreq={SFREQ} Hz"
+    ),
+    source=(
+        "EEGDash plot_40 | OpenNeuro ds005514 (mock) | filter 1-40 Hz FIR (firwin)"
+    ),
+    grid_axis="none",
 )
-fig.tight_layout(rect=(0.0, 0.04, 1.0, 1.0))
 plt.show()
 
 # %% [markdown]

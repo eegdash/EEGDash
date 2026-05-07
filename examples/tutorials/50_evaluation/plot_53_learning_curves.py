@@ -52,7 +52,14 @@ from eegdash.splits import (
     majority_baseline,
     make_split_manifest,
 )
+from eegdash.viz import (
+    EEGDASH_BLUE,
+    chance_line,
+    style_figure,
+    use_eegdash_style,
+)
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 SEED = 42
 np.random.seed(SEED)
@@ -196,24 +203,22 @@ print(f"chance level (majority on test pool): {chance:.2f}")
 xs = np.asarray(FRACTIONS)
 ys = np.asarray([mean_acc[f] for f in FRACTIONS])
 es = np.asarray([std_acc[f] for f in FRACTIONS])
-fig, ax = plt.subplots(figsize=(6.0, 3.6))
-ax.plot(xs, ys, marker="o", color="#0072B2", label="logistic regression")
-ax.fill_between(xs, ys - es, ys + es, color="#0072B2", alpha=0.18, label="+/- 1 std")
-ax.axhline(chance, color="#D55E00", linestyle="--", label=f"chance = {chance:.2f}")
+fig, ax = plt.subplots(figsize=(6.5, 3.8))
+ax.plot(xs, ys, marker="o", color=EEGDASH_BLUE, label="logistic regression")
+ax.fill_between(xs, ys - es, ys + es, color=EEGDASH_BLUE, alpha=0.18, label="+/- 1 std")
 ax.set_xlabel("training-set fraction (subjects)")
 ax.set_ylabel("test accuracy")
-ax.set_title("Learning curve: accuracy vs. training-set size")
-ax.text(
-    0.5,
-    1.02,
-    f"n_subjects={N_SUBJECTS}, n_perms={N_PERMS}, source: synthetic",
-    ha="center",
-    transform=ax.transAxes,
-    fontsize=8,
-)
+ax.set_xlim(min(xs), max(xs))
 ax.set_ylim(0.4, 1.0)
+chance_line(ax, level=chance, label="chance")
 ax.legend(loc="lower right", fontsize=8)
-fig.tight_layout()
+fig.subplots_adjust(top=0.78, bottom=0.18)
+style_figure(
+    fig,
+    title="Learning curve: accuracy vs. training-set size",
+    subtitle=f"synthetic cohort | n_subjects={N_SUBJECTS}, n_perms={N_PERMS}",
+    source="EEGDash plot_53 | synthetic split manifest",
+)
 
 # %% [markdown]
 # Step 6 -- Investigate where the curve plateaus

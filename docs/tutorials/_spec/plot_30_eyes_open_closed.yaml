@@ -43,7 +43,7 @@ learning_objectives:
 audience: Beginner who has worked through Cat A and Cat B. Knows about windows, splits,
   and baselines; learns about annotations and resting-state framing here.
 budgets:
-  max_loc: 305
+  max_loc: 320
   max_runtime_seconds: 180
   max_network_mb: 200
   cpu_only: true

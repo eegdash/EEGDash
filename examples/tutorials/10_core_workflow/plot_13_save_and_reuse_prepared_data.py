@@ -54,7 +54,9 @@ from braindecode.datasets import BaseConcatDataset, RawDataset
 from braindecode.datautil import load_concat_dataset
 from braindecode.preprocessing import create_fixed_length_windows
 import eegdash
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 mne.set_log_level("ERROR")

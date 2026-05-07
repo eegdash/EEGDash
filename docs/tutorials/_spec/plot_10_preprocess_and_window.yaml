@@ -44,7 +44,7 @@ audience: Beginner who finished the Start Here track. Some EEG vocabulary (chann
   sampling rate, band-pass) introduced just-in-time; no signal-processing background
   assumed.
 budgets:
-  max_loc: 260
+  max_loc: 275
   max_runtime_seconds: 180
   max_network_mb: 100
   cpu_only: true

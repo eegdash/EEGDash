@@ -51,7 +51,9 @@ from sklearn.model_selection import StratifiedKFold
 
 from eegdash import EEGDashDataset
 from eegdash.splits import assert_no_leakage, majority_baseline
+from eegdash.viz import EEGDASH_BLUE, EEGDASH_ORANGE, style_figure, use_eegdash_style
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 mne.set_log_level("ERROR")
@@ -66,11 +68,11 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 # al. 2019, doi:10.1038/s41597-019-0104-8). Subject ``001`` is small.
 
 # %%
-SUBJECT = "001"
+SUBJECT = "002"
 dataset = EEGDashDataset(
-    cache_dir=cache_dir, dataset="ds005863", task="P3", subject=SUBJECT
+    cache_dir=cache_dir, dataset="ds005863", task="visualoddball", subject=SUBJECT
 )
-print(f"records: {len(dataset.datasets)} (dataset=ds005863, task=P3)")
+print(f"records: {len(dataset.datasets)} (dataset=ds005863, task=visualoddball)")
 
 # %% [markdown]
 # Step 2 -- Inspect the events table
@@ -181,18 +183,21 @@ print(f"Model accuracy: {acc:.3f} | chance: {chance:.3f} | ROC-AUC: {auc:.3f}")
 times = np.linspace(TMIN, TMAX, X.shape[-1])
 ch_names = [c.lower() for c in raw0.ch_names]
 ch_idx = ch_names.index("pz") if "pz" in ch_names else 0
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.plot(times, X[y == 1, ch_idx, :].mean(0), color="#D55E00", label="target")
-ax.plot(times, X[y == 0, ch_idx, :].mean(0), color="#0072B2", label="standard")
+fig, ax = plt.subplots(figsize=(6, 3.4))
+ax.plot(times, X[y == 1, ch_idx, :].mean(0), color=EEGDASH_ORANGE, label="target")
+ax.plot(times, X[y == 0, ch_idx, :].mean(0), color=EEGDASH_BLUE, label="standard")
 ax.axvspan(0.25, 0.5, color="grey", alpha=0.15, label="P300 window")
 ax.axhline(0, color="k", lw=0.5)
-ax.set(
-    xlabel="time (s)",
-    ylabel="amplitude (µV)",
-    title=f"ERP at {raw0.ch_names[ch_idx]} (n_t={n_targets}, sfreq={SFREQ:.0f} Hz)",
-)
+ax.set_xlabel("time (s)")
+ax.set_ylabel("amplitude (µV)")
 ax.legend(loc="upper right", fontsize=8)
-fig.tight_layout()
+fig.subplots_adjust(top=0.78, bottom=0.18)
+style_figure(
+    fig,
+    title=f"P300 ERP at {raw0.ch_names[ch_idx]}",
+    subtitle=f"ds005863 sub-{SUBJECT} | n_targets={n_targets}, n_standards={int((y == 0).sum())} | sfreq={SFREQ:.0f} Hz",
+    source="EEGDash plot_20 | OpenNeuro ds005863 | task=visualoddball",
+)
 
 # %% [markdown]
 # A common mistake -- and how to recover

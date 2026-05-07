@@ -42,7 +42,9 @@ import numpy as np
 
 import eegdash
 from eegdash import EEGDash
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 SEED = 0
 np.random.seed(SEED)
 random.seed(SEED)

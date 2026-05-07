@@ -51,7 +51,9 @@ import numpy as np
 
 import eegdash
 from eegdash import EEGDashDataset
+from eegdash.viz import EEGDASH_BLUE, style_figure, use_eegdash_style
 
+use_eegdash_style()
 np.random.seed(42)
 cache_dir = os.environ.get("EEGDASH_CACHE_DIR", str(Path.home() / ".eegdash_cache"))
 print(f"eegdash version: {eegdash.__version__}")
@@ -147,21 +149,16 @@ fig_raw.suptitle(f"Source: OpenNeuro {DATASET}", y=0.02, fontsize=8)
 
 snippet = np.asarray(preview.snippet)
 times = np.arange(snippet.shape[1]) / sfreq
-fig, ax = plt.subplots(figsize=(7.2, 2.4), constrained_layout=True)
-ax.plot(times, snippet[0] * 1e6, color="#0072B2", linewidth=0.8)
+fig, ax = plt.subplots(figsize=(7.2, 2.8), constrained_layout=False)
+ax.plot(times, snippet[0] * 1e6, color=EEGDASH_BLUE, linewidth=0.8)
 ax.set_xlabel("time (s)")
 ax.set_ylabel(f"{raw.ch_names[0]} (µV)")
-ax.set_title(
-    f"First 5 s, channel {raw.ch_names[0]} | sub-{SUBJECT}, {nchan} ch @ {sfreq:.0f} Hz"
-)
-ax.text(
-    0.99,
-    -0.35,
-    f"Source: OpenNeuro {DATASET}",
-    transform=ax.transAxes,
-    ha="right",
-    fontsize=7,
-    color="#64748B",
+fig.subplots_adjust(top=0.78, bottom=0.18)
+style_figure(
+    fig,
+    title=f"First 5 s, channel {raw.ch_names[0]}",
+    subtitle=f"{DATASET} sub-{SUBJECT} | {nchan} ch @ {sfreq:.0f} Hz | n_samples={snippet.shape[1]}",
+    source=f"EEGDash plot_01 | OpenNeuro {DATASET} (doi:10.18112/openneuro.ds002718)",
 )
 plt.show()
 
@@ -206,7 +203,7 @@ print(
 #
 # Pick a *different task* (or dataset) and repeat the inspection.
 #
-# - **Easier**: keep ``ds002718`` and pass ``task="FacePerception"`` explicitly.
+# - **Easier**: keep ``ds002718`` and pass ``task="FaceRecognition"`` explicitly.
 # - **Same difficulty**: try another OpenNeuro dataset (e.g. ``ds002893``).
 # - **Harder**: filter two subjects, then ``preview(index=1)`` for the second.
 

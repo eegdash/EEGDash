@@ -40,7 +40,7 @@ learning_objectives:
 audience: Beginner ML user with one prior EEGDash tutorial (plot_10). Has heard of
   train/test splits; the leakage pitfall is introduced in this lesson.
 budgets:
-  max_loc: 260
+  max_loc: 285
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true

@@ -48,7 +48,9 @@ from sklearn.metrics import accuracy_score
 from eegdash import EEGDashDataset
 from eegdash.splits import assert_no_leakage, get_splitter, majority_baseline
 from eegdash.tasks import get_task
+from eegdash.viz import style_figure, use_eegdash_style
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=RuntimeWarning)
 mne.set_log_level("ERROR")
 SEED = 42
@@ -131,16 +133,24 @@ vlim = (
     float(min(mean_open.min(), mean_closed.min())),
     float(max(mean_open.max(), mean_closed.max())),
 )
-fig, axes = plt.subplots(1, 2, figsize=(6.0, 3.0), dpi=120)
+fig, axes = plt.subplots(1, 2, figsize=(6.5, 3.4), dpi=120)
 for ax, vec, title in zip(axes, (mean_open, mean_closed), ("eyes open", "eyes closed")):
     mne.viz.plot_topomap(vec, info, axes=ax, show=False, vlim=vlim, cmap="viridis")
     ax.set_title(f"{title}\nlog10 alpha (8-12 Hz)")
-footer = (
-    f"source: ds005514 sub-{task.subjects[0]} | n_chans={len(ch_names)} | "
-    f"sfreq={sfreq:.0f} Hz | band-pass {task.bandpass[0]:.1f}-{task.bandpass[1]:.1f} Hz"
+fig.subplots_adjust(top=0.74, bottom=0.12)
+style_figure(
+    fig,
+    title="Alpha-band power: eyes open vs. eyes closed",
+    subtitle=(
+        f"ds005514 sub-{task.subjects[0]} | n_chans={len(ch_names)}, "
+        f"n_open={int((y == 0).sum())}, n_closed={int((y == 1).sum())} | sfreq={sfreq:.0f} Hz"
+    ),
+    source=(
+        f"EEGDash plot_30 | OpenNeuro ds005514 | task={task.name} | "
+        f"band-pass {task.bandpass[0]:.1f}-{task.bandpass[1]:.1f} Hz"
+    ),
+    grid_axis="none",
 )
-fig.text(0.01, 0.01, footer, fontsize=6, ha="left")
-fig.tight_layout(rect=(0.0, 0.04, 1.0, 1.0))
 plt.show()
 
 # %% [markdown]

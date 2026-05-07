@@ -41,7 +41,7 @@ learning_objectives:
   - "After this tutorial you will be able to phrase the result in clinical-cautious language: small N, single dataset, p-factor as a derived score not a diagnosis."
 audience: "Advanced user; prior plot_42 (features-to-sklearn) and plot_70 (challenge dataset). Project-tier scaffolding rules apply."
 budgets:
-  max_loc: 348
+  max_loc: 363
   max_runtime_seconds: 1500
   max_network_mb: 1500
   cpu_only: false

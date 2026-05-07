@@ -40,7 +40,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from eegdash.splits import assert_no_leakage, majority_baseline
+from eegdash.viz import EEGDASH_BLUE, EEGDASH_ORANGE, style_figure, use_eegdash_style
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 SEED, SFREQ, DATASET = 42, 128.0, "ds003061"  # resampled to match plot_20
@@ -133,25 +135,23 @@ print(
     f"Auditory target peaks: N100~{n100_lat:.0f} ms, P300~{p300_lat:.0f} ms "
     "(hedged: single channel, simulated subject pool)"
 )
-fig, ax = plt.subplots(figsize=(7.0, 2.6), constrained_layout=True)
-ax.plot(times, erp_t, color="#D55E00", label="target", linewidth=1.6)
-ax.plot(times, erp_s, color="#0072B2", label="standard", linewidth=1.4)
+fig, ax = plt.subplots(figsize=(7.0, 3.0))
+ax.plot(times, erp_t, color=EEGDASH_ORANGE, label="target", linewidth=1.6)
+ax.plot(times, erp_s, color=EEGDASH_BLUE, label="standard", linewidth=1.4)
 ax.axvline(0.0, color="#64748B", linewidth=0.6)
-ax.set(
-    xlabel="time (ms)",
-    ylabel="amplitude (uV)",
-    title=f"Auditory ERP target vs. standard | "
-    f"n_subj={metadata['subject'].nunique()}, sfreq={SFREQ:.0f} Hz",
-)
+ax.set_xlabel("time (ms)")
+ax.set_ylabel("amplitude (µV)")
 ax.legend(frameon=False)
-ax.text(
-    0.99,
-    -0.30,
-    f"Source: OpenNeuro {DATASET}",
-    transform=ax.transAxes,
-    ha="right",
-    fontsize=7,
-    color="#64748B",
+fig.subplots_adjust(top=0.78, bottom=0.18)
+style_figure(
+    fig,
+    title="Auditory ERP target vs. standard",
+    subtitle=(
+        f"{DATASET} | n_subj={metadata['subject'].nunique()}, "
+        f"n_targets={int((y == 1).sum())}, n_standards={int((y == 0).sum())} | "
+        f"sfreq={SFREQ:.0f} Hz"
+    ),
+    source=f"EEGDash plot_21 | OpenNeuro {DATASET} | task=auditoryoddball",
 )
 plt.show()
 

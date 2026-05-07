@@ -38,7 +38,7 @@ learning_objectives:
 audience: Intermediate user who finished plot_40 and at least one Cat B tutorial.
   Comfortable with basic spectral concepts; learns the feature-tree abstraction here.
 budgets:
-  max_loc: 322
+  max_loc: 337
   max_runtime_seconds: 300
   max_network_mb: 100
   cpu_only: true

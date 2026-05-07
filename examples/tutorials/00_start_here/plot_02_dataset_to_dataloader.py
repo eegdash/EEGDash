@@ -50,12 +50,14 @@ from torch.utils.data import DataLoader
 
 import eegdash
 from eegdash import EEGDashDataset
+from eegdash.viz import use_eegdash_style
 from braindecode.preprocessing import (
     Preprocessor,
     create_fixed_length_windows,
     preprocess,
 )
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)

@@ -349,7 +349,10 @@ sphinx_gallery_conf = {
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
-    "filename_pattern": r"/(?:plot|tutorial)_(?!_).*\.py",
+    "filename_pattern": os.environ.get(
+        "EEGDASH_GALLERY_FILENAME_PATTERN",
+        r"/(?:plot|tutorial)_(?!_).*\.py",
+    ),
     "matplotlib_animations": True,
     "reset_modules": ("matplotlib", "seaborn"),
     "first_notebook_cell": (

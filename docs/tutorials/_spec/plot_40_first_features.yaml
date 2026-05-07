@@ -39,7 +39,7 @@ learning_objectives:
 audience: Beginner who finished Cat A and at least plot_10. Knows what a band-pass
   filter is; learns about spectral power as a per-window feature here.
 budgets:
-  max_loc: 295
+  max_loc: 310
   max_runtime_seconds: 300
   max_network_mb: 100
   cpu_only: true

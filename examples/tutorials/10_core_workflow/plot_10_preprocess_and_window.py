@@ -59,7 +59,9 @@ from braindecode.preprocessing import (
 
 from eegdash import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 CACHE_DIR = get_default_cache_dir()
 TARGET_SFREQ = 100.0  # Hz, see Step 5
 WINDOW_SIZE_S = 2.0  # seconds, see Step 6
@@ -74,7 +76,7 @@ WINDOW_SIZE_S = 2.0  # seconds, see Step 6
 # pipeline. ``ds002718`` (Wakeman & Henson) is small, public, 10-20.
 
 dataset = EEGDashDataset(
-    cache_dir=CACHE_DIR, dataset="ds002718", subject="012", task="FacePerception"
+    cache_dir=CACHE_DIR, dataset="ds002718", subject="012", task="FaceRecognition"
 )
 preview = dataset.preview(0)
 raw = preview.raw.load_data().copy()

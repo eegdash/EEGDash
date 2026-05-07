@@ -52,7 +52,9 @@ import numpy as np
 import pandas as pd
 
 from eegdash.splits import assert_no_leakage, majority_baseline
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 

@@ -52,7 +52,9 @@ from eegdash.splits import (
     make_split_manifest,
     manifest_to_json,
 )
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 

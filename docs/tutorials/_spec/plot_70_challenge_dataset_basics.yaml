@@ -45,7 +45,7 @@ audience: Beginner-to-intermediate user who has loaded one EEGDash recording (pl
   and wants to start the EEG2025 challenge. Knows basic BIDS entities; learns what
   makes the challenge dataset object special here.
 budgets:
-  max_loc: 280
+  max_loc: 295
   max_runtime_seconds: 240
   max_network_mb: 200
   cpu_only: true

@@ -38,7 +38,7 @@ learning_objectives:
 audience: Beginner who finished plot_10/11/12. Knows that preprocessing is expensive;
   this lesson shows how to stop paying that cost on every iteration.
 budgets:
-  max_loc: 260
+  max_loc: 285
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true

@@ -2,19 +2,23 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Re-export shim for the EEGDash visual-identity helpers.
+"""EEGDash visualization helpers (palette, Data Rail, figure-level styling).
 
-The reusable identity tokens and helper functions now live in
-:mod:`eegdash.viz`. This shim preserves the historical import path
-``from plot_dataset.identity import ...`` so the existing docs build and
-plot scripts under ``docs/plot_dataset/`` continue to work without changes.
+Public surface:
 
-Prefer importing from :mod:`eegdash.viz` in new code.
+- :func:`use_eegdash_style` -- one-call rcParams + palette setup for tutorials.
+- :func:`style_figure` -- apply the EEGDash identity to every axes in a figure
+  and attach the title/subtitle/source block + Data Rail.
+- :func:`chance_line` -- add a labelled chance-level reference line.
+- :func:`apply_eegdash_matplotlib_style` -- per-axes styling primitive.
+- :func:`apply_eegdash_plotly_layout` -- Plotly equivalent of the rail.
+- :func:`eegdash_viz_card_html` -- compact HTML card for docs pages.
+- Palette constants ``EEGDASH_BLUE``, ``EEGDASH_ORANGE``, ..., ``EEGDASH_PALETTE``.
 """
 
 from __future__ import annotations
 
-from eegdash.viz.identity import (  # noqa: F401  (re-exports)
+from .identity import (
     EEGDASH_AMBER,
     EEGDASH_BLUE,
     EEGDASH_BLUE_DARK,

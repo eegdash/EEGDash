@@ -73,7 +73,7 @@ print(f"EEGDASH_CACHE_DIR set: {bool(os.environ.get('EEGDASH_CACHE_DIR'))}")
 dataset = EEGDashDataset(
     cache_dir=CACHE_DIR,
     dataset=DATASET,
-    task="FacePerception",
+    task="FaceRecognition",
     description_fields=["subject", "session", "task", "run"],
 )
 n_records = len(dataset.datasets)
@@ -116,7 +116,7 @@ assert not missing, f"{len(missing)} file(s) missing under {CACHE_DIR}"
 offline = EEGDashDataset(
     cache_dir=CACHE_DIR,
     dataset=DATASET,
-    task="FacePerception",
+    task="FaceRecognition",
     download=False,
 )
 assert len(offline.datasets) == n_records, (

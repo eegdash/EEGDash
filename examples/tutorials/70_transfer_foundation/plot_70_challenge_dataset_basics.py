@@ -47,7 +47,9 @@ from eegdash.const import (
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 

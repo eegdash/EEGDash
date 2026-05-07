@@ -44,7 +44,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 from eegdash.splits import majority_baseline
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))

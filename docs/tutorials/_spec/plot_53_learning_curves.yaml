@@ -36,7 +36,7 @@ learning_objectives:
   - "After this tutorial you will be able to report a chance-level baseline alongside the curve and call out the regime where the model first surpasses chance."
 audience: "Intermediate user who completed plot_11, plot_12, and plot_51. Knows how to run a single cross-subject evaluation; here they sweep training-set size and read the curve."
 budgets:
-  max_loc: 316
+  max_loc: 331
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true

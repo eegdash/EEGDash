@@ -54,7 +54,9 @@ from eegdash.features import (
     univariate_feature,
 )
 from eegdash.features.feature_bank import spectral as _spec
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 np.random.seed(42)
 print(f"eegdash {eegdash.__version__}")
 

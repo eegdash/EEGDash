@@ -47,7 +47,9 @@ from eegdash.splits import (
     majority_baseline,
     make_split_manifest,
 )
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 rng = np.random.default_rng(SEED)

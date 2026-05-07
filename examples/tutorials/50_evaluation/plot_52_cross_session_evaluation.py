@@ -54,7 +54,9 @@ from eegdash.splits import (
     majority_baseline,
     make_split_manifest,
 )
+from eegdash.viz import use_eegdash_style
 
+use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 N_SUBJECTS, N_SESSIONS, N_WINDOWS = 8, 3, 8

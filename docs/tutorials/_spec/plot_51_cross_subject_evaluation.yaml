@@ -42,7 +42,7 @@ audience: Beginner ML user who completed plot_11 (leakage-safe split) and plot_1
   (baseline). This is the most common evaluation in EEG decoding and is intentionally
   kept very accessible.
 budgets:
-  max_loc: 315
+  max_loc: 330
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true

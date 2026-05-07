@@ -434,12 +434,10 @@ def draw_neuroai_interop_figure(
         f"{window_samples}-sample windows"
     )
     source_bits = [f"EEGDash {plot_id}"]
-    if dataset_id and dataset_id != "synthetic":
+    if dataset_id:
         source_bits.append(
             f"OpenNeuro {dataset_id}" + (f" ({citation})" if citation else "")
         )
-    else:
-        source_bits.append("synthetic fallback (neuralfetch/neuralset offline)")
     source_bits.append("Meta NeuroAI: facebookresearch.github.io/neuroai")
     style_figure(
         fig,

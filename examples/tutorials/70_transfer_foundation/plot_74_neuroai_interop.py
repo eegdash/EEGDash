@@ -42,21 +42,15 @@ DataFrame, and which ones live downstream of it?
 # %% [markdown]
 # Requirements
 # ------------
-# - About 1 min on CPU when ``neuralfetch`` and ``neuralset`` are
-#   installed; the synthetic fallback path runs in under 5 s.
-# - Network on first call (~30 MB into ``cache_dir`` for the EEGDash
-#   query). NeuralFetch's downloader is gated behind an ``import``
-#   check so the gallery build never fails on a missing extra.
+# - About 1 min on CPU.
+# - Network on first call (~30 MB into ``cache_dir`` for the EEGDash query).
 # - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
 #   (DataLoader basics), :doc:`plot_70_challenge_dataset_basics`
-#   (challenge loader). Optional install:
-#   ``pip install neuralfetch neuralset``.
+#   (challenge loader).
 # - Concept: :doc:`/concepts/eegdash_objects`.
 
 # %%
 # Setup. Seeding ``numpy`` keeps any sampling reproducible across runs.
-# The optional NeuroAI imports are wrapped so the audit can read this
-# file in an environment without ``neuralfetch`` or ``neuralset``.
 import os
 import warnings
 from pathlib import Path
@@ -79,32 +73,12 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(f"eegdash version: {eegdash.__version__}")
 print(f"cache directory: {CACHE_DIR}")
 
-# Probe the optional NeuroAI dependencies. ``neuralfetch.download.Eegdash``
-# is the EEGDash backend NeuralFetch ships, and ``neuralset.Segmenter``
-# is the tensor-pipeline entry point. Either may be absent on a fresh
-# environment, so the rest of the tutorial gates on the flag rather
-# than failing the import.
-try:
-    import neuralfetch  # noqa: F401  imported for the version-print only
-    from neuralfetch.download import Eegdash as NeuralFetchEegdash
-
-    HAS_NEURALFETCH = True
-except ImportError as exc:
-    print(f"neuralfetch unavailable ({exc}); install with `pip install neuralfetch`.")
-    HAS_NEURALFETCH = False
-
-try:
-    import neuralset as ns
-    from neuralset import Segmenter
-    from neuralset.events import standardize_events
-    from neuralset.extractors import Pulse
-
-    HAS_NEURALSET = True
-except ImportError as exc:
-    print(f"neuralset unavailable ({exc}); install with `pip install neuralset`.")
-    HAS_NEURALSET = False
-
-print(f"HAS_NEURALFETCH = {HAS_NEURALFETCH}; HAS_NEURALSET = {HAS_NEURALSET}")
+import neuralfetch  # noqa: F401  imported for the version-print only
+import neuralset as ns
+from neuralfetch.download import Eegdash as NeuralFetchEegdash
+from neuralset import Segmenter
+from neuralset.events import standardize_events
+from neuralset.extractors import Pulse
 
 # %% [markdown]
 # Four projects, one chain: the mental model
@@ -155,26 +129,10 @@ print(f"HAS_NEURALFETCH = {HAS_NEURALFETCH}; HAS_NEURALSET = {HAS_NEURALSET}")
 # subpackage are the surface this tutorial exercises.
 
 # %%
-if HAS_NEURALSET:
-    ns_public = sorted(
-        name for name in dir(ns) if not name.startswith("_") and not name == "base"
-    )
-    surface_df = pd.DataFrame({"symbol": ns_public}).head(20)
-else:
-    surface_df = pd.DataFrame(
-        {
-            "symbol": [
-                "Chain",
-                "Event",
-                "Segment",
-                "SegmentDataset",
-                "Segmenter",
-                "Step",
-                "Study",
-                "extractors",
-            ]
-        }
-    )
+ns_public = sorted(
+    name for name in dir(ns) if not name.startswith("_") and not name == "base"
+)
+surface_df = pd.DataFrame({"symbol": ns_public}).head(20)
 surface_df
 
 # %% [markdown]
@@ -318,17 +276,16 @@ neuralfetch_card = pd.Series(
     name="value",
 ).to_frame()
 
-if HAS_NEURALFETCH:
-    # Construct the descriptor without calling ``.run()`` so the
-    # tutorial budget stays small. NeuralFetch validates the
-    # constructor arguments via pydantic; a successful instantiation
-    # confirms the EEGDash backend is wired up.
-    nf_backend = NeuralFetchEegdash(
-        study=DATASET,
-        dset_dir=str(CACHE_DIR / "neuralfetch"),
-    )
-    neuralfetch_card.loc["instance dset_dir", "value"] = str(nf_backend.dset_dir)
-    neuralfetch_card.loc["instance study", "value"] = nf_backend.study
+# Construct the descriptor without calling ``.run()`` so the
+# tutorial budget stays small. NeuralFetch validates the
+# constructor arguments via pydantic; a successful instantiation
+# confirms the EEGDash backend is wired up.
+nf_backend = NeuralFetchEegdash(
+    study=DATASET,
+    dset_dir=str(CACHE_DIR / "neuralfetch"),
+)
+neuralfetch_card.loc["instance dset_dir", "value"] = str(nf_backend.dset_dir)
+neuralfetch_card.loc["instance study", "value"] = nf_backend.study
 neuralfetch_card
 
 # %% [markdown]
@@ -350,78 +307,40 @@ WINDOW_SECONDS = 2.0
 window_samples = int(WINDOW_SECONDS * sfreq)
 
 
-def synthetic_segment(raw, *, samples: int, picks_eeg=True) -> np.ndarray:
-    """Pull one ``(samples,)`` trace from the first EEG channel."""
-    channels = raw.copy().pick_types(eeg=picks_eeg, eog=False, misc=False)
-    data = channels.get_data()
-    n = data.shape[1]
-    take = min(samples, n)
-    seg = np.zeros(samples, dtype=float)
-    seg[:take] = data[0, :take]
-    if take < samples:
-        seg[take:] = seg[take - 1] if take > 0 else 0.0
-    return seg
+sample_window = raw.copy().pick_types(eeg=True).get_data()[0, :window_samples]
 
-
-sample_window = synthetic_segment(raw, samples=window_samples)
-
-seg_dataset = None  # populated by the live run when neuralset is online
-if HAS_NEURALSET:
-    # Run the Segmenter against the live events DataFrame. The Pulse
-    # extractor returns a binary mask of triggers per segment; it is
-    # the lightest extractor, so the cell stays inside the runtime
-    # budget. The full pipeline would chain ``Pulse`` with
-    # ``EegExtractor`` to bring the voltage signal in.
-    segmenter = Segmenter(
-        start=0.0,
-        duration=WINDOW_SECONDS,
-        stride=WINDOW_SECONDS,
-        stride_drop_incomplete=True,
-        trigger_query='type == "Background"',
-        drop_incomplete=True,
-        extractors={"pulse": Pulse(event_types=("Stimulus",), aggregation="sum")},
-    )
-    try:
-        # ``standardize_events`` sorts, fills the BIDS columns, and
-        # round-trips every row through the canonical pydantic Event
-        # model. Without it, ``Segmenter.apply`` raises with a clear
-        # message about the missing standardisation step.
-        events_std = standardize_events(events_df, auto_fill=True)
-        seg_dataset = segmenter.apply(events_std)
-        n_segments = len(seg_dataset)
-        first_keys = sorted(seg_dataset[0].data.keys()) if n_segments > 0 else []
-        seg_card = pd.Series(
-            {
-                "Segmenter.duration": WINDOW_SECONDS,
-                "Segmenter.stride": WINDOW_SECONDS,
-                "n_segments": n_segments,
-                "extractor keys": str(first_keys),
-                "events kept": int(events_std.shape[0]),
-            },
-            name="value",
-        ).to_frame()
-    except (RuntimeError, ValueError) as exc:
-        # An empty trigger set or pydantic validation issue lands here.
-        # The tutorial keeps walking with the synthetic shape so the
-        # figure still renders.
-        print(f"Segmenter live run skipped ({type(exc).__name__}): {exc}")
-        seg_card = pd.Series(
-            {
-                "status": "live run skipped",
-                "reason": type(exc).__name__,
-                "fallback shape": f"({n_channels}, {window_samples})",
-            },
-            name="value",
-        ).to_frame()
-else:
-    seg_card = pd.Series(
-        {
-            "status": "neuralset offline",
-            "fallback shape": f"({n_channels}, {window_samples})",
-            "Segmenter API": "Segmenter(duration=, stride=, extractors=)",
-        },
-        name="value",
-    ).to_frame()
+# Run the Segmenter against the live events DataFrame. The Pulse
+# extractor returns a binary mask of triggers per segment; it is
+# the lightest extractor, so the cell stays inside the runtime
+# budget. The full pipeline would chain ``Pulse`` with
+# ``EegExtractor`` to bring the voltage signal in.
+segmenter = Segmenter(
+    start=0.0,
+    duration=WINDOW_SECONDS,
+    stride=WINDOW_SECONDS,
+    stride_drop_incomplete=True,
+    trigger_query='type == "Background"',
+    drop_incomplete=True,
+    extractors={"pulse": Pulse(event_types=("Stimulus",), aggregation="sum")},
+)
+# ``standardize_events`` sorts, fills the BIDS columns, and round-trips
+# every row through the canonical pydantic Event model. Without it,
+# ``Segmenter.apply`` raises with a clear message about the missing
+# standardisation step.
+events_std = standardize_events(events_df, auto_fill=True)
+seg_dataset = segmenter.apply(events_std)
+n_segments = len(seg_dataset)
+first_keys = sorted(seg_dataset[0].data.keys()) if n_segments > 0 else []
+seg_card = pd.Series(
+    {
+        "Segmenter.duration": WINDOW_SECONDS,
+        "Segmenter.stride": WINDOW_SECONDS,
+        "n_segments": n_segments,
+        "extractor keys": str(first_keys),
+        "events kept": int(events_std.shape[0]),
+    },
+    name="value",
+).to_frame()
 seg_card
 
 # %% [markdown]
@@ -445,56 +364,28 @@ seg_card
 # segments.
 
 # %%
+from torch.utils.data import DataLoader
+
 BATCH_SIZE = 8
-try:
-    import torch  # noqa: F401  (availability check)
-    from torch.utils.data import DataLoader
-
-    HAS_TORCH = True
-except ImportError as exc:
-    print(f"torch unavailable ({exc}); skipping the DataLoader cell.")
-    HAS_TORCH = False
-
-if HAS_TORCH and HAS_NEURALSET and seg_dataset is not None:
-    try:
-        loader = DataLoader(
-            seg_dataset,
-            batch_size=BATCH_SIZE,
-            shuffle=False,
-            num_workers=0,
-            collate_fn=seg_dataset.collate_fn,
-        )
-        first_batch = next(iter(loader))
-        loader_card = pd.Series(
-            {
-                "DataLoader.batch_size": BATCH_SIZE,
-                "n_batches": len(loader),
-                "batch type": type(first_batch).__name__,
-                "batch keys": str(
-                    sorted(first_batch.data.keys())
-                    if hasattr(first_batch, "data")
-                    else []
-                ),
-            },
-            name="value",
-        ).to_frame()
-    except (RuntimeError, ValueError) as exc:
-        print(f"DataLoader live run skipped ({type(exc).__name__}): {exc}")
-        loader_card = pd.Series(
-            {
-                "status": "live run skipped",
-                "fallback shape": f"({BATCH_SIZE}, {n_channels}, {window_samples})",
-            },
-            name="value",
-        ).to_frame()
-else:
-    loader_card = pd.Series(
-        {
-            "status": "torch / neuralset offline or upstream skipped",
-            "fallback shape": f"({BATCH_SIZE}, {n_channels}, {window_samples})",
-        },
-        name="value",
-    ).to_frame()
+loader = DataLoader(
+    seg_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=False,
+    num_workers=0,
+    collate_fn=seg_dataset.collate_fn,
+)
+first_batch = next(iter(loader))
+loader_card = pd.Series(
+    {
+        "DataLoader.batch_size": BATCH_SIZE,
+        "n_batches": len(loader),
+        "batch type": type(first_batch).__name__,
+        "batch keys": str(
+            sorted(first_batch.data.keys()) if hasattr(first_batch, "data") else []
+        ),
+    },
+    name="value",
+).to_frame()
 loader_card
 
 # %% [markdown]
@@ -584,24 +475,20 @@ plt.show()
 # fall back to a stride-based segmenter.
 
 # %%
-if HAS_NEURALSET:
-    bad_segmenter = Segmenter(
-        start=0.0,
-        duration=WINDOW_SECONDS,
-        trigger_query="type == 'this-event-type-does-not-exist'",
-        extractors={"pulse": Pulse(event_types=("Stimulus",), aggregation="sum")},
-    )
-    try:
-        events_for_bad = standardize_events(events_df, auto_fill=False)
-        bad_segmenter.apply(events_for_bad)
-        print("unexpected: empty trigger query did not raise")
-    except RuntimeError as exc:
-        msg = str(exc)
-        print(f"Caught RuntimeError: {msg[:120]}")
-    print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead.")
-else:
-    print("neuralset offline; the trigger-query failure mode is documented above.")
-
+bad_segmenter = Segmenter(
+    start=0.0,
+    duration=WINDOW_SECONDS,
+    trigger_query="type == 'this-event-type-does-not-exist'",
+    extractors={"pulse": Pulse(event_types=("Stimulus",), aggregation="sum")},
+)
+try:
+    events_for_bad = standardize_events(events_df, auto_fill=False)
+    bad_segmenter.apply(events_for_bad)
+    print("unexpected: empty trigger query did not raise")
+except RuntimeError as exc:
+    msg = str(exc)
+    print(f"Caught RuntimeError: {msg[:120]}")
+print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead.")
 # %% [markdown]
 # Modify
 # ------

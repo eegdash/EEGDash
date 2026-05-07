@@ -117,6 +117,8 @@ docs = [
   "plotly",
   "seaborn",
   "moabb",
+  "neuralfetch",
+  "neuralset",
 ]
 
 digestion = [

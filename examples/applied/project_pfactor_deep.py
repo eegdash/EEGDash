@@ -71,22 +71,12 @@ rng = np.random.default_rng(SEED)
 cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
-# torch and braindecode are optional at parse time so the static audit
-# can read this file in a torch-less environment. Training cells gate on
-# the flag.
-try:
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
-    from braindecode.models import EEGConformer
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from braindecode.models import EEGConformer
 
-    torch.manual_seed(SEED)
-    HAS_TORCH = True
-except ImportError as exc:  # pragma: no cover - documented gating
-    print(f"torch/braindecode unavailable ({exc}); training cells skipped.")
-    HAS_TORCH = False
-
-
+torch.manual_seed(SEED)
 # %% [markdown]
 # Step 2. The mental model and the production data path
 # ------------------------------------------------------
@@ -215,8 +205,6 @@ print(
 # %%
 def build_model() -> "nn.Module":
     """Return a fresh EEGConformer regression head (n_outputs=1)."""
-    if not HAS_TORCH:
-        return None
     return EEGConformer(
         n_chans=N_CHANS,
         n_outputs=1,
@@ -284,37 +272,36 @@ def epoch_loop(model, X_tr_t, y_tr_t, X_va_t, y_va_t, *, epochs, lr, batch):
     return train_mse, val_mse, val_r, v_pred
 
 
-if HAS_TORCH:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using device: {device}")
-    X_tr_t = torch.from_numpy(X_tr).float().to(device)
-    y_tr_t = torch.from_numpy(y_tr).float().to(device)
-    X_va_t = torch.from_numpy(X_va).float().to(device)
-    y_va_t = torch.from_numpy(y_va).float().to(device)
-    for s in range(N_SEEDS):
-        torch.manual_seed(SEED + s)
-        np.random.seed(SEED + s)
-        model = build_model().to(device)
-        tr_mse, va_mse, va_r, last_val_pred = epoch_loop(
-            model,
-            X_tr_t,
-            y_tr_t,
-            X_va_t,
-            y_va_t,
-            epochs=NUM_EPOCHS,
-            lr=LEARNING_RATE,
-            batch=BATCH_SIZE,
-        )
-        train_loss_curve[s, :], val_loss_curve[s, :], val_r_curve[s, :] = (
-            tr_mse,
-            va_mse,
-            va_r,
-        )
-        last_model = model
-        print(
-            f"seed {s}: epoch {NUM_EPOCHS} | train_mse={tr_mse[-1]:.3f} | "
-            f"val_mse={va_mse[-1]:.3f} | val_r={va_r[-1]:+.3f}"
-        )
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
+X_tr_t = torch.from_numpy(X_tr).float().to(device)
+y_tr_t = torch.from_numpy(y_tr).float().to(device)
+X_va_t = torch.from_numpy(X_va).float().to(device)
+y_va_t = torch.from_numpy(y_va).float().to(device)
+for s in range(N_SEEDS):
+    torch.manual_seed(SEED + s)
+    np.random.seed(SEED + s)
+    model = build_model().to(device)
+    tr_mse, va_mse, va_r, last_val_pred = epoch_loop(
+        model,
+        X_tr_t,
+        y_tr_t,
+        X_va_t,
+        y_va_t,
+        epochs=NUM_EPOCHS,
+        lr=LEARNING_RATE,
+        batch=BATCH_SIZE,
+    )
+    train_loss_curve[s, :], val_loss_curve[s, :], val_r_curve[s, :] = (
+        tr_mse,
+        va_mse,
+        va_r,
+    )
+    last_model = model
+    print(
+        f"seed {s}: epoch {NUM_EPOCHS} | train_mse={tr_mse[-1]:.3f} | "
+        f"val_mse={va_mse[-1]:.3f} | val_r={va_r[-1]:+.3f}"
+    )
 
 # %% [markdown]
 # Step 8. Investigate: per-subject scatter and saliency
@@ -331,7 +318,7 @@ if HAS_TORCH:
 # %%
 def compute_saliency(model, X_va_t, y_va_t, *, top_frac=0.5):
     """|grad x|, averaged over the top-confidence half of val windows."""
-    if not HAS_TORCH or model is None:
+    if model is None:
         return np.zeros((N_CHANS, N_TIMES), dtype=float)
     model.eval()
     X = X_va_t.clone().detach().requires_grad_(True)
@@ -346,12 +333,11 @@ def compute_saliency(model, X_va_t, y_va_t, *, top_frac=0.5):
 
 
 saliency_map = np.zeros((N_CHANS, N_TIMES), dtype=float)
-if HAS_TORCH and last_model is not None:
-    saliency_map = compute_saliency(last_model, X_va_t, y_va_t, top_frac=0.5)
-    print(
-        f"saliency: peak channel={CH_NAMES[int(saliency_map.mean(axis=1).argmax())]} | "
-        f"peak time idx={int(saliency_map.mean(axis=0).argmax())} | max={saliency_map.max():.3e}"
-    )
+saliency_map = compute_saliency(last_model, X_va_t, y_va_t, top_frac=0.5)
+print(
+    f"saliency: peak channel={CH_NAMES[int(saliency_map.mean(axis=1).argmax())]} | "
+    f"peak time idx={int(saliency_map.mean(axis=0).argmax())} | max={saliency_map.max():.3e}"
+)
 
 # %% [markdown]
 # Step 9. Result: the 3-panel diagnostic
@@ -399,17 +385,16 @@ print(
 # mode is visible (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
 # %%
-if HAS_TORCH and last_model is not None:
-    try:
-        bad_y = meta["p_factor"].astype(str).to_numpy()
-        torch.tensor(bad_y[:BATCH_SIZE], dtype=torch.float32)
-    except (ValueError, TypeError) as exc:
-        print(f"Caught {type(exc).__name__}: {str(exc)[:90]}")
-        fixed = pd.to_numeric(meta["p_factor"], errors="coerce").to_numpy()
-        fixed_t = torch.from_numpy(fixed[:BATCH_SIZE]).float()
-        print(
-            f"Recovery: cast p_factor to float (dtype={fixed.dtype}); shape={tuple(fixed_t.shape)}."
-        )
+try:
+    bad_y = meta["p_factor"].astype(str).to_numpy()
+    torch.tensor(bad_y[:BATCH_SIZE], dtype=torch.float32)
+except (ValueError, TypeError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:90]}")
+    fixed = pd.to_numeric(meta["p_factor"], errors="coerce").to_numpy()
+    fixed_t = torch.from_numpy(fixed[:BATCH_SIZE]).float()
+    print(
+        f"Recovery: cast p_factor to float (dtype={fixed.dtype}); shape={tuple(fixed_t.shape)}."
+    )
 
 # %% [markdown]
 # Step 11. Modify: from-scratch -> linear-probe -> full-finetune

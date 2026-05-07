@@ -65,20 +65,11 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 ckpt_path = cache_dir / "plot_73_pretrained_encoder.pt"
 
-# torch + braindecode are optional at parse time so the audit can read
-# this file in a torch-less environment. The training cells gate on
-# the flag.
-try:
-    import torch
-    import torch.nn as nn
-    from braindecode.models import ShallowFBCSPNet
+import torch
+import torch.nn as nn
+from braindecode.models import ShallowFBCSPNet
 
-    torch.manual_seed(SEED)
-    HAS_TORCH = True
-except ImportError as exc:  # pragma: no cover - documented gating
-    print(f"torch/braindecode unavailable ({exc}); training cells skipped.")
-    HAS_TORCH = False
-
+torch.manual_seed(SEED)
 # %% [markdown]
 # Three regimes, one figure: the mental model
 # -------------------------------------------
@@ -110,17 +101,16 @@ except ImportError as exc:  # pragma: no cover - documented gating
 # linear-probe regime walks this list and toggles ``requires_grad``.
 
 # %%
-if HAS_TORCH:
-    _peek = ShallowFBCSPNet(8, 2, n_times=256, final_conv_length="auto")
-    print(
-        pd.DataFrame(
-            [
-                {"name": n, "shape": tuple(p.shape), "n_params": p.numel()}
-                for n, p in _peek.named_parameters()
-            ]
-        ).to_string(index=False)
-    )
-    del _peek
+_peek = ShallowFBCSPNet(8, 2, n_times=256, final_conv_length="auto")
+print(
+    pd.DataFrame(
+        [
+            {"name": n, "shape": tuple(p.shape), "n_params": p.numel()}
+            for n, p in _peek.named_parameters()
+        ]
+    ).to_string(index=False)
+)
+del _peek
 
 # %% [markdown]
 # Step 1: Pretrain a small encoder on a synthetic source task
@@ -170,8 +160,6 @@ def synth_windows(n_subj, n_per, prefix="src", freq_offset=0.0, snr=2.0):
 
 
 def build_model(n_outputs=2):
-    if not HAS_TORCH:
-        return None
     return ShallowFBCSPNet(
         n_chans=N_CHANS, n_outputs=n_outputs, n_times=N_TIMES, final_conv_length="auto"
     )
@@ -186,8 +174,6 @@ print(f"source X={X_src.shape}, y={y_src.shape}")
 # %%
 def evaluate(model, X, y):
     """Classification accuracy on ``(X, y)``."""
-    if not HAS_TORCH:
-        return float("nan")
     model.eval()
     with torch.no_grad():
         preds = model(torch.from_numpy(X).float()).argmax(dim=1).numpy()
@@ -200,8 +186,6 @@ def adamw_loop(model, X_tr, y_tr, *, epochs, lr, batch=32, X_val=None, y_val=Non
     With ``X_val`` the return is per-epoch validation accuracy; without,
     per-epoch training loss. The figure consumes the validation form.
     """
-    if not HAS_TORCH:
-        return [float("nan")] * epochs
     params = [p for p in model.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=lr, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
@@ -225,21 +209,18 @@ def adamw_loop(model, X_tr, y_tr, *, epochs, lr, batch=32, X_val=None, y_val=Non
     return track
 
 
-if HAS_TORCH:
-    pretrained = build_model()
-    pre_losses = adamw_loop(pretrained, X_src, y_src, epochs=2, lr=1e-3)
-    # Save only the encoder (drop final_layer) so the head is
-    # contractually replaced. Mirrors ``model.reset_head(n_outputs=K)``.
-    enc_state = {
-        k: v
-        for k, v in pretrained.state_dict().items()
-        if not k.startswith("final_layer")
-    }
-    torch.save(enc_state, ckpt_path)
-    print(
-        f"saved encoder: {ckpt_path.name} ({len(enc_state)} tensors); "
-        f"pretrain loss trajectory={[round(x, 3) for x in pre_losses]}"
-    )
+pretrained = build_model()
+pre_losses = adamw_loop(pretrained, X_src, y_src, epochs=2, lr=1e-3)
+# Save only the encoder (drop final_layer) so the head is
+# contractually replaced. Mirrors ``model.reset_head(n_outputs=K)``.
+enc_state = {
+    k: v for k, v in pretrained.state_dict().items() if not k.startswith("final_layer")
+}
+torch.save(enc_state, ckpt_path)
+print(
+    f"saved encoder: {ckpt_path.name} ({len(enc_state)} tensors); "
+    f"pretrain loss trajectory={[round(x, 3) for x in pre_losses]}"
+)
 
 # %% [markdown]
 # **Predict.** Three regimes share data, optimiser, and budget; which
@@ -292,8 +273,6 @@ print(
 # %%
 def configure_regime(model, regime):
     """Apply one regime in place; return ``(frozen, trainable, total)``."""
-    if not HAS_TORCH:
-        return model, (0, 0, 0)
     if regime == "from-scratch":
         for p in model.parameters():
             p.requires_grad = True
@@ -335,25 +314,22 @@ LRS = {"from-scratch": 1e-3, "linear-probe": 1e-2, "full-finetune": 1e-3}
 curves = {r: np.full((N_SEEDS, EPOCHS_FT), np.nan, dtype=float) for r in REGIMES}
 trainable_params = {r: 0 for r in REGIMES}
 
-if HAS_TORCH:
-    for s in range(N_SEEDS):
-        torch.manual_seed(SEED + s)
-        np.random.seed(SEED + s)
-        for r in REGIMES:
-            model, (_, trainable, _) = configure_regime(build_model(), r)
-            trainable_params[r] = trainable
-            curves[r][s, :] = adamw_loop(
-                model,
-                X_tr,
-                y_tr,
-                epochs=EPOCHS_FT,
-                lr=LRS[r],
-                X_val=X_te,
-                y_val=y_te,
-            )
-        print(
-            f"seed {s}: " + " | ".join(f"{r}={curves[r][s, -1]:.2f}" for r in REGIMES)
+for s in range(N_SEEDS):
+    torch.manual_seed(SEED + s)
+    np.random.seed(SEED + s)
+    for r in REGIMES:
+        model, (_, trainable, _) = configure_regime(build_model(), r)
+        trainable_params[r] = trainable
+        curves[r][s, :] = adamw_loop(
+            model,
+            X_tr,
+            y_tr,
+            epochs=EPOCHS_FT,
+            lr=LRS[r],
+            X_val=X_te,
+            y_val=y_te,
         )
+    print(f"seed {s}: " + " | ".join(f"{r}={curves[r][s, -1]:.2f}" for r in REGIMES))
 
 # %% [markdown]
 # Investigate
@@ -415,21 +391,18 @@ plt.show()
 # visible (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
 # %%
-if HAS_TORCH:
-    try:
-        # pretrained on 8 chans; rebuild with 10 to trip the size check.
-        wrong = ShallowFBCSPNet(
-            N_CHANS + 2, 2, n_times=N_TIMES, final_conv_length="auto"
-        )
-        state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-        wrong.load_state_dict(state, strict=True)
-    except RuntimeError as exc:
-        print(f"Caught RuntimeError: {str(exc)[:90]}...")
-        # Recovery: matching n_chans, strict=False, head re-init.
-        fixed = build_model()
-        missing, _ = fixed.load_state_dict(state, strict=False)
-        head_only = all(k.startswith("final_layer") for k in missing)
-        print(f"Recovery: matching n_chans + strict=False; head re-init={head_only}.")
+try:
+    # pretrained on 8 chans; rebuild with 10 to trip the size check.
+    wrong = ShallowFBCSPNet(N_CHANS + 2, 2, n_times=N_TIMES, final_conv_length="auto")
+    state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+    wrong.load_state_dict(state, strict=True)
+except RuntimeError as exc:
+    print(f"Caught RuntimeError: {str(exc)[:90]}...")
+    # Recovery: matching n_chans, strict=False, head re-init.
+    fixed = build_model()
+    missing, _ = fixed.load_state_dict(state, strict=False)
+    head_only = all(k.startswith("final_layer") for k in missing)
+    print(f"Recovery: matching n_chans + strict=False; head re-init={head_only}.")
 
 # %% [markdown]
 # Modify
@@ -441,22 +414,21 @@ if HAS_TORCH:
 # a row to ``results_table``.
 
 # %%
-if HAS_TORCH:
-    last_block = build_model()
-    last_block.load_state_dict(
-        torch.load(ckpt_path, map_location="cpu", weights_only=True), strict=False
+last_block = build_model()
+last_block.load_state_dict(
+    torch.load(ckpt_path, map_location="cpu", weights_only=True), strict=False
+)
+for name, p in last_block.named_parameters():
+    unfreeze = any(t in name for t in ("conv_classifier", "bnorm")) or (
+        name.startswith("final_layer")
     )
-    for name, p in last_block.named_parameters():
-        unfreeze = any(t in name for t in ("conv_classifier", "bnorm")) or (
-            name.startswith("final_layer")
-        )
-        p.requires_grad = unfreeze
-    n_trainable = sum(p.numel() for p in last_block.parameters() if p.requires_grad)
-    print(
-        f"last-block starter: trainable={n_trainable} "
-        f"(linear-probe={trainable_params['linear-probe']}, "
-        f"full-finetune={trainable_params['full-finetune']})"
-    )
+    p.requires_grad = unfreeze
+n_trainable = sum(p.numel() for p in last_block.parameters() if p.requires_grad)
+print(
+    f"last-block starter: trainable={n_trainable} "
+    f"(linear-probe={trainable_params['linear-probe']}, "
+    f"full-finetune={trainable_params['full-finetune']})"
+)
 
 # %% [markdown]
 # Mini-project

@@ -208,13 +208,10 @@ pd.Series(
 
 # %%
 N_FOLDS = 5
-# ``engine="sklearn"`` selects a GroupKFold-flavoured splitter that
-# honours ``n_folds`` exactly. The ``"moabb"`` default uses
-# LeaveOneGroupOut, which is correct but produces one fold per subject;
-# 5 folds keep the audit short for the tutorial.
-splitter = get_splitter(
-    "cross_subject", engine="sklearn", n_folds=N_FOLDS, random_state=SEED
-)
+# Passing ``n_folds`` swaps MOABB's default LeaveOneGroupOut for a
+# GroupKFold cv_class so the audit stays short. Without ``n_folds`` you
+# get LeaveOneGroupOut, which produces one fold per subject.
+splitter = get_splitter("cross_subject", n_folds=N_FOLDS, random_state=SEED)
 manifest = make_split_manifest(
     splitter, metadata["target"].to_numpy(), metadata, target="target"
 )
@@ -486,6 +483,37 @@ plt.show()
 # bar. The pills in column 3 read ``10/10`` for the naive row and
 # ``0/10`` for the cross-subject row. Same windows, same labels, only
 # the split rule changed.
+
+# %% [markdown]
+# Quick alternative: HuggingFace-style splits in two lines
+# --------------------------------------------------------
+# The manifest path above is auditable and persisted; for the common
+# case of "give me one train/test split or N folds right now", EEGDash
+# also exposes two HuggingFace-style helpers that wrap the same MOABB
+# splitters: :func:`eegdash.splits.train_test_split` returns
+# ``{"train": ..., "test": ...}`` (HF
+# :meth:`datasets.Dataset.train_test_split` shape) and
+# :func:`eegdash.splits.k_fold` yields ``(train, test)`` pairs. They
+# also live as methods on :class:`~eegdash.EEGDashDataset` so
+# ``dataset.train_test_split(group="subject", test_size=0.2)`` is the
+# one-liner replacement for the manifest dance when you do not need a
+# persisted audit trail.
+
+# %%
+from eegdash.splits import k_fold as hf_k_fold
+from eegdash.splits import train_test_split as hf_train_test_split
+
+quick = hf_train_test_split(metadata, test_size=0.4, group="subject", seed=SEED)
+print(
+    f"train_test_split: train={len(quick['train'])} rows, "
+    f"test={len(quick['test'])} rows | "
+    f"test subjects={sorted(quick['test']['subject'].unique().tolist())}"
+)
+fold_sizes = [
+    (len(tr), len(te))
+    for tr, te in hf_k_fold(metadata, n_folds=N_FOLDS, group="subject", seed=SEED)
+]
+pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 
 # %% [markdown]
 # Wrap-up

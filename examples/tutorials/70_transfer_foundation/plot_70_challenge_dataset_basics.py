@@ -1,45 +1,64 @@
-"""Get started with EEGChallengeDataset for the EEG2025 challenge
-=================================================================
+"""How do I get started with the EEG 2025 Foundation Challenge dataset?
+========================================================================
 
-The EEG 2025 Foundation Challenge ships its own loader -- ``EEGChallengeDataset``
--- on top of the same ``eegdash`` infrastructure that powers ``EEGDashDataset``.
-Why two classes? The challenge fixes a frozen subject pool per "release" (R1 to
-R11, all from the Healthy Brain Network cohort, Alexander et al. 2017),
-downsamples each recording to 100 Hz, band-pass filters it 0.5-50 Hz, and
-exposes a "mini" subset of 20 subjects per release for fast iteration. Mixing
-those preprocessed cubes with raw OpenNeuro pulls would silently break the
-leaderboard contract. This tutorial walks through the loader, contrasts it with
-``EEGDashDataset``, and verifies that ``mini=True`` is a strict subset of the
-full release (Pernet et al. 2019 BIDS, Cisotto and Chicco 2024 clinical EEG
-reproducibility tips). So why does the challenge need its own dataset class?
+The EEG 2025 Foundation Challenge ships its own loader,
+:class:`~eegdash.dataset.EEGChallengeDataset`, on top of the same
+``eegdash`` infrastructure that powers
+:class:`~eegdash.dataset.EEGDashDataset`. The data pool is the
+Healthy Brain Network release (HBN; Alexander et al. 2017), reachable
+through `NEMAR <https://nemar.org>`_ (Delorme et al. 2022): every
+recording is downsampled from 500 Hz to 100 Hz, band-pass filtered
+0.5-50 Hz, and shipped via a fixed S3 bucket so the leaderboard contract
+stays reproducible (Cisotto & Chicco 2024). This tutorial walks through
+the loader, surfaces the task taxonomy, the participant-level metadata,
+and the official catalog row a single recording carries. The deliverable
+is one :class:`pandas.DataFrame` with records-per-task counts and one
+three-panel figure rendered from the live metadata.
+
+.. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_70_challenge_dataset_basics.png'
 """
-
-# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_70_challenge_dataset_basics.png'
 
 # %% [markdown]
 # Learning objectives
 # -------------------
-#
-# - Build ``EEGChallengeDataset(release=..., mini=True)`` and read ``.release`` / ``.mini`` back.
-# - Use ``mini=True`` to iterate on 20 subjects in seconds rather than the full release.
-# - Verify the mini subject pool is a strict subset of the full release pool (frozen list).
-# - Compare the challenge loader with ``EEGDashDataset``: a release-to-OpenNeuro map plus a curated mini list, on top of the same lazy-loading machinery.
-# - Surface the leaderboard contract: see :doc:`/concepts/eegdash_objects` and the EEG 2025 site for evaluation rules.
-#
+# - Build :class:`~eegdash.dataset.EEGChallengeDataset` for a given release
+#   (R1-R11) with ``mini=True`` and read the ``release`` / ``mini``
+#   attributes back.
+# - Enumerate the HBN task taxonomy (resting, passive video, active
+#   cognitive, sequence learning) from ``ds.description['task']`` without
+#   downloading the recordings.
+# - Inspect the per-recording metadata catalog row: BIDS entities,
+#   sampling frequency, channel count, and the participants.tsv extras.
+# - Verify the strict-subset invariant ``set(mini_subjects).issubset(full_subjects)``
+#   and contrast the loader against
+#   :class:`~eegdash.dataset.EEGDashDataset` for the same subjects.
+# - Read the leaderboard contract: see :doc:`/concepts/eegdash_objects`
+#   and the EEG 2025 challenge site for evaluation rules.
+
+# %% [markdown]
 # Requirements
 # ------------
-#
-# - You finished ``plot_01_first_recording`` and ``plot_02_dataset_to_dataloader``.
-# - CPU only; runtime < 1 minute.
-# - Network: the constructor queries the eegdash metadata catalog (~1 MB on first run, cached after). The challenge BDF files are *not* eagerly downloaded -- that happens lazily when you call ``.preview()`` or iterate ``.raw``.
+# - About 1 min on CPU on first run; under 10 s once the metadata catalog
+#   is cached.
+# - Network on first call (~1 MB into ``cache_dir`` for the catalog
+#   query). The challenge BDF files are not eagerly downloaded; that
+#   happens lazily on ``.preview()`` or when a Braindecode pipeline pulls
+#   ``record.raw``.
+# - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_00_first_search`,
+#   :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
+# - Concept: :doc:`/concepts/eegdash_objects`.
 
 # %%
-# Setup -- seeds and imports.
+# Setup. ``np.random.seed`` keeps any later sampling reproducible; the
+# warning filter silences a pandas ``FutureWarning`` raised by the
+# metadata catalog inside the constructor.
 import os
 import warnings
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 import eegdash
 from eegdash import EEGChallengeDataset, EEGDashDataset
@@ -53,139 +72,276 @@ use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 
-cache_dir = os.environ.get("EEGDASH_CACHE_DIR", str(Path.home() / ".eegdash_cache"))
+cache_dir = Path(
+    os.environ.get("EEGDASH_CACHE_DIR", str(Path.home() / ".eegdash_cache"))
+)
+cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"eegdash version: {eegdash.__version__}")
 print(f"cache directory: {cache_dir}")
 
 # %% [markdown]
-# Step 1 -- Instantiate ``EEGChallengeDataset(release='R5', mini=True)``
-# ----------------------------------------------------------------------
+# Two loaders, one catalog: the mental model
+# ------------------------------------------
+# :class:`~eegdash.dataset.EEGDashDataset` is a thin query layer over the
+# eegdash metadata catalog: pass any combination of BIDS entities and it
+# returns every match. :class:`~eegdash.dataset.EEGChallengeDataset` is a
+# pre-baked recipe on top of that:
 #
-# **Run.** We pick release ``R5`` because it has 20 mini subjects (every release
-# does). ``download=False`` means no S3 traffic now -- we only need the metadata
-# catalog to enumerate records and verify the strict-subset claim.
+# .. code-block:: text
+#
+#     EEGDashDataset                   EEGChallengeDataset
+#     (any BIDS query on the           (release-pinned recipe on top of
+#      metadata catalog)                EEGDashDataset)
+#     +-----------------------+        +------------------------------+
+#     | dataset='ds005509',   |        | release='R5', mini=True      |
+#     | subject='NDARAH...'   |        |   - dataset = 'EEG2025r5mini'|
+#     | task='symbolSearch'   | -----> |   - subject = curated 20     |
+#     | -> records, BIDS meta |        |   - s3 bucket = challenge    |
+#     +-----------------------+        |   - cache id  = isolated     |
+#                                      | -> records, BIDS meta        |
+#                                      +------------------------------+
+#       raw OpenNeuro files (500 Hz)     preprocessed BDFs (100 Hz,
+#                                          0.5-50 Hz pass-band)
+#
+# Why two classes? The challenge fixes a frozen subject pool per release
+# (R1 to R11; HBN), preprocesses each recording (Cz reference, downsample,
+# band-pass), and exposes a "mini" subset of 20 subjects per release for
+# fast iteration. Mixing those preprocessed cubes with raw OpenNeuro pulls
+# would silently break the leaderboard contract, so the two classes stay
+# separate even though they share the same lazy-loading machinery.
+
+# %% [markdown]
+# What does ``EEGChallengeDataset`` expose?
+# -----------------------------------------
+# Before instantiating one, list the public methods and properties on the
+# class. The ``release``, ``mini``, ``description``, ``records``, and
+# ``preview`` names are the ones the rest of the tutorial leans on.
+
+# %%
+challenge_attrs = sorted(
+    name for name in dir(EEGChallengeDataset) if not name.startswith("_")
+)
+pd.DataFrame({"attribute": challenge_attrs}).head(20)
+
+# %% [markdown]
+# Step 1: Build ``EEGChallengeDataset(release='R5', mini=True)``
+# --------------------------------------------------------------
+# **Run.** Pick release ``R5`` because it ships the full HBN task
+# protocol and 20 mini subjects (every release does). ``download``
+# defaults to ``True`` for the constructor itself, but no S3 traffic
+# happens until a call asks for ``record.raw``, the metadata catalog
+# query alone is enough to enumerate the task taxonomy.
 
 # %%
 RELEASE = "R5"
-ds_mini = EEGChallengeDataset(release=RELEASE, cache_dir=cache_dir, mini=True)
+ds_mini = EEGChallengeDataset(release=RELEASE, cache_dir=str(cache_dir), mini=True)
 n_mini_records = len(ds_mini.records)
-print(f"release   : {ds_mini.release}")
-print(f"mini      : {ds_mini.mini}")
-print(f"n_records : {n_mini_records}")
-print(f"s3_bucket : {ds_mini.s3_bucket}")
-print(f"data_dir  : {ds_mini.data_dir}")
+n_mini_subjects = ds_mini.description["subject"].nunique()
+pd.Series(
+    {
+        "release": ds_mini.release,
+        "mini": ds_mini.mini,
+        "n_records": n_mini_records,
+        "n_subjects": int(n_mini_subjects),
+        "s3_bucket": ds_mini.s3_bucket,
+        "OpenNeuro id": RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE],
+    },
+    name="value",
+).to_frame()
 
 # %% [markdown]
-# Step 2 -- Predict: how does ``mini=True`` change the records list?
-# ------------------------------------------------------------------
+# Step 2: The HBN task taxonomy
+# -----------------------------
+# **Predict.** Before running the next cell, write down: how many
+# distinct tasks do you expect on the R5 mini release? Recall the HBN
+# protocol covers a resting-state run, four passive video clips,
+# three active cognitive tasks (contrast change detection, surround
+# suppression, symbol search), and two sequence-learning variants
+# (Alexander et al. 2017, sec. 4.4).
 #
-# **Predict.** Before running Step 3, write down: how many subjects do you
-# expect ``ds_mini`` to cover? Recall that ``SUBJECT_MINI_RELEASE_MAP[release]``
-# is a frozen list of 20 names per release.
-#
-# **Investigate.** ``mini=True`` does not touch the random number generator; it
-# substitutes a curated subject list and renames the dataset id to
-# ``EEG2025r5mini`` for cache isolation. So your prediction should be exactly
-# 20 subjects.
+# **Run.** ``ds.description`` is a :class:`pandas.DataFrame` with one
+# row per recording. The ``task`` column carries the BIDS task entity,
+# untouched by the preprocessing pipeline.
 
 # %%
-mini_subjects = sorted(set(ds_mini.description["subject"]))
-print(
-    f"mini subjects ({len(mini_subjects)}): {mini_subjects[:3]} ... {mini_subjects[-2:]}"
+task_counts = ds_mini.description["task"].value_counts().to_dict()
+n_tasks = len(task_counts)
+pd.Series(task_counts, name="records").rename_axis("task").to_frame()
+
+# %% [markdown]
+# **Investigate.** A few observations from the count above. The active
+# cognitive tasks (``contrastChangeDetection``, ``surroundSupp``) appear
+# multiple times per subject because HBN records them across two or
+# three runs. The passive videos (``DespicableMe``, ``ThePresent``,
+# ``DiaryOfAWimpyKid``, ``FunwithFractals``) are one run per subject.
+# ``seqLearning6target`` and ``seqLearning8target`` are present for a
+# subset of the cohort because the sequence-learning protocol was added
+# mid-study.
+
+# %% [markdown]
+# Step 3: The participant-level metadata
+# --------------------------------------
+# **Run.** ``ds.description`` carries every BIDS entity *plus* the
+# columns from ``participants.tsv``: age, sex, the four CBCL summary
+# scores (``p_factor``, ``attention``, ``internalizing``,
+# ``externalizing``), the EHQ handedness total, and a per-task
+# availability flag (``available`` / ``not available``) for the ten HBN
+# tasks. The next cell surfaces the columns at a glance.
+
+# %%
+metadata_columns = list(ds_mini.description.columns)
+pd.DataFrame({"column": metadata_columns}).head(30)
+
+# %% [markdown]
+# Step 4: Build an age x task availability matrix
+# -----------------------------------------------
+# HBN spans children to young adults, so task coverage shifts with age:
+# the resting-state and passive-video runs are present at every age,
+# whereas sequence learning was added later in the protocol. Bin the
+# ages into four buckets and pivot.
+
+# %%
+age_bins = pd.IntervalIndex.from_tuples(
+    [(5, 8), (8, 12), (12, 16), (16, 19)], closed="left"
 )
+age_labels = ["5-8", "8-12", "12-16", "16-19"]
+desc = ds_mini.description.copy()
+desc["age_bin"] = pd.cut(
+    desc["age"], bins=[5, 8, 12, 16, 19], right=False, labels=age_labels
+)
+age_task_matrix = (
+    desc.groupby(["age_bin"], observed=False)["task"]
+    .value_counts()
+    .unstack(fill_value=0)
+    .reindex(columns=list(task_counts.keys()), fill_value=0)
+)
+age_task_matrix
+
+# %% [markdown]
+# Step 5: One catalog row, fully expanded
+# ---------------------------------------
+# Every BDF file in the challenge bucket has a row in the metadata
+# catalog with the BIDS entities, the storage descriptor, and the
+# participants.tsv extras. ``ds.records[0]`` is exactly that row,
+# returned as a Python ``dict``. The next cell renders it as a
+# :class:`pandas.DataFrame` so the long fields stay readable.
+
+# %%
+sample_record = dict(ds_mini.records[0])
+record_view = pd.Series(
+    {k: v for k, v in sample_record.items() if k != "_id"},
+    name="value",
+).to_frame()
+record_view.head(20)
+
+# %% [markdown]
+# **Investigate.** A handful of fields are load-bearing for downstream
+# code:
+#
+# - ``data_name`` is the unique BDF filename inside the challenge bucket;
+#   :meth:`~eegdash.dataset.EEGDashDataset.preview` keys on it.
+# - ``dataset`` is ``"EEG2025r5mini"``, *not* the OpenNeuro id; the
+#   dataset id pins the cache folder so preprocessed and raw pulls do
+#   not collide.
+# - ``sampling_frequency`` is ``100.0`` (downsampled from the original
+#   500 Hz), and ``nchans`` is the post-Cz-reference channel count.
+# - ``storage`` carries the S3 backend descriptor (``s3://nmdatasets/NeurIPS25/...``).
+
+# %% [markdown]
+# Step 6: Render the live numbers as a 3-panel figure
+# ---------------------------------------------------
+# The drawing helpers live in a sibling ``_challenge_basics_figure``
+# module so the rendering plumbing stays out of this tutorial. Panel 1
+# is the records-per-task bar chart from Step 2; panel 2 is the age x
+# task matrix from Step 4; panel 3 is the catalog row from Step 5.
+
+# %%
+from _challenge_basics_figure import draw_challenge_basics_figure
+
+# Augment the catalog row with the live subject count so the figure
+# subtitle can carry it without an extra parameter.
+sample_for_figure = dict(sample_record)
+sample_for_figure["__n_subjects"] = int(n_mini_subjects)
+
+fig = draw_challenge_basics_figure(
+    task_counts=task_counts,
+    age_task_matrix=age_task_matrix,
+    sample_metadata_row=sample_for_figure,
+    plot_id="plot_70",
+)
+plt.show()
+
+# %% [markdown]
+# Step 7: Verify the strict-subset invariant
+# ------------------------------------------
+# **Run.** ``mini=True`` substitutes a curated subject list (20 per
+# release, frozen in :data:`~eegdash.const.SUBJECT_MINI_RELEASE_MAP`)
+# and renames the dataset id to ``EEG2025r5mini`` for cache isolation.
+# Build the full release the same way and check the strict-subset
+# claim.
+
+# %%
+ds_full = EEGChallengeDataset(release=RELEASE, cache_dir=str(cache_dir), mini=False)
+mini_subjects = sorted(set(ds_mini.description["subject"]))
+full_subjects = sorted(set(ds_full.description["subject"]))
 assert ds_mini.release == RELEASE, "release attribute must match the request"
 assert ds_mini.mini is True, "mini=True must be honoured"
 assert len(mini_subjects) == 20, "every challenge release lists 20 mini subjects"
-
-# %% [markdown]
-# Step 3 -- Show that ``mini`` is a strict subset of ``full``
-# -----------------------------------------------------------
-#
-# **Run.** Build the full-release dataset (still ``download=False``) and compare
-# subject sets. The full release pulls every subject mapped to OpenNeuro
-# dataset ``RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE]``.
-
-# %%
-ds_full = EEGChallengeDataset(release=RELEASE, cache_dir=cache_dir, mini=False)
-n_full_records = len(ds_full.records)
-full_subjects = sorted(set(ds_full.description["subject"]))
-print(f"full release subjects: {len(full_subjects)}")
-print(f"full release records : {n_full_records}")
-print(f"OpenNeuro dataset id : {RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE]}")
-
-mini_set = set(mini_subjects)
-full_set = set(full_subjects)
-assert mini_set.issubset(full_set), "mini subjects must all appear in the full release"
-assert len(mini_set) < len(full_set), "mini must be a strict subset, not equal"
-ratio = len(mini_set) / len(full_set)
-print(f"|mini| / |full|      : {ratio:.2%}")
-assert ratio < 0.10, "mini should keep < 10% of the full subject pool"
-
-# %% [markdown]
-# Step 4 -- Surface the leaderboard contract
-# ------------------------------------------
-#
-# **Investigate.** The challenge data is *not* identical to what
-# ``EEGDashDataset`` would download for the same OpenNeuro id: every recording
-# is downsampled (500 Hz to 100 Hz) and band-pass filtered (0.5-50 Hz pass-band)
-# before being shipped via the ``s3://nmdatasets/NeurIPS25`` bucket. That means
-# you cannot mix challenge and non-challenge data in a leaderboard submission
-# without breaking the contract. The full preprocessing recipe is documented at
-# https://github.com/eeg2025/downsample-datasets and the evaluation rules at
-# https://eeg2025.github.io.
-
-# %%
-print(
-    f"records ratio mini/full: {n_mini_records} / {n_full_records} = "
-    f"{n_mini_records / n_full_records:.2%}"
+assert set(mini_subjects).issubset(set(full_subjects)), (
+    "mini subjects must all appear in the full release"
 )
-print(
-    f"all dataset ids start with 'EEG2025r{RELEASE[1:]}': "
-    f"{all(r['dataset'].startswith(f'EEG2025r{RELEASE[1:]}') for r in ds_mini.records)}"
+assert len(mini_subjects) < len(full_subjects), (
+    "mini must be a strict subset, not equal"
 )
-print("evaluation: see https://eeg2025.github.io (leaderboard, splits, deadline)")
+ratio = len(mini_subjects) / len(full_subjects)
+pd.Series(
+    {
+        "|mini|": len(mini_subjects),
+        "|full|": len(full_subjects),
+        "|mini| / |full|": f"{ratio:.2%}",
+        "n_records mini": n_mini_records,
+        "n_records full": len(ds_full.records),
+    },
+    name="value",
+).to_frame()
 
 # %% [markdown]
-# Step 5 -- Investigate: how does this differ from ``EEGDashDataset``?
-# --------------------------------------------------------------------
-#
-# **Investigate.** ``EEGDashDataset`` is a thin query layer over the eegdash
-# metadata catalog -- you pass any combination of BIDS entities and it returns
-# every match. ``EEGChallengeDataset`` is a pre-baked recipe on top of that:
-# it picks the dataset id from a release-to-OpenNeuro map, restricts subjects
-# to a frozen curated list when ``mini=True``, redirects S3 to the challenge
-# bucket, and pins the cache folder so the preprocessed BDF files do not collide
-# with the raw OpenNeuro tree.
+# Step 8: Same subjects, two views via ``EEGDashDataset``
+# -------------------------------------------------------
+# **Run.** Pulling the same subject through
+# :class:`~eegdash.dataset.EEGDashDataset` returns the *raw* OpenNeuro
+# recording (500 Hz, no challenge band-pass). The leaderboard contract
+# explicitly forbids mixing the two views in a submission.
 
 # %%
 ds_eegdash = EEGDashDataset(
-    cache_dir=cache_dir,
+    cache_dir=str(cache_dir),
     dataset=RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE],
     subject=mini_subjects[0],
 )
-print(
-    f"EEGDashDataset(dataset='{RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE]}', "
-    f"subject='{mini_subjects[0]}') -> {len(ds_eegdash.records)} records (raw 500 Hz)"
-)
-print(
-    f"EEGChallengeDataset(release='{RELEASE}', mini=True) -> {n_mini_records} "
-    "records (preprocessed 100 Hz)"
-)
-print("Same metadata catalog, two different views of the same subjects.")
+pd.Series(
+    {
+        "EEGDashDataset records (raw 500 Hz)": len(ds_eegdash.records),
+        "EEGChallengeDataset records (mini, 100 Hz)": n_mini_records,
+        "Same metadata catalog?": "yes",
+        "Same preprocessing?": "no - challenge ships preprocessed BDFs",
+    },
+    name="value",
+).to_frame()
 
 # %% [markdown]
-# A common mistake -- and how to recover (E2.17)
-# ----------------------------------------------
-#
-# **Run.** Typing the release identifier wrong (``r5`` instead of ``R5``, or
-# ``"R12"``) raises ``ValueError`` at construction time -- before any S3 traffic
-# happens. We trigger the error on purpose so the failure mode is visible.
+# A common mistake, and how to recover
+# ------------------------------------
+# **Run.** Typing the release identifier wrong (``"r5"`` instead of
+# ``"R5"``, or ``"R12"``) raises :class:`ValueError` at construction time
+# , before any S3 traffic happens. We trigger the error on purpose so
+# the failure mode is visible.
 
 # %%
 try:
     _bogus = EEGChallengeDataset(
         release="R12",  # there is no R12; the map only goes up to R11
-        cache_dir=cache_dir,
+        cache_dir=str(cache_dir),
         mini=True,
     )
 except ValueError as exc:
@@ -196,84 +352,105 @@ except ValueError as exc:
     print(f"Recovery: use one of {available}")
 
 # %% [markdown]
-# Modify -- try a different release
-# ---------------------------------
-#
-# **Your turn.** Switch ``RELEASE`` to ``"R2"`` (smaller dataset) and re-check
-# the strict-subset invariant. The 20 mini subjects per release are different,
-# but the relationship ``mini ⊂ full`` holds for every release in the map.
+# Modify: pick a different release
+# ----------------------------------
+# **Your turn.** Switch ``RELEASE`` to ``"R2"`` (a smaller release) and
+# re-check the strict-subset invariant. The 20 mini subjects per release
+# are different by design, but the relationship ``mini`` is a subset of
+# ``full`` holds for every release in the map.
 
 # %%
-ds_alt = EEGChallengeDataset(release="R2", cache_dir=cache_dir, mini=True)
+ds_alt = EEGChallengeDataset(release="R2", cache_dir=str(cache_dir), mini=True)
 alt_subjects = set(ds_alt.description["subject"])
 assert alt_subjects == set(SUBJECT_MINI_RELEASE_MAP["R2"]), (
     "mini subjects must equal SUBJECT_MINI_RELEASE_MAP[release]"
 )
-print(
-    f"R2 mini: {len(alt_subjects)} subjects, dataset id {ds_alt.records[0]['dataset']}"
-)
+pd.Series(
+    {
+        "release": ds_alt.release,
+        "n_subjects": len(alt_subjects),
+        "first record dataset id": ds_alt.records[0]["dataset"],
+        "first record task": ds_alt.records[0]["task"],
+    },
+    name="value",
+).to_frame()
 
 # %% [markdown]
-# Make -- a tiny preview-only pipeline
-# ------------------------------------
-#
-# Build a one-record preview from the mini release. Inspect the record header
-# without pulling the 100 Hz BDF file: ``ds.records`` is enumerated at
-# construction time and exposes BIDS entities and metadata catalog fields
-# (``subject``, ``task``, ``nchans``, ``sampling_frequency``).
+# Make: a release-by-release tabulation
+# ---------------------------------------
+# **Mini-project.** Tabulate ``|mini|`` versus ``|full|`` for every
+# release in :data:`~eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP`.
+# The cell below does the loop on the mini side without touching the
+# full pool (so it stays fast); the ``|full|`` column is read straight
+# from the participants.tsv via the metadata catalog.
 
 # %%
-first_record = ds_mini.records[0]
-print(f"first record subject : {first_record['subject']}")
-print(f"first record task    : {first_record['task']}")
-print(f"first record nchans  : {first_record['nchans']}")
-print(
-    f"first record sfreq   : {first_record['sampling_frequency']} Hz "
-    "(downsampled from 500 Hz)"
-)
-print("To download and plot: call ds_mini.preview(0) after construction.")
+release_table_rows = []
+for release in sorted(
+    RELEASE_TO_OPENNEURO_DATASET_MAP.keys(), key=lambda s: int(s[1:])
+):
+    release_table_rows.append(
+        {
+            "release": release,
+            "OpenNeuro id": RELEASE_TO_OPENNEURO_DATASET_MAP[release],
+            "|mini|": len(SUBJECT_MINI_RELEASE_MAP[release]),
+        }
+    )
+pd.DataFrame(release_table_rows)
 
 # %% [markdown]
-# Try it yourself (Extensions)
-# ----------------------------
-#
-# - **Easier**: print ``SUBJECT_MINI_RELEASE_MAP[RELEASE]`` and confirm it matches ``mini_subjects``.
-# - **Same difficulty**: loop over every release in ``RELEASE_TO_OPENNEURO_DATASET_MAP`` and tabulate ``|mini|`` vs ``|full|``.
-# - **Harder**: run with ``download=True``, call ``preview(0)``, and confirm ``raw.info["sfreq"] == 100.0`` (the challenge downsample step).
-#
 # Result
 # ------
-
-# %%
-summary = ds_mini.summary(verbose=False)
-print(
-    f"release={ds_mini.release} mini={ds_mini.mini} "
-    f"n_records={summary['n_records']} n_subjects={summary['n_subjects']} "
-    f"sampling_rates={dict(summary['sampling_rates'])}"
-)
+# We loaded the R5 mini release, surfaced the HBN task taxonomy
+# (10 tasks across four families), built an age x task availability
+# matrix, and rendered the catalog row for one recording. Reproducing
+# this without the loader would take a custom S3 listing, a custom
+# cache key, and a custom subject filter; the loader rolls all three
+# into one constructor call (Cisotto & Chicco 2024 would say: do not
+# rebuild what the dataset class already enforces).
 
 # %% [markdown]
 # Wrap-up
 # -------
-#
-# ``EEGChallengeDataset`` is ``EEGDashDataset`` with three rails attached: a
-# release-to-OpenNeuro map, a frozen mini subject list, and the challenge bucket.
-# Use ``mini=True`` while iterating; switch to ``mini=False`` for a final
-# submission; never mix challenge data with raw ``EEGDashDataset`` pulls -- the
-# 0.5-50 Hz pass-band and 100 Hz downsample make the two views incompatible. See
-# :doc:`/concepts/eegdash_objects` for the object model behind both classes.
-#
+# :class:`~eegdash.dataset.EEGChallengeDataset` is
+# :class:`~eegdash.dataset.EEGDashDataset` with three rails attached: a
+# release-to-OpenNeuro map, a frozen mini subject list per release, and
+# a fixed challenge S3 bucket. Use ``mini=True`` while iterating; switch
+# to ``mini=False`` for a final submission; never mix challenge data
+# with raw :class:`~eegdash.dataset.EEGDashDataset` pulls because the
+# 0.5-50 Hz pass-band and 100 Hz downsample make the two views
+# incompatible. Next:
+# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
+# trains a transfer baseline across the task taxonomy you just
+# enumerated;
+# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
+# fine-tunes a foundation model with the same loader.
+
+# %% [markdown]
+# Try it yourself (Extensions)
+# ----------------------------
+# - Print ``SUBJECT_MINI_RELEASE_MAP[RELEASE]`` and confirm the list
+#   matches ``mini_subjects`` element-by-element.
+# - Re-run Step 4 with the ``sex`` column instead of ``age_bin`` and
+#   compare the M/F coverage across the four task families.
+# - Run with ``download=True``, call ``ds_mini.preview(0)``, and confirm
+#   ``raw.info["sfreq"] == 100.0`` (the challenge downsample step).
+
+# %% [markdown]
 # References
 # ----------
-#
-# - Alexander, L. M. et al. (2017). An open resource for transdiagnostic
-#   research in pediatric mental health and learning disorders. *Scientific
-#   Data* 4:170181, doi:10.1038/sdata.2017.181.
-# - Pernet, C. R. et al. (2019). EEG-BIDS: an extension to the brain imaging
-#   data structure for electroencephalography. *Scientific Data* 6:103,
-#   doi:10.1038/s41597-019-0104-8.
-# - Cisotto, G. and Chicco, D. (2024). Ten quick tips for clinical
-#   electroencephalographic (EEG) data acquisition and signal processing.
-#   *PeerJ Computer Science* 10:e2256, doi:10.7717/peerj-cs.2256.
+# - Alexander et al. 2017, An open resource for transdiagnostic research
+#   in pediatric mental health and learning disorders, *Scientific Data*
+#   4:170181. https://doi.org/10.1038/sdata.2017.181
+# - Delorme et al. 2022, NEMAR: an open access data, tools and compute
+#   resource operating on neuroelectromagnetic data, *Database* baac096.
+#   https://doi.org/10.1093/database/baac096
+# - Pernet et al. 2019, EEG-BIDS: an extension to the brain imaging data
+#   structure for electroencephalography, *Scientific Data* 6:103.
+#   https://doi.org/10.1038/s41597-019-0104-8
+# - Cisotto & Chicco 2024, Ten quick tips for clinical
+#   electroencephalographic (EEG) data acquisition and signal processing,
+#   *PeerJ Computer Science* 10:e2256.
+#   https://doi.org/10.7717/peerj-cs.2256
 # - EEG 2025 Foundation Challenge: https://eeg2025.github.io
 # - Challenge preprocessing recipe: https://github.com/eeg2025/downsample-datasets

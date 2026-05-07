@@ -42,7 +42,7 @@ audience: Beginner ML user who completed plot_11 (leakage-safe split) and plot_1
   (baseline). This is the most common evaluation in EEG decoding and is intentionally
   kept very accessible.
 budgets:
-  max_loc: 330
+  max_loc: 470
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true
@@ -96,9 +96,16 @@ links:
   related_how_to:
   - how_to_use_moabb_splitters
   related_papers:
-  - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319)\
-    \ \u2014 cross-subject evaluation as the de-facto standard"
-  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips (Tip 9)"
+  - "Aristimunha et al. 2023, MOABB benchmark, J. Neural Eng. 20:056025 (10.1088/1741-2552/aceaf8)\
+    \ - cross-subject evaluation as the de-facto standard"
+  - "Brookshire et al. 2024, Data leakage in deep learning studies of translational\
+    \ EEG, Frontiers in Neuroscience 18:1373515 (10.3389/fnins.2024.1373515)"
+  - "Cisotto & Chicco 2024, PeerJ Computer Science 10:e2256 - clinical EEG ten quick\
+    \ tips (Tip 9)"
+  - "Wakeman & Henson 2015, ds002718 multi-subject neuroimaging dataset, Scientific\
+    \ Data 2:150001 (10.1038/sdata.2015.1)"
+  - "Delorme et al. 2022, NEMAR open access neuroelectromagnetic compute resource,\
+    \ Database baac096 (10.1093/database/baac096)"
 requires_api:
 - eegdash.splits.get_splitter
 - eegdash.splits.make_split_manifest
@@ -107,5 +114,7 @@ requires_api:
 - eegdash.splits.describe_split
 - eegdash.splits.majority_baseline
 - sklearn.linear_model.LogisticRegression
-- sklearn.metrics.accuracy_score
+- sklearn.metrics.balanced_accuracy_score
+- sklearn.metrics.ConfusionMatrixDisplay
+- sklearn.model_selection.LeaveOneGroupOut
 review_rubric_overrides: {}

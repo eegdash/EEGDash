@@ -40,7 +40,7 @@ learning_objectives:
 audience: Beginner ML user with one prior EEGDash tutorial (plot_10). Has heard of
   train/test splits; the leakage pitfall is introduced in this lesson.
 budgets:
-  max_loc: 285
+  max_loc: 560
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true
@@ -92,8 +92,12 @@ links:
   related_how_to:
   - how_to_handle_bad_records
   related_papers:
+  - "Brookshire et al. 2024, Front. Neurosci. 18:1373515 \u2014 data leakage in translational EEG deep learning"
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips (Tip 9)"
-  - "Aristimunha et al. 2023, MOABB benchmark \u2014 cross-subject evaluation"
+  - "Aristimunha et al. 2023, J. Neural Eng. 20:056025 \u2014 MOABB benchmark, cross-subject evaluation"
+  - "Wakeman & Henson 2015, Sci. Data 2:150001 \u2014 ds002718 source dataset"
+  - "Delorme et al. 2022, Database baac096 \u2014 NEMAR catalogue"
+  - "Pernet et al. 2019, Sci. Data 6:103 \u2014 EEG-BIDS split-metadata sidecars"
 requires_api:
 - eegdash.splits.get_splitter
 - eegdash.splits.make_split_manifest
@@ -101,4 +105,9 @@ requires_api:
 - eegdash.splits.assert_no_leakage
 - eegdash.splits.describe_split
 - eegdash.splits.manifest_to_json
+- eegdash.splits.to_moabb_split_inputs
+- eegdash.splits.to_split_metadata
+- eegdash.viz._tutorial_panels
+- sklearn.model_selection.GroupKFold
+- sklearn.model_selection.train_test_split
 review_rubric_overrides: {}

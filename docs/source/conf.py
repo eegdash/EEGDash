@@ -114,6 +114,23 @@ autodoc_type_aliases = {
 
 python_use_unqualified_type_names = False
 
+# -- intersphinx ------------------------------------------------------------
+# Resolve cross-references to external libraries so ``:class:`pandas.DataFrame```
+# etc. become real hyperlinks in the rendered HTML instead of plain inline
+# code. Inventories are cached locally by Sphinx; broken or unreachable
+# upstream sites don't block local builds.
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy", None),
+    "sklearn": ("https://scikit-learn.org/stable", None),
+    "torch": ("https://docs.pytorch.org/docs/stable", None),
+    "mne": ("https://mne.tools/stable", None),
+    "braindecode": ("https://braindecode.org/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+}
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "pydata_sphinx_theme"
@@ -353,6 +370,11 @@ sphinx_gallery_conf = {
         "EEGDASH_GALLERY_FILENAME_PATTERN",
         r"/(?:plot|tutorial)_(?!_).*\.py",
     ),
+    # Skip private helper modules (leading underscore) entirely. The
+    # default ignore_pattern only matches __init__.py, which leaves files
+    # like _pipeline_diagram.py rendered as standalone gallery pages
+    # when they are imported by a sibling tutorial.
+    "ignore_pattern": r"(?:^|/)_[^/]*\.py$",
     "matplotlib_animations": True,
     "reset_modules": ("matplotlib", "seaborn"),
     "first_notebook_cell": (

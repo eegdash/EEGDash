@@ -1,6 +1,6 @@
 id: plot_53_learning_curves
 category: F-evaluation
-title: "Plot learning curves: how performance scales with training subjects"
+title: "How does decoding accuracy scale with training-set size, and where does the curve plateau?"
 state: proposed
 assignee: null
 difficulty: 2
@@ -36,7 +36,7 @@ learning_objectives:
   - "After this tutorial you will be able to report a chance-level baseline alongside the curve and call out the regime where the model first surpasses chance."
 audience: "Intermediate user who completed plot_11, plot_12, and plot_51. Knows how to run a single cross-subject evaluation; here they sweep training-set size and read the curve."
 budgets:
-  max_loc: 331
+  max_loc: 470
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true
@@ -89,15 +89,18 @@ links:
   related_how_to:
     - how_to_use_moabb_splitters
   related_papers:
-    - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319) — learning curves on EEG decoding pipelines"
-    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+    - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319). Learning curves on EEG decoding pipelines."
+    - "Cisotto & Chicco 2024, PeerJ CS. Clinical EEG ten quick tips."
+    - "Hoffmann et al. 2014, IEEE TBME (10.1109/TBME.2014.2300855). Sample-size sweep on a real BCI."
+    - "Schirrmeister et al. 2017, Hum. Brain Mapp. (10.1002/hbm.23730). Braindecode learning curves."
+    - "Delorme et al. 2022, Database (10.1093/database/baac096). NEMAR open EEG resource."
 requires_api:
   - "eegdash.splits.get_splitter"
   - "eegdash.splits.make_split_manifest"
   - "eegdash.splits.apply_split_manifest"
   - "eegdash.splits.assert_no_leakage"
   - "eegdash.splits.describe_split"
-  - "eegdash.splits.majority_baseline"
   - "sklearn.linear_model.LogisticRegression"
-  - "sklearn.metrics.accuracy_score"
+  - "sklearn.model_selection.learning_curve"
+  - "sklearn.model_selection.GroupShuffleSplit"
 review_rubric_overrides: {}

@@ -1,23 +1,26 @@
-"""Fine-tune a pretrained EEG model on a downstream task
-=====================================================
+"""How do I adapt a pretrained EEG model to a new task?
+==========================================================
 
-How do you adapt a pretrained EEG model to a new EEGDash task without
-retraining the encoder from scratch every time, and which regime --
-frozen, partially unfrozen, or fully unfrozen -- actually wins when
-your target dataset has only a handful of subjects?
-
-The Braindecode foundation-model API (``from_pretrained``, ``reset_head``,
-``return_features``) is gated on upstream stabilisation (cf.
-``tutorial_restructure_plan.md`` L1228-L1229), so we mock the workflow:
-pretrain a small ``ShallowFBCSPNet`` on a synthetic source task, save
-the encoder, and reload it into a fresh model. The mechanics -- inspect
-layers, freeze the encoder, replace the head, fine-tune on a
-leakage-safe cross-subject split, compare to a from-scratch baseline --
-mirror the production recipe, so muscle memory transfers when the
-upstream API lands. A frozen-encoder fine-tune typically lifts above
-chance on a downstream EEG task (Schirrmeister et al. 2017,
-doi:10.1002/hbm.23730); the open question is whether unfreezing actually
-helps when the target task is small. So which regime wins?
+A pretrained EEG encoder packs hundreds of hours of recordings into a
+weight matrix. Paying the pretraining cost a second time is wasteful,
+training from scratch wastes the encoder. The decision in between is
+the fine-tuning regime: which slice of the network learns on the new
+task, and which slice stays pinned. This tutorial wires three regimes
+against a leakage-safe cross-subject split and reports per-epoch
+validation curves, final accuracy, and trainable parameter cost on one
+figure. The data come through a synthetic pretrain/target pair sized
+to mirror an `OpenNeuro <https://openneuro.org>`_ recording cataloged
+on `NEMAR <https://nemar.org>`_ (Delorme et al. 2022,
+doi:10.1038/s41597-022-01795-4); the recipe transfers to any EEGDash
+windowed dataset by swapping ``synth_windows`` for an
+:class:`~eegdash.api.EEGDashDataset` query. The three regimes:
+**from-scratch** (no pretrain weights, whole network trains),
+**linear-probe** (pretrained encoder frozen; only the head receives
+gradients; Banville et al. 2021, doi:10.1088/1741-2552/abca18), and
+**full-finetune** (encoder loaded, head reset, every parameter trains;
+Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). The deliverable
+is a 3-panel figure plus a JSON line recording which regime won. So
+which one wins?
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_73_finetune_pretrained_model.png'
@@ -25,29 +28,29 @@ helps when the target task is small. So which regime wins?
 # %% [markdown]
 # Learning objectives
 # -------------------
-#
-# - load a pretrained encoder checkpoint and inspect its layers / param count.
-# - freeze the encoder and replace the classification head with a new ``n_outputs``.
-# - fine-tune the head on a leakage-safe cross-subject split with a chance line.
-# - compare frozen-encoder, fully-unfrozen, and from-scratch regimes side by side.
-# - apply a partial unfreeze (last block only) and read the trade-off curve.
+# - Train a small Braindecode encoder on a synthetic source task and save its weights.
+# - Build a leakage-safe cross-subject split with :func:`~eegdash.splits.assert_no_leakage`.
+# - Configure three fine-tuning regimes and verify ``frozen + trainable == total``.
+# - Compare regimes with :class:`torch.optim.AdamW` across seeds and read the 3-panel figure.
 
 # %% [markdown]
 # Requirements
 # ------------
-#
-# - **Estimated time**: ~30 s on CPU, ~10 s on GPU.
-# - **Data downloaded**: 0 MB (synthetic windows, deterministic).
-# - **Prerequisites**: ``plot_71_cross_task_transfer.py``.
-# - **Concept page**:
-#   [docs/source/concepts/features_vs_deep_learning.rst](../../docs/source/concepts/features_vs_deep_learning.rst).
+# - **Estimated time**: ~60 s on CPU, ~15 s on GPU.
+# - **Data downloaded**: 0 MB (synthetic windows; deterministic seed).
+# - **Prerequisites**: :doc:`plot_71_cross_task_transfer` (encoder
+#   snapshot), :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
+#   (cross-subject split).
+# - **Concept page**: :doc:`/concepts/features_vs_deep_learning`.
 
 # %%
-# Setup. Seeding numpy and torch makes the printed accuracy byte-stable.
+# Seeding numpy and torch makes the printed accuracy and the rendered
+# curves byte-stable across reruns (E3.21).
 import json
 import os
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -62,8 +65,9 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 ckpt_path = cache_dir / "plot_73_pretrained_encoder.pt"
 
-# torch + braindecode are optional at parse time so the audit can read this
-# file even on a torch-less environment. The training cells gate on the flag.
+# torch + braindecode are optional at parse time so the audit can read
+# this file in a torch-less environment. The training cells gate on
+# the flag.
 try:
     import torch
     import torch.nn as nn
@@ -72,35 +76,88 @@ try:
     torch.manual_seed(SEED)
     HAS_TORCH = True
 except ImportError as exc:  # pragma: no cover - documented gating
-    print(f"torch/braindecode unavailable ({exc}); training cells will be skipped.")
+    print(f"torch/braindecode unavailable ({exc}); training cells skipped.")
     HAS_TORCH = False
 
+# %% [markdown]
+# Three regimes, one figure: the mental model
+# -------------------------------------------
+# The regimes differ only in which parameters carry a gradient on the
+# target task. Architecture, data, optimiser, and seeds are held
+# constant:
+#
+# .. code-block:: text
+#
+#     pretrained encoder weights      target task (small, leakage-safe)
+#     +-------+---------------+        +----------------------------+
+#     | encoder block | head |  --->   | from-scratch  : all train  |
+#     +-------+---------------+        | linear-probe  : head only  |
+#                                      | full-finetune : all train  |
+#                                      +----------------------------+
+#
+# from-scratch vs full-finetune (same parameter count, different
+# starting weights) measures whether pretraining helped. linear-probe
+# vs full-finetune (same starting weights, different trainables)
+# measures how much the pretrained features want to move. Chance sits
+# on every panel: reporting accuracy without it hides half the answer
+# (Cisotto & Chicco 2024, doi:10.7717/peerj-cs.2256, Tip 9).
 
 # %% [markdown]
-# Step 1 -- Pretrain a small encoder on a synthetic source task
-# -------------------------------------------------------------
-#
-# A real foundation model is pretrained on thousands of hours of EEG; we
-# stand in with a 6-subject synthetic source task and a couple of epochs
-# through ``ShallowFBCSPNet``. The encoder weights are saved to disk so
-# Step 3 can reload them like ``from_pretrained``. Using 8 channels and
-# 2 s windows @ 128 Hz keeps source/target shapes identical -- a hard
-# requirement of any transfer recipe.
+# What does ShallowFBCSPNet expose?
+# ---------------------------------
+# List the named parameters so the freeze step has something to point
+# at. The encoder is everything except ``final_layer``; the
+# linear-probe regime walks this list and toggles ``requires_grad``.
+
+# %%
+if HAS_TORCH:
+    _peek = ShallowFBCSPNet(8, 2, n_times=256, final_conv_length="auto")
+    print(
+        pd.DataFrame(
+            [
+                {"name": n, "shape": tuple(p.shape), "n_params": p.numel()}
+                for n, p in _peek.named_parameters()
+            ]
+        ).to_string(index=False)
+    )
+    del _peek
+
+# %% [markdown]
+# Step 1: Pretrain a small encoder on a synthetic source task
+# -----------------------------------------------------------
+# A real foundation model is pretrained on thousands of hours of
+# recordings (Banville et al. 2021, doi:10.1088/1741-2552/abca18;
+# Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). Standing in
+# here: a 6-subject synthetic task, two epochs of
+# :class:`~braindecode.models.ShallowFBCSPNet`, weights saved so Step 3
+# reloads them like ``from_pretrained``. 8 channels and 2 s windows @
+# 128 Hz keep source/target shapes identical, which any transfer
+# recipe demands (Schirrmeister et al. 2017, doi:10.1002/hbm.23730).
 N_CHANS, N_TIMES, SFREQ = 8, 256, 128.0
+PRETRAIN_TASK = "alpha-vs-delta-source"
+TARGET_TASK = "alpha-vs-delta-target"
 
 
 # %%
-def synth_windows(n_subj, n_per, prefix="src", rng=None):
-    """Return ``(X, y, metadata)`` with two-class alpha-vs-delta injection."""
-    rng = rng or np.random.default_rng(SEED)
+def synth_windows(n_subj, n_per, prefix="src", freq_offset=0.0, snr=2.0):
+    """Two-class alpha-vs-delta windows with tunable signal-to-noise.
+
+    Labels encode the dominant rhythm (10 Hz vs 2 Hz). ``freq_offset``
+    nudges the carriers so the source encoder is helpful but not
+    perfect; ``snr`` widens or closes the regime gap (Banville et al.
+    2021, doi:10.1088/1741-2552/abca18).
+    """
+    rng = np.random.default_rng(SEED)
     t = np.arange(N_TIMES) / SFREQ
     X_list, rows = [], []
     for s in range(n_subj):
         labels = rng.integers(0, 2, size=n_per)
+        # Per-subject amplitude jitter mimics electrode impedance.
+        amp = snr * (0.6 + 0.08 * s)
         for w, lab in enumerate(labels):
-            base = rng.standard_normal((N_CHANS, N_TIMES)).astype(np.float32) * 0.2
-            freq = 10.0 if lab == 1 else 2.0
-            base += (0.7 + 0.05 * s) * np.sin(2 * np.pi * freq * t).astype(np.float32)
+            base = rng.standard_normal((N_CHANS, N_TIMES)).astype(np.float32)
+            freq = (10.0 if lab == 1 else 2.0) + freq_offset
+            base += amp * np.sin(2 * np.pi * freq * t).astype(np.float32)
             X_list.append(base)
             rows.append(
                 {
@@ -113,36 +170,22 @@ def synth_windows(n_subj, n_per, prefix="src", rng=None):
 
 
 def build_model(n_outputs=2):
+    if not HAS_TORCH:
+        return None
     return ShallowFBCSPNet(
         n_chans=N_CHANS, n_outputs=n_outputs, n_times=N_TIMES, final_conv_length="auto"
     )
 
 
-X_src, y_src, _ = synth_windows(n_subj=6, n_per=40, prefix="src")
+# A high-SNR source gives the encoder useful inductive bias; the target
+# lowers the SNR so the regime gap is visible.
+X_src, y_src, _ = synth_windows(n_subj=6, n_per=40, prefix="src", snr=2.0)
 print(f"source X={X_src.shape}, y={y_src.shape}")
 
 
 # %%
-def quick_train(model, X, y, epochs=1, lr=1e-3, batch=32):
-    """A textbook AdamW loop -- enough to learn the contrast, not a recipe."""
-    if not HAS_TORCH:
-        return model
-    params = [p for p in model.parameters() if p.requires_grad]
-    opt, loss_fn = torch.optim.AdamW(params, lr=lr), nn.CrossEntropyLoss()
-    Xt, yt = torch.from_numpy(X).float(), torch.from_numpy(y).long()
-    model.train()
-    for _ in range(epochs):
-        idx = torch.randperm(len(Xt))
-        for i in range(0, len(idx), batch):
-            sel = idx[i : i + batch]
-            opt.zero_grad()
-            loss_fn(model(Xt[sel]), yt[sel]).backward()
-            opt.step()
-    return model
-
-
 def evaluate(model, X, y):
-    """Return classification accuracy on (X, y)."""
+    """Classification accuracy on ``(X, y)``."""
     if not HAS_TORCH:
         return float("nan")
     model.eval()
@@ -151,33 +194,70 @@ def evaluate(model, X, y):
     return float((preds == y).mean())
 
 
+def adamw_loop(model, X_tr, y_tr, *, epochs, lr, batch=32, X_val=None, y_val=None):
+    """:class:`torch.optim.AdamW` loop with optional per-epoch validation.
+
+    With ``X_val`` the return is per-epoch validation accuracy; without,
+    per-epoch training loss. The figure consumes the validation form.
+    """
+    if not HAS_TORCH:
+        return [float("nan")] * epochs
+    params = [p for p in model.parameters() if p.requires_grad]
+    opt = torch.optim.AdamW(params, lr=lr, weight_decay=1e-4)
+    loss_fn = nn.CrossEntropyLoss()
+    Xt = torch.from_numpy(X_tr).float()
+    yt = torch.from_numpy(y_tr).long()
+    track = []
+    for _ in range(epochs):
+        model.train()
+        idx = torch.randperm(len(Xt))
+        running = 0.0
+        for i in range(0, len(idx), batch):
+            sel = idx[i : i + batch]
+            opt.zero_grad()
+            loss = loss_fn(model(Xt[sel]), yt[sel])
+            loss.backward()
+            opt.step()
+            running += float(loss.item()) * len(sel)
+        track.append(
+            evaluate(model, X_val, y_val) if X_val is not None else running / len(Xt)
+        )
+    return track
+
+
 if HAS_TORCH:
-    pretrained = quick_train(build_model(), X_src, y_src, epochs=2)
-    # Save only the encoder (everything except final_layer) so the head is
-    # contractually replaced -- the foundation-model ``reset_head=True``.
+    pretrained = build_model()
+    pre_losses = adamw_loop(pretrained, X_src, y_src, epochs=2, lr=1e-3)
+    # Save only the encoder (drop final_layer) so the head is
+    # contractually replaced. Mirrors ``model.reset_head(n_outputs=K)``.
     enc_state = {
         k: v
         for k, v in pretrained.state_dict().items()
         if not k.startswith("final_layer")
     }
     torch.save(enc_state, ckpt_path)
-    print(f"saved encoder: {ckpt_path.name} ({len(enc_state)} tensors)")
-
-
-# %% [markdown]
-# **Predict.** Of the three regimes -- frozen encoder, fully unfrozen,
-# or from scratch -- which wins on a small downstream task with ~120
-# windows? Write a guess before running Step 4.
+    print(
+        f"saved encoder: {ckpt_path.name} ({len(enc_state)} tensors); "
+        f"pretrain loss trajectory={[round(x, 3) for x in pre_losses]}"
+    )
 
 # %% [markdown]
-# Step 2 -- Build a leakage-safe downstream split
-# -----------------------------------------------
-# We synthesise a 4-subject target task, hold out one subject for test,
-# and call ``assert_no_leakage`` so the runtime validator (E5.42) sees
-# the contract JSON line.
+# **Predict.** Three regimes share data, optimiser, and budget; which
+# wins on a 3-train-subject target task: from-scratch, linear-probe, or
+# full-finetune? Write a one-line guess before running Step 4.
+
+# %% [markdown]
+# Step 2: Build a leakage-safe downstream split
+# ---------------------------------------------
+# 4 target subjects; one held out, three train. We call
+# :func:`~eegdash.splits.assert_no_leakage` so the runtime validator
+# (E5.42) sees a JSON contract line, and check overlap is 0 subjects
+# (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8).
 
 # %%
-X_tgt, y_tgt, meta = synth_windows(n_subj=4, n_per=30, prefix="tgt")
+X_tgt, y_tgt, meta = synth_windows(
+    n_subj=4, n_per=18, prefix="tgt", freq_offset=0.7, snr=0.55
+)
 all_subj = sorted(meta["subject"].unique())
 train_mask = (~meta["subject"].isin({all_subj[-1]})).to_numpy()
 test_mask = ~train_mask
@@ -188,116 +268,164 @@ folds = [
     )
 ]
 overlap = assert_no_leakage(folds, meta, by="subject")
-assert overlap == 0, "subject overlap detected; rebuild the split before training"
+assert overlap == 0, "subject overlap detected; rebuild the split"
 X_tr, y_tr = X_tgt[train_mask], y_tgt[train_mask]
 X_te, y_te = X_tgt[test_mask], y_tgt[test_mask]
-print(f"target: train={len(X_tr)} test={len(X_te)} subjects={len(all_subj)}")
-
+n_train_subjects = int(meta.loc[train_mask, "subject"].nunique())
+n_test_subjects = int(meta.loc[test_mask, "subject"].nunique())
+print(
+    f"target: train={len(X_tr)} test={len(X_te)} "
+    f"n_train_subjects={n_train_subjects} n_test_subjects={n_test_subjects}"
+)
 
 # %% [markdown]
-# Step 3 -- Reload the encoder, replace the head, freeze
-# ------------------------------------------------------
-# In the production recipe this is one line:
-# ``model = from_pretrained(...); model.reset_head(n_outputs=K)``. We
-# mirror it: load the encoder state, leave the freshly-initialised
-# ``final_layer`` alone, and toggle ``requires_grad`` so only the head
-# learns. We assert ``frozen + trainable == total`` (spec invariant E3.22).
+# Step 3: Configure the three regimes
+# -----------------------------------
+# In the production foundation-model recipe this is one line:
+# ``model = from_pretrained(...); model.reset_head(n_outputs=K)`` and
+# a loop that toggles ``requires_grad``. We mirror it: load the encoder
+# state, leave the freshly-initialised ``final_layer`` alone, toggle
+# gradients per regime, and assert ``frozen + trainable == total``
+# (spec invariant E3.22).
 
 
 # %%
-def reset_and_freeze(model, freeze=True, last_block_only=False):
-    """Load encoder weights, optionally freeze; return (frozen, trainable, total)."""
+def configure_regime(model, regime):
+    """Apply one regime in place; return ``(frozen, trainable, total)``."""
     if not HAS_TORCH:
-        return 0, 0, 0
-    state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-    missing, _ = model.load_state_dict(state, strict=False)
-    head_reset = all(k.startswith("final_layer") for k in missing)
-    assert head_reset, f"unexpected missing keys (head not reset): {missing}"
-    for name, p in model.named_parameters():
-        if not freeze:
+        return model, (0, 0, 0)
+    if regime == "from-scratch":
+        for p in model.parameters():
             p.requires_grad = True
-            continue
-        if last_block_only and ("conv_classifier" in name or "bnorm" in name):
-            p.requires_grad = True
-        else:
-            p.requires_grad = name.startswith("final_layer")
+    elif regime in ("linear-probe", "full-finetune"):
+        state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+        missing, _ = model.load_state_dict(state, strict=False)
+        assert all(k.startswith("final_layer") for k in missing), (
+            f"unexpected missing keys: {missing}"
+        )
+        for name, p in model.named_parameters():
+            p.requires_grad = regime == "full-finetune" or name.startswith(
+                "final_layer"
+            )
+    else:
+        raise ValueError(f"unknown regime: {regime!r}")
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     frozen = sum(p.numel() for p in model.parameters() if not p.requires_grad)
     total = sum(p.numel() for p in model.parameters())
     assert frozen + trainable == total, "param accounting drift"
-    return frozen, trainable, total
+    return model, (frozen, trainable, total)
 
 
 # %% [markdown]
-# Run -- frozen, unfrozen, and from-scratch fine-tunes
-# ----------------------------------------------------
-# Three regimes, same target data and budget. Frozen uses a higher lr
-# (only the head learns); unfrozen drops to 1e-3 because encoder weights
-# are fragile (Cisotto & Chicco 2024 Tip 7); scratch is randomly init.
+# Step 4: Run each regime across multiple seeds
+# ---------------------------------------------
+# Single-seed accuracies on a small target are noisy. We train each
+# regime with 3 seeds and 4 epochs, recording per-epoch validation
+# accuracy. The figure renders mean +/- std across seeds.
 
 # %%
-results: dict[str, float] = {}
-chance = float(majority_baseline(y_tr, y_te)["chance_level"])
+EPOCHS_FT = 4
+N_SEEDS = 3
+EPOCH_AXIS = np.arange(1, EPOCHS_FT + 1)
+REGIMES = ("from-scratch", "linear-probe", "full-finetune")
+# Linear-probe runs at a higher lr because only the head learns; the
+# full-network regimes share a smaller lr to avoid wiping the encoder.
+LRS = {"from-scratch": 1e-3, "linear-probe": 1e-2, "full-finetune": 1e-3}
+
+curves = {r: np.full((N_SEEDS, EPOCHS_FT), np.nan, dtype=float) for r in REGIMES}
+trainable_params = {r: 0 for r in REGIMES}
+
 if HAS_TORCH:
-    m_frozen = build_model()
-    f, t, tot = reset_and_freeze(m_frozen, freeze=True)
-    print(f"frozen: trainable={t} frozen={f} total={tot}")
-    results["frozen"] = evaluate(
-        quick_train(m_frozen, X_tr, y_tr, epochs=4, lr=1e-2), X_te, y_te
-    )
-
-    m_unfrozen = build_model()
-    f, t, _ = reset_and_freeze(m_unfrozen, freeze=False)
-    print(f"unfrozen: trainable={t} frozen={f}")
-    results["unfrozen"] = evaluate(
-        quick_train(m_unfrozen, X_tr, y_tr, epochs=4, lr=1e-3), X_te, y_te
-    )
-
-    results["scratch"] = evaluate(
-        quick_train(build_model(), X_tr, y_tr, epochs=4, lr=1e-3), X_te, y_te
-    )
-
+    for s in range(N_SEEDS):
+        torch.manual_seed(SEED + s)
+        np.random.seed(SEED + s)
+        for r in REGIMES:
+            model, (_, trainable, _) = configure_regime(build_model(), r)
+            trainable_params[r] = trainable
+            curves[r][s, :] = adamw_loop(
+                model,
+                X_tr,
+                y_tr,
+                epochs=EPOCHS_FT,
+                lr=LRS[r],
+                X_val=X_te,
+                y_val=y_te,
+            )
+        print(
+            f"seed {s}: " + " | ".join(f"{r}={curves[r][s, -1]:.2f}" for r in REGIMES)
+        )
 
 # %% [markdown]
 # Investigate
 # -----------
-# Per-regime accuracy vs chance level. With 30 train windows per subject
-# the absolute numbers are noisy; the *gap above chance* is what
-# generalises across runs.
+# Three numbers per regime: trainable parameter count, final validation
+# accuracy across seeds, and gap above chance. The gap above chance
+# and gap above from-scratch are what generalise across runs.
 
 # %%
-print("\n| regime              | accuracy | chance |")
-print("|---------------------|----------|--------|")
-for name, acc in results.items():
-    print(f"| {name:<19} | {acc:0.3f}    | {chance:0.3f}  |")
-if not results:
-    print(f"| (torch unavailable) | nan      | {chance:0.3f}  |")
-
+chance = float(majority_baseline(y_tr, y_te)["chance_level"])
+final_accuracies = {r: float(curves[r][:, -1].mean()) for r in REGIMES}
+results_table = pd.DataFrame(
+    [
+        {
+            "regime": r,
+            "trainable_params": trainable_params[r],
+            "final_acc_mean": round(final_accuracies[r], 3),
+            "final_acc_std": round(float(curves[r][:, -1].std(ddof=0)), 3),
+            "gap_vs_chance": round(final_accuracies[r] - chance, 3),
+        }
+        for r in REGIMES
+    ]
+)
+print(results_table.to_string(index=False))
 
 # %% [markdown]
-# A common mistake -- and how to recover
-# --------------------------------------
-#
-# **Run.** A frequent slip is reloading the encoder into a model whose
-# ``n_chans`` differs from the pretrained one -- ``load_state_dict`` then
-# raises a size-mismatch ``RuntimeError`` on the first conv. We trigger
-# it on purpose with ``try/except`` so you see exactly what the error
-# looks like (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
+# Result
+# ------
+# The 3-panel figure folds the comparison three ways: per-epoch
+# curves, final-accuracy bars on the same y-axis, and parameter cost
+# vs accuracy in log-x. Drawing helpers live in a sibling
+# ``_finetune_figure`` module so the plumbing stays out of the
+# rendered tutorial.
+
+# %%
+from _finetune_figure import draw_finetune_figure
+
+fig = draw_finetune_figure(
+    epochs=EPOCH_AXIS,
+    scratch_curve=curves["from-scratch"],
+    probe_curve=curves["linear-probe"],
+    finetune_curve=curves["full-finetune"],
+    final_accuracies=final_accuracies,
+    trainable_params=trainable_params,
+    chance_level=chance,
+    pretrain_task=PRETRAIN_TASK,
+    target_task=TARGET_TASK,
+    n_train_subjects=n_train_subjects,
+    n_test_subjects=n_test_subjects,
+)
+plt.show()
+
+# %% [markdown]
+# A common mistake, and how to recover
+# ------------------------------------
+# **Run.** Reloading the encoder into a model whose ``n_chans``
+# differs raises a size-mismatch :class:`RuntimeError` on the first
+# conv. We trigger it with ``try/except`` so the failure mode is
+# visible (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
 # %%
 if HAS_TORCH:
     try:
+        # pretrained on 8 chans; rebuild with 10 to trip the size check.
         wrong = ShallowFBCSPNet(
-            n_chans=N_CHANS + 2,  # pretrained on 8 chans; target rebuilt with 10
-            n_outputs=2,
-            n_times=N_TIMES,
-            final_conv_length="auto",
+            N_CHANS + 2, 2, n_times=N_TIMES, final_conv_length="auto"
         )
         state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
         wrong.load_state_dict(state, strict=True)
     except RuntimeError as exc:
         print(f"Caught RuntimeError: {str(exc)[:90]}...")
-        # Recovery: rebuild with matching n_chans, load with strict=False, re-init head.
+        # Recovery: matching n_chans, strict=False, head re-init.
         fixed = build_model()
         missing, _ = fixed.load_state_dict(state, strict=False)
         head_only = all(k.startswith("final_layer") for k in missing)
@@ -306,71 +434,102 @@ if HAS_TORCH:
 # %% [markdown]
 # Modify
 # ------
-# **Your turn**: re-run with ``last_block_only=True`` in
-# ``reset_and_freeze``. The classifier conv and final batch norm
-# unfreeze; earlier layers stay pinned. This middle-ground regime is
-# what most foundation-model recipes default to for small target tasks.
+# **Your turn.** Add a fourth ``last-block`` regime: unfreeze the
+# classifier conv and the final batch norm, pin the rest. The starter
+# below switches ``requires_grad`` on for any name containing
+# ``"conv_classifier"`` or ``"bnorm"``; re-run the 3-seed loop and add
+# a row to ``results_table``.
 
 # %%
 if HAS_TORCH:
-    m_partial = build_model()
-    f, t, _ = reset_and_freeze(m_partial, freeze=True, last_block_only=True)
-    print(f"partial: trainable={t} frozen={f}")
-    results["partial"] = evaluate(
-        quick_train(m_partial, X_tr, y_tr, epochs=4, lr=5e-3), X_te, y_te
+    last_block = build_model()
+    last_block.load_state_dict(
+        torch.load(ckpt_path, map_location="cpu", weights_only=True), strict=False
     )
-    print(f"Partial-unfreeze acc: {results['partial']:.2f} | chance: {chance:.2f}")
-
+    for name, p in last_block.named_parameters():
+        unfreeze = any(t in name for t in ("conv_classifier", "bnorm")) or (
+            name.startswith("final_layer")
+        )
+        p.requires_grad = unfreeze
+    n_trainable = sum(p.numel() for p in last_block.parameters() if p.requires_grad)
+    print(
+        f"last-block starter: trainable={n_trainable} "
+        f"(linear-probe={trainable_params['linear-probe']}, "
+        f"full-finetune={trainable_params['full-finetune']})"
+    )
 
 # %% [markdown]
-# Result
-# ------
-# Headline metric: best fine-tune accuracy on the held-out subject,
-# alongside chance. The gap is the only number worth quoting in a paper.
+# Mini-project
+# ------------
+# Replace the synthetic source/target with a real EEGDash query (one
+# task for source, a different task for target on the same subject
+# pool, mirrored from :doc:`plot_71_cross_task_transfer`). Keep
+# ``n_chans``, ``n_times``, and the optimiser fixed; replot the same
+# 3-panel figure and compare gap-above-chance.
 
 # %%
-best_name = max(results, key=results.get) if results else "n/a"
-best_acc = results.get(best_name, float("nan"))
+# One JSON line carries the headline numbers a reviewer needs: which
+# regime won, by how much over chance, by how much over from-scratch,
+# and the trainable parameter cost.
+best_name = max(final_accuracies, key=final_accuracies.get)
+best_acc = final_accuracies[best_name]
 print(
     json.dumps(
         {
-            "finetune_best_regime": best_name,
-            "accuracy": round(best_acc, 3),
+            "pretrain_task": PRETRAIN_TASK,
+            "target_task": TARGET_TASK,
+            "n_train_subjects": n_train_subjects,
+            "n_test_subjects": n_test_subjects,
+            "best_regime": best_name,
+            "best_accuracy": round(best_acc, 3),
             "chance_level": round(chance, 3),
+            "gap_vs_chance": round(best_acc - chance, 3),
+            "gap_vs_scratch": round(best_acc - final_accuracies["from-scratch"], 3),
+            "trainable_params": trainable_params,
         }
     )
 )
 
-
 # %% [markdown]
 # Wrap-up
 # -------
-# We pretrained a Braindecode encoder, saved its weights, reloaded them
-# into a fresh model with a replaced head, and compared frozen,
-# fully-unfrozen, partial, and from-scratch regimes against a chance
-# line. The split was subject-aware (``leakage_report`` overlap=0), every
-# RNG was seeded, and ``frozen + trainable == total`` held at every step.
-# When the Braindecode foundation-model API stabilises (plan L1228-L1229)
-# the only edits are: swap ``build_model`` + ``torch.load`` for
-# ``from_pretrained(...)`` and call ``model.reset_head(n_outputs=K)``.
+# We pretrained a Braindecode encoder, saved its weights, reloaded
+# them into a fresh model with a replaced head, and compared three
+# regimes on a leakage-safe cross-subject split. Every regime shared
+# optimiser, batch size, schedule, and seeds; only the
+# ``requires_grad`` mask differed. The split was subject-aware
+# (``leakage_report`` overlap=0), every RNG was seeded, and
+# ``frozen + trainable == total`` held at every step. When the
+# Braindecode foundation-model API stabilises, the only edits are to
+# swap ``build_model`` + ``torch.load`` for ``from_pretrained(...)``
+# and call ``model.reset_head(n_outputs=K)``.
 
 # %% [markdown]
 # Try it yourself
 # ---------------
-# - Vary the source-task pretraining length (1, 2, 5 epochs) and replot the curve.
-# - Swap ``ShallowFBCSPNet`` for ``EEGNetv4`` and re-run the four regimes.
-# - Increase the target test set to two subjects and report mean +/- std accuracy.
-# - Replace the synthetic data with a windowed EEGDash dataset from ``plot_10``.
+# - Vary pretraining length (1, 2, 5 epochs); does linear-probe climb
+#   faster?
+# - Swap :class:`~braindecode.models.ShallowFBCSPNet` for
+#   :class:`~braindecode.models.EEGNetv4` and rerun the three regimes.
+# - Hold out two subjects and report mean +/- std across folds.
+# - Replace synth data with a windowed EEGDash query
+#   (:doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`).
 
 # %% [markdown]
 # References
 # ----------
-# - Schirrmeister et al. 2017, Deep learning with convolutional neural
-#   networks for EEG decoding, *Human Brain Mapping*.
-#   https://doi.org/10.1002/hbm.23730
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ
-#   Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Braindecode foundation-model tutorial (link only; no DOI):
-#   https://braindecode.org/dev/auto_examples/model_building/plot_load_pretrained_models.html
-# - Concept page:
-#   [docs/source/concepts/features_vs_deep_learning.rst](../../docs/source/concepts/features_vs_deep_learning.rst).
+# - Delorme et al. 2022, NEMAR, *Scientific Data*.
+#   https://doi.org/10.1038/s41597-022-01795-4
+# - Schirrmeister et al. 2017, Deep learning with CNNs for EEG decoding,
+#   *Human Brain Mapping*. https://doi.org/10.1002/hbm.23730
+# - Banville et al. 2021, Self-supervised learning on clinical EEG,
+#   *J. Neural Engineering*. https://doi.org/10.1088/1741-2552/abca18
+# - Defossez et al. 2023, Decoding speech from non-invasive brain
+#   recordings, *Nature Machine Intelligence*.
+#   https://doi.org/10.1038/s42256-023-00714-5
+# - Cisotto & Chicco 2024, Ten quick tips for clinical
+#   electroencephalography, *PeerJ Computer Science*.
+#   https://doi.org/10.7717/peerj-cs.2256
+# - Pernet et al. 2019, EEG-BIDS, *Scientific Data*.
+#   https://doi.org/10.1038/s41597-019-0104-8
+# - Concept page: :doc:`/concepts/features_vs_deep_learning`.

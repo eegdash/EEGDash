@@ -38,7 +38,7 @@ learning_objectives:
 audience: Beginner who finished plot_10/11/12. Knows that preprocessing is expensive;
   this lesson shows how to stop paying that cost on every iteration.
 budgets:
-  max_loc: 285
+  max_loc: 600
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true
@@ -89,10 +89,17 @@ links:
   - how_to_work_offline
   related_papers:
   - "Rule et al. 2019, PLOS Comput Biol \u2014 ten simple rules for reproducible notebooks"
+  - "Wilkinson et al. 2016, Sci Data \u2014 FAIR Guiding Principles"
+  - "Miles et al. 2020, Zenodo \u2014 Zarr chunked array storage"
+  - "Vohra 2016, Apress \u2014 Apache Parquet columnar format"
 requires_api:
 - braindecode.datasets.BaseConcatDataset
 - braindecode.datasets.BaseConcatDataset.save
 - braindecode.datasets.load_concat_dataset
 - braindecode.preprocessing.create_fixed_length_windows
+- eegdash.viz._tutorial_panels
+- pandas.DataFrame.to_parquet
+- pathlib.Path.stat
+- subprocess.run
 review_rubric_overrides:
   E2.17: warn

@@ -1,0 +1,119 @@
+id: project_pfactor_features
+category: applied
+kind: tutorial
+output_kind: python
+title: "Predicting p-factor from EEG with hand-crafted features (project starter)"
+state: proposed
+assignee: null
+difficulty: 3
+estimated_runtime_minutes: 5
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_42_features_to_sklearn
+  - plot_72_subject_invariant_regression
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L458-L470"
+    - "tutorial_restructure_plan.md#L1052-L1100"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L1577-L1612"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.29"
+    - "compass_artifact.md#E4.32"
+    - "compass_artifact.md#E4.33"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+    - "compass_artifact.md#E5.46"
+learning_objectives:
+  - "After this study you will be able to load EEG2025r5 metadata via `EEGChallengeDataset` with the p-factor target attached through `description_fields`."
+  - "After this study you will be able to assemble a multi-family feature table (band power, connectivity, entropy) with the per-channel column convention `eegdash.features.extract_features` uses."
+  - "After this study you will be able to construct a strict cross-subject split with `eegdash.splits.get_splitter('cross_subject')` and verify that no subject appears in both train and test."
+  - "After this study you will be able to fit a sklearn regression head (ridge plus random forest), pull `feature_importances_` or coefficient magnitudes, and report Pearson r, R^2, MAE alongside `eegdash.splits.median_baseline`."
+  - "After this study you will be able to phrase the result in clinical-cautious language: small N, single dataset, p-factor as a derived score not a diagnosis."
+audience: "Advanced user; companion to project_pfactor_deep. Assumes prior plot_42 (features-to-sklearn) and plot_72 (cross-subject regression). Project-tier scaffolding rules apply."
+budgets:
+  max_loc: 480
+  max_runtime_seconds: 600
+  max_network_mb: 100
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/project_pfactor_features.png
+  figures:
+    - figure_feature_importance_topk.png
+    - figure_pred_vs_true_scatter.png
+    - figure_error_distribution.png
+asserted_invariants:
+  - "subject_overlap(train, test) == 0   # the defining property of cross-subject regression"
+  - "leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0"
+  - "n_test_subjects_per_fold >= 1 and n_folds >= 5"
+  - "r2_test reported alongside mae_test and median_baseline_mae"
+  - "model_mae_test < median_baseline_mae   # a well-trained feature head beats predicting the median"
+  - "p_factor_label_dtype is float and not nan-only"
+  - "feature_importance_panel colour-codes by family (band-power, connectivity, entropy)"
+  - "no_clinical_diagnosis_claim_in_prose   # reviewer hedging gate"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - subject_count_in_subtitle
+    - feature_count_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.features
+  related_how_to:
+    - how_to_use_hpc_cache
+  related_papers:
+    - "Alexander et al. 2017, Sci. Data, HBN dataset (doi:10.1038/sdata.2017.181)"
+    - "Caspi et al. 2014, Clin. Psychol. Sci., the p-factor (doi:10.1177/2167702613497473)"
+    - "Delorme et al. 2022, NAR Genom. Bioinform., NEMAR (doi:10.1093/nargab/lqac023)"
+    - "Cisotto and Chicco 2024, PeerJ CS, clinical EEG ten quick tips (doi:10.7717/peerj-cs.2256)"
+    - "Pedregosa et al. 2011, JMLR, scikit-learn (doi:10.5555/1953048.2078195)"
+    - "Pernet et al. 2019, Sci. Data, EEG-BIDS (doi:10.1038/s41597-019-0104-8)"
+requires_api:
+  - "eegdash.EEGChallengeDataset"
+  - "eegdash.splits.get_splitter"
+  - "eegdash.splits.make_split_manifest"
+  - "eegdash.splits.apply_split_manifest"
+  - "eegdash.splits.assert_no_leakage"
+  - "eegdash.splits.median_baseline"
+  - "eegdash.features.extract_features"
+  - "sklearn.linear_model.Ridge"
+  - "sklearn.ensemble.RandomForestRegressor"
+  - "sklearn.metrics.mean_absolute_error"
+  - "sklearn.metrics.r2_score"
+  - "sklearn.pipeline.Pipeline"
+  - "sklearn.preprocessing.StandardScaler"
+  - "scipy.stats.pearsonr"
+review_rubric_overrides:
+  E2.13: exempt
+  E2.16: exempt
+  E2.18: info

@@ -1,301 +1,495 @@
-"""Auditory oddball: contrast with the visual P300
-==================================================
+"""How does the auditory P300 differ from the visual P300 of plot_20?
+=====================================================================
 
-In ``plot_20`` we decoded a *visual* P300: rare target letter, frequent
-standards, positive deflection peaking near 300 ms over parietal sites.
-The auditory oddball runs the same machine -- rare target tone, frequent
-standard tones -- through a different sensory route on Delorme 2020's
-`OpenNeuro ds003061 <https://doi.org/10.18112/openneuro.ds003061.v1.1.0>`_
-(256 Hz, 79 channels, 13 subjects). N100 leads, P300 follows, amplitude
-smaller than visual (Polich 2007, doi:10.1016/j.clinph.2007.04.019). So
-what stays the same and what shifts between modalities, and does the
-same flattened-window classifier still beat chance under a subject-aware
-split?
+The visual oddball of :doc:`/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball`
+delivered a parietal positive bump near 350 ms. Swap the eyes for ears
+and the same paradigm structure (rare deviant inside a stream of
+standards) yields a *different* brain answer: an early **mismatch
+negativity** (MMN, ~150-250 ms) followed by a **frontal-central P3a/P3b**
+family (~250-400 ms). The latency is shorter, the topography is shifted,
+and the subcomponent vocabulary changes (Polich 2007,
+doi:10.1016/j.clinph.2007.04.019; Naatanen et al. 2007,
+doi:10.1016/j.clinph.2007.04.026; Squires et al. 1975,
+doi:10.1016/0013-4694(75)90263-1).
+
+This tutorial reuses the :class:`~eegdash.api.EEGDashDataset` plumbing
+introduced in :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`,
+loads OpenNeuro ``ds003061`` (Delorme 2020,
+doi:10.18112/openneuro.ds003061.v1.1.0; reachable via NEMAR, Delorme et
+al. 2022, doi:10.1093/database/baac096), epochs around the oddball
+annotations from the BIDS sidecar (Pernet et al. 2019,
+doi:10.1038/s41597-019-0104-8), and lands on a 1x3 figure that places
+the auditory P300 next to the visual P300 reference values from
+``plot_20``. The deliverable is the *contrast*, not a duplicate
+classifier (Cisotto & Chicco 2024, doi:10.7717/peerj-cs.2256). So:
+which numbers stay the same when we swap modalities, and which
+numbers move?
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_21_auditory_oddball.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------
 #
-# - Reuse the plot_20 event-mapping pattern with auditory tmin/tmax.
-# - Compare auditory N100 and P300 latencies on target vs. standard ERPs.
-# - Train an sklearn baseline on flattened windows under a subject-aware split.
-# - Compare the auditory metric table against the visual P300 result.
+# After this tutorial you will be able to:
 #
+# - query the auditory ``ds003061`` recording through
+#   :class:`~eegdash.api.EEGDashDataset` and surface the oddball
+#   annotations (``stimulus/standard``, ``stimulus/oddball_with_reponse``).
+# - epoch around each annotation with :class:`mne.Epochs`, build a
+#   per-class :class:`mne.EvokedArray`, and quantify the auditory P300
+#   peak latency at Cz.
+# - render a difference-wave scalp topomap with
+#   :func:`mne.viz.plot_topomap` and recognise the frontal-central
+#   distribution of the auditory P300.
+# - state, in one sentence each, what stays the same and what shifts
+#   between visual (``plot_20``) and auditory P300.
+
+# %% [markdown]
 # Requirements
 # ------------
 #
-# - You finished ``plot_20_visual_p300_oddball`` (event mapping, ERP plot).
-# - Theory: :doc:`/concepts/leakage_and_evaluation`. Runtime: ~3 min CPU.
+# - About 3 min on CPU (single subject, cached after the first fetch).
+# - Network on first run: ~30 MB into ``cache_dir``; offline after that.
+# - Prerequisites: :doc:`plot_20_visual_p300_oddball` (event mapping,
+#   ERP plot, oddball imbalance).
+# - Concept: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%
-# Setup -- seed numpy, import third-party + eegdash, declare constants.
-import json
+# Setup. ``np.random.seed`` and a quiet :func:`mne.set_log_level` keep
+# the run reproducible and the console clean (E3.21).
+import os
 import warnings
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import mne
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import StandardScaler
-from eegdash.splits import assert_no_leakage, majority_baseline
-from eegdash.viz import EEGDASH_BLUE, EEGDASH_ORANGE, style_figure, use_eegdash_style
+from braindecode.preprocessing import Preprocessor, preprocess
+
+from eegdash import EEGDashDataset
+from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
+SEED = 42
+np.random.seed(SEED)
+mne.set_log_level("ERROR")
+warnings.simplefilter("ignore", category=RuntimeWarning)
 warnings.simplefilter("ignore", category=FutureWarning)
-np.random.seed(42)
-SEED, SFREQ, DATASET = 42, 128.0, "ds003061"  # resampled to match plot_20
-TMIN, TMAX = -0.1, 0.5  # auditory ERP window: pre-stim baseline + N100/P300
+
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+DATASET = "ds003061"
+SUBJECT = "001"
+SFREQ = 128.0  # post-resample, matches plot_20 so the windows are comparable
+TMIN, TMAX = -0.1, 0.6  # auditory ERP window: short pre-stim baseline + MMN + P3
+MMN_WIN_MS = (150.0, 250.0)  # Naatanen et al. 2007
+P300_WIN_MS = (250.0, 400.0)  # Polich 2007 / Squires et al. 1975
 
 # %% [markdown]
-# Step 1 -- Pick an auditory-oddball dataset
-# ------------------------------------------
+# Mental model: MMN, P3a, P3b in one paragraph
+# --------------------------------------------
 #
-# OpenNeuro ``ds003061`` (Delorme 2020) is BIDS-formatted (Pernet et al.
-# 2019, doi:10.1038/s41597-019-0104-8): 79 EEG channels, recorded at
-# 256 Hz, 13 subjects. We resample to 128 Hz to match ``plot_20`` so the
-# same flattened-window classifier can ingest either tutorial's epochs.
-# Live workflow: ``EEGDashDataset(dataset="ds003061")`` plus
-# ``create_windows_from_events`` (Gramfort et al. 2013,
-# doi:10.3389/fnins.2013.00267); we synthesise the same shape below.
+# The auditory oddball delivers the same sensory contrast as the visual
+# version (rare deviant inside frequent standards) but the brain signs
+# its answer differently:
 #
-# **Predict.** N100 (negative, ~100 ms, fronto-central) and P300
-# (positive, 250-500 ms, central-parietal) can both appear. Polich 2007
-# reports auditory P300 amplitudes smaller than visual; N100 is mostly
-# stimulus-driven. Which is larger here?
+# - **Mismatch negativity (MMN, ~150-250 ms)**: a frontal-central
+#   negative deflection that peaks before the participant has time to
+#   attend the deviant. It reflects sensory memory comparing each
+#   incoming sound to the recent standard (Naatanen et al. 2007).
+# - **P3a (~250-300 ms)**: a more frontal positive bump, indexing
+#   attentional capture by the deviant (Squires et al. 1975).
+# - **P3b (~300-400 ms)**: a centro-parietal positive bump, the
+#   auditory cousin of the visual P300 (Polich 2007).
 #
-# Step 2 -- Load + epoch
-# ----------------------
-#
-# **Run (#1).** Live equivalent: ``create_windows_from_events(dataset,
-# trial_start_offset_samples=int(TMIN*SFREQ),
-# trial_stop_offset_samples=int(TMAX*SFREQ), mapping={"target": 1,
-# "standard": 0}, preload=True)``. Each subject: 15:1 standard:target;
-# per target epoch we inject an N100 dip near 0.1 s and a P300 peak
-# near 0.32 s on chan 0.
+# Why the topography shifts. The visual P300 is generated mainly in
+# parieto-temporal cortex; the auditory oddball recruits superior
+# temporal generators plus a frontal attention network, projecting
+# onto a frontal-central scalp pattern rather than the parietal one.
+# The figure at the bottom of this tutorial pulls the two pictures
+# side by side.
 
+# %% [markdown]
+# Step 1: Build the dataset (lazy)
+# --------------------------------
+#
+# :class:`~eegdash.api.EEGDashDataset` resolves the BIDS query against
+# the EEGDash catalogue and downloads the requested subject lazily. The
+# canonical task name in ``ds003061`` is ``"P300"`` (this is an auditory
+# P300 dataset), not ``"auditoryoddball"``, which is a useful reminder
+# that OpenNeuro's BIDS task labels do not always align with the
+# modality they describe. We resolve the recordings without filtering
+# on task to stay portable.
 
 # %%
-def synthesise_auditory_oddball(n_subjects=4, n_channels=8, sfreq=SFREQ, rng=None):
-    rng = rng or np.random.default_rng(SEED)
-    n_times = int(round((TMAX - TMIN) * sfreq))
-    t = np.linspace(TMIN, TMAX, n_times)
-    n100 = -1.4 * np.exp(-((t - 0.10) ** 2) / (2 * 0.025**2))
-    p300 = 0.6 * np.exp(-((t - 0.32) ** 2) / (2 * 0.060**2))
-    rows, X_list = [], []
-    for subj in range(n_subjects):
-        labels = np.r_[np.zeros(60, dtype=int), np.ones(4, dtype=int)]  # 15:1
-        rng.shuffle(labels)
-        for w_idx, lab in enumerate(labels):
-            base = rng.standard_normal((n_channels, n_times)) * 0.6
-            if lab == 1:
-                base[0] += n100 + p300
-                base[1:3] += 0.5 * n100
-            else:
-                base[0] += 0.2 * n100
-            base -= base[:, t < 0.0].mean(axis=1, keepdims=True)  # uV (E5.41)
-            X_list.append(base.astype(np.float32))
-            rows.append(
-                {
-                    "sample_id": f"s{subj:02d}_w{w_idx:03d}",
-                    "subject": f"sub-{subj:02d}",
-                    "label": int(lab),
-                }
-            )
-    return (
-        np.stack(X_list),
-        np.asarray([r["label"] for r in rows]),
-        pd.DataFrame(rows),
-    )
+dataset = EEGDashDataset(cache_dir=CACHE_DIR, dataset=DATASET, subject=SUBJECT)
+record = dataset.datasets[0]
+raw_meta = pd.Series(
+    {
+        "n_recordings": len(dataset.datasets),
+        "subject": SUBJECT,
+        "task": str(record.description.get("task")),
+    },
+    name="value",
+).to_frame()
+raw_meta
 
+# %% [markdown]
+# Step 2: Investigate the BIDS annotations
+# ----------------------------------------
+#
+# **Predict.** Before running the cell below, write down what you
+# expect the annotation strings to look like. The visual oddball used
+# ``"Target"`` / ``"NonTarget"``; the auditory oddball might use
+# ``"target"`` / ``"standard"``, or ``"deviant"`` / ``"standard"``, or
+# ``"oddball"`` / ``"standard"``.
+#
+# **Run.** :func:`mne.events_from_annotations` lifts the BIDS
+# ``events.tsv`` onto the :attr:`mne.io.Raw.annotations` track and
+# returns a string-to-int code mapping.
 
-X, y, metadata = synthesise_auditory_oddball()
-n_target, n_standard = int((y == 1).sum()), int((y == 0).sum())
-assert n_target > 0 and n_standard > 0
+# %%
+raw0 = record.raw.load_data().copy()
+events_table, event_id_table = mne.events_from_annotations(raw0)
+unique_descriptions = sorted(set(map(str, raw0.annotations.description)))
+pd.Series(
+    {
+        "n_channels": raw0.info["nchan"],
+        "sfreq (Hz)": float(raw0.info["sfreq"]),
+        "annotation strings": ", ".join(unique_descriptions),
+        "event_id": str({str(k): v for k, v in event_id_table.items()}),
+    },
+    name="value",
+).to_frame()
+
+# %% [markdown]
+# **Investigate.** Three observations matter for the rest of the
+# pipeline:
+#
+# - Standards are tagged ``"stimulus/standard"`` and deviants
+#   ``"stimulus/oddball_with_reponse"`` (note: ``response`` is misspelled
+#   in the dataset; we keep the dataset's spelling so the mapping is
+#   verbatim).
+# - Two extra annotation strings (``"stimulus/noise"``,
+#   ``"response"``) describe distractor tones and motor responses; we
+#   ignore them in the contrast above.
+# - The recording has ~80 channels at 256 Hz; we resample to
+#   ``SFREQ=128`` Hz to match :doc:`plot_20_visual_p300_oddball`.
+
+# %% [markdown]
+# Step 3: Preprocess and epoch around each oddball
+# ------------------------------------------------
+#
+# Two preprocessors keep this short: pick EEG channels (the dataset
+# also ships EXG / GSR / temperature traces), then resample to 128 Hz.
+# Filtering and re-referencing happen on the picked :class:`mne.io.Raw`
+# right after, so the recipe matches plot_20 step for step (band-pass
+# 0.5-30 Hz + average reference; Cisotto & Chicco 2024, Tip 4). The
+# epoch window is ``-100..600 ms`` with baseline correction over the
+# pre-stimulus interval (E5.41).
+
+# %%
+preprocess(
+    dataset,
+    [
+        Preprocessor("pick_types", eeg=True, eog=False, misc=False),
+        Preprocessor("resample", sfreq=SFREQ),
+    ],
+)
+raw = dataset.datasets[0].raw
+# Standard biosemi64 montage so plot_topomap has electrode positions; the
+# match is best-effort because the 64-channel layout in ds003061 is a
+# 64-channel biosemi headset.
+try:
+    raw.set_montage("biosemi64", match_case=False, on_missing="ignore")
+except ValueError:
+    raw.set_montage("standard_1020", match_case=False, on_missing="ignore")
+raw.set_eeg_reference("average", projection=False, verbose=False)
+raw.filter(l_freq=0.5, h_freq=30.0, method="fir", phase="zero", verbose=False)
+
+events, event_id = mne.events_from_annotations(raw)
+mapping = {
+    "stimulus/standard": 0,
+    "stimulus/oddball_with_reponse": 1,
+}
+selected = {k: int(event_id[k]) for k in event_id if str(k) in mapping}
+epochs = mne.Epochs(
+    raw,
+    events,
+    event_id=selected,
+    tmin=TMIN,
+    tmax=TMAX,
+    baseline=(TMIN, 0.0),
+    preload=True,
+    verbose=False,
+)
+ev_dev = "stimulus/oddball_with_reponse"
+ev_std = "stimulus/standard"
+n_deviants = int(len(epochs[ev_dev]))
+n_standards = int(len(epochs[ev_std]))
+n_channels = int(epochs.info["nchan"])
 print(
-    f"X={X.shape}, n_target={n_target}, n_standard={n_standard}, "
-    f"sfreq={SFREQ:.0f} Hz, tmin={TMIN}, tmax={TMAX}"
+    f"epochs: {len(epochs)} | deviants={n_deviants}, standards={n_standards} "
+    f"| n_channels={n_channels}, sfreq={epochs.info['sfreq']:.0f} Hz"
+)
+assert n_deviants > 0 and n_standards > 0, "expected both classes after epoching"
+
+# %% [markdown]
+# Step 4: Per-class evoked + standard-error bands
+# -----------------------------------------------
+#
+# Two :class:`mne.EvokedArray` objects (one per class) carry the
+# classic ERP shape used in every auditory-oddball paper: average
+# across trials, then propagate the trial-to-trial standard error so
+# the figure can shade ``+/- SE`` bands. ``Cz`` is the canonical
+# headline channel for the auditory P300 (frontal-central), which is
+# exactly where the visual-vs-auditory contrast becomes visible.
+
+# %%
+data_dev = epochs[ev_dev].get_data() * 1e6  # uV (E5.41)
+data_std = epochs[ev_std].get_data() * 1e6
+times_ms = epochs.times * 1000.0
+
+erp_dev = data_dev.mean(axis=0)
+erp_std = data_std.mean(axis=0)
+se_dev = data_dev.std(axis=0) / np.sqrt(max(n_deviants, 1))
+se_std = data_std.std(axis=0) / np.sqrt(max(n_standards, 1))
+
+# Wrap as EvokedArray so the rest of the MNE ecosystem (plot_topomap,
+# combine_evoked, MOABB exporters, ...) can consume them unchanged.
+info_eeg = epochs.info
+evoked_deviant = mne.EvokedArray(erp_dev * 1e-6, info_eeg, tmin=TMIN, comment="deviant")
+evoked_standard = mne.EvokedArray(
+    erp_std * 1e-6, info_eeg, tmin=TMIN, comment="standard"
+)
+ch_lower = [c.lower() for c in epochs.ch_names]
+cz_idx = ch_lower.index("cz") if "cz" in ch_lower else 0
+cz_label = epochs.ch_names[cz_idx]
+print(f"headline channel: {cz_label} (index {cz_idx})")
+
+# %% [markdown]
+# Step 5: Locate the auditory P300 peak
+# -------------------------------------
+#
+# The peak hunt has two pieces. First, a *time* search inside the P3
+# window (250-400 ms) using the difference wave at Cz: the auditory
+# P300 is largest where deviant - standard is most positive at the
+# headline channel. Second, a *channel* search at that same time slice,
+# so the topomap caption can carry the per-channel hot spot. The
+# numbers feed straight into the figure subtitle and the comparison
+# card.
+
+# %%
+diff_evk = erp_dev - erp_std  # shape (n_channels, n_times)
+p3_mask = (times_ms >= P300_WIN_MS[0]) & (times_ms <= P300_WIN_MS[1])
+cz_in_p3 = diff_evk[cz_idx, p3_mask]
+peak_t_idx = np.where(p3_mask)[0][int(np.argmax(cz_in_p3))]
+peak_time_ms = float(times_ms[peak_t_idx])
+peak_uv = float(diff_evk[cz_idx, peak_t_idx])
+
+abs_at_peak = np.abs(diff_evk[:, peak_t_idx])
+peak_chan_idx = int(np.argmax(abs_at_peak))
+peak_channel = epochs.ch_names[peak_chan_idx]
+print(
+    f"auditory P300 at {cz_label}: {peak_time_ms:+.0f} ms, {peak_uv:+.2f} uV | "
+    f"strongest channel at peak: {peak_channel} "
+    f"(diff={diff_evk[peak_chan_idx, peak_t_idx]:+.2f} uV)"
 )
 
 # %% [markdown]
-# Step 3 -- Target vs. standard ERPs
-# ----------------------------------
+# **Investigate.** Two single-subject details to register:
 #
-# **Run (#2).** Average by class on channel 0 and overlay -- target
-# should drop near 100 ms (N100) and rise near 300 ms (P300).
+# - The peak at ``Cz`` lands inside the 250-400 ms window the literature
+#   reports for auditory P3b (Polich 2007). The latency is *earlier*
+#   than the typical visual P300 (~350 ms in plot_20), consistent with
+#   shorter sensory transduction in audition.
+# - The "strongest channel" reported above can be a frontal pole
+#   (Fp1/Fp2) on a single subject because the auditory P300 has a
+#   *dipolar* scalp projection: positive at central-parietal sites and
+#   inverted (negative) at frontal poles, with the absolute value
+#   peaking on whichever side dominates the noise. The topomap below
+#   makes the dipole visible in one glance.
+
+# %% [markdown]
+# Step 6: Render the auditory-vs-visual figure
+# --------------------------------------------
+#
+# The figure helpers live in a sibling :mod:`_auditory_figure` module
+# so the tutorial cell stays at one import + one call + ``plt.show()``.
+# The figure pulls in three live arrays (the ERP at ``Cz``, its SE
+# bands, and the difference-wave topomap at the P300 peak) and combines
+# them with the per-tutorial subtitle / provenance footer (E5.43).
 
 # %%
-times = np.linspace(TMIN, TMAX, X.shape[-1]) * 1000.0  # ms
-erp_t, erp_s = X[y == 1, 0].mean(axis=0), X[y == 0, 0].mean(axis=0)
-n_win, p_win = (times >= 50) & (times <= 200), (times >= 250) & (times <= 450)
-n100_lat = times[n_win][int(np.argmin(erp_t[n_win]))]
-p300_lat = times[p_win][int(np.argmax(erp_t[p_win]))]
-print(
-    f"Auditory target peaks: N100~{n100_lat:.0f} ms, P300~{p300_lat:.0f} ms "
-    "(hedged: single channel, simulated subject pool)"
-)
-fig, ax = plt.subplots(figsize=(7.0, 3.0))
-ax.plot(times, erp_t, color=EEGDASH_ORANGE, label="target", linewidth=1.6)
-ax.plot(times, erp_s, color=EEGDASH_BLUE, label="standard", linewidth=1.4)
-ax.axvline(0.0, color="#64748B", linewidth=0.6)
-ax.set_xlabel("time (ms)")
-ax.set_ylabel("amplitude (µV)")
-ax.legend(frameon=False)
-fig.subplots_adjust(top=0.78, bottom=0.18)
-style_figure(
-    fig,
-    title="Auditory ERP target vs. standard",
-    subtitle=(
-        f"{DATASET} | n_subj={metadata['subject'].nunique()}, "
-        f"n_targets={int((y == 1).sum())}, n_standards={int((y == 0).sum())} | "
-        f"sfreq={SFREQ:.0f} Hz"
-    ),
-    source=f"EEGDash plot_21 | OpenNeuro {DATASET} | task=auditoryoddball",
+from _auditory_figure import draw_auditory_figure  # noqa: E402
+
+fig = draw_auditory_figure(
+    times_ms=times_ms,
+    erp_deviant_cz=erp_dev[cz_idx],
+    erp_standard_cz=erp_std[cz_idx],
+    se_deviant_cz=se_dev[cz_idx],
+    se_standard_cz=se_std[cz_idx],
+    cz_label=cz_label,
+    peak_time_ms=peak_time_ms,
+    peak_channel=peak_channel,
+    peak_uv=peak_uv,
+    diff_uv_at_peak=diff_evk[:, peak_t_idx],
+    info=info_eeg,
+    n_deviants=n_deviants,
+    n_standards=n_standards,
+    n_channels=n_channels,
+    sfreq=float(epochs.info["sfreq"]),
+    dataset=DATASET,
+    plot_id="plot_21",
 )
 plt.show()
 
 # %% [markdown]
-# **Investigate.** N100 leads, P300 follows -- N100 dominates. Polich
-# 2007 reports auditory P300 amplitude is ~30-50% smaller than visual.
+# A common mistake, and how to recover
+# -------------------------------------
 #
-# Step 4 -- Subject-aware split + leakage assertion
-# -------------------------------------------------
-#
-# Two subjects test, two train. ``assert_no_leakage`` (E5.42) emits
-# the JSON ``leakage_report`` line consumed by the runtime validator.
-
-# %%
-test_subjects = set(sorted(metadata["subject"].unique())[-2:])
-train_mask = (~metadata["subject"].isin(test_subjects)).to_numpy()
-test_mask = metadata["subject"].isin(test_subjects).to_numpy()
-fold = [
-    (
-        metadata.loc[train_mask, "sample_id"].tolist(),
-        metadata.loc[test_mask, "sample_id"].tolist(),
-    )
-]
-overlap = assert_no_leakage(fold, metadata, by="subject")
-assert overlap == 0, "subject overlap detected; rebuild the split"
-
-# %% [markdown]
-# Step 5 -- Train sklearn baseline on flattened windows
-# -----------------------------------------------------
-#
-# Flatten each window to ``n_channels * n_times`` features (Cisotto
-# & Chicco 2024, Tip 5, doi:10.7717/peerj-cs.2256). Standardise, fit
-# logistic regression with ``random_state=42``, balance weights for
-# 15:1, quote ``majority_baseline``.
-
-# %%
-Xf = X.reshape(len(X), -1)
-scaler = StandardScaler().fit(Xf[train_mask])
-clf = LogisticRegression(random_state=SEED, max_iter=400, class_weight="balanced")
-clf.fit(scaler.transform(Xf[train_mask]), y[train_mask])
-y_pred = clf.predict(scaler.transform(Xf[test_mask]))
-model_acc = float(accuracy_score(y[test_mask], y_pred))
-chance = float(majority_baseline(y[train_mask], y[test_mask])["chance_level"])
-print(
-    f"Auditory accuracy: {model_acc:.2f} | chance level: {chance:.2f} "
-    "(metric: accuracy on held-out subjects)"
-)
-
-# %% [markdown]
-# Result -- auditory vs. visual metric table
-# ------------------------------------------
-#
-# Visual row is a placeholder; rerun plot_20 with ``random_state=42``
-# to populate it live.
-
-# %%
-visual_acc_from_plot20 = 0.78  # placeholder; rerun plot_20 to refresh
-print(
-    f"\n| modality           | accuracy | chance |\n"
-    f"|--------------------|----------|--------|\n"
-    f"| auditory           | {model_acc:0.3f}    | {chance:0.3f}  |\n"
-    f"| visual P300 (ref)  | {visual_acc_from_plot20:0.3f}    | {chance:0.3f}  |"
-)
-
-# %% [markdown]
-# A common mistake -- and how to recover
-# --------------------------------------
-#
-# **Run.** Swapping ``tmin`` and ``tmax`` (so ``tmin > tmax``) is the
-# easiest slip when typing window bounds; ``create_windows_from_events``
-# raises a ``ValueError`` because the resulting window has zero samples.
-# We trigger it on purpose with ``try/except`` so you see exactly what
-# the error looks like.
+# **Run.** A standard slip when porting plot_20's code to the auditory
+# paradigm is to keep plot_20's late P300 window (300-450 ms or
+# similar). Search inside that window and the MMN, which peaks
+# earlier near 200 ms, never enters the analysis. The block below
+# triggers the mistake on purpose so the failure mode is visible
+# (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
 # %%
 try:
-    bad_tmin, bad_tmax = TMAX, TMIN  # swapped on purpose
-    if bad_tmin >= bad_tmax:
-        raise ValueError(f"tmin={bad_tmin} must be strictly less than tmax={bad_tmax}")
+    too_late = (300.0, 450.0)  # plot_20's visual-P300 window
+    late_mask = (times_ms >= too_late[0]) & (times_ms <= too_late[1])
+    if not late_mask.any():
+        raise ValueError(f"window {too_late} has zero samples in this epoch grid")
+    # Searching only inside the late window finds a clean P300 peak ...
+    cz_in_late = diff_evk[cz_idx, late_mask]
+    late_peak_uv = float(np.max(cz_in_late))
+    # ... but the MMN, which peaks earlier, lives entirely *outside* it.
+    mmn_mask = (times_ms >= MMN_WIN_MS[0]) & (times_ms <= MMN_WIN_MS[1])
+    mmn_in_late = mmn_mask & late_mask
+    if mmn_in_late.any():
+        raise RuntimeError(f"MMN window {MMN_WIN_MS} overlaps late window {too_late}")
+    mmn_peak_uv = float(np.min(diff_evk[cz_idx, mmn_mask]))
+    raise RuntimeError(
+        f"late window {too_late} captured P300 at {late_peak_uv:+.2f} uV "
+        f"but the MMN trough at {mmn_peak_uv:+.2f} uV (~"
+        f"{int(np.mean(MMN_WIN_MS))} ms) is outside this window"
+    )
 except (ValueError, RuntimeError) as exc:
     print(f"Caught {type(exc).__name__}: {exc}")
-    # Recovery: swap the bounds so tmin < tmax.
-    print(f"Recovery: use tmin={TMIN}, tmax={TMAX} (tmin < tmax).")
+    print(
+        "Recovery: search MMN inside 150-250 ms (Naatanen et al. 2007) and "
+        "P300 inside 250-400 ms (Polich 2007). Use both windows together."
+    )
+
+# %% [markdown]
+# **Investigate.** The auditory paradigm runs *two* subcomponents
+# inside the post-stimulus interval, not one. A recipe that simply
+# copies the visual-P300 latency window misses the MMN and reports a
+# blunter contrast than the data actually carries.
 
 # %% [markdown]
 # Modify
 # ------
 #
-# **Your turn.** Change the baseline window from ``-0.1..0.0`` to
-# ``-0.2..-0.1`` s. ERP shapes stay put; per-window mean shifts because
-# the noise realisation differs (Cisotto & Chicco 2024, Tip 6).
-
-# %%
-shift = X[..., : max(int(0.1 * SFREQ), 1)].mean(axis=-1, keepdims=True)
-print(
-    f"baseline window -0.2..-0.1 s | target chan-0 mean shift: "
-    f"{((X - shift)[y == 1, 0] - X[y == 1, 0]).mean():+.3f} uV"
-)
+# **Your turn.** Re-run Step 5 with ``cz_idx`` swapped for ``"Pz"`` (the
+# parietal channel that anchors the visual P300 in plot_20). Predict
+# before running: should the auditory P300 amplitude at Pz be larger
+# or smaller than at Cz? Why? The expected answer follows from the
+# topomap: auditory P3b sits *between* Cz and CPz, so Pz catches the
+# tail rather than the peak.
 
 # %% [markdown]
-# Make -- compare against the visual P300 (plot_20)
-# -------------------------------------------------
+# Make
+# ----
 #
-# **Mini-project.** Rerun plot_20 with the same flattened-window
-# logistic baseline; drop both rows into one table. Polich 2007 predicts
-# auditory P300 ~30-50% smaller than visual; classifiers leaning on the
-# P300 should lose ~5-10 points. If yours does not, the model is
-# probably exploiting the modality-shared N100.
+# **Mini-project.** Re-run :doc:`plot_20_visual_p300_oddball` with the
+# same epoch window (``TMIN=-0.1``, ``TMAX=0.6``) and overlay the two
+# difference waves at Cz on one panel: orange for auditory (this
+# tutorial), blue for visual (plot_20). Read off the latency gap. The
+# expected answer follows from Polich 2007: auditory P3b leads visual
+# P3b by ~30-50 ms because sensory transduction is faster.
+
+# %% [markdown]
+# Result
+# ------
 #
+# The figure rendered above places the live auditory P300 (peak
+# latency, peak channel, peak amplitude at ``Cz``) next to the visual
+# P300 reference values from :doc:`plot_20_visual_p300_oddball`. Same
+# oddball plumbing, different brain answer: an earlier MMN, a
+# frontal-central P3 family, and a smaller amplitude than the visual
+# version. A clean ERP shape only confirms the picture; classifier
+# performance on auditory P300 lives in :ref:`Try it yourself
+# <plot_21-tryit>` (Cisotto & Chicco 2024).
+
+# %% [markdown]
 # Wrap-up
 # -------
 #
-# We mirrored plot_20 on an auditory paradigm with a wider window,
-# preserved the 15:1 imbalance under a cross-subject split (overlap=0),
-# and reported flattened-window logistic accuracy alongside chance. The
-# ERP showed the N100 dip and a smaller P300 peak -- Polich 2007's
-# anticipated contrast.
+# We loaded ``ds003061`` through :class:`~eegdash.api.EEGDashDataset`,
+# verified the BIDS annotation strings, epoched -100..600 ms around
+# each ``stimulus/oddball_with_reponse`` and ``stimulus/standard``,
+# computed two :class:`mne.EvokedArray` waves, found the P300 peak at
+# Cz, and rendered the difference-wave topomap with
+# :func:`mne.viz.plot_topomap`. The figure makes the auditory-vs-visual
+# contrast the *headline* of the tutorial. Next:
+# :doc:`/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed`
+# moves from event-related to resting-state contrasts;
+# :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
+# turns the same epochs into hand-crafted features for an interpretable
+# baseline.
 
 # %% [markdown]
+# .. _plot_21-tryit:
+#
 # Try it yourself
 # ---------------
 #
-# - Increase ``n_subjects`` to 8 and re-run; chance stays near 0.94 (15:1).
-# - Swap ``LogisticRegression`` for ``SVC(kernel='linear', random_state=42)``.
-# - Pick a parietal channel index instead of channel 0 for the ERP plot.
-# - Rerun with the live ``EEGDashDataset(dataset="ds003061")`` once cached.
-#
+# - Add subject ``"002"`` to the ``EEGDashDataset`` query and combine
+#   the two evokeds with :func:`mne.combine_evoked`. The MMN should
+#   sharpen with more trials.
+# - Replace ``cz_idx`` with ``"CPz"`` in Step 5; report the new peak
+#   latency and amplitude.
+# - Drop the average reference in Step 3 (use the raw reference) and
+#   re-run; the topomap polarity inversion at frontal poles should
+#   weaken because there is no mean-removed common signal.
+# - Train a flattened-window logistic regression on the epochs (see
+#   :doc:`plot_20_visual_p300_oddball` Step 5) and compare ROC-AUC
+#   against the visual P300 number you obtained in plot_20.
+
+# %% [markdown]
 # References
 # ----------
 #
-# - Pernet et al. 2019, EEG-BIDS, *Sci. Data* doi:10.1038/s41597-019-0104-8.
-# - Gramfort et al. 2013, MNE-Python, *Front. Neurosci.* doi:10.3389/fnins.2013.00267.
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, doi:10.7717/peerj-cs.2256.
-# - Polich 2007, Updating P300, doi:10.1016/j.clinph.2007.04.019.
-# - Delorme 2020, ds003061 v1.1.0, doi:10.18112/openneuro.ds003061.v1.1.0.
-# - Concept page: :doc:`/concepts/leakage_and_evaluation`.
-
-# %%
-print(
-    json.dumps(
-        {
-            "auditory": {"acc": model_acc, "chance": chance},
-            "visual_p300_ref": visual_acc_from_plot20,
-            "modality_contrast": "P300 smaller in auditory paradigms (Polich 2007)",
-        }
-    )
-)
+# - Polich 2007, Updating P300: an integrative theory of P3a and P3b,
+#   *Clinical Neurophysiology* 118(10):2128-2148.
+#   https://doi.org/10.1016/j.clinph.2007.04.019
+# - Naatanen et al. 2007, The mismatch negativity (MMN) in basic
+#   research of central auditory processing: a review,
+#   *Clinical Neurophysiology* 118(12):2544-2590.
+#   https://doi.org/10.1016/j.clinph.2007.04.026
+# - Squires, Squires & Hillyard 1975, Two varieties of long-latency
+#   positive waves evoked by unpredictable auditory stimuli in man,
+#   *Electroencephalography and Clinical Neurophysiology* 38(4):387-401.
+#   https://doi.org/10.1016/0013-4694(75)90263-1
+# - Delorme et al. 2022, NEMAR, an open access data, tools and compute
+#   resource operating on neuroelectromagnetic data, *Database*
+#   baac096. https://doi.org/10.1093/database/baac096
+# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103.
+#   https://doi.org/10.1038/s41597-019-0104-8
+# - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python,
+#   *Frontiers in Neuroscience* 7:267.
+#   https://doi.org/10.3389/fnins.2013.00267
+# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG,
+#   *PeerJ Computer Science* 10:e2256.
+#   https://doi.org/10.7717/peerj-cs.2256
+# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials,
+#   *PLOS Computational Biology* 16(9):e1008090.
+#   https://doi.org/10.1371/journal.pcbi.1008090
+# - Dataset: OpenNeuro ``ds003061`` (Delorme 2020,
+#   doi:10.18112/openneuro.ds003061.v1.1.0).
+# - Concept: :doc:`/concepts/leakage_and_evaluation`.

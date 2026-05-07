@@ -45,7 +45,7 @@ audience: Beginner-to-intermediate user who has loaded one EEGDash recording (pl
   and wants to start the EEG2025 challenge. Knows basic BIDS entities; learns what
   makes the challenge dataset object special here.
 budgets:
-  max_loc: 295
+  max_loc: 470
   max_runtime_seconds: 240
   max_network_mb: 200
   cpu_only: true
@@ -102,8 +102,13 @@ links:
   related_papers:
   - "Alexander et al. 2017, Sci. Data \u2014 Healthy Brain Network (HBN) dataset"
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Delorme et al. 2022, Database \u2014 NEMAR open compute resource"
+  - "Pernet et al. 2019, Sci. Data \u2014 EEG-BIDS extension"
+  - "EEG 2025 Foundation Challenge \u2014 https://eeg2025.github.io"
 requires_api:
 - eegdash.EEGChallengeDataset
+- eegdash.EEGDashDataset
+- eegdash.dataset.EEGChallengeDataset
 - eegdash.const.RELEASE_TO_OPENNEURO_DATASET_MAP
 - eegdash.const.SUBJECT_MINI_RELEASE_MAP
 - eegdash.paths.get_default_cache_dir

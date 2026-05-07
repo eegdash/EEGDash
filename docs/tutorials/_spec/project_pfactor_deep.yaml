@@ -1,0 +1,115 @@
+id: project_pfactor_deep
+category: applied
+kind: tutorial
+output_kind: python
+title: "Predict p-factor from EEG with a Braindecode model (deep-learning regime)"
+state: proposed
+assignee: null
+difficulty: 3
+estimated_runtime_minutes: 20
+hardware: gpu
+network: cached_first_run
+prerequisites:
+  - plot_11_leakage_safe_split
+  - plot_12_train_a_baseline
+  - plot_72_subject_invariant_regression
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L458-L470"
+    - "tutorial_restructure_plan.md#L1052-L1100"
+    - "tutorial_restructure_plan.md#L1158-L1178"
+    - "tutorial_restructure_plan.md#L1220-L1229"
+    - "tutorial_restructure_plan.md#L1577-L1612"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E3.24"
+    - "compass_artifact.md#E3.29"
+    - "compass_artifact.md#E4.32"
+    - "compass_artifact.md#E4.33"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+    - "compass_artifact.md#E5.45"
+    - "compass_artifact.md#E5.46"
+learning_objectives:
+  - "After this case study you will be able to load ds005505 with `EEGDashDataset` and surface `p_factor` through `description_fields`."
+  - "After this case study you will be able to build a strict cross-subject split before windowing so no subject straddles train and validation."
+  - "After this case study you will be able to train `braindecode.models.EEGConformer` end-to-end with `torch.optim.AdamW` and report MSE, Pearson r, R^2, and MAE across seeds."
+  - "After this case study you will be able to read a 3-panel deep-regression diagnostic: training curves, predicted-vs-true scatter, and a gradient-saliency map."
+  - "After this case study you will be able to phrase the result in clinical-cautious language: small N, single dataset, p-factor as a derived score not a diagnosis."
+audience: "Advanced applied user with prior plot_72 (feature-based subject-invariant regression) and plot_12 (baseline training). Project-tier scaffolding rules apply; assumes GPU is available but degrades to CPU on the synthetic surrogate."
+budgets:
+  max_loc: 440
+  max_runtime_seconds: 1500
+  max_network_mb: 1500
+  cpu_only: false
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/project_pfactor_deep.png
+  figures:
+    - figure_training_curves.png
+    - figure_pred_vs_true_scatter.png
+    - figure_saliency_map.png
+asserted_invariants:
+  - "subject_overlap(train, val) == 0   # the defining property of cross-subject regression"
+  - "n_val_subjects >= 2 and n_train_subjects >= n_val_subjects"
+  - "best_val_r reported alongside MSE, R^2, and MAE on held-out subjects"
+  - "p_factor_label_dtype is float and not nan-only"
+  - "no_clinical_diagnosis_claim_in_prose   # reviewer hedging gate"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 4
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - subject_count_in_subtitle
+    - sample_rate_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_use_hpc_cache
+  related_papers:
+    - "Alexander et al. 2017, Sci. Data, the Healthy Brain Network (HBN) dataset behind ds005505 (doi:10.1038/sdata.2017.181)"
+    - "Caspi et al. 2014, Clin. Psychol. Sci., the p-factor as a general dimension of psychopathology (doi:10.1177/2167702613497473)"
+    - "Delorme et al. 2022, NAR Genom. Bioinform., NEMAR (doi:10.1093/nargab/lqac023)"
+    - "Cisotto and Chicco 2024, PeerJ CS, clinical EEG ten quick tips (doi:10.7717/peerj-cs.2256)"
+    - "Schirrmeister et al. 2017, Hum. Brain Mapp., Braindecode CNNs for EEG decoding (doi:10.1002/hbm.23730)"
+    - "Song et al. 2023, IEEE TNSRE, EEGConformer (doi:10.1109/TNSRE.2022.3230250)"
+    - "Nederbragt et al. 2020, PLOS Comput. Biol., ten simple rules for teaching coding (doi:10.1371/journal.pcbi.1008090)"
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "eegdash.paths.get_default_cache_dir"
+  - "braindecode.models.EEGConformer"
+  - "braindecode.preprocessing.Preprocessor"
+  - "braindecode.preprocessing.create_fixed_length_windows"
+  - "braindecode.preprocessing.preprocess"
+  - "torch.nn.Module"
+  - "torch.optim.AdamW"
+  - "torch.nn.functional.mse_loss"
+review_rubric_overrides:
+  E2.13: exempt
+  E2.16: exempt
+  E2.18: info

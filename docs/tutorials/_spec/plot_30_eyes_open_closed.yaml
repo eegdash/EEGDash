@@ -43,8 +43,8 @@ learning_objectives:
 audience: Beginner who has worked through Cat A and Cat B. Knows about windows, splits,
   and baselines; learns about annotations and resting-state framing here.
 budgets:
-  max_loc: 320
-  max_runtime_seconds: 180
+  max_loc: 620
+  max_runtime_seconds: 360
   max_network_mb: 200
   cpu_only: true
   gpu_required: false
@@ -99,10 +99,25 @@ links:
   - "Barry et al. 2007, Clin. Neurophysiol. \u2014 EEG differences in EO vs EC"
   - "Alexander et al. 2017, Sci. Data \u2014 HBN dataset"
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Berger 1929, Arch. Psychiatr. Nervenkr. \u2014 discovery of the alpha rhythm"
+  - "Niedermeyer 1999, Electroencephalography (Williams & Wilkins) \u2014 normal EEG of the waking adult"
+  - "Klimesch 2012, Trends Cogn. Sci. \u2014 alpha-band oscillations and attention (doi:10.1016/j.tics.2012.10.007)"
+  - "Delorme et al. 2022, Database (NEMAR) \u2014 doi:10.1093/database/baac096"
+  - "Pedregosa et al. 2011, JMLR \u2014 scikit-learn"
 requires_api:
 - eegdash.EEGDashDataset
+- eegdash.tasks.get_task
+- eegdash.viz.use_eegdash_style
+- eegdash.viz._tutorial_panels
 - braindecode.preprocessing.Preprocessor
-- braindecode.preprocessing.create_fixed_length_windows
-- eegdash.splits.get_splitter
+- braindecode.preprocessing.create_windows_from_events
+- braindecode.preprocessing.preprocess
+- mne.time_frequency.psd_array_welch
+- mne.viz.plot_topomap
+- mne.channels.make_standard_montage
+- sklearn.linear_model.LogisticRegression
+- sklearn.model_selection.GroupKFold
+- sklearn.metrics.accuracy_score
 - eegdash.splits.assert_no_leakage
+- eegdash.splits.majority_baseline
 review_rubric_overrides: {}

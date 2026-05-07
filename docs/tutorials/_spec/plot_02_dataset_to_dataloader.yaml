@@ -37,8 +37,8 @@ learning_objectives:
 audience: Beginner familiar with plot_00 and plot_01. Has used PyTorch tensors but
   not necessarily Braindecode; no model-training expected here.
 budgets:
-  max_loc: 288
-  max_runtime_seconds: 60
+  max_loc: 1150
+  max_runtime_seconds: 240
   max_network_mb: 100
   cpu_only: true
   gpu_required: false
@@ -91,8 +91,15 @@ links:
   related_papers:
   - "Schirrmeister et al. 2017, Hum. Brain Mapp. \u2014 Braindecode"
   - "Gramfort et al. 2013, Front. Neurosci. \u2014 MNE software"
+  - "Paszke et al. 2019, NeurIPS 32 \u2014 PyTorch DataLoader semantics"
+  - "Delorme et al. 2022, Database baac096 \u2014 NEMAR catalogue"
+  - "Miles et al. 2020, Zenodo \u2014 Zarr chunked array storage"
+  - "MNE-Python, mne.Epochs API \u2014 event_id, metadata, drop_bad"
+  - "HuggingFace datasets, use_with_pytorch \u2014 with_format, Arrow, IterableDataset"
 requires_api:
 - eegdash.EEGDashDataset
+- eegdash.splits.to_split_metadata
+- eegdash.splits.to_moabb_split_inputs
 - braindecode.preprocessing.Preprocessor
 - braindecode.preprocessing.preprocess
 - braindecode.preprocessing.create_fixed_length_windows

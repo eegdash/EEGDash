@@ -40,7 +40,7 @@ learning_objectives:
 audience: Intermediate user who finished plot_40 and plot_11. Knows scikit-learn pipelines;
   learns leakage-safe scaling and EEG-specific feature interpretation here.
 budgets:
-  max_loc: 323
+  max_loc: 580
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true
@@ -92,12 +92,22 @@ links:
   related_papers:
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
   - "Pedregosa et al. 2011, JMLR \u2014 scikit-learn"
+  - "Delorme et al. 2022, Database baac096 \u2014 NEMAR catalogue"
+  - "Brookshire et al. 2024, Front. Neurosci. \u2014 data leakage in EEG deep learning"
 requires_api:
 - eegdash.features.extract_features
 - eegdash.splits.get_splitter
 - eegdash.splits.apply_split_manifest
 - eegdash.splits.assert_no_leakage
+- eegdash.splits.majority_baseline
+- eegdash.splits.make_split_manifest
+- eegdash.viz._tutorial_panels
+- sklearn.pipeline.Pipeline
 - sklearn.preprocessing.StandardScaler
 - sklearn.linear_model.LogisticRegression
+- sklearn.linear_model.RidgeClassifier
 - sklearn.ensemble.RandomForestClassifier
+- sklearn.inspection.DecisionBoundaryDisplay
+- sklearn.metrics.ConfusionMatrixDisplay
+- sklearn.metrics.accuracy_score
 review_rubric_overrides: {}

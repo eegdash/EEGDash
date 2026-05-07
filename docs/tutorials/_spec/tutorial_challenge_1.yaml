@@ -1,0 +1,132 @@
+id: tutorial_challenge_1
+category: challenge
+kind: tutorial
+output_kind: python
+title: Get my first baseline running for EEG2025 Challenge 1 (CCD)
+state: proposed
+assignee: null
+difficulty: 2
+estimated_runtime_minutes: 6
+hardware: cpu
+network: cached_first_run
+prerequisites:
+- plot_70_challenge_dataset_basics
+- plot_02_dataset_to_dataloader
+cites:
+  plan:
+  - tutorial_restructure_plan.md#L458-L470
+  - tutorial_restructure_plan.md#L1158-L1178
+  - tutorial_restructure_plan.md#L1220-L1229
+  rubric:
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.13
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.29
+  - compass_artifact.md#E4.32
+  - compass_artifact.md#E5.42
+  - compass_artifact.md#E5.43
+  - compass_artifact.md#E5.46
+learning_objectives:
+- After this tutorial you will be able to instantiate `EEGChallengeDataset(task='contrastChangeDetection',
+  release='R5', mini=True)` and explain what `release` / `mini` control.
+- After this tutorial you will be able to carve stimulus-locked CCD windows of shape
+  `(n_chans=129, n_samples=200)` (2 s at 100 Hz, +0.5 s shift) using
+  `braindecode.preprocessing.create_windows_from_events`.
+- After this tutorial you will be able to split the cohort into 5 cross-subject folds
+  with `sklearn.model_selection.KFold` and assert no subject leakage across folds.
+- After this tutorial you will be able to train an `EEGNeX` baseline and report per-fold
+  test accuracy with mean +/- std next to chance level on the same axes.
+- After this tutorial you will be able to render a three-panel starter-kit figure
+  (trial schematic, one CCD window, per-fold accuracy) via `draw_challenge_1_figure`
+  and save the model state_dict for submission.
+audience: Beginner-to-intermediate user who has loaded one challenge recording (plot_70)
+  and one PyTorch DataLoader (plot_02), and now wants to ship a Challenge 1 submission
+  end-to-end. Level 2 because the cross-subject split, the leakage assertion, and the
+  Braindecode training loop are all in scope at once.
+budgets:
+  max_loc: 620
+  max_runtime_seconds: 360
+  max_network_mb: 200
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/tutorial_challenge_1.png
+  figures:
+  - figure_trial_schematic.png
+  - figure_one_window_heatmap.png
+  - figure_per_fold_accuracy.png
+asserted_invariants:
+- 'X.shape == (n_windows, 129, 200)   # Challenge 1 input contract'
+- 'subject_overlap(train_subj, test_subj) == 0   # cross-subject KFold'
+- len(fold_accuracies) == n_folds and all(0.0 <= a <= 1.0 for a in fold_accuracies)
+- chance_level == 0.5 reported on the same axes as the per-fold bars
+- mean_acc and std_acc printed next to chance on the result table
+- weights_path.exists() after `torch.save(model.state_dict(), weights_path)`
+sections_required:
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 6
+    labelled_subgoals: true
+- checkpoints:
+    min: 3
+- result
+- wrapup
+- links
+primm_required:
+  predict: 1
+  run: '>=2'
+  investigate: 1
+  modify: 1
+  make: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+  - chance_level_line
+  - subject_count_in_subtitle
+  - sample_rate_in_subtitle
+  - source_provenance_footer
+links:
+  concept: docs/source/concepts/eegdash_objects.rst
+  api: eegdash.dataset
+  related_how_to:
+  - how_to_download_a_dataset
+  - how_to_work_offline
+  related_papers:
+  - "Alexander et al. 2017, Sci. Data - Healthy Brain Network (HBN) dataset"
+  - "Aristimunha et al. 2025, arXiv:2506.19141 - EEG2025 Foundation Challenge"
+  - "Cisotto & Chicco 2024, PeerJ CS - clinical EEG ten quick tips"
+  - "Delorme et al. 2022, Database - NEMAR open compute resource"
+  - "Pernet et al. 2019, Sci. Data - EEG-BIDS extension"
+  - "Schirrmeister et al. 2017, HBM - Braindecode for EEG deep learning"
+  - "EEG 2025 Foundation Challenge - https://eeg2025.github.io"
+requires_api:
+- eegdash.EEGChallengeDataset
+- eegdash.dataset.EEGChallengeDataset
+- eegdash.hbn.windows.annotate_trials_with_target
+- eegdash.hbn.windows.add_aux_anchors
+- eegdash.hbn.windows.add_extras_columns
+- eegdash.hbn.windows.keep_only_recordings_with
+- eegdash.viz.use_eegdash_style
+- eegdash.viz.chance_line
+- eegdash.viz.style_figure
+- eegdash.viz._tutorial_panels.add_provenance_footer
+- braindecode.preprocessing.create_windows_from_events
+- braindecode.preprocessing.preprocess
+- braindecode.preprocessing.Preprocessor
+- braindecode.models.EEGNeX
+- sklearn.model_selection.KFold
+- torch.nn.CrossEntropyLoss
+- torch.optim.AdamW
+- torch.save
+review_rubric_overrides:
+  E1.1: exempt
+  E1.4: exempt

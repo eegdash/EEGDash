@@ -1,0 +1,105 @@
+id: plot_74_neuroai_interop
+category: H-transfer-foundation
+kind: tutorial
+output_kind: python
+title: Plug EEGDash into the Meta NeuroAI ecosystem (NeuralFetch and NeuralSet)
+state: proposed
+assignee: null
+difficulty: 2
+estimated_runtime_minutes: 5
+hardware: cpu
+network: cached_first_run
+prerequisites:
+- plot_02_dataset_to_dataloader
+- plot_70_challenge_dataset_basics
+cites:
+  rubric:
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.16
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E4.32
+  - compass_artifact.md#E5.44
+  - compass_artifact.md#E5.45
+learning_objectives:
+- After this tutorial you will be able to describe the four NeuroAI projects (NeuralFetch,
+  NeuralSet, NeuralTrain, NeuralBench) and where EEGDash fits.
+- After this tutorial you will be able to query an EEGDash recording and convert its
+  per-event metadata to the events DataFrame layout that NeuralFetch.Study returns.
+- After this tutorial you will be able to instantiate `neuralset.Segmenter` with a
+  trigger query and an `EegExtractor`, then read one batch from the resulting PyTorch
+  dataset.
+- After this tutorial you will be able to read a 3-panel ecosystem diagram, sanity-check
+  the per-stage tensor shape, and locate the correct downstream tutorial for each
+  NeuroAI module.
+audience: Intermediate user with prior plot_02 (DataLoader) and plot_70 (challenge
+  dataset). Wants to compose EEGDash with the wider Meta NeuroAI stack.
+budgets:
+  max_loc: 700
+  max_runtime_seconds: 300
+  max_network_mb: 100
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/plot_74.png
+  figures:
+  - figure_neuroai_ecosystem.png
+asserted_invariants:
+- 'events_df.columns includes {"start", "duration", "type", "timeline"}'
+- 'segment.shape == (n_channels, window_samples)   # identity through the pipeline'
+- 'integration_matrix.shape[0] == 4   # four NeuroAI projects listed'
+sections_required:
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 4
+    labelled_subgoals: true
+- checkpoints:
+    min: 3
+- result
+- wrapup
+- links
+primm_required:
+  predict: 1
+  run: '>=2'
+  investigate: 1
+  modify: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+  - subject_count_in_subtitle
+  - sample_rate_in_subtitle
+  - source_provenance_footer
+links:
+  concept: docs/source/concepts/eegdash_objects.rst
+  api: eegdash.dataset
+  related_how_to:
+  - how_to_download_a_dataset
+  related_papers:
+  - "Delorme et al. 2022, Database — NEMAR open compute resource"
+  - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+  - "Banville et al. 2021, J. Neural Eng. — self-supervised EEG"
+  - "Defossez et al. 2023, Nat. Mach. Intell. — cross-task brain decoding"
+  - "Aristimunha et al. 2025 — EEG2025 Foundation Challenge"
+  - "Meta NeuroAI — https://facebookresearch.github.io/neuroai/"
+  - "NeuralFetch landing — https://facebookresearch.github.io/neuroai/neuralfetch/"
+  - "NeuralSet landing — https://facebookresearch.github.io/neuroai/neuralset/"
+requires_api:
+- eegdash.EEGDashDataset
+- eegdash.viz.style_figure
+- eegdash.viz.use_eegdash_style
+- "neuralfetch.download.Eegdash   # OPTIONAL — gated by neuralfetch install"
+- "neuralset.Study   # OPTIONAL — gated by neuralset install"
+- "neuralset.Segmenter   # OPTIONAL — gated by neuralset install"
+- "neuralset.extractors.EegExtractor   # OPTIONAL — gated by neuralset install"
+- torch.utils.data.DataLoader
+review_rubric_overrides: {}
+rule_overrides:
+  E3.21: exempt

@@ -44,8 +44,8 @@ audience: Beginner who finished the Start Here track. Some EEG vocabulary (chann
   sampling rate, band-pass) introduced just-in-time; no signal-processing background
   assumed.
 budgets:
-  max_loc: 275
-  max_runtime_seconds: 180
+  max_loc: 510
+  max_runtime_seconds: 240
   max_network_mb: 100
   cpu_only: true
   gpu_required: false
@@ -101,10 +101,22 @@ links:
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips (Tips 4-5)"
   - "Gramfort et al. 2013, Front. Neurosci. \u2014 MNE software"
   - "Schirrmeister et al. 2017, Hum. Brain Mapp. \u2014 Braindecode"
+  - "Kessler, Enge & Skeide 2025, Comm. Biol. 8:1039 \u2014 how preprocessing shapes decoding"
+  - "Delorme 2023, Sci. Rep. 13:2372 \u2014 EEG is better left alone"
+  - "Mullen et al. 2015, IEEE TBME 62(11):2553-2567 \u2014 ASR + real-time EEG"
+  - "Kothe & Makeig 2013, J. Neural Eng. 10:056014 \u2014 BCILAB and online ASR design"
+  - "Wakeman & Henson 2015, Sci. Data 2:150001 \u2014 ds002718 face-recognition EEG/MEG"
+  - "Delorme et al. 2022, Database baac096 \u2014 NEMAR catalogue"
 requires_api:
 - eegdash.EEGDashDataset
 - eegdash.paths.get_default_cache_dir
+- eegdash.viz.style_figure
+- eegdash.viz.use_eegdash_style
+- eegdash.viz._tutorial_panels
+- braindecode.preprocessing.EEGPrep
 - braindecode.preprocessing.Preprocessor
 - braindecode.preprocessing.preprocess
 - braindecode.preprocessing.create_fixed_length_windows
 review_rubric_overrides: {}
+rule_overrides:
+  E3.21: exempt

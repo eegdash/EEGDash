@@ -1,16 +1,20 @@
-"""Compare a feature baseline against a neural network on the same split
-======================================================================
+"""Is Pipeline A really better than Pipeline B, or did it luck out on one subject?
+=================================================================================
 
-When a decoder beats a feature baseline by a few accuracy points on one
-held-out subject, the honest question is: did the model actually win,
-or just luck into a friendlier fold? This is the keystone of MOABB-style
-evaluation (Chevallier, Aristimunha et al. 2024,
-doi:10.48550/arXiv.2404.15319): build ONE split manifest, feed both
-pipelines the SAME fold ids, and run a paired test on the per-fold
-deltas. Cisotto & Chicco 2024 (doi:10.7717/peerj-cs.2256, Tip 9) flag
-unpaired evaluation as the most common over-claim in clinical EEG.
-So: does the neural network really beat the linear baseline, or is the
-gap noise?
+A new decoding pipeline beats your linear baseline by three accuracy
+points on the held-out subject in a hackathon notebook. The gap looks
+big until somebody asks the obvious follow-up: would the same gap show
+up if you swap the test subject for any of the others sitting in
+`NEMAR <https://nemar.org>`_ (Delorme et al. 2022,
+doi:10.1093/database/baac096)? When the same N subjects are scored by
+both pipelines you can answer that directly with a paired statistical
+test on the per-subject deltas. Demsar 2006
+(`Statistical comparisons of classifiers <https://www.jmlr.org/papers/v7/demsar06a.html>`_,
+JMLR) is the canonical reference for the recipe; Cisotto & Chicco 2024
+(doi:10.7717/peerj-cs.2256, Tip 9) flag the unpaired comparison as the
+single most common over-claim in clinical EEG. So: does the win
+survive a paired test, and how big is the effect once we strip the
+between-subject variance?
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_54_compare_two_pipelines.png'
@@ -19,30 +23,35 @@ gap noise?
 # Learning objectives
 # -------------------
 #
-# - build ONE cross-subject split manifest reused by two pipelines.
-# - apply the same fold ids to a feature baseline and a small neural network.
-# - assert ``fold_ids_pipeline_a == fold_ids_pipeline_b`` in code, not prose.
-# - run ``scipy.stats.wilcoxon`` on the paired per-fold accuracy deltas.
-# - interpret the p-value alongside the median delta and chance level.
+# - score two pipelines on the SAME N held-out subjects via one shared split manifest.
+# - assert ``fold_ids_pipeline_a == fold_ids_pipeline_b`` in code so the comparison is paired.
+# - compute a paired Wilcoxon p-value, Cohen's d on the deltas, and a 95% CI of the mean delta.
+# - read a three-panel figure that shows per-subject bars, the paired-difference distribution, and the cumulative-wins curve.
+# - phrase the conclusion with the hedging Demsar 2006 recommends.
 #
 # Requirements
 # ------------
 #
-# - Prerequisites: ``plot_12_train_a_baseline``, ``plot_42_features_to_sklearn``.
+# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`,
+#   :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`,
+#   :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
 # - Theory: :doc:`/concepts/leakage_and_evaluation`.
-# - ~5 s on CPU, no GPU, no network.
+# - **Estimated time**: ~5 s on CPU. **Data**: 0 MB (synthetic 12-subject cohort).
 
 # %%
-# Setup -- seed everything (E3.21) and import the paired-evaluation stack.
+# Setup, seed and imports.
 import warnings
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import wilcoxon
+from scipy.stats import ttest_rel, wilcoxon
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+
 from eegdash.splits import (
     apply_split_manifest,
     assert_no_leakage,
@@ -52,6 +61,8 @@ from eegdash.splits import (
 )
 from eegdash.viz import use_eegdash_style
 
+from _compare_pipelines_figure import draw_compare_pipelines_figure
+
 use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 warnings.simplefilter("ignore", category=UserWarning)
@@ -59,12 +70,14 @@ SEED = 42
 np.random.seed(SEED)
 
 # %% [markdown]
-# Step 1 -- Build per-subject windowed metadata
-# ---------------------------------------------
+# Step 1. A 12-subject feature table to compare on
+# --------------------------------------------------
 #
-# We synthesise 12 subjects x 16 windows of band-power features (alpha
-# bump on closed eyes, identical layout to plot_42). On real data you
-# would reload the parquet feature table from plot_40.
+# We synthesise 12 subjects x 16 windows of band-power features
+# (alpha bump on closed eyes, identical layout to plot_42). On real
+# data you would reload the parquet feature table from plot_40, the
+# only thing the comparison cares about is that one row of metadata
+# carries a ``subject`` column the splitter can group on.
 
 # %%
 N_SUBJECTS, N_PER_SUBJECT = 12, 16
@@ -101,26 +114,28 @@ print(
 )
 
 # %% [markdown]
-# Step 2 -- Predict which pipeline wins
+# Step 2. Predict which pipeline wins
 # -------------------------------------
 #
-# **Predict.** Pipeline A is ``LogisticRegression`` on band-power
-# features (the linear baseline); Pipeline B is a small ``MLPClassifier``
-# -- a one-hidden-layer neural network trained with Adam (Pedregosa et
-# al. 2011, doi:10.5555/1953048.2078195). The MLP can fit non-linear
-# contrasts the linear arm cannot, but on this synthetic near-linear
-# setup we expect the two to land within a few accuracy points -- and
-# a few points only matters when per-fold deltas are consistent
-# (Sentance et al. 2019, doi:10.1080/08993408.2019.1608781). Chance ~0.5.
+# **Predict.** Pipeline A is a :class:`~sklearn.linear_model.LogisticRegression`
+# on band-power features (the linear baseline); Pipeline B is a small
+# :class:`~sklearn.neural_network.MLPClassifier`, a one-hidden-layer
+# neural network trained with Adam. The MLP can fit non-linear
+# contrasts the linear arm cannot, but on this near-linear synthetic
+# task we expect the two to land within a few accuracy points.
+# The question Demsar 2006 forces on you: a few points on average is
+# only worth reporting if the per-subject deltas are consistent in
+# sign. Chance ~0.5.
 #
-# Step 3 -- Build ONE cross-subject split manifest
+# Step 3. Build ONE cross-subject split manifest
 # ------------------------------------------------
 #
-# **Run #1.** ``get_splitter("cross_subject", ...)`` keyed on
-# ``subject`` gives a leakage-safe ``GroupKFold``-style split.
-# ``assert_no_leakage`` emits the JSON contract line E5.42 reads. The
-# manifest is built ONCE -- both pipelines will consume the SAME fold
-# ids, which is what makes the comparison paired.
+# **Run.** :func:`eegdash.splits.get_splitter` returns a leave-one-
+# subject-out manifest (``n_folds=N_SUBJECTS``); each fold's test set
+# is exactly one held-out subject. :func:`~eegdash.splits.assert_no_leakage`
+# emits the JSON contract line a downstream auditor can grep for.
+# The manifest is built ONCE, both pipelines will consume the SAME
+# fold ids, which is what makes the comparison paired.
 
 # %%
 splitter = get_splitter(
@@ -130,16 +145,17 @@ manifest = make_split_manifest(
     splitter, metadata["target"].to_numpy(), metadata, target="target"
 )
 overlap = assert_no_leakage(manifest, metadata, by="subject")
-assert overlap == 0, "cross_subject manifest leaked!"
+assert overlap == 0, "cross_subject manifest leaked across subjects."
 n_folds = manifest["n_folds"]
 print(f"manifest: {manifest['splitter_class']} | folds: {n_folds}")
 
 # %% [markdown]
-# Step 4 -- Pipeline A: StandardScaler + LogisticRegression
-# ---------------------------------------------------------
+# Step 4. Score both pipelines on the SAME folds
+# ------------------------------------------------
 #
-# **Run #2.** Loop the manifest folds, fit on train, score on test,
-# collect per-fold accuracies and the chance level. ``random_state=42``
+# The shared scoring loop reads the manifest, fits on train, scores on
+# test, and returns three aligned arrays per pipeline: per-fold
+# accuracy, per-fold subject id, and the chance level. ``random_state``
 # everywhere keeps the comparison byte-stable.
 
 
@@ -173,117 +189,196 @@ pipe_a = Pipeline(
 accs_a, fold_ids_a, chances = run_pipeline(pipe_a)
 print(
     f"Pipeline A (LogReg): mean={np.mean(accs_a):.3f} +/- {np.std(accs_a):.3f} | "
-    f"chance level={np.mean(chances):.3f} (n_folds={n_folds})"
+    f"chance={np.mean(chances):.3f} (n_subjects={n_folds})"
 )
-
-# %% [markdown]
-# Step 5 -- Pipeline B: StandardScaler + MLPClassifier (neural net)
-# -----------------------------------------------------------------
-#
-# **Run #3.** Same scaffolding, different head: a one-hidden-layer
-# neural network (16 ReLU units, Adam). Scaler still fits on train only.
-# The MLP stays small so the tutorial runs in a few seconds on CPU.
 
 # %%
-mlp = MLPClassifier(
-    hidden_layer_sizes=(16,),
-    activation="relu",
-    solver="adam",
-    max_iter=200,
-    random_state=SEED,
+pipe_b = Pipeline(
+    [
+        ("scaler", StandardScaler()),
+        (
+            "clf",
+            MLPClassifier(
+                hidden_layer_sizes=(16,),
+                activation="relu",
+                solver="adam",
+                max_iter=200,
+                random_state=SEED,
+            ),
+        ),
+    ]
 )
-pipe_b = Pipeline([("scaler", StandardScaler()), ("clf", mlp)])
 accs_b, fold_ids_b, _ = run_pipeline(pipe_b)
 print(
     f"Pipeline B (MLP): mean={np.mean(accs_b):.3f} +/- {np.std(accs_b):.3f} | "
-    f"chance level={np.mean(chances):.3f} (n_folds={n_folds})"
+    f"chance={np.mean(chances):.3f} (n_subjects={n_folds})"
 )
 
 # %% [markdown]
-# Step 6 -- Paired Wilcoxon signed-rank test
+# Step 5. Assert the paired contract holds
 # ------------------------------------------
 #
-# **Investigate.** Same fold ids on both sides are the precondition for
-# pairing. We assert the invariant in code (not just prose), then call
-# ``scipy.stats.wilcoxon`` (Wilcoxon 1945, doi:10.2307/3001968) on the
-# per-fold deltas. The Wilcoxon test does not assume normality, so it
-# survives the small-sample regime typical of EEG benchmarks.
+# **Investigate.** Same fold ids on both sides are the precondition
+# for pairing. We assert the invariant in code (not just prose); when
+# it fails the assertion fires before the test, so a future reader
+# never picks the wrong p-value off an unpaired evaluation.
 
 # %%
-assert fold_ids_a == fold_ids_b, "fold ids diverged -- comparison is NOT paired!"
-deltas = np.asarray(accs_b) - np.asarray(accs_a)
-median_delta = float(np.median(deltas))
-# ``zero_method='wilcox'`` matches the textbook definition; ties are
-# dropped from the rank sum.
-wstat, pvalue = wilcoxon(accs_b, accs_a, zero_method="wilcox", correction=False)
+assert fold_ids_a == fold_ids_b, "fold ids diverged: comparison is NOT paired."
+deltas = np.asarray(accs_a) - np.asarray(accs_b)  # A minus B per subject
+n = deltas.size
+# Recover the held-out subject id per fold; under cross-subject CV
+# every test set contains exactly one subject.
+held_out_subjects = []
+for k in range(n_folds):
+    test_mask = apply_split_manifest(metadata, manifest, fold=k, split="test")
+    subjects_in_fold = metadata.loc[test_mask, "subject"].unique().tolist()
+    assert len(subjects_in_fold) == 1, "cross_subject fold contained >1 subject."
+    held_out_subjects.append(str(subjects_in_fold[0]))
 print(
-    f"paired Wilcoxon: W={float(wstat):.2f} | p={float(pvalue):.3f} | "
-    f"median(B-A)={median_delta:+.3f}"
+    f"paired contract: {n} per-subject deltas | "
+    f"sign(A-B): wins={int((deltas > 0).sum())}, "
+    f"ties={int((deltas == 0).sum())}, "
+    f"losses={int((deltas < 0).sum())}"
 )
 
 # %% [markdown]
-# Step 7 -- Per-fold paired comparison table
-# ------------------------------------------
+# Step 6. Wilcoxon, paired t-test, Cohen's d, 95% CI
+# ----------------------------------------------------
 #
-# A "paired plot" connects each fold's two scores with a line so the
-# reader can eyeball whether B beats A consistently or only on average.
-# We tabulate the per-fold rows; in a notebook you would also render
-# the connected-line figure (figure_paired_comparison.png).
+# Demsar 2006 recommends the Wilcoxon signed-rank test as the default
+# paired comparison: it does not assume the deltas are normally
+# distributed, which is the case you almost never check in practice.
+# We still report :func:`scipy.stats.ttest_rel` alongside so the
+# reader can see whether the two tests agree, they usually do, but
+# disagreement is informative when it happens.
+#
+# Cohen's d on the paired differences is ``mean(d) / sd(d)``; this is
+# the standardised effect size, comparable across studies and units.
+# A 95% CI on the mean delta gives the practical-significance ruler:
+# values inside the CI are the effects you cannot rule out at this
+# sample size.
+
+# %%
+mean_delta = float(deltas.mean())
+sd_delta = float(deltas.std(ddof=1)) if n > 1 else 0.0
+se_delta = sd_delta / np.sqrt(n) if n > 0 else 0.0
+ci_lo, ci_hi = mean_delta - 1.96 * se_delta, mean_delta + 1.96 * se_delta
+cohens_d = mean_delta / sd_delta if sd_delta > 0 else 0.0
+
+# ``zero_method='wilcox'`` matches the textbook definition; ties are
+# dropped from the rank sum. ``correction=False`` keeps the small-N
+# normal approximation off so the p-value is the exact one.
+wstat, p_wilcoxon = wilcoxon(accs_a, accs_b, zero_method="wilcox", correction=False)
+tstat, p_ttest = ttest_rel(accs_a, accs_b)
+print(
+    f"Wilcoxon: W={float(wstat):.2f} | p={float(p_wilcoxon):.3f}\n"
+    f"paired t : t={float(tstat):.2f} | p={float(p_ttest):.3f}\n"
+    f"mean(A-B)={mean_delta:+.3f} | 95% CI=[{ci_lo:+.3f}, {ci_hi:+.3f}] | "
+    f"Cohen's d={cohens_d:+.2f} (n={n})"
+)
+
+# %% [markdown]
+# Step 7. Per-subject paired comparison table
+# ---------------------------------------------
+#
+# Tabulate the per-subject rows so the reader can scan which subjects
+# A wins on, which it loses on, and where the deltas concentrate. The
+# next cell turns the same numbers into the three-panel figure.
 
 # %%
 paired_df = pd.DataFrame(
     {
-        "fold": np.arange(n_folds),
+        "subject": held_out_subjects,
         "pipeline_a_acc": accs_a,
         "pipeline_b_acc": accs_b,
-        "delta_b_minus_a": deltas,
+        "delta_a_minus_b": deltas,
         "chance": chances,
     }
 )
 print(paired_df.to_string(index=False, float_format=lambda v: f"{v:.3f}"))
 
 # %% [markdown]
-# Result -- report the comparison with appropriate hedging
-# --------------------------------------------------------
+# Step 8. Read the three-panel figure
+# -------------------------------------
+#
+# **Investigate.** The figure that ships with this tutorial reads
+# left-to-right as the argument Demsar 2006 would write up:
+#
+# - Panel 1 (per-subject paired bars, sorted by Pipeline A accuracy)
+#   shows the raw evidence the reader needs to judge the win/loss
+#   pattern: are A's wins clustered on easy subjects, or do they
+#   spread across the cohort?
+# - Panel 2 (paired-difference histogram with mean line and 95% CI
+#   shading) makes the size and uncertainty of the average effect
+#   visible. The Wilcoxon p-value, Cohen's d, and ``n`` are stamped
+#   into the panel so the figure stands alone.
+# - Panel 3 (cumulative-wins curve) is the per-subject answer to
+#   "would I always pick A?" The diagonal is the unanimous-wins
+#   bound; the flat line is the no-wins bound; the observed curve
+#   tells you when in the sorted sequence the wins came in.
+
+# %%
+fig = draw_compare_pipelines_figure(
+    pipeline_a_scores=accs_a,
+    pipeline_b_scores=accs_b,
+    pipeline_names=("LogReg", "MLP"),
+    subject_ids=held_out_subjects,
+    p_value=float(p_wilcoxon),
+    cohens_d=cohens_d,
+    chance_level=float(np.mean(chances)),
+    plot_id="plot_54",
+)
+plt.show()
+
+# %% [markdown]
+# Result: report the comparison with the hedging Demsar 2006 asks for
+# ---------------------------------------------------------------------
 #
 # Single dataset, fixed hyperparameters, 12 cross-subject folds: the
-# headline is median delta + Wilcoxon p-value + chance-level baseline.
+# headline is mean delta + Wilcoxon p-value + Cohen's d + chance-level
+# baseline. Demsar 2006 reminds the reader that a single-dataset
+# paired test answers a narrow question (does A beat B on these N
+# subjects from this distribution?), not the broader "is A a better
+# pipeline?", that needs cross-dataset replication.
 
 # %%
 print(
-    f"Pipeline B - Pipeline A = {100 * median_delta:+.2f} accuracy points; "
-    f"paired Wilcoxon p = {float(pvalue):.3f} (n_folds = {n_folds}); "
-    f"chance = {np.mean(chances):.3f}"
+    f"Pipeline A - Pipeline B = {100 * mean_delta:+.2f} accuracy points "
+    f"(95% CI [{100 * ci_lo:+.2f}, {100 * ci_hi:+.2f}]); "
+    f"paired Wilcoxon p = {float(p_wilcoxon):.3f}, "
+    f"Cohen's d = {cohens_d:+.2f}, "
+    f"n_subjects = {n}, chance = {np.mean(chances):.3f}"
 )
 print("Hedge: small sample, single mock dataset, fixed hyperparameters.")
 
 # %% [markdown]
-# A common mistake -- and how to recover
+# A common mistake, and how to recover
 # --------------------------------------
 #
-# **Run.** Calling ``wilcoxon`` on empty per-fold deltas (e.g. when one
-# pipeline was never evaluated) raises ``ValueError``. We trigger it on
-# purpose with ``try/except`` so you see exactly what the error looks
-# like.
+# **Run.** Calling :func:`~scipy.stats.wilcoxon` on empty per-subject
+# deltas (e.g. when one pipeline was never evaluated on any fold)
+# raises :class:`ValueError`. We trigger it on purpose so you see the
+# error message and the recovery path next to it.
 
 # %%
 try:
-    empty_deltas: list[float] = []  # would happen if Pipeline B was skipped
+    empty_deltas: list[float] = []  # what you would get if pipe_b never ran
     if len(empty_deltas) == 0:
         raise ValueError("zero_method='wilcox' requires at least one non-zero delta")
     wilcoxon(empty_deltas)
 except (ValueError, RuntimeError) as exc:
     print(f"Caught {type(exc).__name__}: {exc}")
     # Recovery: ensure both pipelines are evaluated on the same manifest.
-    print(f"Recovery: paired deltas have {len(deltas)} entries -- re-run pipe_b.")
+    print(f"Recovery: paired deltas have {len(deltas)} entries, re-run pipe_b.")
 
 # %% [markdown]
-# Modify -- swap Pipeline B for a different model
-# -----------------------------------------------
+# Modify: swap Pipeline B for a different head
+# ----------------------------------------------
 #
 # **Modify.** Same scaffolding, different head: replace the MLP with a
-# stronger-regularised LogReg (``C=0.1``) and rerun. The paired contract
-# still has to hold.
+# stronger-regularised :class:`~sklearn.linear_model.LogisticRegression`
+# (``C=0.1``) and rerun. The paired contract still has to hold.
 
 # %%
 pipe_b_alt = Pipeline(
@@ -293,25 +388,53 @@ pipe_b_alt = Pipeline(
     ]
 )
 accs_b_alt, fold_ids_b_alt, _ = run_pipeline(pipe_b_alt)
-assert fold_ids_a == fold_ids_b_alt, "Modify variant broke the paired contract!"
-_, p_alt = wilcoxon(accs_b_alt, accs_a, zero_method="wilcox")
-delta_alt = np.median(np.asarray(accs_b_alt) - np.asarray(accs_a))
+assert fold_ids_a == fold_ids_b_alt, "Modify variant broke the paired contract."
+deltas_alt = np.asarray(accs_a) - np.asarray(accs_b_alt)
+sd_alt = float(deltas_alt.std(ddof=1)) if deltas_alt.size > 1 else 0.0
+d_alt = float(deltas_alt.mean()) / sd_alt if sd_alt > 0 else 0.0
+_, p_alt = wilcoxon(accs_a, accs_b_alt, zero_method="wilcox")
 print(
-    f"Modify (LogReg C=0.1) vs A: median delta={delta_alt:+.3f} | p={float(p_alt):.3f}"
+    f"Modify (LogReg C=0.1): mean(A-B')={float(deltas_alt.mean()):+.3f} | "
+    f"p={float(p_alt):.3f} | Cohen's d={d_alt:+.2f}"
 )
 
 # %% [markdown]
 # Try it yourself / Extensions
 # ----------------------------
 #
-# - widen the MLP to ``hidden_layer_sizes=(64, 32)`` and rerun.
-# - reduce ``N_SUBJECTS`` to 6 and watch the Wilcoxon p-value lose power.
-# - add a third pipeline and run pairwise Wilcoxon with Bonferroni.
+# - **Mini-project.** Drop ``N_SUBJECTS`` from 12 to 6 and watch the
+#   95% CI on the mean delta widen by roughly ``sqrt(2)``. The
+#   Wilcoxon test loses power fastest because its rank sum has fewer
+#   distinct values to discriminate.
+# - Run a third pipeline (e.g. ``RidgeClassifier``) and apply the
+#   Bonferroni correction across the three pairwise Wilcoxon tests
+#   (Demsar 2006, Section 3.2). Report the corrected p-values.
+# - Replace the synthetic feature table with a real OpenNeuro cohort
+#   pulled via NEMAR (Delorme et al. 2022). The manifest contract
+#   stays identical; only the feature loader changes.
+#
+# Wrap-up
+# -------
+#
+# We scored two pipelines on the same 12 cross-subject folds, asserted
+# the paired contract in code, ran Wilcoxon and a paired t-test on
+# the per-subject deltas, and reported a 95% CI plus Cohen's d. The
+# three-panel figure makes the per-subject win/loss pattern, the
+# average-effect uncertainty, and the cumulative-wins shape visible
+# in one read.
 #
 # References
 # ----------
 #
-# - Chevallier, Aristimunha et al. 2024 (doi:10.48550/arXiv.2404.15319) -- MOABB paired pipeline comparison.
-# - Cisotto & Chicco 2024 (doi:10.7717/peerj-cs.2256) -- ten clinical EEG tips, Tip 9 on evaluation.
-# - Pedregosa et al. 2011 (doi:10.5555/1953048.2078195) -- scikit-learn ``Pipeline``.
-# - Wilcoxon 1945 (doi:10.2307/3001968) -- the signed-rank test.
+# - Delorme et al. 2022, NEMAR: an open-access data, tools and compute
+#   resource operating on neuroelectromagnetic data, *Database* baac096.
+#   https://doi.org/10.1093/database/baac096
+# - Demsar 2006, Statistical comparisons of classifiers over multiple
+#   data sets, *JMLR* 7. https://www.jmlr.org/papers/v7/demsar06a.html
+# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ CS*.
+#   https://doi.org/10.7717/peerj-cs.2256, Tip 9 on paired evaluation.
+# - Wilcoxon 1945, Individual comparisons by ranking methods,
+#   *Biometrics Bulletin*. https://doi.org/10.2307/3001968
+# - Pedregosa et al. 2011, scikit-learn ``Pipeline`` and
+#   ``MLPClassifier``, *JMLR* 12. https://dl.acm.org/doi/10.5555/1953048.2078195
+# - Concept: :doc:`/concepts/leakage_and_evaluation`.

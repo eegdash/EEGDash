@@ -1,0 +1,98 @@
+id: project_clinical_dataset_summary
+category: applied
+kind: tutorial
+output_kind: python
+title: Survey a clinical EEG dataset before training a model
+state: proposed
+assignee: null
+difficulty: 3
+estimated_runtime_minutes: 1
+hardware: cpu
+network: cached_first_run
+prerequisites:
+- plot_00_first_search
+- plot_01_first_recording
+cites:
+  plan:
+  - tutorial_restructure_plan.md#applied-projects
+  rubric:
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E4.31
+  - compass_artifact.md#E4.32
+  - compass_artifact.md#E5.44
+learning_objectives:
+- After this project starter you will be able to instantiate `EEGDashDataset(dataset='ds004504',
+  cache_dir=...)` and read its `description` DataFrame without downloading any signal
+  bytes.
+- After this project starter you will be able to aggregate the participants.tsv columns
+  (`Group`, `Age`, `Gender`, `MMSE`) into per-condition counts.
+- After this project starter you will be able to compute recording-duration and channel-count
+  distributions from `ds.records` alone.
+- After this project starter you will be able to render the four headline numbers
+  (`n_subjects`, `n_recordings`, mean duration, `n_channels`) a project plan needs
+  before any modelling.
+audience: Intermediate user who has loaded one EEGDash recording (plot_01) and now
+  wants to scope a clinical EEG project. Knows basic BIDS entities and pandas; learns
+  how to interrogate the catalog before training.
+budgets:
+  max_loc: 360
+  max_runtime_seconds: 120
+  max_network_mb: 50
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/project_clinical_dataset_summary.png
+  figures:
+  - figure_clinical_summary.png
+asserted_invariants:
+- 'len(ds.records) == ds.description.shape[0]   # one record per row'
+- 'set(ds.description["group"].dropna().unique()).issubset({"A", "F", "C"})   # ds004504
+  has three groups'
+- 'records_df["nchans"].nunique() == 1   # ds004504 ships uniform channel count'
+- 'records_df["sfreq"].nunique() == 1   # ds004504 ships uniform sampling rate'
+sections_required:
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 5
+    labelled_subgoals: true
+- checkpoints:
+    min: 4
+- result
+- wrapup
+- links
+primm_required:
+  predict: 1
+  run: '>=2'
+  investigate: 1
+  modify: 1
+faded_scaffolding:
+  required: true
+  pattern: completion
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+  - subject_count_in_subtitle
+  - dataset_id_in_subtitle
+  - source_provenance_footer
+links:
+  concept: docs/source/concepts/eegdash_objects.rst
+  api: eegdash.EEGDashDataset
+  related_how_to:
+  - how_to_work_offline
+  - how_to_download_a_dataset
+  related_papers:
+  - "Miltiadous et al. 2023, Data, ds004504 Alzheimer's disease, frontotemporal dementia and healthy subjects"
+  - "Cisotto and Chicco 2024, PeerJ CS, clinical EEG ten quick tips"
+  - "Delorme et al. 2022, Database, NEMAR open compute resource"
+  - "Pernet et al. 2019, Sci. Data, EEG-BIDS extension"
+requires_api:
+- eegdash.EEGDashDataset
+- eegdash.viz.use_eegdash_style
+- eegdash.viz.style_figure
+review_rubric_overrides: {}

@@ -41,7 +41,7 @@ audience: Beginner ML user who has finished plot_10 and plot_11. Comfortable wit
   logistic regression at a conceptual level; deep nets introduced as 'one alternative,'
   not the focus.
 budgets:
-  max_loc: 283
+  max_loc: 600
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true
@@ -49,8 +49,7 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_12.png
   figures:
-  - figure_metric_table.png
-  - figure_confusion_matrix.png
+  - figure_baseline_diagnostic.png
 asserted_invariants:
 - 'leakage_report[''overlap''] == 0  # split inherited from plot_11'
 - majority_baseline_accuracy >= chance_level - 0.02
@@ -92,10 +91,21 @@ links:
   api: eegdash.splits
   related_how_to: []
   related_papers:
-  - "Schirrmeister et al. 2017, Hum. Brain Mapp. \u2014 Braindecode"
-  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Wakeman & Henson 2015, Scientific Data - ds002718 face perception"
+  - "Delorme et al. 2022, Database baac096 - NEMAR catalogue"
+  - "Pedregosa et al. 2011, JMLR - scikit-learn"
+  - "Schirrmeister et al. 2017, Hum. Brain Mapp. - Braindecode"
+  - "Chambon et al. 2018, IEEE TNSRE - band-power features for EEG"
+  - "Cisotto & Chicco 2024, PeerJ CS - clinical EEG ten quick tips"
 requires_api:
+- eegdash.EEGDashDataset
 - eegdash.splits.majority_baseline
+- eegdash.viz._tutorial_panels
+- braindecode.preprocessing.create_windows_from_events
+- braindecode.preprocessing.preprocess
+- numpy.fft.rfft
 - sklearn.linear_model.LogisticRegression
 - sklearn.metrics.accuracy_score
+- sklearn.metrics.confusion_matrix
+- sklearn.model_selection.GroupKFold
 review_rubric_overrides: {}

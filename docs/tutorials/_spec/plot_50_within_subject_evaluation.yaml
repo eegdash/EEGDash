@@ -35,7 +35,7 @@ learning_objectives:
   - "After this tutorial you will be able to report per-subject accuracy with chance level and a class-balance check, and explain why the resulting score does not generalise to new subjects."
 audience: "Intermediate user with plot_11 and plot_12 done. Knows that subject leakage is bad in cross-subject setups; this lesson contrasts that pitfall with the legitimate case where staying within a subject is the scientific question."
 budgets:
-  max_loc: 316
+  max_loc: 480
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true
@@ -87,8 +87,11 @@ links:
   related_how_to:
     - how_to_use_moabb_splitters
   related_papers:
+    - "Delorme et al. 2022, NEMAR (10.1093/database/baac096) — public benchmark host"
     - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319) — within-subject vs cross-subject evaluation"
-    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips (Tip 9)"
+    - "Cisotto & Chicco 2024, PeerJ CS (10.7717/peerj-cs.2256) — clinical EEG ten quick tips (Tip 9)"
+    - "Brookshire et al. 2024, Frontiers in Neuroscience 18:1373515 (10.3389/fnins.2024.1373515) — data leakage in deep-learning EEG studies"
+    - "Combrisson & Jerbi 2015, Journal of Neuroscience Methods 250 (10.1016/j.jneumeth.2015.01.010) — chance-level statistics for decoding accuracy"
 requires_api:
   - "eegdash.splits.get_splitter"
   - "eegdash.splits.make_split_manifest"
@@ -98,4 +101,6 @@ requires_api:
   - "eegdash.splits.majority_baseline"
   - "sklearn.linear_model.LogisticRegression"
   - "sklearn.metrics.accuracy_score"
+  - "sklearn.metrics.ConfusionMatrixDisplay"
+  - "sklearn.model_selection.LeaveOneGroupOut"
 review_rubric_overrides: {}

@@ -1,43 +1,61 @@
-"""Reuse spectral computation with feature trees
-=================================================
+"""How do classical EEG markers compose on top of one Welch PSD?
+==================================================================
 
-Welch's PSD underlies every classical EEG marker -- band power,
-spectral entropy, peak frequency, slope. Asking for four band powers
-as four independent features re-runs the FFT four times.
-:class:`~eegdash.features.FeatureExtractor` solves this with a small
-dependency-tree API: declare the PSD once, hang every band feature
-off it (Cisotto & Chicco 2024 Tip 5, doi:10.7717/peerj-cs.2256).
+Welch's method (Welch 1967) returns one power spectrum per window; band
+power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
+et al. 2007; Donoghue et al. 2020) are four scalars *derived* from that
+same spectrum. If a feature dictionary asks for four band powers as
+four independent features, the FFT runs four times per window. The
+:class:`~eegdash.features.FeatureExtractor` dependency tree shares one
+``spectral_preprocessor`` across every spectral feature so the FFT runs
+once. The deliverable for this tutorial is one feature table with the
+four derived columns, plus a three-panel figure that names the
+hierarchy, shows each feature's distribution, and prints the 4x4
+Pearson correlation between them.
 
-If alpha-, beta-, theta- and delta-band powers each call Welch
-separately, how many PSDs run per batch -- and what does sharing one
+Live data come from the same 1-40 Hz FIR-filtered windows used in
+:doc:`/auto_examples/tutorials/40_features/plot_40_first_features` to
+keep the tutorial self-contained and offline-runnable, with the same
+HBN resting-state ds005514 recipe served through `NEMAR
+<https://nemar.org>`_ (Delorme et al. 2022) and the BIDS conventions
+of Pernet et al. (2019); for clinical EEG good-practice on band
+selection see Cisotto and Chicco (2024).
+
+.. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_41_feature_trees.png'
+
+So if alpha-, beta-, theta-, and delta-band powers each call Welch
+separately, how many PSDs run per batch, and what does sharing one
 ``spectral_preprocessor`` change?
 """
-
-# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_41_feature_trees.png'
 
 # %% [markdown]
 # Learning objectives
 # -------------------
-# After this tutorial you will be able to:
-#
 # - Identify when independent feature definitions cause repeated PSD work.
-# - Build a shared ``spectral_preprocessor`` feeding multiple band features.
+# - Build a shared ``spectral_preprocessor`` and hang four derived features off it (band power, spectral entropy, peak frequency, 1/f slope).
 # - Read the dependency tree printed by :class:`~eegdash.features.FeatureExtractor`.
 # - Compute the wall-time speedup from sharing one PSD versus N.
 # - Implement a custom decorated feature on the same shared PSD.
-#
+
+# %% [markdown]
 # Requirements
 # ------------
-# - Estimated time ~5 s on CPU. No GPU. No network.
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
+# - About 5 s on CPU. No GPU. No network.
+# - Prerequisites:
+#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
 #   :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`.
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 
 # %%
-# Setup -- imports, seed, welch counter (Gramfort 2013).
+# Setup. ``np.random.seed`` makes the synthetic recordings reproducible
+# (E3.21). One global Welch counter lets us prove the shared-PSD claim
+# at runtime; the counter is reset to the original Welch in a try/finally
+# so subsequent tutorials in the same sphinx-gallery process see a clean
+# ``_spec.welch`` (Gramfort et al. 2013).
 import time
 from functools import partial
 
+import matplotlib.pyplot as plt
 import mne
 import numpy as np
 import pandas as pd
@@ -50,7 +68,11 @@ from eegdash.features import (
     extract_features,
     feature_predecessor,
     spectral_bands_power,
+    spectral_db_preprocessor,
+    spectral_entropy,
+    spectral_normalized_preprocessor,
     spectral_preprocessor,
+    spectral_slope,
     univariate_feature,
 )
 from eegdash.features.feature_bank import spectral as _spec
@@ -64,26 +86,54 @@ PSD_CALLS, _TAG, _orig_welch = {"flat": 0, "tree": 0}, {"value": "tree"}, _spec.
 
 
 def _counting_welch(*a, **k):
+    """Wrap :func:`scipy.signal.welch` to count invocations per run."""
     PSD_CALLS[_TAG["value"]] = PSD_CALLS[_TAG["value"]] + 1
     return _orig_welch(*a, **k)
 
 
-# Sphinx-gallery executes many tutorials in one process, so we patch in
-# a try/finally so ``_spec.welch`` is always restored after Run #2.
 _spec.welch = _counting_welch
 
 # %% [markdown]
-# Step 1 -- Build a small windowed dataset
-# ----------------------------------------
-# Two 16 s recordings at 128 Hz, four parieto-occipital channels, 10 Hz
-# alpha sine in eyes-closed. The 1-40 Hz FIR band-pass writes
-# ``info["highpass"]/lowpass`` so ``spectral_preprocessor`` reads them.
+# Mental model: PSD is the parent of every classical EEG marker
+# -------------------------------------------------------------
+# Welch's PSD takes one window of shape ``(n_channels, n_times)`` and
+# returns a power spectrum of shape ``(n_channels, n_freqs)``. Every
+# classical resting-state marker is one or two lines of NumPy applied
+# to that spectrum:
+#
+# .. code-block:: text
+#
+#       raw window  ->  Welch PSD  ->  band power
+#                                     spectral entropy
+#                                     peak frequency
+#                                     1/f slope
+#
+# Two consequences land immediately. First, if four features each
+# rebuild the same PSD, the FFT runs four times instead of once.
+# Second, the four features read different views of the spectrum (raw
+# power for band integrals, normalised power for entropy, log power
+# for the 1/f fit). A shared ``spectral_preprocessor`` plus
+# :func:`~eegdash.features.feature_predecessor`-tagged consumers solve
+# both at once.
+
+# %% [markdown]
+# Step 1: Build a small windowed dataset
+# --------------------------------------
+# Two 16 s recordings at 128 Hz on a 4-channel parieto-occipital
+# montage. Eyes-closed gets a 10 Hz alpha sine on top of the noise
+# floor; eyes-open does not. The non-causal 1-40 Hz FIR band-pass
+# writes ``info["highpass"]`` and ``info["lowpass"]`` so that the
+# downstream ``spectral_preprocessor`` can read them when picking the
+# integration window. Synthetic data keep the tutorial offline; the
+# same code path runs on real ``ds005514`` windows from
+# :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
 
 # %%
 SFREQ, CH_NAMES, WIN = 128, ["O1", "Oz", "O2", "Cz"], int(2.0 * 128)
 
 
 def _make_raw(eyes_open: bool, seed: int) -> mne.io.Raw:
+    """Build a synthetic 16 s ``Raw`` with optional 10 Hz alpha sine."""
     n = SFREQ * 16
     data = np.random.default_rng(seed).standard_normal((len(CH_NAMES), n)) * 1e-6
     if not eyes_open:
@@ -118,36 +168,52 @@ windows = create_fixed_length_windows(
     drop_last_window=True,
     preload=True,
 )
-print(
-    f"windows: n_recordings=2 | n_windows={sum(len(d) for d in windows.datasets)}"
-    f" @ {SFREQ} Hz"
-)
+n_windows = sum(len(d) for d in windows.datasets)
+pd.Series(
+    {
+        "n_recordings": 2,
+        "n_windows": n_windows,
+        "n_channels": len(CH_NAMES),
+        "sfreq (Hz)": SFREQ,
+        "window_samples": WIN,
+    },
+    name="value",
+).to_frame()
 
 # %% [markdown]
-# Step 2 -- Predict (PRIMM)
-# -------------------------
-# **Predict.** Four independent band-power features each run their own
-# Welch internally -- expect *four PSDs per batch*. With one shared
-# ``spectral_preprocessor`` it should drop to *one PSD per batch*.
-# Predict the speedup before running.
+# Step 2: Predict (PRIMM)
+# -----------------------
+# **Predict.** Four band-power features built as four independent
+# extractors each call Welch separately, so the FFT runs four times per
+# batch. With one shared ``spectral_preprocessor`` the count should
+# drop to one per batch. Predict the speedup before running.
 
 # %% [markdown]
-# Step 3 -- Run #1: WITHOUT the tree
-# ----------------------------------
-# **Run.** Each band gets its own top-level :class:`FeatureExtractor`
-# with its own ``spectral_preprocessor`` -- the FFT runs once per band
-# per batch.
+# Step 3: Run #1, without the tree
+# --------------------------------
+# **Run.** Each band gets its own top-level
+# :class:`~eegdash.features.FeatureExtractor` with its own
+# ``spectral_preprocessor``. The FFT runs once per band per batch; the
+# Welch counter records the redundant calls.
 
 # %%
 BANDS = {"delta": (1, 4.5), "theta": (4.5, 8), "alpha": (8, 12), "beta": (12, 30)}
 
 
-def _band_pow(n, lim):
-    return partial(spectral_bands_power, bands={n: lim})
+def _band_pow(name, lim):
+    """Return a ``spectral_bands_power`` partial for one named band."""
+    return partial(spectral_bands_power, bands={name: lim})
 
 
 def _psd_pre():
-    return partial(spectral_preprocessor, window_size_in_sec=1.0)
+    """Return a ``spectral_preprocessor`` partial with a 2 s segment."""
+    return partial(
+        spectral_preprocessor,
+        fs=SFREQ,
+        nperseg=int(2.0 * SFREQ),
+        f_min=1.0,
+        f_max=40.5,
+    )
 
 
 flat_features = {
@@ -163,9 +229,10 @@ runtime_flat = time.perf_counter() - t0
 psds_flat = PSD_CALLS["flat"]
 
 # %% [markdown]
-# Step 4 -- Investigate the flat run
-# ----------------------------------
-# **Investigate.** Every band rebuilt the PSD: ``n_bands * n_batches``.
+# Step 4: Investigate the flat run
+# --------------------------------
+# **Investigate.** Every band rebuilt the PSD. The total Welch count
+# equals ``n_bands * n_batches``.
 
 # %%
 print(
@@ -173,10 +240,11 @@ print(
 )
 
 # %% [markdown]
-# Step 5 -- Run #2: WITH the tree (shared PSD)
-# --------------------------------------------
+# Step 5: Run #2, with the tree (shared PSD)
+# ------------------------------------------
 # **Run.** One ``spectral_preprocessor`` at the top, four band features
-# below. Printing the extractor renders the dependency tree.
+# below. Printing the extractor renders the dependency tree exactly as
+# :func:`~eegdash.features.get_feature_predecessors` would describe it.
 
 # %%
 tree_extractor = FeatureExtractor(
@@ -192,13 +260,12 @@ runtime_tree = time.perf_counter() - t0
 psds_tree = PSD_CALLS["tree"]
 
 # %% [markdown]
-# Step 6 -- Investigate the speedup
-# ---------------------------------
+# Step 6: Investigate the speedup
+# -------------------------------
 # **Investigate.** Same row count, identical band columns, but the PSD
-# counter dropped 4x. :func:`~eegdash.features.get_feature_predecessors`
-# gives the same dependency view programmatically. After Run #1 and
-# Run #2 we restore ``_spec.welch`` (try/finally) so any subsequent
-# tutorial in the same sphinx-gallery process sees the original Welch.
+# counter dropped 4x. After Run #1 and Run #2 we restore
+# ``_spec.welch`` in a ``try``/``finally`` so any subsequent tutorial in
+# the same sphinx-gallery process sees the original Welch.
 
 # %%
 try:
@@ -215,13 +282,188 @@ finally:
     print("welch restored")
 
 # %% [markdown]
-# A common mistake -- and how to recover
-# --------------------------------------
+# Step 7: Four derived markers on one shared PSD
+# ----------------------------------------------
+# Band power is one of four standard derivations from the PSD. The other
+# three live in :mod:`eegdash.features.feature_bank.spectral`:
+# :func:`~eegdash.features.spectral_entropy` (normalised PSD, minus sum of
+# ``p * log(p)``); peak frequency (argmax inside a band, the individual
+# alpha frequency anchor; Demanuele et al. 2007); and
+# :func:`~eegdash.features.spectral_slope` (least-squares fit of
+# ``log P(f) = a * log(f) + b`` on the decibel spectrum, with FOOOF as
+# the periodic / aperiodic split; Donoghue et al. 2020). Each consumer
+# is decorated with the matching
+# :func:`~eegdash.features.feature_predecessor`, so the tree wires the
+# normalised, raw, and decibel views of the same Welch output to the
+# four leaves without recomputing the FFT.
+
+
+# %%
+@feature_predecessor(spectral_preprocessor)
+@univariate_feature
+def alpha_band_power(f, p, /):
+    """Total power in the 8-12 Hz band, channel-wise."""
+    mask = (f >= 8.0) & (f <= 12.0)
+    return p[..., mask].sum(axis=-1)
+
+
+@feature_predecessor(spectral_preprocessor)
+@univariate_feature
+def alpha_peak_frequency(f, p, /):
+    """Argmax frequency inside the 8-12 Hz alpha band, channel-wise."""
+    mask = (f >= 8.0) & (f <= 12.0)
+    f_band = f[mask]
+    p_band = p[..., mask]
+    idx = np.argmax(p_band, axis=-1)
+    return f_band[idx]
+
+
+markers = FeatureExtractor(
+    {
+        "alpha_pow": alpha_band_power,
+        "alpha_peak": alpha_peak_frequency,
+        "norm": FeatureExtractor(
+            {"spec_ent": spectral_entropy},
+            preprocessor=spectral_normalized_preprocessor,
+        ),
+        "db": FeatureExtractor(
+            {"slope_1f": spectral_slope},
+            preprocessor=spectral_db_preprocessor,
+        ),
+    },
+    preprocessor=_psd_pre(),
+)
+
+# %% [markdown]
+# .. note::
 #
+#    Spectral entropy needs the *normalised* PSD; the 1/f slope needs
+#    the PSD in decibels. Two inner extractors hang those derived
+#    preprocessors off the parent ``spectral_preprocessor``, so the FFT
+#    still runs once per window. :func:`~eegdash.features.spectral_slope`
+#    returns ``{'exp': ..., 'int': ...}``; the extractor expands it into
+#    one column per key (``db_slope_1f_exp_<channel>``, ``..._int_...``).
+
+# %%
+markers_table = extract_features(
+    windows, markers, batch_size=64, n_jobs=1
+).to_dataframe(include_target=True)
+print(
+    "marker columns (first 10):",
+    [c for c in markers_table.columns[:10]],
+)
+print(f"markers table shape: {markers_table.shape}")
+
+# %% [markdown]
+# Step 8: Reduce the per-channel markers to four scalars per window
+# -----------------------------------------------------------------
+# Each marker comes back as one scalar per channel; the figure wants one
+# scalar per window per marker. We average over the four
+# parieto-occipital channels per row. On a real recording the right
+# reduction is task-specific (Cisotto and Chicco 2024 Tip 5).
+
+
+# %%
+def _mean_over_channels(df: pd.DataFrame, prefix: str) -> np.ndarray:
+    """Average ``<prefix>_<channel>`` columns into one scalar per row."""
+    cols = [c for c in df.columns if any(c == f"{prefix}_{ch}" for ch in CH_NAMES)]
+    return df[cols].to_numpy().mean(axis=1)
+
+
+feature_names = ["band power", "spectral entropy", "peak frequency", "1/f slope"]
+band_pow = _mean_over_channels(markers_table, "alpha_pow")
+spec_ent = _mean_over_channels(markers_table, "norm_spec_ent")
+peak_f = _mean_over_channels(markers_table, "alpha_peak")
+# spectral_slope returns {'exp', 'int'}; we want the slope ('exp').
+slope = _mean_over_channels(markers_table, "db_slope_1f_exp")
+derived = np.stack([band_pow, spec_ent, peak_f, slope], axis=1)
+print(f"derived feature matrix shape: {derived.shape}")
+# Band power lives at the picovolt^2/Hz scale (~1e-12), so we report the
+# summary in scientific notation rather than rounded floats.
+print(
+    pd.DataFrame(derived, columns=feature_names)
+    .agg(["mean", "std"])
+    .map(lambda v: f"{v:.3g}")
+    .to_string()
+)
+
+# %% [markdown]
+# Step 9: Compute the per-window Welch PSD for the figure
+# -------------------------------------------------------
+# The leaf thumbnails in Panel 1 show what each derived feature reads
+# off the spectrum. The PSD is computed once from the windowed dataset
+# using ``nperseg = sfreq`` (1 s segments) to match
+# ``spectral_preprocessor``.
+
+# %%
+from scipy.signal import welch as _welch_clean
+
+
+def _stack_window_array(windows_obj):
+    """Concatenate windows into ``(n_windows, n_channels, n_times)``."""
+    arrays = []
+    for sub in windows_obj.datasets:
+        for i in range(len(sub)):
+            arrays.append(np.asarray(sub[i][0]))
+    return np.stack(arrays, axis=0)
+
+
+X_windows = _stack_window_array(windows)
+freqs, psd_array = _welch_clean(X_windows, fs=SFREQ, nperseg=SFREQ, axis=-1)
+psd_array = psd_array[..., (freqs >= 1.0) & (freqs <= 40.0)]
+freqs = freqs[(freqs >= 1.0) & (freqs <= 40.0)]
+pd.Series(
+    {
+        "X.shape": str(X_windows.shape),
+        "psd_array.shape": str(psd_array.shape),
+        "freqs.shape": str(freqs.shape),
+        "f_min (Hz)": float(freqs.min()),
+        "f_max (Hz)": float(freqs.max()),
+    },
+    name="value",
+).to_frame()
+
+# %% [markdown]
+# Step 10: Plot the feature tree, distributions, and correlations
+# ---------------------------------------------------------------
+# Panel 1 redraws the dependency tree with a tiny PSD thumbnail inside
+# each leaf. Panel 2 shows the per-window distribution of each derived
+# scalar. Panel 3 reports the 4x4 Pearson correlation between the four
+# columns; band power and 1/f slope typically anti-correlate on
+# alpha-rich windows. The drawing helpers live in a sibling
+# ``_feature_tree_figure`` module so the rendering plumbing stays out
+# of this tutorial.
+
+# %%
+from _feature_tree_figure import draw_feature_tree_figure
+
+fig = draw_feature_tree_figure(
+    psd_array=psd_array,
+    freqs=freqs,
+    derived_features=derived,
+    feature_names=feature_names,
+    plot_id="plot_41",
+    sfreq=SFREQ,
+    n_windows=int(derived.shape[0]),
+    citation="Demanuele et al. 2007 / Donoghue et al. 2020",
+)
+plt.show()
+
+# %% [markdown]
+# **Investigate.** Panel 2 shows that the four markers are not
+# redundant: band power and peak frequency span different ranges, and
+# the 1/f slope sits well below zero across every window. Panel 3
+# names which pairs co-vary; on a real cohort, those off-diagonals are
+# the columns a clinician reads first when comparing wake states.
+
+# %% [markdown]
+# A common mistake, and how to recover
+# ------------------------------------
 # **Run.** A common slip is reversing a band tuple so the lower bound
-# exceeds the upper bound -- ``spectral_bands_power`` then sees an empty
-# mask and the column is all NaN. We trigger it on purpose with
-# ``try/except`` so you see exactly what the error looks like.
+# exceeds the upper bound. ``spectral_bands_power`` then sees an empty
+# mask and the column comes back all NaN. We trigger it on purpose with
+# a ``try``/``except`` so the failure mode is visible (Nederbragt et
+# al. 2020).
 
 # %%
 try:
@@ -231,12 +473,11 @@ try:
         raise ValueError(f"band tuple ({lo}, {hi}) reversed: lo must be < hi")
 except (ValueError, RuntimeError) as exc:
     print(f"Caught {type(exc).__name__}: {exc}")
-    # Recovery: order the tuple so lo < hi (alpha = 8 to 12 Hz).
     print(f"Recovery: use {(min(bad_band), max(bad_band))} so lo < hi.")
 
 # %% [markdown]
-# Modify -- add a fifth band (gamma)
-# ----------------------------------
+# Modify: add a fifth band (gamma)
+# --------------------------------
 # **Your turn.** Add ``gamma`` (30-40 Hz) to ``BANDS`` and rerun the
 # tree. Runtime barely budges; the flat version would pay a fifth PSD.
 
@@ -252,11 +493,13 @@ ext_table = extract_features(windows, ext_tree, batch_size=64, n_jobs=1).to_data
 print(f"extended (with gamma): n_cols={ext_table.shape[1]}")
 
 # %% [markdown]
-# Make -- a custom feature on the same shared PSD
-# -----------------------------------------------
-# **Mini-project.** :func:`~eegdash.features.feature_predecessor` pins
-# the predecessor; :func:`~eegdash.features.univariate_feature` names
-# columns per channel. Relative alpha is a classical drowsiness marker.
+# Make: a custom feature on the same shared PSD
+# ---------------------------------------------
+# **Mini-project.**
+# :func:`~eegdash.features.feature_predecessor` pins the predecessor;
+# :func:`~eegdash.features.univariate_feature` names columns per
+# channel. Relative alpha is a classical drowsiness marker (Cisotto
+# and Chicco 2024 Tip 5).
 
 
 # %%
@@ -286,6 +529,12 @@ print(
 # %% [markdown]
 # Result
 # ------
+# We turned one windowed dataset into a tidy table with the four
+# canonical scalars per window plus the alpha relative-power add-on,
+# all built on top of one Welch PSD per window. The shared-PSD tree
+# divides the FFT work by the number of spectral features. A clean
+# table only confirms plumbing; signal quality and task design are
+# still open questions (Cisotto and Chicco 2024).
 
 # %%
 result = pd.DataFrame(
@@ -301,21 +550,34 @@ print(result.round(4).to_string())
 assert speedup >= 1.0
 
 # %% [markdown]
-# Try it yourself / Extensions
-# ----------------------------
-# - Swap ``spectral_preprocessor`` for ``spectral_normalized_preprocessor`` and add ``spectral_entropy``.
-# - Wire ``spectral_db_preprocessor`` plus ``spectral_slope`` to read 1/f.
-# - Save ``custom_table`` to parquet and continue in plot_42.
-# - Compare runtimes on a longer recording (~5 minutes) -- the speedup widens with FFT size.
+# Try it yourself
+# ---------------
+# - Add a fifth leaf for spectral edge frequency
+#   (:func:`~eegdash.features.spectral_edge`) on the same tree.
+# - Save ``markers_table`` to parquet and continue in
+#   :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
+# - Compare runtimes on a longer recording (~5 minutes); the speedup
+#   widens with FFT size.
 
 # %% [markdown]
-# Wrap-up and links
-# -----------------
-# - Concept: :doc:`/concepts/features_vs_deep_learning`.
-# - API: :class:`eegdash.features.FeatureExtractor`,
-#   :func:`eegdash.features.spectral_preprocessor`,
-#   :func:`eegdash.features.spectral_bands_power`,
-#   :func:`eegdash.features.feature_predecessor`.
-# - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
-# - Gramfort et al. 2013, *Front. Neurosci.* 7:267. https://doi.org/10.3389/fnins.2013.00267
+# Wrap-up
+# -------
+# We named four canonical PSD-derived markers, declared them on one
+# shared ``spectral_preprocessor``, plotted the dependency tree, and
+# checked that the columns are not redundant. Next:
+# :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
+# turns this table into a scikit-learn estimator. Concept:
+# :doc:`/concepts/features_vs_deep_learning`.
+
+# %% [markdown]
+# References
+# ----------
+# - Welch 1967, The use of Fast Fourier Transform for the estimation of power spectra, *IEEE Transactions on Audio and Electroacoustics* 15(2):70-73. https://doi.org/10.1109/TAU.1967.1161901
+# - Demanuele et al. 2007, Distinguishing low frequency oscillations within the 1/f spectral behaviour of electromagnetic brain signals, *BMC Bioinformatics* 8:280. https://doi.org/10.1186/1471-2105-8-280
+# - Donoghue et al. 2020, Parameterizing neural power spectra into periodic and aperiodic components (FOOOF), *Nature Neuroscience* 23(12):1655-1665. https://doi.org/10.1038/s41593-020-00744-x
+# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
+# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
+# - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
+# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
+# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials, *PLOS Computational Biology* 16(9):e1008090. https://doi.org/10.1371/journal.pcbi.1008090
 # - HBN resting-state ds005514 (Release 9). https://doi.org/10.18112/openneuro.ds005514.v1.0.0

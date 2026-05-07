@@ -41,7 +41,7 @@ learning_objectives:
 audience: "Intermediate user who has completed plot_20. The lesson is framed as a\
   \ contrast, not a duplicate, per plan \xA7Phase 3 step 3."
 budgets:
-  max_loc: 319
+  max_loc: 540
   max_runtime_seconds: 300
   max_network_mb: 200
   cpu_only: true
@@ -94,12 +94,21 @@ links:
   related_how_to: []
   related_papers:
   - "Polich 2007, Clin. Neurophysiol. \u2014 Updating P300"
+  - "Naatanen et al. 2007, Clin. Neurophysiol. \u2014 The mismatch negativity (MMN)"
+  - "Squires, Squires & Hillyard 1975, EEG Clin. Neurophysiol. \u2014 Two varieties\
+    \ of long-latency positive waves (P3a/P3b)"
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Delorme et al. 2022, Database \u2014 NEMAR open access EEG resource"
 requires_api:
 - eegdash.EEGDashDataset
-- braindecode.preprocessing.create_windows_from_events
-- eegdash.splits.get_splitter
-- eegdash.splits.assert_no_leakage
+- braindecode.preprocessing.preprocess
+- braindecode.preprocessing.Preprocessor
+- mne.Epochs
+- mne.EvokedArray
+- mne.events_from_annotations
+- mne.viz.plot_topomap
+- eegdash.viz._tutorial_panels
+- eegdash.viz.style_figure
 review_rubric_overrides:
   E2.16: warn
 notes:

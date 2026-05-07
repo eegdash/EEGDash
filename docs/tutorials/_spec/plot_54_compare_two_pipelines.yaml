@@ -1,6 +1,6 @@
 id: plot_54_compare_two_pipelines
 category: F-evaluation
-title: Compare a feature baseline against a neural network on the same split
+title: Is Pipeline A really better than Pipeline B, or did it luck out on one subject?
 state: proposed
 assignee: null
 difficulty: 2
@@ -33,21 +33,25 @@ cites:
   - compass_artifact.md#E5.45
   - compass_artifact.md#E5.46
 learning_objectives:
-- After this tutorial you will be able to evaluate a feature-based scikit-learn pipeline
-  and a small neural network (sklearn ``MLPClassifier``) on the *exact same* cross-subject
-  folds, by reusing one split manifest.
-- After this tutorial you will be able to produce a paired per-fold score table and
-  run a paired Wilcoxon signed-rank test to ask whether the difference is significant.
-- After this tutorial you will be able to plot a paired-comparison figure (per-fold
-  lines + box/violin) with the chance level on the same axes.
-- "After this tutorial you will be able to phrase the conclusion with appropriate\
-  \ hedging \u2014 small sample, single dataset, fixed hyperparameters \u2014 so the\
-  \ comparison is not over-claimed."
+- After this tutorial you will be able to score two pipelines (a feature-based scikit-learn
+  pipeline and a small neural network) on the SAME N held-out subjects via one shared
+  cross-subject split manifest.
+- After this tutorial you will be able to assert ``fold_ids_pipeline_a == fold_ids_pipeline_b``
+  in code and run a paired Wilcoxon signed-rank test together with a paired t-test
+  on the per-subject deltas.
+- After this tutorial you will be able to compute and report Cohen's d on the paired
+  differences and a 95% CI on the mean delta from the standard error.
+- After this tutorial you will be able to read a three-panel figure (per-subject paired
+  bars, paired-difference distribution with mean and CI, cumulative-wins curve) that
+  makes the per-subject pattern, the average effect, and its uncertainty visible in
+  one read.
+- "After this tutorial you will be able to phrase the conclusion with the hedging
+  Demsar 2006 recommends -- single dataset, fixed hyperparameters, narrow inference."
 audience: Intermediate user who completed plot_11, plot_12, plot_42 and plot_51. Knows
   how to run each pipeline alone; learns here how to compare them paper-style under
-  one split manifest.
+  one shared cross-subject manifest with a paired test and an effect size.
 budgets:
-  max_loc: 333
+  max_loc: 470
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true
@@ -56,13 +60,14 @@ artifacts:
   thumbnail: thumbnails/plot_54.png
   figures:
   - figure_paired_comparison.png
-  - figure_per_fold_score_table.png
-  - figure_split_audit.png
+  - figure_paired_difference_distribution.png
+  - figure_cumulative_wins_curve.png
 asserted_invariants:
 - 'fold_ids_pipeline_a == fold_ids_pipeline_b   # same split manifest reused'
 - subject_overlap(train, test) == 0
-- len(per_fold_scores_a) == len(per_fold_scores_b) and len(per_fold_scores_a) >= 5
-- wilcoxon_signed_rank_p_value reported alongside median delta
+- len(per_subject_scores_a) == len(per_subject_scores_b) and len(per_subject_scores_a) >= 5
+- wilcoxon_signed_rank_p_value reported alongside paired t-test p-value and Cohen's d
+- mean_delta reported with a 95% CI from the standard error of the mean
 - chance_level reported on the same axes for BOTH pipelines
 - abs(class_balance_train - class_balance_test) < 0.10
 - leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0
@@ -100,11 +105,17 @@ links:
   related_how_to:
   - how_to_use_moabb_splitters
   related_papers:
-  - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319)\
-    \ \u2014 paired pipeline comparison and meta-analysis"
-  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
-  - "Wilcoxon 1945, Biometrics Bulletin \u2014 paired signed-rank test"
-  - "Pedregosa et al. 2011, JMLR \u2014 scikit-learn ``Pipeline`` and ``MLPClassifier``"
+  - "Delorme et al. 2022, NEMAR (10.1093/database/baac096) -- open-access EEG/MEG
+    data, tools, and compute powering NEMAR-derived cohorts."
+  - "Demsar 2006, Statistical comparisons of classifiers over multiple data sets, JMLR
+    7 -- canonical recipe for paired tests, effect sizes, and multiple-comparison
+    correction. https://www.jmlr.org/papers/v7/demsar06a.html"
+  - "Cisotto & Chicco 2024, Ten quick tips for clinical EEG, PeerJ CS (10.7717/peerj-cs.2256)
+    -- Tip 9 on paired evaluation."
+  - "Wilcoxon 1945, Individual comparisons by ranking methods, Biometrics Bulletin
+    (10.2307/3001968) -- the signed-rank test."
+  - "Pedregosa et al. 2011, scikit-learn ``Pipeline`` and ``MLPClassifier``, JMLR
+    12 (10.5555/1953048.2078195)."
 requires_api:
 - eegdash.splits.get_splitter
 - eegdash.splits.make_split_manifest
@@ -117,4 +128,5 @@ requires_api:
 - sklearn.linear_model.LogisticRegression
 - sklearn.neural_network.MLPClassifier
 - scipy.stats.wilcoxon
+- scipy.stats.ttest_rel
 review_rubric_overrides: {}

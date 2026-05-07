@@ -1,0 +1,105 @@
+id: project_age_regression
+category: applied
+kind: tutorial
+output_kind: python
+title: "Age regression from EEG (applied case study)"
+state: proposed
+assignee: null
+difficulty: 3
+estimated_runtime_minutes: 5
+hardware: cpu
+network: cached_first_run
+prerequisites:
+  - plot_02_dataset_to_dataloader
+  - plot_42_features_to_sklearn
+  - plot_51_cross_subject_evaluation
+cites:
+  plan:
+    - "tutorial_restructure_plan.md#L1052-L1100"
+  rubric:
+    - "compass_artifact.md#E1.2"
+    - "compass_artifact.md#E2.20"
+    - "compass_artifact.md#E3.21"
+    - "compass_artifact.md#E3.23"
+    - "compass_artifact.md#E5.42"
+    - "compass_artifact.md#E5.43"
+    - "compass_artifact.md#E5.44"
+learning_objectives:
+  - "After this case study you will be able to load HBN ds005505 recordings via `EEGDashDataset` with `age` and `sex` attached through `description_fields`."
+  - "After this case study you will be able to construct a strict subject-aware split with `sklearn.model_selection.GroupKFold` keyed on subject and verify zero subject overlap."
+  - "After this case study you will be able to fit a `Ridge` regression head on a feature table and report `r2`, MAE, and a median-baseline reference."
+  - "After this case study you will be able to read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression."
+audience: "Advanced applied user; prior plot_42 (features-to-sklearn) and plot_51 (cross-subject evaluation). Project-tier scaffolding rules apply."
+budgets:
+  max_loc: 460
+  max_runtime_seconds: 300
+  max_network_mb: 2000
+  cpu_only: true
+  gpu_required: false
+artifacts:
+  thumbnail: thumbnails/project_age_regression.png
+  figures:
+    - figure_predicted_vs_true.png
+    - figure_residual_by_subject.png
+    - figure_error_distribution.png
+asserted_invariants:
+  - "subject_overlap(train, test) == 0   # the defining property of cross-subject regression"
+  - "n_test_subjects_per_fold >= 1 and n_folds >= 5"
+  - "r2_test reported alongside mae_test and median_baseline_mae"
+  - "model_mae_test < median_baseline_mae   # the trained head must beat the median predictor"
+  - "age_label_dtype is float and not nan-only"
+  - "no_clinical_diagnosis_claim_in_prose   # reviewer hedging gate"
+sections_required:
+  - title
+  - opening
+  - learning_objectives
+  - requirements
+  - setup
+  - lesson_steps:
+      min: 6
+      labelled_subgoals: true
+  - checkpoints:
+      min: 3
+  - result
+  - wrapup
+  - links
+primm_required:
+  predict: 1
+  run: ">=2"
+  investigate: 1
+faded_scaffolding:
+  required: true
+  pattern: parsons
+viz_compliance:
+  palette: eegdash-rail
+  required_elements:
+    - subject_count_in_subtitle
+    - source_provenance_footer
+links:
+  concept: docs/source/concepts/leakage_and_evaluation.rst
+  api: eegdash.dataset
+  related_how_to:
+    - how_to_use_hpc_cache
+  related_papers:
+    - "Alexander et al. 2017, Sci. Data, HBN dataset behind ds005505 (doi:10.1038/sdata.2017.181)"
+    - "Delorme et al. 2022, NAR Genom. Bioinform., NEMAR (doi:10.1093/nargab/lqac023)"
+    - "Cisotto and Chicco 2024, PeerJ CS, ten quick tips for clinical EEG (doi:10.7717/peerj-cs.2256)"
+    - "Zoubi et al. 2018, Front. Hum. Neurosci., predicting age from resting EEG (doi:10.3389/fnhum.2018.00461)"
+    - "Pernet et al. 2019, Sci. Data, EEG-BIDS (doi:10.1038/s41597-019-0104-8)"
+    - "Song et al. 2023, IEEE TNSRE, EEG Conformer (doi:10.1109/TNSRE.2022.3230250)"
+    - "Pedregosa et al. 2011, JMLR, scikit-learn (doi:10.5555/1953048.2078195)"
+requires_api:
+  - "eegdash.EEGDashDataset"
+  - "sklearn.model_selection.GroupKFold"
+  - "sklearn.linear_model.Ridge"
+  - "sklearn.preprocessing.StandardScaler"
+  - "sklearn.pipeline.Pipeline"
+  - "sklearn.metrics.mean_absolute_error"
+  - "sklearn.metrics.r2_score"
+  - "scipy.stats.pearsonr"
+  - "scipy.stats.spearmanr"
+review_rubric_overrides:
+  E1.1: exempt
+  E2.13: exempt
+  E2.16: exempt
+  E2.18: info

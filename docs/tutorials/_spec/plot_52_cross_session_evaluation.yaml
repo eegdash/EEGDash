@@ -43,7 +43,7 @@ audience: Intermediate user who completed plot_11, plot_12, and plot_50. Has see
   subject-disjoint splits; learns here that session disjointness is a separate, weaker
   generalisation claim than cross-subject.
 budgets:
-  max_loc: 309
+  max_loc: 445
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true
@@ -51,9 +51,9 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_52.png
   figures:
-  - figure_cross_session_score_box.png
-  - figure_session_drift_per_subject.png
-  - figure_split_audit.png
+  - figure_cross_session_drift.png
+  - figure_session_transfer_matrix.png
+  - figure_drift_distribution.png
 asserted_invariants:
 - 'session_overlap(train, test) == 0   # within each (subject, fold) pair'
 - 'subject_overlap(train, test) > 0    # within-subject by design'
@@ -97,8 +97,14 @@ links:
   - how_to_use_moabb_splitters
   related_papers:
   - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319)\
-    \ \u2014 cross-session evaluation and calibration drift"
-  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips (Tip 9)"
+    \ -- cross-session evaluation and calibration drift"
+  - "Cisotto & Chicco 2024, PeerJ CS (10.7717/peerj-cs.2256) -- clinical EEG ten quick\
+    \ tips (Tip 9)"
+  - "Delorme et al. 2022, NEMAR (10.1162/imag_a_00026) -- BIDS metadata source"
+  - "Jayaram & Barachant 2018, J. Neural Eng. (10.1088/1741-2552/aabea9) -- covariate\
+    \ shift and transfer learning in BCI calibration"
+  - "Khazem et al. 2024 (10.48550/arXiv.2410.01985) -- Riemannian alignment for cross-session\
+    \ BCI transfer"
 requires_api:
 - eegdash.splits.get_splitter
 - eegdash.splits.make_split_manifest

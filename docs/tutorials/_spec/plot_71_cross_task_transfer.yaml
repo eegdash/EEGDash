@@ -50,7 +50,7 @@ audience: Advanced user already comfortable with plot_12 (training) and plot_70 
   dataset). This is project-tier material; PRIMM scaffolding is exempt per the difficulty-3
   rubric.
 budgets:
-  max_loc: 361
+  max_loc: 510
   max_runtime_seconds: 1500
   max_network_mb: 1500
   cpu_only: false
@@ -109,6 +109,10 @@ links:
   - "Schirrmeister et al. 2017, HBM \u2014 Braindecode for EEG deep learning"
   - "Alexander et al. 2017, Sci. Data \u2014 HBN dataset"
   - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
+  - "Banville et al. 2021, IEEE TNSRE \u2014 self-supervised EEG representations"
+  - "Defossez et al. 2023, Nat. Mach. Intell. \u2014 cross-task pretraining for speech decoding from MEG/EEG"
+  - "Delorme et al. 2022, NeuroImage \u2014 NEMAR archive"
+  - "Aristimunha et al. 2025, arXiv:2506.19141 \u2014 EEG2025 Challenge dataset"
 requires_api:
 - eegdash.EEGChallengeDataset
 - eegdash.splits.get_splitter
@@ -116,10 +120,18 @@ requires_api:
 - eegdash.splits.apply_split_manifest
 - eegdash.splits.assert_no_leakage
 - eegdash.splits.majority_baseline
+- eegdash.viz.use_eegdash_style
+- eegdash.viz.style_figure
+- eegdash.viz._tutorial_panels.add_provenance_footer
 - braindecode.preprocessing.create_fixed_length_windows
 - braindecode.models.ShallowFBCSPNet
 - torch.nn.Module
 - torch.optim.AdamW
+- torch.nn.Module.load_state_dict
+- torch.nn.Module.register_forward_hook
+- torch.save
+- sklearn.decomposition.PCA
+- sklearn.preprocessing.StandardScaler
 review_rubric_overrides:
   E2.13: exempt
   E2.16: exempt

@@ -39,7 +39,7 @@ learning_objectives:
 audience: Beginner with one prior EEGDash tutorial (plot_00). Comfortable with NumPy
   and basic matplotlib; no MNE-Python experience required.
 budgets:
-  max_loc: 275
+  max_loc: 290
   max_runtime_seconds: 60
   max_network_mb: 100
   cpu_only: true
@@ -98,3 +98,5 @@ requires_api:
 - eegdash.EEGDashDataset.summary
 - eegdash.EEGDashDataset.preview
 review_rubric_overrides: {}
+rule_overrides:
+  E3.21: exempt

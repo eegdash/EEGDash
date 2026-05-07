@@ -1,26 +1,97 @@
 :html_theme.sidebar_secondary.remove: true
-:og:description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
+:og:description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, datasets, and Evidence Dashboard.
 
 .. meta::
-   :description: Learn how to use EEGDash to query, download, and analyze 700+ BIDS-first EEG/MEG datasets. Covers EEGDashDataset, metadata queries, and reproducible pipelines.
+   :description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, datasets, and Evidence Dashboard.
 
 .. currentmodule:: eegdash.api
 
 
-User Guide
-==========
+=================
+Quick Start Guide
+=================
 
-This guide walks through the :mod:`eegdash` library and its main data access object, :class:`~eegdash.api.EEGDashDataset`. You will see how to find, access, and manage EEG data for research and analysis.
+EEGDash is three things at once: a **metadata index** over 700+ BIDS-curated
+EEG/MEG datasets that you can query without ever downloading a byte; a
+**dataset loader** that materialises matching recordings into a
+PyTorch-compatible :class:`~eegdash.api.EEGDashDataset`; and an
+**audit-trail system** that ships every tutorial with a machine-verifiable
+evidence dossier under ``docs/evidence/tutorials/``. The same library
+takes you from a one-line ``find()`` against the public REST API
+to a leakage-safe :class:`torch.utils.data.DataLoader`, with each step
+traceable back to the rubric line that justifies it.
 
-The EEGDash Object
-------------------
+This page is the on-ramp. It points you at the curated learning path
+(three Start-Here tutorials), gives you four copy-paste recipes for the
+questions a hurried reader actually asks first -- *how do I open a
+client, find records, filter by task, filter by subject?* -- documents
+the environment variables that govern API access, and then hands off to
+the rest of the documentation: the full gallery, the Concepts chapter
+that explains *why* each design decision matters, the dataset catalogue,
+and the Evidence Dashboard that audits every tutorial against the 49-rule
+rubric.
 
-:class:`~eegdash.api.EEGDashDataset` is the main tool for loading data for machine learning. For direct access to the metadata database, use the lower-level :class:`~eegdash.api.EEGDash` object. It is the right choice for exploring what is available, running ad-hoc queries, or managing records.
+
+The curated learning path
+=========================
+
+The Start-Here trio is the difficulty-1 on-ramp described in the
+tutorial restructure plan, Category A. Each lesson runs CPU-only in a
+few minutes and pairs with a YAML spec, an audit dossier, and the
+"Behind this lesson" footer that traces every claim back to a citation.
+Read them in order before branching into the rest of the gallery.
+
+.. grid:: 1 2 3 3
+   :gutter: 3
+   :class-container: quickstart-cat-a
+
+   .. grid-item-card:: Find datasets and records
+      :link: /generated/auto_examples/tutorials/00_start_here/plot_00_first_search
+      :link-type: doc
+      :img-top: _static/thumbs/plot_00_first_search.png
+      :columns: 12 6 4 4
+
+      Open a metadata-only :class:`~eegdash.api.EEGDash` client and
+      surface BIDS entity fields for ``ds002718`` -- subjects, sampling
+      rates, total hours -- without downloading any signal.
+
+   .. grid-item-card:: Load one recording and inspect it
+      :link: /generated/auto_examples/tutorials/00_start_here/plot_01_first_recording
+      :link-type: doc
+      :img-top: _static/thumbs/plot_01_first_recording.png
+      :columns: 12 6 4 4
+
+      Materialise a single ``EEGDashDataset`` entry, read sampling rate,
+      channel count, duration and annotations, and plot the first five
+      seconds via ``RecordingPreview``.
+
+   .. grid-item-card:: From dataset to PyTorch DataLoader
+      :link: /generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
+      :link-type: doc
+      :img-top: _static/thumbs/plot_02_dataset_to_dataloader.png
+      :columns: 12 6 4 4
+
+      Chain two safe Braindecode preprocessors, cut fixed-length
+      windows, and wrap the result in a
+      :class:`torch.utils.data.DataLoader` -- one batch shape, no
+      training.
+
+
+Common recipes
+==============
+
+The four blocks below cover the questions a new user asks in the first
+five minutes: how do I open a client, find a record, filter by task,
+filter by subject? Each recipe is self-contained and ends with a link
+to the deeper Start-Here tutorial that walks through the same code in
+narrative form.
+
 
 Initializing EEGDash
-~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------
 
-Create a client that connects to the public database:
+Create a metadata-only client that connects to the public database at
+``https://data.eegdash.org``:
 
 .. code-block:: python
 
@@ -29,186 +100,95 @@ Create a client that connects to the public database:
     # Connect to the public database
     eegdash = EEGDash()
 
-Finding Records
-~~~~~~~~~~~~~~~
+For a fully worked example with cohort statistics and BIDS entity
+fields, see
+:doc:`/generated/auto_examples/tutorials/00_start_here/plot_00_first_search`.
 
-Use ``find()`` to query the database for records matching specific criteria. Pass keyword arguments for simple filters, or a full MongoDB query dictionary for more advanced searches.
+
+Finding records
+---------------
+
+Use :meth:`~eegdash.api.EEGDash.find` to query the database. Pass keyword
+arguments for simple filters, or a MongoDB-style dictionary for advanced
+queries with operators like ``$in``:
 
 .. code-block:: python
 
-    # Find records for a specific dataset and subject
+    # Simple keyword filter
     records = eegdash.find(dataset="ds002718", subject="012")
     print(f"Found {len(records)} records.")
 
-    # You can also use more complex queries
+    # MongoDB-style query
     query = {"dataset": "ds002718", "subject": {"$in": ["012", "013"]}}
     records_advanced = eegdash.find(query)
     print(f"Found {len(records_advanced)} records with advanced query.")
 
-EEGDash vs. EEGDashDataset
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The same query mechanism feeds the on-ramp tutorial
+:doc:`/generated/auto_examples/tutorials/00_start_here/plot_00_first_search`,
+which walks through interpreting the BIDS fields you get back.
 
-These two objects do different jobs:
 
--   :class:`~eegdash.api.EEGDash`: query and manage metadata. Returns a list of dictionaries, one per record.
--   :class:`~eegdash.api.EEGDashDataset`: load EEG data for analysis or machine learning. Returns a PyTorch-compatible dataset where each item can load the underlying EEG signal.
+Filtering by task
+-----------------
 
-For most data loading work, use :class:`~eegdash.api.EEGDashDataset`.
-
-The EEGDashDataset Object
--------------------------
-
-:class:`~eegdash.api.EEGDashDataset` is the main entry point for working with EEG recordings in :mod:`eegdash`. It is a high-level interface that queries the metadata database and loads matching EEG data, either from a remote source or from a local cache.
-
-Initializing EEGDashDataset
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Create an instance of :class:`~eegdash.api.EEGDashDataset`. The two main parameters are ``cache_dir`` and ``dataset``.
-
-- ``cache_dir``: local directory where ``eegdash`` stores downloaded data.
-- ``dataset``: identifier of the dataset (e.g., ``"ds002718"``).
-
-A basic example:
+:class:`~eegdash.api.EEGDashDataset` accepts the same filters as
+``find()`` and materialises the matching recordings as a
+PyTorch-compatible dataset. Filter by task to focus on, say,
+resting-state recordings:
 
 .. code-block:: python
 
     from eegdash import EEGDashDataset
 
-    # Initialize the dataset for ds002718
-    dataset = EEGDashDataset(
-        cache_dir="./eeg_data",
-        dataset="ds002718",
-    )
-
-    print(f"Found {len(dataset)} recordings in the dataset.")
-
-The resulting object holds every recording in ``ds002718``. Files are downloaded to ``./eeg_data/ds002718/`` on first access.
-
-Querying for Specific Data
---------------------------
-
-:class:`~eegdash.api.EEGDashDataset` lets you select a subset of recordings by task, subject, session, or run.
-
-Filtering by Task
-~~~~~~~~~~~~~~~~~
-
-You can select recordings tied to a specific experimental task. For example, to get all resting-state recordings:
-
-.. code-block:: python
-
-    # Filter by a single task
     resting_state_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
-        task="RestingState"
+        task="RestingState",
     )
 
     print(f"Found {len(resting_state_dataset)} resting-state recordings.")
 
-Filtering by Subject
-~~~~~~~~~~~~~~~~~~~~
+For the end-to-end version that loads one recording and inspects its
+annotations, see
+:doc:`/generated/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 
-Filter by one or more subjects:
+
+Filtering by subject
+--------------------
+
+Filter by a single subject or by a list of subject IDs. Filters compose,
+so you can combine ``subject``, ``task``, ``session`` and ``run`` for
+narrower queries:
 
 .. code-block:: python
 
-    # Filter by a single subject
+    # One subject
     subject_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
-        subject="012"
+        subject="012",
     )
-
     print(f"Found {len(subject_dataset)} recordings for subject 012.")
 
-    # Filter by a list of subjects
+    # A list of subjects, narrowed to a task
     multi_subject_dataset = EEGDashDataset(
         cache_dir="./eeg_data",
         dataset="ds002718",
-        subject=["012", "013", "014"]
+        subject=["012", "013", "014"],
+        task="RestingState",
     )
+    print(f"Found {len(multi_subject_dataset)} recordings for subjects 012-014.")
 
-    print(f"Found {len(multi_subject_dataset)} recordings for subjects 012, 013, and 014.")
-
-
-Combining Filters
-~~~~~~~~~~~~~~~~~
-
-Combine filters for narrower queries. For example, to get resting-state recordings from a specific set of subjects:
-
-.. code-block:: python
-
-    # Combine subject and task filters
-    combined_filter_dataset = EEGDashDataset(
-        cache_dir="./eeg_data",
-        dataset="ds002718",
-        subject=["012", "013"],
-        task="RestingState"
-    )
-
-    print(f"Found {len(combined_filter_dataset)} recordings matching the criteria.")
-
-Advanced Querying with MongoDB Syntax
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For more complex queries, pass a MongoDB-style query dictionary directly to the ``query`` parameter. Operators such as ``$in`` work here.
-
-.. code-block:: python
-
-    # Use a MongoDB-style query
-    query = {
-        "dataset": "ds002718",
-        "subject": {"$in": ["012", "013"]},
-        "task": "RestingState"
-    }
-    advanced_dataset = EEGDashDataset(cache_dir="./eeg_data", query=query)
-
-    print(f"Found {len(advanced_dataset)} recordings using an advanced query.")
+To take a single-subject ``EEGDashDataset`` all the way to a PyTorch
+``DataLoader`` -- preprocessing, windowing, batch shape -- see
+:doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`.
 
 
-Working with Local Data (Offline Mode)
---------------------------------------
+API configuration
+=================
 
-:mod:`eegdash` also works with local data you have already downloaded or manage yourself. Pass ``download=False`` and :class:`~eegdash.api.EEGDashDataset` reads BIDS-compliant files from disk instead of hitting the database or remote storage.
-
-The data must follow a BIDS-like layout inside your ``cache_dir``. If ``cache_dir`` is ``./eeg_data`` and the dataset is ``ds002718``, the files belong under ``./eeg_data/ds002718/``.
-
-Offline mode in practice:
-
-.. code-block:: python
-
-    # Initialize in offline mode
-    local_dataset = EEGDashDataset(
-        cache_dir="./eeg_data",
-        dataset="ds002718",
-        download=False
-    )
-
-    print(f"Found {len(local_dataset)} local recordings.")
-
-With ``download=False``, :mod:`eegdash` scans ``cache_dir`` for EEG files and builds the dataset from the local file system. Use this for offline environments, air-gapped machines, or your own curated datasets.
-
-Accessing Data from the Dataset
--------------------------------
-
-The :class:`~eegdash.api.EEGDashDataset` object behaves like a list: index into it to access individual recordings. Each item is an :class:`~eegdash.data_utils.EEGDashBaseDataset` that carries the metadata and loads the EEG data on demand.
-
-.. code-block:: python
-
-    if len(dataset) > 0:
-        # Get the first recording
-        recording = dataset[0]
-        
-        print(f"Loaded recording for subject: {recording.description['subject']}")
-
-This is how ``eegdash`` plugs into a data analysis pipeline, whether the data is remote or local. For contributor resources, see :doc:`Developer Notes </developer_notes>`.
-
-
-API Configuration
------------------
-
-By default, :mod:`eegdash` connects to the public REST API at ``https://data.eegdash.org``.
-Override it through environment variables:
+By default, :mod:`eegdash` connects to the public REST API at
+``https://data.eegdash.org``. Override it through environment variables:
 
 .. code-block:: bash
 
@@ -218,11 +198,60 @@ Override it through environment variables:
    # Admin write operations (required for dataset ingestion)
    export EEGDASH_API_TOKEN="your-admin-token"
 
-Public endpoints are rate-limited to 100 requests per minute per IP. Service
-status is available at ``/health``, and every response carries an
-``X-Request-ID`` header you can use for debugging.
+Public endpoints are rate-limited to 100 requests per minute per IP.
+Service status is available at ``/health``, and every response carries
+an ``X-Request-ID`` header you can use for debugging.
 
 For more on the API architecture, see :doc:`API Core </api/api_core>`.
+
+
+Where to go next
+================
+
+Four hand-offs that cover the rest of the documentation: the full
+gallery, the explanation pages, the dataset catalogue, and the audit
+trail.
+
+.. grid:: 1 2 2 4
+   :gutter: 3
+   :class-container: quickstart-next
+
+   .. grid-item-card:: Examples gallery
+      :link: /generated/auto_examples/index
+      :link-type: doc
+      :columns: 12 6 6 3
+
+      The full curated learning path: seven tutorial categories from
+      Start-Here to transfer learning, plus how-to recipes, applied
+      projects, EEG 2025 Foundation Challenge pipelines, and HPC
+      templates.
+
+   .. grid-item-card:: Concepts
+      :link: /concepts/index
+      :link-type: doc
+      :columns: 12 6 6 3
+
+      Diataxis explanation pages: the ``EEGDashDataset`` object model,
+      BIDS metadata, leakage and evaluation, preprocessing decisions,
+      features versus deep learning. Read these to understand *why*.
+
+   .. grid-item-card:: Datasets catalogue
+      :link: dataset_summary
+      :link-type: doc
+      :columns: 12 6 6 3
+
+      Search the 700+ BIDS-first datasets across EEG, MEG, fNIRS, EMG
+      and iEEG modalities, with per-dataset cohort statistics, sampling
+      rates, and ready-to-use class IDs.
+
+   .. grid-item-card:: Evidence Dashboard
+      :link: evidence
+      :link-type: doc
+      :columns: 12 6 6 3
+
+      The audit trail of every tutorial: rubric scorecards, runtime
+      budgets, asserted invariants, expected figures, and reviewer
+      notes -- generated at build time from each evidence dossier.
 
 
 .. seealso::

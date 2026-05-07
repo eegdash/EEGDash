@@ -316,7 +316,7 @@
    :hidden:
 
    Datasets <dataset_summary>
-   User Guide <user_guide>
+   Quick Start <user_guide>
    Install <install/install>
    Examples <generated/auto_examples/index>
    Concepts <concepts/index>

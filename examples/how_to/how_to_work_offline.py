@@ -6,13 +6,15 @@ the same records as the online path, with no network calls.
 """
 
 # %% [markdown]
-# ## Goal
+# Goal
+# ----
 # Load and filter EEGDash records from a local BIDS cache on an HPC node
 # or air-gapped workstation, with zero network calls, and prove the cache
 # is complete by comparing online vs. offline shape and metadata.
 
 # %% [markdown]
-# ## Prerequisites
+# Prerequisites
+# -------------
 # - Estimated time: ~4 min on CPU (cache hit; one online prefetch on
 #   first run only).
 # - You have already populated the cache via
@@ -45,10 +47,12 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"cache_dir = {cache_dir}")
 
 # %% [markdown]
-# ## Recipe
+# Recipe
+# ------
 
 # %% [markdown]
-# ### Step 1 -- Populate the cache (online, once)
+# Step 1 -- Populate the cache (online, once)
+# ...........................................
 # Run this block on a node with internet. ``download_all`` prefetches
 # every record so subsequent runs can use ``download=False``. If your
 # cache is already populated, this is a near-instant no-op.
@@ -64,7 +68,8 @@ ds_online.download_all(n_jobs=-1)
 print(f"online: {len(ds_online.datasets)} recording(s) cached.")
 
 # %% [markdown]
-# ### Step 2 -- Load offline with ``download=False``
+# Step 2 -- Load offline with ``download=False``
+# ..............................................
 # This is the air-gapped path: EEGDash parses BIDS filenames in the cache
 # instead of querying the database or S3. The challenge subset lives at
 # ``<cache_dir>/<dataset_id>-bdf-mini``; check it exists before loading.
@@ -84,7 +89,8 @@ if ds_offline.datasets:
     print("first bidspath:", ds_offline.datasets[0].record["bidspath"])
 
 # %% [markdown]
-# ### Step 3 -- Filter by BIDS entity offline
+# Step 3 -- Filter by BIDS entity offline
+# .......................................
 # With ``download=False`` you can still filter by ``subject``, ``session``,
 # ``task``, and ``run`` -- those entities live in the BIDS filenames, not
 # the database. Database-only fields (e.g., ``modality`` aliases) are not
@@ -104,7 +110,8 @@ assert len(ds_offline_sub.datasets) <= len(ds_offline.datasets), (
 )
 
 # %% [markdown]
-# ### Step 4 -- Verify the cache is complete
+# Step 4 -- Verify the cache is complete
+# ......................................
 # Compare record counts, raw-data shapes, and the description tables. If
 # any of these diverge, the cache is partial -- re-run ``download_all`` or
 # clear the suffixed folder and start over.
@@ -126,7 +133,8 @@ assert desc_offline.equals(desc_online), "description metadata diverges"
 print("offline cache is complete.")
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # - ``ds_offline.records_count == ds_online.records_count`` (cache complete).
 # - ``raw.get_data().shape`` matches across paths.
 # - ``description.equals(...)`` is True -- offline parses identical metadata.
@@ -136,7 +144,8 @@ print("offline cache is complete.")
 # Source: HBN release R2 (OpenNeuro ds005506), task RestingState, mini=True.
 
 # %% [markdown]
-# ## Common pitfalls
+# Common pitfalls
+# ---------------
 # - If ``cache_dir`` does not exist, ``EEGDashDataset`` will silently
 #   re-download. Always create it first AND set ``EEGDASH_OFFLINE=1`` (or
 #   ``download=False``) on air-gapped nodes -- belt and braces.
@@ -152,7 +161,8 @@ print("offline cache is complete.")
 #   NVMe (see ``how_to_use_hpc_cache``) before training.
 
 # %% [markdown]
-# ## See also
+# See also
+# --------
 # - [how_to_download_a_dataset](how_to_download_a_dataset.py) -- populate
 #   the cache before going offline.
 # - [how_to_use_hpc_cache](how_to_use_hpc_cache.py) -- stage the cache
@@ -160,7 +170,8 @@ print("offline cache is complete.")
 # - Concept: [docs/source/concepts/lazy_loading_and_cache.rst](../../docs/source/concepts/lazy_loading_and_cache.rst).
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Pernet et al. 2019, EEG-BIDS, *Sci. Data* 6:103.
 #   https://doi.org/10.1038/s41597-019-0104-8 -- the BIDS-EEG layout that
 #   makes offline filename-based filtering possible.

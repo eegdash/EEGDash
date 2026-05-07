@@ -47,7 +47,7 @@ audience: Intermediate user who completed plot_11, plot_12, plot_42 and plot_51.
   how to run each pipeline alone; learns here how to compare them paper-style under
   one split manifest.
 budgets:
-  max_loc: 305
+  max_loc: 318
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true

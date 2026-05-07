@@ -1,0 +1,63 @@
+/*
+ * "Behind this lesson" footer block.
+ *
+ * Injected at the bottom of every sphinx-gallery tutorial page by
+ * docs/source/_extensions/eegdash_tutorial_footer.py. Visual design follows
+ * docs/design/data-viz-design.md: light blue surface, EEGDash-orange Data
+ * Rail at the top, ink-coloured monospace for paths.
+ */
+
+.eegdash-tutorial-footer {
+  margin: 2rem 0 1rem;
+  padding: 1rem 1.25rem;
+  border-top: 3px solid #f7941d; /* EEGDASH_ORANGE - Data Rail */
+  background-color: #f7fbfe;     /* EEGDASH_SURFACE */
+  color: #102a43;                /* EEGDASH_INK */
+  border-radius: 0 0 6px 6px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.eegdash-tutorial-footer strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: #004a76; /* EEGDASH_BLUE_DARK */
+  letter-spacing: 0.01em;
+}
+
+.eegdash-tutorial-footer ul {
+  list-style: disc;
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.eegdash-tutorial-footer li {
+  margin: 0.15rem 0;
+}
+
+.eegdash-tutorial-footer code {
+  font-size: 0.85em;
+  padding: 0.05em 0.35em;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 108, 163, 0.18); /* faint EEGDASH_BLUE */
+  border-radius: 3px;
+  color: #006ca3; /* EEGDASH_BLUE */
+}
+
+/* Dark theme: keep the rail orange, swap surface and text for legibility. */
+html[data-theme="dark"] .eegdash-tutorial-footer {
+  background-color: rgba(0, 108, 163, 0.12);
+  color: #e5edf5;
+  border-top-color: #f7941d;
+}
+
+html[data-theme="dark"] .eegdash-tutorial-footer strong {
+  color: #4f8cff;
+}
+
+html[data-theme="dark"] .eegdash-tutorial-footer code {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(79, 140, 255, 0.35);
+  color: #4f8cff;
+}

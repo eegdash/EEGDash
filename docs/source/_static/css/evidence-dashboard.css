@@ -1,0 +1,203 @@
+/*
+ * Evidence dashboard styling.
+ *
+ * Used by the ``eegdash-evidence-dashboard`` directive (see
+ * ``docs/source/_extensions/eegdash_evidence.py``). Palette mirrors
+ * ``docs/design/data-viz-design.md`` so the contributing dashboard speaks
+ * the same visual language as the dataset and benchmark cards.
+ */
+
+:root {
+  --eegdash-blue: #006CA3;
+  --eegdash-blue-dark: #004A76;
+  --eegdash-orange: #F7941D;
+  --eegdash-mint: #22D3EE;
+  --eegdash-ink: #102A43;
+  --eegdash-muted: #64748B;
+  --eegdash-grid: #7A8CA0;
+  --eegdash-surface: #F7FBFE;
+  --eegdash-zebra: #EEF6FB;
+}
+
+/* --- Evidence table ----------------------------------------------------- */
+
+table.evidence,
+table.evidence-table,
+table.docutils.evidence,
+.evidence > table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 2rem;
+  font-size: 0.92em;
+  table-layout: fixed;
+  background: white;
+  border-top: 3px solid var(--eegdash-blue);
+}
+
+table.evidence thead th,
+table.evidence thead td,
+.evidence thead th,
+.evidence thead td {
+  background: var(--eegdash-surface);
+  color: var(--eegdash-blue-dark);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.5em 0.75em;
+  border-bottom: 2px solid var(--eegdash-blue);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+table.evidence tbody td,
+.evidence tbody td {
+  padding: 0.5em 0.75em;
+  vertical-align: top;
+  border-bottom: 1px solid #E2E8F0;
+  color: var(--eegdash-ink);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+table.evidence tbody tr:nth-child(odd) td,
+.evidence tbody tr:nth-child(odd) td {
+  background: var(--eegdash-zebra);
+}
+
+table.evidence tbody tr:hover td,
+.evidence tbody tr:hover td {
+  background: #DCEBF6;
+}
+
+table.evidence p,
+.evidence table p {
+  margin: 0;
+}
+
+.evidence p.evidence-id {
+  margin-top: 0.15em;
+  font-size: 0.82em;
+  color: var(--eegdash-muted);
+}
+
+.evidence p.evidence-id code,
+.evidence p.evidence-id .pre {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--eegdash-muted);
+}
+
+/* --- State badges ------------------------------------------------------- */
+
+.evidence-badge {
+  display: inline-block;
+  padding: 0.12em 0.55em;
+  border-radius: 0.5em;
+  font-size: 0.82em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.evidence-badge.state-proposed {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #FBBF24;
+}
+
+.evidence-badge.state-drafted {
+  background: #DBEAFE;
+  color: #1E40AF;
+  border-color: #60A5FA;
+}
+
+.evidence-badge.state-audited {
+  background: #E0E7FF;
+  color: #3730A3;
+  border-color: #818CF8;
+}
+
+.evidence-badge.state-reviewed {
+  background: #CFFAFE;
+  color: #155E75;
+  border-color: var(--eegdash-mint);
+}
+
+.evidence-badge.state-merged {
+  background: #DCFCE7;
+  color: #166534;
+  border-color: #4ADE80;
+}
+
+.evidence-badge.state-deprecated {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #F87171;
+}
+
+.evidence-badge.state-unknown {
+  background: #F1F5F9;
+  color: var(--eegdash-muted);
+  border-color: #CBD5E1;
+}
+
+/* --- Diataxis quadrant SVG --------------------------------------------- */
+
+.diataxis-quadrant {
+  display: block;
+  margin: 1.5rem auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* --- Sphinx-design card overrides -------------------------------------- */
+
+.tutorial-evidence-cards .sd-card {
+  border-top: 3px solid var(--eegdash-blue);
+  border-radius: 0.5em;
+  background: white;
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.tutorial-evidence-cards .sd-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 108, 163, 0.12);
+}
+
+.tutorial-evidence-cards .sd-card-title {
+  color: var(--eegdash-blue-dark);
+  font-weight: 600;
+}
+
+/* Dark-mode shim — Pydata theme adds ``data-theme="dark"`` on <html>. */
+
+html[data-theme="dark"] table.evidence,
+html[data-theme="dark"] .evidence > table {
+  background: #1F2933;
+  border-top-color: var(--eegdash-blue);
+}
+
+html[data-theme="dark"] table.evidence thead th,
+html[data-theme="dark"] .evidence thead th {
+  background: #16222C;
+  color: #BFE2F4;
+}
+
+html[data-theme="dark"] table.evidence tbody td,
+html[data-theme="dark"] .evidence tbody td {
+  background: #1F2933;
+  color: #E2E8F0;
+  border-bottom-color: #2D3748;
+}
+
+html[data-theme="dark"] table.evidence tbody tr:nth-child(odd) td,
+html[data-theme="dark"] .evidence tbody tr:nth-child(odd) td {
+  background: #1A2530;
+}
+
+html[data-theme="dark"] table.evidence tbody tr:hover td,
+html[data-theme="dark"] .evidence tbody tr:hover td {
+  background: #233040;
+}

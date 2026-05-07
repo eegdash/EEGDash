@@ -14,7 +14,8 @@ gap noise?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - build ONE cross-subject split manifest reused by two pipelines.
 # - apply the same fold ids to a feature baseline and a small neural network.
@@ -22,7 +23,8 @@ gap noise?
 # - run ``scipy.stats.wilcoxon`` on the paired per-fold accuracy deltas.
 # - interpret the p-value alongside the median delta and chance level.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - Prerequisites: ``plot_12_train_a_baseline``, ``plot_42_features_to_sklearn``.
 # - Theory: :doc:`/concepts/leakage_and_evaluation`.
@@ -53,7 +55,8 @@ SEED = 42
 np.random.seed(SEED)
 
 # %% [markdown]
-# ## Step 1 -- Build per-subject windowed metadata
+# Step 1 -- Build per-subject windowed metadata
+# ---------------------------------------------
 #
 # We synthesise 12 subjects x 16 windows of band-power features (alpha
 # bump on closed eyes, identical layout to plot_42). On real data you
@@ -94,7 +97,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict which pipeline wins
+# Step 2 -- Predict which pipeline wins
+# -------------------------------------
 #
 # **Predict.** Pipeline A is ``LogisticRegression`` on band-power
 # features (the linear baseline); Pipeline B is a small ``MLPClassifier``
@@ -105,7 +109,8 @@ print(
 # a few points only matters when per-fold deltas are consistent
 # (Sentance et al. 2019, doi:10.1080/08993408.2019.1608781). Chance ~0.5.
 #
-# ## Step 3 -- Build ONE cross-subject split manifest
+# Step 3 -- Build ONE cross-subject split manifest
+# ------------------------------------------------
 #
 # **Run #1.** ``get_splitter("cross_subject", ...)`` keyed on
 # ``subject`` gives a leakage-safe ``GroupKFold``-style split.
@@ -126,7 +131,8 @@ n_folds = manifest["n_folds"]
 print(f"manifest: {manifest['splitter_class']} | folds: {n_folds}")
 
 # %% [markdown]
-# ## Step 4 -- Pipeline A: StandardScaler + LogisticRegression
+# Step 4 -- Pipeline A: StandardScaler + LogisticRegression
+# ---------------------------------------------------------
 #
 # **Run #2.** Loop the manifest folds, fit on train, score on test,
 # collect per-fold accuracies and the chance level. ``random_state=42``
@@ -167,7 +173,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- Pipeline B: StandardScaler + MLPClassifier (neural net)
+# Step 5 -- Pipeline B: StandardScaler + MLPClassifier (neural net)
+# -----------------------------------------------------------------
 #
 # **Run #3.** Same scaffolding, different head: a one-hidden-layer
 # neural network (16 ReLU units, Adam). Scaler still fits on train only.
@@ -189,7 +196,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 6 -- Paired Wilcoxon signed-rank test
+# Step 6 -- Paired Wilcoxon signed-rank test
+# ------------------------------------------
 #
 # **Investigate.** Same fold ids on both sides are the precondition for
 # pairing. We assert the invariant in code (not just prose), then call
@@ -210,7 +218,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 7 -- Per-fold paired comparison table
+# Step 7 -- Per-fold paired comparison table
+# ------------------------------------------
 #
 # A "paired plot" connects each fold's two scores with a line so the
 # reader can eyeball whether B beats A consistently or only on average.
@@ -230,7 +239,8 @@ paired_df = pd.DataFrame(
 print(paired_df.to_string(index=False, float_format=lambda v: f"{v:.3f}"))
 
 # %% [markdown]
-# ## Result -- report the comparison with appropriate hedging
+# Result -- report the comparison with appropriate hedging
+# --------------------------------------------------------
 #
 # Single dataset, fixed hyperparameters, 12 cross-subject folds: the
 # headline is median delta + Wilcoxon p-value + chance-level baseline.
@@ -244,7 +254,8 @@ print(
 print("Hedge: small sample, single mock dataset, fixed hyperparameters.")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** Calling ``wilcoxon`` on empty per-fold deltas (e.g. when one
 # pipeline was never evaluated) raises ``ValueError``. We trigger it on
@@ -263,7 +274,8 @@ except (ValueError, RuntimeError) as exc:
     print(f"Recovery: paired deltas have {len(deltas)} entries -- re-run pipe_b.")
 
 # %% [markdown]
-# ## Modify -- swap Pipeline B for a different model
+# Modify -- swap Pipeline B for a different model
+# -----------------------------------------------
 #
 # **Modify.** Same scaffolding, different head: replace the MLP with a
 # stronger-regularised LogReg (``C=0.1``) and rerun. The paired contract
@@ -285,13 +297,15 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself / Extensions
+# Try it yourself / Extensions
+# ----------------------------
 #
 # - widen the MLP to ``hidden_layer_sizes=(64, 32)`` and rerun.
 # - reduce ``N_SUBJECTS`` to 6 and watch the Wilcoxon p-value lose power.
 # - add a third pipeline and run pairwise Wilcoxon with Bonferroni.
 #
-# ## References
+# References
+# ----------
 #
 # - Chevallier, Aristimunha et al. 2024 (doi:10.48550/arXiv.2404.15319) -- MOABB paired pipeline comparison.
 # - Cisotto & Chicco 2024 (doi:10.7717/peerj-cs.2256) -- ten clinical EEG tips, Tip 9 on evaluation.

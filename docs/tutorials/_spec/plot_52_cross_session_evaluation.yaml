@@ -43,7 +43,7 @@ audience: Intermediate user who completed plot_11, plot_12, and plot_50. Has see
   subject-disjoint splits; learns here that session disjointness is a separate, weaker
   generalisation claim than cross-subject.
 budgets:
-  max_loc: 285
+  max_loc: 294
   max_runtime_seconds: 240
   max_network_mb: 50
   cpu_only: true

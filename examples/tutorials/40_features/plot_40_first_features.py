@@ -11,7 +11,8 @@ Can a small set of band-power features distinguish eyes-open from eyes-closed?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Build a small feature dictionary mixing time-domain and spectral features.
@@ -20,7 +21,8 @@ Can a small set of band-power features distinguish eyes-open from eyes-closed?
 # - Save the feature table to parquet for plot_42.
 # - Write a custom ``@univariate_feature`` of your own.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - Estimated time ~30 s on CPU. No GPU. No network.
 # - Prerequisite:
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
@@ -55,7 +57,8 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 
 # %% [markdown]
-# ## Step 1 -- Reload (or mimic) the windows from plot_10
+# Step 1 -- Reload (or mimic) the windows from plot_10
+# ----------------------------------------------------
 # In production you would reload windows saved by plot_10 with
 # ``load_concat_dataset``. To stay reproducible offline we synthesise two short
 # recordings at 128 Hz on a 4-channel parieto-occipital montage and inject a
@@ -111,7 +114,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Pick a small feature set
+# Step 2 -- Pick a small feature set
+# ----------------------------------
 # Two time-domain summaries plus the canonical EEG band powers. The spectral
 # features share a single ``spectral_preprocessor`` (Welch PSD) so the FFT
 # runs once per window; that dependency tree is the topic of plot_41.
@@ -133,7 +137,8 @@ features_dict = {
 print(f"feature kinds: {list(features_dict)} | bands: {list(BANDS)}")
 
 # %% [markdown]
-# ## Step 3 -- Run extract_features
+# Step 3 -- Run extract_features
+# ------------------------------
 # **Run #1.** ``extract_features`` walks every recording, applies the
 # preprocessor once per window, then evaluates each feature; column names are
 # ``<feature>_<channel>`` so a learner can grep ``alpha_O1``.
@@ -161,7 +166,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 4 -- Channels-by-features heatmap
+# Step 4 -- Channels-by-features heatmap
+# --------------------------------------
 # **Run #2.** Pick the first eyes-closed window and reshape its row into a
 # (channels x features) matrix. The heatmap uses ``viridis`` -- a colorblind-
 # safe perceptually-uniform palette appropriate for a continuous scale
@@ -199,7 +205,8 @@ fig.tight_layout(rect=(0.0, 0.04, 1.0, 1.0))
 plt.show()
 
 # %% [markdown]
-# ## Step 5 -- Save the feature table for plot_42
+# Step 5 -- Save the feature table for plot_42
+# --------------------------------------------
 # Parquet keeps dtypes (float64) and is what scikit-learn / LightGBM expect.
 
 # %%
@@ -211,7 +218,8 @@ assert dict(roundtrip.dtypes) == dict(feature_table.dtypes)
 print(f"saved {parquet_path.name}; reload shape={roundtrip.shape}")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Passing an unknown feature key (e.g. ``"varience"`` typo) is
 # the most common slip; the extractor raises ``KeyError`` /
 # ``AttributeError``. We trigger it with ``try/except`` so the failure
@@ -226,12 +234,14 @@ except (KeyError, TypeError, AttributeError) as exc:
     print(f"Recovery: known feature keys -> {list(features_dict)}")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn.** Add Hjorth complexity to ``features_dict``: import
 # ``signal_hjorth_complexity``, register ``"hjorth_comp": signal_hjorth_complexity``,
 # and re-run Steps 3-5.
 #
-# ## Make
+# Make
+# ----
 # **Mini-project.** Write a univariate feature with the
 # :func:`eegdash.features.univariate_feature` decorator -- the cell below
 # defines a peak-to-peak / std ratio. Plug it into ``features_dict``.
@@ -252,7 +262,8 @@ extended = extract_features(
 print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # - Feature table ``n_rows`` matches the number of windows; columns embed
 #   channel names so downstream code can group by feature family.
 # - Eyes-closed alpha is roughly two orders of magnitude higher than
@@ -261,14 +272,16 @@ print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 #   plot_42.
 
 # %% [markdown]
-# ## Try it yourself / Extensions
+# Try it yourself / Extensions
+# ----------------------------
 # - Swap ``BANDS`` for a clinical mu-band split and rerun Step 3.
 # - Reload your real plot_10 windows from disk and rerun ``extract_features``.
 # - Add ``include_metadata=["subject"]`` and check a leakage-safe split (plot_11).
 # - Wire ``spectral_entropy`` plus ``spectral_normalized_preprocessor`` (plot_41).
 
 # %% [markdown]
-# ## Wrap-up and links
+# Wrap-up and links
+# -----------------
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 # - API: :func:`eegdash.features.extract_features`, :class:`eegdash.features.FeatureExtractor`, :func:`eegdash.features.spectral_bands_power`.
 # - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256. https://doi.org/10.7717/peerj-cs.2256

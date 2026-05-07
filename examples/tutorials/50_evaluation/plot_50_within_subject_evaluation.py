@@ -15,7 +15,8 @@ the right call?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - identify when within-subject evaluation is appropriate (calibration decoders, single-subject diagnostics, high inter-subject variance).
 # - build a 5-fold within-subject manifest with ``get_splitter("within_subject", n_folds=5)``.
@@ -23,7 +24,8 @@ the right call?
 # - assert no trial overlap with ``assert_no_leakage`` and verify the JSON ``leakage_report`` line.
 # - compare per-subject accuracy against ``majority_baseline`` chance level.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - You finished plot_11_leakage_safe_split and plot_12_train_a_baseline.
 # - CPU only, runtime ~3 minutes.
@@ -51,7 +53,8 @@ warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 
 # %% [markdown]
-# ## Step 1 -- Build a per-subject windowed metadata table
+# Step 1 -- Build a per-subject windowed metadata table
+# -----------------------------------------------------
 #
 # We mock 12 subjects x 2 sessions x 8 windows = 192 rows. Each row carries
 # a ``trial`` identifier (one trial per window here) and a synthetic class
@@ -94,7 +97,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict the right invariant
+# Step 2 -- Predict the right invariant
+# -------------------------------------
 #
 # **Predict.** In a *cross*-subject split (plot_11) we wanted
 # ``subject_overlap == 0`` -- a subject must never sit on both sides. For
@@ -108,7 +112,8 @@ print(
 # no individual window may appear in both train and test.
 
 # %% [markdown]
-# ## Step 3 -- Build the 5-fold within-subject manifest
+# Step 3 -- Build the 5-fold within-subject manifest
+# --------------------------------------------------
 #
 # **Run.** ``get_splitter("within_subject", n_folds=5, random_state=42)``
 # returns MOABB's ``WithinSubjectSplitter`` (or a sklearn ``GroupKFold``
@@ -127,7 +132,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 4 -- Assert no trial leakage and read the audit
+# Step 4 -- Assert no trial leakage and read the audit
+# ----------------------------------------------------
 #
 # ``assert_no_leakage(by="trial")`` walks every fold and intersects the
 # ``trial`` values across train/test. It always emits the JSON line
@@ -168,7 +174,8 @@ print(
 # subject.
 
 # %% [markdown]
-# ## Step 5 -- Train per-subject and quote chance level
+# Step 5 -- Train per-subject and quote chance level
+# --------------------------------------------------
 #
 # **Run.** For each fold we materialise train/test masks, fit a
 # ``LogisticRegression(random_state=42)``, and aggregate accuracy across
@@ -198,7 +205,8 @@ mean_score = float(np.mean(fold_scores)) if fold_scores else float("nan")
 mean_chance = float(np.mean(fold_chance)) if fold_chance else float("nan")
 
 # %% [markdown]
-# ## Result -- accuracy with chance level
+# Result -- accuracy with chance level
+# ------------------------------------
 #
 # Within-subject mean accuracy across 12 subjects x 5 folds compared to the
 # majority-class chance level (E5.43). The score is per-subject by
@@ -225,7 +233,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** ``within_subject`` keys folds on the ``subject`` column; if
 # that column is missing the splitter raises ``KeyError``. We trigger it
@@ -244,7 +253,8 @@ except (KeyError, ValueError) as exc:
     print(f"Recovery: keep `subject` (have {cols!r}).")
 
 # %% [markdown]
-# ## Modify -- swap to within-session
+# Modify -- swap to within-session
+# --------------------------------
 #
 # **Modify.** What if you suspect session-day effects (caffeine, electrode
 # drift) dominate within a subject? Swap ``within_subject`` for
@@ -264,7 +274,8 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself -- Extensions
+# Try it yourself -- Extensions
+# -----------------------------
 #
 # - bump ``n_folds`` to 10 and watch per-fold test sizes shrink.
 # - re-run with ``random_state=7`` and confirm trial disjointness still holds.
@@ -272,7 +283,8 @@ print(
 #   plot per-subject accuracy as a bar chart, sorted by score.
 
 # %% [markdown]
-# ## Links
+# Links
+# -----
 #
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - API: ``get_splitter``, ``majority_baseline``, ``assert_no_leakage``.

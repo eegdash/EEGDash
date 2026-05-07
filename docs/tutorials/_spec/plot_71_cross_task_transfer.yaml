@@ -50,7 +50,7 @@ audience: Advanced user already comfortable with plot_12 (training) and plot_70 
   dataset). This is project-tier material; PRIMM scaffolding is exempt per the difficulty-3
   rubric.
 budgets:
-  max_loc: 335
+  max_loc: 346
   max_runtime_seconds: 1500
   max_network_mb: 1500
   cpu_only: false

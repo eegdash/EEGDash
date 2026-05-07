@@ -13,7 +13,8 @@ how much does it beat chance?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - load ``EEGChallengeDataset(release="R5", mini=True)`` for source + target.
 # - train a Braindecode ``ShallowFBCSPNet`` encoder on the source and snapshot it.
@@ -21,7 +22,8 @@ how much does it beat chance?
 # - compare fine-tune, scratch, and **chance level** accuracy together (E5.43).
 # - run ``assert_no_leakage`` on the cross-subject split for both pipelines.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - prereqs: plot_70 (challenge dataset basics) and plot_12 (baseline).
 # - CUDA GPU preferred; CPU fallback runs in ~6 min on the mini release.
@@ -57,7 +59,8 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"device={DEVICE}, seed={SEED}")
 
 # %% [markdown]
-# ## Step 1 -- Load source + target tasks (same subject pool)
+# Step 1 -- Load source + target tasks (same subject pool)
+# --------------------------------------------------------
 #
 # In a full run we call ``EEGChallengeDataset(task="RestingState",
 # release="R5", mini=True, ...)`` and again with
@@ -109,7 +112,8 @@ assert set(meta_src["subject"]) == set(meta_tgt["subject"]), "subject pools must
 print(f"source={TASK_SOURCE}: X={X_src.shape} | target={TASK_TARGET}: X={X_tgt.shape}")
 
 # %% [markdown]
-# ## Step 2 -- Predict
+# Step 2 -- Predict
+# -----------------
 #
 # **Predict.** With binary balanced classes chance hovers near 0.50. How
 # much above chance do you expect a ``ShallowFBCSPNet`` to land after 5
@@ -117,7 +121,8 @@ print(f"source={TASK_SOURCE}: X={X_src.shape} | target={TASK_TARGET}: X={X_tgt.s
 # (e.g. finetune 0.70 / scratch 0.62) before running the next cells.
 
 # %% [markdown]
-# ## Step 3 -- Build encoder, pretrain on source, save weights
+# Step 3 -- Build encoder, pretrain on source, save weights
+# ---------------------------------------------------------
 #
 # **Run.** ``ShallowFBCSPNet`` (Schirrmeister et al. 2017,
 # doi:10.1002/hbm.23730) is a small temporal-then-spatial CNN. We
@@ -184,7 +189,8 @@ assert weights_path.exists(), "encoder snapshot must exist before fine-tune"
 print(f"pretrain losses (RestingState): {[round(x, 3) for x in pretrain_losses]}")
 
 # %% [markdown]
-# ## Step 4 -- Fine-tune the pretrained encoder on the target
+# Step 4 -- Fine-tune the pretrained encoder on the target
+# --------------------------------------------------------
 #
 # **Run (#2).** A fresh model with identical shape loads the pretrained
 # state dict, then keeps training on **CCD** windows. The cross-subject
@@ -199,7 +205,8 @@ finetune_acc = eval_acc(finetune_model, X_tgt, y_tgt, tgt_test)
 print(f"finetune losses (CCD): {[round(x, 3) for x in finetune_losses]}")
 
 # %% [markdown]
-# ## Step 5 -- Train a from-scratch baseline on the target
+# Step 5 -- Train a from-scratch baseline on the target
+# -----------------------------------------------------
 #
 # Same architecture, same budget, same split -- only the starting
 # weights differ. Without source-task inductive bias, scratch typically
@@ -211,7 +218,8 @@ scratch_losses = train_loop(scratch_model, X_tgt, y_tgt, tgt_train, n_epochs=5)
 scratch_acc = eval_acc(scratch_model, X_tgt, y_tgt, tgt_test)
 
 # %% [markdown]
-# ## Step 6 -- Compare fine-tune vs scratch vs chance
+# Step 6 -- Compare fine-tune vs scratch vs chance
+# ------------------------------------------------
 #
 # **Investigate.** ``majority_baseline`` returns the test-set frequency
 # of the most common label -- a defensible chance level (Cisotto &
@@ -230,7 +238,8 @@ print(
 )
 
 # %% [markdown]
-# ## Result -- one row per condition
+# Result -- one row per condition
+# -------------------------------
 #
 # The fine-tuned encoder lifts CCD accuracy above the scratch baseline,
 # both above chance. With a single seed and the mini release the
@@ -255,7 +264,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # Loading a state dict whose ``n_outputs`` mismatches the pretrained one
 # raises ``RuntimeError`` (size mismatch on the final layer). We trigger
@@ -273,7 +283,8 @@ except RuntimeError as exc:
     print(f"Recovery: ShallowFBCSPNet(n_outputs=2) -> {type(fixed).__name__}")
 
 # %% [markdown]
-# ## Modify -- freeze the encoder, train only the head
+# Modify -- freeze the encoder, train only the head
+# -------------------------------------------------
 #
 # **Modify.** Freeze every encoder parameter and update only the head:
 # on small mini-release data this often beats full fine-tune because
@@ -290,7 +301,8 @@ n_trainable = sum(p.numel() for p in frozen.parameters() if p.requires_grad)
 print(f"frozen-encoder mode: trainable params={n_trainable}")
 
 # %% [markdown]
-# ## Make -- swap in a different source pretext task
+# Make -- swap in a different source pretext task
+# -----------------------------------------------
 #
 # **Make.** Replace ``TASK_SOURCE`` with another passive HBN task
 # (``surroundSupp``, ``symbolSearch``), rerun the pretrain step, and
@@ -298,7 +310,8 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 # their representations transfer -- the core EEG2025 Challenge 1 question.
 
 # %% [markdown]
-# ## Extensions
+# Extensions
+# ----------
 #
 # - rerun with five seeds and report ``mean +/- std`` for both pipelines.
 # - swap to ``release="R2"`` and check whether the transfer gap holds.
@@ -307,7 +320,8 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 # - partial-freeze: freeze temporal conv only, retrain spatial conv + head.
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 #
 # We loaded the EEG2025 Challenge 1 source/target pair on the same
 # subject pool, pretrained ``ShallowFBCSPNet`` on RestingState, fine-tuned
@@ -316,7 +330,8 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 # ``assert_no_leakage`` on a subject-grouped split (Pernet et al. 2019,
 # doi:10.1038/s41597-019-0104-8). The single-seed lift must be hedged.
 #
-# ## Links
+# Links
+# -----
 #
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 # - API: ``eegdash.EEGChallengeDataset``, ``eegdash.splits.assert_no_leakage``.

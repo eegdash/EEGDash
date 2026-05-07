@@ -14,7 +14,8 @@ separately, how many PSDs run per batch -- and what does sharing one
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Identify when independent feature definitions cause repeated PSD work.
@@ -23,7 +24,8 @@ separately, how many PSDs run per batch -- and what does sharing one
 # - Compute the wall-time speedup from sharing one PSD versus N.
 # - Implement a custom decorated feature on the same shared PSD.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - Estimated time ~5 s on CPU. No GPU. No network.
 # - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
 #   :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`.
@@ -67,7 +69,8 @@ def _counting_welch(*a, **k):
 _spec.welch = _counting_welch
 
 # %% [markdown]
-# ## Step 1 -- Build a small windowed dataset
+# Step 1 -- Build a small windowed dataset
+# ----------------------------------------
 # Two 16 s recordings at 128 Hz, four parieto-occipital channels, 10 Hz
 # alpha sine in eyes-closed. The 1-40 Hz FIR band-pass writes
 # ``info["highpass"]/lowpass`` so ``spectral_preprocessor`` reads them.
@@ -117,14 +120,16 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict (PRIMM)
+# Step 2 -- Predict (PRIMM)
+# -------------------------
 # **Predict.** Four independent band-power features each run their own
 # Welch internally -- expect *four PSDs per batch*. With one shared
 # ``spectral_preprocessor`` it should drop to *one PSD per batch*.
 # Predict the speedup before running.
 
 # %% [markdown]
-# ## Step 3 -- Run #1: WITHOUT the tree
+# Step 3 -- Run #1: WITHOUT the tree
+# ----------------------------------
 # **Run.** Each band gets its own top-level :class:`FeatureExtractor`
 # with its own ``spectral_preprocessor`` -- the FFT runs once per band
 # per batch.
@@ -154,7 +159,8 @@ runtime_flat = time.perf_counter() - t0
 psds_flat = PSD_CALLS["flat"]
 
 # %% [markdown]
-# ## Step 4 -- Investigate the flat run
+# Step 4 -- Investigate the flat run
+# ----------------------------------
 # **Investigate.** Every band rebuilt the PSD: ``n_bands * n_batches``.
 
 # %%
@@ -163,7 +169,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- Run #2: WITH the tree (shared PSD)
+# Step 5 -- Run #2: WITH the tree (shared PSD)
+# --------------------------------------------
 # **Run.** One ``spectral_preprocessor`` at the top, four band features
 # below. Printing the extractor renders the dependency tree.
 
@@ -181,7 +188,8 @@ runtime_tree = time.perf_counter() - t0
 psds_tree = PSD_CALLS["tree"]
 
 # %% [markdown]
-# ## Step 6 -- Investigate the speedup
+# Step 6 -- Investigate the speedup
+# ---------------------------------
 # **Investigate.** Same row count, identical band columns, but the PSD
 # counter dropped 4x. :func:`~eegdash.features.get_feature_predecessors`
 # gives the same dependency view programmatically. After Run #1 and
@@ -203,7 +211,8 @@ finally:
     print("welch restored")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A common slip is reversing a band tuple so the lower bound
 # exceeds the upper bound -- ``spectral_bands_power`` then sees an empty
@@ -222,7 +231,8 @@ except (ValueError, RuntimeError) as exc:
     print(f"Recovery: use {(min(bad_band), max(bad_band))} so lo < hi.")
 
 # %% [markdown]
-# ## Modify -- add a fifth band (gamma)
+# Modify -- add a fifth band (gamma)
+# ----------------------------------
 # **Your turn.** Add ``gamma`` (30-40 Hz) to ``BANDS`` and rerun the
 # tree. Runtime barely budges; the flat version would pay a fifth PSD.
 
@@ -238,7 +248,8 @@ ext_table = extract_features(windows, ext_tree, batch_size=64, n_jobs=1).to_data
 print(f"extended (with gamma): n_cols={ext_table.shape[1]}")
 
 # %% [markdown]
-# ## Make -- a custom feature on the same shared PSD
+# Make -- a custom feature on the same shared PSD
+# -----------------------------------------------
 # **Mini-project.** :func:`~eegdash.features.feature_predecessor` pins
 # the predecessor; :func:`~eegdash.features.univariate_feature` names
 # columns per channel. Relative alpha is a classical drowsiness marker.
@@ -269,7 +280,8 @@ print(
 )
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 
 # %%
 result = pd.DataFrame(
@@ -285,14 +297,16 @@ print(result.round(4).to_string())
 assert speedup >= 1.0
 
 # %% [markdown]
-# ## Try it yourself / Extensions
+# Try it yourself / Extensions
+# ----------------------------
 # - Swap ``spectral_preprocessor`` for ``spectral_normalized_preprocessor`` and add ``spectral_entropy``.
 # - Wire ``spectral_db_preprocessor`` plus ``spectral_slope`` to read 1/f.
 # - Save ``custom_table`` to parquet and continue in plot_42.
 # - Compare runtimes on a longer recording (~5 minutes) -- the speedup widens with FFT size.
 
 # %% [markdown]
-# ## Wrap-up and links
+# Wrap-up and links
+# -----------------
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 # - API: :class:`eegdash.features.FeatureExtractor`,
 #   :func:`eegdash.features.spectral_preprocessor`,

@@ -37,7 +37,7 @@ learning_objectives:
 audience: Beginner familiar with plot_00 and plot_01. Has used PyTorch tensors but
   not necessarily Braindecode; no model-training expected here.
 budgets:
-  max_loc: 260
+  max_loc: 273
   max_runtime_seconds: 60
   max_network_mb: 100
   cpu_only: true

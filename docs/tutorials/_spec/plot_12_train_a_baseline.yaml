@@ -41,7 +41,7 @@ audience: Beginner ML user who has finished plot_10 and plot_11. Comfortable wit
   logistic regression at a conceptual level; deep nets introduced as 'one alternative,'
   not the focus.
 budgets:
-  max_loc: 260
+  max_loc: 268
   max_runtime_seconds: 180
   max_network_mb: 50
   cpu_only: true

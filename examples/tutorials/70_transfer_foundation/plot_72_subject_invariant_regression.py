@@ -21,7 +21,8 @@ train-set median predictor on never-seen-before subjects?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - load EEG2025 Challenge 2 recordings via ``EEGChallengeDataset``.
@@ -29,7 +30,8 @@ train-set median predictor on never-seen-before subjects?
 # - fit a Ridge head and report ``r2`` against ``median_baseline`` chance.
 # - examine a per-subject residual histogram for invariance failures.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - ~30 s on CPU; GPU optional. No live network.
 # - Prereqs: ``plot_70_challenge_dataset_basics`` and ``plot_42_features_to_sklearn``.
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
@@ -64,7 +66,8 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
-# ## Step 1 -- Load EEGChallengeDataset for the p-factor task
+# Step 1 -- Load EEGChallengeDataset for the p-factor task
+# --------------------------------------------------------
 #
 # In production, ``EEGChallengeDataset`` exposes ``p_factor`` through
 # ``description_fields`` so it surfaces as a per-recording column. The
@@ -131,7 +134,8 @@ assert metadata["p_factor"].notna().all(), "p_factor has NaN rows"
 assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 
 # %% [markdown]
-# ## Step 2 -- Predict: what r2 should chance look like?
+# Step 2 -- Predict: what r2 should chance look like?
+# ---------------------------------------------------
 #
 # **Predict.** A constant predictor that always returns the train-set
 # median has ``r2 = 0`` against the test-set mean by definition --
@@ -139,7 +143,8 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 # faint EEG features to reach -- 0.05? 0.20? 0.50? Write your guess.
 
 # %% [markdown]
-# ## Step 3 -- Build a regression head on top of features
+# Step 3 -- Build a regression head on top of features
+# ----------------------------------------------------
 #
 # A ``StandardScaler -> Ridge`` Pipeline (Pedregosa et al. 2011,
 # doi:10.5555/1953048.2078195) is the regression analogue of plot_42's
@@ -159,7 +164,8 @@ def make_regressor() -> Pipeline:
 
 
 # %% [markdown]
-# ## Step 4 -- Cross-subject split, assert_no_leakage, train per fold
+# Step 4 -- Cross-subject split, assert_no_leakage, train per fold
+# ----------------------------------------------------------------
 #
 # **Run.** ``get_splitter("cross_subject", n_folds=5, random_state=42)``
 # returns sklearn's ``GroupKFold`` keyed on ``subject``. We freeze the
@@ -181,7 +187,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- Mean r2 +/- std across folds vs the median baseline
+# Step 5 -- Mean r2 +/- std across folds vs the median baseline
+# -------------------------------------------------------------
 #
 # Loop the manifest, fit the Pipeline on the train fold, score on the
 # held-out subjects with ``r2_score`` and ``mean_absolute_error``, and
@@ -222,7 +229,8 @@ mean_chance = float(np.mean(fold_chance))
 mean_baseline_mae = float(np.mean(fold_baseline_mae))
 
 # %% [markdown]
-# ## Step 6 -- Investigate per-subject residuals
+# Step 6 -- Investigate per-subject residuals
+# -------------------------------------------
 #
 # **Investigate.** Mean r2 hides the failure mode that matters here:
 # subject-invariance. If residuals concentrate around zero across all
@@ -248,7 +256,8 @@ for low, high in zip(edges[:-1], edges[1:]):
     print(f"  [{low:.3f}, {high:.3f}): {'#' * n}")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A frequent slip is wiring a non-numeric target column into
 # ``Ridge.fit`` -- ``p_factor`` arrives as strings if a CSV was loaded
@@ -268,7 +277,8 @@ except (ValueError, TypeError) as exc:
     print(f"Recovery: cast p_factor to float (dtype={fixed_y.dtype}); Ridge fit.")
 
 # %% [markdown]
-# ## Modify -- domain-adversarial training (concept only)
+# Modify -- domain-adversarial training (concept only)
+# ----------------------------------------------------
 #
 # **Modify (concept).** A more aggressive way to enforce subject
 # invariance is *domain-adversarial training* (Ganin et al. 2016,
@@ -280,7 +290,8 @@ except (ValueError, TypeError) as exc:
 # subject loop above is the contract any such system must still satisfy.
 
 # %% [markdown]
-# ## Result -- model r2 vs median baseline (chance)
+# Result -- model r2 vs median baseline (chance)
+# ----------------------------------------------
 #
 # Five folds, disjoint subject test sets. ``mean +/- std`` against the
 # regression chance level. Note that ``median_baseline`` returns the
@@ -300,7 +311,8 @@ print(
 assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baseline MAE."
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We loaded a Challenge-2-shaped feature table (with ``p_factor`` as a
 # float column), built a 5-fold ``cross_subject`` manifest, asserted zero
 # subject leakage, fit a Ridge head per fold, and reported r2 +/- std
@@ -310,13 +322,15 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # study with much larger N.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Swap ``Ridge`` for ``MLPRegressor`` (still ``random_state=42``).
 # - Pre-train a Braindecode ``ShallowFBCSPNet`` and feed activations in.
 # - Bump ``n_folds`` to ``N_SUBJECTS`` for leave-one-subject-out variance.
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256.
 #   https://doi.org/10.7717/peerj-cs.2256
 # - Schirrmeister et al. 2017, *Hum. Brain Mapp.* 38:5391.

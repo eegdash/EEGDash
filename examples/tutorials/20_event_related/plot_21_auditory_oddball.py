@@ -13,14 +13,16 @@ same flattened-window classifier still beat chance under a subject-aware
 split?
 """
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - Reuse the plot_20 event-mapping pattern with auditory tmin/tmax.
 # - Compare auditory N100 and P300 latencies on target vs. standard ERPs.
 # - Train an sklearn baseline on flattened windows under a subject-aware split.
 # - Compare the auditory metric table against the visual P300 result.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - You finished ``plot_20_visual_p300_oddball`` (event mapping, ERP plot).
 # - Theory: :doc:`/concepts/leakage_and_evaluation`. Runtime: ~3 min CPU.
@@ -43,7 +45,8 @@ SEED, SFREQ, DATASET = 42, 128.0, "ds003061"  # resampled to match plot_20
 TMIN, TMAX = -0.1, 0.5  # auditory ERP window: pre-stim baseline + N100/P300
 
 # %% [markdown]
-# ## Step 1 -- Pick an auditory-oddball dataset
+# Step 1 -- Pick an auditory-oddball dataset
+# ------------------------------------------
 #
 # OpenNeuro ``ds003061`` (Delorme 2020) is BIDS-formatted (Pernet et al.
 # 2019, doi:10.1038/s41597-019-0104-8): 79 EEG channels, recorded at
@@ -58,7 +61,8 @@ TMIN, TMAX = -0.1, 0.5  # auditory ERP window: pre-stim baseline + N100/P300
 # reports auditory P300 amplitudes smaller than visual; N100 is mostly
 # stimulus-driven. Which is larger here?
 #
-# ## Step 2 -- Load + epoch
+# Step 2 -- Load + epoch
+# ----------------------
 #
 # **Run (#1).** Live equivalent: ``create_windows_from_events(dataset,
 # trial_start_offset_samples=int(TMIN*SFREQ),
@@ -111,7 +115,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 3 -- Target vs. standard ERPs
+# Step 3 -- Target vs. standard ERPs
+# ----------------------------------
 #
 # **Run (#2).** Average by class on channel 0 and overlay -- target
 # should drop near 100 ms (N100) and rise near 300 ms (P300).
@@ -152,7 +157,8 @@ plt.show()
 # **Investigate.** N100 leads, P300 follows -- N100 dominates. Polich
 # 2007 reports auditory P300 amplitude is ~30-50% smaller than visual.
 #
-# ## Step 4 -- Subject-aware split + leakage assertion
+# Step 4 -- Subject-aware split + leakage assertion
+# -------------------------------------------------
 #
 # Two subjects test, two train. ``assert_no_leakage`` (E5.42) emits
 # the JSON ``leakage_report`` line consumed by the runtime validator.
@@ -171,7 +177,8 @@ overlap = assert_no_leakage(fold, metadata, by="subject")
 assert overlap == 0, "subject overlap detected; rebuild the split"
 
 # %% [markdown]
-# ## Step 5 -- Train sklearn baseline on flattened windows
+# Step 5 -- Train sklearn baseline on flattened windows
+# -----------------------------------------------------
 #
 # Flatten each window to ``n_channels * n_times`` features (Cisotto
 # & Chicco 2024, Tip 5, doi:10.7717/peerj-cs.2256). Standardise, fit
@@ -192,7 +199,8 @@ print(
 )
 
 # %% [markdown]
-# ## Result -- auditory vs. visual metric table
+# Result -- auditory vs. visual metric table
+# ------------------------------------------
 #
 # Visual row is a placeholder; rerun plot_20 with ``random_state=42``
 # to populate it live.
@@ -207,7 +215,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** Swapping ``tmin`` and ``tmax`` (so ``tmin > tmax``) is the
 # easiest slip when typing window bounds; ``create_windows_from_events``
@@ -226,7 +235,8 @@ except (ValueError, RuntimeError) as exc:
     print(f"Recovery: use tmin={TMIN}, tmax={TMAX} (tmin < tmax).")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 #
 # **Your turn.** Change the baseline window from ``-0.1..0.0`` to
 # ``-0.2..-0.1`` s. ERP shapes stay put; per-window mean shifts because
@@ -240,7 +250,8 @@ print(
 )
 
 # %% [markdown]
-# ## Make -- compare against the visual P300 (plot_20)
+# Make -- compare against the visual P300 (plot_20)
+# -------------------------------------------------
 #
 # **Mini-project.** Rerun plot_20 with the same flattened-window
 # logistic baseline; drop both rows into one table. Polich 2007 predicts
@@ -248,7 +259,8 @@ print(
 # P300 should lose ~5-10 points. If yours does not, the model is
 # probably exploiting the modality-shared N100.
 #
-# ## Wrap-up
+# Wrap-up
+# -------
 #
 # We mirrored plot_20 on an auditory paradigm with a wider window,
 # preserved the 15:1 imbalance under a cross-subject split (overlap=0),
@@ -257,14 +269,16 @@ print(
 # anticipated contrast.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 #
 # - Increase ``n_subjects`` to 8 and re-run; chance stays near 0.94 (15:1).
 # - Swap ``LogisticRegression`` for ``SVC(kernel='linear', random_state=42)``.
 # - Pick a parietal channel index instead of channel 0 for the ERP plot.
 # - Rerun with the live ``EEGDashDataset(dataset="ds003061")`` once cached.
 #
-# ## References
+# References
+# ----------
 #
 # - Pernet et al. 2019, EEG-BIDS, *Sci. Data* doi:10.1038/s41597-019-0104-8.
 # - Gramfort et al. 2013, MNE-Python, *Front. Neurosci.* doi:10.3389/fnins.2013.00267.

@@ -48,7 +48,7 @@ audience: "Advanced user with prior plot_12 (training) and plot_70 (challenge da
   \ a stable Braindecode foundation-model API and may not be runnable today (plan\
   \ \xA7L1228-L1229)."
 budgets:
-  max_loc: 360
+  max_loc: 377
   max_runtime_seconds: 1800
   max_network_mb: 2000
   cpu_only: false

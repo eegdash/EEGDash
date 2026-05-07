@@ -320,10 +320,5 @@
    Install <install/install>
    Examples <generated/auto_examples/index>
    Concepts <concepts/index>
+   Evidence Dashboard <evidence>
    Docs <api/api>
-
-.. toctree::
-   :hidden:
-   :caption: Contributing
-
-   Tutorial Evidence <contributing/tutorial_evidence>

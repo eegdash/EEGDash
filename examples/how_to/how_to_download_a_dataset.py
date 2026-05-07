@@ -6,7 +6,8 @@ inspect the cache.
 """
 
 # %% [markdown]
-# ## Goal
+# Goal
+# ----
 #
 # Stage every file for a query *before* a long training run, an HPC job, or
 # an air-gapped session. We pick a small public dataset, prefetch it with
@@ -16,7 +17,8 @@ inspect the cache.
 # swapping the constructor.
 
 # %% [markdown]
-# ## Prerequisites
+# Prerequisites
+# -------------
 #
 # - You have completed ``plot_00_first_search`` and ``plot_01_first_recording``.
 # - Network access is available for the *initial* download.
@@ -38,9 +40,11 @@ from eegdash.paths import get_default_cache_dir
 np.random.seed(42)
 
 # %% [markdown]
-# ## Recipe
+# Recipe
+# ------
 #
-# ### Step 1 -- Pick the dataset id and cache_dir
+# Step 1 -- Pick the dataset id and cache_dir
+# ...........................................
 #
 # We use OpenNeuro ``ds002718`` (Wakeman & Henson visual face perception,
 # 19 subjects, ~ 80 MB) so the recipe finishes in minutes on any laptop.
@@ -55,7 +59,8 @@ print(f"cache_dir = {CACHE_DIR}")
 print(f"EEGDASH_CACHE_DIR set: {bool(os.environ.get('EEGDASH_CACHE_DIR'))}")
 
 # %% [markdown]
-# ### Step 2 -- Instantiate ``EEGDashDataset``
+# Step 2 -- Instantiate ``EEGDashDataset``
+# ........................................
 #
 # Construction queries the metadata service but does *not* fetch raw EEG
 # yet -- recordings stay lazy until ``.raw`` is accessed or
@@ -73,7 +78,8 @@ n_records = len(dataset.datasets)
 print(f"queried {n_records} record(s) from {DATASET}")
 
 # %% [markdown]
-# ### Step 3 -- Call ``download_all``
+# Step 3 -- Call ``download_all``
+# ...............................
 #
 # ``EEGDashDataset.download_all(n_jobs=...)`` walks every record, skips
 # files that already match the local cache, and downloads the rest in
@@ -87,7 +93,8 @@ dataset.download_all(n_jobs=4)
 print("prefetch complete")
 
 # %% [markdown]
-# ### Step 4 -- Verify completeness
+# Step 4 -- Verify completeness
+# .............................
 #
 # Three independent checks together prove the cache is usable offline:
 #
@@ -119,7 +126,8 @@ total_bytes = sum(p.stat().st_size for p in ds_root.rglob("*") if p.is_file())
 print(f"on-disk footprint: {total_bytes / 1e6:.1f} MB across {n_records} record(s)")
 
 # %% [markdown]
-# ### Step 5 -- Inspect the cache layout
+# Step 5 -- Inspect the cache layout
+# ..................................
 #
 # EEGDash mirrors the BIDS tree under ``cache_dir/<dataset_id>/``. Listing
 # the top-level entries confirms the dataset descriptor, participant
@@ -135,7 +143,8 @@ if len(top_level) > 10:
     print(f"  ... ({len(top_level) - 10} more)")
 
 # %% [markdown]
-# ## Common pitfalls
+# Common pitfalls
+# ---------------
 #
 # - **Hard-coded paths.** Always resolve ``cache_dir`` from
 #   ``EEGDASH_CACHE_DIR`` or a CLI argument; literal ``"/scratch/..."``
@@ -157,7 +166,8 @@ if len(top_level) > 10:
 #   wall time bounded.
 
 # %% [markdown]
-# ## See also
+# See also
+# --------
 #
 # - :doc:`how_to_work_offline </auto_examples/how_to/how_to_work_offline>`
 #   -- consume the cache populated above with ``download=False``.
@@ -166,7 +176,8 @@ if len(top_level) > 10:
 # - :doc:`plot_01_first_recording </auto_examples/tutorials/00_start_here/plot_01_first_recording>`
 #   -- the prerequisite single-recording tutorial.
 #
-# ## References
+# References
+# ----------
 #
 # - Pernet, C. R. et al. (2019). EEG-BIDS: an extension to the brain
 #   imaging data structure for electroencephalography. *Scientific Data*

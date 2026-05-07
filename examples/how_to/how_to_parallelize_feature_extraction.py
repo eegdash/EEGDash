@@ -10,7 +10,8 @@ in under 90 s on a 4-core CPU.
 """
 
 # %% [markdown]
-# ## Goal
+# Goal
+# ----
 # Cut wall-clock for feature extraction on a single node, keep memory below
 # the cgroup limit, and avoid recomputing the Welch PSD across job restarts.
 # Tied to Cisotto and Chicco (2024,
@@ -18,13 +19,15 @@ in under 90 s on a 4-core CPU.
 # (reuse cached spectra) and the joblib parallelism documented in
 # scikit-learn (Pedregosa et al., 2011).
 #
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # - Choose ``n_jobs`` from ``$SLURM_CPUS_PER_TASK`` instead of ``-1``.
 # - Pick a ``batch_size`` that keeps each worker busy without OOMing.
 # - Persist the feature table once and reload it across jobs.
 # - Read a small scaling table and stop adding workers when it pays nothing.
 #
-# ## Prerequisites
+# Prerequisites
+# -------------
 # - Completed :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`.
 # - Read :doc:`/auto_examples/how_to/how_to_use_hpc_cache` so you know where
 #   ``EEGDASH_CACHE`` and ``EEGDASH_FEATURES_CACHE`` should point.
@@ -64,7 +67,8 @@ N_CORES = os.cpu_count() or 1
 
 
 # %% [markdown]
-# ## Synthetic dataset (mimics plot_10 windows)
+# Synthetic dataset (mimics plot_10 windows)
+# ------------------------------------------
 # 16 short 6-channel resting-state recordings at 128 Hz; half get a 10 Hz
 # alpha bump so the feature table is non-degenerate.
 def _make_raw(seed: int, eyes_closed: bool, secs: int = 240) -> mne.io.Raw:
@@ -120,7 +124,8 @@ features = {
 
 
 # %% [markdown]
-# ## Step 1 -- profile the single-threaded baseline
+# Step 1 -- profile the single-threaded baseline
+# ----------------------------------------------
 # Run once with ``n_jobs=1`` and assert no rows are silently dropped.
 def _run(nj: int, bs: int = 64) -> float:
     t = time.perf_counter()
@@ -134,7 +139,8 @@ t1 = _run(nj=1)
 print(f"baseline n_jobs=1: {t1:.2f}s")
 
 # %% [markdown]
-# ## Step 2 -- scale with ``n_jobs``
+# Step 2 -- scale with ``n_jobs``
+# -------------------------------
 # Read ``n_jobs`` from ``$SLURM_CPUS_PER_TASK`` (or your scheduler's
 # equivalent). Never hard-code ``-1`` on a shared node.
 sched = int(os.environ.get("SLURM_CPUS_PER_TASK", min(4, N_CORES)))
@@ -155,7 +161,8 @@ print(pd.DataFrame(scaling).to_string(index=False))
 # curve flattens once n_jobs equals the number of recordings.
 
 # %% [markdown]
-# ## Step 3 -- tune ``batch_size``
+# Step 3 -- tune ``batch_size``
+# -----------------------------
 # ``batch_size`` controls how many windows each worker holds in memory.
 # Too small and Python per-batch overhead dominates; too large and you OOM.
 batch_report = [
@@ -164,7 +171,8 @@ batch_report = [
 print(pd.DataFrame(batch_report).to_string(index=False))
 
 # %% [markdown]
-# ## Step 4 -- persist intermediate results
+# Step 4 -- persist intermediate results
+# --------------------------------------
 # Write the feature table to parquet once; reload on every subsequent call.
 parquet = CACHE / "features.parquet"
 if parquet.exists():
@@ -180,7 +188,8 @@ assert parquet.exists() and len(df) == N_WIN
 print(f"persisted={parquet.name} rows={len(df)} reload_s={reload_s:.3f}")
 
 # %% [markdown]
-# ## Step 5 (optional) -- ``joblib.dump`` the extractor
+# Step 5 (optional) -- ``joblib.dump`` the extractor
+# --------------------------------------------------
 # When the pipeline contains a fitted CSP or trainable feature, pickling the
 # extractor lets you reapply it to held-out data without retraining.
 extractor_path = CACHE / "extractor.joblib"
@@ -189,7 +198,8 @@ reused = joblib.load(extractor_path)
 print(f"checkpoint -> {extractor_path.name} (keys={list(reused)})")
 
 # %% [markdown]
-# ## Common pitfalls
+# Common pitfalls
+# ---------------
 # - **Oversubscribed cores.** ``n_jobs=-1`` on a shared SLURM node steals
 #   cores from other jobs. Read ``$SLURM_CPUS_PER_TASK``.
 # - **Large batches OOMing.** Each worker holds
@@ -201,13 +211,15 @@ print(f"checkpoint -> {extractor_path.name} (keys={list(reused)})")
 # - **Process spawn cost.** macOS ``loky`` spawns fresh Pythons (2-3 s
 #   fixed); Linux ``fork`` is sub-second.
 #
-# ## See also
+# See also
+# --------
 # - :doc:`/auto_examples/tutorials/40_features/plot_41_feature_trees` --
 #   shared-preprocessor pipelines that amplify the speedup here.
 # - :doc:`/auto_examples/how_to/how_to_use_hpc_cache` -- placing
 #   ``EEGDASH_CACHE`` on local NVMe.
 #
-# ## References
+# References
+# ----------
 # - Cisotto, G. and Chicco, D. (2024). Ten quick tips for clinical
 #   electroencephalographic (EEG) data acquisition and signal processing.
 #   *PeerJ Computer Science*, 10, e2256.

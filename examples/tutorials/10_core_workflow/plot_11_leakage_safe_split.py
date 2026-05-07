@@ -18,7 +18,8 @@ and yet fail in deployment?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - identify subject leakage as the failure mode of naive random splits.
 # - build a leakage-safe 5-fold split with ``get_splitter("cross_subject")``.
@@ -26,7 +27,8 @@ and yet fail in deployment?
 # - compare a leaky window-level random split against a subject-aware split.
 # - save a split manifest and read the ``describe_split`` audit.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - You finished
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
@@ -53,7 +55,8 @@ warnings.simplefilter("ignore", category=FutureWarning)
 np.random.seed(42)
 
 # %% [markdown]
-# ## Step 1 -- Load windows metadata for a handful of subjects
+# Step 1 -- Load windows metadata for a handful of subjects
+# ---------------------------------------------------------
 #
 # After ``plot_10`` you would reload windows from disk and read
 # ``windows_ds.description`` for per-recording subject IDs. To keep the
@@ -84,7 +87,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict, then run the WRONG way
+# Step 2 -- Predict, then run the WRONG way
+# -----------------------------------------
 #
 # **Predict.** If we shuffle these 192 windows uniformly and put 20% in a
 # test fold, how many subjects will end up in both train and test -- 0,
@@ -116,7 +120,8 @@ assert naive_overlap > 0
 # protocol throughout the MOABB benchmark.
 
 # %% [markdown]
-# ## Step 3 -- Build a leakage-safe 5-fold split manifest
+# Step 3 -- Build a leakage-safe 5-fold split manifest
+# ----------------------------------------------------
 #
 # **Run (#2).** ``get_splitter("cross_subject", ...)`` returns a MOABB
 # ``CrossSubjectSplitter`` (or a sklearn ``GroupKFold`` keyed on ``subject``
@@ -132,7 +137,8 @@ manifest = make_split_manifest(
 print(f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']}")
 
 # %% [markdown]
-# ## Step 4 -- Prove no subject leakage and read the audit
+# Step 4 -- Prove no subject leakage and read the audit
+# -----------------------------------------------------
 #
 # ``assert_no_leakage`` walks every fold, intersects ``subject`` values
 # across train/test, and always prints one JSON line --
@@ -156,7 +162,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- Materialise one fold and persist the manifest
+# Step 5 -- Materialise one fold and persist the manifest
+# -------------------------------------------------------
 #
 # ``apply_split_manifest`` returns a boolean mask for any fold; the
 # manifest serialises to plain JSON -- the BIDS "split metadata" Pernet
@@ -171,7 +178,8 @@ manifest_path = cache_dir / "plot_11_split_manifest.json"
 manifest_path.write_text(manifest_to_json(manifest), encoding="utf-8")
 
 # %% [markdown]
-# ## Result -- naive vs leakage-safe
+# Result -- naive vs leakage-safe
+# -------------------------------
 #
 # Naive split leaked subjects; safe split prints
 # ``{"leakage_report": {"overlap": 0, "by": "subject"}}`` (E5.42), with 5
@@ -193,7 +201,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Mistyping the splitter name is the single most common slip
 # in this API; ``get_splitter`` raises ``KeyError`` with the valid
 # names. We trigger it with ``try/except`` so the error is visible.
@@ -208,7 +217,8 @@ except (KeyError, ValueError) as exc:
     print(f"Recovery: get_splitter('cross_subject') -> {type(fixed).__name__}")
 
 # %% [markdown]
-# ## Modify -- try a session-aware split
+# Modify -- try a session-aware split
+# -----------------------------------
 #
 # **Modify.** Swap ``"cross_subject"`` for ``"cross_session"`` and re-run
 # ``assert_no_leakage`` with ``by="session"``: the scaffolding stays put,
@@ -223,14 +233,16 @@ session_overlap = assert_no_leakage(session_manifest, metadata, by="session")
 print(f"cross_session overlap: {session_overlap}")
 
 # %% [markdown]
-# ## Make -- apply it to your own windows
+# Make -- apply it to your own windows
+# ------------------------------------
 #
 # **Make.** Apply this flow to the windows you saved in plot_10: pass the
 # ``WindowsConcatDataset`` to ``to_split_metadata``, then back into
 # ``make_split_manifest`` and ``assert_no_leakage``.
 
 # %% [markdown]
-# ## Extensions
+# Extensions
+# ----------
 #
 # - change ``random_state`` and confirm folds shift but disjointness holds.
 # - edit ``n_folds`` to 10 and see the per-fold subject count change.
@@ -238,7 +250,8 @@ print(f"cross_session overlap: {session_overlap}")
 # - add ``by="session"`` to ``assert_no_leakage`` and watch the report flip.
 
 # %% [markdown]
-# ## Links
+# Links
+# -----
 #
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - API: ``get_splitter``, ``make_split_manifest``, ``assert_no_leakage``.

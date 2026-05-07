@@ -16,13 +16,15 @@ is the spread once we move from one held-out subject to a fold?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # - explain why cross-subject evaluation is the gold standard for generalisation.
 # - build a 5-fold cross_subject split with ``get_splitter`` + ``assert_no_leakage``.
 # - compute ``mean +/- std`` across folds against ``majority_baseline`` chance.
 # - describe each fold's test cohort using ``describe_split``.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - Prereqs:
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
 #   and ``plot_12_train_a_baseline`` (one model on one split).
@@ -50,7 +52,8 @@ rng = np.random.default_rng(SEED)
 
 
 # %% [markdown]
-# ## Step 1 -- Build per-subject metadata for >= 8 subjects
+# Step 1 -- Build per-subject metadata for >= 8 subjects
+# ------------------------------------------------------
 #
 # We materialise a synthetic table for 10 subjects with a 2-D feature
 # carrying class signal plus a per-subject offset ("subject fingerprint").
@@ -89,7 +92,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict the subject overlap before vs after
+# Step 2 -- Predict the subject overlap before vs after
+# -----------------------------------------------------
 #
 # **Predict.** If we hold out 2 of the 10 subjects, fit on the 8 others,
 # and score on the held-out 2, how many subject IDs will appear on both
@@ -111,7 +115,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 3 -- Assert no leakage on every fold
+# Step 3 -- Assert no leakage on every fold
+# -----------------------------------------
 #
 # **Run (#2).** ``get_splitter`` here returns sklearn's ``GroupKFold``
 # keyed on ``subject`` (MOABB's CrossSubjectSplitter is also available
@@ -129,7 +134,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 4 -- Train one baseline per fold; report mean +/- std
+# Step 4 -- Train one baseline per fold; report mean +/- std
+# ----------------------------------------------------------
 #
 # Loop over folds, materialise each split via ``apply_split_manifest``,
 # fit ``LogisticRegression(random_state=42)`` (plot_12's baseline),
@@ -158,7 +164,8 @@ std_acc = float(np.std(fold_acc, ddof=1))
 mean_chance = float(np.mean(fold_chance))
 
 # %% [markdown]
-# ## Step 5 -- ``describe_split``: each fold's test set has DIFFERENT subjects
+# Step 5 -- ``describe_split``: each fold's test set has DIFFERENT subjects
+# -------------------------------------------------------------------------
 #
 # **Run (#3).** Each fold's *test* subject set differs from every other
 # fold's; together they tile the cohort. That is the cross-subject contract.
@@ -178,7 +185,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 6 -- Investigate the per-fold accuracy distribution
+# Step 6 -- Investigate the per-fold accuracy distribution
+# --------------------------------------------------------
 #
 # **Investigate.** A tiny ASCII histogram. *Spread* matters as much as
 # the mean: a high mean with high std means the model works for some
@@ -193,7 +201,8 @@ for low, high in zip(edges[:-1], edges[1:]):
     print(f"  [{low:.2f}, {high:.2f}): {'#' * n}")
 
 # %% [markdown]
-# ## Result -- one number, one error bar, against chance (E5.43)
+# Result -- one number, one error bar, against chance (E5.43)
+# -----------------------------------------------------------
 
 # %%
 print(
@@ -202,7 +211,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Asking for more folds than subjects (``n_folds=20`` on a
 # 10-subject cohort) is the most common slip in a benchmark loop.
 # ``GroupKFold`` raises ``ValueError`` -- catch it and clamp.
@@ -227,7 +237,8 @@ except ValueError as exc:
     )
 
 # %% [markdown]
-# ## Modify -- try ``n_folds=10`` for finer-grained variance
+# Modify -- try ``n_folds=10`` for finer-grained variance
+# -------------------------------------------------------
 #
 # **Modify.** Bump folds from 5 to 10. With 10 subjects this becomes
 # leave-one-subject-out: each test fold sees one subject, so the
@@ -247,7 +258,8 @@ print(
 )
 
 # %% [markdown]
-# ## Make -- apply the loop to a cohort with imbalanced subjects
+# Make -- apply the loop to a cohort with imbalanced subjects
+# -----------------------------------------------------------
 #
 # **Make.** Real cohorts rarely have equal trials per subject. Build a
 # cohort where subjects contribute 10 to 60 windows, re-run the same
@@ -270,7 +282,8 @@ print(
 )
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We built per-subject metadata, asked ``get_splitter`` for a 5-fold
 # cross-subject manifest, asserted zero subject leakage, trained a
 # logistic baseline per fold, and reported ``mean +/- std`` against a
@@ -278,13 +291,15 @@ print(
 # folds tile the cohort -- the headline of any cross-subject paper.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Replace ``LogisticRegression`` with ``LogisticRegressionCV`` (still ``random_state=42``).
 # - Pass ``stratified=True`` to a ``GroupKFold`` fallback and re-check class balance.
 # - Swap the synthetic cohort for the windows + manifest you saved in plot_11.
 
 # %% [markdown]
-# ## Links
+# Links
+# -----
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - API: ``eegdash.splits.get_splitter``, ``make_split_manifest``,
 #   ``apply_split_manifest``, ``assert_no_leakage``, ``describe_split``,

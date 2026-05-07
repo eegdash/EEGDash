@@ -19,6 +19,9 @@ from sphinx.util import logging
 from sphinx_gallery.sorting import FileNameSortKey
 
 sys.path.insert(0, os.path.abspath(".."))
+# Local Sphinx extensions live under ``docs/source/_extensions``; make them
+# importable before the ``extensions`` list below references them.
+sys.path.insert(0, os.path.abspath("_extensions"))
 if os.environ.get("SPHINX_BUILD", "") == "":
     os.environ["SPHINX_BUILD"] = "1"
 
@@ -58,6 +61,12 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx_copybutton",
     "sphinx_time_estimation",
+    # Project-local extension exposing the ``eegdash-evidence-dashboard``
+    # directive used by the top-level ``evidence.rst`` page.
+    "eegdash_evidence",
+    # In-tree extension that appends a "Behind this lesson" footer to every
+    # sphinx-gallery tutorial page when an evidence dossier is present.
+    "eegdash_tutorial_footer",
 ]
 
 # -- Open Graph / Twitter Card configuration --------------------------------
@@ -122,6 +131,12 @@ html_css_files = [
     "custom.css",
     "css/treemap.css",
     "css/custom.css",
+    # Used by the ``eegdash-evidence-dashboard`` directive and the
+    # contributing tutorial evidence page.
+    "css/evidence-dashboard.css",
+    # Styles the "Behind this lesson" footer injected on every gallery page
+    # by the in-tree ``eegdash_tutorial_footer`` extension.
+    "css/eegdash_tutorial_footer.css",
 ]
 # Only truly-global JS is loaded here; page-specific scripts (homepage hero
 # search, dataset-summary DataTables stack) are gated in `_templates/layout.html`
@@ -347,6 +362,21 @@ sphinx_gallery_conf = {
     # `examples_dirs` above). Order is therefore controlled by the order of
     # the entries in `examples_dirs`/`gallery_dirs`.
     "within_subsection_order": FileNameSortKey,
+    # Polish: hide sub-1s timing rows, drop the noisy module signature line,
+    # strip ``# sphinx-gallery-...`` config comments from the rendered output,
+    # standardise card thumbnails at 320x224, ship a branded fallback when a
+    # tutorial produces no figure, promote bare-string sentences to titles,
+    # and pin the scraper list (we never use mayavi) to a single matplotlib
+    # entry so docs builds don't import optional viz deps.
+    "min_reported_time": 1,
+    "show_signature": False,
+    "remove_config_comments": True,
+    "thumbnail_size": (320, 224),
+    "default_thumb_file": str(Path(__file__).parent / "_static" / "eegdash_thumb.png"),
+    # Note: ``promote_strings_to_titles`` is not a recognised key in
+    # sphinx-gallery 0.20.x (raises ``ConfigError`` at startup), so it is
+    # intentionally omitted; revisit when we bump to a release that ships it.
+    "image_scrapers": ("matplotlib",),
 }
 
 # -- Custom Setup Function to fix the error -----------------------------------

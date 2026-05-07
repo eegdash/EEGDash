@@ -10,7 +10,8 @@ Can we decode whether a child saw a target or a standard image from a
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - load a P300 BIDS dataset via ``EEGDashDataset`` and surface its events.
@@ -20,7 +21,8 @@ Can we decode whether a child saw a target or a standard image from a
 # - compare target and standard ERPs and recognise the P300 bump.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 # - **Estimated time**: ~3 min on CPU (one subject; cached on first run).
 # - **Prerequisites**: ``plot_10_preprocess_and_window``, ``plot_11_leakage_safe_split``.
 # - **Concept**: [docs/source/concepts/leakage_and_evaluation.rst](../../docs/source/concepts/leakage_and_evaluation.rst).
@@ -56,7 +58,8 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
-# ## Step 1 -- Pick a P300 dataset
+# Step 1 -- Pick a P300 dataset
+# -----------------------------
 # We query EEGDash for ``ds005863`` visual-oddball recordings (Pernet et
 # al. 2019, doi:10.1038/s41597-019-0104-8). Subject ``001`` is small.
 
@@ -68,7 +71,8 @@ dataset = EEGDashDataset(
 print(f"records: {len(dataset.datasets)} (dataset=ds005863, task=P3)")
 
 # %% [markdown]
-# ## Step 2 -- Inspect the events table
+# Step 2 -- Inspect the events table
+# ----------------------------------
 # ``events_from_annotations`` (MNE-Python, Gramfort et al. 2013,
 # doi:10.3389/fnins.2013.00267) maps string codes to integer ids. Targets
 # are rare and standards frequent: the textbook oddball imbalance we
@@ -86,7 +90,8 @@ print(f"event keys (first 6): {list(event_id.keys())[:6]}")
 # a positive bump on targets only.
 
 # %% [markdown]
-# ## Step 3 -- Preprocess and create event-locked windows
+# Step 3 -- Preprocess and create event-locked windows
+# ----------------------------------------------------
 # We resample to 128 Hz and apply a 0.5-30 Hz **non-causal FIR band-pass**
 # (pass-band 0.5-30 Hz; Cisotto & Chicco 2024, Tip 4).
 # ``create_windows_from_events`` epochs every Target / NonTarget annotation
@@ -119,7 +124,8 @@ n_targets, n_standards = int((y == 1).sum()), int((y == 0).sum())
 print(f"X={X.shape}, n_targets={n_targets}, n_standards={n_standards}")
 
 # %% [markdown]
-# ## Step 4 -- Leakage-safe within-subject split
+# Step 4 -- Leakage-safe within-subject split
+# -------------------------------------------
 # One subject is on hand, so a stratified within-subject split keeps the
 # class balance. ``assert_no_leakage`` intersects train and test on the
 # chosen key and prints the contract JSON line E5.42 reads.
@@ -134,7 +140,8 @@ overlap = assert_no_leakage(manifest, meta, by="trial_id")
 assert overlap == 0
 
 # %% [markdown]
-# ## Step 5 -- Train a linear classifier
+# Step 5 -- Train a linear classifier
+# -----------------------------------
 # A flat ``LogisticRegression`` (``random_state=42``, L2, C=1) on
 # vectorised windows is the simplest target-vs-standard decoder. We
 # standardise per-channel using train-set statistics, then quote ROC-AUC.
@@ -151,7 +158,8 @@ acc = float(accuracy_score(y[test_idx], y_pred))
 auc = float(roc_auc_score(y[test_idx], y_score))
 
 # %% [markdown]
-# ## Step 6 -- Report accuracy alongside chance
+# Step 6 -- Report accuracy alongside chance
+# ------------------------------------------
 # ``majority_baseline`` returns the test-set frequency of the most common
 # class. With a 4:1 standard:target imbalance, chance hovers near 0.80.
 
@@ -160,7 +168,8 @@ chance = float(majority_baseline(y[train_idx], y[test_idx])["chance_level"])
 print(f"Model accuracy: {acc:.3f} | chance: {chance:.3f} | ROC-AUC: {auc:.3f}")
 
 # %% [markdown]
-# ## Step 7 -- Investigate target vs. standard ERPs
+# Step 7 -- Investigate target vs. standard ERPs
+# ----------------------------------------------
 # We plot the per-class average at Pz, where the P300 peaks.
 # **Investigate.** Compare the orange target trace with the blue standard
 # trace inside the shaded P300 window: a targets-only positivity confirms
@@ -184,7 +193,8 @@ ax.legend(loc="upper right", fontsize=8)
 fig.tight_layout()
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A frequent slip is mistyping the event mapping (here we swap
 # ``"target"`` for ``"targets"``) -- ``create_windows_from_events`` then
@@ -204,18 +214,21 @@ except (KeyError, ValueError) as exc:
     print(f"Recovery: known event keys are {list(event_id.keys())[:6]}.")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: re-run Step 3 with ``TMAX = 0.4`` (cutting at 400 ms) and
 # refit. ROC-AUC drops a little because the late P300 is gone.
 
 # %% [markdown]
-# ## Make
+# Make
+# ----
 # **Mini-project**: rerun the pipeline on a different subject
 # (``SUBJECT="002"``) or apply it to ``ds002718`` (Wakeman & Henson) by
 # remapping events to famous-vs-scrambled.
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 
 # %%
 print("\n| metric            | value |")
@@ -227,21 +240,24 @@ print(f"| n_targets         | {n_targets} |")
 print(f"| n_standards       | {n_standards} |")
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We loaded a P300 BIDS dataset, mapped its annotations to binary labels,
 # epoched with baseline correction, ran a leakage-safe split, and trained
 # a linear classifier. The ROC-AUC sits above the majority chance level --
 # the only honest summary of an imbalanced two-class decoder.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Set ``TMAX = 0.4`` in Step 3 and re-run; ROC-AUC drops because the late P300 is gone.
 # - Swap ``LogisticRegression`` for ``LogisticRegressionCV(cv=3)`` and see whether tuned regularisation buys >0.01 AUC.
 # - Loop over 3 subjects of ``ds005863``; class balance stays oddball-shaped (~1:4) and chance stays near 0.80.
 # - Compute a topomap at 300 ms with ``mne.viz.plot_topomap`` and confirm the central-parietal P300 maximum.
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Polich 2007, Updating P300, *Clin. Neurophysiol.* https://doi.org/10.1016/j.clinph.2007.04.019
 # - Pernet et al. 2019, EEG-BIDS, *Sci. Data*. https://doi.org/10.1038/s41597-019-0104-8
 # - Gramfort et al. 2013, MNE-Python, *Front. Neurosci.* https://doi.org/10.3389/fnins.2013.00267

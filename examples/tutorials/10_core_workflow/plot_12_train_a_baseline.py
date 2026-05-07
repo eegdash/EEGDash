@@ -10,7 +10,8 @@ for the EEGDash windowed example, before we ever reach for a deep net?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Compute per-channel band-power features for windowed EEG.
@@ -19,7 +20,8 @@ for the EEGDash windowed example, before we ever reach for a deep net?
 # - Compare model accuracy and chance level on the same printed line.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 # - **Estimated time**: ~3 s on CPU.
 # - **Data downloaded**: 0 MB (synthetic windows).
 # - **Prerequisites**: ``plot_11_leakage_safe_split.py``.
@@ -47,7 +49,8 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
-# ## Step 1 - Load (or synthesise) windowed EEG
+# Step 1 - Load (or synthesise) windowed EEG
+# ------------------------------------------
 # In a real workflow you would inherit the windowed tensor and split
 # manifest from ``plot_11``. For a CPU-only run we synthesise the same
 # shape (``(n_windows, n_channels, n_times)`` plus subject and label).
@@ -91,14 +94,16 @@ print(f"X={X.shape}, y={y.shape}, n_subjects={metadata['subject'].nunique()}")
 # guess (e.g. 0.65, 0.80) before running the next cells.
 
 # %% [markdown]
-# ## Step 2 - Subject-aware split + leakage check
+# Step 2 - Subject-aware split + leakage check
+# --------------------------------------------
 # We hold out two subjects for the test fold (``cross_subject``).
 # ``assert_no_leakage`` from ``eegdash.splits`` would print the contract
 # JSON line in a full ``plot_11`` pipeline; here we emit the same line
 # manually so the validator (E5.42 / E5.43) sees the contract.
 
 # %% [markdown]
-# ## Run - materialise the split
+# Run - materialise the split
+# ---------------------------
 # Run this cell to commit the train/test index masks; the printed JSON
 # is the line ``scripts/tutorial_audit/runtime/e5_runtime.py`` parses.
 
@@ -114,7 +119,8 @@ print(json.dumps({"leakage_report": {"overlap": int(overlap), "by": "subject"}})
 assert overlap == 0, "subject overlap detected; rebuild the split before training"
 
 # %% [markdown]
-# ## Step 3 - Compute band-power features
+# Step 3 - Compute band-power features
+# ------------------------------------
 # Each window is reduced to ``n_channels * 2`` features: variance after
 # a 1-4 Hz delta band-pass and an 8-12 Hz alpha band-pass (zero-phase,
 # non-causal Butterworth) - a textbook proxy for log-band-power. We
@@ -139,14 +145,16 @@ F = make_features(X)
 print(f"feature matrix={F.shape} (delta + alpha band power per channel)")
 
 # %% [markdown]
-# ## Step 4 - Train logistic regression and predict
+# Step 4 - Train logistic regression and predict
+# ----------------------------------------------
 # We use ``LogisticRegression`` with ``random_state=42`` and the default
 # L2 penalty - the simplest defensible classifier for tabular EEG
 # features. Cisotto & Chicco 2024 (Tip 5) recommend exactly this kind
 # of transparent baseline before wheeling out a deep net.
 
 # %% [markdown]
-# ## Run - fit and score
+# Run - fit and score
+# -------------------
 # Run this cell to train on the four-subject training fold and predict.
 
 # %%
@@ -158,7 +166,8 @@ y_pred = clf.predict(F_test)
 model_acc = float(accuracy_score(y_test, y_pred))
 
 # %% [markdown]
-# ## Step 5 - Compute chance and print model vs. chance
+# Step 5 - Compute chance and print model vs. chance
+# --------------------------------------------------
 # ``majority_baseline`` returns the test-set frequency of the most
 # common label and the score of predicting the train mode on the test
 # set. Either is a defensible "chance level" to report (E5.43); we
@@ -181,7 +190,8 @@ print(
 # the variance, then commit to a single seed for the report.
 
 # %% [markdown]
-# ## Result - tiny metric table
+# Result - tiny metric table
+# --------------------------
 # We print one row per condition so the chance-level disclosure (E5.43)
 # and the model number sit on the same screen.
 
@@ -192,7 +202,8 @@ print(f"| model (logistic)   | {model_acc:0.3f}   |")
 print(f"| chance (majority)  | {chance:0.3f}   |")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Aligning ``X`` and ``y`` slices wrong is the most common
 # slip when stitching features to labels; sklearn raises ``ValueError``.
 # We trigger it with ``try/except`` so the failure mode is visible.
@@ -206,14 +217,16 @@ except ValueError as exc:
     print(f"Recovery: ensure len(X)={len(F_train)} == len(y)={len(y_train)}.")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: swap band-power for a flattened raw window
 # (``X.reshape(len(X), -1)``) before fitting. The accuracy will drop -
 # without inductive bias a linear model on raw samples regresses to
 # chance. That collapse is the point: chance is *the floor*.
 
 # %% [markdown]
-# ## Make
+# Make
+# ----
 # **Mini-project**: replace the synthesiser with the windows + manifest
 # from ``plot_11`` (``apply_split_manifest``), keep ``random_state=42``,
 # and try a small neural baseline such as ``ShallowFBCSPNet`` from
@@ -221,7 +234,8 @@ except ValueError as exc:
 # CPU. Report model accuracy and chance level on the same line.
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We trained a CPU-only logistic-regression baseline on band-power
 # features and reported its accuracy next to the majority-class chance
 # level. The split was subject-aware (``leakage_report`` overlap=0), the
@@ -229,13 +243,15 @@ except ValueError as exc:
 # number worth quoting in a paper or a benchmark submission.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Increase ``n_per_subject`` to 80 and re-run; chance stays near 0.5.
 # - Swap ``majority_baseline`` for a 5-fold cross-subject loop reporting mean +/- std.
 # - Replace the linear model with ``LogisticRegressionCV`` for tuning.
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ
 #   Computer Science*. https://doi.org/10.7717/peerj-cs.2256
 # - Schirrmeister et al. 2017, Deep learning with convolutional neural

@@ -19,7 +19,8 @@ sessions of the same subject?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - explain why decoders drift across sessions of the same subject.
 # - build a cross-session split with ``get_splitter("cross_session")``.
@@ -28,7 +29,8 @@ sessions of the same subject?
 # - compare within-session accuracy to cross-session accuracy and read the
 #   drift delta per subject.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - You finished
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
@@ -56,7 +58,8 @@ np.random.seed(42)
 N_SUBJECTS, N_SESSIONS, N_WINDOWS = 8, 3, 8
 
 # %% [markdown]
-# ## Step 1 -- Build per-subject per-session metadata
+# Step 1 -- Build per-subject per-session metadata
+# ------------------------------------------------
 #
 # 8 subjects x 3 sessions x 8 windows = 192 windows. Features carry a
 # subject-specific cluster (a "neural fingerprint" the within-session
@@ -98,7 +101,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict, then build the cross-session split
+# Step 2 -- Predict, then build the cross-session split
+# -----------------------------------------------------
 #
 # **Predict.** How should ``session_overlap`` differ from
 # ``subject_overlap`` here, compared with ``plot_11``'s cross-subject
@@ -116,7 +120,8 @@ manifest = make_split_manifest(splitter, y, metadata, target="target")
 print(f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']}")
 
 # %% [markdown]
-# ## Step 3 -- Assert no session leakage, confirm subjects are shared
+# Step 3 -- Assert no session leakage, confirm subjects are shared
+# ----------------------------------------------------------------
 #
 # ``assert_no_leakage(..., by="session")`` walks every fold and prints the
 # JSON ``leakage_report`` line consumed by runtime validator E5.42. We
@@ -140,7 +145,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 4 -- Run within-session and cross-session on the SAME data
+# Step 4 -- Run within-session and cross-session on the SAME data
+# ---------------------------------------------------------------
 #
 # **Run (#2).** Two evaluations on the identical ``(X, y, metadata)``:
 # (1) within-session, 75/25 split per ``(subject, session)`` block
@@ -187,7 +193,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- describe_split shows the per (subject, session) audit
+# Step 5 -- describe_split shows the per (subject, session) audit
+# ---------------------------------------------------------------
 #
 # **Run (#3).** ``describe_split`` reports per-fold sample/subject/session
 # counts and class balance. We print the first three of 24 folds: each
@@ -206,7 +213,8 @@ for i, fold in enumerate(summary["per_fold"][:3]):
     )
 
 # %% [markdown]
-# ## Result -- calibration drift is real
+# Result -- calibration drift is real
+# -----------------------------------
 #
 # Subject overlap is 1 per fold by design; session_overlap is 0 (E5.42
 # reports it). Within-session > cross-session > chance, and the gap is
@@ -223,7 +231,8 @@ ranked = sorted(
 print(f"Top 3 drift subjects (within, cross): {ranked}")
 
 # %% [markdown]
-# ## A common slip -- and how to recover
+# A common slip -- and how to recover
+# -----------------------------------
 # **Run.** Calling ``assert_no_leakage`` with the default ``by="subject"``
 # on a cross-session manifest looks like a leak (subjects are shared on
 # purpose). Recovery: pass ``by="session"``.
@@ -237,7 +246,8 @@ except Exception as exc:
     print(f"Recovery overlap = {assert_no_leakage(manifest, metadata, by='session')}")
 
 # %% [markdown]
-# ## Modify -- try a 2-session subject
+# Modify -- try a 2-session subject
+# ---------------------------------
 #
 # **Modify.** Drop one session from ``sub-00`` and re-run. MOABB
 # contributes 2 folds for *that* subject (LOSO over 2 sessions) and 3
@@ -261,13 +271,15 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 #
 # - vary ``random_state`` and confirm session disjointness still holds.
 # - increase per-session drift in the mock data and watch the delta widen.
 # - swap to a real BIDS dataset with ``description['session']`` set.
 #
-# ## Links
+# Links
+# -----
 #
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - API: ``get_splitter``, ``make_split_manifest``, ``assert_no_leakage``,

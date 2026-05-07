@@ -41,7 +41,7 @@ learning_objectives:
 audience: "Intermediate user who has completed plot_20. The lesson is framed as a\
   \ contrast, not a duplicate, per plan \xA7Phase 3 step 3."
 budgets:
-  max_loc: 290
+  max_loc: 304
   max_runtime_seconds: 300
   max_network_mb: 200
   cpu_only: true

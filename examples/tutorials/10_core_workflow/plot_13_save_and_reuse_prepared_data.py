@@ -14,7 +14,8 @@ and reload it in the next session without rerunning the pipeline?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Save a Braindecode windowed dataset with ``windows.save``.
@@ -23,7 +24,8 @@ and reload it in the next session without rerunning the pipeline?
 # - Verify provenance so the cache stays FAIR (Wilkinson et al. 2016).
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 # - **Estimated time**: ~3 s on CPU, no GPU.
 # - **Network**: none — we synthesise a tiny signal locally so the lesson
 #   is reproducible offline. Every artifact is routed through
@@ -57,7 +59,8 @@ mne.set_log_level("ERROR")
 print(f"eegdash {eegdash.__version__} | braindecode {braindecode.__version__}")
 
 # %% [markdown]
-# ## Step 1: build a small windowed dataset
+# Step 1: build a small windowed dataset
+# --------------------------------------
 # We simulate one subject of resting EEG (2 channels, 4 s at 100 Hz) and
 # slice it into two non-overlapping 2-second windows. A miniature dataset
 # keeps runtime under a second yet exercises every code path of the real
@@ -88,7 +91,8 @@ print(f"built {n_windows} window(s) of shape {sample_shape}")
 # and reads them back with MNE. Will the reloaded array be bit-exact, or
 # will you see floating-point drift on the order of 1e-9?
 #
-# ## Step 2: save the windows to disk
+# Step 2: save the windows to disk
+# --------------------------------
 # ``BaseConcatDataset.save(path, overwrite=True)`` writes one subdirectory
 # per child dataset, each holding ``-raw.fif`` (or ``-epo.fif``) plus JSON
 # sidecars for description, target name, and preprocessing kwargs. Caching
@@ -108,7 +112,8 @@ print(f"saved: {windows_path}")
 print(f"artifact tree (first 6): {saved_files[:6]}")
 
 # %% [markdown]
-# ## Step 3: reload the windows in a fresh handle
+# Step 3: reload the windows in a fresh handle
+# --------------------------------------------
 # In a new kernel you would call ``load_concat_dataset(windows_path,
 # preload=True)`` exactly like below. ``preload=True`` returns float32 in
 # RAM — what almost every learner wants the second time around.
@@ -135,7 +140,8 @@ assert list(reloaded.description.columns) == list(windows.description.columns)
 print(f"shapes match: original={sample_shape}, reloaded={x_re.shape}")
 
 # %% [markdown]
-# ## Step 4: save and reload a tabular feature table
+# Step 4: save and reload a tabular feature table
+# -----------------------------------------------
 # Many downstream notebooks consume a ``(n_windows, n_features)`` table
 # rather than raw signals. Parquet fits that need: columnar, typed,
 # compressed, readable from R, Julia, Python, and DuckDB. We compute one
@@ -163,7 +169,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Forgetting ``overwrite=True`` is the single most common slip
 # on the second run of this tutorial; we trigger it on purpose so you
 # see the ``FileExistsError`` first-hand.
@@ -179,7 +186,8 @@ except (FileExistsError, OSError, RuntimeError) as exc:
     print("Recovery: rmtree + save without overwrite=True succeeded.")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: serialise the windows as **Zarr** instead of FIF. Zarr is
 # chunked, supports parallel reads, and can sit on cloud object stores
 # (Wilkinson et al. 2016 — FAIR ``A2`` accessibility). Try
@@ -187,7 +195,8 @@ except (FileExistsError, OSError, RuntimeError) as exc:
 # your own kernel and compare disk usage with ``du -sh``.
 
 # %% [markdown]
-# ## Make
+# Make
+# ----
 # **Mini-project**: write a tiny ``cache_or_compute`` wrapper that calls
 # ``compute_fn`` only on a cache miss — the smallest useful step toward the
 # FAIR provenance manifest (Wilkinson et al. 2016).
@@ -210,7 +219,8 @@ assert len(first) == len(second) == n_windows
 print(f"cache_or_compute OK: hits={demo_path.exists()}")
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # We turned a synthetic recording into a 2-window dataset, persisted both
 # signals and a derived feature table, and reloaded each artifact with
 # shape, dtype, and value parity. Caching is never automatic: it costs
@@ -223,18 +233,21 @@ shutil.rmtree(cache_root, ignore_errors=True)  # keep the cache in real projects
 print("cleanup OK")
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # You can now stop paying the preprocessing cost on every kernel restart;
 # downstream tutorials consume the saved artifact directly.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Re-save with ``overwrite=False`` and observe the ``FileExistsError``.
 # - Add a ``manifest.json`` recording package versions, ``SEED``, and DOI.
 # - Compare Parquet vs CSV size on the same table (Parquet is ~10x smaller).
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Schirrmeister et al. 2017, *Deep learning with convolutional neural
 #   networks for EEG decoding* (Braindecode), Hum Brain Mapp.
 #   https://doi.org/10.1002/hbm.23730

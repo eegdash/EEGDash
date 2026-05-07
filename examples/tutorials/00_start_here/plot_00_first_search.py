@@ -10,7 +10,8 @@ follow-up?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Build an ``EEGDash`` client and run a metadata-only query.
@@ -20,7 +21,8 @@ follow-up?
 # - Filter the catalogue down to candidate datasets matching a question.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 # - Estimated time ~1 minute on CPU; only JSON metadata (< 5 MB) is fetched.
 # - Network required. Offline fallback handled for airgapped builds.
 # - Prerequisites: none. The companion explanation page lives at
@@ -47,7 +49,8 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 
 # %% [markdown]
-# ## Step 1: open a metadata-only client
+# Step 1: open a metadata-only client
+# -----------------------------------
 # ``EEGDash()`` opens a REST connection to the public metadata index. No
 # authentication is required for read-only access, and *no EEG bytes are
 # transferred* — the client only ferries small JSON documents.
@@ -81,7 +84,8 @@ if datasets:
     print(f"DOI  : {datasets[0].get('dataset_doi')!r}")
 
 # %% [markdown]
-# ## Step 2: zoom in to a known dataset
+# Step 2: zoom in to a known dataset
+# ----------------------------------
 # We pick the BIDS face-processing dataset ``ds002718`` (Wakeman & Henson,
 # 2015, doi:10.1038/sdata.2015.1): small, well documented, textbook
 # 70-channel montage. Switching from ``find_datasets`` to ``find`` moves
@@ -125,7 +129,8 @@ if records:
         print(f"  {field:<20s}: {sample.get(field)!r}")
 
 # %% [markdown]
-# ## Step 3: shape a cohort statistic
+# Step 3: shape a cohort statistic
+# --------------------------------
 # A research-grade question usually starts with "how many subjects, for
 # how long, at what rate". We compute those over the records we have —
 # still no signal download.
@@ -155,7 +160,8 @@ def cohort_stats(recs: list[dict]) -> dict:
 print(cohort_stats(records) if records else {})
 
 # %% [markdown]
-# ## Step 4: filter by BIDS entity
+# Step 4: filter by BIDS entity
+# -----------------------------
 # ``find`` accepts keyword filters that compose into a Mongo-style query.
 # We narrow to the first three subjects as a sanity check before larger
 # analyses.
@@ -169,7 +175,8 @@ else:
     subset = []
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** A frequent slip is passing an unknown task name and then
 # debugging the empty list. We trigger it with ``try/except`` so the
 # error is visible (Nederbragt et al. 2020).
@@ -183,7 +190,8 @@ known = sorted({r.get("task") for r in records if r.get("task")})
 print(f"Known tasks for {DATASET_ID}: {known}")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: change ``ALT_TASK`` and rerun. The face dataset has one
 # task, but the catalogue also exposes resting-state and go/no-go families.
 
@@ -196,7 +204,8 @@ except Exception:  # pragma: no cover
 print(f"records with task={ALT_TASK!r}: {len(alt_records)}")
 
 # %% [markdown]
-# ## Make
+# Make
+# ----
 # **Mini-project**: build a query returning *at least 5 candidate datasets*
 # for your own research question — pick a constraint that matters
 # (datatype, minimum subject count, license) and surface the dataset ids.
@@ -222,21 +231,24 @@ shortlist = shortlist_datasets(min_subjects=5, datatype="eeg", limit=30)
 print(f"{len(shortlist)} EEG datasets pass the filter; first 10: {shortlist[:10]}")
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # We surveyed the EEGDash metadata index without pulling a single sample
 # and printed a cohort summary above. Hedged claim, in line with Cisotto &
 # Chicco (2024): the *index* answer ("how many records exist") does not
 # yet tell us anything about signal quality.
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We learned how to call ``find`` and ``find_datasets``, how to read
 # record vs dataset documents, and how to spot a candidate dataset.
 # Next: ``plot_01_first_recording.py`` downloads one record and inspects
 # its raw signal, channel set and duration.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Swap ``ds002718`` for a different OpenNeuro id and rerun Step 2.
 # - Add a Mongo ``$gte`` filter on ``sampling_frequency`` (e.g. >= 250 Hz).
 # - Persist the shortlist to ``cache_dir / 'shortlist.json'`` for reuse.
@@ -244,7 +256,8 @@ print(f"{len(shortlist)} EEG datasets pass the filter; first 10: {shortlist[:10]
 #   they diverge?
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
 # - Wakeman & Henson 2015, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
 # - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256

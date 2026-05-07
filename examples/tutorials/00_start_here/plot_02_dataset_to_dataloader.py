@@ -13,7 +13,8 @@ shape will that first batch be?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Build a single-subject ``EEGDashDataset`` and chain two safe preprocessors with :func:`braindecode.preprocessing.preprocess`.
@@ -23,7 +24,8 @@ shape will that first batch be?
 # - Set seeds for both ``numpy`` and ``torch`` so a teammate gets the same first batch.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 #
 # - Estimated time: about 2 minutes on CPU (the slow step is the first-time cache fetch).
 # - Data downloaded: ~30-60 MB of EEG from OpenNeuro, cached locally.
@@ -62,7 +64,8 @@ print(f"eegdash {eegdash.__version__}, torch {torch.__version__}")
 print(f"cache_dir={cache_dir}")
 
 # %% [markdown]
-# ## Step 1: instantiate one-subject EEGDashDataset
+# Step 1: instantiate one-subject EEGDashDataset
+# ----------------------------------------------
 # We reuse ``ds002718`` from the previous lessons and ask EEGDash for one
 # subject (``sub-002``) so the pipeline stays inside the 60-second budget.
 # ``EEGDashDataset`` is a Braindecode ``BaseConcatDataset``, so it composes
@@ -93,7 +96,8 @@ print(
 # 250 Hz with EEG plus EOG channels mixed in -- we keep only EEG below.
 
 # %% [markdown]
-# ## Step 2: apply two safe preprocessors
+# Step 2: apply two safe preprocessors
+# ------------------------------------
 # ``pick_types(eeg=True)`` keeps the EEG channels (dropping EOG/MISC), and
 # ``resample(sfreq=100)`` downsamples to 100 Hz, keeping the CPU runtime
 # budget tight without distorting slower cortical rhythms.
@@ -119,7 +123,8 @@ assert sfreq == TARGET_SFREQ, "Resampling did not hit the target sfreq."
 # tensor shape downstream.
 
 # %% [markdown]
-# ## Step 3: cut into fixed-length windows
+# Step 3: cut into fixed-length windows
+# -------------------------------------
 # ``create_fixed_length_windows`` slides a non-overlapping window across
 # the recording. We pick 2-second windows with stride equal to the window
 # size, so each sample appears in exactly one window.
@@ -148,7 +153,8 @@ assert X_one.shape == (n_channels, window_size_samples)
 # along a new axis gives the 3-D tensor a model expects.
 
 # %% [markdown]
-# ## Step 4: wrap windows in a DataLoader
+# Step 4: wrap windows in a DataLoader
+# ------------------------------------
 # ``shuffle=False`` plus ``num_workers=0`` makes the first batch
 # bit-for-bit reproducible; we assert ``len(windows) >= batch_size`` because
 # a smaller dataset would silently change the returned shape.
@@ -170,7 +176,8 @@ print(
 # and ``EEGNetv4`` consume.
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Picking a window larger than the recording silently returns
 # zero windows -- the most common slip when scaling this code to a new
 # dataset. We trigger it with ``try/except`` so you see the failure.
@@ -192,13 +199,15 @@ except (ValueError, RuntimeError) as exc:
 print(f"Recovery: keep window_size_samples={window_size_samples} (<< recording).")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: edit ``WINDOW_SECONDS`` to 4 seconds, rerun Step 3 and
 # Step 4, and predict before you run: how should the per-window time axis
 # change, and how should ``len(windows)`` change?
 
 # %% [markdown]
-# ## Make
+# Make
+# ----
 # **Mini-project**: write a tiny custom collate function that returns only
 # the signal tensor (drops ``y`` and the index), and rebuild the loader
 # with it. This is the kind of helper you write when feeding pretext tasks
@@ -223,7 +232,8 @@ print(f"custom collate: X.shape={tuple(X_only.shape)}, X.dtype={X_only.dtype}")
 assert X_only.ndim == 3 and X_only.shape[0] == BATCH_SIZE
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # We turned one subject of ``ds002718`` (BIDS entities ``dataset``,
 # ``subject``, ``task``) into a reproducible PyTorch ``DataLoader``. The
 # first batch shape is ``(batch_size, n_channels, window_size_samples)``.
@@ -231,7 +241,8 @@ assert X_only.ndim == 3 and X_only.shape[0] == BATCH_SIZE
 # only confirms *plumbing* -- not signal quality or task design.
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We chained ``EEGDashDataset`` -> ``preprocess`` ->
 # ``create_fixed_length_windows`` -> ``DataLoader`` for one subject, seeded
 # both RNGs, and read one batch's shape. Next:
@@ -239,14 +250,16 @@ assert X_only.ndim == 3 and X_only.shape[0] == BATCH_SIZE
 # intentional preprocessing choices.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 #
 # - Re-run with ``shuffle=True`` after seeding ``torch`` and observe which positions land in the first batch.
 # - Set ``num_workers=2`` and confirm the batch shape is identical while wall-time changes; explain why on a 1-2-core CPU.
 # - Replace ``stride_samples = window_size_samples`` with a 50% overlap (``window_size_samples // 2``) and predict the new ``len(windows)``; verify your prediction.
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 #
 # - Wakeman & Henson 2015, multi-subject, multi-modal face-processing dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
 # - Schirrmeister et al. 2017, Deep learning with convolutional neural networks for EEG decoding and visualization, *Human Brain Mapping* 38(11). https://doi.org/10.1002/hbm.23730

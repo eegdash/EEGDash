@@ -10,7 +10,8 @@ Can a logistic-regression Pipeline on a handful of EEG features beat the
 majority-class chance level on a held-out subject?
 """
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Build a small feature DataFrame compatible with scikit-learn.
@@ -19,7 +20,8 @@ majority-class chance level on a held-out subject?
 # - Compare accuracy against ``majority_baseline`` chance level (E5.43).
 # - Save the trained Pipeline with ``joblib`` for downstream reuse.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - ~3 s on CPU, no GPU, no network.
 # - Prerequisites: ``plot_40_first_features``, ``plot_11_leakage_safe_split``.
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
@@ -54,7 +56,8 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
-# ## Step 1 -- Extract a small feature table
+# Step 1 -- Extract a small feature table
+# ---------------------------------------
 # In production you would reload ``plot_40_features.parquet``; offline we
 # synthesise the same column layout (per-channel variance + four-band
 # power). Eyes-closed gets the textbook alpha bump (Berger 1929,
@@ -88,13 +91,15 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- Predict before you fit
+# Step 2 -- Predict before you fit
+# --------------------------------
 # **Predict.** With ~20 features and a built-in alpha contrast, what
 # accuracy do you expect a regularised linear baseline to reach above
 # chance (~0.5 with balanced classes)? The PRIMM cycle (Sentance et al.
 # 2019, doi:10.1080/08993408.2019.1608781) turns the gap into learning.
 #
-# ## Step 3 -- Leakage-safe split
+# Step 3 -- Leakage-safe split
+# ----------------------------
 # **Run #1.** ``get_splitter("cross_subject", ...)`` returns a MOABB
 # ``CrossSubjectSplitter`` (or a sklearn ``GroupKFold`` keyed on
 # ``subject``). ``assert_no_leakage`` prints the JSON contract line E5.42
@@ -128,7 +133,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 4 -- StandardScaler -> LogisticRegression Pipeline
+# Step 4 -- StandardScaler -> LogisticRegression Pipeline
+# -------------------------------------------------------
 # A ``Pipeline`` (Pedregosa et al. 2011, doi:10.5555/1953048.2078195)
 # fits ``StandardScaler`` on ``X_train`` only and reapplies ``transform``
 # at predict time; ``random_state=42`` makes accuracy byte-stable.
@@ -143,7 +149,8 @@ pipe = Pipeline(
 pipe.fit(X_train, y_train)
 
 # %% [markdown]
-# ## Step 5 -- Score the test fold against chance
+# Step 5 -- Score the test fold against chance
+# --------------------------------------------
 # **Run #2.** ``majority_baseline`` returns the test-set frequency of the
 # most common label -- the metric pitfall Cisotto & Chicco 2024 Tip 9
 # (doi:10.7717/peerj-cs.2256) flags hardest.
@@ -157,7 +164,8 @@ print(
 )
 
 # %% [markdown]
-# ## Step 6 -- Investigate the confusion matrix
+# Step 6 -- Investigate the confusion matrix
+# ------------------------------------------
 # **Investigate.** Diagonal dominance means the alpha contrast
 # transferred to a held-out subject; off-diagonal mass flags class drift.
 
@@ -171,7 +179,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A common slip is calling ``.fit`` on a bare classifier with
 # un-scaled features -- ``LogisticRegression`` then warns about
@@ -192,7 +201,8 @@ except (Warning, ValueError) as exc:
     print("Recovery: wrap StandardScaler -> LogisticRegression in a Pipeline.")
 
 # %% [markdown]
-# ## Modify -- swap LogisticRegression for RidgeClassifier
+# Modify -- swap LogisticRegression for RidgeClassifier
+# -----------------------------------------------------
 # **Modify.** Same Pipeline, different head: ``RidgeClassifier`` is the
 # closed-form L2 alternative.
 
@@ -205,7 +215,8 @@ ridge_acc = float(accuracy_score(y_test, ridge.predict(X_test)))
 print(f"RidgeClassifier accuracy: {ridge_acc:.3f}")
 
 # %% [markdown]
-# ## Make -- try LightGBM, fall back to RandomForest
+# Make -- try LightGBM, fall back to RandomForest
+# -----------------------------------------------
 # **Make.** ``lightgbm`` is optional; ``try/except ImportError`` falls
 # back to ``RandomForestClassifier``.
 
@@ -233,7 +244,8 @@ boost_acc = float(accuracy_score(y_test, boost.predict(X_test)))
 print(f"{boost_name} accuracy: {boost_acc:.3f}")
 
 # %% [markdown]
-# ## Result -- model vs chance table
+# Result -- model vs chance table
+# -------------------------------
 # All three Pipelines are scored on the same held-out subject with chance
 # alongside (E5.43); the Pipeline is saved for reuse.
 
@@ -275,13 +287,15 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself / Extensions
+# Try it yourself / Extensions
+# ----------------------------
 # - Bump ``n_per`` to 64 and re-run; the gap above chance widens.
 # - Reload the parquet table from plot_40 and reuse this Pipeline.
 # - Inspect ``pipe.named_steps['clf'].coef_`` and rank top-k features.
 # - Loop ``apply_split_manifest`` over all folds and report mean +/- std.
 #
-# ## References
+# References
+# ----------
 # - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
 # - Pernet et al. 2019, *Sci. Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
 # - Pedregosa et al. 2011, *JMLR* 12:2825. https://doi.org/10.5555/1953048.2078195

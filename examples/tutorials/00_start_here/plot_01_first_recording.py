@@ -10,7 +10,8 @@ first five seconds of signal. Why look at one record before scaling up?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - Build an ``EEGDashDataset`` and read ``len(dataset)`` plus ``summary()``.
 # - Use ``preview(index=0)`` to materialize one recording lazily.
@@ -22,7 +23,8 @@ first five seconds of signal. Why look at one record before scaling up?
 # object model behind ``EEGDashDataset``.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 #
 # - Runtime: ~2 min on CPU on first run; <10 s once cached.
 # - Network: ~80 MB on the first call (downloaded from OpenNeuro into the
@@ -32,7 +34,8 @@ first five seconds of signal. Why look at one record before scaling up?
 # - Prerequisite tutorial: ``plot_00_first_search`` for query basics.
 
 # %% [markdown]
-# ## Setup
+# Setup
+# -----
 #
 # Imports follow the EEGDash convention: standard library, third-party
 # (``numpy``, ``matplotlib``), then ``eegdash``. We seed NumPy for reproducibility.
@@ -53,7 +56,8 @@ print(f"eegdash version: {eegdash.__version__}")
 print(f"cache directory: {cache_dir}")
 
 # %% [markdown]
-# ## Step 1: Pick one recording
+# Step 1: Pick one recording
+# --------------------------
 #
 # We pick subject ``002`` from ``ds002718`` (Wakeman and Henson's visual face
 # perception study). One subject keeps the download small and the figure
@@ -68,7 +72,8 @@ DATASET = "ds002718"
 SUBJECT = "002"
 
 # %% [markdown]
-# ## Step 2: Load it via ``EEGDashDataset`` and ``preview(index=0)``
+# Step 2: Load it via ``EEGDashDataset`` and ``preview(index=0)``
+# ---------------------------------------------------------------
 #
 # **Run**: building an ``EEGDashDataset`` queries the EEGDash metadata catalog
 # for matching records — no EEG samples are read yet (lazy loading). The first
@@ -89,7 +94,8 @@ assert len(dataset) >= 1, "Expected at least one recording for subject 002."
 report = dataset.summary(verbose=True)
 
 # %% [markdown]
-# ## Step 3: Inspect channels, sfreq, duration, annotations
+# Step 3: Inspect channels, sfreq, duration, annotations
+# ------------------------------------------------------
 #
 # **Run** the recording-level loader: ``preview`` reads the file, slices the
 # first 5 seconds for a quick glance, and exposes ``raw``, ``metadata``,
@@ -120,7 +126,8 @@ if preview.annotations:
 # ``events.tsv`` file and inherit MNE's onset/duration/description schema.
 
 # %% [markdown]
-# ## Step 4: Plot a 5-second snippet
+# Step 4: Plot a 5-second snippet
+# -------------------------------
 #
 # **Run** ``preview.plot()``. It calls :meth:`mne.io.Raw.plot` under the hood;
 # ``show=False`` returns a figure we can render without blocking on a viewer.
@@ -157,7 +164,8 @@ ax.text(
 plt.show()
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 # **Run.** Asking for a recording index past the end is the most common
 # slip when iterating; we trigger it on purpose with ``try/except`` so
 # the failure mode is visible.
@@ -172,7 +180,8 @@ except (IndexError, KeyError) as exc:
     print(f"Recovery: preview(index={safe_idx}) instead of 999.")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 #
 # **Your turn**: change ``SUBJECT`` to ``"003"`` and re-run Steps 2 and 3.
 # Compare the printed sampling rate, channel count, duration, and annotation
@@ -190,7 +199,8 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself (Make / Extensions)
+# Try it yourself (Make / Extensions)
+# -----------------------------------
 #
 # Pick a *different task* (or dataset) and repeat the inspection.
 #
@@ -199,7 +209,8 @@ print(
 # - **Harder**: filter two subjects, then ``preview(index=1)`` for the second.
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 
 # %%
 print(
@@ -209,7 +220,8 @@ print(
 )
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 #
 # We loaded **one** EEG recording end-to-end without writing a download script:
 # ``EEGDashDataset`` resolves the BIDS query against OpenNeuro,
@@ -220,7 +232,8 @@ print(
 # noise (50/60 Hz), and slow drifts coexist in this view; preprocessing
 # belongs in ``plot_10_preprocess_and_window``.
 #
-# ## References
+# References
+# ----------
 #
 # - Wakeman, D. G., and Henson, R. N. (2015). A multi-subject, multi-modal
 #   human neuroimaging dataset. *Scientific Data* 2:150001. OpenNeuro

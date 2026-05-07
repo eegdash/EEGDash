@@ -40,7 +40,7 @@ learning_objectives:
 audience: Intermediate user who finished plot_40 and plot_11. Knows scikit-learn pipelines;
   learns leakage-safe scaling and EEG-specific feature interpretation here.
 budgets:
-  max_loc: 300
+  max_loc: 308
   max_runtime_seconds: 300
   max_network_mb: 50
   cpu_only: true

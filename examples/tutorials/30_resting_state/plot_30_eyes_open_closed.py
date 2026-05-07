@@ -11,7 +11,8 @@ open or closed?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 # After this tutorial you will be able to:
 #
 # - Use ``eegdash.tasks.get_task`` to pull the canonical EOEC recipe.
@@ -20,7 +21,8 @@ open or closed?
 # - Train a within-subject logistic-regression on band-power features.
 # - Read the JSON ``leakage_report`` line and a chance-vs-accuracy print.
 #
-# ## Requirements
+# Requirements
+# ------------
 # - Estimated time ~5 min on CPU (no GPU; ~80 MB cached after first run).
 # - Prerequisites:
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
@@ -53,7 +55,8 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
-# ## Step 1 -- Get the task
+# Step 1 -- Get the task
+# ----------------------
 # ``get_task("eyes-open-closed")`` returns an :class:`~eegdash.tasks.EyesOpenClosed`
 # whose YAML manifest hard-codes HBN release 9 ``ds005514``
 # (doi:10.18112/openneuro.ds005514.v1.0.0), the EOEC label definition,
@@ -70,14 +73,16 @@ print(
 )
 
 # %% [markdown]
-# ## Step 2 -- PRIMM Predict
+# Step 2 -- PRIMM Predict
+# -----------------------
 # **Predict.** Berger 1929 showed that closing the eyes gates posterior
 # cortex into the alpha rhythm (8-12 Hz). Which condition shows *higher*
 # alpha power over parieto-occipital channels -- eyes open or closed?
 # Note your guess. (Spoiler: closed; the bump sits over O1/Oz/O2.)
 
 # %% [markdown]
-# ## Step 3 -- Load one subject and window it
+# Step 3 -- Load one subject and window it
+# ----------------------------------------
 # ``EyesOpenClosed.make_windows()`` is the supported entry today;
 # ``task.get_windows()`` from the spec is not wired yet. We fall back to
 # the canonical pattern: ``EEGDashDataset`` with ``task.metadata_query()``,
@@ -95,7 +100,8 @@ sfreq = float(windows_ds.datasets[0].windows.info["sfreq"])
 ch_names = list(windows_ds.datasets[0].windows.info["ch_names"])
 
 # %% [markdown]
-# ## Step 4 -- PRIMM Run: per-window alpha power
+# Step 4 -- PRIMM Run: per-window alpha power
+# -------------------------------------------
 # **Run #1.** Welch PSD on each 2 s window, then integrate the canonical
 # 8-12 Hz alpha pass-band per channel.
 
@@ -136,7 +142,8 @@ fig.tight_layout(rect=(0.0, 0.04, 1.0, 1.0))
 plt.show()
 
 # %% [markdown]
-# ## Step 5 -- PRIMM Investigate
+# Step 5 -- PRIMM Investigate
+# ---------------------------
 # **Investigate.** Subtract the two condition maps and rank channels by
 # the eyes-closed minus eyes-open contrast. Posterior electrodes should
 # top the ranking, confirming Berger's finding on a single child.
@@ -157,7 +164,8 @@ assert positive_channel_ratio >= 0.50, (
 )
 
 # %% [markdown]
-# ## Step 6 -- Train logistic regression on alpha power
+# Step 6 -- Train logistic regression on alpha power
+# --------------------------------------------------
 # **Run #3.** With one subject and no cross-subject groups to hold out,
 # we use ``get_splitter("within_subject", ...)``: fold 0's train/test
 # windows come from disjoint slices of the same recording. We then call
@@ -195,7 +203,8 @@ print(
 )
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A common slip is reading the wrong frequency band -- e.g.
 # integrating the PSD between 30 and 8 Hz (lo > hi) so the mask is empty
@@ -215,7 +224,8 @@ except (ValueError, RuntimeError) as exc:
     print("Recovery: use (8.0, 12.0) Hz so the alpha mask is non-empty.")
 
 # %% [markdown]
-# ## Modify -- swap the band
+# Modify -- swap the band
+# -----------------------
 # **Modify.** Re-run Steps 4-6 after swapping the 8-12 Hz alpha band for
 # the 1-8 Hz delta+theta band. The contrast should collapse (and the
 # classifier with it), confirming the alpha bump drives the decoder
@@ -233,14 +243,16 @@ print(
 )
 
 # %% [markdown]
-# ## Make -- a second subject
+# Make -- a second subject
+# ------------------------
 # **Make.** Repeat Steps 3-6 on another HBN subject (e.g.
 # ``"NDARAA075AMK"``) by passing ``subjects=[...]`` to ``get_task``. With
 # two subjects you can promote the splitter to ``cross_subject`` and let
 # the model meet a participant it has never seen.
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # A printed table of the alpha-band evidence and the decoder vs. the
 # chance baseline (E5.43). Model accuracy beats chance and the
 # alpha-power difference is positive: closed eyes carry more alpha.
@@ -268,14 +280,16 @@ print(
 )
 
 # %% [markdown]
-# ## Try it yourself / Extensions
+# Try it yourself / Extensions
+# ----------------------------
 # - Increase the window from 2 s to 4 s and re-run; does the contrast sharpen?
 # - Pull two more subjects, switch to ``get_splitter("cross_subject", ...)``.
 # - Replace the logistic regression with ``ShallowFBCSPNet`` (see plot_12).
 # - Save the alpha topomap with ``fig.savefig`` for the benchmark log.
 
 # %% [markdown]
-# ## Links and references
+# Links and references
+# --------------------
 # - Concept: :doc:`/concepts/preprocessing_decisions`.
 # - API: :func:`eegdash.tasks.get_task`, :class:`eegdash.EEGDashDataset`, :func:`eegdash.splits.get_splitter`, :func:`eegdash.splits.assert_no_leakage`.
 # - Berger 1929, *Arch. Psychiatr. Nervenkr.*, "Uber das Elektrenkephalogramm des Menschen" (cited textually; no DOI).

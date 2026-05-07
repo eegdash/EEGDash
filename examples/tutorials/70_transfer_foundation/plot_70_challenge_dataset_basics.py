@@ -15,7 +15,8 @@ reproducibility tips). So why does the challenge need its own dataset class?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - Build ``EEGChallengeDataset(release=..., mini=True)`` and read ``.release`` / ``.mini`` back.
 # - Use ``mini=True`` to iterate on 20 subjects in seconds rather than the full release.
@@ -23,7 +24,8 @@ reproducibility tips). So why does the challenge need its own dataset class?
 # - Compare the challenge loader with ``EEGDashDataset``: a release-to-OpenNeuro map plus a curated mini list, on top of the same lazy-loading machinery.
 # - Surface the leaderboard contract: see :doc:`/concepts/eegdash_objects` and the EEG 2025 site for evaluation rules.
 #
-# ## Requirements
+# Requirements
+# ------------
 #
 # - You finished ``plot_01_first_recording`` and ``plot_02_dataset_to_dataloader``.
 # - CPU only; runtime < 1 minute.
@@ -52,7 +54,8 @@ print(f"eegdash version: {eegdash.__version__}")
 print(f"cache directory: {cache_dir}")
 
 # %% [markdown]
-# ## Step 1 -- Instantiate ``EEGChallengeDataset(release='R5', mini=True)``
+# Step 1 -- Instantiate ``EEGChallengeDataset(release='R5', mini=True)``
+# ----------------------------------------------------------------------
 #
 # **Run.** We pick release ``R5`` because it has 20 mini subjects (every release
 # does). ``download=False`` means no S3 traffic now -- we only need the metadata
@@ -69,7 +72,8 @@ print(f"s3_bucket : {ds_mini.s3_bucket}")
 print(f"data_dir  : {ds_mini.data_dir}")
 
 # %% [markdown]
-# ## Step 2 -- Predict: how does ``mini=True`` change the records list?
+# Step 2 -- Predict: how does ``mini=True`` change the records list?
+# ------------------------------------------------------------------
 #
 # **Predict.** Before running Step 3, write down: how many subjects do you
 # expect ``ds_mini`` to cover? Recall that ``SUBJECT_MINI_RELEASE_MAP[release]``
@@ -90,7 +94,8 @@ assert ds_mini.mini is True, "mini=True must be honoured"
 assert len(mini_subjects) == 20, "every challenge release lists 20 mini subjects"
 
 # %% [markdown]
-# ## Step 3 -- Show that ``mini`` is a strict subset of ``full``
+# Step 3 -- Show that ``mini`` is a strict subset of ``full``
+# -----------------------------------------------------------
 #
 # **Run.** Build the full-release dataset (still ``download=False``) and compare
 # subject sets. The full release pulls every subject mapped to OpenNeuro
@@ -113,7 +118,8 @@ print(f"|mini| / |full|      : {ratio:.2%}")
 assert ratio < 0.10, "mini should keep < 10% of the full subject pool"
 
 # %% [markdown]
-# ## Step 4 -- Surface the leaderboard contract
+# Step 4 -- Surface the leaderboard contract
+# ------------------------------------------
 #
 # **Investigate.** The challenge data is *not* identical to what
 # ``EEGDashDataset`` would download for the same OpenNeuro id: every recording
@@ -136,7 +142,8 @@ print(
 print("evaluation: see https://eeg2025.github.io (leaderboard, splits, deadline)")
 
 # %% [markdown]
-# ## Step 5 -- Investigate: how does this differ from ``EEGDashDataset``?
+# Step 5 -- Investigate: how does this differ from ``EEGDashDataset``?
+# --------------------------------------------------------------------
 #
 # **Investigate.** ``EEGDashDataset`` is a thin query layer over the eegdash
 # metadata catalog -- you pass any combination of BIDS entities and it returns
@@ -163,7 +170,8 @@ print(
 print("Same metadata catalog, two different views of the same subjects.")
 
 # %% [markdown]
-# ## A common mistake -- and how to recover (E2.17)
+# A common mistake -- and how to recover (E2.17)
+# ----------------------------------------------
 #
 # **Run.** Typing the release identifier wrong (``r5`` instead of ``R5``, or
 # ``"R12"``) raises ``ValueError`` at construction time -- before any S3 traffic
@@ -184,7 +192,8 @@ except ValueError as exc:
     print(f"Recovery: use one of {available}")
 
 # %% [markdown]
-# ## Modify -- try a different release
+# Modify -- try a different release
+# ---------------------------------
 #
 # **Your turn.** Switch ``RELEASE`` to ``"R2"`` (smaller dataset) and re-check
 # the strict-subset invariant. The 20 mini subjects per release are different,
@@ -201,7 +210,8 @@ print(
 )
 
 # %% [markdown]
-# ## Make -- a tiny preview-only pipeline
+# Make -- a tiny preview-only pipeline
+# ------------------------------------
 #
 # Build a one-record preview from the mini release. Inspect the record header
 # without pulling the 100 Hz BDF file: ``ds.records`` is enumerated at
@@ -220,13 +230,15 @@ print(
 print("To download and plot: call ds_mini.preview(0) after construction.")
 
 # %% [markdown]
-# ## Try it yourself (Extensions)
+# Try it yourself (Extensions)
+# ----------------------------
 #
 # - **Easier**: print ``SUBJECT_MINI_RELEASE_MAP[RELEASE]`` and confirm it matches ``mini_subjects``.
 # - **Same difficulty**: loop over every release in ``RELEASE_TO_OPENNEURO_DATASET_MAP`` and tabulate ``|mini|`` vs ``|full|``.
 # - **Harder**: run with ``download=True``, call ``preview(0)``, and confirm ``raw.info["sfreq"] == 100.0`` (the challenge downsample step).
 #
-# ## Result
+# Result
+# ------
 
 # %%
 summary = ds_mini.summary(verbose=False)
@@ -237,7 +249,8 @@ print(
 )
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 #
 # ``EEGChallengeDataset`` is ``EEGDashDataset`` with three rails attached: a
 # release-to-OpenNeuro map, a frozen mini subject list, and the challenge bucket.
@@ -246,7 +259,8 @@ print(
 # 0.5-50 Hz pass-band and 100 Hz downsample make the two views incompatible. See
 # :doc:`/concepts/eegdash_objects` for the object model behind both classes.
 #
-# ## References
+# References
+# ----------
 #
 # - Alexander, L. M. et al. (2017). An open resource for transdiagnostic
 #   research in pediatric mental health and learning disorders. *Scientific

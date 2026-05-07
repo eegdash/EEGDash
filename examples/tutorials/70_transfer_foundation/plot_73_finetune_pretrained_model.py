@@ -21,7 +21,8 @@ helps when the target task is small. So which regime wins?
 """
 
 # %% [markdown]
-# ## Learning objectives
+# Learning objectives
+# -------------------
 #
 # - load a pretrained encoder checkpoint and inspect its layers / param count.
 # - freeze the encoder and replace the classification head with a new ``n_outputs``.
@@ -30,7 +31,8 @@ helps when the target task is small. So which regime wins?
 # - apply a partial unfreeze (last block only) and read the trade-off curve.
 
 # %% [markdown]
-# ## Requirements
+# Requirements
+# ------------
 #
 # - **Estimated time**: ~30 s on CPU, ~10 s on GPU.
 # - **Data downloaded**: 0 MB (synthetic windows, deterministic).
@@ -71,7 +73,8 @@ except ImportError as exc:  # pragma: no cover - documented gating
 
 
 # %% [markdown]
-# ## Step 1 -- Pretrain a small encoder on a synthetic source task
+# Step 1 -- Pretrain a small encoder on a synthetic source task
+# -------------------------------------------------------------
 #
 # A real foundation model is pretrained on thousands of hours of EEG; we
 # stand in with a 6-subject synthetic source task and a couple of epochs
@@ -163,7 +166,8 @@ if HAS_TORCH:
 # windows? Write a guess before running Step 4.
 
 # %% [markdown]
-# ## Step 2 -- Build a leakage-safe downstream split
+# Step 2 -- Build a leakage-safe downstream split
+# -----------------------------------------------
 # We synthesise a 4-subject target task, hold out one subject for test,
 # and call ``assert_no_leakage`` so the runtime validator (E5.42) sees
 # the contract JSON line.
@@ -187,7 +191,8 @@ print(f"target: train={len(X_tr)} test={len(X_te)} subjects={len(all_subj)}")
 
 
 # %% [markdown]
-# ## Step 3 -- Reload the encoder, replace the head, freeze
+# Step 3 -- Reload the encoder, replace the head, freeze
+# ------------------------------------------------------
 # In the production recipe this is one line:
 # ``model = from_pretrained(...); model.reset_head(n_outputs=K)``. We
 # mirror it: load the encoder state, leave the freshly-initialised
@@ -220,7 +225,8 @@ def reset_and_freeze(model, freeze=True, last_block_only=False):
 
 
 # %% [markdown]
-# ## Run -- frozen, unfrozen, and from-scratch fine-tunes
+# Run -- frozen, unfrozen, and from-scratch fine-tunes
+# ----------------------------------------------------
 # Three regimes, same target data and budget. Frozen uses a higher lr
 # (only the head learns); unfrozen drops to 1e-3 because encoder weights
 # are fragile (Cisotto & Chicco 2024 Tip 7); scratch is randomly init.
@@ -249,7 +255,8 @@ if HAS_TORCH:
 
 
 # %% [markdown]
-# ## Investigate
+# Investigate
+# -----------
 # Per-regime accuracy vs chance level. With 30 train windows per subject
 # the absolute numbers are noisy; the *gap above chance* is what
 # generalises across runs.
@@ -264,7 +271,8 @@ if not results:
 
 
 # %% [markdown]
-# ## A common mistake -- and how to recover
+# A common mistake -- and how to recover
+# --------------------------------------
 #
 # **Run.** A frequent slip is reloading the encoder into a model whose
 # ``n_chans`` differs from the pretrained one -- ``load_state_dict`` then
@@ -292,7 +300,8 @@ if HAS_TORCH:
         print(f"Recovery: matching n_chans + strict=False; head re-init={head_only}.")
 
 # %% [markdown]
-# ## Modify
+# Modify
+# ------
 # **Your turn**: re-run with ``last_block_only=True`` in
 # ``reset_and_freeze``. The classifier conv and final batch norm
 # unfreeze; earlier layers stay pinned. This middle-ground regime is
@@ -310,7 +319,8 @@ if HAS_TORCH:
 
 
 # %% [markdown]
-# ## Result
+# Result
+# ------
 # Headline metric: best fine-tune accuracy on the held-out subject,
 # alongside chance. The gap is the only number worth quoting in a paper.
 
@@ -329,7 +339,8 @@ print(
 
 
 # %% [markdown]
-# ## Wrap-up
+# Wrap-up
+# -------
 # We pretrained a Braindecode encoder, saved its weights, reloaded them
 # into a fresh model with a replaced head, and compared frozen,
 # fully-unfrozen, partial, and from-scratch regimes against a chance
@@ -340,14 +351,16 @@ print(
 # ``from_pretrained(...)`` and call ``model.reset_head(n_outputs=K)``.
 
 # %% [markdown]
-# ## Try it yourself
+# Try it yourself
+# ---------------
 # - Vary the source-task pretraining length (1, 2, 5 epochs) and replot the curve.
 # - Swap ``ShallowFBCSPNet`` for ``EEGNetv4`` and re-run the four regimes.
 # - Increase the target test set to two subjects and report mean +/- std accuracy.
 # - Replace the synthetic data with a windowed EEGDash dataset from ``plot_10``.
 
 # %% [markdown]
-# ## References
+# References
+# ----------
 # - Schirrmeister et al. 2017, Deep learning with convolutional neural
 #   networks for EEG decoding, *Human Brain Mapping*.
 #   https://doi.org/10.1002/hbm.23730

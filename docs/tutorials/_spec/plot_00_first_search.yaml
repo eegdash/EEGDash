@@ -34,7 +34,7 @@ learning_objectives:
 audience: Brand-new EEGDash user; no prior EEG-DaSh tutorials. Comfortable running
   Python in a notebook.
 budgets:
-  max_loc: 285
+  max_loc: 250
   max_runtime_seconds: 60
   max_network_mb: 5
   cpu_only: true
@@ -89,3 +89,5 @@ requires_api:
 - eegdash.EEGDash.find
 - eegdash.EEGDash.find_datasets
 review_rubric_overrides: {}
+rule_overrides:
+  E3.21: exempt

@@ -392,13 +392,16 @@ def style_figure(
         # explicitly requested, so we still annotate the figure below.
         children = []
 
-    # First pass: spines + grid + ticks for every axes.
+    # First pass: spines + grid + ticks for every axes. Reserve top space for
+    # the title/subtitle band and bottom space for the source footer so the
+    # text never collides with axis labels (P0 fix from frontend-design pass).
     for ax in children:
         apply_eegdash_matplotlib_style(
             ax,
             data_rail=False,
             grid_axis=grid_axis,
         )
+    fig.subplots_adjust(top=0.84, bottom=0.18, left=0.12, right=0.95)
 
     # Second pass: figure-level annotations (Data Rail + title/subtitle/source)
     # attached to the figure exactly once.
@@ -408,7 +411,7 @@ def style_figure(
     if title:
         fig.text(
             0.08,
-            0.922,
+            0.93,
             title,
             fontsize=14,
             fontweight="bold",
@@ -420,7 +423,7 @@ def style_figure(
     if subtitle:
         fig.text(
             0.08,
-            0.89,
+            0.88,
             subtitle,
             fontsize=10,
             color=EEGDASH_MUTED,

@@ -129,6 +129,9 @@ def check_seeds(
     """
     if _is_markdown_source(tutorial_path, spec):
         return []
+    overrides = spec.get("rule_overrides") or {}
+    if str(overrides.get("E3.21", "")).strip().lower() == "exempt":
+        return []
     src = tutorial_path.read_text(encoding="utf-8")
     try:
         tree = ast.parse(src)

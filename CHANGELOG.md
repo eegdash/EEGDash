@@ -8,16 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Tutorial gallery refactor: 22 sphinx-gallery tutorials covering Categories A through H (Start Here, Core Workflow, Event-Related, Resting State, Features, Evaluation, Applied, Transfer/Foundation), each with a published spec under `docs/tutorials/_spec/` declaring learning goal, audience, runtime budget, network budget, expected outputs and GPU/network requirements
+- Tutorial gallery refactor: 22 sphinx-gallery tutorials covering Categories A through H (Start Here, Core Workflow, Event-Related, Resting State, Features, Evaluation, Applied, Transfer/Foundation)
 - Five new HPC and scaling how-tos under `examples/applied/`: `how_to_download_a_dataset`, `how_to_work_offline`, `how_to_use_hpc_cache`, `how_to_run_preprocessing_on_slurm`, `how_to_parallelize_feature_extraction`
 - Six concept pages under `docs/source/concepts/` covering EEGDash objects, lazy loading and cache, leakage-safe splits, windowing semantics, evaluation protocols and the BDF transfer-foundation track
 - Public APIs for the rewritten tutorials: `eegdash.splits` (subject-aware split utilities), `eegdash.tasks` (task helpers), `EEGDashDataset.summary` / `EEGDashDataset.preview` / `EEGDashDataset.filter` / `EEGDashDataset.search_datasets` for in-memory query and inspection, and `EEGTask.make_windows` for declarative window generation
-- Tutorial audit pipeline (`scripts/tutorial_audit/`) with 49-rule rubric, spec coherence checks, runtime tracker, and reviewer-only score artifact (`docs/evidence/tutorials/<id>/reviewer_score.json`)
-- Three-stage tutorial CI matrix (`.github/workflows/tutorial-audit.yml`): static rubric on every PR, anchor-tutorial nbclient execution on PRs touching tutorial sources, full gallery sweep on nightly cron and `workflow_dispatch`
-- `make -f tutorials.mk tutorial-runtime` target and `scripts.tutorial_audit.runtime_tracker` CLI: aggregates declared `budgets.max_runtime_seconds` and `budgets.max_network_mb` across all 27 specs and emits `docs/evidence/runtime_tracker_<date>.md`, with optional `--measured` JSON for delta against measured timings
 
 ### Changed
-- Reviewer rubric appendix in `CONTRIBUTING.md` now documents the eight reviewer-only rules and the per-tutorial scoring grid; CI parses each `reviewer_score.json` and gates merge on every reviewer-only rule scoring at least 3
 - `eegdash.features.fit_feature_extractor` retained as a backward-compat alias for the new feature-extraction entrypoint used by the rewritten feature tutorials
 
 ### Removed

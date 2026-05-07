@@ -61,7 +61,7 @@ use_eegdash_style()
 SEED = 42
 np.random.seed(SEED)
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 ckpt_path = cache_dir / "plot_73_pretrained_encoder.pt"
 

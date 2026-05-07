@@ -69,7 +69,7 @@ use_eegdash_style()
 mne.set_log_level("ERROR")
 SEED = 42
 np.random.seed(SEED)
-cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 

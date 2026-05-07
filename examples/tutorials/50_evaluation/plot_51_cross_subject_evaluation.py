@@ -161,7 +161,6 @@ print(f"n_subjects={N_SUBJECTS} | n_loso_folds={n_loso_folds}")
 
 splitter = get_splitter(
     "cross_subject",
-    engine="sklearn",
     n_folds=N_SUBJECTS,
     n_splits=N_SUBJECTS,
     random_state=SEED,
@@ -337,7 +336,6 @@ print(
 try:
     bad = get_splitter(
         "cross_subject",
-        engine="sklearn",
         n_folds=20,
         n_splits=20,
         random_state=SEED,
@@ -347,7 +345,6 @@ except ValueError as exc:
     print(f"Caught ValueError: {str(exc)[:90]}")
     fixed = get_splitter(
         "cross_subject",
-        engine="sklearn",
         n_folds=N_SUBJECTS,
         n_splits=N_SUBJECTS,
         random_state=SEED,
@@ -369,7 +366,6 @@ except ValueError as exc:
 # %%
 splitter5 = get_splitter(
     "cross_subject",
-    engine="sklearn",
     n_folds=5,
     n_splits=5,
     random_state=SEED,
@@ -399,7 +395,6 @@ X_imb, meta_imb = make_cohort(
 y_imb = meta_imb["target"].to_numpy()
 splitter_imb = get_splitter(
     "cross_subject",
-    engine="sklearn",
     n_folds=len(sizes_imb),
     n_splits=len(sizes_imb),
     random_state=SEED,

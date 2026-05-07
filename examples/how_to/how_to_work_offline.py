@@ -44,7 +44,7 @@ DATASET_ID = RELEASE_TO_OPENNEURO_DATASET_MAP[RELEASE]  # "ds005506"
 
 # Resolve cache from EEGDASH_CACHE if set, else the package default.
 # Never hard-code paths -- HPC jobs override this per node.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE", get_default_cache_dir())).resolve()
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", get_default_cache_dir())).resolve()
 cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"cache_dir = {cache_dir}")
 

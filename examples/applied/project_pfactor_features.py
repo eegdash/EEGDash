@@ -79,7 +79,7 @@ warnings.simplefilter("ignore", category=UserWarning)
 SEED = 42
 np.random.seed(SEED)
 rng = np.random.default_rng(SEED)
-cache_dir = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
 cache_dir.mkdir(parents=True, exist_ok=True)
 
 # %% [markdown]
@@ -232,9 +232,7 @@ def make_forest() -> RandomForestRegressor:
 # subjects.
 
 # %%
-splitter = get_splitter(
-    "cross_subject", engine="sklearn", n_folds=5, n_splits=5, random_state=SEED
-)
+splitter = get_splitter("cross_subject", n_folds=5, n_splits=5, random_state=SEED)
 manifest = make_split_manifest(splitter, y, metadata, target="target")
 overlap = assert_no_leakage(manifest, metadata, by="subject")
 assert overlap == 0, "cross_subject manifest leaked subjects"

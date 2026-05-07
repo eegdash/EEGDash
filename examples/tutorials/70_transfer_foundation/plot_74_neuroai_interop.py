@@ -68,17 +68,24 @@ warnings.simplefilter("ignore", category=FutureWarning)
 SEED = 42
 np.random.seed(SEED)
 
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE", Path.home() / ".eegdash_cache"))
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.home() / ".eegdash_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(f"eegdash version: {eegdash.__version__}")
 print(f"cache directory: {CACHE_DIR}")
 
 import neuralfetch  # noqa: F401  imported for the version-print only
 import neuralset as ns
-from neuralfetch.download import Eegdash as NeuralFetchEegdash
 from neuralset import Segmenter
 from neuralset.events import standardize_events
 from neuralset.extractors import Pulse
+
+# ``Eegdash`` lives at ``neuralfetch.download`` in older releases and is
+# re-exported at the top level in newer ones. Probe both so the tutorial
+# survives either layout.
+try:
+    from neuralfetch.download import Eegdash as NeuralFetchEegdash
+except ImportError:
+    from neuralfetch import Eegdash as NeuralFetchEegdash  # type: ignore[no-redef]
 
 # %% [markdown]
 # Four projects, one chain: the mental model

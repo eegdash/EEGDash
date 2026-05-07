@@ -203,6 +203,9 @@ fig_raw = raw.plot(
 # we drop them and let the spatial pattern speak.
 
 # %%
+# HBN data ships with a GSN-HydroCel-129 layout; set the montage so
+# plot_sensors has channel positions to draw.
+raw.set_montage("GSN-HydroCel-129", match_case=False, on_missing="ignore")
 fig_sens, ax_sens = plt.subplots(figsize=(5.0, 5.0))
 raw.plot_sensors(
     kind="topomap",

@@ -308,7 +308,6 @@ plt.show()
 # %%
 splitter = get_splitter(
     "learning_curve",
-    engine="sklearn",
     data_size={"policy": "ratio", "value": train_sizes_frac.tolist()},
     n_perms=N_PERMS,
     test_size=TEST_SIZE,

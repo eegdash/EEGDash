@@ -75,7 +75,7 @@ use_eegdash_style()
 warnings.simplefilter("ignore", category=FutureWarning)
 warnings.simplefilter("ignore", category=UserWarning)
 
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE", Path.home() / ".eegdash_cache"))
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.home() / ".eegdash_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 # MOABB writes its result database to ``MNE_DATA``; carry that to a
 # tutorial-local subdir so repeat runs do not pollute the user's main

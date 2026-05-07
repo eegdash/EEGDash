@@ -95,7 +95,7 @@ use_eegdash_style()
 mne.set_log_level("ERROR")
 warnings.simplefilter("ignore", category=RuntimeWarning)
 SEED = 42
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE", Path.home() / ".eegdash_cache"))
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.home() / ".eegdash_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 

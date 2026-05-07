@@ -65,7 +65,7 @@ SEED = 42
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE", Path.home() / ".eegdash_cache"))
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.home() / ".eegdash_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(
     f"eegdash {eegdash.__version__}; braindecode {braindecode.__version__}; "

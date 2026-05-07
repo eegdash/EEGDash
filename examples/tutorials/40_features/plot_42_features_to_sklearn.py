@@ -98,7 +98,7 @@ warnings.simplefilter("ignore", category=FutureWarning)
 warnings.simplefilter("ignore", category=UserWarning)
 SEED = 42
 np.random.seed(SEED)
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE", Path.cwd() / "eegdash_cache"))
+CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 

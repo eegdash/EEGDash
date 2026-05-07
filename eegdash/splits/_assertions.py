@@ -2,14 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Leakage assertions for cross-validation manifests.
-
-The single public entry point :func:`assert_no_leakage` is what tutorials
-and benchmarks call after building a split. It emits a single JSON line on
-stdout of the form::
-
-    {"leakage_report": {"overlap": <int>, "by": "<by>"}}
-"""
+"""Leakage assertions for cross-validation manifests."""
 
 from __future__ import annotations
 
@@ -31,7 +24,6 @@ ManifestLike = Union[dict, Sequence[tuple]]
 
 
 def _emit_report(overlap: int, by: str) -> None:
-    """Print the leakage-report JSON line on stdout."""
     payload = {"leakage_report": {"overlap": int(overlap), "by": str(by)}}
     sys.stdout.write(json.dumps(payload) + "\n")
     sys.stdout.flush()
@@ -40,7 +32,6 @@ def _emit_report(overlap: int, by: str) -> None:
 def _iter_fold_pairs(
     manifest_or_splits: ManifestLike,
 ) -> Iterable[tuple[Sequence, Sequence]]:
-    """Yield ``(train_ids, test_ids)`` for each fold."""
     if isinstance(manifest_or_splits, dict) and "folds" in manifest_or_splits:
         for fold in manifest_or_splits["folds"]:
             yield fold["train"], fold["test"]
@@ -56,7 +47,6 @@ def _values_for_ids(
     ids: Sequence,
     by: str,
 ) -> set:
-    """Return the unique values of column ``by`` for rows whose sample_id is in ``ids``."""
     if by not in metadata.columns:
         raise ValueError(
             f"Metadata has no column '{by}'. "

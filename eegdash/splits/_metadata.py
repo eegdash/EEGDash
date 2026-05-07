@@ -2,16 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Metadata adapters that bridge EEGDash/Braindecode datasets and MOABB-style
-splitters.
-
-The purpose of this file is *not* to introduce a new metadata format: it
-normalizes the heterogeneous representations used across EEGDash
-(``EEGDashDataset``), Braindecode windows datasets and ``FeaturesConcatDataset``
-into a single tabular form expected by MOABB splitters and scikit-learn
-``Group*`` splitters. The main entry points are :func:`to_split_metadata` and
-:func:`to_moabb_split_inputs`.
-"""
+"""Metadata adapters that bridge EEGDash/Braindecode datasets and MOABB-style"""
 
 from __future__ import annotations
 
@@ -39,7 +30,6 @@ DatasetLike = (
 
 
 def _coerce_str(value: Any, default: str) -> str:
-    """Return a deterministic string for a metadata value, replacing missing values."""
     if value is None:
         return default
     if isinstance(value, float) and np.isnan(value):
@@ -48,7 +38,6 @@ def _coerce_str(value: Any, default: str) -> str:
 
 
 def _description_to_row(description: Any, index: int) -> dict[str, Any]:
-    """Pull the columns we need from a description record (dict or Series)."""
     if description is None:
         return {}
     if isinstance(description, pd.Series):
@@ -73,7 +62,6 @@ def _description_to_row(description: Any, index: int) -> dict[str, Any]:
 
 
 def _iter_subdatasets(dataset: DatasetLike) -> list[Any]:
-    """Return the list of contained datasets for a concatenated container."""
     sub = getattr(dataset, "datasets", None)
     if sub is None:
         return []
@@ -85,7 +73,6 @@ def _resolve_target_value(
     sample_index: int,
     target: Optional[str],
 ) -> Optional[Any]:
-    """Resolve a target value for a single sample within ``sub_dataset``."""
     if target is None:
         return None
 
@@ -126,7 +113,6 @@ def _resolve_target_value(
 
 
 def _samples_in_subdataset(sub_dataset: Any) -> int:
-    """Return the number of windows/samples in a single sub-dataset."""
     metadata = getattr(sub_dataset, "metadata", None)
     if isinstance(metadata, pd.DataFrame):
         return len(metadata.index)
@@ -140,7 +126,6 @@ def _from_concat_dataset(
     dataset: DatasetLike,
     target: Optional[str],
 ) -> pd.DataFrame:
-    """Build a one-row-per-sample metadata frame from a concat-style dataset."""
     rows: list[dict[str, Any]] = []
     for ds_index, sub_dataset in enumerate(_iter_subdatasets(dataset)):
         description = getattr(sub_dataset, "description", None)
@@ -168,7 +153,6 @@ def _from_concat_dataset(
 
 
 def _coerce_metadata_frame(frame: pd.DataFrame, target: Optional[str]) -> pd.DataFrame:
-    """Validate and fill in defaults for a user-provided metadata DataFrame."""
     out = frame.copy()
     for column in ("subject", "session", "run", "dataset"):
         if column not in out.columns:

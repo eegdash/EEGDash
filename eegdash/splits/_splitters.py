@@ -2,14 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Friendly-named splitter factory.
-
-This module wraps MOABB's evaluation splitters and provides clean
-scikit-learn-only fallbacks. The factory returns objects that conform to a
-small protocol (``split(y, metadata)`` -> iterator of ``(train_idx, test_idx)``)
-so the manifest builder does not need to know which engine produced the
-splitter.
-"""
+"""Friendly-named splitter factory."""
 
 from __future__ import annotations
 
@@ -122,7 +115,6 @@ def _moabb_available() -> bool:
 
 
 def _build_moabb_splitter(name: str, **kwargs: Any):
-    """Construct a MOABB splitter for ``name`` with safe defaults."""
     import moabb.evaluations.splitters as moabb_splitters
 
     cls_name = _MOABB_NAME_MAP[name]

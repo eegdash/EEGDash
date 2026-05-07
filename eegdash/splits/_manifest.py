@@ -2,17 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Build and consume cross-validation split manifests.
-
-A split manifest is a small, JSON-serializable dictionary that captures
-exactly enough provenance to reproduce a split: which splitter class was used
-with which kwargs, what random seed, what target definition, what library
-versions, and the actual ``train``/``test`` index lists per fold.
-
-The manifest is produced once (by :func:`make_split_manifest`), serialized to
-disk for benchmark submissions, and then consumed at training time by
-:func:`apply_split_manifest`.
-"""
+"""Build and consume cross-validation split manifests."""
 
 from __future__ import annotations
 
@@ -29,11 +19,6 @@ SCHEMA_VERSION: str = "1.0.0"
 
 
 def _hash_metadata(metadata: pd.DataFrame) -> str:
-    """Return a stable sha256 of the metadata frame's string representation.
-
-    We only hash the columns that are leakage-relevant; that keeps the manifest
-    invariant when the user enriches the metadata with cosmetic columns later.
-    """
     columns = [
         c
         for c in ("subject", "session", "run", "dataset", "sample_id")
@@ -51,7 +36,6 @@ def _hash_metadata(metadata: pd.DataFrame) -> str:
 
 
 def _library_versions() -> dict[str, str]:
-    """Snapshot of versions for tools that materially affect a split."""
     out: dict[str, str] = {}
     for module_name in ("eegdash", "moabb", "sklearn", "numpy", "pandas"):
         try:
@@ -65,13 +49,11 @@ def _library_versions() -> dict[str, str]:
 
 
 def _splitter_class_name(splitter: Any) -> str:
-    """Return ``module.ClassName`` for a splitter instance."""
     cls = type(splitter)
     return f"{cls.__module__}.{cls.__qualname__}"
 
 
 def _splitter_kwargs(splitter: Any) -> dict[str, Any]:
-    """Best-effort extraction of constructor kwargs for provenance."""
     if hasattr(splitter, "splitter_kwargs"):
         return dict(splitter.splitter_kwargs)
     keys = (
@@ -241,7 +223,6 @@ def apply_split_manifest(
 
 
 def _select_subdatasets(dataset: Any, indices: list[int]) -> Any:
-    """Return a concat dataset of the same class containing only ``indices``."""
     cls = type(dataset)
     sub = [dataset.datasets[i] for i in indices]
     try:

@@ -2,20 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Trivial baselines used by the E5.43 chance-level reporting rule.
-
-Tutorials that quote a model's accuracy must also quote a chance level for the
-same evaluation; otherwise it is impossible to know whether the model has
-learned anything. The two helpers in this file provide the simplest defensible
-chance level for classification (majority vote on the train set) and for
-regression (median of the train set).
-
-Both return ``{"chance_level": float, "baseline_score": float, "metric": ...}``
-where ``chance_level`` and ``baseline_score`` are computed against the test
-set. They are split out from the ``majority_baseline`` family in
-scikit-learn's ``DummyClassifier`` so they can be called without instantiating
-an estimator pipeline.
-"""
+"""Trivial baselines used by the E5.43 chance-level reporting rule."""
 
 from __future__ import annotations
 

@@ -2,14 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Human-readable summaries of cross-validation manifests.
-
-:func:`describe_split` returns a small dictionary of per-fold statistics and,
-optionally, prints a one-screen report. It is meant to be used in the
-"split audit" cell of tutorials: confirm that folds are balanced enough,
-catch tiny test sets, and surface session/site/dataset coverage problems
-before training kicks off.
-"""
+"""Human-readable summaries of cross-validation manifests."""
 
 from __future__ import annotations
 
@@ -29,7 +22,6 @@ def _describe_fold(
     metadata: pd.DataFrame,
     target: Optional[str],
 ) -> dict[str, Any]:
-    """Compute per-fold statistics referenced by :func:`describe_split`."""
     train_ids = set(fold["train"])
     test_ids = set(fold["test"])
 
@@ -135,7 +127,6 @@ def describe_split(
 
 
 def _print_report(summary: dict[str, Any]) -> None:
-    """Render a compact summary suitable for tutorials."""
     cov = summary["coverage"]
     print(
         "Split summary -- "

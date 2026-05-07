@@ -98,6 +98,7 @@ tests = [
     'pytest-cov',
     'pytest-benchmark',
     'plotly',
+    'moabb',
 ]
 dev = [
   "pre-commit",

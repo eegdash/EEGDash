@@ -1,7 +1,9 @@
-"""Unit tests for ``EEGDashDataset.summary``, ``preview``, and ``filter``.
+"""Unit tests for the public ``EEGDashDataset`` helpers.
 
-These tests use synthetic / mocked records and a tiny BIDS scratch dataset
-constructed via ``mne_bids``. No network access is performed.
+These tests cover ``summary``, ``preview``, ``filter``,
+``estimate_download_size``, and ``ensure_downloaded`` using synthetic /
+mocked records and a tiny BIDS scratch dataset constructed via
+``mne_bids``. No network access is performed.
 """
 
 from __future__ import annotations
@@ -402,3 +404,234 @@ def test_preview_load_failure_wrapped(toy_bids_dataset):
         ds.preview(index=0)
     assert isinstance(exc_info.value.__cause__, _Boom)
     assert exc_info.value.index == 0
+
+
+# ---------------------------------------------------------------------------
+# estimate_download_size()
+# ---------------------------------------------------------------------------
+
+
+def test_estimate_download_size_uses_record_sizes(synthetic_dataset):
+    estimate = synthetic_dataset.estimate_download_size()
+    assert estimate == {
+        "bytes": 1_000_000 + 2_500_000 + 1_500_000,
+        "n_records": 3,
+        "source": "records",
+    }
+
+
+def test_estimate_download_size_falls_back_to_summary(tmp_path):
+    records = [
+        {
+            "dataset": "ds_no_size",
+            "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+            "bidspath": "ds_no_size/sub-01/eeg/sub-01_task-rest_eeg.set",
+            "storage": {"backend": "local", "base": str(tmp_path / "ds_no_size")},
+            "subject": "01",
+            "task": "rest",
+            "modality": "eeg",
+        },
+        {
+            "dataset": "ds_no_size",
+            "bids_relpath": "sub-02/eeg/sub-02_task-rest_eeg.set",
+            "bidspath": "ds_no_size/sub-02/eeg/sub-02_task-rest_eeg.set",
+            "storage": {"backend": "local", "base": str(tmp_path / "ds_no_size")},
+            "subject": "02",
+            "task": "rest",
+            "modality": "eeg",
+        },
+    ]
+    (tmp_path / "ds_no_size").mkdir()
+    ds = EEGDashDataset(
+        cache_dir=tmp_path,
+        dataset="ds_no_size",
+        records=records,
+        download=False,
+    )
+    # No record carries a byte count -> fall back to dataset_doc.
+    ds.dataset_doc = {"size_bytes": 12_345_678, "total_files": 2}
+    estimate = ds.estimate_download_size()
+    assert estimate == {
+        "bytes": 12_345_678,
+        "n_records": 2,
+        "source": "summary",
+    }
+
+
+def test_estimate_download_size_unknown_when_no_hints(tmp_path):
+    records = [
+        {
+            "dataset": "ds_unknown",
+            "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+            "bidspath": "ds_unknown/sub-01/eeg/sub-01_task-rest_eeg.set",
+            "storage": {"backend": "local", "base": str(tmp_path / "ds_unknown")},
+            "subject": "01",
+            "task": "rest",
+            "modality": "eeg",
+        }
+    ]
+    (tmp_path / "ds_unknown").mkdir()
+    ds = EEGDashDataset(
+        cache_dir=tmp_path,
+        dataset="ds_unknown",
+        records=records,
+        download=False,
+    )
+    ds.dataset_doc = None
+    estimate = ds.estimate_download_size()
+    assert estimate == {"bytes": None, "n_records": 1, "source": "unknown"}
+
+
+def test_estimate_download_size_picks_storage_size(tmp_path):
+    records = [
+        {
+            "dataset": "ds_storage",
+            "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
+            "bidspath": "ds_storage/sub-01/eeg/sub-01_task-rest_eeg.set",
+            "storage": {
+                "backend": "local",
+                "base": str(tmp_path / "ds_storage"),
+                "size_bytes": 4096,
+            },
+            "subject": "01",
+            "task": "rest",
+            "modality": "eeg",
+        }
+    ]
+    (tmp_path / "ds_storage").mkdir()
+    ds = EEGDashDataset(
+        cache_dir=tmp_path,
+        dataset="ds_storage",
+        records=records,
+        download=False,
+    )
+    estimate = ds.estimate_download_size()
+    assert estimate["bytes"] == 4096
+    assert estimate["source"] == "records"
+
+
+def test_estimate_download_size_empty_dataset(tmp_path):
+    ds = EEGDashDataset.__new__(EEGDashDataset)
+    ds.cache_dir = tmp_path
+    ds.records = []
+    ds.datasets = []
+    ds.cumulative_sizes_cache = []
+    ds.dataset_doc = None
+    estimate = ds.estimate_download_size()
+    assert estimate == {"bytes": None, "n_records": 0, "source": "unknown"}
+
+
+# ---------------------------------------------------------------------------
+# ensure_downloaded()
+# ---------------------------------------------------------------------------
+
+
+class _StubRecording:
+    """Minimal stand-in for an ``EEGDashRaw`` instance."""
+
+    def __init__(self, filecache, dep_paths=None):
+        self.filecache = filecache
+        self._dep_paths = list(dep_paths or [])
+
+
+def _empty_eegdash_dataset(tmp_path: Path) -> EEGDashDataset:
+    """Build an EEGDashDataset that bypasses the constructor's discovery."""
+    ds = EEGDashDataset.__new__(EEGDashDataset)
+    ds.cache_dir = tmp_path
+    ds.records = []
+    ds.datasets = []
+    ds.cumulative_sizes_cache = []
+    ds.dataset_doc = None
+    ds.n_jobs = 1
+    return ds
+
+
+def test_ensure_downloaded_returns_summary(synthetic_dataset, monkeypatch):
+    """download_all is invoked once and the summary reports counts/bytes."""
+    calls: list[dict[str, Any]] = []
+
+    def _fake_download_all(self, n_jobs=None):
+        calls.append({"n_jobs": n_jobs})
+
+    monkeypatch.setattr(EEGDashDataset, "download_all", _fake_download_all)
+
+    summary = synthetic_dataset.ensure_downloaded(n_jobs=2)
+
+    assert summary["n_records"] == 3
+    assert summary["n_downloaded"] + summary["n_skipped"] == 3
+    # Every record has size_bytes -> bytes_total is summed from records.
+    assert summary["bytes_total"] == 1_000_000 + 2_500_000 + 1_500_000
+    assert calls == [{"n_jobs": 2}]
+
+
+def test_ensure_downloaded_counts_skipped_vs_downloaded(tmp_path, monkeypatch):
+    ds = _empty_eegdash_dataset(tmp_path)
+    monkeypatch.setattr(EEGDashDataset, "download_all", lambda self, n_jobs=None: None)
+
+    cached_path = tmp_path / "cached.set"
+    cached_path.write_bytes(b"x")
+    missing_path = tmp_path / "missing.set"
+    ds.datasets = [
+        _StubRecording(filecache=cached_path),
+        _StubRecording(filecache=missing_path),
+        _StubRecording(filecache=None),  # also counted as missing
+    ]
+
+    summary = ds.ensure_downloaded()
+    assert summary["n_records"] == 3
+    assert summary["n_skipped"] == 1
+    assert summary["n_downloaded"] == 2
+    # No size hints anywhere -> bytes_total falls back to None.
+    assert summary["bytes_total"] is None
+
+
+def test_ensure_downloaded_empty_dataset_skips_download_all(tmp_path, monkeypatch):
+    ds = _empty_eegdash_dataset(tmp_path)
+    called = {"count": 0}
+
+    def _fake_download_all(self, n_jobs=None):
+        called["count"] += 1
+
+    monkeypatch.setattr(EEGDashDataset, "download_all", _fake_download_all)
+
+    summary = ds.ensure_downloaded()
+    assert summary == {
+        "n_records": 0,
+        "n_downloaded": 0,
+        "n_skipped": 0,
+        "bytes_total": None,
+    }
+    # Skip the underlying download for empty datasets.
+    assert called["count"] == 0
+
+
+def test_ensure_downloaded_progress_falls_back_when_tqdm_missing(tmp_path, monkeypatch):
+    ds = _empty_eegdash_dataset(tmp_path)
+    cached_path = tmp_path / "cached.set"
+    cached_path.write_bytes(b"x")
+    ds.datasets = [_StubRecording(filecache=cached_path)]
+    monkeypatch.setattr(EEGDashDataset, "download_all", lambda self, n_jobs=None: None)
+
+    # Force the tqdm import to fail and ensure we still get a clean summary.
+    import builtins
+
+    real_import = builtins.__import__
+
+    def _missing_tqdm(name, *args, **kwargs):
+        if name.startswith("tqdm"):
+            raise ImportError("synthetic missing tqdm")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", _missing_tqdm)
+    summary = ds.ensure_downloaded(progress=True)
+    assert summary["n_records"] == 1
+    assert summary["n_skipped"] == 1
+    assert summary["n_downloaded"] == 0
+
+
+def test_ensure_downloaded_raises_when_download_all_missing(tmp_path):
+    ds = _empty_eegdash_dataset(tmp_path)
+    # Hide download_all on this instance only; the class attribute remains.
+    ds.download_all = None  # type: ignore[assignment]
+    with pytest.raises(NotImplementedError, match="download_all"):
+        ds.ensure_downloaded()

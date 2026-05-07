@@ -1039,6 +1039,176 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # Download global dataset files (participants.tsv, etc.)
         self._download_dataset_files()
 
+    def estimate_download_size(self) -> dict[str, Any]:
+        """Estimate the on-disk size required to materialize this dataset.
+
+        Inspects ``self.records`` for any per-recording byte counts
+        (``size_bytes``, ``file_size_bytes``, or ``storage.size_bytes``)
+        and sums them. When no record exposes a size, falls back to the
+        dataset-level ``size_bytes`` field surfaced by
+        :meth:`EEGDash.find_datasets` (and cached on
+        ``self.dataset_doc``). The method never touches the network or
+        the filesystem.
+
+        Returns
+        -------
+        dict
+            A dictionary with keys:
+
+            - ``bytes`` (int | None): Total estimated bytes; ``None``
+              when no information is available.
+            - ``n_records`` (int): Number of recordings considered.
+            - ``source`` (str): One of ``"records"`` (per-record sizes
+              were summed), ``"summary"`` (dataset-level fallback was
+              used), or ``"unknown"`` (no size hint anywhere).
+
+        Notes
+        -----
+        Returns ``{"bytes": None, "n_records": 0, "source": "unknown"}``
+        for an empty dataset. The ``"summary"`` fallback is best-effort:
+        when only a subset of records is selected (e.g. one subject out
+        of many) the dataset-level total will overestimate the actual
+        download size.
+
+        """
+        records: list[dict[str, Any]] = list(getattr(self, "records", []) or [])
+        n_records = len(records)
+
+        total_bytes = 0
+        size_seen = False
+        for record in records:
+            size_val = (
+                record.get("size_bytes")
+                or record.get("file_size_bytes")
+                or (record.get("storage") or {}).get("size_bytes")
+            )
+            if isinstance(size_val, (int, float)) and size_val > 0:
+                total_bytes += int(size_val)
+                size_seen = True
+
+        if size_seen:
+            return {
+                "bytes": int(total_bytes),
+                "n_records": n_records,
+                "source": "records",
+            }
+
+        # Fall back to the dataset-level summary cached on dataset_doc
+        # (populated by EEGDash.get_dataset(...) during __init__).
+        dataset_doc = getattr(self, "dataset_doc", None) or {}
+        summary_size = dataset_doc.get("size_bytes")
+        if isinstance(summary_size, (int, float)) and summary_size > 0:
+            return {
+                "bytes": int(summary_size),
+                "n_records": n_records,
+                "source": "summary",
+            }
+
+        return {"bytes": None, "n_records": n_records, "source": "unknown"}
+
+    def ensure_downloaded(
+        self,
+        n_jobs: int | None = None,
+        progress: bool = False,
+    ) -> dict[str, Any]:
+        """Download any missing files and return a small summary.
+
+        Discoverable wrapper around :meth:`download_all` for tutorials
+        and docs. Identifies which recordings still need fetching, then
+        delegates the actual transfer to ``download_all``. Optionally
+        renders a ``tqdm`` progress bar while iterating recordings; if
+        ``tqdm`` is not installed, falls back silently to a no-op
+        iterator.
+
+        Parameters
+        ----------
+        n_jobs : int | None, optional
+            Number of parallel workers forwarded to
+            :meth:`download_all`. ``None`` (the default) defers to
+            ``self.n_jobs``.
+        progress : bool, default False
+            If True, render a ``tqdm`` progress bar while inspecting
+            recordings. Requires ``tqdm`` to be installed; otherwise
+            the bar is silently skipped.
+
+        Returns
+        -------
+        dict
+            A dictionary with keys:
+
+            - ``n_records`` (int): Total number of recordings.
+            - ``n_downloaded`` (int): Recordings whose local cache was
+              missing before this call (i.e., now scheduled for
+              download).
+            - ``n_skipped`` (int): Recordings already present locally
+              and therefore skipped.
+            - ``bytes_total`` (int | None): Estimated total bytes from
+              :meth:`estimate_download_size`; ``None`` when no size
+              hints are available.
+
+        Raises
+        ------
+        NotImplementedError
+            If the underlying class no longer exposes
+            :meth:`download_all`.
+
+        Notes
+        -----
+        For an empty dataset, the call is a no-op and returns a summary
+        with all counts set to zero.
+
+        """
+        download_fn = getattr(self, "download_all", None)
+        if not callable(download_fn):
+            raise NotImplementedError(
+                "ensure_downloaded() requires EEGDashDataset.download_all(); "
+                "the current class does not provide it."
+            )
+
+        datasets = list(getattr(self, "datasets", []) or [])
+        n_records = len(datasets)
+
+        # Optional progress bar — tqdm is intentionally a soft dependency.
+        iterator: Any = datasets
+        if progress and datasets:
+            try:
+                from tqdm.auto import tqdm  # type: ignore[import-not-found]
+
+                iterator = tqdm(
+                    datasets,
+                    total=n_records,
+                    desc="ensure_downloaded",
+                )
+            except ImportError:
+                iterator = datasets
+
+        n_downloaded = 0
+        n_skipped = 0
+        for ds in iterator:
+            filecache = getattr(ds, "filecache", None)
+            dep_paths = getattr(ds, "_dep_paths", []) or []
+            needs_download = False
+            if filecache is None or not filecache.exists():
+                needs_download = True
+            elif any(not p.exists() for p in dep_paths):
+                needs_download = True
+            if needs_download:
+                n_downloaded += 1
+            else:
+                n_skipped += 1
+
+        size_estimate = self.estimate_download_size()
+
+        if n_records:
+            download_fn(n_jobs=n_jobs)
+
+        return {
+            "n_records": n_records,
+            "n_downloaded": n_downloaded,
+            "n_skipped": n_skipped,
+            "bytes_total": size_estimate["bytes"],
+        }
+
     def _download_dataset_files(self) -> None:
         """Download global dataset files defined in dataset metadata."""
         if not self.dataset_doc or not self.download:

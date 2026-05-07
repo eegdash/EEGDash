@@ -16,7 +16,7 @@ from typing import Iterable, Mapping, Sequence
 from urllib.parse import quote
 
 from sphinx.util import logging
-from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+from sphinx_gallery.sorting import FileNameSortKey
 
 sys.path.insert(0, os.path.abspath(".."))
 if os.environ.get("SPHINX_BUILD", "") == "":
@@ -195,8 +195,10 @@ html_sidebars = {
     # ~15 KB of chrome above the fold for no navigation gain (gallery
     # pages already have their own previous/next nav injected).
     "generated/auto_examples/*": [],
-    "generated/auto_examples/core/*": [],
     "generated/auto_examples/tutorials/*": [],
+    "generated/auto_examples/tutorials/*/*": [],
+    "generated/auto_examples/applied/*": [],
+    "generated/auto_examples/how_to/*": [],
     "generated/auto_examples/dev_scripts/*": [],
     "generated/auto_examples/eeg2025/*": [],
     "generated/auto_examples/hpc/*": [],
@@ -278,9 +280,33 @@ numpydoc_show_class_members = False
 
 # Sphinx Gallery
 EX_DIR = "../../examples"  # relative to docs/source
+# Sphinx-gallery 0.20 only walks one level: each entry in `examples_dirs` is
+# treated as a gallery root, and its immediate subdirectories become
+# subsections (with plot_*.py files collected at that depth only).
+# `examples/tutorials/` itself is two levels deep (it has nested category
+# subdirs like ``00_start_here/`` rather than ``plot_*.py`` files at the
+# top), so we list each tutorial category as its own gallery root and pair
+# it with a matching `gallery_dirs` entry. Same pattern for the leaf-only
+# directories (`how_to`, `applied`, `eeg2025`, `hpc`, `dev_scripts`).
+TUTORIAL_SUBDIRS = [
+    "00_start_here",
+    "10_core_workflow",
+    "20_event_related",
+    "30_resting_state",
+    "40_features",
+    "50_evaluation",
+    "70_transfer_foundation",
+]
+LEAF_DIRS = ["how_to", "applied", "eeg2025", "hpc", "dev_scripts"]
+EX_DIRS = [f"{EX_DIR}/tutorials/{name}" for name in TUTORIAL_SUBDIRS] + [
+    f"{EX_DIR}/{name}" for name in LEAF_DIRS
+]
+GALLERY_DIRS = [
+    f"generated/auto_examples/tutorials/{name}" for name in TUTORIAL_SUBDIRS
+] + [f"generated/auto_examples/{name}" for name in LEAF_DIRS]
 sphinx_gallery_conf = {
-    "examples_dirs": [f"{EX_DIR}"],
-    "gallery_dirs": ["generated/auto_examples"],
+    "examples_dirs": EX_DIRS,
+    "gallery_dirs": GALLERY_DIRS,
     # Execute examples by default for CI builds; use html-noplot target for local fast builds
     "plot_gallery": True,
     # Don't fail the build when examples error (e.g. missing cache, API down).
@@ -297,6 +323,10 @@ sphinx_gallery_conf = {
         "use_jupyter_lab": True,
     },
     "capture_repr": ("_repr_html_", "__repr__"),
+    # Each entry in `examples_dirs` above is a leaf gallery (its plot_*.py
+    # files are immediate children), so `nested_sections=False` is correct
+    # and avoids the `_replace_md5(None)` AssertionError that sphinx-gallery
+    # 0.20 raises when a parent gallery dir contains only subdirectories.
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
     "inspect_global_variables": True,
@@ -312,7 +342,10 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
-    "subsection_order": ExplicitOrder([f"{EX_DIR}/core", "*"]),
+    # `subsection_order` is no longer required because each tutorial
+    # category and how-to/applied bucket is now its own gallery root (see
+    # `examples_dirs` above). Order is therefore controlled by the order of
+    # the entries in `examples_dirs`/`gallery_dirs`.
     "within_subsection_order": FileNameSortKey,
 }
 
@@ -3476,6 +3509,79 @@ def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
     context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
 
 
+def _write_auto_examples_root_index(app):
+    """Write a top-level ``generated/auto_examples/index.rst`` aggregator.
+
+    Sphinx-gallery is configured with multiple gallery roots (one per
+    tutorial category, plus how-to / applied / eeg2025 / hpc / dev_scripts).
+    Each generates its own ``index.rst``, but there is no automatic
+    parent index for the whole gallery tree -- yet ``index.rst`` references
+    ``generated/auto_examples/index`` in its top-level toctree. This hook
+    creates that file so cross-references resolve cleanly.
+
+    Runs at priority 600 so that sphinx-gallery's own
+    ``generate_gallery_rst`` (default priority 500) has already run and
+    materialised every per-leaf ``index.rst``.
+    """
+    out_path = Path(app.srcdir) / "generated" / "auto_examples" / "index.rst"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    body = """:orphan:
+
+.. _sphx_glr_generated_auto_examples:
+
+Examples gallery
+================
+
+The EEGDash gallery groups runnable Python examples by purpose. The
+**Tutorials** section is the curated learning path; the **How-to recipes**
+are short task-focused snippets; **Applied projects** are end-to-end
+research demos; the remaining sections collect the EEG 2025 challenge
+pipelines and HPC examples.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials (curated learning path)
+
+   tutorials/00_start_here/index
+   tutorials/10_core_workflow/index
+   tutorials/20_event_related/index
+   tutorials/30_resting_state/index
+   tutorials/40_features/index
+   tutorials/50_evaluation/index
+   tutorials/70_transfer_foundation/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: How-to recipes
+
+   how_to/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Applied projects
+
+   applied/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: EEG 2025 competition
+
+   eeg2025/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: High-performance computing
+
+   hpc/index
+
+.. toctree::
+   :hidden:
+
+   dev_scripts/index
+"""
+    out_path.write_text(body, encoding="utf-8")
+
+
 def setup(app):
     """Create the back-references directory and setup Sphinx events."""
     backreferences_dir = os.path.join(
@@ -3486,6 +3592,9 @@ def setup(app):
 
     app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
+    # Run after sphinx-gallery's `generate_gallery_rst` (priority 500) so
+    # the per-leaf index files exist before we link to them.
+    app.connect("builder-inited", _write_auto_examples_root_index, priority=600)
     app.connect("build-finished", _copy_dataset_summary)
     # Align sitemap homepage entry with the canonical emitted in
     # `_inject_seo_context`. Must run after `sphinx-sitemap` writes

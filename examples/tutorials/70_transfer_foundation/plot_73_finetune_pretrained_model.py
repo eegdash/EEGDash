@@ -264,6 +264,34 @@ if not results:
 
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A frequent slip is reloading the encoder into a model whose
+# ``n_chans`` differs from the pretrained one -- ``load_state_dict`` then
+# raises a size-mismatch ``RuntimeError`` on the first conv. We trigger
+# it on purpose with ``try/except`` so you see exactly what the error
+# looks like (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
+
+# %%
+if HAS_TORCH:
+    try:
+        wrong = ShallowFBCSPNet(
+            n_chans=N_CHANS + 2,  # pretrained on 8 chans; target rebuilt with 10
+            n_outputs=2,
+            n_times=N_TIMES,
+            final_conv_length="auto",
+        )
+        state = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+        wrong.load_state_dict(state, strict=True)
+    except RuntimeError as exc:
+        print(f"Caught RuntimeError: {str(exc)[:90]}...")
+        # Recovery: rebuild with matching n_chans, load with strict=False, re-init head.
+        fixed = build_model()
+        missing, _ = fixed.load_state_dict(state, strict=False)
+        head_only = all(k.startswith("final_layer") for k in missing)
+        print(f"Recovery: matching n_chans + strict=False; head re-init={head_only}.")
+
+# %% [markdown]
 # ## Modify
 # **Your turn**: re-run with ``last_block_only=True`` in
 # ``reset_and_freeze``. The classifier conv and final batch norm

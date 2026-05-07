@@ -248,6 +248,26 @@ for low, high in zip(edges[:-1], edges[1:]):
     print(f"  [{low:.3f}, {high:.3f}): {'#' * n}")
 
 # %% [markdown]
+# ## A common mistake -- and how to recover
+#
+# **Run.** A frequent slip is wiring a non-numeric target column into
+# ``Ridge.fit`` -- ``p_factor`` arrives as strings if a CSV was loaded
+# without dtype hints, and Ridge then refuses to solve. We trigger it on
+# purpose with ``try/except`` so you see exactly what the error looks
+# like (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
+
+# %%
+try:
+    bad_y = metadata["p_factor"].astype(str).to_numpy()  # string p-factor
+    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], bad_y[:8])
+except (ValueError, TypeError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:90]}")
+    # Recovery: cast the target to float before fitting any regression head.
+    fixed_y = pd.to_numeric(metadata["p_factor"], errors="coerce").to_numpy()
+    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], fixed_y[:8])
+    print(f"Recovery: cast p_factor to float (dtype={fixed_y.dtype}); Ridge fit.")
+
+# %% [markdown]
 # ## Modify -- domain-adversarial training (concept only)
 #
 # **Modify (concept).** A more aggressive way to enforce subject
@@ -305,3 +325,5 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 #   https://doi.org/10.1038/s41597-019-0104-8
 # - Caspi et al. 2014, *Clin. Psychol. Sci.* 2:119.
 #   https://doi.org/10.1177/2167702613497473
+# - Nederbragt et al. 2020, Ten simple rules for teaching coding,
+#   *PLOS Comp. Biol.* https://doi.org/10.1371/journal.pcbi.1008090

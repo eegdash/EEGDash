@@ -47,11 +47,23 @@ from ._manifest import (
     manifest_to_json,
 )
 from ._metadata import to_moabb_split_inputs, to_split_metadata
+from ._recipes import (
+    EEGNetv4Baseline,
+    LightGBMBaseline,
+    LogisticRegressionBaseline,
+    RidgeRegressionBaseline,
+    ShallowFBCSPNetBaseline,
+)
 from ._splitters import get_splitter
 
 __all__ = [
+    "EEGNetv4Baseline",
     "LeakageError",
+    "LightGBMBaseline",
+    "LogisticRegressionBaseline",
+    "RidgeRegressionBaseline",
     "SCHEMA_VERSION",
+    "ShallowFBCSPNetBaseline",
     "apply_split_manifest",
     "assert_no_leakage",
     "describe_split",

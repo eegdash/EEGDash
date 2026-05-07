@@ -2,7 +2,7 @@ id: how_to_use_hpc_cache
 category: I-scaling-hpc
 kind: how-to
 output_kind: python
-title: "Place the EEGDash cache on shared or local cluster storage"
+title: Place the EEGDash cache on shared or local cluster storage
 state: proposed
 assignee: null
 difficulty: 2
@@ -10,31 +10,37 @@ estimated_runtime_minutes: 5
 hardware: cluster
 network: cached_first_run
 prerequisites:
-  - how_to_download_a_dataset
-  - how_to_work_offline
+- how_to_download_a_dataset
+- how_to_work_offline
 cites:
   plan:
-    - "tutorial_restructure_plan.md#L471-L483"
-    - "tutorial_restructure_plan.md#L673-L685"
-    - "tutorial_restructure_plan.md#L751-L758"
-    - "tutorial_restructure_plan.md#L1131-L1144"
-    - "tutorial_restructure_plan.md#L1158-L1178"
-    - "tutorial_restructure_plan.md#L1503-L1512"
+  - tutorial_restructure_plan.md#L471-L483
+  - tutorial_restructure_plan.md#L673-L685
+  - tutorial_restructure_plan.md#L751-L758
+  - tutorial_restructure_plan.md#L1131-L1144
+  - tutorial_restructure_plan.md#L1158-L1178
+  - tutorial_restructure_plan.md#L1503-L1512
   rubric:
-    - "compass_artifact.md#E1.2"
-    - "compass_artifact.md#E2.20"
-    - "compass_artifact.md#E3.22"
-    - "compass_artifact.md#E3.23"
-    - "compass_artifact.md#E3.24"
-    - "compass_artifact.md#E3.28"
-    - "compass_artifact.md#E5.44"
-    - "compass_artifact.md#E6.49"
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.22
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.24
+  - compass_artifact.md#E3.28
+  - compass_artifact.md#E5.44
+  - compass_artifact.md#E6.49
 learning_objectives:
-  - "After this how-to you will be able to choose between shared filesystems (Lustre, GPFS, NFS) and local-to-node storage (NVMe, RAM disk) for the EEGDash cache, given a workload profile (epoch IO vs. one-pass)."
-  - "After this how-to you will be able to set `cache_dir` from a SLURM environment variable (`$SCRATCH`, `$TMPDIR`, `$LOCAL_SCRATCH`) and validate the cache before training."
-  - "After this how-to you will be able to stage a copy from shared to local-node storage at job-start with a small helper, and clean up at job-end."
-  - "After this how-to you will be able to recognise the symptoms of metadata-server contention (slow first-epoch IO, throttling) and select the appropriate tier."
-audience: "User running EEGDash on a SLURM/LSF/PBS cluster. Already knows how to populate the cache and load offline."
+- After this how-to you will be able to choose between shared filesystems (Lustre,
+  GPFS, NFS) and local-to-node storage (NVMe, RAM disk) for the EEGDash cache, given
+  a workload profile (epoch IO vs. one-pass).
+- After this how-to you will be able to set `cache_dir` from a SLURM environment variable
+  (`$SCRATCH`, `$TMPDIR`, `$LOCAL_SCRATCH`) and validate the cache before training.
+- After this how-to you will be able to stage a copy from shared to local-node storage
+  at job-start with a small helper, and clean up at job-end.
+- After this how-to you will be able to recognise the symptoms of metadata-server
+  contention (slow first-epoch IO, throttling) and select the appropriate tier.
+audience: User running EEGDash on a SLURM/LSF/PBS cluster. Already knows how to populate
+  the cache and load offline.
 budgets:
   max_loc: 200
   max_runtime_seconds: 300
@@ -44,24 +50,27 @@ budgets:
 artifacts:
   thumbnail: thumbnails/how_to_use_hpc_cache.png
   figures:
-    - figure_storage_tier_io_throughput.png
-    - figure_cache_layout_diagram.png
+  - figure_storage_tier_io_throughput.png
+  - figure_cache_layout_diagram.png
 asserted_invariants:
-  - "cache_dir resolves from environment (e.g., $SCRATCH or $TMPDIR), not a hard-coded path"
-  - "stage-in copies all queried records to local-node storage before training begins"
-  - "ds = EEGDashDataset(cache_dir=local_node_cache, download=False).records_count == queried_record_count"
-  - "stage-out (or cleanup) is executed in a SLURM trap so partial caches are not left behind"
-  - "the recipe contrasts shared vs. local-node IO with at least one measured timing"
+- cache_dir resolves from environment (e.g., $SCRATCH or $TMPDIR), not a hard-coded
+  path
+- stage-in copies all queried records to local-node storage before training begins
+- ds = EEGDashDataset(cache_dir=local_node_cache, download=False).records_count ==
+  queried_record_count
+- stage-out (or cleanup) is executed in a SLURM trap so partial caches are not left
+  behind
+- the recipe contrasts shared vs. local-node IO with at least one measured timing
 sections_required:
-  - title
-  - opening
-  - learning_objectives
-  - requirements
-  - setup
-  - recipe_steps:
-      min: 4
-  - result
-  - links
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- recipe_steps:
+    min: 4
+- result
+- links
 primm_required: {}
 faded_scaffolding:
   required: true
@@ -69,16 +78,16 @@ faded_scaffolding:
 viz_compliance:
   palette: eegdash-rail
   required_elements:
-    - source_provenance_footer
+  - source_provenance_footer
 links:
   concept: docs/source/concepts/lazy_loading_and_cache.rst
   api: eegdash.paths
   related_how_to:
-    - how_to_work_offline
-    - how_to_run_preprocessing_on_slurm
-    - how_to_parallelize_feature_extraction
+  - how_to_work_offline
+  - how_to_run_preprocessing_on_slurm
+  - how_to_parallelize_feature_extraction
   related_papers: []
 requires_api:
-  - "eegdash.EEGDashDataset"
-  - "eegdash.paths.get_default_cache_dir"
+- eegdash.EEGDashDataset
+- eegdash.paths.get_default_cache_dir
 review_rubric_overrides: {}

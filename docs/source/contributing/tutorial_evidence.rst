@@ -1,8 +1,8 @@
 .. _tutorial_evidence:
 
-==========================
+===========================
 Tutorial Evidence Dashboard
-==========================
+===========================
 
 EEGDash tutorials ship with a machine-verifiable audit trail. Every tutorial
 has a YAML *spec* under ``docs/tutorials/_spec/`` declaring its rubric
@@ -61,15 +61,10 @@ Per-tutorial dossiers
 =====================
 
 Each tutorial dossier renders to ``docs/evidence/tutorials/<id>/report.md``.
-The toctree below is intentionally short during bootstrap; the audit
-pipeline will extend it with one entry per tutorial as dossiers land.
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Tutorial dossiers
-   :glob:
-
-   tutorial_evidence/*
+No dossiers are checked into the source tree yet; once the audit pipeline
+emits the first ``docs/source/contributing/tutorial_evidence/<id>.rst``
+stubs (one per Release-1 tutorial), the glob toctree (``tutorial_evidence/*``)
+will be re-enabled here to pick them up automatically.
 
 The thirteen tutorials in scope
 ===============================

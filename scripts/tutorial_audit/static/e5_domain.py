@@ -1,4 +1,9 @@
-"""Static E.5 domain-correctness checks (filter disclosure for now)."""
+"""Static E.5 domain-correctness checks (filter disclosure for now).
+
+The validators here are AST-based (they look for ``raw.filter(...)`` calls)
+and therefore skip Markdown how-tos -- those are template + commentary
+documents, not runnable Python sources.
+"""
 
 from __future__ import annotations
 
@@ -56,6 +61,19 @@ class _FilterCallFinder(ast.NodeVisitor):
         self.generic_visit(node)
 
 
+def _spec_output_kind(spec: dict) -> str:
+    """Return ``spec.output_kind`` lowercased; default ``"python"``."""
+    kind = spec.get("output_kind") or "python"
+    return str(kind).strip().lower()
+
+
+def _is_markdown_source(tutorial_path: Path, spec: dict) -> bool:
+    """True when the tutorial source is a Markdown file (no AST parsing)."""
+    if tutorial_path.suffix.lower() == ".md":
+        return True
+    return _spec_output_kind(spec) == "markdown"
+
+
 def check_filter_disclosed(
     tutorial_path: Path,
     spec: dict,
@@ -64,7 +82,11 @@ def check_filter_disclosed(
     """E5.37 -- when ``.filter(...)`` is called, disclose pass-band / stop-band /
     filter type within the surrounding 50 lines of source (docstring or
     markdown prose).
+
+    Skipped for Markdown how-tos (no Python AST to parse).
     """
+    if _is_markdown_source(tutorial_path, spec):
+        return []
     src = tutorial_path.read_text(encoding="utf-8")
     try:
         tree = ast.parse(src)

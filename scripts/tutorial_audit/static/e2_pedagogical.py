@@ -1,4 +1,11 @@
-"""Static E.2 pedagogical checks (PRIMM scaffolding and learning objectives)."""
+"""Static E.2 pedagogical checks (PRIMM scaffolding and learning objectives).
+
+The validators branch on ``spec.kind``: tutorial recipes (PRIMM, learning
+objectives) are required for ``kind == "tutorial"`` only. For
+``kind == "how-to"`` the PRIMM check is fully exempt and the learning-
+objectives rule is replaced with a ``## Goal`` section check (rule id
+``E2.20.howto``). Markdown how-tos skip the AST-based docstring lookup.
+"""
 
 from __future__ import annotations
 
@@ -77,6 +84,25 @@ ACTION_VERB_WHITELIST = {
 }
 
 
+def _spec_kind(spec: dict) -> str:
+    """Return ``spec.kind`` lowercased; default ``"tutorial"``."""
+    kind = spec.get("kind") or "tutorial"
+    return str(kind).strip().lower()
+
+
+def _spec_output_kind(spec: dict) -> str:
+    """Return ``spec.output_kind`` lowercased; default ``"python"``."""
+    kind = spec.get("output_kind") or "python"
+    return str(kind).strip().lower()
+
+
+def _is_markdown_source(tutorial_path: Path, spec: dict) -> bool:
+    """True when the tutorial source is a Markdown file (no AST parsing)."""
+    if tutorial_path.suffix.lower() == ".md":
+        return True
+    return _spec_output_kind(spec) == "markdown"
+
+
 def _strip_md_prefix(line: str) -> str:
     """Strip a leading ``# `` (sphinx-gallery markdown line prefix) and whitespace."""
     s = line.lstrip()
@@ -122,8 +148,11 @@ def check_primm_blocks(
     """E2.13 -- count Predict/Run/Investigate/Modify/Make markers.
 
     Severity is difficulty-aware (Kalyuga 2003): error for 1-star tutorials,
-    warn for 2-star, exempt for 3-star.
+    warn for 2-star, exempt for 3-star. How-tos (``kind == "how-to"``) are
+    fully exempt because PRIMM is a tutorial-quadrant scaffold.
     """
+    if _spec_kind(spec) == "how-to":
+        return []
     difficulty = int(spec.get("difficulty", 1))
     if difficulty >= 3:
         return []
@@ -211,16 +240,85 @@ def _docstring(tutorial_path: Path) -> str:
     return ast.get_docstring(tree) or ""
 
 
+# Header marking the "Goal" section in a how-to recipe. Accepts Markdown ATX
+# (``## Goal``), a reST title with the next line being the underline, an
+# inline bold label (``**Goal.** ...``), or an italic label, all
+# case-insensitive. The pattern intentionally allows trailing prose so an
+# inline ``**Goal.** Copy a single .slurm template ...`` paragraph counts.
+GOAL_HEADER_RE = re.compile(
+    r"^\s*(?:#+\s*|\*+\s*)?goal\b",
+    re.I,
+)
+
+
+def _has_goal_section(tutorial_path: Path, spec: dict) -> bool:
+    r"""Return True if the source contains a ``## Goal`` (or equivalent) header.
+
+    For Python how-tos we check the docstring and every ``# %% [markdown]``
+    block, plus a tolerant fallback: every comment line in the source is
+    stripped of its ``# `` prefix and matched against ``GOAL_HEADER_RE``.
+    The fallback is necessary because some sphinx-gallery how-tos use the
+    bare ``# %%`` cell form and write prose as ``# Goal\n# ----``, not
+    inside an explicit ``# %% [markdown]`` block.
+    """
+    src = tutorial_path.read_text(encoding="utf-8")
+    if _is_markdown_source(tutorial_path, spec):
+        for line in src.splitlines():
+            if GOAL_HEADER_RE.match(line.rstrip()):
+                return True
+        return False
+    # Python how-to: search docstring and markdown blocks.
+    blocks: list[str] = [_docstring(tutorial_path)]
+    blocks.extend(_markdown_blocks(src))
+    for block in blocks:
+        if not block:
+            continue
+        for line in block.splitlines():
+            if GOAL_HEADER_RE.match(line.rstrip()):
+                return True
+    # Fallback: scan every line of source after stripping the ``# `` comment
+    # prefix. This catches the bare ``# %%`` + ``# Goal`` form used by some
+    # how-tos that do not declare ``# %% [markdown]`` explicitly.
+    for line in src.splitlines():
+        stripped = _strip_md_prefix(line)
+        if not stripped:
+            continue
+        if GOAL_HEADER_RE.match(stripped):
+            return True
+    return False
+
+
 def check_learning_objectives(
     tutorial_path: Path,
     spec: dict,
     ctx: Optional["RunContext"] = None,
 ) -> list[Finding]:
-    """E2.20 -- 3-5 learning-objective bullets, each starting with an action verb.
+    """E2.20 / E2.20.howto -- learning objectives or how-to ``Goal`` section.
 
-    The header may live in the module docstring or in the first
-    ``# %% [markdown]`` block.
+    For ``kind == "tutorial"`` this enforces the 3-5 learning-objective bullet
+    list. For ``kind == "how-to"`` the rule is replaced by ``E2.20.howto``,
+    which only requires a ``## Goal`` (or equivalent) header somewhere in the
+    source. The header may live in the docstring, a sphinx-gallery markdown
+    block, or -- for Markdown how-tos -- the file body.
     """
+    if _spec_kind(spec) == "how-to":
+        if _has_goal_section(tutorial_path, spec):
+            return []
+        return [
+            Finding(
+                rule_id="E2.20.howto",
+                level="error",
+                message=(
+                    "How-to source must contain a '## Goal' (or equivalent) "
+                    "section stating the recipe's outcome in one paragraph"
+                ),
+                cite_rubric="compass_artifact.md#E2.20",
+                cite_plan="tutorial_restructure_plan.md#L519-L524",
+                evidence={"kind": "how-to"},
+                tool="regex",
+            )
+        ]
+
     src = tutorial_path.read_text(encoding="utf-8")
     md_blocks = _markdown_blocks(src)
     candidates = [_docstring(tutorial_path)]

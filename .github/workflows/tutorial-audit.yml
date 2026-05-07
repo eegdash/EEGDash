@@ -1,18 +1,25 @@
-# Tutorial audit (Day-0, static stage only).
+# Tutorial audit -- 3-stage matrix per docs/tutorial_restructure_plan.md Phase 5.
 #
-# This workflow enforces the spec-first tutorial rubric described in
-# `docs/tutorial_implementation_strategy.md`. It runs the static stage of the
-# pipeline (E.1 structural, E.2 pedagogical, E.3 technical, E.4 engagement,
-# E.5 domain, E.6 Diataxis) on every pull request that touches tutorial
-# sources or specs, on `develop` pushes, and nightly. The runtime matrix
-# (clean-kernel execution, budgets, leakage, palette) is intentionally
-# omitted at Day-0 and will be added once the first three Release-1
-# tutorials are drafted (see strategy doc, "Bootstrap (Day-0)" section).
+# Stage 1 (`static`): cheap, runs on every PR that touches tutorial sources or
+#   specs. Covers the static rubric (E.1 structural, E.2 pedagogical, E.3
+#   technical, E.4 engagement, E.5 domain, E.6 Diataxis) defined in
+#   `docs/tutorial_implementation_strategy.md`.
 #
-# Notebook lint via `nbqa ruff` runs warn-only at first to gather signal
-# before promotion to error. Spec coherence is checked first because it is
-# the cheapest gate and catches most authoring mistakes before any per-file
-# rubric runs.
+# Stage 2 (`anchors`): selected-tutorial execution. Runs only on PRs that
+#   actually touch `examples/tutorials/`. Picks three anchor tutorials that
+#   cover the major code paths (search, leakage-safe split, resting-state)
+#   and executes them via nbclient after sphinx-gallery converts the .py to
+#   a notebook. Reports per-tutorial wall time as a CI artifact.
+#
+# Stage 3 (`gallery`): full-gallery sweep. Runs nightly via cron and on
+#   manual `workflow_dispatch`. Failures are non-blocking; results upload
+#   as artifacts so docs maintainers can audit drift in runtime / data
+#   budgets.
+#
+# The runtime tracker (`scripts.tutorial_audit.runtime_tracker`) collates
+# the declared budgets and (optionally) the per-tutorial timings produced
+# by stages 2/3 into a single markdown dashboard under
+# `docs/evidence/runtime_tracker_<date>.md`.
 
 name: tutorial-audit
 
@@ -40,7 +47,7 @@ on:
 
 jobs:
   static:
-    name: static-rubric
+    name: stage-1-static-rubric
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -79,6 +86,12 @@ jobs:
         run: |
           nbqa ruff examples/tutorials/**/plot_*.py || true
 
+      - name: Refresh runtime tracker
+        run: |
+          mkdir -p docs/evidence
+          python -m scripts.tutorial_audit.runtime_tracker \
+            --out "docs/evidence/runtime_tracker_$(date +%Y-%m-%d).md"
+
       - name: Aggregate evidence report
         if: always()
         run: python -m scripts.tutorial_audit.report --aggregate
@@ -92,6 +105,168 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tutorial-evidence-py${{ matrix.python-version }}
-          path: docs/evidence/tutorials/
+          path: docs/evidence/
+          if-no-files-found: warn
+          retention-days: 30
+
+  anchors:
+    name: stage-2-selected-execution
+    runs-on: ubuntu-latest
+    # Only run when a PR actually touches tutorial sources, or on manual
+    # dispatch / nightly. Path filters at the workflow level cover this on
+    # `pull_request`; for other triggers we still want the job to run.
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule'
+    needs: static
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+        tutorial:
+          - examples/tutorials/00_start_here/plot_00_first_search.py
+          - examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.py
+          - examples/tutorials/30_resting_state/plot_30_eyes_open_closed.py
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect tutorial-source diff
+        id: diff
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=2 origin "${{ github.base_ref }}" || true
+          if git diff --name-only "origin/${{ github.base_ref }}"...HEAD \
+              | grep -E '^(examples/tutorials/|docs/tutorials/_spec/)' >/dev/null; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Python
+        if: github.event_name != 'pull_request' || steps.diff.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install execution dependencies
+        if: github.event_name != 'pull_request' || steps.diff.outputs.run == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[docs]"
+          pip install nbclient jupytext pyyaml
+
+      - name: Convert tutorial .py to notebook
+        if: github.event_name != 'pull_request' || steps.diff.outputs.run == 'true'
+        run: |
+          mkdir -p .runtime/anchors
+          jupytext --to notebook "${{ matrix.tutorial }}" \
+            --output ".runtime/anchors/$(basename '${{ matrix.tutorial }}' .py).ipynb"
+
+      - name: Execute tutorial via nbclient
+        if: github.event_name != 'pull_request' || steps.diff.outputs.run == 'true'
+        id: exec
+        run: |
+          NB=".runtime/anchors/$(basename '${{ matrix.tutorial }}' .py).ipynb"
+          START=$(date +%s)
+          jupyter execute --kernel_name=python3 \
+            --ExecutePreprocessor.timeout=900 "$NB"
+          END=$(date +%s)
+          DURATION=$((END - START))
+          echo "duration_seconds=$DURATION" >> "$GITHUB_OUTPUT"
+          ID=$(basename '${{ matrix.tutorial }}' .py)
+          echo "{\"$ID\": {\"runtime_seconds\": $DURATION}}" \
+            > ".runtime/anchors/${ID}.timing.json"
+
+      - name: Upload anchor timings
+        if: always() && (github.event_name != 'pull_request' || steps.diff.outputs.run == 'true')
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-anchor-timings-${{ strategy.job-index }}
+          path: .runtime/anchors/*.timing.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  gallery:
+    name: stage-3-full-gallery
+    # Nightly schedule + manual workflow_dispatch only. Never blocks PRs.
+    if: |
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install gallery dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[docs]"
+          pip install nbclient jupytext pyyaml
+
+      - name: Execute every plot_*.py via nbclient
+        run: |
+          set +e
+          mkdir -p .runtime/gallery
+          STATUS=0
+          for tut in $(find examples/tutorials -name "plot_*.py" -type f | sort); do
+            ID=$(basename "$tut" .py)
+            NB=".runtime/gallery/${ID}.ipynb"
+            jupytext --to notebook "$tut" --output "$NB"
+            START=$(date +%s)
+            if jupyter execute --kernel_name=python3 \
+                --ExecutePreprocessor.timeout=1800 "$NB"; then
+              RESULT=ok
+            else
+              RESULT=fail
+              STATUS=1
+            fi
+            END=$(date +%s)
+            DURATION=$((END - START))
+            echo "{\"$ID\": {\"runtime_seconds\": $DURATION, \"result\": \"$RESULT\"}}" \
+              >> .runtime/gallery/timings.jsonl
+          done
+          # Aggregate per-tutorial timings into a flat JSON object for the
+          # runtime tracker. Failures are non-blocking on this stage.
+          python <<'PY'
+          import json, pathlib
+          out = {}
+          for line in pathlib.Path('.runtime/gallery/timings.jsonl').read_text().splitlines():
+              if line.strip():
+                  out.update(json.loads(line))
+          pathlib.Path('.runtime/gallery/timings.json').write_text(
+              json.dumps(out, indent=2, sort_keys=True)
+          )
+          PY
+          exit 0
+
+      - name: Refresh runtime tracker with measured timings
+        run: |
+          mkdir -p docs/evidence
+          python -m scripts.tutorial_audit.runtime_tracker \
+            --out "docs/evidence/runtime_tracker_$(date +%Y-%m-%d).md" \
+            --measured .runtime/gallery/timings.json
+
+      - name: Upload gallery artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-gallery-py${{ matrix.python-version }}
+          path: |
+            .runtime/gallery/
+            docs/evidence/runtime_tracker_*.md
           if-no-files-found: warn
           retention-days: 30

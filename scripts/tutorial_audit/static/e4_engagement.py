@@ -67,6 +67,36 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _spec_kind(spec: dict) -> str:
+    """Return ``spec.kind`` lowercased; default ``"tutorial"``."""
+    kind = spec.get("kind") or "tutorial"
+    return str(kind).strip().lower()
+
+
+def _spec_output_kind(spec: dict) -> str:
+    """Return ``spec.output_kind`` lowercased; default ``"python"``."""
+    kind = spec.get("output_kind") or "python"
+    return str(kind).strip().lower()
+
+
+def _is_markdown_source(tutorial_path: Path, spec: dict) -> bool:
+    """True when the tutorial source is a Markdown file (no AST parsing)."""
+    if tutorial_path.suffix.lower() == ".md":
+        return True
+    return _spec_output_kind(spec) == "markdown"
+
+
+# Header that satisfies the how-to "Common pitfalls" wrap-up. Accepted
+# variants mirror the prose conventions in
+# tutorial_restructure_plan.md#L1503-L1512. ``re.MULTILINE`` lets ``^``
+# match the start of each line so ``re.search`` works on multi-line blocks.
+PITFALLS_HEADER_RE = re.compile(
+    r"^\s*(?:#+\s*|\*+\s*)?"
+    r"(?:common\s+pitfalls?|pitfalls?|gotchas?)\b",
+    re.I | re.MULTILINE,
+)
+
+
 def _strip_md_prefix(line: str) -> str:
     """Strip a leading ``# `` (sphinx-gallery prose prefix) and return the rest."""
     s = line
@@ -111,6 +141,29 @@ def _docstring_text(src: str) -> str:
     except SyntaxError:
         return ""
     return ast.get_docstring(tree) or ""
+
+
+def _markdown_sections(src: str) -> list[str]:
+    """Return text of each top-level Markdown section in ``src``.
+
+    A "section" runs from one ``##`` (or higher) heading to the next, mirroring
+    the structure used by ``how_to_*.md`` files. The first segment (before the
+    first heading) is skipped because it is the document title rather than a
+    section.
+    """
+    sections: list[str] = []
+    cur: list[str] | None = None
+    for line in src.splitlines():
+        if re.match(r"^#{2,}\s+\S", line):
+            if cur is not None:
+                sections.append("\n".join(cur))
+            cur = [line]
+            continue
+        if cur is not None:
+            cur.append(line)
+    if cur is not None:
+        sections.append("\n".join(cur))
+    return sections
 
 
 def _normalise_doi(token: str) -> str:
@@ -247,64 +300,162 @@ def _bullet_lines_after_header(block: str) -> int:
     return n_bullets
 
 
-def check_extensions_section(
-    tutorial_path: Path,
-    spec: dict,
-    ctx: Optional["RunContext"] = None,
-) -> list[Finding]:
-    """E4.34 -- tutorial wrap-up must contain an Extensions section with >= 3 bullets.
+def _stripped_source_block(src: str) -> str:
+    """Return the source with every line's leading ``# `` prefix stripped.
 
-    The header may live in the module docstring or in any
-    ``# %% [markdown]`` block. We accept several common phrasings (Try it
-    yourself, Extensions, Further exploration, Next steps, Challenges,
-    Exercises). The bullet count is *contiguous* bullets after the header so
-    a stray bulleted list elsewhere in the tutorial does not satisfy E4.34.
+    Some sphinx-gallery how-tos use the bare ``# %%`` cell form and write
+    prose lines as ``# heading`` rather than inside a ``# %% [markdown]``
+    block. The stripped view lets the bullet/header scan still find them.
+    Lines that are sphinx-gallery cell delimiters are dropped.
+    """
+    out: list[str] = []
+    for line in src.splitlines():
+        if MD_BLOCK_RE.match(line) or line.startswith("# %%"):
+            out.append("")
+            continue
+        if line.startswith("# "):
+            out.append(line[2:])
+        elif line.startswith("#"):
+            out.append(line[1:])
+        else:
+            out.append(line)
+    return "\n".join(out)
+
+
+def _collect_blocks(tutorial_path: Path, spec: dict) -> list[str]:
+    """Return the prose blocks to scan for header-bullet pairs.
+
+    For ``kind == "tutorial"`` and Python how-tos this returns the module
+    docstring plus every ``# %% [markdown]`` block. For Markdown how-tos it
+    returns the raw file contents split on ``##`` headings so each "section"
+    is a self-contained block. Python how-tos additionally include a
+    flattened "stripped source" view as a final block so the bare ``# %%``
+    + ``# heading`` cell form is still scanned.
     """
     src = _read(tutorial_path)
+    if _is_markdown_source(tutorial_path, spec):
+        return _markdown_sections(src)
     blocks: list[str] = []
     docstring = _docstring_text(src)
     if docstring:
         blocks.append(docstring)
     blocks.extend(_markdown_blocks(src))
+    blocks.append(_stripped_source_block(src))
+    return blocks
+
+
+def _bullets_after_match(block: str, header_re: re.Pattern[str]) -> int:
+    """Count contiguous bullets that follow the first header match in ``block``.
+
+    Generalisation of ``_bullet_lines_after_header`` that lets callers pick
+    which header pattern is the section anchor (Extensions or Pitfalls).
+    Indented continuation lines (e.g. wrapped prose under a bullet) are
+    treated as part of the previous bullet and do not terminate the list.
+    """
+    lines = block.splitlines()
+    in_block = False
+    after_header_idx = -1
+    for idx, line in enumerate(lines):
+        if header_re.match(line.strip()):
+            in_block = True
+            after_header_idx = idx + 1
+            break
+    if not in_block:
+        return 0
+
+    n_bullets = 0
+    seen_bullet = False
+    for line in lines[after_header_idx:]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if REST_UNDERLINE_RE.match(stripped):
+            continue
+        if BULLET_RE.match(line):
+            n_bullets += 1
+            seen_bullet = True
+            continue
+        # Indented continuation of a wrapped bullet: skip but stay in block.
+        if seen_bullet and (line.startswith("  ") or line.startswith("\t")):
+            continue
+        if seen_bullet:
+            break
+        # Tolerate a one-line intro before the bullet list begins.
+        continue
+    return n_bullets
+
+
+def check_extensions_section(
+    tutorial_path: Path,
+    spec: dict,
+    ctx: Optional["RunContext"] = None,
+) -> list[Finding]:
+    """E4.34 / E4.34.howto -- wrap-up must list >= 3 modifications or pitfalls.
+
+    Tutorials (``kind == "tutorial"``) require an "Extensions" / "Try it
+    yourself" wrap-up with at least three graded modifications. How-tos
+    (``kind == "how-to"``) require a "Common pitfalls" section with at least
+    three bullets instead -- this matches the recipe layout in
+    tutorial_restructure_plan.md#L1503-L1512.
+    """
+    kind = _spec_kind(spec)
+    blocks = _collect_blocks(tutorial_path, spec)
+
+    if kind == "how-to":
+        rule_id = "E4.34.howto"
+        header_re = PITFALLS_HEADER_RE
+        missing_msg = (
+            "How-to source missing a 'Common pitfalls' section; recipes should "
+            "close with at least three pitfalls/gotchas"
+        )
+        too_few_template = (
+            "Common pitfalls section found but only {count} bullets; rubric "
+            "requires at least 3"
+        )
+    else:
+        rule_id = "E4.34"
+        header_re = EXTENSIONS_HEADER_RE
+        missing_msg = (
+            "Tutorial wrap-up missing an 'Extensions' / 'Try it yourself' "
+            "section; sphinx-gallery tutorials should close with at least "
+            "three graded modifications"
+        )
+        too_few_template = (
+            "Extensions section found but only {count} graded modification "
+            "bullets; rubric requires at least 3"
+        )
 
     best: int = 0
     found_header = False
     for block in blocks:
-        if not EXTENSIONS_HEADER_RE.search(block):
+        if not header_re.search(block):
             continue
         found_header = True
-        count = _bullet_lines_after_header(block)
+        count = _bullets_after_match(block, header_re)
         if count > best:
             best = count
 
     if not found_header:
         return [
             Finding(
-                rule_id="E4.34",
+                rule_id=rule_id,
                 level="warn",
-                message=(
-                    "Tutorial wrap-up missing an 'Extensions' / 'Try it yourself' "
-                    "section; sphinx-gallery tutorials should close with at least "
-                    "three graded modifications"
-                ),
+                message=missing_msg,
                 cite_rubric="compass_artifact.md#E4.34",
                 cite_plan="tutorial_restructure_plan.md#L516-L562",
-                evidence={"bullet_count": 0},
+                evidence={"bullet_count": 0, "kind": kind},
                 tool="regex",
             )
         ]
     if best < 3:
         return [
             Finding(
-                rule_id="E4.34",
+                rule_id=rule_id,
                 level="warn",
-                message=(
-                    f"Extensions section found but only {best} graded modification "
-                    "bullets; rubric requires at least 3"
-                ),
+                message=too_few_template.format(count=best),
                 cite_rubric="compass_artifact.md#E4.34",
                 cite_plan="tutorial_restructure_plan.md#L516-L562",
-                evidence={"bullet_count": best},
+                evidence={"bullet_count": best, "kind": kind},
                 tool="regex",
             )
         ]
@@ -327,7 +478,27 @@ def check_motivating_question_present(
     that close their opening block with a flat assertion. We always emit a
     single ``info`` finding noting the reviewer-only nature of the wider rule
     so the dossier records that the human/LLM reviewer is still on the hook.
+
+    How-tos (``kind == "how-to"``) are recipe-style: they open with a Goal
+    statement, not a motivating question. The mechanical question-mark check
+    is skipped for them with an info-level "skipped: how-to" record.
     """
+    kind = _spec_kind(spec)
+    if kind == "how-to":
+        return [
+            Finding(
+                rule_id="E4.31",
+                level="info",
+                message=(
+                    "Skipped: how-to recipes open with a Goal statement, "
+                    "not a motivating question (E4.31 does not apply)"
+                ),
+                cite_rubric="compass_artifact.md#E4.31",
+                cite_plan="tutorial_restructure_plan.md#L516-L562",
+                evidence={"skipped": "how-to", "kind": kind},
+                tool="reviewer-stub",
+            )
+        ]
     src = _read(tutorial_path)
     findings: list[Finding] = []
     blocks: list[str] = []

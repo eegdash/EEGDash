@@ -62,6 +62,12 @@ DEFAULT_PATTERN = "examples/tutorials/**/plot_*.py"
 DEFAULT_OUT_DIR = REPO_ROOT / "docs" / "evidence" / "tutorials"
 SPEC_DIR = REPO_ROOT / "docs" / "tutorials" / "_spec"
 
+# Source-file suffixes the pipeline knows how to audit. ``.py`` is the
+# primary tutorial format (sphinx-gallery); ``.md`` is for how-to recipes
+# whose ``spec.output_kind`` is ``markdown`` -- those run a structural-only
+# subset of the static validators (no AST parsing).
+SUPPORTED_SUFFIXES: tuple[str, ...] = (".py", ".md")
+
 EVIDENCE_FLOAT_NDIGITS = 6
 
 
@@ -105,13 +111,35 @@ def discover_tutorials(
     pattern: str,
     explicit_id: str | None = None,
 ) -> list[Path]:
-    """Glob the repo for tutorial source files."""
+    """Glob the repo for tutorial source files.
+
+    When ``explicit_id`` is given we look first under
+    ``examples/tutorials/**`` (sphinx-gallery tutorials) and then under
+    ``examples/how_to/`` (how-to recipes). Both ``.py`` and ``.md`` sources
+    are accepted -- the ``.md`` branch is how Markdown how-tos
+    (``output_kind: markdown``) are picked up.
+
+    Without an explicit id we honour the caller-provided glob ``pattern``
+    verbatim. The default pattern targets sphinx-gallery tutorials; callers
+    can pass ``examples/how_to/how_to_*.py`` (or ``*.md``) to scan how-tos.
+    """
     if explicit_id is not None:
-        # Match anywhere in examples/tutorials with this stem.
-        candidates = sorted(
-            (REPO_ROOT / "examples" / "tutorials").glob(f"**/{explicit_id}.py")
-        )
-        return list(candidates)
+        candidates: list[Path] = []
+        for root in ("examples/tutorials", "examples/how_to"):
+            base = REPO_ROOT / root
+            if not base.exists():
+                continue
+            for suffix in SUPPORTED_SUFFIXES:
+                candidates.extend(base.glob(f"**/{explicit_id}{suffix}"))
+        # De-duplicate while preserving deterministic order.
+        seen: set[Path] = set()
+        unique: list[Path] = []
+        for path in sorted(candidates):
+            if path in seen:
+                continue
+            seen.add(path)
+            unique.append(path)
+        return unique
     return sorted(REPO_ROOT.glob(pattern))
 
 

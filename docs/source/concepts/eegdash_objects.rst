@@ -1,7 +1,7 @@
 .. _concepts-eegdash-objects:
 
 EEGDash objects: ``EEGDash``, ``EEGDashDataset``, ``EEGChallengeDataset``
-========================================================================
+=========================================================================
 
 The library exposes three top-level objects that look similar at first glance
 but answer very different questions. Picking the wrong one is the most common

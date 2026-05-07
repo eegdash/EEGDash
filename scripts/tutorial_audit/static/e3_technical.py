@@ -1,4 +1,10 @@
-"""Static E.3 technical / reproducibility checks (seeds, paths, inline pip)."""
+"""Static E.3 technical / reproducibility checks (seeds, paths, inline pip).
+
+The AST-based validators (seed detection, hard-coded paths) skip Markdown
+how-tos, since those are template + commentary, not Python source. The
+inline-pip regex still runs on Markdown sources because shell-bang patterns
+are equally bad in a SLURM script as in a notebook.
+"""
 
 from __future__ import annotations
 
@@ -37,6 +43,19 @@ INLINE_PIP_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
         re.compile(r"subprocess\.[A-Za-z_]+\([^)]*['\"]pip['\"]"),
     ),
 ]
+
+
+def _spec_output_kind(spec: dict) -> str:
+    """Return ``spec.output_kind`` lowercased; default ``"python"``."""
+    kind = spec.get("output_kind") or "python"
+    return str(kind).strip().lower()
+
+
+def _is_markdown_source(tutorial_path: Path, spec: dict) -> bool:
+    """True when the tutorial source is a Markdown file (no AST parsing)."""
+    if tutorial_path.suffix.lower() == ".md":
+        return True
+    return _spec_output_kind(spec) == "markdown"
 
 
 def _seed_keyword_args() -> set[str]:
@@ -102,7 +121,14 @@ def check_seeds(
     spec: dict,
     ctx: Optional["RunContext"] = None,
 ) -> list[Finding]:
-    """E3.21 -- at least one RNG-seeding pattern must appear in the tutorial."""
+    """E3.21 -- at least one RNG-seeding pattern must appear in the tutorial.
+
+    Markdown how-tos are skipped: they are template + commentary documents
+    that do not embed runnable Python code paths and thus cannot be expected
+    to seed an RNG.
+    """
+    if _is_markdown_source(tutorial_path, spec):
+        return []
     src = tutorial_path.read_text(encoding="utf-8")
     try:
         tree = ast.parse(src)
@@ -172,9 +198,13 @@ def check_no_hardcoded_paths(
 
     The eegdash cache directory should come from a variable, ``Path("./...")``,
     or an environment variable lookup -- never a hard-coded ``/Users/...``,
-    ``/home/...``, ``C:\...`` or ``~/Downloads/...`` path.
+    ``/home/...``, ``C:\...`` or ``~/Downloads/...`` path. For Markdown
+    how-tos we fall back to the line-level regex scan since there is no
+    Python AST to walk.
     """
     src = tutorial_path.read_text(encoding="utf-8")
+    if _is_markdown_source(tutorial_path, spec):
+        return _hardcoded_paths_line_scan(src)
     try:
         tree = ast.parse(src)
     except SyntaxError:

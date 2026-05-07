@@ -1,23 +1,23 @@
-"""Compare a feature baseline against a neural model on the same split
-=====================================================================
+"""Compare a feature baseline against a neural network on the same split
+======================================================================
 
-When a fancy decoder beats a simple feature baseline by a few accuracy
-points on one held-out subject, the honest question is: did the model
-actually win, or did it just luck into a friendlier fold? This is the
-keystone of MOABB-style evaluation (Chevallier, Aristimunha et al. 2024,
+When a decoder beats a feature baseline by a few accuracy points on one
+held-out subject, the honest question is: did the model actually win,
+or just luck into a friendlier fold? This is the keystone of MOABB-style
+evaluation (Chevallier, Aristimunha et al. 2024,
 doi:10.48550/arXiv.2404.15319): build ONE split manifest, feed both
 pipelines the SAME fold ids, and run a paired test on the per-fold
 deltas. Cisotto & Chicco 2024 (doi:10.7717/peerj-cs.2256, Tip 9) flag
 unpaired evaluation as the most common over-claim in clinical EEG.
-
-So: does the second baseline really beat the first, or is the gap noise?
+So: does the neural network really beat the linear baseline, or is the
+gap noise?
 """
 
 # %% [markdown]
 # ## Learning objectives
 #
 # - build ONE cross-subject split manifest reused by two pipelines.
-# - apply the same fold ids to a feature baseline and a contrasting model.
+# - apply the same fold ids to a feature baseline and a small neural network.
 # - assert ``fold_ids_pipeline_a == fold_ids_pipeline_b`` in code, not prose.
 # - run ``scipy.stats.wilcoxon`` on the paired per-fold accuracy deltas.
 # - interpret the p-value alongside the median delta and chance level.
@@ -34,8 +34,9 @@ import warnings
 import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
-from sklearn.linear_model import LogisticRegression, RidgeClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from eegdash.splits import (
@@ -84,9 +85,8 @@ for subj in range(N_SUBJECTS):
         rows.append(row)
 feature_table = pd.DataFrame(rows)
 feature_cols = [c for c in feature_table.columns if c.startswith("spec_")]
-metadata = feature_table[
-    ["subject", "session", "run", "dataset", "sample_id", "target"]
-].copy()
+META_COLS = ["subject", "session", "run", "dataset", "sample_id", "target"]
+metadata = feature_table[META_COLS].copy()
 print(
     f"feature table: rows={len(feature_table)} | features={len(feature_cols)} | "
     f"subjects={metadata['subject'].nunique()} | "
@@ -97,11 +97,13 @@ print(
 # ## Step 2 -- Predict which pipeline wins
 #
 # **Predict.** Pipeline A is ``LogisticRegression`` on band-power
-# features (the feature baseline); Pipeline B is the closed-form L2
-# alternative ``RidgeClassifier``. On this near-linear contrast both
-# should land within a few accuracy points of each other -- and a few
-# points only matters when the per-fold deltas are consistent (Sentance
-# et al. 2019, doi:10.1080/08993408.2019.1608781). Chance is ~0.5.
+# features (the linear baseline); Pipeline B is a small ``MLPClassifier``
+# -- a one-hidden-layer neural network trained with Adam (Pedregosa et
+# al. 2011, doi:10.5555/1953048.2078195). The MLP can fit non-linear
+# contrasts the linear arm cannot, but on this synthetic near-linear
+# setup we expect the two to land within a few accuracy points -- and
+# a few points only matters when per-fold deltas are consistent
+# (Sentance et al. 2019, doi:10.1080/08993408.2019.1608781). Chance ~0.5.
 #
 # ## Step 3 -- Build ONE cross-subject split manifest
 #
@@ -165,19 +167,24 @@ print(
 )
 
 # %% [markdown]
-# ## Step 5 -- Pipeline B: StandardScaler + RidgeClassifier
+# ## Step 5 -- Pipeline B: StandardScaler + MLPClassifier (neural net)
 #
-# **Run #3.** Same scaffolding, different head. Both pipelines are
-# wrapped in ``sklearn.pipeline.Pipeline`` so the scaler is fit on the
-# train fold only -- no test peek through preprocessing.
+# **Run #3.** Same scaffolding, different head: a one-hidden-layer
+# neural network (16 ReLU units, Adam). Scaler still fits on train only.
+# The MLP stays small so the tutorial runs in a few seconds on CPU.
 
 # %%
-pipe_b = Pipeline(
-    [("scaler", StandardScaler()), ("clf", RidgeClassifier(random_state=SEED))]
+mlp = MLPClassifier(
+    hidden_layer_sizes=(16,),
+    activation="relu",
+    solver="adam",
+    max_iter=200,
+    random_state=SEED,
 )
+pipe_b = Pipeline([("scaler", StandardScaler()), ("clf", mlp)])
 accs_b, fold_ids_b, _ = run_pipeline(pipe_b)
 print(
-    f"Pipeline B (Ridge): mean={np.mean(accs_b):.3f} +/- {np.std(accs_b):.3f} | "
+    f"Pipeline B (MLP): mean={np.mean(accs_b):.3f} +/- {np.std(accs_b):.3f} | "
     f"chance level={np.mean(chances):.3f} (n_folds={n_folds})"
 )
 
@@ -258,8 +265,9 @@ except (ValueError, RuntimeError) as exc:
 # %% [markdown]
 # ## Modify -- swap Pipeline B for a different model
 #
-# **Modify.** Same scaffolding, different head: replace ``RidgeClassifier``
-# with another linear classifier (here LogReg with stronger L2) and rerun.
+# **Modify.** Same scaffolding, different head: replace the MLP with a
+# stronger-regularised LogReg (``C=0.1``) and rerun. The paired contract
+# still has to hold.
 
 # %%
 pipe_b_alt = Pipeline(
@@ -271,14 +279,15 @@ pipe_b_alt = Pipeline(
 accs_b_alt, fold_ids_b_alt, _ = run_pipeline(pipe_b_alt)
 assert fold_ids_a == fold_ids_b_alt, "Modify variant broke the paired contract!"
 _, p_alt = wilcoxon(accs_b_alt, accs_a, zero_method="wilcox")
+delta_alt = np.median(np.asarray(accs_b_alt) - np.asarray(accs_a))
 print(
-    f"Modify (LogReg C=0.1) vs A: median delta={np.median(np.asarray(accs_b_alt) - np.asarray(accs_a)):+.3f} | p={float(p_alt):.3f}"
+    f"Modify (LogReg C=0.1) vs A: median delta={delta_alt:+.3f} | p={float(p_alt):.3f}"
 )
 
 # %% [markdown]
 # ## Try it yourself / Extensions
 #
-# - swap Pipeline B for ``MLPClassifier(random_state=42)`` and rerun.
+# - widen the MLP to ``hidden_layer_sizes=(64, 32)`` and rerun.
 # - reduce ``N_SUBJECTS`` to 6 and watch the Wilcoxon p-value lose power.
 # - add a third pipeline and run pairwise Wilcoxon with Bonferroni.
 #

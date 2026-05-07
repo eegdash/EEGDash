@@ -1,6 +1,6 @@
 id: plot_54_compare_two_pipelines
 category: F-evaluation
-title: "Compare a feature baseline against a neural model on the same split"
+title: "Compare a feature baseline against a neural network on the same split"
 state: proposed
 assignee: null
 difficulty: 2
@@ -33,7 +33,7 @@ cites:
     - "compass_artifact.md#E5.45"
     - "compass_artifact.md#E5.46"
 learning_objectives:
-  - "After this tutorial you will be able to evaluate a feature-based scikit-learn pipeline and a small Braindecode neural model on the *exact same* cross-subject folds, by reusing one split manifest."
+  - "After this tutorial you will be able to evaluate a feature-based scikit-learn pipeline and a small neural network (sklearn ``MLPClassifier``) on the *exact same* cross-subject folds, by reusing one split manifest."
   - "After this tutorial you will be able to produce a paired per-fold score table and run a paired Wilcoxon signed-rank test to ask whether the difference is significant."
   - "After this tutorial you will be able to plot a paired-comparison figure (per-fold lines + box/violin) with the chance level on the same axes."
   - "After this tutorial you will be able to phrase the conclusion with appropriate hedging — small sample, single dataset, fixed hyperparameters — so the comparison is not over-claimed."
@@ -94,7 +94,8 @@ links:
   related_papers:
     - "Chevallier, Aristimunha et al. 2024, MOABB benchmark (10.48550/arXiv.2404.15319) — paired pipeline comparison and meta-analysis"
     - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
-    - "Schirrmeister et al. 2017, HBM — Braindecode for EEG deep learning"
+    - "Wilcoxon 1945, Biometrics Bulletin — paired signed-rank test"
+    - "Pedregosa et al. 2011, JMLR — scikit-learn ``Pipeline`` and ``MLPClassifier``"
 requires_api:
   - "eegdash.splits.get_splitter"
   - "eegdash.splits.make_split_manifest"
@@ -105,6 +106,6 @@ requires_api:
   - "eegdash.features.extract_features"
   - "sklearn.pipeline.Pipeline"
   - "sklearn.linear_model.LogisticRegression"
+  - "sklearn.neural_network.MLPClassifier"
   - "scipy.stats.wilcoxon"
-  - "braindecode.models.ShallowFBCSPNet"
 review_rubric_overrides: {}

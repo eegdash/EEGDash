@@ -71,9 +71,18 @@ home.
 #
 # Verify from Python that the resolution works as expected.
 import os
+import random
 from pathlib import Path
 
+import numpy as np
+
 from eegdash.paths import get_default_cache_dir
+
+# Seed local RNG for the deterministic synthetic record we forge below
+# (E3.21). HPC how-tos run on a head node where reproducibility is still
+# expected even for the demo's tmp-cache record.
+np.random.seed(42)
+random.seed(42)
 
 os.environ["EEGDASH_CACHE_DIR"] = str(Path.cwd() / ".eegdash_cache_local")
 local_cache = get_default_cache_dir()

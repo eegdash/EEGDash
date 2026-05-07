@@ -22,7 +22,8 @@ TUTORIAL_GLOB := examples/tutorials/**/plot_*.py
 DATE := $(shell date +%Y-%m-%d)
 
 .PHONY: tutorial-help tutorial-audit tutorial-baseline tutorial-claim \
-        tutorial-release tutorial-dossier tutorial-phase-report
+        tutorial-release tutorial-dossier tutorial-phase-report \
+        tutorial-runtime
 
 tutorial-help:
 	@echo "EEGDash tutorial audit -- Make targets"
@@ -35,11 +36,16 @@ tutorial-help:
 	@echo "  tutorial-release       Advance TUTORIAL=<id> from state=reviewed to state=merged."
 	@echo "  tutorial-dossier       Render report.md from evidence.json for TUTORIAL=<id>."
 	@echo "  tutorial-phase-report  Aggregate diff vs _baseline_*/ for PHASE=<n>."
+	@echo "  tutorial-runtime       Aggregate spec runtime/data budgets into"
+	@echo "                         docs/evidence/runtime_tracker_<date>.md."
+	@echo "                         Pass MEASURED=<file> to compare against measured timings."
 	@echo ""
 	@echo "Variables:"
 	@echo "  TUTORIAL    Tutorial id matching docs/tutorials/_spec/<id>.yaml"
 	@echo "  BY          Author handle written to spec.assignee"
 	@echo "  PHASE       Migration phase number from tutorial_restructure_plan.md"
+	@echo "  MEASURED    Optional path to a JSON file with measured per-tutorial"
+	@echo "              runtimes (produced by the runtime CI stage)."
 
 # tutorial-audit: static stage on TUTORIAL=<id> or every plot_*.py if blank.
 tutorial-audit:
@@ -112,3 +118,17 @@ tutorial-phase-report:
 		--aggregate \
 		--phase "$(PHASE)" \
 		--baseline-glob "$(EVIDENCE_DIR)/_baseline_*"
+
+# tutorial-runtime: aggregate declared budgets into a markdown tracker.
+# Optional MEASURED=<path> compares the estimates with measured timings
+# emitted by the stage-2/3 runtime CI jobs.
+tutorial-runtime:
+	@mkdir -p docs/evidence
+	@if [ -z "$(MEASURED)" ]; then \
+		$(PYTHON) -m scripts.tutorial_audit.runtime_tracker \
+			--out "docs/evidence/runtime_tracker_$(DATE).md"; \
+	else \
+		$(PYTHON) -m scripts.tutorial_audit.runtime_tracker \
+			--out "docs/evidence/runtime_tracker_$(DATE).md" \
+			--measured "$(MEASURED)"; \
+	fi

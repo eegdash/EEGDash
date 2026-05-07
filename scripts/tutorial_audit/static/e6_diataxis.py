@@ -62,6 +62,12 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _spec_kind(spec: dict) -> str:
+    """Return ``spec.kind`` lowercased; default ``"tutorial"``."""
+    kind = spec.get("kind") or "tutorial"
+    return str(kind).strip().lower()
+
+
 # -- E6.48 ------------------------------------------------------------------
 
 
@@ -83,6 +89,10 @@ def check_concept_link_present(
     sphinx-gallery markdown blocks, and even comments -- because the
     cross-reference can legitimately appear anywhere a reST/Markdown link
     is rendered.
+
+    For how-tos (``kind == "how-to"``) the rule is downgraded to ``info``:
+    the Diataxis convention encourages but does not require recipe pages to
+    cross-link an explanation page.
     """
     src = _read(tutorial_path)
     matches: list[str] = []
@@ -91,18 +101,19 @@ def check_concept_link_present(
     if matches:
         return []
 
+    level = "info" if _spec_kind(spec) == "how-to" else "warn"
     return [
         Finding(
             rule_id="E6.48",
-            level="warn",
+            level=level,
             message=(
-                "Tutorial does not link to any explanation/concept page; "
+                "Source does not link to any explanation/concept page; "
                 "Diataxis purity asks tutorials to defer deeper theory to "
                 "the explanation quadrant via a :doc: or markdown link"
             ),
             cite_rubric="compass_artifact.md#E6.48",
             cite_plan="tutorial_restructure_plan.md#L516-L562",
-            evidence={"n_matches": 0},
+            evidence={"n_matches": 0, "kind": _spec_kind(spec)},
             tool="regex",
         )
     ]

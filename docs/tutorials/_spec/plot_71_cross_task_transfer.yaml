@@ -2,7 +2,8 @@ id: plot_71_cross_task_transfer
 category: H-transfer-foundation
 kind: tutorial
 output_kind: python
-title: "Pretrain on resting-state, fine-tune on contrast-change detection (EEG2025 Challenge 1)"
+title: Pretrain on resting-state, fine-tune on contrast-change detection (EEG2025
+  Challenge 1)
 state: proposed
 assignee: null
 difficulty: 3
@@ -10,37 +11,46 @@ estimated_runtime_minutes: 25
 hardware: gpu
 network: cached_first_run
 prerequisites:
-  - plot_70_challenge_dataset_basics
-  - plot_11_leakage_safe_split
-  - plot_12_train_a_baseline
+- plot_70_challenge_dataset_basics
+- plot_11_leakage_safe_split
+- plot_12_train_a_baseline
 cites:
   plan:
-    - "tutorial_restructure_plan.md#L458-L470"
-    - "tutorial_restructure_plan.md#L1158-L1178"
-    - "tutorial_restructure_plan.md#L1220-L1229"
-    - "tutorial_restructure_plan.md#L1354-L1366"
-    - "tutorial_restructure_plan.md#L2718-L2735"
+  - tutorial_restructure_plan.md#L458-L470
+  - tutorial_restructure_plan.md#L1158-L1178
+  - tutorial_restructure_plan.md#L1220-L1229
+  - tutorial_restructure_plan.md#L1354-L1366
+  - tutorial_restructure_plan.md#L2718-L2735
   rubric:
-    - "compass_artifact.md#E1.2"
-    - "compass_artifact.md#E2.20"
-    - "compass_artifact.md#E3.21"
-    - "compass_artifact.md#E3.23"
-    - "compass_artifact.md#E3.29"
-    - "compass_artifact.md#E4.32"
-    - "compass_artifact.md#E4.33"
-    - "compass_artifact.md#E5.42"
-    - "compass_artifact.md#E5.43"
-    - "compass_artifact.md#E5.44"
-    - "compass_artifact.md#E5.45"
-    - "compass_artifact.md#E5.46"
+  - compass_artifact.md#E1.2
+  - compass_artifact.md#E2.20
+  - compass_artifact.md#E3.21
+  - compass_artifact.md#E3.23
+  - compass_artifact.md#E3.29
+  - compass_artifact.md#E4.32
+  - compass_artifact.md#E4.33
+  - compass_artifact.md#E5.42
+  - compass_artifact.md#E5.43
+  - compass_artifact.md#E5.44
+  - compass_artifact.md#E5.45
+  - compass_artifact.md#E5.46
 learning_objectives:
-  - "After this tutorial you will be able to load EEG2025 Challenge 1 windows for two tasks (resting-state pretext, contrastChangeDetection target) using `EEGChallengeDataset` and aligned preprocessing."
-  - "After this tutorial you will be able to pretrain a small Braindecode encoder on the resting-state task and snapshot its weights to a file."
-  - "After this tutorial you will be able to fine-tune the pretrained encoder on the contrastChangeDetection task with a fresh classification head and compare against a from-scratch baseline on the same cross-subject split."
-  - "After this tutorial you will be able to report the cross-task transfer delta with chance level on the same axes and hedge the conclusion (single seed, mini release, fixed hyperparameters)."
-audience: "Advanced user already comfortable with plot_12 (training) and plot_70 (challenge dataset). This is project-tier material; PRIMM scaffolding is exempt per the difficulty-3 rubric."
+- After this tutorial you will be able to load EEG2025 Challenge 1 windows for two
+  tasks (resting-state pretext, contrastChangeDetection target) using `EEGChallengeDataset`
+  and aligned preprocessing.
+- After this tutorial you will be able to pretrain a small Braindecode encoder on
+  the resting-state task and snapshot its weights to a file.
+- After this tutorial you will be able to fine-tune the pretrained encoder on the
+  contrastChangeDetection task with a fresh classification head and compare against
+  a from-scratch baseline on the same cross-subject split.
+- After this tutorial you will be able to report the cross-task transfer delta with
+  chance level on the same axes and hedge the conclusion (single seed, mini release,
+  fixed hyperparameters).
+audience: Advanced user already comfortable with plot_12 (training) and plot_70 (challenge
+  dataset). This is project-tier material; PRIMM scaffolding is exempt per the difficulty-3
+  rubric.
 budgets:
-  max_loc: 320
+  max_loc: 335
   max_runtime_seconds: 1500
   max_network_mb: 1500
   cpu_only: false
@@ -48,35 +58,36 @@ budgets:
 artifacts:
   thumbnail: thumbnails/plot_71.png
   figures:
-    - figure_pretrain_loss_curves.png
-    - figure_finetune_vs_scratch_box.png
-    - figure_split_audit.png
+  - figure_pretrain_loss_curves.png
+  - figure_finetune_vs_scratch_box.png
+  - figure_split_audit.png
 asserted_invariants:
-  - "subject_overlap(train, test) == 0   # cross-subject for the target task"
-  - "leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0"
-  - "pretext_subjects == target_subjects   # same subject pool, different tasks"
-  - "finetune_accuracy_mean - scratch_accuracy_mean reported with std across seeds"
-  - "finetune_accuracy_mean > scratch_accuracy_mean - 0.02   # transfer at least non-harmful on the toy run"
-  - "chance_level reported on the same axes as both pipelines"
-  - "abs(class_balance_train - class_balance_test) < 0.10"
-  - "encoder_weights_path exists after pretrain and is loaded before fine-tune"
+- 'subject_overlap(train, test) == 0   # cross-subject for the target task'
+- leakage_report['column'] == 'subject' and leakage_report['overlap'] == 0
+- 'pretext_subjects == target_subjects   # same subject pool, different tasks'
+- finetune_accuracy_mean - scratch_accuracy_mean reported with std across seeds
+- 'finetune_accuracy_mean > scratch_accuracy_mean - 0.02   # transfer at least non-harmful
+  on the toy run'
+- chance_level reported on the same axes as both pipelines
+- abs(class_balance_train - class_balance_test) < 0.10
+- encoder_weights_path exists after pretrain and is loaded before fine-tune
 sections_required:
-  - title
-  - opening
-  - learning_objectives
-  - requirements
-  - setup
-  - lesson_steps:
-      min: 6
-      labelled_subgoals: true
-  - checkpoints:
-      min: 4
-  - result
-  - wrapup
-  - links
+- title
+- opening
+- learning_objectives
+- requirements
+- setup
+- lesson_steps:
+    min: 6
+    labelled_subgoals: true
+- checkpoints:
+    min: 4
+- result
+- wrapup
+- links
 primm_required:
   predict: 1
-  run: ">=2"
+  run: '>=2'
   investigate: 1
 faded_scaffolding:
   required: true
@@ -84,31 +95,31 @@ faded_scaffolding:
 viz_compliance:
   palette: eegdash-rail
   required_elements:
-    - chance_level_line
-    - subject_count_in_subtitle
-    - sample_rate_in_subtitle
-    - source_provenance_footer
+  - chance_level_line
+  - subject_count_in_subtitle
+  - sample_rate_in_subtitle
+  - source_provenance_footer
 links:
   concept: docs/source/concepts/features_vs_deep_learning.rst
   api: eegdash.dataset
   related_how_to:
-    - how_to_use_hpc_cache
+  - how_to_use_hpc_cache
   related_papers:
-    - "EEG2025 Challenge — Challenge 1 (cross-task transfer)"
-    - "Schirrmeister et al. 2017, HBM — Braindecode for EEG deep learning"
-    - "Alexander et al. 2017, Sci. Data — HBN dataset"
-    - "Cisotto & Chicco 2024, PeerJ CS — clinical EEG ten quick tips"
+  - "EEG2025 Challenge \u2014 Challenge 1 (cross-task transfer)"
+  - "Schirrmeister et al. 2017, HBM \u2014 Braindecode for EEG deep learning"
+  - "Alexander et al. 2017, Sci. Data \u2014 HBN dataset"
+  - "Cisotto & Chicco 2024, PeerJ CS \u2014 clinical EEG ten quick tips"
 requires_api:
-  - "eegdash.EEGChallengeDataset"
-  - "eegdash.splits.get_splitter"
-  - "eegdash.splits.make_split_manifest"
-  - "eegdash.splits.apply_split_manifest"
-  - "eegdash.splits.assert_no_leakage"
-  - "eegdash.splits.majority_baseline"
-  - "braindecode.preprocessing.create_fixed_length_windows"
-  - "braindecode.models.ShallowFBCSPNet"
-  - "torch.nn.Module"
-  - "torch.optim.AdamW"
+- eegdash.EEGChallengeDataset
+- eegdash.splits.get_splitter
+- eegdash.splits.make_split_manifest
+- eegdash.splits.apply_split_manifest
+- eegdash.splits.assert_no_leakage
+- eegdash.splits.majority_baseline
+- braindecode.preprocessing.create_fixed_length_windows
+- braindecode.models.ShallowFBCSPNet
+- torch.nn.Module
+- torch.optim.AdamW
 review_rubric_overrides:
   E2.13: exempt
   E2.16: exempt

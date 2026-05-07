@@ -4,15 +4,11 @@
 
 """Leakage assertions for cross-validation manifests.
 
-The single public entry point :func:`assert_no_leakage` is what tutorials and
-benchmarks call after building a split. It always emits a single JSON line on
-stdout exactly of the form::
+The single public entry point :func:`assert_no_leakage` is what tutorials
+and benchmarks call after building a split. It emits a single JSON line on
+stdout of the form::
 
     {"leakage_report": {"overlap": <int>, "by": "<by>"}}
-
-That format is parsed by ``scripts/tutorial_audit/runtime/e5_runtime.py`` for
-rule E5.42, so its shape is part of the public contract and must not be
-reformatted (no extra whitespace, no nesting changes).
 """
 
 from __future__ import annotations
@@ -35,12 +31,7 @@ ManifestLike = Union[dict, Sequence[tuple]]
 
 
 def _emit_report(overlap: int, by: str) -> None:
-    """Print the JSON line consumed by the runtime validator (E5.42).
-
-    The line is intentionally a single ``json.dumps`` call without any extra
-    formatting so the regex/parser in
-    ``scripts/tutorial_audit/runtime/e5_runtime.py`` matches reliably.
-    """
+    """Print the leakage-report JSON line on stdout."""
     payload = {"leakage_report": {"overlap": int(overlap), "by": str(by)}}
     sys.stdout.write(json.dumps(payload) + "\n")
     sys.stdout.flush()

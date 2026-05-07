@@ -22,7 +22,7 @@ open or closed?
 # -------------------
 # After this tutorial you will be able to:
 #
-# - Use :func:`eegdash.tasks.get_task` to pull the canonical EOEC recipe for HBN ``ds005514``.
+# - Configure the canonical EOEC preprocessing recipe (24-channel HydroCel pick, 128 Hz resample, 1-55 Hz band-pass) on HBN ``ds005514``.
 # - Build balanced 2-second windows around the ``hbn_ec_ec_reannotation`` events and read the live counts off :class:`braindecode.datasets.BaseConcatDataset`.
 # - Compute Welch PSDs with :func:`mne.time_frequency.psd_array_welch` and read the textbook posterior alpha bump from the spectrum and the topomap.
 # - Train a leave-one-subject-out :class:`sklearn.linear_model.LogisticRegression` on log alpha-band power split with :class:`sklearn.model_selection.GroupKFold`, then read the chance-vs-accuracy line.
@@ -57,7 +57,9 @@ from sklearn.model_selection import GroupKFold
 
 from eegdash import EEGDashDataset
 from eegdash.splits import assert_no_leakage, majority_baseline
-from eegdash.tasks import get_task
+from braindecode.preprocessing import Preprocessor
+
+from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -98,17 +100,16 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 #     -> "open" class label            -> "closed" class label
 
 # %% [markdown]
-# Step 1. Get the task
-# ----------------------
-# :func:`eegdash.tasks.get_task` returns an
-# :class:`eegdash.tasks.EyesOpenClosed` whose YAML manifest hard-codes
-# HBN release 9 ``ds005514`` (doi:10.18112/openneuro.ds005514.v1.0.0),
-# the EOEC label definition (``eyes_open=0`` / ``eyes_closed=1``), the
-# 24-channel HydroCel pick (the published HBN baseline montage), the
-# resample to 128 Hz, and a non-causal IIR Butterworth band-pass from
-# 1.0 to 55.0 Hz (:class:`braindecode.preprocessing.Preprocessor`).
-# Asking for four subjects keeps the run inside the tutorial budget and
-# leaves enough material for a 4-fold leave-one-subject-out split.
+# Step 1. Configure the EOEC recipe
+# -----------------------------------
+# The canonical HBN eyes-open / eyes-closed configuration: HBN release 9
+# ``ds005514`` (doi:10.18112/openneuro.ds005514.v1.0.0), label mapping
+# ``eyes_open=0`` / ``eyes_closed=1``, the 24-channel HydroCel pick (the
+# published HBN baseline montage), resample to 128 Hz, and a non-causal
+# IIR Butterworth band-pass 1.0-55.0 Hz
+# (:class:`braindecode.preprocessing.Preprocessor`). Six subjects keep
+# the run inside the tutorial budget and leave enough material for a
+# leave-one-subject-out split.
 
 # %%
 SUBJECTS = [
@@ -120,12 +121,49 @@ SUBJECTS = [
     "NDARAL897CYV",
 ]
 ALPHA_BAND = (8.0, 13.0)
-task = get_task("eyes-open-closed", subjects=SUBJECTS)
-label_def = task.label_definition()
-recipe = task.preprocessing_recipe()
+DATASET = "ds005514"  # HBN Release 9 (Alexander et al. 2017)
+TASK = "RestingState"
+BANDPASS = (1.0, 55.0)
+RESAMPLE_HZ = 128
+WINDOW_SAMPLES = 256  # 2 s at 128 Hz
+LABEL_MAPPING = {"eyes_open": 0, "eyes_closed": 1}
+CLASS_NAMES = ("eyes_open", "eyes_closed")
+# 24-channel HydroCel pick (the published HBN baseline montage).
+CHANNELS = [
+    "E22",
+    "E9",
+    "E33",
+    "E24",
+    "E11",
+    "E124",
+    "E122",
+    "E29",
+    "E6",
+    "E111",
+    "E45",
+    "E36",
+    "E104",
+    "E108",
+    "E42",
+    "E55",
+    "E93",
+    "E58",
+    "E52",
+    "E62",
+    "E92",
+    "E96",
+    "E70",
+    "Cz",
+]
+recipe = [
+    hbn_ec_ec_reannotation(),
+    Preprocessor("pick_channels", ch_names=CHANNELS),
+    Preprocessor("resample", sfreq=RESAMPLE_HZ),
+    Preprocessor("filter", l_freq=BANDPASS[0], h_freq=BANDPASS[1]),
+]
 print(
-    f"Task: {task.name} | dataset={task.dataset} | n_subjects={len(task.subjects)} "
-    f"| classes={label_def['class_names']} | filter={task.bandpass} Hz"
+    f"Task: eyes-open-closed | dataset={DATASET} | n_subjects={len(SUBJECTS)} "
+    f"| classes={list(CLASS_NAMES)} | filter={BANDPASS} Hz"
 )
 
 # %% [markdown]
@@ -141,7 +179,7 @@ print(
 # Step 3. Load six subjects and window them
 # -------------------------------------------
 # The supported entry today is :class:`eegdash.EEGDashDataset` with
-# ``task.metadata_query()`` followed by
+# the metadata ``query`` dict followed by
 # :func:`braindecode.preprocessing.preprocess` and
 # :func:`braindecode.preprocessing.create_windows_from_events`. The
 # ``hbn_ec_ec_reannotation`` step inside the recipe replaces the HBN
@@ -150,10 +188,16 @@ print(
 # which is what makes the per-class window counts balanced.
 
 # %%
-ds = EEGDashDataset(query=task.metadata_query(), cache_dir=cache_dir)
+query = {"dataset": DATASET, "task": TASK, "subject": {"$in": SUBJECTS}}
+ds = EEGDashDataset(query=query, cache_dir=cache_dir)
 preprocess(ds, recipe)
-win_kw = {k: v for k, v in task.windowing_recipe().items() if k != "kind"}
-windows_ds = create_windows_from_events(ds, **win_kw)
+windows_ds = create_windows_from_events(
+    ds,
+    trial_start_offset_samples=0,
+    trial_stop_offset_samples=WINDOW_SAMPLES,
+    preload=True,
+    mapping=LABEL_MAPPING,
+)
 
 # Live shapes off the per-record EEGWindowsDataset (the new braindecode
 # API replaces the old ``.windows.info`` accessor with ``.raw.info``).
@@ -432,7 +476,7 @@ fig = draw_alpha_figure(
     n_channels=n_channels,
     sfreq=sfreq,
     alpha_band=ALPHA_BAND,
-    dataset=task.dataset,
+    dataset=DATASET,
     y_true_pooled=y_pooled_true,
     y_pred_pooled=y_pooled_pred,
     class_names=("eyes open", "eyes closed"),

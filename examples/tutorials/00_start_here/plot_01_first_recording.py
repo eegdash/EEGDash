@@ -36,11 +36,16 @@ import os
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import mne
 import pandas as pd
 
 import eegdash
 from eegdash import EEGDashDataset
 from eegdash.viz import style_figure, use_eegdash_style
+
+# Force MNE's matplotlib browser so raw.plot returns a Figure (the Qt
+# browser returns an MNEQtBrowser instance and skips static capture).
+mne.viz.set_browser_backend("matplotlib")
 
 use_eegdash_style()
 cache_dir = os.environ.get("EEGDASH_CACHE_DIR", str(Path.home() / ".eegdash_cache"))
@@ -165,28 +170,48 @@ raw
 # %% [markdown]
 # Step 6: Plot the signal
 # -----------------------
-# **Run.** :meth:`mne.io.Raw.plot` renders 5 s of signal across the first
-# 20 channels. This is the same viewer MNE shows interactively;
-# sphinx-gallery captures the static frame.
+# **Run.** :meth:`mne.io.Raw.plot` renders an 8 s window across a small
+# midline + temporal selection, the most readable view at this scale.
+# Explicit ``scalings`` and a longer ``duration`` make the morphology
+# legible; default settings squeeze too many channels into the same
+# strip and flatten the signal.
 
 # %%
+midline_picks = [
+    ch
+    for ch in ("Fz", "Cz", "Pz", "Oz", "FCz", "CPz", "POz", "T7", "T8")
+    if ch in raw.ch_names
+][:8]
 fig_raw = raw.plot(
-    duration=5.0,
-    n_channels=min(20, raw.info["nchan"]),
+    start=10.0,
+    duration=8.0,
+    picks=midline_picks if midline_picks else None,
+    n_channels=8,
+    scalings={"eeg": 50e-6},
     show=False,
-    title=f"{DATASET} sub-{SUBJECT} | {raw.info['nchan']} ch @ {raw.info['sfreq']:.0f} Hz",
+    show_scrollbars=False,
+    show_scalebars=False,
+    title="",
 )
 
 # %% [markdown]
 # Step 7: Sensor topology
 # -----------------------
 # Where the electrodes sit on the scalp matters for every later analysis.
-# :meth:`mne.io.Raw.plot_sensors` draws the montage as a 2-D head schematic
-# with each labelled channel.
+# :meth:`mne.io.Raw.plot_sensors` draws the montage as a 2-D head
+# schematic. With 74 channels, channel-name overlays clutter the view;
+# we drop them and let the spatial pattern speak.
 
 # %%
-fig_sens = raw.plot_sensors(show_names=True, show=False)
-fig_sens.set_size_inches(5.5, 4.0)
+fig_sens, ax_sens = plt.subplots(figsize=(5.0, 5.0))
+raw.plot_sensors(
+    kind="topomap",
+    show_names=False,
+    axes=ax_sens,
+    show=False,
+)
+ax_sens.set_title("")
+fig_sens.tight_layout()
 
 # %% [markdown]
 # Step 8: Power spectral density

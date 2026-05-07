@@ -8,24 +8,16 @@ A task bundles the metadata query, label definition, preprocessing recipe,
 windowing recipe, split definitions, metrics, and baseline metadata that a
 tutorial or downstream user needs to reproduce a benchmark.
 
-The interface here is intentionally minimal: the plan
-(``docs/tutorial_restructure_plan.md`` Workstream 2) explicitly says to
-hard-code a few excellent task manifests before extracting deeper
-abstractions. This base class therefore defines required hook methods and a
-single :meth:`make_windows` adapter on top of braindecode windowers.
-
-Workstream 4 of the plan (lines 2853-2898) promotes :meth:`make_windows`
-from a thin stub into a task-level convenience layer that:
-
-- Resolves a dataset (either supplied by the caller or built from
-  ``task.dataset`` / ``task.subjects``).
-- Parses time-string window/stride specifications (``"2s"``, ``"500ms"``,
-  ``"1.5s"``, or raw integer samples).
-- Forwards to :func:`braindecode.preprocessing.create_fixed_length_windows`
-  or :func:`braindecode.preprocessing.create_windows_from_events`.
-- Returns a ``(windows, report)`` tuple with reproducibility metadata --
-  function name, kwargs, library versions, sampling rate, total window
-  count, per-subject window counts, and a manifest hash.
+The interface defines the required hook methods plus a :meth:`make_windows`
+adapter on top of braindecode windowers. ``make_windows`` resolves a
+dataset (caller-supplied or built from ``task.dataset`` / ``task.subjects``),
+parses time-string window/stride specs (``"2s"``, ``"500ms"``, ``"1.5s"``,
+or raw integer samples), forwards to
+:func:`braindecode.preprocessing.create_fixed_length_windows` or
+:func:`braindecode.preprocessing.create_windows_from_events`, and returns
+``(windows, report)`` where ``report`` carries reproducibility metadata
+(function name, kwargs, library versions, sampling rate, total window
+count, per-subject window counts, manifest hash).
 """
 
 from __future__ import annotations

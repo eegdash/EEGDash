@@ -4,13 +4,9 @@
 
 """Eyes-open / eyes-closed classification task.
 
-This task wraps the legacy ``examples/core/tutorial_eoec.py`` notebook into
-the high-level ``eegdash.tasks`` interface described in
-``docs/tutorial_restructure_plan.md`` (Workstream 2). It uses the Healthy
-Brain Network (HBN) RestingState recordings exposed via OpenNeuro
-``ds005514`` (HBN Release 9), with the canonical preprocessing pipeline that
-re-annotates the eyes-open / eyes-closed segments and resamples the data to
-128 Hz.
+Concrete :class:`EEGTask` for HBN RestingState recordings on OpenNeuro
+``ds005514`` (HBN Release 9). The preprocessing pipeline re-annotates the
+eyes-open / eyes-closed segments and resamples the data to 128 Hz.
 """
 
 from __future__ import annotations

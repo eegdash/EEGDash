@@ -4,12 +4,9 @@
 
 """High-level task entry points for EEGDash.
 
-This package implements Workstream 2 of
-``docs/tutorial_restructure_plan.md``: ``EEGTask``, ``get_task`` and a small
-registry of named tasks. The first concrete implementation is the
-eyes-open-closed (HBN resting-state) task; the remaining names listed in the
-plan are registered as stubs that point to the tutorial that will fill them
-in.
+Public surface: :class:`EEGTask` (base class), :class:`EyesOpenClosed`
+(concrete HBN resting-state task), :data:`TASK_REGISTRY`,
+:func:`get_task`, and :func:`list_tasks`.
 """
 
 from __future__ import annotations

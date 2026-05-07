@@ -31,38 +31,11 @@ def test_get_task_returns_eyes_open_closed_instance() -> None:
     assert task.name == "eyes-open-closed"
 
 
-def test_list_tasks_contains_all_planned_names() -> None:
-    """All five planned task names must be registered (concrete or stubs)."""
+def test_list_tasks_contains_eyes_open_closed() -> None:
+    """``eyes-open-closed`` is the only currently registered task."""
     from eegdash.tasks import list_tasks
 
-    expected = {
-        "eyes-open-closed",
-        "visual-p300",
-        "auditory-oddball",
-        "age-regression",
-        "eeg2025-pfactor",
-    }
-    assert expected.issubset(set(list_tasks()))
-
-
-@pytest.mark.parametrize(
-    ("name", "tutorial_marker"),
-    [
-        ("visual-p300", "plot_50_visual_p300"),
-        ("auditory-oddball", "plot_55_auditory_oddball"),
-        ("age-regression", "plot_60_age_regression"),
-        ("eeg2025-pfactor", "plot_70_eeg2025_pfactor"),
-    ],
-)
-def test_stub_tasks_raise_not_implemented(name: str, tutorial_marker: str) -> None:
-    """Deferred tasks must raise ``NotImplementedError`` naming the tutorial."""
-    from eegdash.tasks import get_task
-
-    with pytest.raises(NotImplementedError) as exc_info:
-        get_task(name)
-    message = str(exc_info.value)
-    assert name in message
-    assert tutorial_marker in message
+    assert "eyes-open-closed" in list_tasks()
 
 
 def test_get_task_unknown_name_raises_keyerror() -> None:

@@ -1,11 +1,5 @@
 # Eyes-open / eyes-closed task manifest for the Healthy Brain Network (HBN)
-# resting-state recordings.
-#
-# Schema reference: docs/tutorial_restructure_plan.md, Workstream 2 (Task API).
-#
-# This manifest hard-codes the choices used by the eyes-open-closed tutorial.
-# It is intentionally narrow: per the plan we hard-code a few excellent task
-# manifests first and only abstract once two or three tasks are stable.
+# resting-state recordings. Consumed by ``eegdash.tasks.EyesOpenClosed``.
 name: eyes-open-closed
 version: 1
 display_name: "Eyes Open vs. Eyes Closed (HBN resting-state)"

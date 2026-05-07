@@ -2,7 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Leakage-safe evaluation utilities (Workstream 3).
+"""Leakage-safe evaluation utilities.
 
 This sub-package wraps MOABB's evaluation splitters (or scikit-learn's
 ``GroupKFold``/``StratifiedGroupKFold`` when MOABB is unavailable) behind a

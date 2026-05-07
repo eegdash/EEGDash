@@ -2,7 +2,7 @@
 # License: BSD-3-Clause
 # Copyright the EEGDash contributors.
 
-"""Baseline recipe classes for Workstream 5.
+"""Baseline recipe classes used by the evaluation tutorials.
 
 These wrappers provide a uniform ``.fit(X, y).score(X, y)`` interface plus a
 ``.predict`` method and a ``requires`` class attribute documenting optional

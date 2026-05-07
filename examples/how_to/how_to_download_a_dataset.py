@@ -5,6 +5,8 @@ Download all files for a dataset in advance, validate completeness, and
 inspect the cache.
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_download_a_dataset.png'
+
 # %% [markdown]
 # Goal
 # ----

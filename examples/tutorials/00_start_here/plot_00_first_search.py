@@ -9,6 +9,8 @@ does it expose, and is it a viable candidate for an eyes-open / eyes-closed
 follow-up?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_00_first_search.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

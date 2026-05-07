@@ -12,6 +12,8 @@ what stays the same and what shifts between modalities, and does the
 same flattened-window classifier still beat chance under a subject-aware
 split?
 """
+
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_21_auditory_oddball.png'
 # %% [markdown]
 # Learning objectives
 # -------------------

@@ -38,6 +38,8 @@ Chicco 2024 (Tips 4-5, doi:10.7717/peerj-cs.2256). Why care about *this*
 recording in particular?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_10_preprocess_and_window.png'
+
 # %%
 # Setup
 # -----

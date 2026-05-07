@@ -12,6 +12,8 @@ print one batch's shape and confirm it matches what the spec asserts: what
 shape will that first batch be?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_02_dataset_to_dataloader.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

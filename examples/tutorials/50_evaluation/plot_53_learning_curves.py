@@ -14,6 +14,8 @@ Tip 9) flag chance-aware reporting as the most-violated rule in
 clinical EEG. So where does our toy curve plateau?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_53_learning_curves.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

@@ -13,6 +13,8 @@ So: does the neural network really beat the linear baseline, or is the
 gap noise?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_54_compare_two_pipelines.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

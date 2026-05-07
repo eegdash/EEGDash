@@ -9,6 +9,8 @@ How-to recipe (kind=how-to, no PRIMM). Synthetic data so it runs locally
 in under 90 s on a 4-core CPU.
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_parallelize_feature_extraction.png'
+
 # %% [markdown]
 # Goal
 # ----

@@ -17,6 +17,8 @@ doi:10.1038/s41597-019-0104-8). So why does a random window split look great
 and yet fail in deployment?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_11_leakage_safe_split.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

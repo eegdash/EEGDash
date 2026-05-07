@@ -13,6 +13,8 @@ separately, how many PSDs run per batch -- and what does sharing one
 ``spectral_preprocessor`` change?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_41_feature_trees.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

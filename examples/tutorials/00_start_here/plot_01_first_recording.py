@@ -9,6 +9,8 @@ metadata via the new ``EEGDashDataset.preview()`` helper, and look at the
 first five seconds of signal. Why look at one record before scaling up?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_01_first_recording.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

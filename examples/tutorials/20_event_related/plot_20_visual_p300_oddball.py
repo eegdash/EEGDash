@@ -9,6 +9,8 @@ Can we decode whether a child saw a target or a standard image from a
 800-ms post-stimulus EEG window?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_20_visual_p300_oddball.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

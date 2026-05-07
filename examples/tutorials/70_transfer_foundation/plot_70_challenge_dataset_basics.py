@@ -14,6 +14,8 @@ full release (Pernet et al. 2019 BIDS, Cisotto and Chicco 2024 clinical EEG
 reproducibility tips). So why does the challenge need its own dataset class?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_70_challenge_dataset_basics.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

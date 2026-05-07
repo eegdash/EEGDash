@@ -5,6 +5,8 @@ Goal: instantiate ``EEGChallengeDataset`` with ``download=False`` and load
 the same records as the online path, with no network calls.
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_work_offline.png'
+
 # %% [markdown]
 # Goal
 # ----

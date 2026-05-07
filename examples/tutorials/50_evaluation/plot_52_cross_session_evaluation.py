@@ -18,6 +18,8 @@ doi:10.7717/peerj-cs.2256). So how does calibration drift across
 sessions of the same subject?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_52_cross_session_evaluation.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

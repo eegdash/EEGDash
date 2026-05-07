@@ -9,6 +9,8 @@ leakage-safe split, with the chance level on the same line.
 Can a logistic-regression Pipeline on a handful of EEG features beat the
 majority-class chance level on a held-out subject?
 """
+
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_42_features_to_sklearn.png'
 # %% [markdown]
 # Learning objectives
 # -------------------

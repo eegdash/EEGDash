@@ -20,6 +20,8 @@ faint -- but the more honest one: does our model actually beat the
 train-set median predictor on never-seen-before subjects?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_72_subject_invariant_regression.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

@@ -9,6 +9,8 @@ can a tiny linear baseline really buy us on this synthetic stand-in
 for the EEGDash windowed example, before we ever reach for a deep net?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_12_train_a_baseline.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

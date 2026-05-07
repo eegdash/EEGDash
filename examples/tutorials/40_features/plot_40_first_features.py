@@ -10,6 +10,8 @@ feature-engineering question that needs no model training at all.
 Can a small set of band-power features distinguish eyes-open from eyes-closed?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_40_first_features.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

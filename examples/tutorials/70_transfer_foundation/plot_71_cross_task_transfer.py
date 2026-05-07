@@ -12,6 +12,8 @@ and a from-scratch baseline really is. When the encoder transfers, by
 how much does it beat chance?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_71_cross_task_transfer.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

@@ -14,6 +14,8 @@ MOABB ``WithinSubjectSplitter`` API. So when is within-subject evaluation
 the right call?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_50_within_subject_evaluation.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

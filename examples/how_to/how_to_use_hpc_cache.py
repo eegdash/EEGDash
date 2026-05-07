@@ -16,6 +16,8 @@ storage, stage in at job-start, and never read training data over the network
 home.
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_use_hpc_cache.png'
+
 # %%
 # Goal
 # ----

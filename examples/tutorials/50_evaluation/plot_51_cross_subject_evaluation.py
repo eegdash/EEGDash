@@ -15,6 +15,8 @@ subject groups is what benchmark tables actually publish. So how big
 is the spread once we move from one held-out subject to a fold?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_51_cross_subject_evaluation.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

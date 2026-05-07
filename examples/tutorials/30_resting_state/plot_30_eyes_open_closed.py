@@ -10,6 +10,8 @@ Can we tell from a 2-second EEG snippet whether a child has their eyes
 open or closed?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_30_eyes_open_closed.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

@@ -13,6 +13,8 @@ model-ready windows or a feature table, how do we save that work to disk
 and reload it in the next session without rerunning the pipeline?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_13_save_and_reuse_prepared_data.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

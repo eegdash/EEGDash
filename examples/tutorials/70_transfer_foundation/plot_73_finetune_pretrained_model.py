@@ -20,6 +20,8 @@ doi:10.1002/hbm.23730); the open question is whether unfreezing actually
 helps when the target task is small. So which regime wins?
 """
 
+# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_73_finetune_pretrained_model.png'
+
 # %% [markdown]
 # Learning objectives
 # -------------------

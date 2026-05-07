@@ -61,12 +61,6 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx_copybutton",
     "sphinx_time_estimation",
-    # Project-local extension exposing the ``eegdash-evidence-dashboard``
-    # directive used by the top-level ``evidence.rst`` page.
-    "eegdash_evidence",
-    # In-tree extension that appends a "Behind this lesson" footer to every
-    # sphinx-gallery tutorial page when an evidence dossier is present.
-    "eegdash_tutorial_footer",
 ]
 
 # -- Open Graph / Twitter Card configuration --------------------------------
@@ -148,12 +142,6 @@ html_css_files = [
     "custom.css",
     "css/treemap.css",
     "css/custom.css",
-    # Used by the ``eegdash-evidence-dashboard`` directive and the
-    # contributing tutorial evidence page.
-    "css/evidence-dashboard.css",
-    # Styles the "Behind this lesson" footer injected on every gallery page
-    # by the in-tree ``eegdash_tutorial_footer`` extension.
-    "css/eegdash_tutorial_footer.css",
 ]
 # Only truly-global JS is loaded here; page-specific scripts (homepage hero
 # search, dataset-summary DataTables stack) are gated in `_templates/layout.html`
@@ -3776,14 +3764,6 @@ def _write_auto_examples_root_index(app):
         "every documentation build, and the captured first figure is the "
         "thumbnail you see below.",
         "",
-        "Each tutorial pairs with a YAML spec under ``docs/tutorials/_spec/`` "
-        "that declares its difficulty, runtime budget, prerequisite chain, "
-        "and the exact 49-rule rubric checks (E1-E6) it must satisfy. "
-        "Reviewer audits and verification dossiers live alongside, under "
-        "``docs/evidence/``, and are linked from the *Behind this lesson* "
-        "footer at the bottom of every tutorial page so you can trace any "
-        "claim straight back to the citation that justifies it.",
-        "",
         "The intended path: read the curated **Tutorials** in order, dip "
         "into **How-to recipes** when you have a specific question, then "
         "scale up using the **Applied research projects**, the **EEG 2025 "
@@ -3803,12 +3783,7 @@ def _write_auto_examples_root_index(app):
         "branded fallback is shown when the tutorial produces no figure.",
         "   - **Difficulty.** Each section header states the difficulty "
         "range (1 = absolute beginner, 3 = advanced / foundation-model "
-        "tier). Per-tutorial difficulty stars live in the YAML spec at "
-        "``docs/tutorials/_spec/<id>.yaml``.",
-        "   - **Behind this lesson.** Every tutorial page ends with a "
-        "*Behind this lesson* footer linking the audit dossier in "
-        "``docs/evidence/tutorials/<id>/`` -- the plan section it comes "
-        "from, the rubric checks it passes, and the reviewer notes.",
+        "tier).",
         "",
         "Tutorials (curated learning path)",
         "---------------------------------",

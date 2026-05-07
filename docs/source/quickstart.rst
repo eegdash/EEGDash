@@ -1,8 +1,8 @@
 :html_theme.sidebar_secondary.remove: true
-:og:description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, datasets, and Evidence Dashboard.
+:og:description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, and datasets.
 
 .. meta::
-   :description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, datasets, and Evidence Dashboard.
+   :description: Quick Start hub for EEGDash. Three Cat A tutorials, four copy-paste recipes, API configuration, and pointers into the gallery, concepts, and datasets.
 
 .. currentmodule:: eegdash.api
 
@@ -11,15 +11,12 @@
 Quick Start Guide
 =================
 
-EEGDash is three things at once: a **metadata index** over 700+ BIDS-curated
-EEG/MEG datasets that you can query without ever downloading a byte; a
+EEGDash is two things at once: a **metadata index** over 700+ BIDS-curated
+EEG/MEG datasets that you can query without ever downloading a byte, and a
 **dataset loader** that materialises matching recordings into a
-PyTorch-compatible :class:`~eegdash.api.EEGDashDataset`; and an
-**audit-trail system** that ships every tutorial with a machine-verifiable
-evidence dossier under ``docs/evidence/tutorials/``. The same library
-takes you from a one-line ``find()`` against the public REST API
-to a leakage-safe :class:`torch.utils.data.DataLoader`, with each step
-traceable back to the rubric line that justifies it.
+PyTorch-compatible :class:`~eegdash.api.EEGDashDataset`. The same library
+takes you from a one-line ``find()`` against the public REST API to a
+leakage-safe :class:`torch.utils.data.DataLoader`.
 
 This page is the on-ramp. It points you at the curated learning path
 (three Start-Here tutorials), gives you four copy-paste recipes for the
@@ -27,9 +24,8 @@ questions a hurried reader actually asks first -- *how do I open a
 client, find records, filter by task, filter by subject?* -- documents
 the environment variables that govern API access, and then hands off to
 the rest of the documentation: the full gallery, the Concepts chapter
-that explains *why* each design decision matters, the dataset catalogue,
-and the Evidence Dashboard that audits every tutorial against the 49-rule
-rubric.
+that explains *why* each design decision matters, and the dataset
+catalogue.
 
 
 The curated learning path
@@ -243,15 +239,6 @@ trail.
       Search the 700+ BIDS-first datasets across EEG, MEG, fNIRS, EMG
       and iEEG modalities, with per-dataset cohort statistics, sampling
       rates, and ready-to-use class IDs.
-
-   .. grid-item-card:: Evidence Dashboard
-      :link: evidence
-      :link-type: doc
-      :columns: 12 6 6 3
-
-      The audit trail of every tutorial: rubric scorecards, runtime
-      budgets, asserted invariants, expected figures, and reviewer
-      notes -- generated at build time from each evidence dossier.
 
 
 .. seealso::

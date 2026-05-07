@@ -136,6 +136,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     auth_token : str | None
         Authentication token for accessing protected databases. Required for
         staging or admin operations.
+    max_concurrency : int, default 20
+        Maximum number of parallel S3 transfer connections used when
+        downloading data.  Higher values speed up large/multi-file
+        downloads but consume more bandwidth.
     on_error : str, default "raise"
         How to handle :class:`DataIntegrityError` when accessing ``.raw``
         on individual recordings:
@@ -168,6 +172,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         database: str | None = None,
         auth_token: str | None = None,
         on_error: str = "raise",
+        max_concurrency: int = 20,
         **kwargs,
     ):
         # Parameters that don't need validation
@@ -180,6 +185,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.records = records
         self.download = download
         self.n_jobs = n_jobs
+        self.max_concurrency = max_concurrency
         self.eeg_dash_instance = eeg_dash_instance
 
         if description_fields is None:
@@ -221,6 +227,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
         }
         base_dataset_kwargs["on_error"] = self._on_error
+        base_dataset_kwargs["max_concurrency"] = self.max_concurrency
 
         if "dataset" not in self.query:
             # If explicit records are provided, infer dataset from records
@@ -342,7 +349,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 base_dataset_kwargs=base_dataset_kwargs,
             )
             # We only need filesystem if we need to access S3
-            self.filesystem = downloader.get_s3_filesystem()
+            self.filesystem = downloader.get_s3_filesystem(
+                max_concurrency=self.max_concurrency,
+            )
 
             # Provide helpful error message when no datasets are found
             if len(datasets) == 0:
@@ -597,7 +606,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if not keys_to_download:
             return
 
-        filesystem = downloader.get_s3_filesystem()
+        filesystem = downloader.get_s3_filesystem(
+            max_concurrency=self.max_concurrency,
+        )
 
         # Download files that don't exist locally
         files_to_download = []

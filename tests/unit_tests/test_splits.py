@@ -136,9 +136,9 @@ def test_get_splitter_unknown_name_raises():
         get_splitter("nonsense")
 
 
-def test_get_splitter_sklearn_engine_fallback(metadata):
-    """The sklearn engine must produce subject-disjoint folds for cross_subject."""
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+def test_get_splitter_cross_subject_with_n_splits(metadata):
+    """cross_subject splitter with n_splits=4 produces subject-disjoint folds."""
+    splitter = get_splitter("cross_subject", n_splits=4)
     folds = list(splitter.split(metadata["target"].to_numpy(), metadata))
     assert len(folds) == 4
     for train_idx, test_idx in folds:
@@ -153,14 +153,14 @@ def test_get_splitter_sklearn_engine_fallback(metadata):
 
 
 def test_make_split_manifest_is_deterministic(metadata):
-    splitter_a = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter_a = get_splitter("cross_subject", n_splits=4)
     manifest_a = make_split_manifest(
         splitter_a,
         metadata["target"].to_numpy(),
         metadata,
         target="target",
     )
-    splitter_b = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter_b = get_splitter("cross_subject", n_splits=4)
     manifest_b = make_split_manifest(
         splitter_b,
         metadata["target"].to_numpy(),
@@ -175,7 +175,7 @@ def test_make_split_manifest_is_deterministic(metadata):
 
 
 def test_make_split_manifest_records_provenance(metadata):
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter = get_splitter("cross_subject", n_splits=4)
     manifest = make_split_manifest(
         splitter,
         metadata["target"].to_numpy(),
@@ -196,7 +196,7 @@ def test_make_split_manifest_records_provenance(metadata):
 
 
 def test_apply_split_manifest_selects_correct_indices(metadata):
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter = get_splitter("cross_subject", n_splits=4)
     manifest = make_split_manifest(
         splitter,
         metadata["target"].to_numpy(),
@@ -212,7 +212,7 @@ def test_apply_split_manifest_selects_correct_indices(metadata):
 
 
 def test_apply_split_manifest_invalid_split(metadata):
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter = get_splitter("cross_subject", n_splits=4)
     manifest = make_split_manifest(
         splitter, metadata["target"].to_numpy(), metadata, target="target"
     )
@@ -240,7 +240,7 @@ def _capture_stdout(callable_, *args, **kwargs) -> tuple[object, str]:
 
 
 def test_assert_no_leakage_passes_for_clean_split(metadata):
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter = get_splitter("cross_subject", n_splits=4)
     manifest = make_split_manifest(
         splitter, metadata["target"].to_numpy(), metadata, target="target"
     )
@@ -309,7 +309,7 @@ def test_assert_no_leakage_emits_line_even_on_overlap(metadata):
 
 
 def test_describe_split_basic(metadata):
-    splitter = get_splitter("cross_subject", engine="sklearn", n_splits=4)
+    splitter = get_splitter("cross_subject", n_splits=4)
     manifest = make_split_manifest(
         splitter, metadata["target"].to_numpy(), metadata, target="target"
     )

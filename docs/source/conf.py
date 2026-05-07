@@ -3145,13 +3145,14 @@ def _article_jsonld(title: str, description: str, url: str) -> dict:
 
 
 _ARTICLE_JSONLD: Mapping[str, dict] = {
-    "user_guide": _article_jsonld(
-        "EEGDash user guide",
+    "quickstart": _article_jsonld(
+        "EEGDash quick start guide",
         (
-            "Narrative walkthrough of the EEGDash Python library — query "
-            "datasets, load BIDS records, and build reproducible ML pipelines."
+            "Quick start hub for the EEGDash Python library — the curated "
+            "Cat A learning path, copy-paste recipes for query and filter, "
+            "API configuration, and links to the full gallery and concepts."
         ),
-        "https://eegdash.org/user_guide.html",
+        "https://eegdash.org/quickstart.html",
     ),
     "developer_notes": _article_jsonld(
         "EEGDash developer notes",

@@ -137,7 +137,7 @@ Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Del
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=9be2881c710851e1&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=5903a728cd98334b&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

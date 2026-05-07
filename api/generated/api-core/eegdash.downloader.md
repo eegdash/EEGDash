@@ -14,7 +14,7 @@ between the EEGDash metadata database and the actual EEG data stored in the clou
 |------------------------------------------------------|---------------------------------------------------|
 | `download_files`(files, \*[, filesystem, ...])       | Download multiple S3 URIs to local destinations.  |
 | `get_s3path`(s3_bucket, filepath)                    | Construct an S3 URI from a bucket and file path.  |
-| `get_s3_filesystem`()                                | Get an anonymous S3 filesystem object.            |
+| `get_s3_filesystem`(\*[, max_concurrency, region])   | Get an anonymous S3 filesystem object.            |
 
 ### eegdash.downloader.download_s3_file(s3_path: str, local_path: Path, , filesystem: S3FileSystem | None = None) → Path
 
@@ -60,13 +60,16 @@ Construct an S3 URI from a bucket and file path.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.downloader.get_s3_filesystem() → S3FileSystem
+### eegdash.downloader.get_s3_filesystem(, max_concurrency: int = 20, region: str = 'us-east-2') → S3FileSystem
 
 Get an anonymous S3 filesystem object.
 
 Initializes and returns an `s3fs.S3FileSystem` for anonymous access
-to public S3 buckets, configured for the ‘us-east-2’ region.
+to public S3 buckets.
 
+* **Parameters:**
+  * **max_concurrency** (*int*) – Maximum number of parallel transfer connections (default 20).
+  * **region** (*str*) – AWS region for the S3 endpoint (default `"us-east-2"`).
 * **Returns:**
   An S3 filesystem object.
 * **Return type:**

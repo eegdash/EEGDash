@@ -41805,7 +41805,7 @@ the selection of subject subsets (e.g., “mini” release).
 
 <!-- !! processed by numpydoc !! -->
 
-### *class* eegdash.dataset.EEGDashDataset(cache_dir: str | Path, query: dict[str, Any] = None, description_fields: list[str] | None = None, s3_bucket: str | None = None, records: list[dict] | None = None, download: bool = True, n_jobs: int = -1, eeg_dash_instance: Any = None, database: str | None = None, auth_token: str | None = None, on_error: str = 'raise', \*\*kwargs)
+### *class* eegdash.dataset.EEGDashDataset(cache_dir: str | Path, query: dict[str, Any] = None, description_fields: list[str] | None = None, s3_bucket: str | None = None, records: list[dict] | None = None, download: bool = True, n_jobs: int = -1, eeg_dash_instance: Any = None, database: str | None = None, auth_token: str | None = None, on_error: str = 'raise', max_concurrency: int = 20, \*\*kwargs)
 
 Bases: `BaseConcatDataset`
 
@@ -41902,6 +41902,9 @@ Working with dataset collections and braindecode integration:
     uses the default database.
   * **auth_token** (*str* *|* *None*) – Authentication token for accessing protected databases. Required for
     staging or admin operations.
+  * **max_concurrency** (*int* *,* *default 20*) – Maximum number of parallel S3 transfer connections used when
+    downloading data.  Higher values speed up large/multi-file
+    downloads but consume more bandwidth.
   * **on_error** (*str* *,* *default "raise"*) – 
 
     How to handle `DataIntegrityError` when accessing `.raw`

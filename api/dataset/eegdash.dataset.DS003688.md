@@ -138,7 +138,7 @@ UMC Utrecht Team
 <details class="electrode-explorer">
   <summary>Electrode layout — iEEG · 64 sensors — 64 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=e657792aea40966f&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=f92c94adc951ec16&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

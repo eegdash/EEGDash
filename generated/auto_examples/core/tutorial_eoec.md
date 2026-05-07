@@ -167,12 +167,12 @@ windows_ds = create_windows_from_events(
 ```none
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[05/06/26 18:31:02] WARNING  File not found on S3, skipping:   downloader.py:146
+[05/07/26 19:42:56] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
 Used Annotations descriptions: [np.str_('boundary'), np.str_('break cnt'), np.str_('instructed_toCloseEyes'), np.str_('instructed_toOpenEyes'), np.str_('resting_start')]
-[05/06/26 18:31:03] INFO     Original events found with ids: preprocessing.py:66
+[05/07/26 19:42:57] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -484,6 +484,6 @@ Epoch 4, Train accuracy: 0.91, Test accuracy: 0.57
 Epoch 5, Train accuracy: 0.88, Test accuracy: 0.50
 ```
 
-**Total running time of the script:** (0 minutes 6.423 seconds)
+**Total running time of the script:** (0 minutes 5.948 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-core-tutorial-eoec-py"></a>

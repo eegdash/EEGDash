@@ -38,13 +38,16 @@ at the specified local path. Creates parent directories if they do not exist.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.downloader.get_s3_filesystem() → S3FileSystem
+### eegdash.downloader.get_s3_filesystem(, max_concurrency: int = 20, region: str = 'us-east-2') → S3FileSystem
 
 Get an anonymous S3 filesystem object.
 
 Initializes and returns an `s3fs.S3FileSystem` for anonymous access
-to public S3 buckets, configured for the ‘us-east-2’ region.
+to public S3 buckets.
 
+* **Parameters:**
+  * **max_concurrency** (*int*) – Maximum number of parallel transfer connections (default 20).
+  * **region** (*str*) – AWS region for the S3 endpoint (default `"us-east-2"`).
 * **Returns:**
   An S3 filesystem object.
 * **Return type:**

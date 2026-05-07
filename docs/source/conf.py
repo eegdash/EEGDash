@@ -3788,9 +3788,7 @@ def _write_auto_examples_root_index(app):
         "into **How-to recipes** when you have a specific question, then "
         "scale up using the **Applied research projects**, the **EEG 2025 "
         "Foundation Challenge** pipelines, and the **High-performance "
-        "computing** track. The roster, ordering, and rubric here come "
-        "from ``docs/tutorial_restructure_plan.md``, the source of truth "
-        "for what belongs in this gallery and why.",
+        "computing** track.",
         "",
         ".. admonition:: How to read this gallery",
         "   :class: tip eegdash-gallery-howto",

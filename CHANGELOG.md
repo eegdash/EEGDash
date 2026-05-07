@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `eegdash.features.fit_feature_extractor` retained as a backward-compat alias for the new feature-extraction entrypoint used by the rewritten feature tutorials
 
 ### Removed
-- Legacy tutorial entrypoints superseded by the spec-driven gallery: `examples/tutorial_minimal.py`, `examples/tutorial_transfer_learning.py` and several `examples/noplot_tutorial_*.py` scripts (their pedagogical content has been rewritten under `examples/tutorials/` and their applied counterparts under `examples/applied/`); see `docs/tutorial_restructure_plan.md` for the file-by-file migration map
+- Legacy tutorial entrypoints superseded by the new gallery: `examples/tutorial_minimal.py`, `examples/tutorial_transfer_learning.py` and several `examples/noplot_tutorial_*.py` scripts (their pedagogical content has been rewritten under `examples/tutorials/` and their applied counterparts under `examples/applied/`).
 
 ## [0.7.2] - 2026-04-29
 

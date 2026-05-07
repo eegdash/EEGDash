@@ -1,20 +1,4 @@
-"""Drawing helpers for the ``plot_70`` "Challenge dataset basics" figure.
-
-Sibling module to ``plot_70_challenge_dataset_basics.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the gallery,
-so the helper code stays out of the rendered tutorial; the tutorial imports
-the public ``draw_challenge_basics_figure`` entry point.
-
-The figure has three panels:
-
-1. Records-per-task bar chart, color-coded by task family (passive viewing,
-   active cognitive, resting-state, sequence learning).
-2. Stacked-bar age x task availability, showing how task coverage shifts
-   across HBN age bins (children -> adolescents -> young adults).
-3. One record's full metadata card rendered as a monospace key-value table,
-   so the catalog row that backs every challenge BDF file is visible at the
-   same scale as the live numbers above it.
-"""
+"""Drawing helpers for the ``plot_70`` "Challenge dataset basics" figure."""
 
 from __future__ import annotations
 
@@ -79,7 +63,6 @@ def _family_for(task: str) -> str:
 
 
 def _draw_task_bars(ax, task_counts: Mapping[str, int]) -> None:
-    """Render horizontal bars of records-per-task, colored by family."""
     items = sorted(task_counts.items(), key=lambda kv: kv[1], reverse=True)
     names = [k for k, _ in items]
     counts = np.array([v for _, v in items], dtype=float)
@@ -158,13 +141,6 @@ def _draw_task_bars(ax, task_counts: Mapping[str, int]) -> None:
 def _draw_age_task_stack(
     ax, age_task_matrix: pd.DataFrame, task_order: Sequence[str]
 ) -> None:
-    """Stacked horizontal bars, one row per age bin, segments per task family.
-
-    ``age_task_matrix`` is a non-negative-integer DataFrame with one row per
-    age-bin label and one column per task name; values are record counts.
-    Segments are grouped by family and sorted within a family by total count
-    so the legend reads top-to-bottom matching the bar stacks.
-    """
     age_bins = list(age_task_matrix.index)
     # Reorder columns so a family's segments sit contiguous in the stacks.
     family_order = ["resting", "passive video", "active cognitive", "sequence learning"]
@@ -263,7 +239,6 @@ def _draw_age_task_stack(
 
 
 def _format_value(value) -> str:
-    """Compact, monospace-safe representation of one metadata value."""
     if value is None:
         return "None"
     if isinstance(value, float):
@@ -286,7 +261,6 @@ def _format_value(value) -> str:
 
 
 def _draw_metadata_card(ax, sample_metadata_row: Mapping) -> None:
-    """Render a record-level metadata table inside a soft-bordered panel."""
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)

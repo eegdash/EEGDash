@@ -1,28 +1,4 @@
-"""Drawing helpers for the ``plot_74`` NeuroAI-interop figure.
-
-Sibling module to ``plot_74_neuroai_interop.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery, so the
-rendering plumbing stays out of the rendered tutorial; the tutorial
-imports the public :func:`draw_neuroai_interop_figure` entry point.
-
-The figure has three panels arranged top to bottom on a 3-row gridspec:
-
-1. **Ecosystem pipeline** (top, full width). Four boxes laid out left to
-   right with stage colors EEGDASH_BLUE, EEGDASH_PURPLE, EEGDASH_INK,
-   EEGDASH_ORANGE. Each box carries a title, a one-line role tag, and a
-   monospace shape annotation underneath. Two arrows connect adjacent
-   stages with a short label.
-2. **Data identity through the pipeline** (middle, full width). A small
-   sparkline showing one window at three observation points: the raw
-   EEGDash record, the events-DataFrame row that NeuralFetch produces,
-   and the segmented tensor that NeuralSet returns. The same sample
-   index is highlighted on every panel; the eye reads "the bytes never
-   changed".
-3. **Integration matrix** (bottom, full width). A four-row table whose
-   columns are: NeuroAI project, role, EEGDash integration status, and
-   tutorial that demonstrates it. Rendered as filled cells so the eye
-   reads the matrix without finger-tracking between rows.
-"""
+"""Drawing helpers for the ``plot_74`` NeuroAI-interop figure."""
 
 from __future__ import annotations
 

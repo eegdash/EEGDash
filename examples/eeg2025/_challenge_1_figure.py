@@ -1,32 +1,4 @@
-"""Drawing helpers for the ``tutorial_challenge_1`` starter-kit figure.
-
-Sibling module to ``tutorial_challenge_1.py``. The leading underscore tells
-sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public :func:`draw_challenge_1_figure` entry point.
-
-The figure is a 1x3 plate that reads as the canonical "where do I start
-with Challenge 1?" view of the EEG2025 Foundation Challenge:
-
-1. *Trial-structure schematic* (left). Nodes arranged on a timeline:
-   pre-stimulus baseline -> contrast ramp onset (stim cue) -> response
-   window -> feedback. The decoder window (+0.5 s .. +2.5 s after the
-   stimulus anchor) sits as a translucent band over a synthetic EEG
-   sparkline so the reader sees both the trial structure and what the
-   model actually consumes.
-2. *One CCD window heatmap* (centre). A single ``(n_channels, n_samples)``
-   trial rendered with a diverging ``RdBu_r`` colormap. The shape
-   ``(129, 200)`` is annotated inline so the tensor contract is visible
-   at the same scale as the data.
-3. *Baseline decoder accuracy* (right). One bar per cross-validation
-   fold (or subject), a ``chance_line(ax, level=0.5)`` reference, and a
-   mean +/- std band so the headline number ships next to its noise
-   floor. The mean is annotated above the band.
-
-Geometry and colour conventions follow ``_challenge_basics_figure.py`` and
-``_cross_task_figure.py`` so the gallery reads as one consistent set of
-figures.
-"""
+"""Drawing helpers for the ``tutorial_challenge_1`` starter-kit figure."""
 
 from __future__ import annotations
 
@@ -56,7 +28,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer, shape_label
 
 
 def _draw_node(ax, x_center, y_center, width, height, *, color, title, sub):
-    """One rounded node on the trial-timeline schematic."""
     ax.add_patch(
         FancyBboxPatch(
             (x_center - width / 2, y_center - height / 2),
@@ -93,16 +64,6 @@ def _draw_node(ax, x_center, y_center, width, height, *, color, title, sub):
 
 
 def _draw_paradigm_panel(ax, paradigm_schematic_data: Mapping) -> None:
-    """Render the CCD trial timeline + decoder-window highlight + EEG trace.
-
-    ``paradigm_schematic_data`` carries:
-      - ``trace`` : ``(n_samples,)`` synthetic EEG sparkline.
-      - ``sfreq`` : sampling frequency of the trace (Hz).
-      - ``shift_after_stim`` : decoder window start, seconds after stim.
-      - ``window_len`` : decoder window length, seconds.
-      - ``stim_time`` : seconds at which the stimulus cue lands.
-      - ``response_time`` : seconds at which the synthetic response lands.
-    """
     ax.set_xlim(0.0, 1.0)
     ax.set_ylim(0.0, 1.0)
     ax.set_axis_off()
@@ -223,7 +184,6 @@ def _draw_paradigm_panel(ax, paradigm_schematic_data: Mapping) -> None:
 
 
 def _draw_window_panel(ax, sample_window: np.ndarray, *, sfreq: float) -> None:
-    """Render one ``(n_channels, n_samples)`` CCD window as a heatmap."""
     win = np.asarray(sample_window, dtype=float)
     if win.ndim != 2:
         raise ValueError("sample_window must be 2-D (n_channels, n_samples)")
@@ -295,7 +255,6 @@ def _draw_accuracy_panel(
     *,
     chance_level: float,
 ) -> None:
-    """One bar per fold (or subject), with mean +/- std band and chance line."""
     accs = np.asarray(list(fold_accuracies), dtype=float)
     n = accs.size
     if n == 0:

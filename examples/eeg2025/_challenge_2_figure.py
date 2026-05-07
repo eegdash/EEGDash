@@ -1,30 +1,4 @@
-"""Drawing helpers for the EEG2025 Challenge 2 starter kit.
-
-Sibling module to ``tutorial_challenge_2.py``. The leading underscore
-keeps sphinx-gallery from rendering the file (its ``ignore_pattern``
-matches ``_*.py``), so the plotting plumbing stays out of the rendered
-tutorial. The tutorial imports the public
-:func:`draw_challenge_2_figure` entry point and feeds it three live
-inputs: the train-cohort p-factor distribution, a vector of held-out
-predictions, and a leaderboard table.
-
-The figure has three panels arranged left to right and reads as the
-classic baseline-vs-target story for a regression challenge:
-
-1. **Target distribution.** Histogram of p-factor across the training
-   cohort. Mean and median guides annotate the location and skew of the
-   target so reviewers can see how far the leaderboard scores can
-   plausibly travel.
-2. **Predicted vs true scatter.** One marker per held-out subject (mean
-   prediction across that subject's windows). The diagonal ``y = x``
-   reference is the only line a perfect model would hit; corner box
-   reports Pearson r, R^2, and MAE on the subject-level vectors.
-3. **Leaderboard card.** Three rows: median baseline (chance), the
-   starter-kit baseline produced by this notebook, and the public top
-   score from the EEG2025 challenge dashboard. Bars are colored by
-   regime so the gap between chance, starter, and target reads at a
-   glance.
-"""
+"""Drawing helpers for the EEG2025 Challenge 2 starter kit."""
 
 from __future__ import annotations
 
@@ -66,13 +40,6 @@ def _aggregate_per_subject(
     y_pred: np.ndarray,
     subject_ids: Sequence[str],
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Reduce window-level vectors to one mean prediction per subject.
-
-    The p-factor is a subject-level score: every window of a given
-    subject carries the same ``y_true``. So the only meaningful x point
-    per subject is its single true score, and the only meaningful y is
-    the mean prediction across that subject's held-out windows.
-    """
     subjects = np.asarray(list(subject_ids))
     unique = list(dict.fromkeys(subjects.tolist()))
     yt_subj = np.empty(len(unique), dtype=float)
@@ -85,7 +52,6 @@ def _aggregate_per_subject(
 
 
 def _compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Compute Pearson r, R^2, MAE on subject-level vectors."""
     if y_true.size < 2:
         return {"pearson_r": np.nan, "r2": np.nan, "mae": np.nan}
     pearson_r = float(pearsonr(y_true, y_pred).statistic)
@@ -99,7 +65,6 @@ def _draw_distribution_panel(
     *,
     p_factor_distribution: np.ndarray,
 ) -> None:
-    """Render the train-cohort p-factor histogram with mean / median guides."""
     values = np.asarray(p_factor_distribution, dtype=float).ravel()
     values = values[~np.isnan(values)]
     if values.size == 0:
@@ -173,7 +138,6 @@ def _draw_scatter_panel(
     y_pred_subj: np.ndarray,
     metrics: Mapping[str, float],
 ) -> None:
-    """Render predicted vs true scatter with a y=x reference and a metric box."""
     if y_true_subj.size == 0:
         ax.text(
             0.5,
@@ -261,13 +225,6 @@ def _draw_leaderboard_panel(
     *,
     leaderboard_rows: Sequence[Mapping[str, object]],
 ) -> None:
-    """Render a leaderboard-style result card.
-
-    Each row is rendered as a horizontal bar from 0 to ``score`` with a
-    monospace label on the right and the team / regime name on the
-    left. Rows are drawn top to bottom in input order so the caller
-    decides the reading sequence (typically chance, starter, target).
-    """
     if len(leaderboard_rows) == 0:
         ax.text(
             0.5,

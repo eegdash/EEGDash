@@ -97,6 +97,7 @@ tests = [
     'pytest',
     'pytest-cov',
     'pytest-benchmark',
+    'plotly',
 ]
 dev = [
   "pre-commit",
@@ -115,6 +116,7 @@ docs = [
   "lightgbm",
   "plotly",
   "seaborn",
+  "moabb",
 ]
 
 digestion = [

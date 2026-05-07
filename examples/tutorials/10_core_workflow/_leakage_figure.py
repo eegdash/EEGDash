@@ -1,25 +1,4 @@
-"""Drawing helpers for the ``plot_11`` leakage-vs-safe-split figure.
-
-Sibling module to ``plot_11_leakage_safe_split.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery, so the
-helpers stay out of the rendered tutorial; the tutorial imports the public
-``draw_leakage_figure`` entry point.
-
-The figure is a 2 x 3 grid: row 1 = naive random split, row 2 = cross-subject
-(leakage-safe) split. Each row carries the same three panels:
-
-* col 1 -- subject x fold matrix; cell encodes the per-fold per-subject status.
-  ``0`` = subject is fully on the train side of this fold (blue),
-  ``1`` = subject is fully on the test side (orange),
-  ``2`` = subject is split across train and test within this fold (striped).
-* col 2 -- horizontal Sankey-lite for fold 0; segmented by subject so colors
-  appear once on each side under a clean split, and on both sides under a
-  leaky split.
-* col 3 -- big-number callouts: subjects that leak across train/test in fold
-  0, and the test share of windows in that fold.
-
-Same data underneath; only the split strategy differs across rows.
-"""
+"""Drawing helpers for the ``plot_11`` leakage-vs-safe-split figure."""
 
 from __future__ import annotations
 
@@ -62,15 +41,6 @@ def _draw_status_matrix(
     assignment: np.ndarray,
     subjects: Iterable[str],
 ) -> None:
-    """Cell color encodes subject status PER fold.
-
-    ``assignment[i, j]`` carries one of ``{0, 1, 2}``:
-
-    * ``0`` -- subject ``i`` is fully on the train side of fold ``j``.
-    * ``1`` -- subject ``i`` is fully on the test side of fold ``j``.
-    * ``2`` -- subject ``i`` is split across train and test within fold ``j``
-      (the leakage failure mode).
-    """
     subjects = list(subjects)
     n_subj, n_folds = assignment.shape
     cell_w = 0.92 / max(n_folds, 1)
@@ -158,12 +128,6 @@ def _draw_flow_bars(
     subjects: Iterable[str],
     color_map: dict,
 ) -> None:
-    """Two horizontal stacked bars (train above, test below) for ONE fold.
-
-    Each bar is segmented by subject. Naive: every subject color appears in
-    both bars (leakage). Cross-subject: each color appears in exactly one
-    bar.
-    """
     subjects = list(subjects)
     total = max(train_counts_per_subject.sum(), test_counts_per_subject.sum(), 1.0)
     bar_h = 0.20
@@ -255,7 +219,6 @@ def _draw_callouts(
     target_test_share: float,
     is_safe: bool,
 ) -> None:
-    """Big-number callouts: subject overlap and test-window share."""
     pill_y_top = 0.62
     pill_y_bot = 0.18
     pill_x = 0.06
@@ -327,7 +290,6 @@ def _draw_callouts(
 
 
 def _row_label(ax, label: str, sublabel: str) -> None:
-    """Place a left-margin label naming the row's split strategy."""
     ax.text(
         -0.16,
         0.78,
@@ -352,7 +314,6 @@ def _row_label(ax, label: str, sublabel: str) -> None:
 
 
 def _legend(fig) -> None:
-    """Single shared legend for the matrix color encoding."""
     swatches = [
         (_TRAIN_COLOR, "train fold", None, 0.085),
         (_TEST_COLOR, "test fold", None, 0.085),
@@ -394,14 +355,6 @@ def _per_fold_window_counts(
     n_windows_per_subject: int,
     fold: int,
 ):
-    """Compute per-subject train/test window counts for fold ``fold``.
-
-    For the cross-subject row we treat every window of a subject as test
-    exactly when the safe assignment puts that subject in the test fold.
-    For the naive row we simulate the random shuffle: each window has the
-    same per-fold test probability ``1 / n_folds``, so we draw counts from a
-    Binomial that respects the realised marginal of the matrix.
-    """
     rng = np.random.default_rng(0)
     target_test_frac = 1.0 / max(n_folds, 1)
     train_counts = np.zeros(n_subjects)

@@ -1,25 +1,4 @@
-"""Drawing helpers for ``project_pfactor_deep`` (deep-learning case study).
-
-Sibling module to ``project_pfactor_deep.py``. The leading underscore tells
-sphinx-gallery to skip this file when building the gallery, so the rendering
-plumbing stays out of the rendered tutorial; the case study imports the
-public :func:`draw_pfactor_deep_figure` entry point.
-
-The figure has three panels arranged left-to-right:
-
-1. **Training curves.** Per-epoch train MSE (blue) and validation MSE
-   (orange) on the left y-axis, and validation Pearson r (dark blue) on
-   a twin right y-axis. Mean is solid, +/-1 SE across seeds is shaded.
-2. **Predicted vs true scatter.** One marker per held-out subject (mean
-   prediction across that subject's windows). The diagonal y = x is the
-   only target a perfect model would hit; r, R^2, and MAE land in a
-   corner annotation.
-3. **Saliency map.** Channel-by-time gradient magnitude averaged across
-   high-confidence test windows, normalised to the [0, 1] range. Reads
-   left-to-right as window time, top-to-bottom as electrode, with a
-   sequential colormap so the visual hot-spot reveals where the network
-   reads the signal.
-"""
+"""Drawing helpers for ``project_pfactor_deep`` (deep-learning case study)."""
 
 from __future__ import annotations
 
@@ -42,7 +21,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _curve_band(curve: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Return per-epoch mean and standard error for ``(n_seeds, n_epochs)``."""
     arr = np.asarray(curve, dtype=float)
     if arr.ndim == 1:
         arr = arr.reshape(1, -1)
@@ -62,7 +40,6 @@ def _draw_training_curves_panel(
     val_loss: np.ndarray,
     val_r: np.ndarray,
 ) -> None:
-    """Render train/val loss with a twin r-axis on the right."""
     ep = np.asarray(epochs, dtype=float)
     train_mu, train_se = _curve_band(train_loss)
     val_mu, val_se = _curve_band(val_loss)
@@ -189,7 +166,6 @@ def _aggregate_per_subject(
     y_pred: np.ndarray,
     subject_ids: Sequence[str] | None,
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Reduce window-level vectors to one mean prediction per held-out subject."""
     if subject_ids is None or len(subject_ids) == 0:
         # No subject map -> treat each entry as its own subject.
         ids = [f"s{i:02d}" for i in range(y_true.size)]
@@ -223,7 +199,6 @@ def _draw_pred_vs_true_panel(
     y_pred_subj: np.ndarray,
     metrics: dict,
 ) -> None:
-    """Render the predicted-vs-true scatter with a y=x reference."""
     lo = float(min(y_true_subj.min(), y_pred_subj.min()))
     hi = float(max(y_true_subj.max(), y_pred_subj.max()))
     pad = 0.10 * max(hi - lo, 1e-3)
@@ -301,7 +276,6 @@ def _draw_saliency_panel(
     channel_names: Sequence[str],
     sfreq: float | None = None,
 ) -> None:
-    """Render the channel-by-time saliency heatmap."""
     sal = np.asarray(saliency_map, dtype=float)
     if sal.ndim != 2:
         raise ValueError(f"saliency_map must be 2D (channels, times); got {sal.shape}")

@@ -1,33 +1,4 @@
-"""Drawing helpers for the ``plot_40`` first-features plate.
-
-Sibling module to ``plot_40_first_features.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public ``draw_features_figure`` entry point.
-
-The figure is a 1x3 plate that reads the same way the feature matrix
-does in plot_42:
-
-1. *Band x channel feature-matrix heatmap* (left) -- mean log power
-   across windows for theta, alpha, beta, gamma. ``RdBu_r`` divergent
-   colormap symmetric around the per-band mean so increases above and
-   suppressions below the mean read as red and blue. The alpha row
-   carries a thin EEGDASH_ORANGE tick to flag the band Berger first
-   reported.
-2. *Per-band histogram strip* (middle) -- four small inset histograms
-   stacked vertically with one EEGDASH palette colour per band. Each
-   inset shows the log-power distribution across all (window, channel)
-   pairs for that band; the stripe lets the reader read the variance
-   structure that plot_42 hands to sklearn.
-3. *Top-K alpha discriminative channels* (right) -- horizontal bar
-   chart of per-channel ``closed - open`` log-power difference (or
-   per-channel variance when condition labels are absent). Bars are
-   EEGDASH_BLUE; the channel that peaks first sits at the top.
-
-Geometry, colours, and annotations follow the same conventions as
-``_alpha_figure.py`` and ``_pipeline_diagram.py`` so the gallery reads
-as one consistent set of figures.
-"""
+"""Drawing helpers for the ``plot_40`` first-features plate."""
 
 from __future__ import annotations
 
@@ -55,7 +26,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color(EEGDASH_GRID)
@@ -72,16 +42,6 @@ def _draw_heatmap_panel(
     channel_names: Sequence[str],
     highlight_band: str = "alpha",
 ) -> None:
-    """Band x channel heatmap of mean log power across windows.
-
-    Each row is z-scored across channels so the band-internal
-    parieto-occipital structure reads at the same intensity in every
-    band; the absolute log-power scale (which spans orders of magnitude
-    because alpha can be 100x the broadband floor) is reported in the
-    panel below as a histogram strip. The ``RdBu_r`` colormap is
-    symmetric around zero and the alpha row carries a thin orange tick
-    on the left margin to flag the Berger band.
-    """
     matrix = np.asarray(feature_matrix, dtype=float)
     row_mean = matrix.mean(axis=1, keepdims=True)
     row_std = matrix.std(axis=1, keepdims=True)
@@ -173,13 +133,6 @@ def _draw_histogram_panel(
     log_power_per_band: dict[str, np.ndarray],
     band_names: Sequence[str],
 ) -> None:
-    """Stacked per-band histograms of (window, channel) log-power values.
-
-    Splits the GridSpec slot into one axes per band, stacked vertically.
-    Each sub-axes uses a different EEGDash palette colour so the
-    distribution shape per band is visible at a glance; the band label
-    sits inside each sub-axes in monospace.
-    """
     n_bands = len(band_names)
     inner = gridspec_slot.subgridspec(n_bands, 1, hspace=0.55)
 
@@ -269,12 +222,6 @@ def _draw_topk_panel(
     score_label: str,
     top_k: int = 8,
 ) -> None:
-    """Horizontal bar chart of the top-K discriminative channels for alpha.
-
-    ``discriminative_score`` is the per-channel score (closed - open log
-    power if condition labels exist, else per-channel variance). The
-    largest absolute scores sit at the top; the bars are EEGDASH_BLUE.
-    """
     score = np.asarray(discriminative_score, dtype=float)
     order = np.argsort(np.abs(score))[::-1][: int(top_k)]
     # Re-sort the selected slice in ascending value so the largest bar

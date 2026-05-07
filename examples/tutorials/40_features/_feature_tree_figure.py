@@ -1,30 +1,4 @@
-"""Drawing helpers for the ``plot_41`` feature-tree plate.
-
-Sibling module to ``plot_41_feature_trees.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public ``draw_feature_tree_figure`` entry point.
-
-The figure is a three-panel plate that matches the polish standard set by
-``_pipeline_diagram.py`` (plot_02) and ``_alpha_figure.py`` (plot_30):
-
-1. *Feature tree* (left). A directed graph drawn with FancyBboxPatch
-   nodes and FancyArrowPatch edges. Root ``raw window`` feeds the
-   ``Welch PSD`` intermediate node; four leaves hang off the PSD
-   (``band power``, ``spectral entropy``, ``peak frequency``,
-   ``1/f slope``). Each leaf carries a tiny inset thumbnail showing
-   the relevant slice of the PSD.
-2. *Per-feature distributions* (centre). Four mini KDEs, one per
-   derived feature, coloured from ``EEGDASH_PALETTE``. The reader sees
-   the live spread of each feature across all windows of the recording
-   and confirms that the four scalars are not redundant.
-3. *Feature-feature Pearson correlation heatmap* (right). 4x4 with
-   value annotations in monospace, ``RdBu_r`` divergent symmetric. Tells
-   the reader, in one panel, which derived markers move together.
-
-Helvetica is missing the U+2192 right-arrow glyph, so every prose label
-uses ``->`` instead of an actual arrow character.
-"""
+"""Drawing helpers for the ``plot_41`` feature-tree plate."""
 
 from __future__ import annotations
 
@@ -55,7 +29,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine and tick treatment to a single axes."""
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
     for spine in ("left", "bottom"):
@@ -78,15 +51,6 @@ def _draw_node(
     sub_size: float = 8.4,
     title_anchor: str = "center",
 ) -> tuple[float, float, float, float]:
-    """Draw a rounded rectangle node centred on ``(cx, cy)`` and label it.
-
-    Returns the bounding box ``(x0, y0, w, h)`` so callers can wire edges
-    to the node's borders without recomputing the geometry.
-
-    ``title_anchor`` selects between ``"center"`` (one-line caption) and
-    ``"top"`` (title pinned to the top edge so an inset thumbnail can
-    occupy the bottom of the box).
-    """
     x0, y0 = cx - w / 2, cy - h / 2
     ax.add_patch(
         FancyBboxPatch(
@@ -153,7 +117,6 @@ def _draw_node(
 
 
 def _connect(ax, x_from, y_from, x_to, y_to, *, color=EEGDASH_GRID) -> None:
-    """Draw a straight FancyArrowPatch between two anchor points."""
     ax.add_patch(
         FancyArrowPatch(
             (x_from, y_from),
@@ -167,12 +130,6 @@ def _connect(ax, x_from, y_from, x_to, y_to, *, color=EEGDASH_GRID) -> None:
 
 
 def _add_leaf_thumb(fig, ax, x0, y0, w, h, painter) -> None:
-    """Carve an inner axes inside a leaf node and call ``painter(ax)``.
-
-    The inset is positioned in figure coordinates so it survives any later
-    layout adjustments. Spines are hidden so the thumbnail reads as
-    ornament, not as a chart with its own axes.
-    """
     # Trim the inset to the lower ~45 % of the node; the title row
     # (which can be one or two lines) sits in the upper half.
     pad = 0.012
@@ -198,7 +155,6 @@ def _add_leaf_thumb(fig, ax, x0, y0, w, h, painter) -> None:
 
 
 def _paint_psd_band(ax, freqs, psd_mean, color):
-    """Plot the mean PSD with a shaded 8-12 Hz alpha band."""
     ax.plot(freqs, psd_mean, color=color, linewidth=1.1)
     ax.fill_between(
         freqs, psd_mean, psd_mean.min(), color=color, alpha=0.25, linewidth=0
@@ -208,7 +164,6 @@ def _paint_psd_band(ax, freqs, psd_mean, color):
 
 
 def _paint_psd_norm(ax, freqs, psd_mean, color):
-    """Plot the *normalised* PSD (a probability density)."""
     pdf = psd_mean / (psd_mean.sum() + 1e-30)
     ax.plot(freqs, pdf, color=color, linewidth=1.1)
     ax.fill_between(freqs, pdf, 0.0, color=color, alpha=0.25, linewidth=0)
@@ -216,7 +171,6 @@ def _paint_psd_norm(ax, freqs, psd_mean, color):
 
 
 def _paint_psd_peak(ax, freqs, psd_mean, color):
-    """Plot the PSD with a vertical marker at the peak frequency."""
     ax.plot(freqs, psd_mean, color=color, linewidth=1.1)
     peak_f = freqs[int(np.argmax(psd_mean))]
     ax.axvline(peak_f, color=color, linewidth=1.6, linestyle="--", alpha=0.9)
@@ -224,7 +178,6 @@ def _paint_psd_peak(ax, freqs, psd_mean, color):
 
 
 def _paint_psd_loglog(ax, freqs, psd_mean, color):
-    """Plot log-log PSD with a fitted line, showing the 1/f slope."""
     f_pos = freqs > 0
     log_f = np.log10(freqs[f_pos])
     log_p = np.log10(psd_mean[f_pos] + 1e-30)
@@ -244,12 +197,6 @@ def _draw_tree_panel(
     feature_names: Sequence[str],
     palette: Sequence[str],
 ) -> None:
-    """Paint Panel 1 (the dependency tree) on ``ax``.
-
-    Geometry uses axes coordinates 0..1 so the panel reads identically at
-    any DPI. The four leaf painters are wired by name so the label, the
-    thumbnail painter, and the palette colour stay zipped together.
-    """
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_aspect("auto")
@@ -369,13 +316,6 @@ def _draw_distribution_panel(
     feature_names: Sequence[str],
     palette: Sequence[str],
 ) -> None:
-    """Paint Panel 2 (per-feature distributions).
-
-    ``derived_features`` is shape ``(n_windows, n_features)``. Each feature
-    is drawn as a Gaussian-KDE curve over its own y-row; a small dot
-    annotation marks the mean. Coloured from ``palette`` so the row colour
-    in Panel 2 matches the leaf colour in Panel 1.
-    """
     ax.set_axis_off()
 
     n_feat = derived_features.shape[1]
@@ -470,7 +410,6 @@ def _draw_correlation_panel(
     derived_features: np.ndarray,
     feature_names: Sequence[str],
 ) -> None:
-    """Paint Panel 3 (4x4 Pearson correlation heatmap)."""
     # Per-column standardise, then compute Pearson correlation.
     finite = np.all(np.isfinite(derived_features), axis=1)
     X = derived_features[finite]

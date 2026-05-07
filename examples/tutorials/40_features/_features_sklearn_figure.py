@@ -1,26 +1,4 @@
-"""Drawing helpers for the ``plot_42`` features-to-sklearn figure.
-
-Sibling module to ``plot_42_features_to_sklearn.py``. The leading underscore
-makes sphinx-gallery skip this file (the gallery's ``ignore_pattern``
-matches ``_*.py``), so the plotting plumbing stays out of the rendered
-tutorial; the tutorial imports the public
-:func:`draw_features_sklearn_figure` entry point.
-
-The figure has three panels arranged left-to-right and is shape-parallel
-to ``plot_12``'s baseline diagnostic so the two read together: features
-land on a logistic-regression Pipeline in plot_42 the same way log-power
-features land on the same pipeline in plot_12.
-
-1. Top-2 PCA scatter of the band-power + variance feature matrix, colored
-   by class and marker-shaped by cross-subject fold, with a
-   logistic-regression decision contour rendered by
-   :class:`sklearn.inspection.DecisionBoundaryDisplay`.
-2. Per-fold accuracy bars across leave-one-subject-out folds, with a
-   chance-level reference line and a mean +/- std shaded band.
-3. Row-normalized confusion matrix from the pooled held-out predictions,
-   rendered by :class:`sklearn.metrics.ConfusionMatrixDisplay` in a
-   sequential ``Blues`` colormap.
-"""
+"""Drawing helpers for the ``plot_42`` features-to-sklearn figure."""
 
 from __future__ import annotations
 
@@ -58,7 +36,6 @@ def _draw_pca_panel(
     fold_assignment: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Render the PCA scatter with a logistic-regression decision contour."""
     scaler = StandardScaler().fit(X_features)
     X_std = scaler.transform(X_features)
     pca = PCA(n_components=2, random_state=0).fit(X_std)
@@ -165,7 +142,6 @@ def _draw_accuracy_panel(
     chance_level: float,
     held_out_subjects: Sequence[str],
 ) -> None:
-    """Render the per-fold accuracy bars with a chance reference line."""
     accuracies = np.asarray(fold_accuracies, dtype=float)
     n_folds = accuracies.size
     positions = np.arange(n_folds)
@@ -242,7 +218,6 @@ def _draw_confusion_panel(
     y_pred_pooled: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Render the row-normalized confusion matrix in the Blues colormap."""
     y_true = np.asarray(y_true_pooled).ravel()
     y_pred = np.asarray(y_pred_pooled).ravel()
 

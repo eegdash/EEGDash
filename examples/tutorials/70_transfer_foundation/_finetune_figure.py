@@ -1,25 +1,4 @@
-"""Drawing helpers for the ``plot_73`` fine-tune comparison figure.
-
-Sibling module to ``plot_73_finetune_pretrained_model.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery, so the rendering plumbing stays out of the rendered tutorial;
-the tutorial imports the public :func:`draw_finetune_figure` entry
-point.
-
-The figure has three panels arranged left-to-right:
-
-1. Validation curves: per-epoch validation accuracy across seeds for
-   from-scratch, linear-probe, and full-finetune. Mean is solid, +/-1
-   std is shaded. The chance line sits underneath as a muted dashed
-   reference.
-2. Final-accuracy bars: the same three regimes plotted on the same
-   data axis as panel 1. Each bar is annotated with its absolute
-   accuracy and the gain over from-scratch.
-3. Parameter cost vs accuracy scatter: trainable parameter count on a
-   log x-axis vs final accuracy. The cheap-but-good zone (upper-left)
-   is annotated; from-scratch and full-finetune cluster at high
-   parameter counts, linear-probe sits to the left.
-"""
+"""Drawing helpers for the ``plot_73`` fine-tune comparison figure."""
 
 from __future__ import annotations
 
@@ -62,7 +41,6 @@ _REGIME_MARKERS = {
 
 
 def _curve_stats(curve: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Return per-epoch mean and std for a ``(n_seeds, n_epochs)`` array."""
     arr = np.asarray(curve, dtype=float)
     if arr.ndim != 2:
         raise ValueError(f"expected (n_seeds, n_epochs); got shape {arr.shape}")
@@ -76,7 +54,6 @@ def _draw_curves_panel(
     curves: dict[str, np.ndarray],
     chance_level: float,
 ) -> None:
-    """Render the per-epoch validation-accuracy curves with std bands."""
     epochs = np.asarray(epochs)
     # Set xlim before drawing the chance line so its right-edge text
     # annotation lands past the last training-epoch tick instead of
@@ -143,7 +120,6 @@ def _draw_bars_panel(
     final_accuracies: dict[str, float],
     chance_level: float,
 ) -> None:
-    """Render the final-accuracy bars on the same data axis as panel 1."""
     names = [n for n in _REGIME_ORDER if n in final_accuracies]
     accs = np.asarray([float(final_accuracies[n]) for n in names])
     positions = np.arange(len(names))
@@ -222,7 +198,6 @@ def _draw_scatter_panel(
     trainable_params: dict[str, int],
     final_accuracies: dict[str, float],
 ) -> None:
-    """Render the trainable-parameter vs final-accuracy scatter."""
     names = [
         n for n in _REGIME_ORDER if n in trainable_params and n in final_accuracies
     ]

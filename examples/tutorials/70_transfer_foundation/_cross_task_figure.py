@@ -1,32 +1,4 @@
-"""Drawing helpers for the ``plot_71`` cross-task transfer figure.
-
-Sibling module to ``plot_71_cross_task_transfer.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery (see ``docs/source/conf.py`` ``ignore_pattern``); the rendered
-tutorial only imports the public :func:`draw_cross_task_figure` entry
-point.
-
-The figure is a 1x3 plate that reads as the canonical "does pretraining
-help?" result on EEG:
-
-1. *Source -> target transfer matrix* (left). Rows = source pretext
-   tasks, columns = downstream targets. Cell value is the test-accuracy
-   delta versus a from-scratch baseline. Diverging colormap centred at
-   zero so blue cells are positive transfer and orange cells are
-   negative transfer (encoder collapse).
-2. *From-scratch vs pretrained-then-finetuned bars* (centre). One bar
-   pair per target task, with the gain Δacc annotated above each pair
-   and a chance-level dashed line drawn through the panel.
-3. *Encoder feature space, before vs after pretraining* (right). 2D
-   PCA of the encoder's penultimate-layer activations on target-task
-   windows, side-by-side for a from-scratch encoder and a
-   pretrained-then-finetuned encoder. Pretraining typically yields
-   tighter per-class clusters and larger between-class separation.
-
-Geometry, colours, and annotations follow the same conventions as
-``_baseline_diagnostic.py`` and ``_alpha_figure.py`` so the gallery
-reads as one consistent set of figures.
-"""
+"""Drawing helpers for the ``plot_71`` cross-task transfer figure."""
 
 from __future__ import annotations
 
@@ -54,7 +26,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color(EEGDASH_GRID)
@@ -69,14 +40,6 @@ def _draw_transfer_matrix(
     source_tasks: Sequence[str],
     target_tasks: Sequence[str],
 ) -> None:
-    """Source -> target accuracy-delta heatmap (vs from-scratch baseline).
-
-    Cells are coloured on a diverging ``RdBu`` palette centred at zero;
-    EEGDash blue tones indicate positive transfer and orange tones
-    indicate negative transfer. Every cell is annotated with the signed
-    delta in monospace so the reader can read the values without
-    interpolating the colour bar.
-    """
     matrix = np.asarray(transfer_matrix, dtype=float)
     vmax = float(np.max(np.abs(matrix))) if matrix.size else 1.0
     vmax = max(vmax, 0.02)
@@ -143,12 +106,6 @@ def _draw_bar_panel(
     finetune_acc: Sequence[float],
     chance_level: float,
 ) -> None:
-    """Bars: from-scratch (blue) vs pretrained-then-finetuned (orange).
-
-    One bar pair per target task. The signed gain Δacc is annotated
-    above each pair so the reader can read the transfer benefit at a
-    glance; a dashed chance line is drawn through the panel for context.
-    """
     scratch = np.asarray(scratch_acc, dtype=float)
     finetune = np.asarray(finetune_acc, dtype=float)
     n = scratch.size
@@ -251,14 +208,6 @@ def _draw_bar_panel(
 
 
 def _project_2d(features: np.ndarray) -> tuple[np.ndarray, tuple[float, float]]:
-    """Project ``(n, d)`` features to 2D via standardise + PCA.
-
-    Returns the 2D coordinates and the explained-variance fraction of
-    each component. PCA stays deterministic without the scikit-learn /
-    openTSNE dependency tax of t-SNE on a doc build, and on the
-    encoder's penultimate-layer activations a top-2 PCA already shows
-    cluster separation in line with the cross-task transfer story.
-    """
     feats = np.asarray(features, dtype=float)
     if feats.ndim == 1:
         feats = feats.reshape(-1, 1)
@@ -281,12 +230,6 @@ def _draw_embedding_panel(
     classes_target: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Side-by-side 2D PCA of penultimate-layer activations.
-
-    Left half = from-scratch encoder; right half = pretrained-then-
-    finetuned encoder. Same target-task windows feed both panels so the
-    reader can compare cluster separation directly.
-    """
     inner = gridspec_slot.subgridspec(1, 2, wspace=0.10)
     ax_scratch = fig.add_subplot(inner[0, 0])
     ax_finetune = fig.add_subplot(inner[0, 1])

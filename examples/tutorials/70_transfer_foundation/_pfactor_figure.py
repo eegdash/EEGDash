@@ -1,28 +1,4 @@
-"""Drawing helpers for the ``plot_72`` p-factor regression diagnostic.
-
-Sibling module to ``plot_72_subject_invariant_regression.py``. The leading
-underscore makes sphinx-gallery skip this file (the gallery's
-``ignore_pattern`` matches ``_*.py``), so the plotting plumbing stays out
-of the rendered tutorial; the tutorial imports the public
-:func:`draw_pfactor_figure` entry point.
-
-The figure has three panels arranged left-to-right and reads as a
-regression analogue of ``plot_12``'s classification diagnostic:
-
-1. **Predicted vs true scatter.** One marker per held-out subject (mean
-   prediction across that subject's windows). The diagonal ``y = x``
-   reference line is the only target a perfect model would hit; the
-   distance from the diagonal is the per-subject error. Pearson r,
-   Spearman rho, R^2, and MAE land in a corner annotation.
-2. **Per-subject signed residual.** A bar chart sorted by absolute
-   residual, colored by sign so over-prediction (orange) and
-   under-prediction (blue) read at a glance. The y-axis is
-   ``predicted - true`` so a positive bar means the model over-shot.
-3. **Prediction-error distribution.** Histogram of ``predicted - true``
-   across every held-out window with a Gaussian density overlay. The
-   mean and the std are annotated as vertical guides; the mean is the
-   regression bias and the std is the residual spread.
-"""
+"""Drawing helpers for the ``plot_72`` p-factor regression diagnostic."""
 
 from __future__ import annotations
 
@@ -50,13 +26,6 @@ def _aggregate_per_subject(
     y_pred: np.ndarray,
     subject_ids: Sequence[str],
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Reduce window-level vectors to one mean prediction per held-out subject.
-
-    The p-factor is a subject-level score: every window of a given
-    subject carries the same ``y_true``. So the only meaningful x-axis
-    point per subject is its single true score, and the only meaningful
-    y is the mean prediction across that subject's held-out windows.
-    """
     subjects = np.asarray(list(subject_ids))
     unique = list(dict.fromkeys(subjects.tolist()))  # preserves first-seen order
     yt_subj = np.empty(len(unique), dtype=float)
@@ -75,7 +44,6 @@ def _draw_pred_vs_true_panel(
     y_pred_subj: np.ndarray,
     metrics: dict,
 ) -> None:
-    """Render the predicted-vs-true scatter with a y=x reference."""
     lo = float(min(y_true_subj.min(), y_pred_subj.min()))
     hi = float(max(y_true_subj.max(), y_pred_subj.max()))
     pad = 0.10 * max(hi - lo, 1e-3)
@@ -159,7 +127,6 @@ def _draw_residual_panel(
     y_pred_subj: np.ndarray,
     subject_ids: Sequence[str],
 ) -> None:
-    """Render the per-subject signed-residual bar chart, sorted by |residual|."""
     residuals = y_pred_subj - y_true_subj
     order = np.argsort(np.abs(residuals))
     residuals = residuals[order]
@@ -231,7 +198,6 @@ def _draw_error_distribution_panel(
     y_true_window: np.ndarray,
     y_pred_window: np.ndarray,
 ) -> None:
-    """Render the window-level prediction-error histogram + Gaussian fit."""
     errors = (y_pred_window - y_true_window).astype(float)
     mu = float(np.mean(errors))
     sigma = float(np.std(errors, ddof=1)) if errors.size > 1 else 0.0
@@ -302,7 +268,6 @@ def _draw_error_distribution_panel(
 
 
 def _compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Compute Pearson r, Spearman rho, R^2, MAE on subject-level vectors."""
     if y_true.size < 2:
         return {
             "pearson_r": np.nan,

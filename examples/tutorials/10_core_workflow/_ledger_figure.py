@@ -1,20 +1,4 @@
-"""Drawing helpers for the ``plot_13`` "round-trip ledger" figure.
-
-Sibling module to ``plot_13_save_and_reuse_prepared_data.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the gallery,
-so the helper code stays out of the rendered tutorial; the tutorial imports
-the public ``draw_ledger_figure`` entry point.
-
-The figure has three panels:
-
-1. Grouped horizontal bars: write-time vs read-time per format, with the
-   on-disk size (MB) annotated to the right of each row.
-2. Residual heatmap: ``reloaded - original`` for one window, hard-clipped to
-   plus-or-minus ``1e-7`` in float32 units. Title carries ``np.allclose`` and
-   ``max|delta|``.
-3. Provenance text card: package versions, seed, and git short-SHA. Renders
-   with monospace font so the cache stays reusable next month.
-"""
+"""Drawing helpers for the ``plot_13`` "round-trip ledger" figure."""
 
 from __future__ import annotations
 
@@ -42,7 +26,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _draw_cost_bars(ax, format_records: Sequence[Mapping]) -> None:
-    """Render grouped horizontal bars for write-time and read-time per format."""
     n = len(format_records)
     y = np.arange(n)
     bar_h = 0.36
@@ -136,7 +119,6 @@ def _draw_cost_bars(ax, format_records: Sequence[Mapping]) -> None:
 
 
 def _draw_residual_heatmap(ax, residual_array: np.ndarray) -> None:
-    """Render the (n_channels, n_times) residual heatmap clipped to plus-or-minus 1e-7."""
     arr = np.asarray(residual_array, dtype=float)
     clip = 1.0e-7
     arr_clipped = np.clip(arr, -clip, clip)
@@ -195,7 +177,6 @@ def _draw_residual_heatmap(ax, residual_array: np.ndarray) -> None:
 
 
 def _format_provenance(provenance: Mapping[str, str]) -> str:
-    """Pretty-print the provenance dict as monospace ``key: value`` rows."""
     width = max(len(k) for k in provenance) if provenance else 0
     rows = []
     for k, v in provenance.items():
@@ -204,7 +185,6 @@ def _format_provenance(provenance: Mapping[str, str]) -> str:
 
 
 def _draw_provenance_card(ax, provenance: Mapping[str, str]) -> None:
-    """Render a monospace text block listing the cache provenance."""
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)

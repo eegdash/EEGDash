@@ -1,27 +1,4 @@
-"""Drawing helpers for the ``plot_21`` "auditory vs. visual P300" figure.
-
-Sibling module to ``plot_21_auditory_oddball.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery, so the
-rendering plumbing stays out of the rendered tutorial; the tutorial calls
-the public :func:`draw_auditory_figure` entry point.
-
-The figure is a 1x3 panel set:
-
-- Left: the deviant vs. standard ERP at Cz, with shaded SE bands and two
-  task windows (MMN ~150-250 ms and auditory P300 ~250-400 ms) overlaid
-  in distinct hues so readers see *which* component drives *which* window.
-- Center: a difference-wave (deviant - standard) topomap rendered at the
-  P300 peak latency, on a divergent ``RdBu_r`` colormap. The auditory
-  P300 sits over central-parietal sites (CPz, Cz) with frontal-pole
-  inversion that is the textbook P3a/P3b signature (Polich 2007).
-- Right: a tabular "auditory vs. visual" comparison card with live
-  numbers from this tutorial against the visual P300 reference values
-  (peak latency ~350 ms over Pz, 5-10 uV) drawn from ``plot_20``.
-
-The single deliverable is the matching of paradigm structure (rare
-deviant inside frequent standard) against the modality difference
-(latency, topography, amplitude) that motivates this tutorial.
-"""
+"""Drawing helpers for the ``plot_21`` "auditory vs. visual P300" figure."""
 
 from __future__ import annotations
 
@@ -76,7 +53,6 @@ def _draw_erp_panel(
     n_deviants: int,
     n_standards: int,
 ) -> None:
-    """ERP at the headline channel, with deviant in orange, standard in blue."""
     # MMN window in muted purple, P300 window in soft orange. Distinct hues
     # so the two task intervals are visually separable on the same panel.
     ax.axvspan(
@@ -242,7 +218,6 @@ def _draw_topomap_panel(
     peak_time_ms: float,
     fig: plt.Figure,
 ) -> None:
-    """Render the (deviant - standard) difference wave at the P300 peak."""
     # Symmetric color scale around zero so positive (red) and negative
     # (blue) poles read at a glance.
     vlim = float(np.percentile(np.abs(diff_uv_at_peak), 98))
@@ -285,15 +260,6 @@ def _draw_comparison_panel(
     n_deviants: int,
     n_standards: int,
 ) -> None:
-    """Three-column comparison card: label | auditory (live) | visual (ref).
-
-    The card sits inside one rounded background box. Each row carries a
-    label on the left, the live auditory number in eegdash-orange in the
-    center, and the visual P300 reference value (from plot_20 / Polich
-    2007) in eegdash-blue-dark on the right. Separators are thin
-    horizontal rules so the eye can scan latency / topography / amplitude
-    in a single down-sweep.
-    """
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_axis_off()

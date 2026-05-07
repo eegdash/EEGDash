@@ -1,16 +1,4 @@
-"""Drawing helpers for the ``plot_10`` "EEGPrep before/after" diagnostic.
-
-Sibling module to ``plot_10_preprocess_and_window.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery, so the rendering plumbing stays out of the rendered tutorial;
-the tutorial imports the public ``draw_eegprep_diagnostic`` entry point.
-
-The figure is a 2x2 panel that pairs the time-domain heatmap before
-EEGPrep with the same slice afterwards (top row, identical color limits
-so the burst attenuation reads at a glance), then a PSD overlay (bottom
-left) and a stage-bar diagram (bottom right) summarising what each
-stage in :class:`braindecode.preprocessing.EEGPrep` did to the recording.
-"""
+"""Drawing helpers for the ``plot_10`` "EEGPrep before/after" diagnostic."""
 
 from __future__ import annotations
 
@@ -42,12 +30,6 @@ from eegdash.viz import (
 def _slice_data(
     raw: mne.io.BaseRaw, *, t_start: float, duration: float
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Return ``(data, times, ch_names)`` for a fixed window of EEG channels.
-
-    Picks EEG channels only and crops to ``[t_start, t_start + duration]``.
-    The function never modifies ``raw``: it works on a temporary copy so
-    the caller can pass either the pre- or post-EEGPrep object freely.
-    """
     sfreq = raw.info["sfreq"]
     t_end = min(t_start + duration, raw.times[-1])
     sl = raw.copy().pick("eeg")
@@ -60,7 +42,6 @@ def _slice_data(
 def _shared_channels(
     names_before: Sequence[str], names_after: Sequence[str]
 ) -> list[str]:
-    """Channel names that survive EEGPrep, in the original order."""
     after_set = set(names_after)
     return [n for n in names_before if n in after_set]
 
@@ -76,7 +57,6 @@ def _draw_heatmap(
     drop_mask: np.ndarray | None = None,
     n_yticks: int = 6,
 ) -> None:
-    """Render one time-domain channel-by-time heatmap with eegdash styling."""
     n_ch = data_uv.shape[0]
     extent = (times[0], times[-1], n_ch, 0)
     ax.imshow(
@@ -123,7 +103,6 @@ def _draw_psd_panel(
     band: tuple[float, float] = (1.0, 40.0),
     line_freq: float = 50.0,
 ) -> None:
-    """Welch PSD overlay (mean across EEG channels) before vs after EEGPrep."""
     psd_pre = (
         raw_before.copy()
         .pick("eeg")
@@ -201,10 +180,6 @@ def _draw_stage_bars(
     *,
     title: str,
 ) -> None:
-    """Render the EEGPrep stage list as a vertical stack of named status bars.
-
-    Each entry of ``stages`` is ``(stage_name, status_line, color)``.
-    """
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_axis_off()

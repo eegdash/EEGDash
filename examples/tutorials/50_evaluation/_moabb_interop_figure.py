@@ -1,25 +1,4 @@
-"""Drawing helpers for the ``plot_55`` EEGDash + MOABB interop figure.
-
-Sibling module to ``plot_55_moabb_interop.py``. The leading underscore tells
-sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public :func:`draw_moabb_interop_figure` entry point.
-
-The figure is a one-row, three-panel layout that mirrors the storyline of
-the tutorial:
-
-1. *Per-subject MOABB benchmark bars*: one bar per subject for the primary
-   pipeline, ordered by subject id, with a mean band and a chance-line
-   reference. The dataset name and paradigm sit in the panel title.
-2. *Pipeline-vs-pipeline paired bars*: per-subject paired bars for the two
-   pipelines (Pipeline A blue, Pipeline B orange). Annotated paired delta
-   above each subject; mean delta printed at the top right.
-3. *Integration-flow diagram*: a four-stage flow built from
-   :class:`matplotlib.patches.FancyBboxPatch` nodes and
-   :class:`matplotlib.patches.FancyArrowPatch` arrows, showing the data
-   path ``EEGDashDataset (BIDS) -> mne.Raw -> MOABB Paradigm.get_data()
-   -> sklearn pipeline -> CrossSessionEvaluation results``.
-"""
+"""Drawing helpers for the ``plot_55`` EEGDash + MOABB interop figure."""
 
 from __future__ import annotations
 
@@ -50,12 +29,6 @@ def _per_subject_table(
     pipeline_a: str,
     pipeline_b: str | None,
 ) -> tuple[np.ndarray, np.ndarray | None, list[str]]:
-    """Pivot ``per_subject_results`` to ``(scores_a, scores_b, subjects)``.
-
-    ``per_subject_results`` is the long-format frame with columns
-    ``subject``, ``pipeline``, ``score``. The pivot keeps subjects in
-    sorted order so the two panels share a left-to-right reading axis.
-    """
     df = per_subject_results.copy()
     df["subject"] = df["subject"].astype(str)
     pivot = df.pivot_table(
@@ -86,7 +59,6 @@ def _draw_per_subject_bars(
     paradigm_name: str,
     chance_level: float,
 ) -> None:
-    """Render the per-subject MOABB benchmark bars panel."""
     n = scores.size
     positions = np.arange(n)
     mean_acc = float(np.mean(scores))
@@ -178,7 +150,6 @@ def _draw_pipeline_comparison(
     pipeline_names: Sequence[str],
     chance_level: float,
 ) -> None:
-    """Render paired per-subject bars for two pipelines."""
     n = scores_a.size
     positions = np.arange(n)
     bar_w = 0.40
@@ -286,11 +257,6 @@ def _draw_node(
     sub: str,
     foot: str,
 ) -> tuple[float, float]:
-    """Render one rounded node and return its (x_left_anchor, x_right_anchor).
-
-    The anchors live at the vertical midline of the box so subsequent
-    arrows can be drawn between adjacent nodes without overlap.
-    """
     ax.add_patch(
         FancyBboxPatch(
             (x, y),
@@ -384,7 +350,6 @@ def _draw_integration_diagram(
     n_subjects: int,
     n_pipelines: int,
 ) -> None:
-    """Render the EEGDash + MOABB integration-flow diagram."""
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_aspect("auto")

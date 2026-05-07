@@ -1,27 +1,4 @@
-"""Drawing helpers for the ``plot_52`` cross-session drift figure.
-
-Sibling module to ``plot_52_cross_session_evaluation.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the gallery,
-so the helpers stay out of the rendered tutorial; the tutorial imports the
-public ``draw_cross_session_figure`` entry point.
-
-The figure is a 1 x 3 grid that quantifies *within-subject between-session*
-drift on a fixed cohort:
-
-* col 1 -- session x session transfer matrix (mean across subjects). Rows
-  index the *train* session, columns index the *test* session. Cell shading
-  encodes accuracy on a sequential ``Blues`` ramp; the diagonal carries the
-  highest values (within-session ceiling) and the off-diagonal carries the
-  lower values (cross-session generalisation under calibration drift).
-* col 2 -- paired bars per subject. ``EEGDASH_BLUE`` for within-session,
-  ``EEGDASH_ORANGE`` for between-session. The visible gap is the subject's
-  drift magnitude; the chance line ties both bars to the majority baseline.
-* col 3 -- distribution of ``(within - between)`` across subjects. The right
-  tail picks out subjects whose decoder collapses across days; the left tail
-  marks subjects whose calibration transfers cleanly.
-
-Same data underneath all three panels; only the lens differs.
-"""
+"""Drawing helpers for the ``plot_52`` cross-session drift figure."""
 
 from __future__ import annotations
 
@@ -55,12 +32,6 @@ def _draw_transfer_matrix(
     *,
     chance: float,
 ) -> ScalarMappable:
-    """Render the per-cell accuracy heatmap.
-
-    ``matrix[r, c]`` is the mean test accuracy when training on session ``r``
-    and testing on session ``c`` (averaged across subjects). The diagonal is
-    the within-session ceiling; the off-diagonal is the cross-session score.
-    """
     n = int(matrix.shape[0])
     # Anchor the colormap at chance so the diagonal stands out and the
     # off-diagonal cells stay readable when accuracy hovers near 0.5.
@@ -145,7 +116,6 @@ def _draw_paired_bars(
     between: np.ndarray,
     chance: float,
 ) -> None:
-    """Paired bars per subject: blue = within, orange = between."""
     n = len(subject_ids)
     x = np.arange(n)
     bar_w = 0.36
@@ -267,13 +237,6 @@ def _draw_drift_histogram(
     drift: np.ndarray,
     subject_ids: Sequence[str],
 ) -> None:
-    """Histogram of ``(within - between)`` across subjects.
-
-    Bars are tinted on a diverging scheme: positive drift (typical) in
-    EEGDash orange because that is the calibration-drift story; negative
-    drift (between > within, rare) in EEGDash blue because the decoder
-    transferred *better* to a held-out session than within-session.
-    """
     n = len(drift)
     if n == 0:
         ax.set_axis_off()

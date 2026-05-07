@@ -1,37 +1,4 @@
-"""Drawing helpers for the ``plot_54`` paired-pipelines figure.
-
-Sibling module to ``plot_54_compare_two_pipelines.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery (see ``docs/source/conf.py`` ``ignore_pattern``); the rendered
-tutorial only imports the public :func:`draw_compare_pipelines_figure`
-entry point.
-
-The figure is a 1x3 plate that walks the reader from the per-subject
-score pairs to the inferential summary:
-
-1. *Per-subject paired accuracy* (left) -- one paired bar per held-out
-   subject (Pipeline A blue, Pipeline B orange), ordered by Pipeline A
-   accuracy. The chance line crosses the panel; per-subject deltas are
-   annotated above the orange bar so the reader can see at a glance
-   which subjects A wins, ties, or loses.
-2. *Paired-difference distribution* (centre) -- histogram of
-   ``acc_A - acc_B`` per subject, with a black reference line at zero
-   (no difference) and an :data:`~eegdash.viz.EEGDASH_ORANGE` line at
-   the observed mean difference. The 95 % CI from the SE of the mean
-   is shaded; the panel header carries the Wilcoxon p-value, Cohen's
-   d, and the CI in plain text so the inferential summary lives next
-   to the histogram.
-3. *Cumulative wins for Pipeline A* (right) -- step plot of the count
-   of subjects on which A beats B as the subjects are scanned in the
-   left-panel order. The dashed diagonal climbs to the unanimous-wins
-   bound (one win per subject); the flat line is the no-wins bound.
-   The final win count and the win rate are written into the panel.
-
-The geometry, colours, and annotations follow the same conventions as
-the other ``_*_figure.py`` siblings (``_baseline_diagnostic.py``,
-``_alpha_figure.py``) so the rendered gallery reads as one consistent
-set of figures.
-"""
+"""Drawing helpers for the ``plot_54`` paired-pipelines figure."""
 
 from __future__ import annotations
 
@@ -60,12 +27,6 @@ def _draw_paired_bars_panel(
     pipeline_names: Sequence[str],
     chance_level: float,
 ) -> np.ndarray:
-    """Render the per-subject paired bars and return the sort order.
-
-    Subjects are sorted by Pipeline A accuracy ascending; the same
-    order is used by the cumulative-wins panel so the two panels share
-    a left-to-right reading axis.
-    """
     a_scores = np.asarray(pipeline_a_scores, dtype=float)
     b_scores = np.asarray(pipeline_b_scores, dtype=float)
     order = np.argsort(a_scores, kind="stable")
@@ -173,11 +134,6 @@ def _draw_difference_panel(
     cohens_d: float,
     pipeline_names: Sequence[str],
 ) -> tuple[float, float, float]:
-    """Render the paired-difference histogram with effect-size readout.
-
-    Returns ``(mean_diff, ci_lo, ci_hi)`` so the caller can wire the
-    same numbers into the figure subtitle.
-    """
     diffs = np.asarray(deltas, dtype=float)
     n = diffs.size
     mean_diff = float(diffs.mean())
@@ -287,7 +243,6 @@ def _draw_cumulative_wins_panel(
     sort_order: np.ndarray,
     pipeline_names: Sequence[str],
 ) -> int:
-    """Render the cumulative-wins step plot using the bar-panel order."""
     a_sorted = np.asarray(pipeline_a_scores, dtype=float)[sort_order]
     b_sorted = np.asarray(pipeline_b_scores, dtype=float)[sort_order]
     n = a_sorted.size

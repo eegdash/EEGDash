@@ -1,22 +1,4 @@
-"""Drawing helpers for the ``plot_51`` cross-subject evaluation figure.
-
-Sibling module to ``plot_51_cross_subject_evaluation.py``. The leading
-underscore makes sphinx-gallery skip this file when building the
-gallery, so the matplotlib geometry stays out of the rendered tutorial;
-the tutorial imports the public :func:`draw_cross_subject_figure` entry
-point.
-
-The figure is a one-row, three-panel layout:
-
-1. Subject x subject train-test transfer matrix. Rows index the source
-   subject (the model was trained including this subject in training);
-   columns index the held-out test subject. The within-subject diagonal
-   is masked because cross-subject generalisation is the point.
-2. LOSO per-subject accuracy bars, ordered by accuracy with a chance
-   reference line and a mean +/- std band.
-3. Pooled :class:`sklearn.metrics.ConfusionMatrixDisplay` over every
-   LOSO held-out prediction in a sequential ``Blues`` colormap.
-"""
+"""Drawing helpers for the ``plot_51`` cross-subject evaluation figure."""
 
 from __future__ import annotations
 
@@ -43,14 +25,6 @@ def _draw_transfer_matrix(
     transfer_matrix: np.ndarray,
     subject_ids: Sequence[str],
 ) -> None:
-    """Render the subject x subject balanced-accuracy transfer heatmap.
-
-    ``transfer_matrix[i, j]`` carries the balanced accuracy of a model
-    trained on a fold containing source subject ``i`` and evaluated on
-    held-out subject ``j``. The diagonal (``i == j``) is masked because
-    a within-subject score is not what cross-subject generalisation
-    measures.
-    """
     matrix = np.asarray(transfer_matrix, dtype=float)
     n = matrix.shape[0]
     masked = np.ma.array(matrix, mask=np.eye(n, dtype=bool))
@@ -121,11 +95,6 @@ def _draw_loso_bars(
     held_out_subjects: Sequence[str],
     chance_level: float,
 ) -> None:
-    """Render LOSO per-subject bars ordered by accuracy.
-
-    Sorted ascending so the worst-generalising subject sits at the left
-    and the headline mean +/- std band carries the eye across.
-    """
     accuracies = np.asarray(fold_accuracies, dtype=float)
     order = np.argsort(accuracies)
     sorted_acc = accuracies[order]
@@ -208,7 +177,6 @@ def _draw_pooled_confusion(
     y_pred_pooled: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Render the pooled LOSO confusion matrix (row-normalised)."""
     y_true = np.asarray(y_true_pooled).ravel()
     y_pred = np.asarray(y_pred_pooled).ravel()
 

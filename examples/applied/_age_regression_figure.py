@@ -1,23 +1,4 @@
-"""Drawing helpers for the ``project_age_regression`` diagnostic.
-
-Sibling module to ``project_age_regression.py``. The leading underscore
-makes sphinx-gallery skip this file (the gallery's ``ignore_pattern``
-matches ``_*.py``), so the plotting plumbing stays out of the rendered
-applied case study; the script imports the public
-:func:`draw_age_regression_figure` entry point.
-
-The figure has three panels, left to right, and reads as a regression
-diagnostic plate for the held-out cohort:
-
-1. Predicted vs true age scatter, one marker per held-out subject. The
-   ``y = x`` reference line is the only target a perfect model would
-   hit. Pearson r, Spearman rho, R^2, and MAE land in a corner box.
-2. Per-subject signed residual bar chart, sorted by absolute residual
-   so the worst miss sits on the right. Bars colored by sign:
-   over-prediction in orange, under-prediction in blue.
-3. Prediction-error distribution histogram with a Gaussian density
-   overlay; bias (mean) and spread (std) are annotated as guides.
-"""
+"""Drawing helpers for the ``project_age_regression`` diagnostic."""
 
 from __future__ import annotations
 
@@ -46,13 +27,6 @@ def _aggregate_per_subject(
     subject_ids: Sequence[str],
     sex_or_fold: Sequence[str] | None,
 ) -> tuple[np.ndarray, np.ndarray, list[str], list[str] | None]:
-    """Reduce window-level vectors to one mean prediction per held-out subject.
-
-    Age is a subject-level constant: every window of a given subject
-    carries the same ``y_true``. The only meaningful x point per subject
-    is its single true age, and the only meaningful y is the mean
-    prediction across that subject's held-out windows.
-    """
     subjects = np.asarray(list(subject_ids))
     unique = list(dict.fromkeys(subjects.tolist()))
     yt_subj = np.empty(len(unique), dtype=float)
@@ -72,7 +46,6 @@ def _aggregate_per_subject(
 
 
 def _color_by_group(groups: Sequence[str]) -> tuple[list[str], dict[str, str]]:
-    """Map a small categorical column to two-tone palette tokens."""
     unique = list(dict.fromkeys(groups))
     palette = [EEGDASH_BLUE, EEGDASH_ORANGE, EEGDASH_BLUE_DARK, EEGDASH_MUTED]
     mapping = {key: palette[i % len(palette)] for i, key in enumerate(unique)}
@@ -87,7 +60,6 @@ def _draw_pred_vs_true_panel(
     metrics: dict,
     sex_or_fold_subj: list[str] | None,
 ) -> None:
-    """Render the predicted-vs-true scatter with a y=x reference."""
     lo = float(min(y_true_subj.min(), y_pred_subj.min()))
     hi = float(max(y_true_subj.max(), y_pred_subj.max()))
     pad = 0.10 * max(hi - lo, 1e-3)
@@ -183,7 +155,6 @@ def _draw_residual_panel(
     y_pred_subj: np.ndarray,
     subject_ids: Sequence[str],
 ) -> None:
-    """Render the per-subject signed-residual bar chart, sorted by |residual|."""
     residuals = y_pred_subj - y_true_subj
     order = np.argsort(np.abs(residuals))
     residuals = residuals[order]
@@ -253,7 +224,6 @@ def _draw_error_distribution_panel(
     y_true_window: np.ndarray,
     y_pred_window: np.ndarray,
 ) -> None:
-    """Render the window-level prediction-error histogram + Gaussian fit."""
     errors = (y_pred_window - y_true_window).astype(float)
     mu = float(np.mean(errors))
     sigma = float(np.std(errors, ddof=1)) if errors.size > 1 else 0.0
@@ -308,7 +278,6 @@ def _draw_error_distribution_panel(
 
 
 def _compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Compute Pearson r, Spearman rho, R^2, MAE on subject-level vectors."""
     if y_true.size < 2:
         return {
             "pearson_r": float("nan"),

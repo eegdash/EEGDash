@@ -1,27 +1,4 @@
-"""Drawing helpers for the ``plot_53`` learning-curves figure.
-
-Sibling module to ``plot_53_learning_curves.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public ``draw_learning_curves_figure`` entry point.
-
-The figure is a 1x2 plate that reads like a textbook learning curve:
-
-1. *Training-size x accuracy curve* (left) -- balanced accuracy on the
-   training fold (dashed blue) and on the held-out validation fold
-   (solid orange) as the training set grows. ``+/- 1 std`` bands across
-   ``n_perms`` repeats sit behind each curve. A horizontal chance line
-   anchors the y-axis. Two callouts mark the saturation point where val
-   accuracy reaches 90% of its plateau, and the plateau itself.
-2. *Train-minus-val gap* (right) -- the same x-axis, with
-   ``train_acc - val_acc`` on the y-axis. A widening gap is overfitting;
-   a stable gap is a healthy decoder. The bias-variance trade-off lives
-   here.
-
-Geometry, colours, and annotation conventions follow the rest of the
-gallery (see ``_alpha_figure.py`` and ``_p300_figure.py``) so the plate
-sits visually next to its 50-track siblings.
-"""
+"""Drawing helpers for the ``plot_53`` learning-curves figure."""
 
 from __future__ import annotations
 
@@ -49,7 +26,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
     for spine in ("left", "bottom"):
@@ -71,7 +47,6 @@ def _draw_curve_panel(
     chance_level: float,
     n_perms: int,
 ) -> None:
-    """Train + val accuracy versus training-set size (log x)."""
     xs = np.asarray(train_sizes, dtype=float)
     # Train curve: dashed blue.
     ax.plot(
@@ -207,7 +182,6 @@ def _draw_gap_panel(
     train_std: np.ndarray,
     val_std: np.ndarray,
 ) -> None:
-    """``train_acc - val_acc`` versus training-set size (log x)."""
     xs = np.asarray(train_sizes, dtype=float)
     gap_mean = train_mean - val_mean
     # Std of a difference with independent permutations: sqrt(var_a + var_b).

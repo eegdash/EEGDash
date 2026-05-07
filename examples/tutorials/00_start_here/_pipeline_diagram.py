@@ -1,10 +1,4 @@
-"""Drawing helpers for the ``plot_02`` "Pipeline at a glance" figure.
-
-Sibling module to ``plot_02_dataset_to_dataloader.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery, so the helpers stay out of the rendered tutorial; the tutorial
-imports the public ``draw_pipeline`` entry point.
-"""
+"""Drawing helpers for the ``plot_02`` "Pipeline at a glance" figure."""
 
 from __future__ import annotations
 

@@ -1,30 +1,4 @@
-"""Drawing helpers for the ``project_p300_transfer`` applied case study.
-
-Sibling module to ``project_p300_transfer.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered case study
-only imports the public :func:`draw_p300_transfer_figure` entry point.
-
-The figure is a 1x3 plate that reads as a domain-adaptation result on
-two oddball EEG cohorts:
-
-1. *Source-vs-target accuracy bars* (left). Three conditions side by
-   side: ``naive`` (encoder trained on source, evaluated on target with
-   no alignment), ``AS-MMD`` (same encoder with adversarial-style
-   maximum mean discrepancy), and ``oracle`` (target-trained ceiling).
-   The AS-MMD gain over naive is annotated above the pair.
-2. *Feature-space comparison via PCA* (centre). Penultimate-layer
-   activations of source and target windows projected to 2D before and
-   after AS-MMD alignment. Domains plotted in different colours so the
-   reader can see the post-alignment overlap.
-3. *ERP overlay at Pz* (right). Source vs target target-minus-standard
-   waveforms before and after alignment, with shaded standard-error
-   bands. Demonstrates the alignment does not destroy the P3 component.
-
-Geometry, colours, and annotations follow the same conventions as
-``_cross_task_figure.py`` and ``_p300_figure.py`` so the gallery reads
-as one consistent set of figures.
-"""
+"""Drawing helpers for the ``project_p300_transfer`` applied case study."""
 
 from __future__ import annotations
 
@@ -52,7 +26,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color(EEGDASH_GRID)
@@ -66,12 +39,6 @@ def _draw_accuracy_panel(
     accuracies: dict,
     chance_level: float,
 ) -> None:
-    """Bars for naive, AS-MMD, and oracle target-set accuracy.
-
-    The AS-MMD gain over naive is annotated above the bar pair. The
-    oracle bar is drawn in muted ink so the reader registers it as a
-    ceiling, not a competitor.
-    """
     naive = float(accuracies.get("naive", 0.0))
     mmd = float(accuracies.get("mmd", 0.0))
     oracle = float(accuracies.get("oracle", 0.0))
@@ -186,14 +153,6 @@ def _draw_accuracy_panel(
 
 
 def _project_2d(features: np.ndarray) -> tuple[np.ndarray, tuple[float, float]]:
-    """Project ``(n, d)`` features to 2D via standardise + PCA.
-
-    Returns the 2D coordinates and the explained-variance fraction of
-    each component. PCA stays deterministic without the openTSNE
-    dependency tax of t-SNE on a doc build, and on penultimate-layer
-    activations a top-2 PCA already shows enough cluster structure to
-    read domain mixing at a glance.
-    """
     feats = np.asarray(features, dtype=float)
     if feats.ndim == 1:
         feats = feats.reshape(-1, 1)
@@ -212,13 +171,6 @@ def _draw_embedding_panel(
     *,
     embeddings: dict,
 ) -> None:
-    """Side-by-side 2D PCA of source and target activations.
-
-    Left half = before alignment (naive encoder); right half = after
-    AS-MMD alignment. Source points blue, target points orange. After
-    alignment the two clouds should overlap more, evidence that the
-    encoder pulled cross-domain features into a shared subspace.
-    """
     inner = gridspec_slot.subgridspec(1, 2, wspace=0.10)
     ax_before = fig.add_subplot(inner[0, 0])
     ax_after = fig.add_subplot(inner[0, 1])
@@ -318,17 +270,6 @@ def _draw_erp_panel(
     erp: dict,
     channel_label: str,
 ) -> None:
-    """Source-target ERP overlay at the centro-parietal anchor channel.
-
-    Plots target-minus-standard difference waveforms for source (blue)
-    and target (orange) on the held-out test windows. Source and
-    target use the same epoch grid so the two curves can sit on the
-    same axes; SE bands carry the per-condition trial-count
-    uncertainty. The reader checks two things at once: (i) both
-    cohorts carry the P3 bump in the canonical 300-450 ms window, and
-    (ii) the cross-cohort amplitude difference is the kind of gap an
-    AS-MMD encoder can plausibly absorb.
-    """
     times_ms = np.asarray(erp["times_ms"], dtype=float)
     src_curve = np.asarray(
         erp.get("source_after", erp.get("source_before")), dtype=float

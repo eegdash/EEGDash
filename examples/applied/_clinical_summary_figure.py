@@ -1,20 +1,4 @@
-"""Drawing helpers for the clinical-dataset-summary applied case study.
-
-Sibling module to ``project_clinical_dataset_summary.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the gallery,
-so the helper code stays out of the rendered tutorial; the tutorial imports
-the public ``draw_clinical_summary_figure`` entry point.
-
-Three panels:
-
-1. Subjects-per-condition horizontal bar chart, color-coded by diagnostic
-   group from the participants.tsv ``Group`` field.
-2. Per-condition age histogram drawn with the EEGDash palette so the
-   distributions are easy to read against each other.
-3. A four-cell metadata card with the headline numbers a project plan
-   needs at hand: n_subjects, n_recordings, mean recording duration,
-   n_channels.
-"""
+"""Drawing helpers for the clinical-dataset-summary applied case study."""
 
 from __future__ import annotations
 
@@ -64,7 +48,6 @@ def _color_for(group: str) -> str:
 
 
 def _draw_condition_bars(ax, condition_counts: Mapping[str, int]) -> None:
-    """Render horizontal bars of subjects-per-condition, color-coded."""
     items = sorted(condition_counts.items(), key=lambda kv: kv[1], reverse=True)
     names = [k for k, _ in items]
     counts = np.array([v for _, v in items], dtype=float)
@@ -121,7 +104,6 @@ def _draw_age_histogram(
     ages_by_condition: Mapping[str, Sequence[float]],
     bins: int = 12,
 ) -> None:
-    """Stacked age histogram, one color band per condition."""
     conditions = list(ages_by_condition.keys())
     if not conditions:
         ax.text(0.5, 0.5, "no age data", ha="center", va="center", color=EEGDASH_MUTED)
@@ -198,7 +180,6 @@ def _format_duration_seconds(seconds: float) -> str:
 
 
 def _draw_metadata_card(ax, summary_metrics: Mapping[str, float]) -> None:
-    """Render a 2x2 grid of headline numbers inside a soft-bordered panel."""
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)

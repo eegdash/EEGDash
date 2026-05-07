@@ -1,27 +1,4 @@
-"""Drawing helpers for the ``plot_20`` visual-P300 oddball plate.
-
-Sibling module to ``plot_20_visual_p300_oddball.py``. The leading
-underscore tells sphinx-gallery to skip this file when building the
-gallery, so the rendering plumbing stays out of the rendered tutorial;
-the tutorial imports the public ``draw_p300_figure`` entry point.
-
-The figure is a 2x2 plate that walks ERP -> topography -> decoder ->
-error pattern:
-
-1. *ERP at Pz* (top-left): target vs standard waveforms with shaded SE
-   bands and the P300 search window highlighted.
-2. *Topomap of the difference wave* (top-right; target - standard) at
-   the peak latency, on the cleaned :class:`mne.Info`.
-3. *Per-fold cross-subject accuracy* (bottom-left) of a logistic
-   regression decoder trained on the centro-parietal P300
-   mean-amplitude feature, with the chance level drawn in.
-4. *Pooled LOSO confusion matrix* (bottom-right) rendered with
-   :class:`sklearn.metrics.ConfusionMatrixDisplay`, normalised by row
-   so the off-diagonals read as recall errors per true class.
-
-The 4th panel is optional: if pooled ``y_true``/``y_pred`` are not
-supplied, the helper falls back to the original 1x3 layout.
-"""
+"""Drawing helpers for the ``plot_20`` visual-P300 oddball plate."""
 
 from __future__ import annotations
 
@@ -50,7 +27,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color(EEGDASH_GRID)
@@ -73,7 +49,6 @@ def _draw_erp_panel(
     n_targets: int,
     n_standards: int,
 ) -> None:
-    """ERP butterfly at the centro-parietal anchor channel."""
     p300_lo, p300_hi = p300_window_ms
 
     # Shaded P300 search window first so it sits behind the curves.
@@ -193,7 +168,6 @@ def _draw_topomap_panel(
     info: mne.Info,
     peak_time_ms: float,
 ) -> None:
-    """Scalp topomap of (target - standard) at the P300 peak."""
     vmax = float(np.max(np.abs(diff_at_peak)))
     vmax = max(vmax, 1e-9)
 
@@ -238,7 +212,6 @@ def _draw_accuracy_panel(
     fold_accuracies: Sequence[float],
     chance_level: float,
 ) -> None:
-    """Per-fold leave-one-subject-out accuracy bars."""
     accs = np.asarray(list(fold_accuracies), dtype=float)
     labels = [f"held-out\nsub-{s}" for s in fold_subjects]
     x = np.arange(len(accs))
@@ -347,7 +320,6 @@ def _draw_confusion_panel(
     class_names: tuple[str, str],
     balanced_acc: float,
 ) -> None:
-    """Pooled LOSO confusion matrix rendered via sklearn."""
     y_true = np.asarray(y_true)
     y_pred = np.asarray(y_pred)
     n_test = int(y_true.shape[0])

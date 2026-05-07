@@ -1,29 +1,4 @@
-"""Drawing helpers for the ``project_sex_classification`` figure.
-
-Sibling module to ``project_sex_classification.py``. The leading underscore
-makes sphinx-gallery skip this file (the gallery's ``ignore_pattern`` matches
-``_*.py``), so the plotting plumbing stays out of the rendered project; the
-project imports the public :func:`draw_sex_classification_figure` entry
-point.
-
-The figure has three panels arranged left-to-right and is shape-parallel to
-``plot_12``'s baseline diagnostic and ``plot_42``'s features-to-sklearn
-diagnostic so the three case studies read together. The panels lean on
-scikit-learn's display helpers (Pedregosa et al. 2011) so the plumbing is
-the canonical sklearn stack:
-
-1. Top-2 PCA scatter of the feature matrix, colored by sex (F = blue,
-   M = orange) and marker-shaped by cross-subject fold, with a logistic
-   regression decision boundary rendered by
-   :class:`sklearn.inspection.DecisionBoundaryDisplay`.
-2. ROC curve per fold and pooled, rendered by
-   :class:`sklearn.metrics.RocCurveDisplay`. Per-fold curves are drawn in a
-   muted shade; the pooled curve is the dark ink line on top. The legend
-   reports per-fold AUC and the mean.
-3. Pooled row-normalized confusion matrix from the cross-subject loop,
-   rendered by :class:`sklearn.metrics.ConfusionMatrixDisplay` in a
-   sequential ``Blues`` colormap (colorblind-safe).
-"""
+"""Drawing helpers for the ``project_sex_classification`` figure."""
 
 from __future__ import annotations
 
@@ -63,7 +38,6 @@ def _draw_pca_panel(
     estimator,
     class_names: Sequence[str],
 ) -> None:
-    """Render the PCA scatter with a logistic-regression decision contour."""
     # ``DecisionBoundaryDisplay`` is sklearn's canonical helper for this
     # exact job. The display draws first; the fold-shaped scatter overlay
     # is layered on top so the markers stay readable.
@@ -160,13 +134,6 @@ def _draw_roc_panel(
     fold_assignment: np.ndarray,
     fold_aucs: Sequence[float],
 ) -> None:
-    """Render the per-fold ROC curves plus the pooled curve.
-
-    Per-fold curves use :class:`sklearn.metrics.RocCurveDisplay` with a
-    muted color so the eye lands on the pooled ink-colored curve drawn on
-    top. ``RocCurveDisplay`` appends ``(AUC = X)`` to the legend label
-    itself, so ``name=...`` is the bare fold tag.
-    """
     fold_aucs_arr = np.asarray(fold_aucs, dtype=float)
 
     # Per-fold curves first so they sit underneath the pooled curve. The
@@ -243,7 +210,6 @@ def _draw_confusion_panel(
     y_pred_pooled: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Render the row-normalized confusion matrix in the Blues colormap."""
     y_true = np.asarray(y_true_pooled).ravel()
     y_pred = np.asarray(y_pred_pooled).ravel()
 

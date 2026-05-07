@@ -1,31 +1,4 @@
-"""Drawing helpers for the ``plot_30`` eyes-open vs eyes-closed plate.
-
-Sibling module to ``plot_30_eyes_open_closed.py``. The leading underscore
-tells sphinx-gallery to skip this file when building the gallery (see
-``docs/source/conf.py`` ``ignore_pattern``); the rendered tutorial only
-imports the public ``draw_alpha_figure`` entry point.
-
-The figure is a 2x2 plate that reads like a textbook resting-state
-result:
-
-1. *PSD at the parieto-occipital anchor* (top-left) -- per-condition
-   Welch PSD with a shaded 8-13 Hz alpha band and the live
-   ``closed/open`` ratio.
-2. *Topomap of the alpha-band log-power difference* (top-right; closed
-   minus open) with a divergent colormap symmetric around zero, so the
-   parieto-occipital alpha hotspot is the brightest red spot on the
-   head.
-3. *Per-fold leave-one-subject-out accuracy* (bottom-left) with the
-   chance line drawn in and the mean +/- std annotated in monospace.
-4. *LOSO confusion matrix on pooled predictions* (bottom-right), drawn
-   with :class:`sklearn.metrics.ConfusionMatrixDisplay` and normalised
-   per true class so the reader can read the per-class hit rate at a
-   glance. Pooled raw counts and accuracy are annotated underneath.
-
-The geometry, colours, and annotations follow the same conventions as
-``_p300_figure.py`` and ``_eegprep_diagnostic.py`` so the gallery reads
-as one consistent set of figures.
-"""
+"""Drawing helpers for the ``plot_30`` eyes-open vs eyes-closed plate."""
 
 from __future__ import annotations
 
@@ -55,7 +28,6 @@ from eegdash.viz._tutorial_panels import add_provenance_footer
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color(EEGDASH_GRID)
@@ -75,14 +47,6 @@ def _draw_psd_panel(
     n_open: int,
     n_closed: int,
 ) -> None:
-    """Per-condition PSD overlay at the parieto-occipital anchor channel.
-
-    The shaded amber band marks 8-13 Hz alpha. The eyes-closed curve is
-    drawn in EEGDash orange and sits visibly above the eyes-open curve in
-    that band; the live ``closed / open`` ratio is annotated as a
-    monospace pill so the reader can read the magnitude without scanning
-    the y-axis.
-    """
     fmin = max(float(freqs[0]), 1.0)
     fmax = min(float(freqs[-1]), 40.0)
     band_lo, band_hi = alpha_band
@@ -165,13 +129,6 @@ def _draw_topomap_panel(
     info: mne.Info,
     alpha_band: tuple[float, float],
 ) -> None:
-    """Scalp topomap of (closed - open) log alpha-band power.
-
-    The divergent ``RdBu_r`` colormap is symmetric around zero so a
-    parieto-occipital hotspot of alpha increase reads as red and any
-    anterior alpha suppression reads as blue. The colorbar is labelled
-    with explicit units so the reader does not need the prose.
-    """
     band_lo, band_hi = alpha_band
     vmax = float(np.max(np.abs(diff_log_power)))
     vmax = max(vmax, 1e-9)
@@ -216,7 +173,6 @@ def _draw_accuracy_panel(
     fold_accuracies: Sequence[float],
     chance_level: float,
 ) -> None:
-    """Per-fold leave-one-subject-out accuracy with chance + mean+/-std."""
     accs = np.asarray(list(fold_accuracies), dtype=float)
     labels = [f"held-out\nsub-{s[-4:]}" for s in fold_subjects]
     x = np.arange(len(accs))
@@ -324,14 +280,6 @@ def _draw_confusion_panel(
     y_pred_pooled: np.ndarray,
     class_names: tuple[str, str],
 ) -> None:
-    """LOSO confusion matrix on pooled held-out predictions.
-
-    Drawn with :class:`sklearn.metrics.ConfusionMatrixDisplay` so the
-    panel matches the canonical sklearn rendering. Cells are normalised
-    per true class so the diagonal reads as a per-class hit rate; raw
-    counts plus pooled accuracy are annotated below the matrix in
-    monospace.
-    """
     y_true = np.asarray(y_true_pooled).astype(int)
     y_pred = np.asarray(y_pred_pooled).astype(int)
 

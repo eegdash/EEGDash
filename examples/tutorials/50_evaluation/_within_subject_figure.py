@@ -1,27 +1,4 @@
-"""Drawing helpers for the ``plot_50`` within-subject diagnostic figure.
-
-Sibling module to ``plot_50_within_subject_evaluation.py``. The leading
-underscore makes sphinx-gallery skip this file, so the rendering plumbing
-stays out of the rendered tutorial; the tutorial imports the public
-:func:`draw_within_subject_figure` entry point.
-
-The figure has three panels arranged left-to-right:
-
-1. Per-subject within-CV accuracy bars. One bar per subject, height = mean
-   within-subject 5-fold accuracy, error bar = +/- std. Bars colored
-   uniformly with :data:`~eegdash.viz.EEGDASH_BLUE`. A dashed
-   :func:`~eegdash.viz.chance_line` reference at ``level=0.5`` and a solid
-   :data:`~eegdash.viz.EEGDASH_ORANGE` reference line for the cross-subject
-   pooled accuracy.
-2. Variance comparison between within-subject CV and cross-subject CV,
-   rendered as side-by-side boxplots.
-3. Pooled :class:`sklearn.metrics.ConfusionMatrixDisplay` over all
-   within-subject test predictions, ``Blues`` colormap, ``normalize="true"``.
-
-Mirrors the visual identity of ``_leakage_figure.py`` (plot_11): same blue
-+ orange anchor, same shared :func:`~eegdash.viz.style_figure` driver, same
-provenance footer.
-"""
+"""Drawing helpers for the ``plot_50`` within-subject diagnostic figure."""
 
 from __future__ import annotations
 
@@ -49,12 +26,6 @@ def _draw_per_subject_panel(
     cross_subject_accuracy: float,
     subjects: Sequence[str],
 ) -> None:
-    """Per-subject within-CV accuracy bars with chance + cross-subject refs.
-
-    ``per_subject_accuracies`` is a ``(n_subjects, n_folds)`` matrix; bar
-    height is the per-subject mean and the error bar is the per-subject
-    standard deviation across folds.
-    """
     accuracies = np.asarray(per_subject_accuracies, dtype=float)
     if accuracies.ndim != 2:
         raise ValueError("per_subject_accuracies must be 2-D (n_subjects, n_folds)")
@@ -145,14 +116,6 @@ def _draw_variance_panel(
     within_distribution: np.ndarray,
     cross_distribution: np.ndarray,
 ) -> None:
-    """Side-by-side boxplots: within-subject CV vs cross-subject CV.
-
-    The point of the panel: within-subject variance is typically tighter
-    than cross-subject variance, because inter-subject differences (skull
-    geometry, baseline alpha amplitude, electrode placement) dominate the
-    cross-subject error budget but are absorbed inside the per-subject
-    loop.
-    """
     within = np.asarray(within_distribution, dtype=float).ravel()
     cross = np.asarray(cross_distribution, dtype=float).ravel()
     data = [within, cross]
@@ -233,7 +196,6 @@ def _draw_confusion_panel(
     y_pred_pooled: np.ndarray,
     class_names: Sequence[str],
 ) -> None:
-    """Pooled within-subject confusion matrix in the Blues colormap."""
     y_true = np.asarray(y_true_pooled).ravel()
     y_pred = np.asarray(y_pred_pooled).ravel()
 

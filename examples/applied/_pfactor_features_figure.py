@@ -1,32 +1,4 @@
-"""Drawing helpers for the ``project_pfactor_features`` applied study.
-
-Sibling module to ``project_pfactor_features.py``. The leading underscore
-makes sphinx-gallery skip this file when building the gallery (the
-``ignore_pattern`` matches ``_*.py``), so the plotting plumbing stays out
-of the rendered tutorial; the tutorial imports the public
-:func:`draw_pfactor_features_figure` entry point.
-
-The figure has three panels arranged left-to-right and reads as the
-feature-based companion to ``plot_72``'s deep-learning diagnostic:
-
-1. **Top-K feature importance bars.** One row per feature, sorted by
-   importance, color-coded by feature family: band-power blue, connectivity
-   orange, entropy purple. The family encoding lets a reader spot whether
-   the model leans on spectral structure, on cross-channel coupling, or
-   on signal complexity.
-2. **Predicted vs true scatter.** One marker per held-out subject (mean
-   prediction across that subject's windows). The dashed ``y = x`` line
-   is the only target a perfect model would hit; the corner annotation
-   reports Pearson r, R^2, and MAE on the same subject-aggregated points.
-3. **Error distribution.** Histogram of ``predicted - true`` across every
-   held-out window with a Gaussian density overlay. The bias (mean) and
-   spread (std) are annotated as vertical guides; the distance between
-   the orange bias line and the muted zero reference is the regression
-   bias on the held-out cohort.
-
-The Helvetica font ships without the U+2192 right-arrow glyph, so any
-arrow inside annotations is written ``->`` to keep matplotlib quiet.
-"""
+"""Drawing helpers for the ``project_pfactor_features`` applied study."""
 
 from __future__ import annotations
 
@@ -72,14 +44,6 @@ _FAMILY_LABELS = {
 
 
 def _classify_feature(name: str) -> str:
-    """Map a feature column name to its family key.
-
-    The convention shared with the tutorial is that band-power columns
-    start with ``band_`` (or ``spec_band_``), connectivity columns with
-    ``conn_``, and entropy columns with ``ent_`` (or contain
-    ``entropy``). Anything else is bucketed as ``band_power`` so the
-    palette stays predictable.
-    """
     n = name.lower()
     if n.startswith(("conn_", "coh_", "plv_", "imcoh_")):
         return "connectivity"
@@ -94,13 +58,6 @@ def _aggregate_per_subject(
     y_pred: np.ndarray,
     subject_ids: Sequence[str],
 ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Reduce window-level vectors to one mean prediction per subject.
-
-    The p-factor is a subject-level score, every window of a given subject
-    carries the same ``y_true``. The only meaningful x-axis point per
-    subject is its single true score, and the only meaningful y is the
-    mean prediction across that subject's held-out windows.
-    """
     subjects = np.asarray(list(subject_ids))
     unique = list(dict.fromkeys(subjects.tolist()))  # first-seen order
     yt_subj = np.empty(len(unique), dtype=float)
@@ -113,7 +70,6 @@ def _aggregate_per_subject(
 
 
 def _style_axis(ax) -> None:
-    """Apply the EEGDash spine/tick treatment to a single axes."""
     for spine in ("top", "right"):
         ax.spines[spine].set_visible(False)
     ax.spines["left"].set_color(EEGDASH_GRID)
@@ -130,7 +86,6 @@ def _draw_importance_panel(
     feature_names: Sequence[str],
     top_k: int,
 ) -> dict[str, int]:
-    """Horizontal bar chart of the top-K features, color-coded by family."""
     importances = np.asarray(feature_importances, dtype=float)
     abs_imp = np.abs(importances)
     order = np.argsort(abs_imp)[::-1][: int(top_k)]
@@ -231,7 +186,6 @@ def _draw_pred_vs_true_panel(
     y_pred_subj: np.ndarray,
     metrics: dict,
 ) -> None:
-    """Predicted-vs-true scatter with a y=x reference and corner metrics."""
     lo = float(min(y_true_subj.min(), y_pred_subj.min()))
     hi = float(max(y_true_subj.max(), y_pred_subj.max()))
     pad = 0.10 * max(hi - lo, 1e-3)
@@ -310,7 +264,6 @@ def _draw_error_distribution_panel(
     y_true_window: np.ndarray,
     y_pred_window: np.ndarray,
 ) -> dict[str, float]:
-    """Window-level prediction-error histogram with a Gaussian overlay."""
     errors = (y_pred_window - y_true_window).astype(float)
     mu = float(np.mean(errors))
     sigma = float(np.std(errors, ddof=1)) if errors.size > 1 else 0.0
@@ -373,7 +326,6 @@ def _draw_error_distribution_panel(
 
 
 def _compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Pearson r, R^2, MAE on subject-level vectors."""
     if y_true.size < 2:
         return {"pearson_r": float("nan"), "r2": float("nan"), "mae": float("nan")}
     pearson_r = float(pearsonr(y_true, y_pred).statistic)

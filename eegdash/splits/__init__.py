@@ -6,9 +6,13 @@
 
 from __future__ import annotations
 
-from ._assertions import LeakageError, assert_no_leakage
-from ._baselines import majority_baseline, median_baseline
-from ._describe import describe_split
+from ._audit import (
+    LeakageError,
+    assert_no_leakage,
+    describe_split,
+    majority_baseline,
+    median_baseline,
+)
 from ._manifest import (
     SCHEMA_VERSION,
     apply_split_manifest,

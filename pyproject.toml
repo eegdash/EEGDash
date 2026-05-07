@@ -103,6 +103,14 @@ dev = [
   "pre-commit",
 ]
 
+# MOABB integration is opt-in. Users who want the friendly
+# ``eegdash.splits.get_splitter`` MOABB-backed splitters (CrossSubject,
+# CrossSession, WithinSession, etc.) should install ``eegdash[moabb]``;
+# otherwise the package falls back to the bundled sklearn implementation.
+moabb = [
+  "moabb",
+]
+
 docs = [
   "sphinx",
   "sphinx_design",
@@ -140,6 +148,7 @@ all = [
   "eegdash[dev]",
   "eegdash[tests]",
   "eegdash[digestion]",
+  "eegdash[moabb]",
 ]
 
 [tool.setuptools]

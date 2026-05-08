@@ -116,12 +116,18 @@ dataset
 
 # %%
 description = dataset.description
+
+
+def _nunique(col: str) -> int:
+    return description[col].nunique() if col in description.columns else 0
+
+
 pd.Series(
     {
         "n_records": len(dataset),
-        "n_subjects": description["subject"].nunique(),
-        "n_tasks": description["task"].nunique(),
-        "n_sessions": description["session"].nunique(),
+        "n_subjects": _nunique("subject"),
+        "n_tasks": _nunique("task"),
+        "n_sessions": _nunique("session"),
         "channels": int(description["nchans"].iloc[0]),
         "sampling_frequency_hz": float(description["sampling_frequency"].iloc[0]),
     },

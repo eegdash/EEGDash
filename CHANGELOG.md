@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Tutorial gallery refactor: 22 sphinx-gallery tutorials covering Categories A through H (Start Here, Core Workflow, Event-Related, Resting State, Features, Evaluation, Applied, Transfer/Foundation)
+- Five new HPC and scaling how-tos under `examples/applied/`: `how_to_download_a_dataset`, `how_to_work_offline`, `how_to_use_hpc_cache`, `how_to_run_preprocessing_on_slurm`, `how_to_parallelize_feature_extraction`
+- Six concept pages under `docs/source/concepts/` covering EEGDash objects, lazy loading and cache, leakage-safe splits, windowing semantics, evaluation protocols and the BDF transfer-foundation track
+- Public APIs for the rewritten tutorials: `eegdash.splits` (subject-aware split utilities) plus `EEGDashDataset.summary` / `EEGDashDataset.preview` / `EEGDashDataset.filter` / `EEGDashDataset.search_datasets` for in-memory query and inspection
+
+### Changed
+- `eegdash.features.fit_feature_extractor` retained as a backward-compat alias for the new feature-extraction entrypoint used by the rewritten feature tutorials
+
+### Removed
+- Legacy tutorial entrypoints superseded by the new gallery: `examples/tutorial_minimal.py`, `examples/tutorial_transfer_learning.py` and several `examples/noplot_tutorial_*.py` scripts (their pedagogical content has been rewritten under `examples/tutorials/` and their applied counterparts under `examples/applied/`).
+
 ## [0.7.2] - 2026-04-29
 
 ### Added

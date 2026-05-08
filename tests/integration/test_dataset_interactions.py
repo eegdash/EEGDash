@@ -9,7 +9,6 @@ import pytest
 
 import eegdash.dataset.dataset as dataset_mod
 from eegdash.dataset import EEGDashDataset
-from eegdash.dataset.exceptions import DataIntegrityError
 from eegdash.features.datasets import FeaturesConcatDataset, FeaturesDataset
 from eegdash.features.serialization import load_features_concat_dataset
 
@@ -109,45 +108,6 @@ def test_download_all_respects_cache_state(
     }
     assert called_indices == expected_downloaded
     globals_mock.assert_called_once()
-
-
-@pytest.mark.parametrize("on_error", ["warn", "skip"], ids=["warn", "skip"])
-def test_drop_bad_after_integrity_errors(tmp_path: Path, on_error: str):
-    records = [
-        _record("ds-errors", "01", backend="local"),
-        _record("ds-errors", "02", backend="local"),
-    ]
-    dataset = EEGDashDataset(
-        cache_dir=tmp_path,
-        dataset="ds-errors",
-        records=records,
-        on_error=on_error,
-    )
-
-    def _ensure_side_effect(self):
-        if self.record["run"] == "01":
-            self._raw = object()
-            return
-        raise DataIntegrityError(
-            message="synthetic integrity failure",
-            record=self.record,
-            issues=["synthetic"],
-        )
-
-    with patch.object(
-        dataset_mod.EEGDashRaw, "_ensure_raw", autospec=True
-    ) as ensure_mock:
-        ensure_mock.side_effect = _ensure_side_effect
-        raws = [ds.raw for ds in dataset.datasets]
-
-    assert raws[0] is not None
-    assert raws[1] is None
-
-    dropped = dataset.drop_bad()
-    assert len(dropped) == 1
-    assert dropped[0]["run"] == "02"
-    assert len(dataset.datasets) == 1
-    assert dataset.datasets[0].record["run"] == "01"
 
 
 @pytest.mark.parametrize(

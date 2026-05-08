@@ -20,6 +20,7 @@ from ..bids_metadata import (
 )
 from ..const import (
     ALLOWED_QUERY_FIELDS,
+    DEFAULT_DESCRIPTION_FIELDS,
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
@@ -34,6 +35,33 @@ from .registry import register_openneuro_datasets
 
 # Valid extensions for EEG data files (from MNE-BIDS reader configuration)
 _VALID_DATA_EXTENSIONS = frozenset(reader.keys())
+
+
+def _warn_if_competition_dataset(dataset_id: str) -> None:
+    """Render a Rich panel reminding users to use EEGChallengeDataset for the EEG 2025 Competition."""
+    if dataset_id not in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
+        return
+    message = Text.from_markup(
+        "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
+        "[bold]EEG 2025 Competition Data Notice![/bold]\n"
+        "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
+        "[bold red]IMPORTANT[/bold red]: \n"
+        "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
+        "competition data, which is accessed via `EEGChallengeDataset`. "
+        "The competition data has been downsampled and filtered.\n\n"
+        "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+        "If you are not participating in the competition, you can ignore this message."
+    )
+    panel = Panel(
+        message,
+        title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
+        subtitle="[cyan]Source: EEGDashDataset[/cyan]",
+        border_style="yellow",
+    )
+    try:
+        Console().print(panel)
+    except Exception:
+        logger.warning(str(message))
 
 
 class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
@@ -148,7 +176,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         - ``"warn"``: log the error as a warning and set ``.raw`` to ``None``.
         - ``"skip"``: silently set ``.raw`` to ``None``.
 
-        Use :meth:`drop_bad` after iteration to remove skipped recordings.
+        Skipped recordings are flagged via ``ds._skipped`` so callers can
+        filter them out with a list comprehension after iteration.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -175,54 +204,29 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         max_concurrency: int = 20,
         **kwargs,
     ):
-        # Parameters that don't need validation
-        _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
+        # Internal-only kwargs
+        suppress_comp_warning = kwargs.pop("_suppress_comp_warning", False)
         self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
+
         self._on_error = on_error
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
-        self.records = records
         self.download = download
         self.n_jobs = n_jobs
         self.max_concurrency = max_concurrency
         self.eeg_dash_instance = eeg_dash_instance
+        description_fields = description_fields or DEFAULT_DESCRIPTION_FIELDS
 
-        if description_fields is None:
-            description_fields = [
-                "subject",
-                "session",
-                "run",
-                "task",
-                "age",
-                "gender",
-                "sex",
-            ]
+        self.cache_dir = Path(cache_dir or get_default_cache_dir())
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-        self.cache_dir = cache_dir
-        if self.cache_dir == "" or self.cache_dir is None:
-            self.cache_dir = get_default_cache_dir()
-            logger.warning(
-                f"Cache directory is empty, using the eegdash default path: {self.cache_dir}"
-            )
-
-        self.cache_dir = Path(self.cache_dir)
-
-        if not self.cache_dir.exists():
-            logger.warning(
-                f"Cache directory does not exist, creating it: {self.cache_dir}"
-            )
-            self.cache_dir.mkdir(exist_ok=True, parents=True)
-
-        # Extract query filters from kwargs (validates field names)
+        # Extract & validate query filters from kwargs.
         query_kwargs = {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
         if query_kwargs:
-            # Validate early: this raises ValueError for unknown fields or empty values
             build_query_from_kwargs(**query_kwargs)
 
-        # Separate query kwargs from BaseDataset constructor kwargs
-        self.query = query or {}
-        self.query.update(query_kwargs)
+        self.query = (query or {}) | query_kwargs
         base_dataset_kwargs = {
             k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
         }
@@ -230,49 +234,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         base_dataset_kwargs["max_concurrency"] = self.max_concurrency
 
         if "dataset" not in self.query:
-            # If explicit records are provided, infer dataset from records
-            if isinstance(records, list) and records and isinstance(records[0], dict):
-                inferred = records[0].get("dataset")
-                if inferred:
-                    self.query["dataset"] = inferred
-                else:
-                    raise ValueError("You must provide a 'dataset' argument")
-            else:
+            inferred = records[0].get("dataset") if records else None
+            if not inferred:
                 raise ValueError("You must provide a 'dataset' argument")
+            self.query["dataset"] = inferred
 
-        # Decide on a dataset subfolder name for cache isolation. If using
-        # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
-        # informative suffixes to avoid overlapping with the original dataset.
-        dataset_folder = self.query["dataset"]
+        self.data_dir = self.cache_dir / self.query["dataset"]
 
-        self.data_dir = self.cache_dir / dataset_folder
-
-        if (
-            not _suppress_comp_warning
-            and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
-        ):
-            message_text = Text.from_markup(
-                "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
-                "[bold]EEG 2025 Competition Data Notice![/bold]\n"
-                "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
-                "[bold red]IMPORTANT[/bold red]: \n"
-                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
-                "competition data, which is accessed via `EEGChallengeDataset`. "
-                "The competition data has been downsampled and filtered.\n\n"
-                "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
-                "If you are not participating in the competition, you can ignore this message."
-            )
-            warning_panel = Panel(
-                message_text,
-                title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
-                subtitle="[cyan]Source: EEGDashDataset[/cyan]",
-                border_style="yellow",
-            )
-
-            try:
-                Console().print(warning_panel)
-            except Exception:
-                logger.warning(str(message_text))
+        if not suppress_comp_warning:
+            _warn_if_competition_dataset(self.query["dataset"])
 
         if records is not None:
             self.records = self._normalize_records(records)
@@ -336,7 +306,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 # to avoid circular import
                 from ..api import EEGDash
 
-                # Pass database and auth_token if specified
                 eegdash_kwargs = {}
                 if self.database:
                     eegdash_kwargs["database"] = self.database
@@ -348,12 +317,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 description_fields=description_fields,
                 base_dataset_kwargs=base_dataset_kwargs,
             )
-            # We only need filesystem if we need to access S3
-            self.filesystem = downloader.get_s3_filesystem(
-                max_concurrency=self.max_concurrency,
-            )
 
-            # Provide helpful error message when no datasets are found
             if len(datasets) == 0:
                 query_str = build_query_from_kwargs(**self.query)
                 raise ValueError(
@@ -376,66 +340,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 pass
 
         super().__init__(datasets, lazy=True)
-
-    def drop_bad(self) -> list[dict]:
-        """Remove skipped datasets and return their records.
-
-        Call after accessing ``.raw`` on all datasets (e.g. after iteration
-        or preprocessing) to clean up the dataset list.
-
-        Returns
-        -------
-        list of dict
-            Records that were removed because loading failed.
-
-        """
-        bad = []
-        valid_datasets = []
-        valid_records = []
-        for ds, record in zip(self.datasets, self.records):
-            if getattr(ds, "_skipped", False):
-                bad.append(record)
-            else:
-                valid_datasets.append(ds)
-                valid_records.append(record)
-        self.datasets = valid_datasets
-        self.records = valid_records
-        return bad
-
-    def drop_short(self, min_samples: int) -> list[dict]:
-        """Remove recordings shorter than *min_samples* and return their records.
-
-        This is useful when downstream processing (e.g., fixed-length
-        windowing) requires a minimum number of samples per recording.
-        Recordings whose ``.raw`` is ``None`` (failed to load) are also
-        dropped.
-
-        Parameters
-        ----------
-        min_samples : int
-            Minimum number of time-domain samples a recording must have
-            to be kept.
-
-        Returns
-        -------
-        list of dict
-            Records that were removed.
-
-        """
-        dropped = []
-        valid_datasets = []
-        valid_records = []
-        for ds, record in zip(self.datasets, self.records):
-            raw = ds.raw
-            if raw is None or raw.n_times < min_samples:
-                dropped.append(record)
-                ds._raw = None
-            else:
-                valid_datasets.append(ds)
-                valid_records.append(record)
-        self.datasets = valid_datasets
-        self.records = valid_records
-        return dropped
 
     @property
     def cumulative_sizes(self) -> list[int]:
@@ -737,10 +641,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
             description: dict[str, Any] = {}
             # Requested fields first (normalized matching)
-            for field in description_fields:
-                value = self._find_key_in_nested_dict(record, field)
+            for field_name in description_fields:
+                value = self._find_key_in_nested_dict(record, field_name)
                 if value is not None:
-                    description[field] = value
+                    description[field_name] = value
             # Merge all participants.tsv columns generically
             part = self._find_key_in_nested_dict(record, "participant_tsv")
             if isinstance(part, dict):
@@ -758,24 +662,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 )
             )
         return datasets
-
-    # just to fix the docstring inheritance until we solved it in braindecode.
-    def save(self, path, overwrite=False):
-        """Save the dataset to disk.
-
-        Parameters
-        ----------
-        path : str or Path
-            Destination file path.
-        overwrite : bool, default False
-            If True, overwrite existing file.
-
-        Returns
-        -------
-        None
-
-        """
-        return super().save(path, overwrite=overwrite)
 
 
 class EEGChallengeDataset(EEGDashDataset):

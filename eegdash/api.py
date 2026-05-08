@@ -9,21 +9,17 @@ interacting with the EEGDash ecosystem. It offers methods to query, insert, and 
 metadata records stored in the EEGDash database via REST API.
 """
 
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
-from .bids_metadata import merge_query
+from .bids_metadata import merge_query, records_to_dataframe
 from .http_api_client import get_client
 
-# --- DataFrame projection ------------------------------------------------ #
-# Search-style endpoints map MongoDB JSON records onto a fixed column
-# layout. ``_records_to_dataframe`` is the single helper every such
-# endpoint reuses; per-endpoint specs (``columns`` + ``aliases``) live as
-# module constants right next to the method that consumes them.
-#
-# ``aliases`` lets one canonical column draw from several legacy/nested
-# field paths (dotted keys are resolved via :func:`pandas.json_normalize`).
-# The first non-null value across the alias list wins per row, so the
-# helper survives v1/v2 record schema drift without per-endpoint glue.
+# Search-endpoint projection specs: per-endpoint ``columns`` + ``aliases``
+# fed to :func:`~eegdash.bids_metadata.records_to_dataframe`. ``aliases``
+# lets one canonical column draw from several legacy/nested field paths
+# (dotted keys are resolved via :func:`pandas.json_normalize`); the
+# first non-null source wins per row, so the helper survives v1/v2
+# record schema drift without per-endpoint glue.
 
 _DATASET_SUMMARY_COLUMNS: Sequence[str] = (
     "dataset_id",
@@ -39,42 +35,6 @@ _DATASET_FIELD_ALIASES: Mapping[str, Sequence[str]] = {
     "dataset_id": ("dataset_id", "dataset", "_id"),
     "source": ("source", "provider"),
 }
-
-
-def _records_to_dataframe(
-    records: Iterable[Mapping[str, Any]],
-    columns: Sequence[str],
-    aliases: Mapping[str, Sequence[str]] | None = None,
-):
-    """Project a list of MongoDB JSON records onto a fixed DataFrame layout.
-
-    Uses :func:`pandas.json_normalize` to flatten one level of nesting
-    (so dotted alias paths like ``clinical.group`` resolve), then for
-    each canonical column picks the first non-null value across its
-    alias list. Records that are not mappings are skipped.
-
-    Returns an empty DataFrame with the right column set when ``records``
-    is empty, so callers get a stable schema regardless of result size.
-    """
-    import pandas as pd
-
-    aliases = dict(aliases or {})
-    rows = [r for r in records if isinstance(r, Mapping)]
-    if not rows:
-        return pd.DataFrame(columns=list(columns))
-
-    flat = pd.json_normalize(rows, max_level=1)
-    out = pd.DataFrame(index=flat.index)
-    for col in columns:
-        sources = aliases.get(col, (col,))
-        present = [s for s in sources if s in flat.columns]
-        if not present:
-            out[col] = None
-        elif len(present) == 1:
-            out[col] = flat[present[0]]
-        else:
-            out[col] = flat[present].bfill(axis=1).iloc[:, 0]
-    return out[list(columns)]
 
 
 class EEGDash:
@@ -234,7 +194,7 @@ class EEGDash:
         else:
             query = {"$and": and_clauses}
 
-        return _records_to_dataframe(
+        return records_to_dataframe(
             self._client.find_datasets(query, limit=limit) or [],
             _DATASET_SUMMARY_COLUMNS,
             _DATASET_FIELD_ALIASES,

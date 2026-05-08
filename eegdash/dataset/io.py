@@ -21,6 +21,7 @@ from typing import Any
 
 import mne
 import numpy as np
+import pandas as pd
 from dateutil.parser import parse as _dateutil_parse
 from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
@@ -945,8 +946,6 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
 
             if snirf_base.startswith(tsv_base) or tsv_base in snirf_base:
                 # Read existing channels.tsv to preserve structure
-                import pandas as pd
-
                 try:
                     existing_df = pd.read_csv(channels_tsv, sep="\t")
 
@@ -1369,8 +1368,6 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     # --- Pass 1: rename mismatched TSV entries to match folders ---
     # For each folder not yet in TSV, try to find a TSV entry that
     # fuzzy-matches it via _match_subject_fallback (same logic as digestion).
-    import pandas as pd
-
     tsv_ids = []
     for line in lines[1:]:
         cols = line.split("\t")

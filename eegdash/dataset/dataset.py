@@ -20,6 +20,7 @@ from ..bids_metadata import (
 )
 from ..const import (
     ALLOWED_QUERY_FIELDS,
+    DEFAULT_DESCRIPTION_FIELDS,
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
@@ -34,17 +35,6 @@ from .registry import register_openneuro_datasets
 
 # Valid extensions for EEG data files (from MNE-BIDS reader configuration)
 _VALID_DATA_EXTENSIONS = frozenset(reader.keys())
-
-# Default fields surfaced on every per-record description.
-_DEFAULT_DESCRIPTION_FIELDS = [
-    "subject",
-    "session",
-    "run",
-    "task",
-    "age",
-    "gender",
-    "sex",
-]
 
 
 def _warn_if_competition_dataset(dataset_id: str) -> None:
@@ -226,7 +216,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.n_jobs = n_jobs
         self.max_concurrency = max_concurrency
         self.eeg_dash_instance = eeg_dash_instance
-        description_fields = description_fields or _DEFAULT_DESCRIPTION_FIELDS
+        description_fields = description_fields or DEFAULT_DESCRIPTION_FIELDS
 
         self.cache_dir = Path(cache_dir or get_default_cache_dir())
         self.cache_dir.mkdir(parents=True, exist_ok=True)

@@ -12,6 +12,7 @@ releases and OpenNeuro dataset identifiers, as well as validation rules for data
 __all__ = [
     "config",
     "ALLOWED_QUERY_FIELDS",
+    "DEFAULT_DESCRIPTION_FIELDS",
     "RELEASE_TO_OPENNEURO_DATASET_MAP",
     "SUBJECT_MINI_RELEASE_MAP",
     "MODALITY_ALIASES",
@@ -31,6 +32,19 @@ ALLOWED_QUERY_FIELDS = {
 }
 """set: A set of field names that are permitted in database queries constructed
 via :func:`~eegdash.api.EEGDash.find` with keyword arguments."""
+
+DEFAULT_DESCRIPTION_FIELDS = [
+    "subject",
+    "session",
+    "run",
+    "task",
+    "age",
+    "gender",
+    "sex",
+]
+"""list: BIDS-entity fields surfaced on every per-record description by
+:class:`~eegdash.api.EEGDashDataset` when the constructor is called without
+an explicit ``description_fields=`` argument."""
 
 MODALITY_ALIASES = {"fnirs": "nirs"}
 

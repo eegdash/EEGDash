@@ -9,6 +9,7 @@ and enriching metadata records with participant information from BIDS datasets.
 """
 
 import re
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -27,7 +28,60 @@ __all__ = [
     "enrich_from_participants",
     "get_entity_from_record",
     "get_entities_from_record",
+    "records_to_dataframe",
 ]
+
+
+def records_to_dataframe(
+    records: Iterable[Mapping[str, Any]],
+    columns: Sequence[str],
+    aliases: Mapping[str, Sequence[str]] | None = None,
+) -> pd.DataFrame:
+    """Project a list of MongoDB JSON records onto a fixed DataFrame layout.
+
+    Uses :func:`pandas.json_normalize` to flatten one level of nesting (so
+    dotted alias paths like ``"clinical.group"`` resolve), then for each
+    canonical column picks the first non-null value across its alias list.
+    Records that are not mappings are skipped.
+
+    Parameters
+    ----------
+    records : iterable of dict
+        Raw JSON records (e.g., from :meth:`EEGDash.find_datasets`).
+    columns : sequence of str
+        Canonical column names in the order they should appear in the
+        returned DataFrame.
+    aliases : mapping of str to sequence of str, optional
+        For each canonical column, the ordered list of source field paths
+        to look at (back-fill). Dotted paths supported via ``json_normalize``.
+        When omitted, the canonical column name itself is the only source.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per mapping record, with exactly ``columns``. Missing
+        fields surface as ``None``/``NaN``. Empty input returns an empty
+        DataFrame with the right column set, so callers get a stable
+        schema regardless of result size.
+
+    """
+    aliases = dict(aliases or {})
+    rows = [r for r in records if isinstance(r, Mapping)]
+    if not rows:
+        return pd.DataFrame(columns=list(columns))
+
+    flat = pd.json_normalize(rows, max_level=1)
+    out = pd.DataFrame(index=flat.index)
+    for col in columns:
+        sources = aliases.get(col, (col,))
+        present = [s for s in sources if s in flat.columns]
+        if not present:
+            out[col] = None
+        elif len(present) == 1:
+            out[col] = flat[present[0]]
+        else:
+            out[col] = flat[present].bfill(axis=1).iloc[:, 0]
+    return out[list(columns)]
 
 
 def get_entity_from_record(record: dict[str, Any], entity: str) -> Any:
@@ -401,12 +455,10 @@ def attach_participants_extras(
         pass
 
     try:
-        import pandas as _pd
-
         if isinstance(description, dict):
             for k, v in extras.items():
                 description.setdefault(k, v)
-        elif isinstance(description, _pd.Series):
+        elif isinstance(description, pd.Series):
             missing = [k for k in extras.keys() if k not in description.index]
             if missing:
                 description.loc[missing] = [extras[m] for m in missing]

@@ -180,7 +180,7 @@ def make_regressor() -> Pipeline:
 # each fold tests on ~2-3 unseen subjects.
 
 # %%
-splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5, random_state=SEED)
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 n_rows = len(metadata)
 folds: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in splitter.split(y, metadata):

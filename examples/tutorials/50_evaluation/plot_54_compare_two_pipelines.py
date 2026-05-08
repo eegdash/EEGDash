@@ -135,9 +135,7 @@ print(
 # fold ids, which is what makes the comparison paired.
 
 # %%
-splitter = CrossSubjectSplitter(
-    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
-)
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
 y = metadata["target"].to_numpy()
 n_rows = len(metadata)
 folds: list[tuple[np.ndarray, np.ndarray]] = []

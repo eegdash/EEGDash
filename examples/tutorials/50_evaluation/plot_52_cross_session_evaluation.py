@@ -136,7 +136,7 @@ print(
 # **Run.** ``make_split_manifest`` freezes the splitter output as IDs.
 
 # %%
-splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=3, random_state=SEED)
+splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=3)
 n_rows = len(metadata)
 folds: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in splitter.split(y, metadata):

@@ -154,9 +154,7 @@ print(
 n_loso_folds = LeaveOneGroupOut().get_n_splits(X, y, groups)
 print(f"n_subjects={N_SUBJECTS} | n_loso_folds={n_loso_folds}")
 
-splitter = CrossSubjectSplitter(
-    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
-)
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
 n_rows = len(metadata)
 folds: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in splitter.split(y, metadata):
@@ -335,13 +333,11 @@ print(
 
 # %%
 try:
-    bad = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=20, random_state=SEED)
+    bad = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=20)
     list(bad.split(y, metadata))
 except ValueError as exc:
     print(f"Caught ValueError: {str(exc)[:90]}")
-    fixed = CrossSubjectSplitter(
-        cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
-    )
+    fixed = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
     print(
         f"Recovery: clamp n_folds to n_subjects={N_SUBJECTS} -> {type(fixed).__name__}"
     )
@@ -357,7 +353,7 @@ except ValueError as exc:
 # estimate this cohort can give.
 
 # %%
-splitter5 = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5, random_state=SEED)
+splitter5 = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 folds5: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in splitter5.split(y, metadata):
     tr_mask = np.zeros(n_rows, dtype=bool)

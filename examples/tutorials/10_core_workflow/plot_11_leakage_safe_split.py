@@ -207,9 +207,7 @@ N_FOLDS = 5
 # ``cv_class=GroupKFold`` swaps MOABB's default ``LeaveOneGroupOut`` for
 # a parametrisable fold count so the audit stays short. Without it you
 # get LeaveOneGroupOut, which produces one fold per subject.
-splitter = CrossSubjectSplitter(
-    cv_class=GroupKFold, n_splits=N_FOLDS, random_state=SEED
-)
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_FOLDS)
 y = metadata["target"].to_numpy()
 n_rows = len(metadata)
 folds: list[tuple[np.ndarray, np.ndarray]] = []
@@ -425,9 +423,7 @@ try:
         )
 except ValueError as exc:
     print(f"Caught ValueError: {exc}")
-    fixed = CrossSubjectSplitter(
-        cv_class=GroupKFold, n_splits=N_FOLDS, random_state=SEED
-    )
+    fixed = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_FOLDS)
     print(f"Recovery: CrossSubjectSplitter -> {type(fixed).__name__}")
 
 # Trip 2: a bare sklearn train_test_split on windows leaks silently.
@@ -456,9 +452,7 @@ print(
 # changes. Same call shape, different group key.
 
 # %%
-session_splitter = CrossSessionSplitter(
-    cv_class=GroupKFold, n_splits=2, random_state=SEED
-)
+session_splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=2)
 session_folds: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in session_splitter.split(y, metadata):
     tr_mask = np.zeros(n_rows, dtype=bool)

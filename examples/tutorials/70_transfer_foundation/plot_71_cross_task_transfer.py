@@ -171,7 +171,7 @@ def make_model():
 
 def split_subject_aware(meta, X, y, target="label"):
     """Cross-subject 2-fold split + leakage assertion."""
-    splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=2, random_state=SEED)
+    splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=2)
     n = len(meta)
     folds: list[tuple[np.ndarray, np.ndarray]] = []
     for tr_idx, te_idx in splitter.split(meta[target].to_numpy(), meta):

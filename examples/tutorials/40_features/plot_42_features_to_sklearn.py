@@ -200,9 +200,7 @@ metadata["session"] = "ses-01"
 metadata["run"] = "run-01"
 metadata["dataset"] = "ds-plot42-mock"
 metadata["sample_id"] = [f"row_{i:04d}" for i in range(len(metadata))]
-splitter = CrossSubjectSplitter(
-    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
-)
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
 y = metadata["target"].to_numpy()
 fold_idx_pairs = list(splitter.split(y, metadata))
 n_folds = len(fold_idx_pairs)

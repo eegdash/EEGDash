@@ -17,7 +17,7 @@ strategies side-by-side: same data underneath, only the split differs.
 Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and found
 data leakage in roughly half. Cisotto & Chicco 2024 (Tip 9) name this
 the most common evaluation pitfall in clinical EEG; the MOABB benchmark
-(Aristimunha et al. 2023) uses the cross-subject protocol throughout.
+:cite:`aristimunha2023transferstructure` uses the cross-subject protocol throughout.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_11_leakage_safe_split.png'
 

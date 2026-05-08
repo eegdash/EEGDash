@@ -276,7 +276,7 @@ plt.show()
 # -------------------------------------
 # **Run.** Indexing past the end of ``dataset.datasets`` raises
 # :class:`IndexError`, the standard Python contract. We trigger it on
-# purpose so the failure mode is visible (Nederbragt et al. 2020).
+# purpose so the failure mode is visible :cite:`nederbragt2020teaching`.
 
 # %%
 try:

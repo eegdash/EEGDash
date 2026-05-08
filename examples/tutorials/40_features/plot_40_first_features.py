@@ -9,7 +9,7 @@ through `NEMAR <https://nemar.org>`_, Delorme et al. 2022; Alexander et
 al. 2017), it extracts a band-power feature per channel for each of
 theta, alpha, beta, and gamma. The deliverable is a
 ``(n_windows, 4, n_channels)`` tensor of log10 band power that plot_42
-hands to scikit-learn (Pedregosa et al. 2011) without any further
+hands to scikit-learn :cite:`pedregosa2011sklearn` without any further
 reshaping.
 
 Can a small set of band-power features per channel summarise a window
@@ -256,7 +256,7 @@ pd.Series(
 # **Investigate.** Each row is one window; column names embed the
 # channel name. The structural invariants from the spec hold by
 # construction; we assert them so a regression in the extractor would
-# fail the tutorial loud and early (Nederbragt et al. 2020).
+# fail the tutorial loud and early :cite:`nederbragt2020teaching`.
 
 # %%
 non_meta_cols = [c for c in feature_table.columns if c != "target"]
@@ -304,7 +304,7 @@ pd.Series(
 # Step 5. Save the feature table for plot_42
 # --------------------------------------------
 # Parquet keeps dtypes (float64) and is what scikit-learn / LightGBM
-# expect (Pedregosa et al. 2011). Saving the tidy DataFrame rather than
+# expect :cite:`pedregosa2011sklearn`. Saving the tidy DataFrame rather than
 # the tensor keeps column names and the target column visible to any
 # downstream consumer.
 

@@ -212,7 +212,7 @@ print(
 #
 # A :class:`sklearn.preprocessing.StandardScaler` ``->``
 # :class:`sklearn.linear_model.Ridge`
-# :class:`sklearn.pipeline.Pipeline` (Pedregosa et al. 2011) is the
+# :class:`sklearn.pipeline.Pipeline` :cite:`pedregosa2011sklearn` is the
 # regression analogue of the plot_42 classification baseline. ``alpha=1.0``
 # is a defensible default for an 8-feature table; ``GroupKFold`` keys on
 # subject so a held-out subject never appears in any train fold.

@@ -21,9 +21,8 @@ doi:10.48550/arXiv.2404.15319; Cisotto & Chicco 2024 Tip 9,
 doi:10.7717/peerj-cs.2256). EEGDash sources the same metadata as
 NEMAR (Delorme et al. 2022, doi:10.1162/imag_a_00026), so the same
 contract applies on real BIDS data with ``description['session']`` set.
-Riemannian alignment (Khazem et al. 2024,
-doi:10.48550/arXiv.2410.01985) is one published recovery for severe
-drift; here we just measure it.
+Riemannian alignment of the per-session covariance matrices is one
+documented recovery for severe drift; here we just measure it.
 
 The polished version of this tutorial uses ``plot_52``'s sibling helper
 ``draw_cross_session_figure`` to render a 1 x 3 figure: a session x
@@ -181,9 +180,9 @@ print(
 # within-session score that came from memorising the day-specific
 # feature distribution rather than the paradigm. Jayaram & Barachant
 # 2018 (doi:10.1088/1741-2552/aabea9) frame the same gap as covariate
-# shift between calibration sessions. Khazem et al. 2024
-# (doi:10.48550/arXiv.2410.01985) show Riemannian alignment closes part
-# of it on motor-imagery cohorts; we just measure it here.
+# shift between calibration sessions; Riemannian alignment of the
+# per-session covariance matrices is one documented recovery on
+# motor-imagery cohorts. We just measure the gap here.
 
 
 # %%
@@ -326,9 +325,9 @@ plt.show()
 # Subject overlap is 1 per fold by design; ``session_overlap`` is 0
 # (E5.42 reports it). Within-session > cross-session > chance, and the
 # gap is drift you would see on real multi-session BIDS data too. The
-# top three drifters in this synthetic cohort are listed below;
-# Khazem et al. 2024 would route severe drifters through Riemannian
-# alignment before the classifier.
+# top three drifters in this synthetic cohort are listed below; severe
+# drifters are typical candidates for Riemannian alignment of the
+# per-session covariance matrices before the classifier.
 
 # %%
 ranked = sorted(
@@ -403,7 +402,8 @@ print(
 # - swap to a real BIDS dataset with ``description['session']`` set;
 #   the same manifest contract applies on EEGDash + NEMAR data.
 # - replace logistic regression with a Riemannian alignment pipeline
-#   (Khazem et al. 2024) and watch the off-diagonal cells move.
+#   on per-session covariance matrices and watch the off-diagonal cells
+#   move.
 #
 # Mini-project
 # ------------
@@ -437,5 +437,3 @@ print(
 # - Jayaram & Barachant 2018
 #   (https://doi.org/10.1088/1741-2552/aabea9), covariate shift and
 #   transfer learning in BCI calibration.
-# - Khazem et al. 2024 (https://doi.org/10.48550/arXiv.2410.01985) --
-#   Riemannian alignment for cross-session BCI transfer.

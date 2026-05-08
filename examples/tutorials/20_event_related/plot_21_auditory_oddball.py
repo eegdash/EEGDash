@@ -99,11 +99,11 @@ P300_WIN_MS = (250.0, 400.0)  # Polich 2007 / Squires et al. 1975
 # - **Mismatch negativity (MMN, ~150-250 ms)**: a frontal-central
 #   negative deflection that peaks before the participant has time to
 #   attend the deviant. It reflects sensory memory comparing each
-#   incoming sound to the recent standard (Naatanen et al. 2007).
+#   incoming sound to the recent standard :cite:`naatanen2007mmn`.
 # - **P3a (~250-300 ms)**: a more frontal positive bump, indexing
-#   attentional capture by the deviant (Squires et al. 1975).
+#   attentional capture by the deviant :cite:`squires1975p300`.
 # - **P3b (~300-400 ms)**: a centro-parietal positive bump, the
-#   auditory cousin of the visual P300 (Polich 2007).
+#   auditory cousin of the visual P300 :cite:`polich2007p300`.
 #
 # Why the topography shifts. The visual P300 is generated mainly in
 # parieto-temporal cortex; the auditory oddball recruits superior
@@ -303,7 +303,7 @@ print(
 # **Investigate.** Two single-subject details to register:
 #
 # - The peak at ``Cz`` lands inside the 250-400 ms window the literature
-#   reports for auditory P3b (Polich 2007). The latency is *earlier*
+#   reports for auditory P3b :cite:`polich2007p300`. The latency is *earlier*
 #   than the typical visual P300 (~350 ms in plot_20), consistent with
 #   shorter sensory transduction in audition.
 # - The "strongest channel" reported above can be a frontal pole
@@ -381,8 +381,8 @@ try:
 except (ValueError, RuntimeError) as exc:
     print(f"Caught {type(exc).__name__}: {exc}")
     print(
-        "Recovery: search MMN inside 150-250 ms (Naatanen et al. 2007) and "
-        "P300 inside 250-400 ms (Polich 2007). Use both windows together."
+        "Recovery: search MMN inside 150-250 ms :cite:`naatanen2007mmn` and "
+        "P300 inside 250-400 ms :cite:`polich2007p300`. Use both windows together."
     )
 
 # %% [markdown]

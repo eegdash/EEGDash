@@ -13,8 +13,8 @@ it: six months from now, you still need to know which version of
 Without that record, you cannot trust the cache and you may as well have
 recomputed it. Every step below pairs an artifact with the metadata that
 makes it reusable: FIF for windowed signals (Larson et al. 2024 / MNE),
-Apache Parquet for tabular features (Vohra 2016), and an optional Zarr
-store for chunked random-access reads (Miles et al. 2020). The lesson
+Apache Parquet for tabular features, and an optional Zarr store for
+chunked random-access reads. The lesson
 ends with a three-panel figure that puts the actual cost on disk.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_13_save_and_reuse_prepared_data.png'
@@ -33,7 +33,7 @@ ends with a three-panel figure that puts the actual cost on disk.
 #   the cache is safe to consume downstream.
 # - Stamp every cache with a provenance record (package versions, seed,
 #   git short-SHA) so a future reader can reproduce the upstream
-#   pipeline (Wilkinson et al. 2016).
+#   pipeline :cite:`wilkinson2016fair`.
 # - Read the cost of each format off a single ledger figure: write-time,
 #   read-time, on-disk MB, and the residual heatmap for parity.
 
@@ -236,8 +236,8 @@ print(
 # ---------------------------------------------------
 # FIF is fine for one recording but its random-access cost grows
 # linearly with file size. Zarr stores fixed-size chunks and reads any
-# window in tens of milliseconds even for hundreds of GB
-# (Miles et al. 2020). Braindecode ships the conversion behind
+# window in tens of milliseconds even for hundreds of GB.
+# Braindecode ships the conversion behind
 # :meth:`~braindecode.datasets.BaseConcatDataset.push_to_hub`, and the
 # private helper ``_convert_to_zarr_inline`` exposes it without the
 # Hugging Face dependency. We probe for it at runtime and skip the cell
@@ -291,10 +291,10 @@ else:
 # -----------------------------------------------
 # Many downstream notebooks consume a ``(n_windows, n_features)`` table
 # rather than raw signals. Parquet fits that need: columnar, typed,
-# compressed, and readable from R, Julia, Python, and DuckDB
-# (Vohra 2016). We compute one feature per channel per window
-# (per-channel mean) and assert the round trip preserves dtypes, which
-# is the property a feature store relies on.
+# compressed, and readable from R, Julia, Python, and DuckDB. We compute
+# one feature per channel per window (per-channel mean) and assert the
+# round trip preserves dtypes, which is the property a feature store
+# relies on.
 
 # %%
 features = pd.DataFrame(
@@ -398,7 +398,7 @@ pd.Series(provenance, name="value").to_frame()
 # ------------------------------------
 # **Run.** Forgetting ``overwrite=True`` is the single most common slip
 # on the second run of this tutorial; we trigger it on purpose so the
-# ``FileExistsError`` is visible (Nederbragt et al. 2020). A second
+# ``FileExistsError`` is visible :cite:`nederbragt2020teaching`. A second
 # common pitfall is calling ``load_concat_dataset`` on a path that is
 # missing its sidecars; the helper raises a clear error rather than
 # returning a corrupt dataset.
@@ -465,7 +465,7 @@ plt.show()
 # **Mini-project.** Write a tiny ``cache_or_compute`` wrapper that calls
 # ``compute_fn`` only on a cache miss and stamps a ``manifest.json`` next
 # to the artifact. Persisting the version dict alongside the data is the
-# smallest useful step toward FAIR provenance (Wilkinson et al. 2016).
+# smallest useful step toward FAIR provenance :cite:`wilkinson2016fair`.
 
 # %%
 import json

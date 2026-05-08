@@ -6,7 +6,7 @@ tutorial closes the gap on one BIDS recording from `OpenNeuro
 <https://openneuro.org>`_ ``ds002718`` :cite:`wakeman2015`, reachable
 through `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`: two safe
 preprocessors, a fixed-length window step, a :class:`DataLoader
-<torch.utils.data.DataLoader>` (Paszke et al. 2019), and an optional
+<torch.utils.data.DataLoader>` :cite:`paszke2019pytorch`, and an optional
 Zarr cache that turns batch reads into a few milliseconds of random
 access. We do not train a model. The deliverable is one batch's
 ``shape`` and ``dtype``.
@@ -474,7 +474,7 @@ pd.Series(
 # ------------------------------------
 # **Run.** Asking for windows larger than the recording silently returns
 # zero. We trigger it on purpose so the failure mode is visible
-# (Nederbragt et al. 2020): a ``DataLoader(empty)`` quietly yields
+# :cite:`nederbragt2020teaching`: a ``DataLoader(empty)`` quietly yields
 # nothing, which masks the bug.
 
 # %%

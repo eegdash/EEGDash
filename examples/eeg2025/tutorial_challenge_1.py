@@ -142,7 +142,7 @@ print(f"USE_REAL_DATA={USE_REAL_DATA} (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip
 # chance do you expect a small CNN to land after a few epochs on the
 # mini release? The Foundation Challenge baseline lifts CCD accuracy a
 # few points above chance per fold; the EEG2025 winners cleared that
-# bar by larger margins (Aristimunha et al. 2025).
+# bar by larger margins :cite:`aristimunha2025eeg2025paper`.
 
 # %% [markdown]
 # Step 3. Build the windowed dataset

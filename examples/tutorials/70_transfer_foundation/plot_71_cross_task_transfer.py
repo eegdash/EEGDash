@@ -499,4 +499,4 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 # - Pernet et al. 2019 (doi:10.1038/s41597-019-0104-8), EEG-BIDS.
 # - Delorme et al. 2022 (doi:10.1016/j.neuroimage.2022.119666), NEMAR.
 # - EEG2025 Challenge 1 (doi:10.48550/arXiv.2506.19141), cross-task
-#   transfer (Aristimunha et al. 2025).
+#   transfer :cite:`aristimunha2025eeg2025paper`.

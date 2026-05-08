@@ -4,7 +4,7 @@
 Cross-subject generalisation is the gold standard for any decoding
 claim. Train on N-1 subjects, test on the held-out one, repeat for
 every subject: that is leave-one-subject-out cross-validation (LOSO),
-the protocol behind the MOABB benchmark (Aristimunha et al. 2023) and
+the protocol behind the MOABB benchmark :cite:`aristimunha2023transferstructure` and
 the de-facto evaluation in clinical-EEG decoding. Brookshire et al.
 2024 surveyed 81 deep-learning EEG papers and found data leakage in
 roughly half; on properly subject-held-out splits, the same

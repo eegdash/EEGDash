@@ -186,7 +186,7 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 # the bars carry direction; a random forest
 # (:class:`sklearn.ensemble.RandomForestRegressor`) gives the
 # permutation-style ``feature_importances_`` attribute that handles
-# correlated band-power columns gracefully (Pedregosa et al. 2011). The
+# correlated band-power columns gracefully :cite:`pedregosa2011sklearn`. The
 # :class:`sklearn.pipeline.Pipeline` chains :class:`sklearn.preprocessing.StandardScaler`
 # in front of the ridge so the regularisation strength compares across
 # columns of different scale.
@@ -384,7 +384,7 @@ except (ValueError, TypeError) as exc:
 # correlated band-power columns. :func:`sklearn.inspection.permutation_importance`
 # replaces the impurity-based ``feature_importances_`` with a leave-one-
 # feature-out score that is less biased toward features with many split
-# points (Pedregosa et al. 2011). Both keep the cross-subject contract
+# points :cite:`pedregosa2011sklearn`. Both keep the cross-subject contract
 # above, so dropping them in only changes the importance panel.
 
 # %% [markdown]

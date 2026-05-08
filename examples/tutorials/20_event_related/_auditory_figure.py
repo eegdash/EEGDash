@@ -562,7 +562,7 @@ def draw_auditory_figure(
         title="Auditory P300: same oddball plumbing, different brain answer",
         subtitle=subtitle,
         source=(
-            f"EEGDash {plot_id} | OpenNeuro {dataset} (Delorme 2020) "
+            f"EEGDash {plot_id} | OpenNeuro {dataset} "
             "| Polich 2007 / Naatanen et al. 2007"
         ),
     )

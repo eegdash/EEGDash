@@ -8,7 +8,7 @@ plot_40, reachable through `NEMAR <https://nemar.org>`_ (Delorme et
 al. 2022); to keep the run offline-reproducible the feature table is
 synthesised with the column layout plot_40 saves to parquet. Before
 reaching for a deep net, this tutorial wires the feature matrix into
-:class:`sklearn.pipeline.Pipeline` (Pedregosa et al. 2011) with
+:class:`sklearn.pipeline.Pipeline` :cite:`pedregosa2011sklearn` with
 :class:`~sklearn.preprocessing.StandardScaler` and
 :class:`~sklearn.linear_model.LogisticRegression`, runs a leave-one-
 subject-out loop with a leakage-safe split from

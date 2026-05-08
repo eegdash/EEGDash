@@ -522,7 +522,7 @@ plt.show()
 # ``"target"`` / ``"standard"`` strings; on ``ds005863`` they are
 # BrainVision codes ``S 11`` ... ``S 55`` and the binary task label has
 # to be derived from the digit pair. We trigger the failure on purpose
-# so the recovery is visible (Nederbragt et al. 2020).
+# so the recovery is visible :cite:`nederbragt2020teaching`.
 
 # %%
 try:

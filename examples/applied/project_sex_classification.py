@@ -6,7 +6,7 @@ A canonical "is this signal even predictive?" benchmark task on resting-state
 EEG from `OpenNeuro <https://openneuro.org>`_ ``ds005505`` (Healthy Brain
 Network; Alexander et al. 2017), reachable through `NEMAR
 <https://nemar.org>`_ :cite:`delorme2022nemar`. Log band-power features feed
-:class:`sklearn.pipeline.Pipeline` (Pedregosa et al. 2011) with
+:class:`sklearn.pipeline.Pipeline` :cite:`pedregosa2011sklearn` with
 :class:`~sklearn.preprocessing.StandardScaler` and
 :class:`~sklearn.linear_model.LogisticRegression`. A 3-fold cross-subject
 loop via :class:`~sklearn.model_selection.GroupKFold` keeps every subject

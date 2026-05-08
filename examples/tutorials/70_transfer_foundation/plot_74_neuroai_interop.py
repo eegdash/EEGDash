@@ -471,7 +471,7 @@ plt.show()
 # ------------------------------------
 # **Run.** Calling ``Segmenter`` with a ``trigger_query`` that matches
 # zero events raises a :class:`RuntimeError` with a clear message
-# (Nederbragt et al. 2020). The recovery is to widen the query or
+# :cite:`nederbragt2020teaching`. The recovery is to widen the query or
 # fall back to a stride-based segmenter.
 
 # %%
@@ -527,7 +527,7 @@ print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead
 # the rest of the stack consumes. Next:
 # :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics`
 # loads the EEG2025 challenge cohort that NeuralBench evaluates on
-# (Aristimunha et al. 2025);
+# :cite:`aristimunha2025eeg2025paper`;
 # :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
 # trains a small encoder across tasks (the territory NeuralTrain
 # automates);

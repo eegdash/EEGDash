@@ -459,7 +459,7 @@ def draw_p300_transfer_figure(
         None,
         plot_id=plot_id,
         openneuro_id=source_id,
-        citation="Polich 2007 (P3a/P3b); NEMAR (Delorme 2022)",
+        citation="Polich 2007 (P3a/P3b); NEMAR :cite:`delorme2022nemar`",
         extra="encoder=ShallowFBCSPNet; AS-MMD on logit-space features",
     )
     style_figure(

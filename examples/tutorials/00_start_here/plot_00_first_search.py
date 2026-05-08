@@ -187,7 +187,7 @@ shortlist
 # -------------------------------------
 # **Run.** Passing an unknown task name returns an empty list, not an
 # error. The recovery is to surface what tasks the catalogue actually
-# carries (Nederbragt et al. 2020).
+# carries :cite:`nederbragt2020teaching`.
 
 # %%
 unknown = client.find(task="FacePerceptionXYZ", limit=5)

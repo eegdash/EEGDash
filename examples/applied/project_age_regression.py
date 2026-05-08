@@ -145,7 +145,7 @@ for s in range(N_SUBJECTS):
             for band in BANDS:
                 base = rng.normal(0.0, 1.0)
                 if band in ("alpha", "beta"):
-                    # Age tracks alpha / beta in resting EEG (Zoubi 2018).
+                    # Age tracks alpha / beta in resting EEG :cite:`alzoubi2018ageeeg`.
                     base += 0.18 * (a - 12.0)
                 row[f"spec_{band}_{ch}"] = float(base + 0.4 * bias)
         rows.append(row)

@@ -69,9 +69,8 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 #   time you read it (and only that record). The constructor accepts
 #   ``download=False`` to enforce strict offline mode against an already
 #   populated cache; otherwise EEGDash fetches missing files into
-#   ``cache_dir`` on demand. ``ensure_downloaded()`` and
-#   ``estimate_download_size()`` let you front-load explicitly when a
-#   pipeline cannot afford a cold cache.
+#   ``cache_dir`` on demand. ``download_all()`` lets you front-load
+#   explicitly when a pipeline cannot afford a cold cache.
 # - **Inherits from Braindecode.** ``EEGDashDataset`` is a
 #   :class:`braindecode.datasets.BaseConcatDataset`; each entry under
 #   :attr:`~eegdash.api.EEGDashDataset.datasets` is a

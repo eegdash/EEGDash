@@ -126,8 +126,8 @@ docs = [
   "plotly",
   "seaborn",
   "moabb",
-  "neuralfetch",
-  "neuralset",
+  "neuralfetch>=0.2",
+  "neuralset>=0.2",
   "eegprep",
 ]
 

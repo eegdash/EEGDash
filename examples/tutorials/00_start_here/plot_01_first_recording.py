@@ -3,10 +3,13 @@
 
 Once a search returns a candidate dataset (see plot_00), the next question is
 practical: what does *one* recording actually contain? This tutorial loads a
-single BIDS file from `OpenNeuro <https://openneuro.org>`_ ``ds002718``
-(Wakeman & Henson 2015) through the EEGLAB-ecosystem catalogue shared with
-`NEMAR <https://nemar.org>`_ (Delorme et al. 2022), unwraps the
-:class:`mne.io.Raw` object, and inspects channels, montage, and spectrum.
+single BIDS file from `OpenNeuro <https://openneuro.org>`_ ``ds004504``
+(Miltiadous et al. 2023; Alzheimer / frontotemporal dementia / healthy
+controls) through the catalogue shared with `NEMAR <https://nemar.org>`_
+(Delorme et al. 2022), unwraps the :class:`mne.io.Raw` object, and inspects
+channels, montage, and spectrum. The dataset is small (88 subjects, ~10 min
+per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first
+fetch is under 25 MB and every later step is a hot-cache read.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_01_first_recording.png'
 """
@@ -91,15 +94,15 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 # Constructing an :class:`~eegdash.api.EEGDashDataset` only queries the
 # metadata catalogue. No EEG bytes move yet.
 #
-# **Predict.** How many records will the query for ``ds002718`` subject
-# ``012`` return: 1 face-recognition file, several runs, or the whole
+# **Predict.** How many records will the query for ``ds004504`` subject
+# ``001`` return: 1 eyes-closed file, several tasks, or the whole
 # dataset?
 #
 # **Run.** Build the object; the HTML repr below shows what matched.
 
 # %%
-DATASET = "ds002718"
-SUBJECT = "012"
+DATASET = "ds004504"  # Miltiadous AD/FTD/HC, 19 ch standard 10-20, 500 Hz
+SUBJECT = "001"
 dataset = EEGDashDataset(cache_dir=cache_dir, dataset=DATASET, subject=SUBJECT)
 dataset
 
@@ -204,12 +207,12 @@ fig_raw = raw.plot(
 # we drop them and let the spatial pattern speak.
 
 # %%
-# HBN data ships with a GSN-HydroCel-129 layout. Apply it with
-# ``match_alias=True`` so minor channel-name variants (e.g. ``E1`` vs
-# ``E001``) are absorbed, then draw ``plot_sensors`` only when at least
-# one EEG channel actually has a position attached.
+# ds004504 uses the standard 10-20 layout (Fp1, Fp2, F3, F4, ... Cz, Pz,
+# 19 electrodes); ``standard_1020`` covers all of them. ``plot_sensors``
+# is rendered only when positions actually got attached, so the cell
+# stays robust against arbitrary channel-naming.
 raw.set_montage(
-    "GSN-HydroCel-129",
+    "standard_1020",
     match_case=False,
     match_alias=True,
     on_missing="ignore",
@@ -249,7 +252,7 @@ style_figure(
     fig_psd,
     title="Power spectral density (Welch)",
     subtitle=f"{DATASET} sub-{SUBJECT} | {len(raw.copy().pick('eeg').ch_names)} EEG channels | fmax=80 Hz",
-    source=f"EEGDash plot_01 | OpenNeuro {DATASET} (doi:10.18112/openneuro.ds002718)",
+    source=f"EEGDash plot_01 | OpenNeuro {DATASET} (Miltiadous et al. 2023)",
 )
 plt.show()
 
@@ -276,8 +279,11 @@ except IndexError as exc:
 # match; small differences in run length per subject are normal.
 
 # %%
+SECOND_SUBJECT = "002"
 raw_b = (
-    EEGDashDataset(cache_dir=cache_dir, dataset=DATASET, subject="013").datasets[0].raw
+    EEGDashDataset(cache_dir=cache_dir, dataset=DATASET, subject=SECOND_SUBJECT)
+    .datasets[0]
+    .raw
 )
 pd.DataFrame(
     {
@@ -286,7 +292,7 @@ pd.DataFrame(
             raw.info["nchan"],
             round(raw.times[-1], 1),
         ],
-        "sub-013": [
+        f"sub-{SECOND_SUBJECT}": [
             raw_b.info["sfreq"],
             raw_b.info["nchan"],
             round(raw_b.times[-1], 1),
@@ -317,7 +323,7 @@ pd.DataFrame(
 # %% [markdown]
 # References
 # ----------
-# - Wakeman & Henson 2015, A multi-subject, multi-modal human neuroimaging dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
+# - Miltiadous et al. 2023, A dataset of EEG recordings from Alzheimer's disease, frontotemporal dementia and healthy subjects, *Data* 8(6):95. https://doi.org/10.18112/openneuro.ds004504.v1.0.5
 # - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
 # - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
 # - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267

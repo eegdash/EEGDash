@@ -74,14 +74,14 @@ print(f"dataset:         {DATASET}")
 # ``nchans``, ``ntimes``), and the ``participant_tsv`` extras (``Age``,
 # ``Gender``, ``Group``, ``MMSE``). Any survey question that fits on a
 # panel of this figure can be answered from the catalog alone; no S3
-# traffic happens until ``ds.preview(i)`` is called.
+# traffic happens until ``ds.datasets[i].raw`` is accessed.
 
 # %% [markdown]
 # What does ``EEGDashDataset`` expose?
 # ------------------------------------
 # Before instantiating it, list the public methods and properties on the
-# class. The ``description``, ``records``, ``datasets``, and ``preview``
-# names are the ones the rest of the script leans on.
+# class. The ``description``, ``records``, and ``datasets`` names are the
+# ones the rest of the script leans on.
 
 # %%
 ds_attrs = sorted(name for name in dir(EEGDashDataset) if not name.startswith("_"))
@@ -332,7 +332,7 @@ dataset_card
 # - Bin the MMSE score (``desc['mmse']``) into three buckets (mild,
 #   moderate, severe cognitive impairment) and tabulate
 #   subjects-per-bucket inside the Alzheimer's disease group.
-# - Pull one subject through ``ds.preview(0)`` and confirm
+# - Pull one subject through ``ds.datasets[0].raw`` and confirm
 #   ``raw.info['sfreq'] == 500.0`` and ``len(raw.info['ch_names']) == 19``;
 #   the catalog numbers and the loaded raw must agree.
 

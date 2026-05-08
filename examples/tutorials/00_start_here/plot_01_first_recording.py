@@ -109,14 +109,22 @@ dataset
 # %% [markdown]
 # Step 2: Summarise without touching the network
 # ----------------------------------------------
-# :meth:`~eegdash.api.EEGDashDataset.summary` aggregates every matched
-# record from the metadata index alone. Useful for sanity-checking a query
-# before paying any download cost.
+# Every matched record exposes its BIDS metadata on
+# :attr:`~eegdash.api.EEGDashDataset.description`, a
+# :class:`pandas.DataFrame` materialised without any network call. Useful
+# for sanity-checking a query before paying any download cost.
 
 # %%
-summary = dataset.summary()
+description = dataset.description
 pd.Series(
-    {k: v for k, v in summary.items() if not isinstance(v, (dict, list))},
+    {
+        "n_records": len(dataset),
+        "n_subjects": description["subject"].nunique(),
+        "n_tasks": description["task"].nunique(),
+        "n_sessions": description["session"].nunique(),
+        "channels": int(description["nchans"].iloc[0]),
+        "sampling_frequency_hz": float(description["sampling_frequency"].iloc[0]),
+    },
     name="value",
 ).to_frame()
 

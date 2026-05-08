@@ -59,7 +59,7 @@ Read them in order before branching into the rest of the gallery.
 
       Materialise a single ``EEGDashDataset`` entry, read sampling rate,
       channel count, duration and annotations, and plot the first five
-      seconds via ``RecordingPreview``.
+      seconds with :meth:`mne.io.Raw.plot`.
 
    .. grid-item-card:: From dataset to PyTorch DataLoader
       :link: /generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader

@@ -104,9 +104,10 @@ straightforward to share a cache between machines or to work without
 network access once the first run completes.
 
 The lazy mode also lets you pass an ``on_error`` policy: in pipelines
-that scan many recordings, ``on_error="skip"`` plus a follow-up
-``ds.drop_bad()`` is a robust pattern when a few files in a release are
-known to be corrupt.
+that scan many recordings, ``on_error="skip"`` flags problem files via
+``ds._skipped`` so you can filter them out with a list comprehension
+(``ds.datasets = [d for d in ds.datasets if not getattr(d, "_skipped", False)]``)
+when a few files in a release are known to be corrupt.
 
 When to use ``EEGChallengeDataset``
 -----------------------------------

@@ -42,8 +42,8 @@ three-panel figure rendered from the live metadata.
 #   is cached.
 # - Network on first call (~1 MB into ``cache_dir`` for the catalog
 #   query). The challenge BDF files are not eagerly downloaded; that
-#   happens lazily on ``.preview()`` or when a Braindecode pipeline pulls
-#   ``record.raw``.
+#   happens lazily when ``record.raw`` is accessed or a Braindecode
+#   pipeline pulls it.
 # - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_00_first_search`,
 #   :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 # - Concept: :doc:`/concepts/eegdash_objects`.
@@ -115,7 +115,7 @@ print(f"cache directory: {cache_dir}")
 # -----------------------------------------
 # Before instantiating one, list the public methods and properties on the
 # class. The ``release``, ``mini``, ``description``, ``records``, and
-# ``preview`` names are the ones the rest of the tutorial leans on.
+# ``datasets`` names are the ones the rest of the tutorial leans on.
 
 # %%
 challenge_attrs = sorted(
@@ -239,7 +239,7 @@ record_view.head(20)
 # code:
 #
 # - ``data_name`` is the unique BDF filename inside the challenge bucket;
-#   :meth:`~eegdash.dataset.EEGDashDataset.preview` keys on it.
+#   the lazy ``record.raw`` loader keys on it.
 # - ``dataset`` is ``"EEG2025r5mini"``, *not* the OpenNeuro id; the
 #   dataset id pins the cache folder so preprocessed and raw pulls do
 #   not collide.
@@ -433,8 +433,8 @@ pd.DataFrame(release_table_rows)
 #   matches ``mini_subjects`` element-by-element.
 # - Re-run Step 4 with the ``sex`` column instead of ``age_bin`` and
 #   compare the M/F coverage across the four task families.
-# - Run with ``download=True``, call ``ds_mini.preview(0)``, and confirm
-#   ``raw.info["sfreq"] == 100.0`` (the challenge downsample step).
+# - Run with ``download=True``, access ``ds_mini.datasets[0].raw``, and
+#   confirm ``raw.info["sfreq"] == 100.0`` (the challenge downsample step).
 
 # %% [markdown]
 # References

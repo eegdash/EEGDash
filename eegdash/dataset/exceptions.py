@@ -327,36 +327,8 @@ class StorageAccessError(EEGDashError):
         super().__init__(message)
 
 
-class PreviewError(EEGDashError):
-    """Raised when :meth:`EEGDashDataset.preview` fails to load a recording.
-
-    Wraps the underlying exception so callers can distinguish preview-time
-    failures from other dataset errors while preserving the original cause.
-
-    Attributes
-    ----------
-    index : int | None
-        Index of the recording that failed to preview, when known.
-    record : dict | None
-        The record metadata for the failed recording, when known.
-
-    """
-
-    def __init__(
-        self,
-        message: str,
-        *,
-        index: int | None = None,
-        record: dict[str, Any] | None = None,
-    ):
-        self.index = index
-        self.record = record or {}
-        super().__init__(message)
-
-
 __all__ = [
     "EEGDashError",
     "DataIntegrityError",
     "StorageAccessError",
-    "PreviewError",
 ]

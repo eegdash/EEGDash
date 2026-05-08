@@ -11,8 +11,13 @@ metadata records stored in the EEGDash database via REST API.
 
 from typing import Any, Mapping
 
-from .bids_metadata import merge_query, records_to_dataframe
-from .const import DATASET_FIELD_ALIASES, DATASET_SUMMARY_COLUMNS
+from .bids_metadata import build_query_from_kwargs, merge_query, records_to_dataframe
+from .const import (
+    DATASET_FIELD_ALIASES,
+    DATASET_QUERY_ALLOWED,
+    DATASET_QUERY_FIELD_SPEC,
+    DATASET_SUMMARY_COLUMNS,
+)
 from .http_api_client import get_client
 
 
@@ -140,38 +145,27 @@ class EEGDash:
         >>> df = client.search_datasets(task="rest", source="openneuro")
 
         """
-        # Build a MongoDB-style query from the friendly kwargs. Fields
-        # with multiple plausible storage shapes (flat vs nested) use
-        # ``$or`` so this survives v1/v2 record formats.
-        and_clauses: list[dict[str, Any]] = []
-        if modality is not None:
-            and_clauses.append(
-                {"$or": [{"modality": modality}, {"modality": modality.lower()}]}
+        # Build a MongoDB-style query through the shared helper. Fields
+        # with multiple plausible storage shapes (flat vs nested) and
+        # range operators are encoded once in DATASET_QUERY_FIELD_SPEC.
+        kw = {
+            "modality": modality,
+            "task": task,
+            "clinical_group": clinical_group,
+            "source": source,
+            "license": license,
+            "n_subjects_min": n_subjects_min,
+        }
+        kw = {k: v for k, v in kw.items() if v is not None}
+        query = (
+            build_query_from_kwargs(
+                allowed_fields=DATASET_QUERY_ALLOWED,
+                field_spec=DATASET_QUERY_FIELD_SPEC,
+                **kw,
             )
-        if task is not None:
-            and_clauses.append({"task": task})
-        if clinical_group is not None:
-            and_clauses.append(
-                {
-                    "$or": [
-                        {"clinical.group": clinical_group},
-                        {"clinical_group": clinical_group},
-                    ]
-                }
-            )
-        if source is not None:
-            and_clauses.append({"$or": [{"source": source}, {"provider": source}]})
-        if n_subjects_min is not None:
-            and_clauses.append({"n_subjects": {"$gte": int(n_subjects_min)}})
-        if license is not None:
-            and_clauses.append({"license": license})
-
-        if not and_clauses:
-            query = None
-        elif len(and_clauses) == 1:
-            query = and_clauses[0]
-        else:
-            query = {"$and": and_clauses}
+            if kw
+            else None
+        )
 
         return records_to_dataframe(
             self._client.find_datasets(query, limit=limit) or [],

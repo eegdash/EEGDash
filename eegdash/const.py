@@ -15,6 +15,8 @@ __all__ = [
     "DEFAULT_DESCRIPTION_FIELDS",
     "DATASET_SUMMARY_COLUMNS",
     "DATASET_FIELD_ALIASES",
+    "DATASET_QUERY_ALLOWED",
+    "DATASET_QUERY_FIELD_SPEC",
     "RELEASE_TO_OPENNEURO_DATASET_MAP",
     "SUBJECT_MINI_RELEASE_MAP",
     "MODALITY_ALIASES",
@@ -69,6 +71,41 @@ DATASET_FIELD_ALIASES = {
 :func:`~eegdash.bids_metadata.records_to_dataframe`. Lets one summary
 column draw from several legacy/nested record fields, so the helper
 survives v1/v2 schema drift without per-endpoint glue."""
+
+DATASET_QUERY_ALLOWED = frozenset(
+    {"modality", "task", "clinical_group", "source", "license", "n_subjects_min"}
+)
+"""frozenset: Caller-friendly keyword filters accepted by
+:meth:`~eegdash.api.EEGDash.search_datasets`. Distinct from
+:data:`ALLOWED_QUERY_FIELDS` because the dataset-level documents have a
+different schema than per-recording records."""
+
+DATASET_QUERY_FIELD_SPEC = {
+    "modality": {
+        # Match either the original casing or its lowercase variant —
+        # legacy records use either.
+        "value_aliases": lambda v: ([v, v.lower()] if isinstance(v, str) else [v]),
+    },
+    "clinical_group": {
+        # v1 stored a flat ``clinical_group``; v2 nests under ``clinical.group``.
+        "paths": ("clinical.group", "clinical_group"),
+    },
+    "source": {
+        # ``source`` was renamed to ``provider`` partway through v2.
+        "paths": ("source", "provider"),
+    },
+    "n_subjects_min": {
+        # Friendly minimum threshold; mapped onto the ``n_subjects`` field
+        # with a $gte operator and coerced to int.
+        "paths": ("n_subjects",),
+        "operator": "$gte",
+        "value_aliases": lambda v: [int(v)],
+    },
+}
+"""dict: ``field_spec`` consumed by
+:func:`~eegdash.bids_metadata.build_query_from_kwargs` for the
+:meth:`~eegdash.api.EEGDash.search_datasets` keyword filters. Encodes
+every legacy alias and range operator that endpoint needs."""
 
 MODALITY_ALIASES = {"fnirs": "nirs"}
 

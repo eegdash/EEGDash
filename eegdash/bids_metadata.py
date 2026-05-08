@@ -11,7 +11,7 @@ and enriching metadata records with participant information from BIDS datasets.
 import re
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import AbstractSet, Any
 
 import pandas as pd
 
@@ -144,24 +144,83 @@ def get_entities_from_record(
     }
 
 
-def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
+def _clean_scalar(key: str, value: Any) -> Any:
+    """Trim a string value, raise on None/empty."""
+    if value is None:
+        raise ValueError(
+            f"Received None for query parameter '{key}'. Provide a concrete value."
+        )
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError(f"Received an empty string for query parameter '{key}'.")
+        return cleaned
+    return value
+
+
+def _clean_list(key: str, value: Iterable[Any]) -> list[Any]:
+    """Strip strings, drop None/empties, dedupe."""
+    cleaned: list[Any] = []
+    for item in value:
+        if item is None:
+            continue
+        if isinstance(item, str):
+            item = item.strip()
+            if not item:
+                continue
+        cleaned.append(item)
+    cleaned = list(dict.fromkeys(cleaned))  # dedupe preserving order
+    if not cleaned:
+        raise ValueError(f"Received an empty list for query parameter '{key}'.")
+    return cleaned
+
+
+def build_query_from_kwargs(
+    *,
+    allowed_fields: AbstractSet[str] | None = None,
+    field_spec: Mapping[str, Mapping[str, Any]] | None = None,
+    **kwargs: Any,
+) -> dict[str, Any]:
     """Build and validate a MongoDB query from keyword arguments.
 
-    Converts user-friendly keyword arguments into a valid MongoDB query dictionary.
-    Scalar values become exact matches; list-like values become ``$in`` queries.
+    Converts user-friendly keyword arguments into a valid MongoDB query
+    dictionary. Scalar values become exact matches; list-like values
+    become ``$in`` queries.
 
-    Entity fields (subject, task, session, run) are queried at the top level
-    since the inject script flattens these from nested entities.
+    Entity fields (subject, task, session, run) are queried at the top
+    level since the inject script flattens these from nested entities.
 
     Parameters
     ----------
+    allowed_fields : set of str, optional
+        Override the default :data:`eegdash.const.ALLOWED_QUERY_FIELDS`
+        whitelist. Useful when querying a different collection (e.g.
+        the ``datasets`` collection from
+        :meth:`~eegdash.api.EEGDash.search_datasets`).
+    field_spec : mapping of str to mapping, optional
+        Per-field rule map describing how a friendly key translates to a
+        MongoDB filter. Each rule is a dict with optional keys:
+
+        - ``"paths"`` (sequence of str): DB field paths the key resolves
+          to. When more than one path is given, the rule emits an
+          ``$or`` over ``{path: value}`` per path. Default: ``[<key>]``.
+        - ``"operator"`` (str, e.g. ``"$gte"``): wrap the value in
+          ``{operator: value}`` (range operators). Default: exact match.
+        - ``"value_aliases"`` (callable): ``v -> list`` returns the full
+          list of values to OR-match (e.g. ``lambda v: [v, v.lower()]``
+          for case-insensitive fallback, or ``lambda v: [int(v)]`` to
+          coerce). Default: just ``[v]``. Result is deduplicated.
+
+        Keys without a spec follow the legacy scalar / ``$in`` rules.
     **kwargs
-        Query filters. Allowed keys are in ``eegdash.const.ALLOWED_QUERY_FIELDS``.
+        Query filters. Allowed keys are constrained by ``allowed_fields``.
 
     Returns
     -------
     dict
-        A MongoDB query dictionary.
+        A MongoDB query dictionary. Multiple OR-flavoured fields collect
+        under a top-level ``$and``; single-path single-value fields stay
+        flat.
 
     Raises
     ------
@@ -169,42 +228,62 @@ def build_query_from_kwargs(**kwargs) -> dict[str, Any]:
         If an unsupported field is provided, or if a value is None/empty.
 
     """
-    unknown_fields = set(kwargs.keys()) - ALLOWED_QUERY_FIELDS
+    allowed = ALLOWED_QUERY_FIELDS if allowed_fields is None else set(allowed_fields)
+    spec_map = dict(field_spec) if field_spec else {}
+
+    unknown_fields = set(kwargs.keys()) - allowed
     if unknown_fields:
         raise ValueError(
             f"Unsupported query field(s): {', '.join(sorted(unknown_fields))}. "
-            f"Allowed fields are: {', '.join(sorted(ALLOWED_QUERY_FIELDS))}"
+            f"Allowed fields are: {', '.join(sorted(allowed))}"
         )
 
-    query = {}
+    query: dict[str, Any] = {}
+    or_clauses: list[dict[str, Any]] = []
+
     for key, value in kwargs.items():
-        if value is None:
-            raise ValueError(
-                f"Received None for query parameter '{key}'. Provide a concrete value."
-            )
+        spec = spec_map.get(key, {})
+        paths = list(spec.get("paths") or [key])
+        operator = spec.get("operator")
+        value_aliases = spec.get("value_aliases")
 
         if isinstance(value, (list, tuple, set)):
-            cleaned: list[Any] = []
-            for item in value:
-                if item is None:
-                    continue
-                if isinstance(item, str):
-                    item = item.strip()
-                    if not item:
-                        continue
-                cleaned.append(item)
-            cleaned = list(dict.fromkeys(cleaned))  # dedupe preserving order
-            if not cleaned:
-                raise ValueError(f"Received an empty list for query parameter '{key}'.")
-            query[key] = {"$in": cleaned}
+            # List values keep the legacy $in semantics; specs that try
+            # to combine $in with operator/aliases would be ambiguous.
+            cleaned = _clean_list(key, value)
+            if operator or value_aliases or len(paths) > 1:
+                raise ValueError(
+                    f"Field '{key}' was given a list, but its spec uses "
+                    "operator/value_aliases/multi-path which only support "
+                    "scalar values."
+                )
+            query[paths[0]] = {"$in": cleaned}
+            continue
+
+        scalar = _clean_scalar(key, value)
+        values: list[Any]
+        if value_aliases is not None:
+            values = list(dict.fromkeys(value_aliases(scalar)))
+            if not values:
+                raise ValueError(f"value_aliases for '{key}' returned an empty list.")
         else:
-            if isinstance(value, str):
-                value = value.strip()
-                if not value:
-                    raise ValueError(
-                        f"Received an empty string for query parameter '{key}'."
-                    )
-            query[key] = value
+            values = [scalar]
+
+        branches = [
+            {path: ({operator: v} if operator else v)} for path in paths for v in values
+        ]
+        if len(branches) == 1:
+            path, mongo_value = next(iter(branches[0].items()))
+            query[path] = mongo_value
+        else:
+            or_clauses.append({"$or": branches})
+
+    if or_clauses:
+        if len(or_clauses) == 1:
+            # A single $or fits at the top level alongside the flat fields.
+            query.update(or_clauses[0])
+        else:
+            query["$and"] = or_clauses
 
     return query
 

@@ -464,8 +464,8 @@ naive_assignment = np.full((n_subj_fig, n_folds_fig), 2, dtype=int)
 # exactly one fold and train in the rest.
 safe_assignment = np.zeros((n_subj_fig, n_folds_fig), dtype=int)
 for fold_index in range(min(n_folds_fig, len(folds))):
-    test_ids = folds[fold_index][1]
-    test_subjects = {sid.split("__")[0] for sid in test_ids}
+    test_mask = folds[fold_index][1]
+    test_subjects = set(metadata.loc[test_mask, "subject"].unique())
     for row_idx, subject_id in enumerate(subjects_for_fig):
         if subject_id in test_subjects:
             safe_assignment[row_idx, fold_index] = 1
